@@ -1,0 +1,104 @@
+<div class="row">
+  <div class="col-12">
+    <div class="page-title-box">
+      <h4 class="page-title">ویرایش نوع اطلاعات پایه</h4>
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="accidentOpsFrm" (ngSubmit)="submit('')" id="submitForm">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body row">
+          <div class="form-group col-md-3">
+            <label for="itemTitle" class="col-form-label">
+              <span class="text-danger">*</span>
+              نوع حادثه
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="itemTitle"
+              formControlName="itemTitle"
+              maxlength="100"
+              autocomplete="off"
+              [ngClass]="{
+                'is-invalid':
+                  accidentOpsFrm.controls['itemTitle'].invalid &&
+                  accidentOpsFrm.controls['itemTitle'].touched,
+                'is-valid':
+                  accidentOpsFrm.controls['itemTitle'].valid &&
+                  accidentOpsFrm.controls['itemTitle'].touched
+              }"
+            />
+            <ng-container
+              [ngTemplateOutlet]="formError"
+              [ngTemplateOutletContext]="{
+                validation: 'required',
+                message: 'اجباری است',
+                control: accidentOpsFrm.controls['itemTitle']
+              }"
+            ></ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="card-body">
+    <div class="col-sm-6">
+      <a
+        href="javascript:void(0)"
+        type="button"
+        class="btn btn-success waves-effect waves-light mr-1"
+        (click)="submit('exit')"
+      >
+        <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره
+        و خروج
+      </a>
+      <a
+        href="javascript:void(0)"
+        type="button"
+        class="btn btn-light waves-effect waves-light mr-1"
+        (click)="submit('')"
+      >
+        <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره
+      </a>
+      <a
+        href="javascript:void(0)"
+        type="button"
+        class="btn btn-light waves-effect waves-light mr-1"
+        (click)="submit('new')"
+      >
+        <span class="btn-label"><i class="fas fa-plus"></i></span>ذخیره و جدید
+      </a>
+      <a
+        href="javascript:void(0)"
+        type="button"
+        class="btn btn-light waves-effect waves-light mr-1"
+        (click)="onBtnCancelClick()"
+      >
+        <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
+      </a>
+    </div>
+  </div>
+</div>
+<ng-template
+  #formError
+  let-control="control"
+  let-message="message"
+  let-validation="validation"
+>
+  <ng-container
+    *ngIf="control.hasError(validation) && (control.dirty || control.touched)"
+  >
+    <div class="fv-plugins-message-container invalid-feedback">
+      <span role="alert">
+        {{ message }}
+      </span>
+    </div>
+  </ng-container>
+</ng-template>

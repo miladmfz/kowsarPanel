@@ -1,0 +1,123 @@
+<div class="card">
+  <div class="card-header">
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item">
+        <a class="nav-link  " data-bs-toggle="pill" [routerLink]="['/application/ocr-detail']">پنل توزیع و
+          بایگانی</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link active" data-bs-toggle="pill" [routerLink]="['/application/ocr-list']">لیست توزیع و
+          بایگانی</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/ocr-setting']">تنظیمات توزیع و
+          بایگانی</a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body">
+    <div class="tab-content">
+
+      <div class="tab-pane fade show active" role="tabpanel">
+
+        <!-- <c-input-group class="p-3 col-6">
+          <button cButton color="secondary" id="button-addon1" type="button" variant="outline" (click)="Searching()">
+            جستجو
+          </button>
+          <input aria-describedby="button-addon1" aria-label="Example text with button addon" cFormControl
+            placeholder="جستجو" [(ngModel)]="Searchtarget" [ngModelOptions]="{ standalone: true }" />
+        </c-input-group> -->
+        <div class="p-3 col-md-6">
+          <div class="input-group">
+            <button class="btn btn-secondary" type="button" id="button-addon1" (click)="Searching()">جستجو</button>
+            <input type="text" class="form-control" aria-describedby="button-addon1"
+              aria-label="Example text with button addon" placeholder="جستجو" [(ngModel)]="Searchtarget"
+              [ngModelOptions]="{ standalone: true }">
+          </div>
+        </div>
+
+
+
+        <div class="card-body py-3">
+          <!-- begin::Table container -->
+          <div class="table-responsive">
+
+            <table class="table table-bordered align-middle gs-0 gy-4">
+              <thead>
+                <tr class="fw-bolder ">
+                  <th class="min-w-100px">dbname</th>
+                  <th class="min-w-30px">Code</th>
+                  <th class="min-w-100px">FactorDate</th>
+                  <th class="min-w-100px">CustName</th>
+                  <th class="min-w-30px">CustomerCode</th>
+                  <th class="min-w-100px">Explain</th>
+                  <th class="min-w-50px">CustomerPath</th>
+                  <th class="min-w-100px">Active</th>
+
+
+                </tr>
+              </thead>
+              <tbody *ngFor="let item of items">
+
+                <tr>
+                  <td>{{ item.dbname }}</td>
+                  <td>{{ item.FactorPrivateCode }}</td>
+                  <td>{{ item.FactorDate }}</td>
+                  <td>{{ item.CustName }}</td>
+                  <td>{{ item.CustomerCode }}</td>
+                  <td>{{ item.Explain }}</td>
+                  <td>{{ item.CustomerPath }}</td>
+                  <td>
+
+                    <ng-container *ngIf="item.AppIsControled === 'True'; else notControled">
+                      <ng-container *ngIf="item.AppIsPacked === 'True'; else notPacked">
+                        <ng-container *ngIf="item.AppIsDelivered === 'True'; else notDelivered">
+                          <ng-container *ngIf="item.HasSignature === 'True'; else notHasSignature">
+                            تحویل شده <!-- Delivered -->
+                          </ng-container>
+                          <!-- In transit -->
+                        </ng-container>
+                        <!-- Ready for delivery -->
+                      </ng-container>
+                      <!-- Packed -->
+                    </ng-container>
+
+                    <ng-template #notControled>انبار</ng-template>
+                    <ng-template #notPacked> بسته بندی </ng-template>
+                    <ng-template #notDelivered>آماده ارسال </ng-template>
+                    <ng-template #notHasSignature>باربری </ng-template>
+
+                  </td>
+
+
+                  <td>
+
+                    <a class="btn btn-warning btn-sm mx-1"
+                      [routerLink]="['/application/ocr-factor-detail', item.AppOCRFactorCode]">
+                      View
+                    </a>
+
+
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+          <!-- end::Table container -->
+        </div>
+
+
+
+
+
+
+
+
+      </div>
+
+    </div>
+  </div>
+</div>

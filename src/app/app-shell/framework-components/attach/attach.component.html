@@ -1,0 +1,102 @@
+<table class="table table-stripped table-bordered" [formGroup]="attachFrm">
+
+    <thead>
+        <tr>
+            <th>تاریخ</th>
+            <th>تولید کننده</th>
+            <th>فایل</th>
+            <th *ngIf="!isInViewMode">آپلود</th>
+            <th>شرح</th>
+            <th *ngIf="useSecondLang">شرح لاتین</th>
+            <th *ngIf="!isInViewMode">عملیات</th>
+        </tr>
+    </thead>
+
+    <tbody *ngIf="isInViewMode">
+        <tr *ngFor="let attach of attaches.controls">
+            <td>{{attach.get('creationDate').value}}</td>
+            <td>{{attach.get('creatorName').value}}</td>
+            <td>
+                <img src="{{attach.get('path').value}}" height="30" alt="icon" class="mr-2"
+                    *ngIf="attach.get('id').value">
+                <a href="javascript:void(0);" (click)="download(attach)" class="text-dark">{{ attach.get('attachName').value
+                    }}</a>
+            </td>
+            <td>{{attach.get('description').value}}</td>
+            <td *ngIf="useSecondLang">{{attach.get('engDescription').value}}</td>
+        </tr>
+    </tbody>
+
+    <tbody *ngIf="!isInViewMode" formArrayName="attaches">
+        <tr *ngFor="let attach of attaches.controls; let i = index" [formGroupName]="i">
+            <input type="hidden" id="attachId{{i}}" class="form-control" formControlName="id" />
+            <td>{{attach.get('creationDate').value}}</td>
+            <td>{{attach.get('creatorName').value}}</td>
+            <td>
+                <img src="{{attach.get('path').value}}" height="30" alt="icon" class="mr-2" *ngIf="attach.get('id').value">
+                <a href="javascript:void(0);" (click)="download(attach)" class="text-dark">{{ attach.get('attachName').value
+                    }}</a>
+            </td>
+            <td>
+                <div class="fileupload btn btn-secondary waves-effect waves-light">
+                    <span><i class="mdi mdi-cloud-upload mr-1"></i> انتخاب فایل</span>
+                    <input type="file" class="upload" (change)="setDocument($event, attach)">
+                </div>
+            </td>
+            <td>
+                <input type="text" formControlName="description"
+                    [ngClass]="canEditAttach(attach) ? 'form-control' : 'form-control-plaintext' "
+                    [readonly]="!canEditAttach(attach)" />
+            </td>
+            <td *ngIf="useSecondLang">
+                <input type="text" formControlName="engDescription"
+                    [ngClass]="canEditAttach(attach) ? 'form-control' : 'form-control-plaintext' "
+                    [readonly]="!canEditAttach(attach)" />
+            </td>
+            <td>
+                <a *ngIf="canEditAttach(attach)" class="btn" type="button" class="btn" (click)="submit(attach)">
+                    <i class="fas fa-1-5x fa-check text-success"></i>
+                </a>
+                <a *ngIf="canEditAttach(attach)" type="button" class="btn" (click)="goToEditMode(attach, false)">
+                    <i class="fas fa-1-5x fa-times"></i>
+                </a>
+                <a *ngIf="!canEditAttach(attach)"
+                    [ngClass]="{'disabled': currentUserId !== attach.get('creator').value}" type="button" class="btn"
+                    (click)="goToEditMode(attach, true)">
+                    <i class="fas fa-1-5x fa-edit text-warning"></i>
+                </a>
+                <a *ngIf="!canEditAttach(attach)"
+                    [ngClass]="{'disabled': currentUserId !== attach.get('creator').value}" type="button" class="btn"
+                    (click)="removeAttach(i)">
+                    <i class="fas fa-1-5x fa-trash text-danger"></i>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+
+</table>
+
+
+<ng-container *ngIf="!isInViewMode">
+
+    <div class="separator">آیتم جدید</div>
+
+    <div class="form-group row">
+        <div class="form-group col-md-4">
+            <input type="text" class="form-control" placeholder="توضیحات" [(ngModel)]="newDescription"
+                id="attachNewDescription" maxlength="500" required autocomplete="off">
+        </div>
+        <div class="form-group col-md-4">
+            <input type="text" class="form-control" placeholder="توضیحات لاتین" [(ngModel)]="newEngDescription"
+                id="attachNewEngDescription" maxlength="500" required autocomplete="off">
+        </div>
+        <div class="form-group col-md-3">
+            <input type="file" class="form-control" placeholder="فایل" id="newAttach" name="newAttach"
+                (change)="newAttachAdded($event)" required>
+        </div>
+        <div class="form-group col-md-1">
+            <button class="btn font-20" type="button" (click)="addAttach()"><i class="fas fa-plus"></i></button>
+        </div>
+    </div>
+
+</ng-container>

@@ -1,0 +1,29 @@
+<form cForm>
+
+  <div class="mb-3">
+    <label cLabel for="dateInput">تاریخ:</label>
+    <div class="input-group">
+      <ng-persian-datepicker [uiIsVisible]="false">
+        <input id="dateInput" type="text" [formControl]="dateValue" readonly class="form-control" />
+      </ng-persian-datepicker>
+      <div class="input-group-append">
+
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label cLabel for="titleInput">عنوان تیکت:</label>
+    <input cFormControl [formControl]="titleFormControl" placeholder="عنوان" class="form-control" />
+  </div>
+
+  <div class="mb-3">
+    <label cLabel for="descriptionTextarea">شرح تیکت:</label>
+    <textarea cFormControl [formControl]="descriptionFormControl" placeholder="شرح" rows="3"
+      class="form-control"></textarea>
+  </div>
+  <div class="mb-3">
+    <!-- Add a button with a click event handler -->
+    <button type="button" class="btn btn-primary" (click)="logFormData()">ارسال تیکت </button>
+  </div>
+</form>

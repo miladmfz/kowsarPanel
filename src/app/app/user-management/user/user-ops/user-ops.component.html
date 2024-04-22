@@ -1,0 +1,85 @@
+<div class="row">
+  <div class="col-12">
+    <div class="page-title-box">
+      <h4 class="page-title">ویرایش کاربری</h4>
+    </div>
+  </div>
+</div>
+
+
+<form [formGroup]="userOpsFrm" (ngSubmit)="submit('')" id="submitForm">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body row">
+
+          <div class="form-group col-md-3">
+            <label for="userGroupId" class="col-form-label">گروه کاربری
+              <span class="text-danger">*</span>
+            </label>
+            <select appSelect2 formControlName="userGroupId" id="userGroupId" class="form-control custom-select"
+              data-toggle="select2" required>
+              <option [value]="group.guid" *ngFor="let group of userGroups">{{group.title}}</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="fullname" class="col-form-label">نام
+              <span class="text-danger">*</span>
+            </label>
+            <input type="text" class="form-control" id="fullname" formControlName="fullname" maxlength="100"
+              autocomplete="off" required>
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="name" class="col-form-label">نام کاربری
+              <span class="text-danger">*</span>
+            </label>
+            <input type="text" class="form-control" id="name" formControlName="name" maxlength="100" autocomplete="off"
+              required>
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="password" class="col-form-label">کلمه رمز
+              <span class="text-danger">*</span>
+            </label>
+            <input type="text" class="form-control" id="password" formControlName="password" maxlength="100"
+              autocomplete="off" style="-webkit-text-security: disc;">
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="rePassword" class="col-form-label">تکرار کلمه رمز
+              <span class="text-danger">*</span>
+            </label>
+            <input type="text" class="form-control" id="rePassword" formControlName="rePassword" maxlength="100"
+              autocomplete="off" style="-webkit-text-security: disc;">
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="card-body">
+    <div class="col-sm-6">
+      <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
+        (click)="submit('exit')">
+        <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره و خروج
+      </a>
+      <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+        (click)="submit('')">
+        <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره
+      </a>
+      <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+        (click)="submit('new')">
+        <span class="btn-label"><i class="fas fa-plus"></i></span>ذخیره و جدید
+      </a>
+      <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+        (click)="onBtnCancelClick()">
+        <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
+      </a>
+    </div>
+  </div>
+</div>

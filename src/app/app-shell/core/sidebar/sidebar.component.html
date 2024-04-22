@@ -1,0 +1,258 @@
+<!-- ========== Left Sidebar Start ========== -->
+<div class="left-side-menu">
+  <!-- LOGO -->
+  <div class="logo-box">
+    <a href="index.html" class="logo logo-dark text-center">
+      <span class="logo-sm">
+        <img src="../assets/images/logo-sm-dark.png" alt="" height="24" />
+        <!-- <span class="logo-lg-text-light">Minton</span> -->
+      </span>
+      <span class="logo-lg">
+        <img src="../assets/images/logo-dark.png" alt="" height="20" />
+        <!-- <span class="logo-lg-text-light">M</span> -->
+      </span>
+    </a>
+
+    <a href="index.html" class="logo logo-light text-center">
+      <span class="logo-sm">
+        <img src="../assets/images/logo-sm.png" alt="" height="24" />
+      </span>
+      <span class="logo-lg">
+        <img src="../assets/images/logo-light.png" alt="" height="20" />
+      </span>
+    </a>
+  </div>
+
+  <div class="h-100" data-simplebar>
+    <!-- User box -->
+    <div class="user-box text-center">
+      <img src="../assets/images/users/avatar-1.jpg" alt="user-img" title="Mat Helme"
+        class="rounded-circle avatar-md" />
+      <div class="dropdown">
+        <a href="#" class="text-reset dropdown-toggle h5 mt-2 mb-1 d-block fw-medium" data-bs-toggle="dropdown">{{
+          userData ? userData.name : "" }}</a>
+        <div class="dropdown-menu user-pro-dropdown">
+          <!-- item-->
+          <a href="javascript:void(0);" class="dropdown-item notify-item">
+            <i class="fe-user me-1"></i>
+            <span>My Account</span>
+          </a>
+
+          <!-- item-->
+          <a href="javascript:void(0);" class="dropdown-item notify-item">
+            <i class="fe-settings me-1"></i>
+            <span>Settings</span>
+          </a>
+
+          <!-- item-->
+          <a href="javascript:void(0);" class="dropdown-item notify-item">
+            <i class="fe-lock me-1"></i>
+            <span>Lock Screen</span>
+          </a>
+
+          <!-- item-->
+          <a (click)="logout()" class="dropdown-item notify-item">
+            <i class="fe-log-out me-1"></i>
+            <span>خروج</span>
+          </a>
+        </div>
+      </div>
+      <p class="text-reset">{{ userData ? userData.role[0] : "" }}</p>
+    </div>
+
+    <!--- Sidemenu -->
+
+    <div id="sidebar-menu">
+      <ul id="side-menu">
+        <li class="menu-title">منوی برنامه</li>
+
+        <li>
+          <a routerLink="/dashboard" routerLinkActive="active" data-bs-toggle="collapse" aria-expanded="false"
+            aria-controls="sidebarDashboards" class="waves-effect">
+            <i class="ri-dashboard-line"></i>
+            <span> داشبورد </span>
+          </a>
+        </li>
+
+
+
+        <li>
+          <a href="#kowsar" data-bs-toggle="collapse" aria-expanded="false" aria-controls="kowsar">
+            <i class="ri-layout-line"></i>
+            <span>حسابداری کوثر</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="kowsar">
+            <ul class="nav-second-level">
+              <li>
+                <a routerLink="/kowsar/good-list"> مدیریت کالا </a>
+              </li>
+              <li>
+                <a routerLink="/kowsar/goodsgrp-list"> گروه کالایی </a>
+              </li>
+
+              <li>
+                <a routerLink="/kowsar/good-order-list"> order good</a>
+              </li>
+              <li>
+                <a routerLink="/kowsar/group-order-list"> order group</a>
+              </li>
+
+            </ul>
+          </div>
+        </li>
+
+
+
+
+
+        <li>
+          <a href="#application" data-bs-toggle="collapse" aria-expanded="false" aria-controls="application">
+            <i class="ri-layout-line"></i>
+            <span>نرم افزار های جانبی</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="application">
+            <ul class="nav-second-level">
+              <li>
+                <a routerLink="/application/broker-detail"> بازاریابی </a>
+              </li>
+              <li>
+                <a routerLink="application/company-detail"> مشتریان </a>
+              </li>
+              <li>
+                <a routerLink="application/ocr-detail"> بایگانی </a>
+              </li>
+              <li>
+                <a routerLink="application/order-detail"> سفارشگیر </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+
+
+
+
+
+
+        <li>
+          <a href="#autletter" data-bs-toggle="collapse" aria-expanded="false" aria-controls="autletter">
+            <i class="ri-layout-line"></i>
+            <span>تیکت ها</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="autletter">
+            <ul class="nav-second-level">
+              <li>
+                <a routerLink="/autletter/insert"> ایجاد تیکت جدید </a>
+              </li>
+              <li>
+                <a routerLink="/autletter/list"> لیست تمامی تیکت ها </a>
+              </li>
+              <li>
+                <a routerLink="/autletter/mywork"> وضعیت تیکت های من </a>
+              </li>
+
+            </ul>
+          </div>
+        </li>
+
+
+        <li>
+          <a href="#manager" data-bs-toggle="collapse" aria-expanded="false" aria-controls="manager">
+            <i class="ri-layout-line"></i>
+            <span>توسعه نرم افزار</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="manager">
+            <ul class="nav-second-level">
+              <li>
+                <a routerLink="/manager/list"> اپلیکیشن‌های کوثر </a>
+              </li>
+              <li>
+                <a routerLink="/manager/active"> اپلیکیشن‌های فعال </a>
+              </li>
+              <li>
+                <a routerLink="/manager/log"> لاگ سرور </a>
+              </li>
+
+            </ul>
+          </div>
+        </li>
+
+
+        <li>
+          <a href="#incident" data-bs-toggle="collapse" aria-expanded="false" aria-controls="incident">
+            <i class="ri-layout-line"></i>
+            <span>حادثه</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="incident">
+            <ul class="nav-second-level">
+              <li>
+                <a routerLink="incident/incident/list"> لیست </a>
+              </li>
+              <li>
+                <a routerLink="incident/incident/create">ثبت حادثه </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        <!-- 
+        <li>
+          <a href="#baseInfo" data-bs-toggle="collapse" aria-expanded="false" aria-controls="baseInfo">
+            <i class="ri-layout-line"></i>
+            <span> اطلاعات پایه</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="baseInfo">
+            <ul class="nav-second-level">
+              <li>
+                <a routerLinkActive="active" routerLink="base-info/accident-type/list">نوع حادثه</a>
+              </li>
+              <li>
+                <a routerLink="base-info/incident-item/list">پایه داری</a>
+              </li>
+              <li>
+                <a routerLink="base-info/org-unit/list">چارت سازمانی</a>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+
+
+
+
+        <li>
+          <a href="#users" data-bs-toggle="collapse" aria-expanded="false" aria-controls="users1">
+            <i class="ri-layout-line"></i>
+
+            <span> کاربران</span>
+            <span class="menu-arrow"></span>
+          </a>
+
+          <div class="collapse" id="users1">
+            <ul class="nav-second-level">
+              <li>
+                <a routerLinkActive="active" routerLink="user-management/user/list">اطلاعات شماره 1</a>
+              </li>
+            </ul>
+          </div>
+        </li>
+ -->
+
+
+
+
+      </ul>
+    </div>
+    <!-- End Sidebar -->
+
+    <div class="clearfix"></div>
+  </div>
+  <!-- Sidebar -left -->
+</div>
+<!-- Left Sidebar End -->

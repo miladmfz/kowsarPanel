@@ -1,0 +1,195 @@
+<div class="row">
+  <div class="col-12">
+    <div class="page-title-box">
+      <h4 class="page-title">ویرایش</h4>
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="EditForm" (ngSubmit)="submit('')" id="submitForm">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body row">
+
+
+          <div class="row col-md-12">
+
+
+            <div class="form-group col-md-3">
+              <label for="GoodCode" class="col-form-label">کد کالا </label>
+              <input type="text" class="form-control" id="GoodCode" formControlName="GoodCode" maxlength="100"
+                autocomplete="off" [readOnly]="true" />
+            </div>
+
+            <div class="form-group col-md-3">
+              <label for="GoodType" class="col-form-label">نوع کالا </label>
+              <select formControlName="GoodType" id="GoodType" class="form-control custom-select" data-toggle="select2">
+                <option [value]="item.aType" *ngFor="let item of GoodType_lookup">{{item.aType}}</option>
+              </select>
+            </div>
+
+
+
+            <div class="form-group col-md-3">
+              <label for="Isbn" class="col-form-label">شایک </label>
+              <input type="text" class="form-control" id="Isbn" formControlName="Isbn" maxlength="100"
+                autocomplete="off" />
+            </div>
+
+
+
+            <div class="form-group col-md-3">
+              <label for="SellPriceType" class="col-form-label">نرخ فروش </label>
+              <select formControlName="SellPriceType" id="SellPriceType" class="form-control custom-select"
+                data-toggle="select2" (change)="onSellPriceTypeChange()">
+                <option [value]="item.id" *ngFor="let item of SellPriceType_Lookup">{{item.name}}</option>
+              </select>
+            </div>
+
+
+          </div>
+
+          <div class="form-group col-md-12">
+            <label for="GoodName" class="col-form-label">نام کالا </label>
+            <input type="text" class="form-control" id="GoodName" formControlName="GoodName" maxlength="400"
+              autocomplete="off" />
+          </div>
+
+          <div class="row col-md-12">
+
+            <div class="form-group col-md-4">
+              <label for="MinSellPrice" class="col-form-label">حداقل قیمت فروش </label>
+              <input type="number" class="form-control" id="MinSellPrice" formControlName="MinSellPrice" maxlength="100"
+                autocomplete="off" />
+            </div>
+
+            <div class="form-group col-md-4">
+              <label for="MaxSellPrice" class="col-form-label">فی ناخالص </label>
+              <input type="number" (change)="onMaxPriceTypeChange()" class="form-control" id="MaxSellPrice"
+                formControlName="MaxSellPrice" maxlength="100" autocomplete="off" />
+            </div>
+
+
+          </div>
+
+
+          <div class="form-group col-md-4">
+            <label for="SellPrice1" class="col-form-label">نرخ فروش 1 </label>
+            <input type="number" class="form-control" id="SellPrice1" formControlName="SellPrice1" maxlength="100"
+              autocomplete="off" />
+          </div>
+
+
+          <div class="form-group col-md-4">
+            <label for="SellPrice2" class="col-form-label">نرخ فروش 2 </label>
+            <input type="number" class="form-control" id="SellPrice2" formControlName="SellPrice2" maxlength="100"
+              autocomplete="off" />
+          </div>
+
+
+          <div class="form-group col-md-4">
+            <label for="SellPrice3" class="col-form-label">نرخ فروش 3 </label>
+            <input type="number" class="form-control" id="SellPrice3" formControlName="SellPrice3" maxlength="100"
+              autocomplete="off" />
+          </div>
+
+
+          <div class="form-group col-md-4">
+            <label for="SellPrice4" class="col-form-label">نرخ فروش 4 </label>
+            <input type="number" class="form-control" id="SellPrice4" formControlName="SellPrice4" maxlength="100"
+              autocomplete="off" />
+          </div>
+
+
+          <div class="form-group col-md-4">
+            <label for="SellPrice5" class="col-form-label">نرخ فروش 5 </label>
+            <input type="number" class="form-control" id="SellPrice5" formControlName="SellPrice5" maxlength="100"
+              autocomplete="off" />
+          </div>
+
+
+          <div class="form-group col-md-4">
+            <label for="SellPrice6" class="col-form-label">نرخ فروش 6 </label>
+            <input type="number" class="form-control" id="SellPrice6" formControlName="SellPrice6" maxlength="100"
+              autocomplete="off" />
+          </div>
+
+
+          <div class="form-group col-md-12">
+            <label for="GoodExplain1" class="col-form-label">نوضیحات 1</label>
+            <input type="text" class="form-control" id="GoodExplain1" formControlName="GoodExplain1" maxlength="200"
+              autocomplete="off" />
+          </div>
+
+          <div class="form-group col-md-12">
+            <label for="GoodExplain2" class="col-form-label">نوضیحات 2</label>
+            <input type="text" class="form-control" id="GoodExplain2" formControlName="GoodExplain2" maxlength="200"
+              autocomplete="off" />
+          </div>
+
+          <div class="form-group col-md-12">
+            <label for="GoodExplain3" class="col-form-label">نوضیحات 3</label>
+            <input type="text" class="form-control" id="GoodExplain3" formControlName="GoodExplain3" maxlength="200"
+              autocomplete="off" />
+          </div>
+
+          <div class="form-group col-md-12">
+            <label for="GoodExplain4" class="col-form-label">نوضیحات 4</label>
+            <input type="text" class="form-control" id="GoodExplain4" formControlName="GoodExplain4" maxlength="200"
+              autocomplete="off" />
+          </div>
+
+          <div class="form-group col-md-12">
+            <label for="GoodExplain5" class="col-form-label">نوضیحات 5</label>
+            <input type="text" class="form-control" id="GoodExplain5" formControlName="GoodExplain5" maxlength="200"
+              autocomplete="off" />
+          </div>
+
+          <div class="form-group col-md-12">
+            <label for="GoodExplain6" class="col-form-label">نوضیحات 6</label>
+            <input type="text" class="form-control" id="GoodExplain6" formControlName="GoodExplain6" maxlength="200"
+              autocomplete="off" />
+          </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="card-body">
+    <div class="col-sm-6">
+      <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
+        (click)="submit('exit')">
+        <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره و خروج
+      </a>
+      <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+        (click)="submit('')">
+        <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره
+      </a>
+      <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+        (click)="submit('new')">
+        <span class="btn-label"><i class="fas fa-plus"></i></span>ذخیره و جدید
+      </a>
+      <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+        (click)="onBtnCancelClick()">
+        <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
+      </a>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
+    <div class="fv-plugins-message-container invalid-feedback">
+      <span role="alert">
+        {{ message }}
+      </span>
+    </div>
+  </ng-container>
+</ng-template>

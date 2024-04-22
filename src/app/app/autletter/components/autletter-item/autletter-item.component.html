@@ -1,0 +1,66 @@
+<div class="card">
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <form cForm>
+        <div class="mb-3">
+          <div class="input-group">
+            <ng-persian-datepicker [uiIsVisible]="false">
+              <input id="dateInput" type="text" [formControl]="dateValue" readonly class="form-control" />
+            </ng-persian-datepicker>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label cLabel for="titleInput">کاربر:</label>
+          <select cFormControl [(ngModel)]="selectedUserId" class="form-control" [ngModelOptions]="{standalone: true}">
+            <option *ngFor=" let user of users" [value]="user.CentralCode">{{ user.CentralName }}</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label cLabel for="descriptionTextarea">شرح:</label>
+          <textarea cFormControl [formControl]="descriptionFormControl" placeholder="شرح" rows="3"
+            class="form-control"></textarea>
+        </div>
+        <div class="mb-3">
+          <button type="button" class="btn btn-primary" (click)="submitForm()">ثبت</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+  <div class="table-responsive m-2">
+
+    <table class="table table-bordered align-middle gs-0 gy-4">
+      <thead>
+        <tr class="fw-bolder ">
+
+          <th class="min-w-50px">کاربر </th>
+          <th class="min-w-50px"> تاریخ </th>
+          <th class="min-w-100px"> شرح </th>
+
+
+        </tr>
+      </thead>
+      <tbody *ngFor="let item of items; let i = index">
+
+        <tr>
+          <td>{{ item.RowExecutorName }}</td>
+          <td>{{ item.RowLetterDate | date }}</td>
+          <td>{{ item.LetterRowDescription }}</td>
+
+
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>

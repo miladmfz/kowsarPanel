@@ -1,0 +1,135 @@
+<div class="card">
+  <div class="card-header">
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item">
+        <a class="nav-link  " data-bs-toggle="pill" [routerLink]="['/application/ocr-detail']">پنل توزیع و
+          بایگانی</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link active" data-bs-toggle="pill" [routerLink]="['/application/ocr-list']">لیست توزیع و
+          بایگانی</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/ocr-setting']">تنظیمات توزیع و
+          بایگانی</a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body">
+    <div class="tab-content">
+
+      <div class="tab-pane fade show active" role="tabpanel" *ngFor="let item of items">
+
+        <form>
+          <div class="form-group row mb-6 h1 "><label class="col-sm-3 col-form-label"
+              for="staticEmail1">CustName</label>
+            <div class="col-sm-6 text h1 "><input class="form-control-plaintext" id="staticEmail1" readonly type="text"
+                value="{{item.CustName}}" /></div>
+          </div>
+          <div class="form-group row mb-3"><label class="col-sm-3 col-form-label"
+              for="staticEmail1">FactorPrivateCode</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail1" readonly type="text"
+                value="{{item.FactorPrivateCode}}" /></div><label class="col-sm-3 col-form-label"
+              for="staticEmail2">AppPackDate</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail2" readonly type="text"
+                value="{{item.AppPackDate}}" /></div>
+          </div>
+          <div class="form-group row mb-3"><label class="col-sm-3 col-form-label" for="staticEmail1">FactorDate</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail1" readonly type="text"
+                value="{{item.FactorDate}}" /></div><label class="col-sm-3 col-form-label"
+              for="staticEmail2">AppDeliverDate</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail2" readonly type="text"
+                value="{{item.AppDeliverDate}}" /></div>
+          </div>
+          <div class="form-group row mb-3"><label class="col-sm-3 col-form-label"
+              for="staticEmail1">customercode</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail1" readonly type="text"
+                value="{{item.customercode}}" /></div><label class="col-sm-3 col-form-label"
+              for="staticEmail2">AppReader</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail2" readonly type="text"
+                value="{{item.AppReader}}" /></div>
+          </div>
+          <div class="form-group row mb-3"><label class="col-sm-3 col-form-label" for="staticEmail1">Ersall</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail1" readonly type="text"
+                value="{{item.Ersall}}" /></div><label class="col-sm-3 col-form-label"
+              for="staticEmail2">AppControler</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail2" readonly type="text"
+                value="{{item.AppControler}}" /></div>
+          </div>
+          <div class="form-group row mb-3"><label class="col-sm-3 col-form-label" for="staticEmail1">BrokerName</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail1" readonly type="text"
+                value="{{item.BrokerName}}" /></div><label class="col-sm-3 col-form-label"
+              for="staticEmail2">AppPacker</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail2" readonly type="text"
+                value="{{item.AppPacker}}" /></div>
+          </div>
+          <div class="form-group row mb-3"><label class="col-sm-3 col-form-label"
+              for="staticEmail1">AppOCRFactorCode</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail1" readonly type="text"
+                value="{{item.AppOCRFactorCode}}" /></div><label class="col-sm-3 col-form-label"
+              for="staticEmail2">AppPackDeliverDate</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail2" readonly type="text"
+                value="{{item.AppPackDeliverDate}}" /></div>
+          </div>
+          <div class="form-group row mb-3"><label class="col-sm-3 col-form-label"
+              for="staticEmail1">AppTcPrintRef</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail1" readonly type="text"
+                value="{{item.AppTcPrintRef}}" /></div><label class="col-sm-3 col-form-label"
+              for="staticEmail2">AppPackCount</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail2" readonly type="text"
+                value="{{item.AppPackCount}}" /></div>
+          </div>
+          <div class="form-group row mb-3"><label class="col-sm-3 col-form-label"
+              for="staticEmail1">AppFactorRef</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail1" readonly type="text"
+                value="{{item.AppFactorRef}}" /></div><label class="col-sm-3 col-form-label"
+              for="staticEmail2">AppDeliverer</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail2" readonly type="text"
+                value="{{item.AppDeliverer}}" /></div>
+          </div>
+
+          <div class="form-group row mb-3"><label class="col-sm-3 col-form-label"
+              for="staticEmail2">AppBrokerRef</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail2" readonly type="text"
+                value="{{item.AppBrokerRef}}" /></div><label class="col-sm-3 col-form-label"
+              for="staticEmail2">AppFactorState</label>
+            <div class="col-sm-3"><input class="form-control-plaintext" id="staticEmail2" readonly type="text"
+                value="{{item.AppFactorState}}" /></div>
+          </div>
+
+          <div class="form-group row mb-3">
+
+            <button class="btn btn-warning text-white col-sm-5 mx-2" [routerLink]="['/application/ocr-list']"
+              type="button">list view </button>
+
+            <ng-container *ngIf="item.AppIsDelivered =='True' && item.HasSignature =='false'">
+              <button class="btn btn-danger text-white col-sm-5 mx-2" (click)="ExitDelivery()" type="button">To Pack
+                List </button>
+
+
+            </ng-container>
+
+            <!-- class="col-sm-3 col-form-label" -->
+
+          </div>
+
+
+
+
+
+
+
+        </form>
+
+
+
+
+
+
+
+      </div>
+
+    </div>
+  </div>
+</div>

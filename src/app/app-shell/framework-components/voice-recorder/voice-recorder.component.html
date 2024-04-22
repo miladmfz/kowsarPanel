@@ -1,0 +1,11 @@
+<div style="position: relative;">
+    <input type="text" type="text" class="form-control" readonly>
+
+    <button class="btn record-btn" type="button" (click)="initiateRecording()">
+        <i id="record-icon" class="fa fa-microphone fa-1-5x" area-hidden="true"></i>
+    </button>
+
+    <audio class="audio-player" controls #audioPlayer>
+        <source [src]="source" id="audioSource">
+    </audio>
+</div>
