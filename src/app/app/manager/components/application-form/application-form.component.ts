@@ -224,10 +224,10 @@ implements OnInit {
 
 
   logFormData() {
-    console.log('Form data:', this.formValues);
+     'Form data:', this.formValues);
 
     if (this.id == "0") {
-      console.log(" ersal baraye create ");
+       " ersal baraye create ");
 
       this.router.navigate(['/baseinformation/broker/list']);
 
@@ -255,7 +255,7 @@ implements OnInit {
       });
 
 
-      console.log(this.formValues);
+       this.formValues);
 
     } else {
      
@@ -277,7 +277,7 @@ implements OnInit {
 
 
       this.SingleItems = e;
-      console.log(this.SingleItems);
+       this.SingleItems);
       this.LoadDataSet();
       // Save the updated data to localStorage
 

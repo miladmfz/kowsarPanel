@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { AuthModule, LogLevel } from 'angular-auth-oidc-client';
-import { getIdentityUrl } from 'src/environment/environment';
 
 @NgModule({
   imports: [
@@ -10,8 +9,8 @@ import { getIdentityUrl } from 'src/environment/environment';
         unauthorizedRoute: '/unauthorized',
         logLevel: LogLevel.Debug,
         historyCleanupOff: true,
-        authority: `${getIdentityUrl()}`,
-        redirectUrl: `${window.location.origin}/callback`,
+        authority: `${''}`,
+        redirectUrl: `${window.location.origin} / callback`,
         postLogoutRedirectUri: window.location.origin,
         clientId: 'angular',
         scope: 'profile openid roles',
@@ -23,4 +22,4 @@ import { getIdentityUrl } from 'src/environment/environment';
   ],
   exports: [AuthModule],
 })
-export class AuthConfigModule {}
+export class AuthConfigModule { }

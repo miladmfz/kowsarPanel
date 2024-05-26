@@ -119,7 +119,10 @@ export class KowsarWebApiService {
 
 
 
-
+  GetProperty(Where: string): Observable<any[]> {
+    const params = new HttpParams().append('Where', Where)
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetProperty", { params: params })
+  }
 
 
 
@@ -159,6 +162,15 @@ export class KowsarWebApiService {
     return this.client.get<any[]>(this.kowsarWebUrl + "GetGoodBase", { params: params })
   }
 
+  GetGood_Explain(GoodCode: string): Observable<any[]> {
+    const params = new HttpParams().append('GoodCode', GoodCode)
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetGoodExplain", { params: params })
+  }
+  GetGood_Propertys(GoodCode: string): Observable<any[]> {
+    const params = new HttpParams().append('GoodCode', GoodCode)
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetGoodProperty", { params: params })
+  }
+
   GetGood_Complete(GoodCode: string): Observable<any[]> {
     const params = new HttpParams().append('GoodCode', GoodCode)
     return this.client.get<any[]>(this.kowsarWebUrl + "GetGoodComplete", { params: params })
@@ -175,6 +187,22 @@ export class KowsarWebApiService {
   }
 
 
+
+  GetGood_Images(GoodCode: string): Observable<any[]> {
+    const params = new HttpParams().append('GoodCode', GoodCode)
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetGoodImages", { params: params })
+  }
+
+  GetGood_Groups(GoodCode: string): Observable<any[]> {
+    const params = new HttpParams().append('GoodCode', GoodCode)
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetGoodGroups", { params: params })
+  }
+
+
+  GetGood_Stacks(GoodCode: string): Observable<any[]> {
+    const params = new HttpParams().append('GoodCode', GoodCode)
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetGoodStacks", { params: params })
+  }
 
 
 

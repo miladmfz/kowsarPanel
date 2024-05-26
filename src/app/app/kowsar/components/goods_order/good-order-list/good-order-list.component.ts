@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { KowsarWebApiService } from '../../../services/KowsarWebApi.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
-import { SettingService } from 'src/app/app-shell/framework-services/setting.service';
 import { CellActionGoodOrderList } from './cell-action-good-order-list';
 import { FormControl } from '@angular/forms';
 @Component({
@@ -18,10 +17,9 @@ export class GoodOrderListComponent
     private readonly router: Router,
     private repo: KowsarWebApiService,
     localStorageService: LocalStorageService,
-    settingService: SettingService,
     private location: Location,
   ) {
-    super(localStorageService, settingService);
+    super(localStorageService);
   }
 
 
@@ -197,7 +195,7 @@ implements OnInit {
 
     this.repo.GetOrderGoodList("30", this.Searchtarget, this.GroupCode_str).subscribe(e => {
       this.items = e;
-      console.log(this.items);
+       this.items);
 
     });
 

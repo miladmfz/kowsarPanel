@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { KowsarWebApiService } from '../../../services/KowsarWebApi.service';
 import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
-import { SettingService } from 'src/app/app-shell/framework-services/setting.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { FormControl } from '@angular/forms';
 import { CellActionGoodList } from './cell-action-good-ist';
@@ -17,10 +16,9 @@ export class GoodListComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: KowsarWebApiService,
-    localStorageService: LocalStorageService,
-    settingService: SettingService
+    localStorageService: LocalStorageService
   ) {
-    super(localStorageService, settingService);
+    super(localStorageService);
   }
 
 
@@ -57,41 +55,41 @@ export class GoodListComponent extends AgGridBaseComponent
         field: 'GoodCode',
         headerName: 'کد',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
       {
         field: 'GoodName',
         headerName: 'نام کالا  ',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
       {
         field: 'MaxSellPrice',
         headerName: ' قیمت ناخالص',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       }, {
         field: 'GoodCode',
         headerName: 'کد',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
       {
         field: 'GoodName',
         headerName: 'نام کالا  ',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
       {
         field: 'MaxSellPrice',
         headerName: ' قیمت ناخالص',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
 
@@ -106,6 +104,8 @@ export class GoodListComponent extends AgGridBaseComponent
       this.records = data;
 
     });
+
+
 
 
   }
@@ -216,7 +216,7 @@ LoadList() {
 
   this.repo.GetOrderGoodList("30", this.Searchtarget, this.GroupCode_str).subscribe(e => {
     this.items = e;
-    console.log(this.items);
+     this.items);
 
   });
 

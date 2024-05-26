@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ApplicationWebApiService } from '../../../services/ApplicationWebApi.service';
 import { ActivatedRoute } from '@angular/router';
 import { UntypedFormBuilder } from '@angular/forms';
 
 import { Location } from '@angular/common';
+import { CompanyWebApiService } from '../../../services/CompanyWebApi.service';
 
 @Component({
   selector: 'app-company-column-edit',
@@ -12,7 +12,7 @@ import { Location } from '@angular/common';
 export class CompanyColumnEditComponent implements OnInit {
 
   constructor(
-    private repo: ApplicationWebApiService,
+    private repo: CompanyWebApiService,
     private route: ActivatedRoute,
     private formBuilder: UntypedFormBuilder,
     private location: Location
@@ -115,7 +115,6 @@ export class CompanyColumnEditComponent implements OnInit {
     this.selected_obj_Property = this.Propertys.find(prop => prop.PropertyName === this.selected_PropertyName);
 
     const subString = this.selected_obj_Property.PropertyValueMap.substring(0, 3);
-    console.log(subString);
 
 
 

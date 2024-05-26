@@ -3,7 +3,7 @@ import { NgControl } from '@angular/forms';
 import * as _ from 'lodash';
 import { ACCESS_TOKEN_NAME } from '../../framework-services/configuration';
 import { LocalStorageService } from '../../framework-services/local.storage.service';
-import { getServiceUrl } from 'src/environment/environment';
+
 
 declare var $: any;
 
@@ -79,7 +79,7 @@ export class Select2Directive implements AfterViewInit {
         if (this.ajaxUrl) {
             const token = this.localStorageService.getItem(ACCESS_TOKEN_NAME);
             var searchTerm = this.searchTerm;
-            var baseUrl = `${getServiceUrl()}${this.ajaxUrl}`;
+            var baseUrl = `${''}${this.ajaxUrl}`;
             config["ajax"] = {
                 url: function (params) {
                     let term = params.term;

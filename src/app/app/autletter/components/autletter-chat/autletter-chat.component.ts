@@ -40,7 +40,6 @@ export class AutletterChatComponent implements OnInit {
   ngOnInit() {
     this.CentralRef = "4";
 
-    console.log("textdata-chat=" + this.TextData)
 
 
     this.GetAutConversation();
@@ -54,7 +53,6 @@ export class AutletterChatComponent implements OnInit {
     this.chats = [];
     this.repo.GetAutConversation(this.TextData).subscribe(e => {
       this.chats = e;
-      console.log(e)
     });
 
   }
@@ -95,7 +93,6 @@ export class AutletterChatComponent implements OnInit {
 
 
   sendImageToServer(ObjectCode: string, imageData: string): void {
-    console.log("sendImageToServer")
 
     const data = {
       ClassName: "Aut",
@@ -109,7 +106,6 @@ export class AutletterChatComponent implements OnInit {
     this.http.post<any>(environment.baseUrl + 'Conversation_UploadImage', data).subscribe(
       (response) => {
 
-        console.log(response)
         this.GetAutConversation();
       },
       (error) => {

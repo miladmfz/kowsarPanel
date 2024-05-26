@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ManagerWebApiService } from '../../services/ManagerWebApi.service';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
-import { SettingService } from 'src/app/app-shell/framework-services/setting.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { EditDeleteCellRenderer } from 'src/app/app-shell/framework-components/ag-grid/edit-delete-cell-btn';
 import { CellActionApplicationList } from './cell_action_application_list';
+import { ValidateionStateCellManageApplicationRenderer } from './validation-state-label-cell-manage-application';
 @Component({
   selector: 'app-application-list',
   templateUrl: './application-list.component.html',
@@ -19,10 +19,9 @@ export class ApplicationListComponent
   constructor(
     private readonly router: Router,
     private repo: ManagerWebApiService,
-    localStorageService: LocalStorageService,
-    settingService: SettingService
+    localStorageService: LocalStorageService
   ) {
-    super(localStorageService, settingService);
+    super(localStorageService);
   }
 
 
@@ -45,32 +44,34 @@ export class ApplicationListComponent
         field: 'AppBrokerCustomerCode',
         headerName: 'کد',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
       {
         field: 'ActivationCode',
         headerName: 'کد فعال سازی',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
       {
         field: 'PersianCompanyName',
         headerName: 'نام فارسی',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
       {
         field: 'EnglishCompanyName',
         headerName: 'نام انگلیسی',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
       {
         field: 'AppType',
+        cellRenderer: ValidateionStateCellManageApplicationRenderer,
+
         headerName: 'نوع نرم افزار',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
@@ -166,7 +167,7 @@ implements OnInit {
 
     this.repo.GetAppBrokerCustomer().subscribe(e => {
       this.items = e;
-      console.log(this.items);
+       this.items);
 
       sessionStorage.setItem('ApplicationListCache', JSON.stringify(this.items));
     });

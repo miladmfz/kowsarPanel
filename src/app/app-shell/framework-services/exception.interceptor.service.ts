@@ -29,7 +29,7 @@ export class ExceptionInterceptor implements HttpInterceptor {
           $("#loginBtn").attr("disabled", false);
           $("#loginBtnSpinner").addClass("d-none");
 
-          throw new Error("");          
+          throw new Error("");
         }
 
         $.NotificationApp.send(

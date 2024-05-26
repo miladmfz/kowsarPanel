@@ -7,14 +7,21 @@
         <a class="nav-link active" data-bs-toggle="pill" [routerLink]="['/application/order-detail']">پنل سفارشگیر</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/order-customer']"> customer
-          سفارشگیر</a>
+        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/order-good']"> مدیریت آیتم </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/order-customer']">
+          حساب پرسنل</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/order-report']"> گزارش </a>
       </li>
       <li class="nav-item">
         <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/order-setting']"> تنظیمات سفارشگیر</a>
       </li>
     </ul>
   </div>
+
   <div class="card-body">
     <div class="tab-content">
 
@@ -22,9 +29,93 @@
 
 
 
+        <div class="row">
+          <div class="col-xl-3 col-md-6">
+            <div class="widget-bg-color-icon card border border-info">
+              <div class="card-body card-body">
+                <div class="d-flex align-items-start">
+                  <div class="avatar-lg rounded-circle bg-icon-success"><i
+                      class="font-24 avatar-title mdi-lg mdi mdi-home-roof"></i></div>
+                  <div class="flex-1 text-end  align-self-center">
+                    <h3 class="mt-0"><span><span>میز خالی = {{items1.length}}</span></span></h3>
+                    <h4 class="text-muted mb-0"><span>روف</span></h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6">
+            <div class="widget-bg-color-icon card border border-info">
+              <div class="card-body card-body">
+                <div class="d-flex align-items-start">
+                  <div class="avatar-lg rounded-circle bg-icon-primary"><i
+                      class="font-24 avatar-title  mdi mdi-flower"></i></div>
+
+                  <div class="flex-1 text-end align-self-center">
+                    <h3 class="mt-0"><span><span>میز خالی = {{items2.length}}</span></span></h3>
+                    <h4 class="text-muted mb-0">حیاط</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6">
+            <div class="widget-bg-color-icon card border border-info">
+              <div class="card-body card-body">
+                <div class="d-flex align-items-start">
+                  <div class="avatar-lg rounded-circle bg-icon-danger"><i
+                      class="font-24 avatar-title mdi mdi-bookshelf"></i></div>
+                  <div class="flex-1 text-end align-self-center">
+                    <h3 class="mt-0"><span><span>میز خالی = {{items3.length}}</span></span></h3>
+                    <h4 class="text-muted mb-0">همایش</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6 ">
+            <div class="widget-bg-color-icon card border border-info">
+              <div class="card-body card-body">
+                <div class="d-flex align-items-start">
+                  <div class="avatar-lg rounded-circle bg-icon-purple"><i
+                      class="font-24 avatar-title mdi mdi-table-chair"></i></div>
+                  <div class="flex-1 text-end align-self-center">
+                    <h3 class="mt-0"><span><span>میز خالی = {{items4.length}}</span></span></h3>
+                    <h4 class="text-muted mb-0">تراس</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
 
 
+
+        <div class="p-2 mb-lg-0 card border border-info ">
+          <table class="mb-0 table table-sm table-borderless">
+            <tbody>
+              <tr>
+                <th colspan="2">
+                  <h5 class="font-15 m-0">لیست کاری مجموعه</h5>
+                </th>
+              </tr>
+              <tr>
+                <th scope="row">تعداد کل:</th>
+                <td>{{ itemsAmount1[0].Amount }}</td>
+              </tr>
+              <tr>
+                <th scope="row">آشپزخانه :</th>
+                <td>{{ itemsAmount2[0].Amount }}</td>
+              </tr>
+              <tr>
+                <th scope="row">بار :</th>
+                <td>{{ itemsAmount3[0].Amount }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
 
 
@@ -32,412 +123,18 @@
           <div class="card-body">
 
 
-
-
-            <div class="row">
-
-
-
-
-
-
-
-
-
-              <!-- 
-              <c-col xl="3" md="6" sm="6">
-                <c-widget-stat-b #widgetStatB1inv="cWidgetStatB" [title]="'میز خالی = ' +items1.length" class="mb-4"
-                  color="danger" inverse value="روف">
-                  <c-progress [white]="widgetStatB1inv.inverse" class="my-2" thin>
-                    <c-progress-bar [value]="100"></c-progress-bar>
-                  </c-progress>
-                </c-widget-stat-b>
-              </c-col> -->
-
-
-              <div class="col-xl-3 col-md-6 col-sm-6">
-                <div class="card card-statistic">
-                  <div class="card-body">
-                    <h5 class="card-title">میز خالی = items1.length</h5>
-                    <div class="row align-items-center mb-2">
-                      <div class="col-6">
-                        <div class="progress" style="height: 5px;">
-                          <div class="progress-bar bg-danger" role="progressbar" style="width: 100%;"
-                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="progress mb-0" style="height: 5px;">
-                          <div class="progress-bar bg-danger" role="progressbar" style="width: 100%;"
-                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <p class="mt-1 mb-0 text-muted">روف</p>
-                  </div>
-                </div>
-              </div>
-
-
-
-              <!-- 
-              <c-col xl="3" md="6" sm="6">
-                <c-widget-stat-b #widgetStatB1inv="cWidgetStatB" [title]="'میز خالی = ' +items2.length" class="mb-4"
-                  color="warning" inverse value="حیاط">
-                  <c-progress [white]="widgetStatB1inv.inverse" class="my-2" thin>
-                    <c-progress-bar [value]="100"></c-progress-bar>
-                  </c-progress>
-                </c-widget-stat-b>
-              </c-col> -->
-
-              <div class="col-xl-3 col-md-6 col-sm-6">
-                <div class="card card-statistic">
-                  <div class="card-body">
-                    <h5 class="card-title">میز خالی = items2.length</h5>
-                    <div class="row align-items-center mb-2">
-                      <div class="col-6">
-                        <div class="progress" style="height: 5px;">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: 100%;"
-                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="progress mb-0" style="height: 5px;">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: 100%;"
-                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <p class="mt-1 mb-0 text-muted">حیاط</p>
-                  </div>
-                </div>
-              </div>
-
-
-
-              <!-- <c-col xl="3" md="6" sm="6">
-                <c-widget-stat-b #widgetStatB1inv="cWidgetStatB" [title]="'میز خالی = ' +items3.length" class="mb-4"
-                  color="success" inverse value="همایش">
-                  <c-progress [white]="widgetStatB1inv.inverse" class="my-2" thin>
-                    <c-progress-bar [value]="100"></c-progress-bar>
-                  </c-progress>
-                </c-widget-stat-b>
-              </c-col> -->
-
-
-              <div class="col-xl-3 col-md-6 col-sm-6">
-                <div class="card card-statistic">
-                  <div class="card-body">
-                    <h5 class="card-title">میز خالی = items3.length</h5>
-                    <div class="row align-items-center mb-2">
-                      <div class="col-6">
-                        <div class="progress" style="height: 5px;">
-                          <div class="progress-bar bg-success" role="progressbar" style="width: 100%;"
-                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="progress mb-0" style="height: 5px;">
-                          <div class="progress-bar bg-success" role="progressbar" style="width: 100%;"
-                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <p class="mt-1 mb-0 text-muted">همایش</p>
-                  </div>
-                </div>
-              </div>
-
-
-
-              <!-- <c-col xl="3" md="6" sm="6">
-                <c-widget-stat-b #widgetStatB1inv="cWidgetStatB" [title]="'میز خالی = ' +items4.length" class="mb-4"
-                  color="info" inverse value="تراس">
-                  <c-progress [white]="widgetStatB1inv.inverse" class="my-2" thin>
-                    <c-progress-bar [value]="100"></c-progress-bar>
-                  </c-progress>
-                </c-widget-stat-b>
-              </c-col> -->
-
-              <div class="col-xl-3 col-md-6 col-sm-6">
-                <div class="card card-statistic">
-                  <div class="card-body">
-                    <h5 class="card-title">میز خالی = items4.length</h5>
-                    <div class="row align-items-center mb-2">
-                      <div class="col-6">
-                        <div class="progress" style="height: 5px;">
-                          <div class="progress-bar bg-info" role="progressbar" style="width: 100%;" aria-valuenow="100"
-                            aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="progress mb-0" style="height: 5px;">
-                          <div class="progress-bar bg-info" role="progressbar" style="width: 100%;" aria-valuenow="100"
-                            aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <p class="mt-1 mb-0 text-muted">تراس</p>
-                  </div>
-                </div>
-              </div>
-
-
-
-
-            </div>
-
-
-
-
-            <div class="row">
-              <!-- <c-col xl="3" lg="4" sm="6">
-                <c-widget-stat-c [title]="'تعداد کل'" class="mb-4" value="{{itemsAmount1[0].Amount}}">
-                  <ng-template cTemplateId="widgetIconTemplate">
-                    <svg cIcon height="36" name="cilPeople"></svg>
-                  </ng-template>
-                  <ng-template cTemplateId="widgetProgressTemplate">
-                    <c-progress class="mt-3 mb-0" thin>
-                      <c-progress-bar [value]="100" color="info"></c-progress-bar>
-                    </c-progress>
-                  </ng-template>
-                </c-widget-stat-c>
-              </c-col> -->
-
-
-              <div class="col-xl-3 col-lg-4 col-sm-6">
-                <div class="mb-4">
-                  <!-- <c-widget-stat-c [title]="'تعداد کل'" value="{{itemsAmount1[0].Amount}}">
-                    <ng-template cTemplateId="widgetIconTemplate">
-                      <svg cIcon height="36" name="cilPeople"></svg>
-                    </ng-template>
-                    <ng-template cTemplateId="widgetProgressTemplate">
-                      <c-progress class="mt-3 mb-0" thin>
-                        <c-progress-bar [value]="100" color="info"></c-progress-bar>
-                      </c-progress>
-                    </ng-template>
-                  </c-widget-stat-c> -->
-
-
-                  <div class="card widget-stat-card mb-4">
-                    <div class="card-body">
-                      <h5 class="widget-stat-title">تعداد کل</h5>
-                      <div class="widget-stat-value">{{ itemsAmount1[0].Amount }}</div>
-                      <!-- Icon -->
-                      <svg cIcon height="36" name="cilPeople"></svg>
-                      <!-- Progress Bar -->
-                      <div class="progress mt-3 mb-0">
-                        <div class="progress-bar bg-info" role="progressbar" style="width: 100%" aria-valuenow="100"
-                          aria-valuemin="0" aria-valuemax="100"></div>
-                      </div>
-                    </div>
-                  </div>
-
-
-                </div>
-              </div>
-
-
-
-
-
-
-
-
-              <!-- <c-col xl="3" lg="4" sm="6">
-                <c-widget-stat-c [title]="'آشپزخانه'" class="mb-4" value="{{itemsAmount2[0].Amount}}">
-                  <ng-template cTemplateId="widgetIconTemplate">
-                    <svg cIcon height="36" name="cilPeople"></svg>
-                  </ng-template>
-                  <ng-template cTemplateId="widgetProgressTemplate">
-                    <c-progress class="mt-3 mb-0" thin>
-                      <c-progress-bar [value]="100" color="info"></c-progress-bar>
-                    </c-progress>
-                  </ng-template>
-                </c-widget-stat-c>
-              </c-col> -->
-
-
-              <div class="col-xl-3 col-lg-4 col-sm-6">
-                <div class="card mb-4">
-                  <div class="card-body">
-                    <h5 class="card-title">آشپزخانه</h5>
-                    <div class="widget-stat-value">{{ itemsAmount2[0].Amount }}</div>
-                    <!-- Icon -->
-                    <svg cIcon height="36" name="cilPeople"></svg>
-                    <!-- Progress Bar -->
-                    <div class="progress mt-3 mb-0">
-                      <div class="progress-bar bg-info" role="progressbar" style="width: 100%" aria-valuenow="100"
-                        aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-
-
-
-              <!-- 
-
-              <c-col xl="3" lg="4" sm="6">
-                <c-widget-stat-c [title]="'بار'" class="mb-4" value="{{itemsAmount3[0].Amount}}">
-                  <ng-template cTemplateId="widgetIconTemplate">
-                    <svg cIcon height="36" name="cilPeople"></svg>
-                  </ng-template>
-                  <ng-template cTemplateId="widgetProgressTemplate">
-                    <c-progress class="mt-3 mb-0" thin>
-                      <c-progress-bar [value]="100" color="info"></c-progress-bar>
-                    </c-progress>
-                  </ng-template>
-                </c-widget-stat-c>
-              </c-col> -->
-
-
-              <div class="col-xl-3 col-lg-4 col-sm-6">
-                <div class="card mb-4">
-                  <div class="card-body">
-                    <h5 class="card-title">بار</h5>
-                    <div class="widget-stat-value">{{ itemsAmount3[0].Amount }}</div>
-                    <!-- Icon -->
-                    <svg cIcon height="36" name="cilPeople"></svg>
-                    <!-- Progress Bar -->
-                    <div class="progress mt-3 mb-0">
-                      <div class="progress-bar bg-info" role="progressbar" style="width: 100%" aria-valuenow="100"
-                        aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-
-
-
-              <!-- <c-col xl="3" lg="4" sm="6">
-                <c-widget-stat-c [title]="'مبلغ محاسبه شده'" class="mb-4" value="{{itemsAmount4[0].Amount}}">
-                  <ng-template cTemplateId="widgetIconTemplate">
-                    <svg cIcon height="36" name="cilPeople"></svg>
-                  </ng-template>
-                  <ng-template cTemplateId="widgetProgressTemplate">
-                    <c-progress class="mt-3 mb-0" thin>
-                      <c-progress-bar [value]="100" color="info"></c-progress-bar>
-                    </c-progress>
-                  </ng-template>
-                </c-widget-stat-c>
-              </c-col> -->
-
-              <div class="col-xl-3 col-lg-4 col-sm-6">
-                <div class="card mb-4">
-                  <div class="card-body">
-                    <h5 class="card-title">مبلغ محاسبه شده</h5>
-                    <div class="widget-stat-value">{{ itemsAmount4[0].Amount }}</div>
-                    <!-- Icon -->
-                    <svg cIcon height="36" name="cilPeople"></svg>
-                    <!-- Progress Bar -->
-                    <div class="progress mt-3 mb-0">
-                      <div class="progress-bar bg-info" role="progressbar" style="width: 100%" aria-valuenow="100"
-                        aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-
-            </div>
-
-
-
-
-            <!-- <c-row>
-
-              <div class="table-responsive col-4">
-
-                <table class="table table-bordered align-middle gs-0 gy-4">
-                  <thead>
-                    <tr class="fw-bolder ">
-
-                      <th class="min-w-125px">GoodName </th>
-                      <th class="min-w-20px"> Amount </th>
-
-                    </tr>
-                  </thead>
-                  <tbody *ngFor="let item of ItemsMax; let i = index">
-
-                    <tr>
-                      <td>{{ item.GoodName }}</td>
-                      <td>{{ item.Amount }}</td>
-
-                    </tr>
-
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="table-responsive col-4">
-
-                <table class="table table-bordered align-middle gs-0 gy-4">
-                  <thead>
-                    <tr class="fw-bolder ">
-
-                      <th class="min-w-125px">GoodName </th>
-                      <th class="min-w-20px"> Amount </th>
-
-                    </tr>
-                  </thead>
-                  <tbody *ngFor="let item of ItemsMin; let i = index">
-
-                    <tr>
-                      <td>{{ item.GoodName }}</td>
-                      <td>{{ item.Amount }}</td>
-
-                    </tr>
-
-                  </tbody>
-                </table>
-              </div>
-
-
-              <div class="table-responsive col-4">
-
-                <table class="table table-bordered align-middle gs-0 gy-4">
-                  <thead>
-                    <tr class="fw-bolder ">
-
-                      <th class="min-w-125px">name</th>
-
-                    </tr>
-                  </thead>
-                  <tbody *ngFor="let item of ItemsZero ; let i = index">
-
-                    <ng-container *ngIf=" i <10">
-
-                      <tr>
-
-                        <td>{{ item.GoodName }}</td>
-
-                      </tr>
-                    </ng-container>
-
-
-
-                  </tbody>
-                </table>
-              </div>
-
-            </c-row> -->
-
-            <div class="container mt-5 mb-3">
+            <div class="container ">
               <div class="row">
 
-                <div class="col-md-4">
-                  <div class="table-responsive">
+                <div class="col-md-6 card ">
+                  <label class="col-form-label">کمترین فروش روز </label>
+
+                  <div class="table-responsive border border-info">
                     <table class="table table-bordered align-middle gs-0 gy-4">
                       <thead>
                         <tr class="fw-bolder">
-                          <th class="min-w-125px">GoodName</th>
-                          <th class="min-w-20px">Amount</th>
+                          <th class="min-w-125px">نام</th>
+                          <th class="min-w-20px">تعداد</th>
                         </tr>
                       </thead>
                       <tbody *ngFor="let item of ItemsMax">
@@ -450,13 +147,15 @@
                   </div>
                 </div>
 
-                <div class="col-md-4">
-                  <div class="table-responsive">
+                <div class="col-md-6 card ">
+                  <label class="col-form-label">بیشترین فروش روز </label>
+
+                  <div class="table-responsive border border-info">
                     <table class="table table-bordered align-middle gs-0 gy-4">
                       <thead>
                         <tr class="fw-bolder">
-                          <th class="min-w-125px">GoodName</th>
-                          <th class="min-w-20px">Amount</th>
+                          <th class="min-w-125px">نام</th>
+                          <th class="min-w-20px">تعداد</th>
                         </tr>
                       </thead>
                       <tbody *ngFor="let item of ItemsMin">
@@ -469,176 +168,13 @@
                   </div>
                 </div>
 
-                <div class="col-md-4">
-                  <div class="table-responsive">
-                    <table class="table table-bordered align-middle gs-0 gy-4">
-                      <thead>
-                        <tr class="fw-bolder">
-                          <th class="min-w-125px">name</th>
-                        </tr>
-                      </thead>
-                      <tbody *ngFor="let item of ItemsZero; let i = index">
-                        <ng-container *ngIf="i < 10">
-                          <tr>
-                            <td>{{ item.GoodName }}</td>
-                          </tr>
-                        </ng-container>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
 
               </div>
             </div>
 
 
-
-            <!-- 
-
-
-            <c-row>
-              <c-col xl="3" md="6" sm="6">
-                <c-widget-stat-f [title]="'Income'" class="mb-3" color="primary" padding value="$1,999.50">
-                  <ng-template cTemplateId="widgetIconTemplate">
-                    <svg cIcon name="cilSettings" size="xl" width="24"></svg>
-                  </ng-template>
-                  <ng-template cTemplateId="widgetFooterTemplate">
-                    <a class="font-weight-bold font-xs text-medium-emphasis" href="https://coreui.io/"
-                      rel="noopener norefferer" target="_blank">
-                      View more
-                      <svg cIcon class="float-end" name="cilArrowRight" width="16"></svg>
-                    </a>
-                  </ng-template>
-                </c-widget-stat-f>
-              </c-col>
-
-            </c-row>
-
-            <c-row>
-              <c-col xl="3" md="6" sm="6">
-                <c-widget-stat-f [title]="'Income'" class="mb-3" color="primary" value="$1,999.50">
-                  <ng-template cTemplateId="widgetIconTemplate">
-                    <svg cIcon name="cilSettings" size="xl" width="24"></svg>
-                  </ng-template>
-                </c-widget-stat-f>
-              </c-col>
-
-            </c-row>
-
-
-
-
-
-
-
-
-
-
-
-
-
-            <c-row>
-              <c-col xl="2" lg="4" sm="6">
-                <c-widget-stat-c [title]="'Visitors'" class="mb-4" color="info" inverse value="87,500">
-                  <ng-template cTemplateId="widgetIconTemplate">
-                    <svg cIcon height="36" name="cilPeople"></svg>
-                  </ng-template>
-                  <ng-template cTemplateId="widgetProgressTemplate">
-                    <c-progress class="mt-3 mb-0" thin white>
-                      <c-progress-bar [value]="100"></c-progress-bar>
-                    </c-progress>
-                  </ng-template>
-                </c-widget-stat-c>
-              </c-col> 
-
-
-
-            </c-row>-->
           </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

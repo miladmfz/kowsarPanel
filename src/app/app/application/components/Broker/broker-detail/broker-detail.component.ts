@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ApplicationWebApiService } from '../../../services/ApplicationWebApi.service';
 import { ActivatedRoute } from '@angular/router';
 import { UntypedFormBuilder } from '@angular/forms';
+import { BrokerWebApiService } from '../../../services/BrokerWebApi.service';
 
 @Component({
   selector: 'app-broker-detail',
@@ -10,7 +10,7 @@ import { UntypedFormBuilder } from '@angular/forms';
 export class BrokerDetailComponent implements OnInit {
 
   constructor(
-    private repo: ApplicationWebApiService,
+    private repo: BrokerWebApiService,
     private route: ActivatedRoute,
     private formBuilder: UntypedFormBuilder
   ) { }

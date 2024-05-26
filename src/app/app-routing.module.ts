@@ -15,6 +15,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./app-shell/core/layout.module').then((m) => m.LayoutModule),
   },
+
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: 'callback', component: CallbackComponent },
   {

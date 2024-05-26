@@ -18,52 +18,32 @@
 
 
 
+        <div class="card">
+          <h5 class="card-header">ساختن تنظیم جدول</h5>
+          <div class="card-body">
+            <div class="card-body">
+              <h5 class="card-title">ایجاد فیلد های مورد نیاز برای نمایش در نرم افزار های قابل استفاده</h5>
 
-        <!-- begin::Column -->
-        <div class="row my-5">
-          <div class="row">
-            <div class="col-4 ">
-              <h3 class="card-title align-items-start flex-column">
-                <span class="card-label ">ساختن تنظیم جدول:</span>
-              </h3>
-            </div>
-            <div class="col-md-3" *ngIf="BasketColumns.length>1">
-              <span class="input-group-btn">
-                <button class="btn btn-warning text-white" type="button"
-                  [routerLink]="['/application/company-column']">اصلاح تنظیم جدول </button>
+              <h5 *ngIf="BasketColumns.length<1" class="card-text">{{AppBasketColumn_Status}}</h5>
+              <a *ngIf="BasketColumns.length>0" [routerLink]="['/application/broker-column']"
+                class="btn btn-primary">اصلاح تنظیم جدول</a>
 
-              </span>
+              <a *ngIf="BasketColumns.length<1" (click)="CreateAppBasketColumn()" class="btn btn-primary">ایجاد تنظیم
+                جدول</a>
             </div>
-            <div class="col-md-3" *ngIf="BasketColumns.length<1">
-              <span class="input-group-btn">
-                <button class="btn btn-success text-white" type="button" (click)="CreateAppBasketColumn()">ایجاد تنظیم
-                  جدول</button>
-
-              </span>
-            </div>
-            <div class="col-md-2">
-              <p>
-                {{AppBasketColumn_Status}}
-              </p>
-            </div>
-
           </div>
-
         </div>
-        <!-- End::Column -->
 
 
 
-        <!-- begin::DBSetup -->
+
         <div>
-          <!-- begin::header Table  -->
-          <div class="row mt-5 mb-3">
-            <div class="col-4 ">
-              <h3 class="card-title align-items-start flex-column">
-                <span class="card-label ">تنظیمات پایه نرم افزار:</span>
-              </h3>
-            </div>
-          </div>
+
+          <h3 class="card-title align-items-start flex-column">
+            <span class="card-label ">تنظیمات پایه نرم افزار:</span>
+          </h3>
+
+
           <!-- End::header Table  -->
           <!-- begin::Table container -->
           <div class="table-responsive">
@@ -95,7 +75,7 @@
 
 
                   <td>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                    <button class="rounded-pill btn btn-outline-info" type="button" data-bs-toggle="modal"
                       data-bs-target="#verticallyCenteredModal" (click)="SelectDbSetup(i)">
                       تغییر
                     </button>
@@ -132,13 +112,13 @@
 
 
           <div class="row justify-content-between my-3">
-            <div class="col-md-4">
+            <div class="col-md-6">
               <h3 class="card-title align-items-start flex-column">
                 <span class="card-label">لیست پرینتر های تعریف شده:</span>
               </h3>
             </div>
-            <div class="col-md-4">
-              <button class="btn btn-success text-white" type="button" data-bs-toggle="modal"
+            <div class="col-md-6">
+              <button class="rounded-pill btn btn-outline-success" type="button" data-bs-toggle="modal"
                 data-bs-target="#printerModal" (click)="CreateprinterRecord()">ایجاد پرینتر جدید</button>
             </div>
           </div>
@@ -169,7 +149,15 @@
                   <td>{{ item.GoodGroups }}</td>
                   <td>{{ item.WhereClause }}</td>
                   <td>{{ item.PrintCount }}</td>
-                  <td>{{ item.PrinterActive }}</td>
+                  <td>
+                    <span *ngIf="item.PrinterActive == 'True'">
+                      <span class="bg-soft-success text-success" style="padding: 3px">فعال</span>
+                    </span>
+                    <span *ngIf="item.PrinterActive == 'False'">
+                      <span class="bg-soft-danger text-danger" style="padding: 3px">غیرفعال</span>
+                    </span>
+                  </td>
+
                   <!-- <td>
                     <button [cModalToggle]="printerModal.id" (click)="SelectPrinter(i)" cButton>
                       تغییر</button>
@@ -177,8 +165,8 @@
 
 
                   <td>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#printerModal"
-                      (click)="SelectPrinter(i)">
+                    <button class="rounded-pill btn btn-outline-info" type="button" data-bs-toggle="modal"
+                      data-bs-target="#printerModal" (click)="SelectPrinter(i)">
                       تغییر
                     </button>
                   </td>
@@ -276,86 +264,8 @@
 
 
 
-<!-- <c-modal #printerModal alignment="center" size="lg" id="printerModal">
-  <c-modal-header>
-    <h5 cModalTitle>جزییات پرینتر</h5>
-    <button [cModalToggle]="printerModal.id" cButtonClose></button>
-  </c-modal-header>
-  <c-modal-body>
-
-
-    <form cForm cRow ngNativeValidate>
-
-
-
-      <c-row class="mb-3">
-        <label cLabel="col" class="col-sm-2" for="inputPassword"> نام سیستمی پرینتر</label>
-        <c-col [sm]="10">
-          <input cFormControl type="text" required [(ngModel)]="PrinterName" [ngModelOptions]="{ standalone: true }"
-            dir="ltr" />
-          <c-form-feedback [valid]="false"></c-form-feedback>
-        </c-col>
-      </c-row>
-      <c-row class="mb-3">
-        <label cLabel="col" class="col-sm-2" for="inputPassword"> شرح</label>
-        <c-col [sm]="10"> <input cFormControl type="text" [(ngModel)]="PrinterExplain"
-            [ngModelOptions]="{ standalone: true }" />
-        </c-col>
-      </c-row>
-
-      <c-row class="mb-3">
-        <label cLabel="col" class="col-sm-2" for="inputPassword"> گروه نمایشی</label>
-        <c-col [sm]="10">
-          <input cFormControl type="text" [(ngModel)]="GoodGroups" [ngModelOptions]="{ standalone: true }" />
-        </c-col>
-      </c-row>
-
-
-      <c-row class="mb-3">
-        <label cLabel="col" class="col-sm-2" for="inputPassword"> شرط نمایش</label>
-        <c-col [sm]="10">
-          <input cFormControl type="text" [(ngModel)]="WhereClause" [ngModelOptions]="{ standalone: true }" />
-        </c-col>
-      </c-row>
-
-      <c-row class="mb-3">
-        <label cLabel="col" class="col-sm-2" for="inputPassword"> تعداد پرینت</label>
-        <c-col [sm]="10">
-          <input cFormControl type="text" [(ngModel)]="PrintCount" [ngModelOptions]="{ standalone: true }" />
-        </c-col>
-      </c-row>
-
-
-      <c-row class="mb-3">
-        <label cLabel="col" class="col-sm-2" for="inputPassword">فعال /غیرفعال</label>
-        <c-col [sm]="10">
-          <input cFormControl type="text" [(ngModel)]="PrinterActive" [ngModelOptions]="{ standalone: true }" />
-        </c-col>
-      </c-row>
-
-      <c-row class="mb-3">
-        <label cLabel="col" class="col-sm-2" for="inputPassword"> آدرش فایل طراحی</label>
-        <c-col [sm]="10">
-          <input cFormControl type="text" [(ngModel)]="FilePath" [ngModelOptions]="{ standalone: true }" dir="ltr" />
-        </c-col>
-      </c-row>
-      <button cButton class="me-1" color="primary" type="submit" (click)="Updateprinter()">
-        ثبت اطلاعات
-      </button>
-    </form>
-
-  </c-modal-body>
-  <c-modal-footer>
-    <button [cModalToggle]="printerModal.id" cButton color="secondary">
-      بستن
-    </button>
-
-  </c-modal-footer>
-</c-modal> -->
-
-
-
-<div class="modal fade" id="printerModal" tabindex="-1" aria-labelledby="printerModalLabel" aria-hidden="true">
+<div class="modal fade" #printerModal id="printerModal" tabindex="-1" aria-labelledby="printerModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -363,41 +273,57 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form class="row g-3" (ngSubmit)="Updateprinter()" ngNativeValidate>
-          <div class="col-md-6">
-            <label for="inputPrinterName" class="form-label">نام سیستمی پرینتر</label>
-            <input type="text" class="form-control" id="inputPrinterName" required [(ngModel)]="PrinterName">
+        <form [formGroup]="EditForm_printer" (submit)="Updateprinter()">
+
+
+          <div class="form-group col-md-12">
+            <label for="PrinterName" class="col-form-label">نام پا ادرس چاپگر</label>
+            <input type="text" class="form-control" id="PrinterName" formControlName="PrinterName" maxlength="400"
+              autocomplete="off" />
           </div>
-          <div class="col-md-6">
-            <label for="inputPrinterExplain" class="form-label">شرح</label>
-            <input type="text" class="form-control" id="inputPrinterExplain" [(ngModel)]="PrinterExplain">
+
+          <div class="form-group col-md-12">
+            <label for="PrinterExplain" class="col-form-label">توضیحات چاپگر</label>
+            <input type="text" class="form-control" id="PrinterExplain" formControlName="PrinterExplain" maxlength="400"
+              autocomplete="off" />
           </div>
-          <div class="col-12">
-            <label for="inputGoodGroups" class="form-label">گروه نمایشی</label>
-            <input type="text" class="form-control" id="inputGoodGroups" [(ngModel)]="GoodGroups">
+
+          <div class="form-group col-md-12">
+            <label for="GoodGroups" class="col-form-label">کد گروه برای چاپگر</label>
+            <input type="text" class="form-control" id="GoodGroups" formControlName="GoodGroups" maxlength="400"
+              autocomplete="off" />
           </div>
-          <div class="col-12">
-            <label for="inputWhereClause" class="form-label">شرط نمایش</label>
-            <input type="text" class="form-control" id="inputWhereClause" [(ngModel)]="WhereClause">
+
+
+          <div class="form-group col-md-12">
+            <label for="WhereClause" class="col-form-label">شرط چاپگر</label>
+            <input type="text" class="form-control" id="WhereClause" formControlName="WhereClause" maxlength="400"
+              autocomplete="off" />
           </div>
-          <div class="col-md-6">
-            <label for="inputPrintCount" class="form-label">تعداد پرینت</label>
-            <input type="text" class="form-control" id="inputPrintCount" [(ngModel)]="PrintCount">
+          <div class="form-group col-md-12">
+            <label for="PrintCount" class="col-form-label">تعداد چاپ </label>
+            <input type="text" class="form-control" id="PrintCount" formControlName="PrintCount" maxlength="400"
+              autocomplete="off" />
           </div>
-          <div class="col-md-6">
-            <label for="inputPrinterActive" class="form-label">فعال /غیرفعال</label>
-            <input type="text" class="form-control" id="inputPrinterActive" [(ngModel)]="PrinterActive">
+
+          <div class="form-group col-md-12">
+            <label for="PrinterActive" class="col-form-label">فعال بودن چاپگر</label>
+            <input type="text" class="form-control" id="PrinterActive" formControlName="PrinterActive" maxlength="400"
+              autocomplete="off" />
           </div>
-          <div class="col-12">
-            <label for="inputFilePath" class="form-label">آدرس فایل طراحی</label>
-            <input type="text" class="form-control" id="inputFilePath" [(ngModel)]="FilePath">
+          <div class="form-group col-md-12">
+            <label for="FilePath" class="col-form-label">ادرس فایل چاپگر</label>
+            <input type="text" class="form-control" id="FilePath" formControlName="FilePath" maxlength="400"
+              autocomplete="off" />
           </div>
-          <div class="col-12">
-            <button type="submit" class="btn btn-primary">ثبت اطلاعات</button>
-          </div>
+
+
+
         </form>
       </div>
       <div class="modal-footer">
+
+        <button type="button" class="btn btn-primary" (click)="Updateprinter()">ثبت اطلاعات</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
       </div>
     </div>

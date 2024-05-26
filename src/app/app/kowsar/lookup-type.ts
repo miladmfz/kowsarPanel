@@ -1,4 +1,4 @@
-export type SellPriceType_Lookup = {
+export type Base_Lookup = {
     id: string,
     name: string
 }

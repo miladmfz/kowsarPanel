@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { LocalStorageService } from '../../framework-services/local.storage.service';
-import { SettingService } from '../../framework-services/setting.service';
 import { FormGroup } from '@angular/forms';
 declare var $: any;
 
@@ -13,9 +12,7 @@ export class AppSharedDataComponent implements OnInit {
   currentCompanyGuid;
   SomeGlobalSetting;
 
-  constructor(readonly localStorageService: LocalStorageService,
-    readonly settingService: SettingService) {
-    // this.SomeGlobalSetting = this.settingService.getSettingValue("Public_UseSecondlanguage");
+  constructor(readonly localStorageService: LocalStorageService) {
   }
 
   ngOnInit() { }

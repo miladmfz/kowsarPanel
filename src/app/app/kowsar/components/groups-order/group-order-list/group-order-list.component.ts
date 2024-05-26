@@ -4,7 +4,6 @@ import { KowsarWebApiService } from '../../../services/KowsarWebApi.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
-import { SettingService } from 'src/app/app-shell/framework-services/setting.service';
 import { CellActionGoodOrderList } from '../../goods_order/good-order-list/cell-action-good-order-list';
 @Component({
   selector: 'app-group-list',
@@ -17,10 +16,9 @@ export class GroupOrderListComponent
   constructor(
     private readonly router: Router,
     private repo: KowsarWebApiService,
-    localStorageService: LocalStorageService,
-    settingService: SettingService
+    localStorageService: LocalStorageService
   ) {
-    super(localStorageService, settingService);
+    super(localStorageService);
   }
 
 
@@ -157,7 +155,7 @@ implements OnInit {
 
     this.repo.GetOrdergroupList(this.GroupCode_str).subscribe(e => {
       this.items = e;
-      console.log(this.items);
+       this.items);
 
     });
 

@@ -42,10 +42,9 @@ app-custom-button {
 
 .mdi-set,
 .mdi:before {
-  font-size: 16px !important;
+  font-size: 28px !important;
 }
 
 .page-title-box {
   margin: 0 -27px 20px;
 }
-

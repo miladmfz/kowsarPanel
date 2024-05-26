@@ -12,4 +12,63 @@
       </li>
     </ul>
   </div>
+  <div class="card-body">
+    <div class="tab-content">
+
+      <div class="tab-pane fade show active" role="tabpanel">
+        <div>
+          <div class="row row-cols-1 row-cols-sm-4 row-cols-md-4 g-3">
+
+            <!-- ListVisible Component -->
+            <div class="form-group col-md-4">
+              <div class="card-header">آیتم های نمایشی در لیست </div>
+              <div class="card-body">
+                <!-- List Content -->
+                <ul>
+                  <ng-container *ngFor="let item of ListVisible_items">
+                    <li *ngIf="item.ListVisible > 0">{{ item.ColumnDesc }}</li>
+                  </ng-container>
+                </ul>
+
+              </div>
+            </div>
+
+            <!-- DetailVisible Component -->
+            <div class="form-group col-md-4">
+              <div class="card-header">آیتم های نمایشی در جزییات </div>
+              <div class="card-body">
+                <!-- List Content -->
+                <ul>
+
+                  <ng-container *ngFor="let item of DetailVisible_items">
+                    <li *ngIf="item.DetailVisible > 0">{{ item.ColumnDesc }}</li>
+                  </ng-container>
+
+                </ul>
+              </div>
+            </div>
+
+            <!-- SearchVisible Component -->
+            <div class="form-group col-md-4">
+              <div class="card-header">آیتم های نمایشی در جستجوی پیشرفته </div>
+              <div class="card-body">
+                <!-- List Content -->
+                <ul>
+
+                  <ng-container *ngFor="let item of SearchVisible_items">
+                    <li *ngIf="item.SearchVisible > 0">{{ item.ColumnDesc }}</li>
+                  </ng-container>
+
+
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
 </div>

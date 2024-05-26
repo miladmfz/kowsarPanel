@@ -16,9 +16,7 @@ import { LocalStorageService } from '../framework-services/local.storage.service
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { PhoenixFrameworkModule } from '../framework-components/framework.module';
-import { IdentityService } from '../framework-services/identity.service';
 import { NotificationService } from '../framework-services/notification.service';
-import { SettingService } from '../framework-services/setting.service';
 import { SwalService } from '../framework-services/swal.service';
 const routes: Routes = [
   {
@@ -47,11 +45,9 @@ const routes: Routes = [
   providers: [
     { provide: LocationStrategy, useClass: PathLocationStrategy },
     LocalStorageService,
-    IdentityService,
-    SettingService,
     NotificationService,
     SwalService,
   ],
   exports: [RouterModule],
 })
-export class LayoutModule {}
+export class LayoutModule { }

@@ -9,7 +9,6 @@ import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { AppSharedDataComponent } from '../app-shared-data/app-shared-data.component';
 import { ImageCellRenderer } from '../ag-grid/image-cell-renderer';
 import { LocalStorageService } from '../../framework-services/local.storage.service';
-import { SettingService } from '../../framework-services/setting.service';
 import { AG_GRID_LOCALE_FA } from './locale.fa';
 import { Module } from './ag-grid-module';
 declare var Swal: any;
@@ -26,6 +25,14 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
   modules: Module[] = AllModules;
   public defaultColDef;
   public columnDefs: any[];
+  public columnDefs1: any[];
+
+  public columnDefs2: any[];
+
+  public columnDefs3: any[];
+  public columnDefs4: any[];
+
+
   public localeText: any;
   public autoGroupColumnDef;
   public rowGroupPanelShow = 'always';
@@ -37,23 +44,22 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
 
   constructor(
     localStorageService: LocalStorageService,
-    settingService: SettingService,
     @Inject(Boolean) hasPinnedRow = false
   ) {
-    super(localStorageService, settingService);
+    super(localStorageService);
 
     this.defaultColDef = {
       flex: 1,
       resizable: true,
       filter: true,
       sortable: true,
-      minWidth: 150,
+      minWidth: 100,
       enableValue: true,
       enableRowGroup: true,
       enablePivot: true,
     };
 
-    this.autoGroupColumnDef = { minWidth: 200 };
+    this.autoGroupColumnDef = { minWidth: 150 };
     this.rowGroupPanelShow = 'always';
     this.pivotPanelShow = 'always';
 

@@ -25,10 +25,13 @@
           <!-- Date Picker -->
           <div class="form-group col-md-3">
             <label for="datePicker" class="col-form-label">تاریخ</label>
-            <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
-              [uiHideAfterSelectDate]="true">
-              <input class="form-control" id="datePicker" type="text" [formControl]="dateValue" />
-            </ng-persian-datepicker>
+            <div>
+              <ng-persian-datepicker style="position: absolute; z-index: 1;" [uiTheme]="customTheme"
+                [uiHideOnOutsideClick]="false" [uiHideAfterSelectDate]="true">
+                <input class="form-control" id="datePicker" type="text" [formControl]="dateValue" />
+              </ng-persian-datepicker>
+            </div>
+
           </div>
 
 

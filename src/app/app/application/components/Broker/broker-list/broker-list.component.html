@@ -27,28 +27,10 @@
 
         <!-- begin::Header -->
         <div class="card">
-          <div class="card-header border-0 pt-5">
-
-            <div class="row">
-
-
-            </div>
-
-            <div class="card-toolbar">
-              <!-- begin::Menu -->
-
-
-
-
-              <!-- <a [routerLink]="['/manager/broker/edit-form', 0]">ایجاد رکرود جدید</a> -->
-
-              <!-- end::Menu -->
-            </div>
-          </div>
 
           <!-- begin::header Table  -->
           <div class="row mx-3">
-            <div class="col-4 ">
+            <div class="col-12 ">
               <h3 class="card-title align-items-start flex-column">
                 <span class="card-label "> لیست بازاریاب های فعال</span>
               </h3>
@@ -88,9 +70,9 @@
 
                     <td>
 
-                      <a class="btn btn-warning btn-sm mx-1"
+                      <a class="rounded-pill btn btn-outline-info"
                         [routerLink]="['/application/broker-report', item.BrokerCode]">
-                        View
+                        نمایش
                       </a>
 
                     </td>

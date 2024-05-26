@@ -5,8 +5,14 @@
         <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/order-detail']">پنل سفارشگیر</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link active" data-bs-toggle="pill" [routerLink]="['/application/order-customer']"> customer
-          سفارشگیر</a>
+        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/order-good']"> مدیریت آیتم </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" data-bs-toggle="pill" [routerLink]="['/application/order-customer']">
+          حساب پرسنل</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/order-report']"> گزارش </a>
       </li>
       <li class="nav-item">
         <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/order-setting']"> تنظیمات سفارشگیر</a>
@@ -17,22 +23,21 @@
 
 
 
-  <div class="card-body">
-    <div class="tab-content">
+  <div class="card-body  ">
+    <div class="tab-content border border-primary">
       <div class="tab-pane fade show active" role="tabpanel">
 
         <ng-container *ngIf="this.id.length==0">
 
           <div class="table-responsive">
 
-            <table class="table table-bordered align-middle gs-0 gy-4">
+            <table class="table table-bordered align-middle">
               <thead>
                 <tr class="fw-bolder ">
-                  <th class="min-w-30px"> </th>
 
-                  <th class="min-w-125px">CustomerName </th>
-                  <th class="min-w-100px"> CustomerBedehkarMandeh </th>
-                  <th class="min-w-100"> Action </th>
+                  <th class="min-w-125px">نام </th>
+                  <th class="min-w-100px"> مبلغ </th>
+                  <th class="min-w-100"> عملیات </th>
 
 
                 </tr>
@@ -40,14 +45,13 @@
               <tbody *ngFor="let item of items; let i = index">
 
                 <tr>
-                  <td>{{ i+1 }}</td>
                   <td>{{ item.CustomerName }}</td>
                   <td>{{ item.CustomerBedehkarMandeh }}</td>
 
                   <td>
-                    <a class="btn btn-warning btn-sm mx-1"
+                    <a class="rounded-pill btn btn-outline-info"
                       [routerLink]="['/application/order-customer', item.CustomerCode]">
-                      View
+                      نمایش
                     </a>
                   </td>
                 </tr>
@@ -70,9 +74,9 @@
                 <tr class="fw-bolder ">
                   <th class="min-w-30px"> </th>
 
-                  <th class="min-w-125px">GoodName </th>
-                  <th class="min-w-100px"> Price </th>
-                  <th class="min-w-100"> FactorDate </th>
+                  <th class="min-w-125px">نام آیتم </th>
+                  <th class="min-w-100px"> قیمت </th>
+                  <th class="min-w-100"> تاریخ فاکتور </th>
 
 
                 </tr>

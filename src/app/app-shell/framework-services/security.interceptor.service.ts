@@ -10,18 +10,17 @@ import {
   HttpResponse,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { getIdentityUrl } from 'src/environment/environment';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { ACCESS_TOKEN_NAME } from './configuration';
 
 @Injectable()
 export class SecurityInterceptor implements HttpInterceptor {
-  constructor(private oidcSecurityService: OidcSecurityService) {}
+  constructor(private oidcSecurityService: OidcSecurityService) { }
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    if (!request.url.includes(getIdentityUrl())) {
+    if (!request.url.includes('')) {
       var token = localStorage.getItem(ACCESS_TOKEN_NAME);
       if (!token) {
         this.oidcSecurityService

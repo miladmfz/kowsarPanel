@@ -1,11 +1,46 @@
-<div class="row">
-    <!-- First Column (33.33%) -->
-    <div class="col-md-6">
-        <app-autletter-item [TextData]="id"></app-autletter-item>
-    </div>
+<div class="card-body">
+    <h4 class="header-title mb-4"> ویرایش کالا</h4>
 
-    <!-- Second Column (66.66%) -->
-    <div class="col-md-6">
-        <app-autletter-chat [TextData]="id"></app-autletter-chat>
+    <ul class="nav nav-pills navtab-bg nav-justified">
+        <li class="nav-item">
+            <a href="#detail" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
+                <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+                <span class="d-none d-sm-inline-block">روند ارحاع تیکت</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#chat" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                <span class="d-inline-block d-sm-none"><i class="mdi mdi-email-variant"></i></span>
+                <span class="d-none d-sm-inline-block">مکاتبات </span>
+            </a>
+        </li>
+
+
+
+
+    </ul>
+
+
+
+
+    <div class="tab-content">
+
+
+
+        <div class="tab-pane active " id="detail">
+
+            <app-autletter-item [TextData]="id"></app-autletter-item>
+
+        </div>
+
+
+        <div class="tab-pane " id="chat">
+            <app-autletter-chat [TextData]="id"></app-autletter-chat>
+
+        </div>
+
+
+
+
     </div>
 </div>

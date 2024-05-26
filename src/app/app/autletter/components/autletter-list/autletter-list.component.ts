@@ -6,8 +6,8 @@ import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
-import { SettingService } from 'src/app/app-shell/framework-services/setting.service';
 import { CellActionAutletterList } from './cell-action-autletter-list';
+import { ValidateionStateCellAutletterRenderer } from './validation-state-label-cell-autletter';
 
 @Component({
   selector: 'app-autletter-list',
@@ -20,10 +20,9 @@ export class AutletterListComponent
   constructor(
     private router: Router,
     private repo: AutletterWebApiService,
-    localStorageService: LocalStorageService,
-    settingService: SettingService
+    localStorageService: LocalStorageService
   ) {
-    super(localStorageService, settingService);
+    super(localStorageService);
   }
 
 
@@ -44,6 +43,7 @@ export class AutletterListComponent
   customTheme: Partial<IDatepickerTheme> = {
     selectedBackground: '#D68E3A',
     selectedText: '#FFFFFF',
+
   };
 
 
@@ -69,26 +69,31 @@ export class AutletterListComponent
         },
         width: 50,
       },
+      {
+        field: 'AlarmActive',
+        cellRenderer: ValidateionStateCellAutletterRenderer,
 
+        cellClass: 'text-center',
+      },
       {
         field: 'LetterTitle',
         headerName: 'عنوان تیکت',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
       {
         field: 'LetterDescription',
         headerName: 'متن تیکت',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
       {
         field: 'LetterDate',
         headerName: 'تاریخ تیکت	',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
 
@@ -96,7 +101,7 @@ export class AutletterListComponent
         field: 'CreatorName',
         headerName: 'ایجاد کننده',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
 
@@ -104,7 +109,7 @@ export class AutletterListComponent
         field: 'RowsCount',
         headerName: 'تعداد ارجاع',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
 
@@ -112,23 +117,17 @@ export class AutletterListComponent
         field: 'RowExecutorName',
         headerName: 'کاربر فعلی	',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
       {
         field: 'RowLetterDate',
         headerName: 'تاریخ ارجاع',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
-      {
-        field: 'AlarmActive',
-        headerName: 'وضعیت',
-        filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
-        cellClass: 'text-center',
-      },
+
     ];
 
     this.getList();

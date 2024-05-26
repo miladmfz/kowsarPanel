@@ -21,6 +21,103 @@
 
       <div class="tab-pane fade show active" role="tabpanel">
 
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">{{ title }}</h4>
+            <div class="row mb-2">
+              <div class="col-sm-12">
+
+
+                <form [formGroup]="EditForm_ocr" id="submitForm">
+                  <div class="row col-md-12">
+
+
+                    <div class="form-group col-md-9">
+                      <label for="Searchtarget" class="col-form-label">جستجو </label>
+                      <input type="text" placeholder="جستجو..." class="form-control" id="Searchtarget"
+                        formControlName="Searchtarget" maxlength="100" autocomplete="off"
+                        (ngModelChange)="onInputChange()" />
+                    </div>
+
+
+                    <div class="form-group col-md-3">
+                      <label for="SourceFlag" class="col-form-label">دیتابیس مورد نظر </label>
+                      <select formControlName="SourceFlag" id="SourceFlag" class="form-control custom-select"
+                        data-toggle="select2" (ngModelChange)="onInputChange()">
+                        <option [value]="item.id" *ngFor="let item of SourceFlag_lookup">{{
+                          item.name }}</option>
+                      </select>
+
+                    </div>
+
+
+
+                  </div>
+                </form>
+
+
+
+
+                <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
+                  <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
+                </a>
+                <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="removeAllFilters()">
+                  <span class="btn-label"><i class="fas fa-eye-slash"></i></span>حذف
+                  جستجو
+                </a>
+                <div class="btn-group">
+                  <!-- *hasPermission="['Public']" -->
+                  <button type="button" class="btn btn-light waves-effect waves-light m-1 dropdown-toggle"
+                    id="exportdropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    دریافت خروجی <i class="mdi mdi-chevron-down"></i>
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="exportdropdown">
+                    <button class="dropdown-item" type="button" (click)="onExportExcel()">
+                      Excel <i class="fas fa-file-excel"></i>
+                    </button>
+                    <button class="dropdown-item" type="button" (click)="onExportCSV()">
+                      CSV <i class="fas fa-file-csv"></i>
+                    </button>
+
+
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+
+            <ag-grid-angular #agGrid id="myGrid" style="height: 700px; width: auto" class="ag-theme-material"
+              [rowData]="records" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
+              [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)" [pagination]="true"
+              [frameworkComponents]="frameworkComponents" [context]="context">
+            </ag-grid-angular>
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
         <!-- <c-input-group class="p-3 col-6">
           <button cButton color="secondary" id="button-addon1" type="button" variant="outline" (click)="Searching()">
             جستجو
@@ -28,19 +125,18 @@
           <input aria-describedby="button-addon1" aria-label="Example text with button addon" cFormControl
             placeholder="جستجو" [(ngModel)]="Searchtarget" [ngModelOptions]="{ standalone: true }" />
         </c-input-group> -->
-        <div class="p-3 col-md-6">
+        <!-- <div class="p-3 col-md-6">
           <div class="input-group">
             <button class="btn btn-secondary" type="button" id="button-addon1" (click)="Searching()">جستجو</button>
             <input type="text" class="form-control" aria-describedby="button-addon1"
               aria-label="Example text with button addon" placeholder="جستجو" [(ngModel)]="Searchtarget"
               [ngModelOptions]="{ standalone: true }">
           </div>
-        </div>
+        </div> -->
 
-
+        <!-- 
 
         <div class="card-body py-3">
-          <!-- begin::Table container -->
           <div class="table-responsive">
 
             <table class="table table-bordered align-middle gs-0 gy-4">
@@ -74,13 +170,10 @@
                       <ng-container *ngIf="item.AppIsPacked === 'True'; else notPacked">
                         <ng-container *ngIf="item.AppIsDelivered === 'True'; else notDelivered">
                           <ng-container *ngIf="item.HasSignature === 'True'; else notHasSignature">
-                            تحویل شده <!-- Delivered -->
+                            تحویل شده 
                           </ng-container>
-                          <!-- In transit -->
                         </ng-container>
-                        <!-- Ready for delivery -->
                       </ng-container>
-                      <!-- Packed -->
                     </ng-container>
 
                     <ng-template #notControled>انبار</ng-template>
@@ -106,9 +199,8 @@
             </table>
           </div>
 
-          <!-- end::Table container -->
         </div>
-
+ -->
 
 
 

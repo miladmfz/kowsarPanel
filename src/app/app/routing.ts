@@ -29,27 +29,6 @@ const Routing: Routes = [
       import('../app/autletter/autletter.module').then((m) => m.AutLetterModule)
   },
 
-  {
-    path: 'user-management',
-    loadChildren: () =>
-      import('../app/user-management/user-management.module').then(
-        (x) => x.UserManagementModule
-      ),
-  },
-  {
-    path: 'base-info',
-    loadChildren: () =>
-      import('../app/base-information/base-information.module').then(
-        (x) => x.BaseInformationModule
-      ),
-  },
-  {
-    path: 'incident',
-    loadChildren: () =>
-      import('../app/incident/incident.module').then(
-        (x) => x.IncidentModule
-      ),
-  },
 ];
 
 export { Routing };

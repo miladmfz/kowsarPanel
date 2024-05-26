@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { AutletterWebApiService } from '../../services/AutletterWebApi.service';
 import { Router } from '@angular/router';
+import { IDatepickerTheme } from 'ng-persian-datepicker';
 
 @Component({
   selector: 'app-autletter-insert',
@@ -10,29 +11,42 @@ import { Router } from '@angular/router';
 export class AutletterInsertComponent implements OnInit {
 
   constructor(private repo: AutletterWebApiService, private router: Router) { }
-  dateValue = new FormControl();
-  titleFormControl = new FormControl();
-  descriptionFormControl = new FormControl();
+
+  EditForm = new FormGroup({
+    dateValue: new FormControl(''),
+    titleFormControl: new FormControl(''),
+    descriptionFormControl: new FormControl(''),
+  });
+
+
+
+
+
   CentralRef: string = '';
   ngOnInit() {
   }
 
+  customTheme: Partial<IDatepickerTheme> = {
+    selectedBackground: '#D68E3A',
+    selectedText: '#FFFFFF',
 
-  logFormData(): void {
-    // Log the relevant information
-    console.log('Date Value:', this.dateValue.value);
-    console.log('Title:', this.titleFormControl.value);
-    console.log('Description:', this.descriptionFormControl.value);
-
+  };
 
 
+
+
+  submit(action) {
     this.CentralRef = '4';
+    const command = this.EditForm.value;
+    if (action == 'delete') {
+      // this.incidentService.delete(command.id).subscribe((id) => {
+      //   this.handleCreateEditOps(action, id);
+      // });
+    }
 
-
-    this.repo.LetterInsert(this.dateValue.value, this.titleFormControl.value, this.descriptionFormControl.value, this.CentralRef).subscribe(e => {
+    this.repo.LetterInsert(this.EditForm.value.dateValue, this.EditForm.value.titleFormControl, this.EditForm.value.descriptionFormControl, this.CentralRef).subscribe(e => {
       const intValue = parseInt(e[0].LetterCode, 10);
       if (!isNaN(intValue) && intValue > 0) {
-        console.log(e)
         this.router.navigate(['/autletter/list']);
       } else {
         console.log("insert nashod")
@@ -40,7 +54,11 @@ export class AutletterInsertComponent implements OnInit {
 
     });
 
+
+
   }
+
+
 
 
 

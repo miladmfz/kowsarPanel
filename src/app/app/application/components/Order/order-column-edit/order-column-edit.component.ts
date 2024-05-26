@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ApplicationWebApiService } from '../../../services/ApplicationWebApi.service';
 import { ActivatedRoute } from '@angular/router';
 import { UntypedFormBuilder } from '@angular/forms';
 
 import { Location } from '@angular/common';
+import { OrderWebApiService } from '../../../services/OrderWebApi.service';
 
 @Component({
   selector: 'app-order-column-edit',
@@ -12,7 +12,7 @@ import { Location } from '@angular/common';
 export class OrderColumnEditComponent implements OnInit {
 
   constructor(
-    private repo: ApplicationWebApiService,
+    private repo: OrderWebApiService,
     private route: ActivatedRoute,
     private formBuilder: UntypedFormBuilder,
     private location: Location
@@ -62,7 +62,8 @@ export class OrderColumnEditComponent implements OnInit {
 
   ngOnInit() {
 
-    this.TagName = "Insert app column"
+    this.TagName = "تعریف تنظیم جدول جدید"
+
     this.GetGoodType()
 
 
@@ -115,7 +116,6 @@ export class OrderColumnEditComponent implements OnInit {
     this.selected_obj_Property = this.Propertys.find(prop => prop.PropertyName === this.selected_PropertyName);
 
     const subString = this.selected_obj_Property.PropertyValueMap.substring(0, 3);
-    console.log(subString);
 
 
 

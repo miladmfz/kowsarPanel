@@ -17,6 +17,8 @@ import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { CellActionAutletterWork } from './components/autletter-work/cell-action-autletter-work';
 import { AgGridModule } from 'ag-grid-angular';
 import { CellActionAutletterList } from './components/autletter-list/cell-action-autletter-list';
+import { ValidateionStateCellAutletterRenderer } from './components/autletter-list/validation-state-label-cell-autletter';
+import { ValidateionStateCellAutletterWorkRenderer } from './components/autletter-work/validation-state-label-cell-autletter-work';
 
 
 @NgModule({
@@ -38,7 +40,8 @@ import { CellActionAutletterList } from './components/autletter-list/cell-action
     AutletterWorkComponent,
     CellActionAutletterWork,
     CellActionAutletterList,
-
+    ValidateionStateCellAutletterRenderer,
+    ValidateionStateCellAutletterWorkRenderer,
 
   ],
 })

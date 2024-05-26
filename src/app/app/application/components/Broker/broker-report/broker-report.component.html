@@ -1,3 +1,12 @@
+<div class="row">
+  <div class="col-12">
+    <div class="page-title-box">
+      <h4 class="page-title">مدیریت </h4>
+    </div>
+  </div>
+</div>
+
+
 <div class="card">
   <div class="card-header">
     <ul class="nav nav-pills nav-fill">
@@ -5,13 +14,15 @@
         <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/broker-detail']">پنل بازاریاب</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/broker-setting']">تنظیمات بازاریاب</a>
+        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/broker-setting']">تنظیمات
+          بازاریاب</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="pill" [routerLink]="['/application/broker-list']">لیست بازاریاب</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link active" data-bs-toggle="pill" [routerLink]="['/application/broker-report']">Broker Report</a>
+        <a class="nav-link active" data-bs-toggle="pill" [routerLink]="['/application/broker-report']">گزارش بازاریاب
+        </a>
       </li>
 
     </ul>
@@ -23,65 +34,86 @@
 
 
 
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body border border-secondary">
+              <div class="d-flex align-items-start">
 
+                <div class="me-3">
+                  <label for="fileInput" class="position-relative">
+                    <ng-container *ngIf="Imageitem.length>100">
+                      <img [src]="Imageitem" alt="No Photo" class="rounded avatar-md"
+                        (mouseover)="showUploadText = true" (mouseleave)="showUploadText = false"
+                        (click)="fileInput.click()">
+                    </ng-container>
+                    <ng-container *ngIf="Imageitem.length<100">
+                      <img src="./assets/images/nophoto.jpg" alt="No Photo" class="rounded avatar-md"
+                        style="width: 150px; height: 150px; border-radius: 5%; cursor: pointer;"
+                        (mouseover)="showUploadText = true" (mouseleave)="showUploadText = false"
+                        (click)="fileInput.click()">
 
-        <div class="table-responsive">
+                    </ng-container>
 
-
-          <div class="row">
-
-            <div class="col-md-3 d-flex justify-content-center align-items-center position-relative">
-              <label for="fileInput" class="position-relative">
-                <ng-container *ngIf="Imageitem.length>100">
-                  <img [src]="Imageitem" alt="No Photo"
-                    style="width: 150px; height: 150px; border-radius: 5%; cursor: pointer;"
-                    (mouseover)="showUploadText = true" (mouseleave)="showUploadText = false"
-                    (click)="fileInput.click()">
-                </ng-container>
-                <ng-container *ngIf="Imageitem.length<100">
-                  <img src="assets/images/nophoto.jpg" alt="No Photo"
-                    style="width: 150px; height: 150px; border-radius: 5%; cursor: pointer;"
-                    (mouseover)="showUploadText = true" (mouseleave)="showUploadText = false"
-                    (click)="fileInput.click()">
-
-                </ng-container>
-
-                <span
-                  class="upload-text position-absolute top-50 start-50 translate-middle text-white fw-bold opacity-50 transition-opacity"
-                  [ngClass]="{'opacity-100': showUploadText}">Upload</span>
-              </label>
-              <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput style="display: none;">
-            </div>
-
-
-            <div class="list-group col-md-9">
-              <li class="list-group-item" *ngFor="let item of items">
-                <div class="row">
-                  <div class="col-md-3">
-                    <div><strong>نام بازاریاب</strong></div>
-                    <div><strong>تعداد فاکتور :</strong></div>
-                    <div><strong>انبار:</strong></div>
-                    <div><strong>تعداد مشتری:</strong></div>
-                    <div><strong>کد بازاریاب:</strong></div>
-                    <div><strong>کد مرکزی:</strong></div>
-
-                  </div>
-                  <div class="col-md-5">
-                    <div>{{ item.BrokerNameWithoutType }}</div>
-                    <div>{{ item.FactorCount }}</div>
-                    <div>{{ item.Stack }}</div>
-                    <div>{{ item.CustomerCount }}</div>
-                    <div>{{ item.BrokerCode }}</div>
-                    <div>{{ item.CentralRef }}</div>
-
-                  </div>
+                    <span
+                      class="upload-text position-absolute top-50 start-50 translate-middle text-white fw-bold opacity-50 transition-opacity"
+                      [ngClass]="{'opacity-100': showUploadText}">آپلود</span>
+                  </label>
+                  <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput style="display: none;">
                 </div>
-              </li>
+
+
+
+                <div class="flex-1">
+                  <h5 class="my-1"><a class="text-dark">{{ items[0].BrokerNameWithoutType }}</a></h5>
+                  <p class="text-muted mb-0"><i class="mdi mdi-account me-1"></i>{{ items[0].RelationType }}
+                  </p>
+                </div>
+
+              </div>
+              <hr>
+              <div class="text-muted">
+                <div class="row">
+
+                  <div class="col-sm-2 col-6">
+                    <div>
+                      <p class="mb-0">کد بازاریاب</p>
+                      <h5 class="mb-sm-0">{{items[0].CustomerCount}}</h5>
+                    </div>
+                  </div>
+                  <div class="col-sm-2 col-6">
+                    <div>
+                      <p class="mb-0">اجزای پایه</p>
+                      <h5 class="mb-sm-0">{{items[0].CentralRef}}</h5>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-2 col-6">
+                    <div>
+                      <p class="mb-0">تعداد فاکتور</p>
+                      <h5 class="mb-sm-0">{{items[0].FactorCount}}</h5>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-2 col-6">
+                    <div>
+                      <p class="mb-0">انبار</p>
+                      <h5 class="mb-sm-0">{{ items[0].Stack }}</h5>
+                    </div>
+                  </div>
+                  <div class="col-sm-2 col-6">
+                    <div>
+                      <p class="mb-0">تعداد مشتری</p>
+                      <h5 class="mb-sm-0">{{items[0].BrokerCode}}</h5>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
             </div>
           </div>
-
-
         </div>
+
 
 
 
@@ -107,168 +139,118 @@
           </c-button-group>
         </form> -->
 
-        <form [formGroup]="formRadio1">
-          <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-            <input class="btn-check visually-hidden" formControlName="radio1" type="radio" id="Radio3" value="Radio3" />
-            <label class="btn btn-outline-primary" for="Radio3" (click)="setRadioValue('Radio3')">لیست چارت</label>
+        <div class="card-body">
 
-            <input class="btn-check visually-hidden" formControlName="radio1" type="radio" id="Radio1" value="Radio1" />
-            <label class="btn btn-outline-primary" for="Radio1" (click)="setRadioValue('Radio1')">مشتری - قیمت</label>
+          <ul class="nav nav-pills navtab-bg nav-justified">
 
-            <input class="btn-check visually-hidden" formControlName="radio1" type="radio" id="Radio2" value="Radio2" />
-            <label class="btn btn-outline-primary" for="Radio2" (click)="setRadioValue('Radio2')">مشتری - تعداد</label>
+            <li class="nav-item">
+              <a href="#Radio1" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
+                <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+                <span class="d-none d-sm-inline-block">چارت مشتری</span>
+              </a>
+            </li>
+            <li class="nav-item">
 
-            <input class="btn-check visually-hidden" formControlName="radio1" type="radio" id="Radio4" value="Radio4" />
-            <label class="btn btn-outline-primary" for="Radio4" (click)="setRadioValue('Radio4')">چارت مشتری</label>
-            <!-- 
-          <input class="btn-check visually-hidden" formControlName="radio1" type="radio" id="Radio5" value="Radio5" />
-          <label class="btn btn-outline-primary" for="Radio5" (click)="setRadioValue('Radio5')">chart Gps Location</label> -->
-          </div>
-        </form>
-
-
-      </div>
-    </div>
-    <!-- begin::Header -->
-    <div class="card">
-      <div class="card-header border-0 pt-5">
-
-        <div class="row">
-
-
-        </div>
-
-        <div class="card-toolbar">
-          <!-- begin::Menu -->
+              <a href="#Radio3" data-bs-toggle="tab" aria-expanded="false" class="nav-link ">
+                <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+                <span class="d-none d-sm-inline-block">فاکتور</span>
+              </a>
+            </li>
 
 
 
+            <li class="nav-item">
+              <a href="#Radio2" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+                <span class="d-none d-sm-inline-block">مشتری - تعداد</span>
+              </a>
+            </li>
 
-          <!-- <a [routerLink]="['/manager/broker/edit-form', 0]">ایجاد رکرود جدید</a> -->
+            <li class="nav-item">
+              <a href="#Radio4" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+                <span class="d-none d-sm-inline-block">مشتری - قیمت</span>
+              </a>
+            </li>
 
-          <!-- end::Menu -->
-        </div>
-      </div>
+
+          </ul>
 
 
 
-      <div>
-        <div *ngIf="selectedRadio === 'Radio1'">
-          <!-- begin::header Table  -->
-          <div class="row mx-3">
-            <div class="col-4 ">
-              <h3 class="card-title align-items-start flex-column">
-                <span class="card-label ">لیست مشتری - قیمت :</span>
-              </h3>
-            </div>
-          </div>
-          <!-- End::header Table  -->
-          <!-- <c-col xs="12">
-            <c-card class="mb-4">
 
-              <c-card-body>
-                <c-chart type="bar" [data]="chartBarData"></c-chart>
-              </c-card-body>
-            </c-card>
-          </c-col> -->
+          <div class="tab-content">
 
-          <div class="col-md-12">
-            <div class="card mb-4">
-              <div class="card-body">
-                <!-- Your chart component goes here -->
-                <!-- <c-chart type="bar" [data]="chartBarData"></c-chart> -->
+
+
+
+
+
+            <div class="tab-pane active" id="Radio1">
+
+              <div class="card-body py-3">
+                <div class="table-responsive">
+
+                  <table class="table table-bordered align-middle gs-0 gy-4">
+                    <thead>
+                      <tr class="fw-bolder ">
+                        <th class="min-w-125px"></th>
+                        <th class="min-w-125px">نام نشتری</th>
+                        <th class="min-w-125px">تعداد عنوان </th>
+                        <th class="min-w-125px">تعداد سفارش </th>
+                        <th class="min-w-125px">جمع کل </th>
+                      </tr>
+                    </thead>
+                    <tbody *ngFor="let item of Broker_Prefactors; let i = index">
+                      <tr>
+                        <td>{{ i+1 }}</td>
+                        <td>{{ item.CustName }}</td>
+                        <td>{{ item.RowsCount }}</td>
+                        <td>{{ item.SumAmount }}</td>
+                        <td>{{ item.SumPrice }}</td>
+                      </tr>
+                    </tbody>
+
+                  </table>
+                </div>
 
               </div>
+
+
+
+
             </div>
-          </div>
 
 
-        </div>
-        <div *ngIf="selectedRadio === 'Radio2'">
-          <!-- begin::header Table  -->
-          <div class="row mx-3">
-            <div class="col-4 ">
+            <div class="tab-pane" id="Radio2">
               <h3 class="card-title align-items-start flex-column">
                 <span class="card-label ">لیست مشتری - تعداد :</span>
               </h3>
+
             </div>
-          </div>
-          <!-- End::header Table  -->
-          <!-- <c-col xs="12">
-            <c-card class="mb-4">
+            <div class="tab-pane " id="Radio3">
 
-              <c-card-body>
-                <c-chart type="bar" [data]="chartBarData1"></c-chart>
-              </c-card-body>
-            </c-card>
-          </c-col> -->
-
-
-          <div class="col-md-12">
-            <div class="card mb-4">
-              <div class="card-body">
-                <!-- Your chart component goes here -->
-                <!-- <c-chart type="bar" [data]="chartBarData1"></c-chart> -->
-              </div>
-            </div>
-          </div>
-
-
-        </div>
-        <div *ngIf="selectedRadio === 'Radio3'">
-
-          <!-- begin::header Table  -->
-          <div class="row mx-3">
-            <div class="col-4 ">
               <h3 class="card-title align-items-start flex-column">
                 <span class="card-label ">لیست فاکتور های ارسالی:</span>
               </h3>
             </div>
-          </div>
-          <!-- End::header Table  -->
 
-          <div class="card-body py-3">
-            <!-- begin::Table container -->
-            <div class="table-responsive">
+            <div class="tab-pane " id="Radio4">
+              <h3 class="card-title align-items-start flex-column">
+                <span class="card-label ">لیست مشتری - قیمت :</span>
+              </h3>
 
-              <table class="table table-bordered align-middle gs-0 gy-4">
-                <thead>
-                  <tr class="fw-bolder ">
-                    <th class="min-w-125px"></th>
-                    <th class="min-w-125px">نام نشتری</th>
-                    <th class="min-w-125px">تعداد عنوان </th>
-                    <th class="min-w-125px">تعداد سفارش </th>
-                    <th class="min-w-125px">جمع کل </th>
-                  </tr>
-                </thead>
-                <tbody *ngFor="let item of Broker_Prefactors; let i = index">
-                  <tr>
-                    <td>{{ i+1 }}</td>
-                    <td>{{ item.CustName }}</td>
-                    <td>{{ item.RowsCount }}</td>
-                    <td>{{ item.SumAmount }}</td>
-                    <td>{{ item.SumPrice }}</td>
-                  </tr>
-                </tbody>
-
-              </table>
             </div>
 
-            <!-- end::Table container -->
+
           </div>
         </div>
+
+
+
+
       </div>
-
-
-
-
-
-      <!-- end::Header -->
-      <!-- begin::Body -->
-
-      <!-- begin::Body -->
     </div>
-
 
 
   </div>

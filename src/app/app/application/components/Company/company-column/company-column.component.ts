@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ApplicationWebApiService } from '../../../services/ApplicationWebApi.service';
 import { ActivatedRoute } from '@angular/router';
 import { UntypedFormBuilder } from '@angular/forms';
+import { CompanyWebApiService } from '../../../services/CompanyWebApi.service';
 
 
 @Component({
@@ -12,7 +12,7 @@ export class CompanyColumnComponent implements OnInit {
 
 
   constructor(
-    private repo: ApplicationWebApiService,
+    private repo: CompanyWebApiService,
     private route: ActivatedRoute,
     private formBuilder: UntypedFormBuilder
   ) { }
@@ -41,7 +41,6 @@ export class CompanyColumnComponent implements OnInit {
     this.repo.GetBasketColumnList(this.Apptype).subscribe(e => {
       this.BasketColumns = e;
 
-      console.log(this.BasketColumns)
 
     });
 

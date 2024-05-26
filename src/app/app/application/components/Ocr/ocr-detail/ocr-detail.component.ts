@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ApplicationWebApiService, } from '../../../services/ApplicationWebApi.service';
 import { ActivatedRoute } from '@angular/router';
 import { UntypedFormBuilder } from '@angular/forms';
+import { OcrWebApiService } from '../../../services/OcrWebApi.service';
 
 @Component({
   selector: 'app-ocr-detail',
@@ -11,7 +11,7 @@ export class OcrDetailComponent implements OnInit {
 
 
   constructor(
-    private repo: ApplicationWebApiService,
+    private repo: OcrWebApiService,
     private route: ActivatedRoute,
     private formBuilder: UntypedFormBuilder
   ) { }

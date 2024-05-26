@@ -24,46 +24,18 @@
     <div class="tab-content">
       <div class="tab-pane fade show active" role="tabpanel">
 
-
-
-        <!-- Inside ListVisibleComponent -->
-
-
-
-        <!-- begin::DBSetup -->
         <div>
-          <!-- begin::header Table  -->
 
-
-          <!-- <c-container class=" mt-5 mb-3">
-
-            <c-row class="justify-content-between">
-              <c-col xs="4">
-                <h3 class="card-title align-items-start flex-column">
-                  <span class="card-label ">تنظیم جدول اپلیکیشن :</span>
-                </h3>
-              </c-col>
-              <c-col xs="2">
-                <div>
-                  <button cButton color="success" class=" text-white"
-                    [routerLink]="['/application/broker-column-edit']"> ایجاد رکورد جدید</button>
-                </div>
-              </c-col>
-            </c-row>
-
-          </c-container> -->
-
-
-
-          <div class="row mt-5 mb-3">
-            <div class="col-md-4">
+          <div class="row mb-3">
+            <div class="col-md-6">
               <h3 class="card-title align-items-start flex-column">
                 <span class="card-label">تنظیم جدول اپلیکیشن :</span>
               </h3>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
               <div>
-                <a [routerLink]="['/application/broker-column-edit']" class="btn btn-success text-white"> ایجاد رکورد
+                <a [routerLink]="['/application/broker-column-edit']" class="rounded-pill btn btn-outline-success">
+                  ایجاد رکورد
                   جدید</a>
               </div>
             </div>
@@ -75,8 +47,6 @@
 
 
 
-          <!-- End::header Table  -->
-          <!-- begin::Table container -->
           <div class="table-responsive">
 
             <table class="table table-bordered align-middle gs-0 gy-4">
@@ -93,7 +63,6 @@
                   <th class="min-w-50px">نوع ستون</th>
                   <th class="min-w-50px">صورت</th>
 
-                  <!-- <th class="min-w-50px">Actions </th> -->
                 </tr>
               </thead>
               <tbody *ngFor="let item of BasketColumns; let i = index">
@@ -105,7 +74,6 @@
                   <td>{{ item.ObjectType }}</td>
                   <td>
                     <ng-container *ngIf="item.ListVisible == 0; else nonZeroList">
-                      <!-- Content when ListVisible is zero -->
                       محاسباتی
                     </ng-container>
                     <ng-template #nonZeroList>
@@ -115,13 +83,11 @@
                       </ng-container>
 
                       <ng-container *ngIf="item.ListVisible > 10">
-                        <!-- Content when ListVisible is positive -->
                         فقط نمایش
                       </ng-container>
 
 
                       <ng-container *ngIf="item.ListVisible < 0">
-                        <!-- Content when ListVisible is positive -->
                       </ng-container>
 
                     </ng-template>
@@ -130,13 +96,11 @@
                   <td>
 
                     <ng-container *ngIf="item.DetailVisible == 0; else nonZeroDetail">
-                      <!-- Content when DetailVisible is zero -->
                       محاسباتی
                     </ng-container>
                     <ng-template #nonZeroDetail>
 
                       <ng-container *ngIf="item.DetailVisible > 0">
-                        <!-- Content when DetailVisible is positive -->
                         فقط نمایش
                       </ng-container>
                       <ng-container *ngIf="item.DetailVisible < 0">
@@ -232,28 +196,12 @@
 
                     </ng-template>
                   </td>
-                  <!-- <td>
 
-                    <button cButton color="info" variant="ghost">edit</button>
-
-                    <button cButton color="danger" variant="ghost">delete</button>
-                  </td> -->
                 </tr>
               </tbody>
             </table>
           </div>
-          <!-- end::Table container -->
         </div>
-        <!-- end::DBSetup -->
-
-
-
-
-
-
-
-
-
 
 
 

@@ -6,19 +6,19 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
   templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit {
-  constructor(private oidcSecurityService: OidcSecurityService) {}
+  constructor(private oidcSecurityService: OidcSecurityService) { }
   userData = null;
   ngOnInit(): void {
     this.getUserData();
   }
   logout() {
-    this.oidcSecurityService
-      .logoffAndRevokeTokens()
-      .subscribe((result) => console.log(result));
+    // this.oidcSecurityService
+    //   .logoffAndRevokeTokens()
+    //   .subscribe((result) =>  result));
   }
   async getUserData() {
-    await this.oidcSecurityService.getUserData().subscribe((data) => {
-      this.userData = data;
-    });
+    // await this.oidcSecurityService.getUserData().subscribe((data) => {
+    //   this.userData = data;
+    // });
   }
 }

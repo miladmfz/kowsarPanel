@@ -1,195 +1,1459 @@
 <div class="row">
   <div class="col-12">
     <div class="page-title-box">
-      <h4 class="page-title">ویرایش</h4>
+      <h4 class="page-title">مدیریت کالا</h4>
     </div>
   </div>
 </div>
 
-<form [formGroup]="EditForm" (ngSubmit)="submit('')" id="submitForm">
-  <div class="row">
-    <div class="col-12">
+<div class="card-body">
+  <h4 class="header-title mb-4"> ویرایش کالا</h4>
+
+  <ul class="nav nav-pills navtab-bg nav-justified">
+    <li class="nav-item">
+      <a href="#GoodBase" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
+        <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+        <span class="d-none d-sm-inline-block">اطلاعات کالا</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#GoodExplains" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+        <span class="d-inline-block d-sm-none"><i class="mdi mdi-email-variant"></i></span>
+        <span class="d-none d-sm-inline-block">توضیحات کالا </span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#GoodComplete" data-bs-toggle="tab" aria-expanded="true" class="nav-link">
+        <span class="d-inline-block d-sm-none"><i class="mdi mdi-account"></i></span>
+        <span class="d-none d-sm-inline-block">اطلاعات تکمیلی</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a href="#GoodProperty" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+        <span class="d-inline-block d-sm-none"><i class="mdi mdi-cog"></i></span>
+        <span class="d-none d-sm-inline-block">خصوصیت اضافه</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#GoodRelations" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+        <span class="d-inline-block d-sm-none"><i class="mdi mdi-cog"></i></span>
+        <span class="d-none d-sm-inline-block">ارتباطات کالا</span>
+      </a>
+    </li>
+
+
+  </ul>
+
+
+
+
+  <div class="tab-content">
+
+
+
+    <div class="tab-pane active" id="GoodBase">
+
+
+      <form [formGroup]="EditForm_Base" (ngSubmit)="submit('')" id="submitForm">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body row">
+
+
+
+                <div class="row col-md-12">
+
+
+                  <div class="form-group col-md-3">
+                    <label for="GoodCode" class="col-form-label">کد سیستمی کالا </label>
+                    <input type="text" class="form-control" id="GoodCode" formControlName="GoodCode" maxlength="100"
+                      autocomplete="off" [readOnly]="true" />
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="GoodCode" class="col-form-label">کد اصلی</label>
+                    <input type="text" class="form-control" id="GoodCode" formControlName="GoodCode" maxlength="100"
+                      autocomplete="off" [readOnly]="true" />
+                  </div>
+
+
+                  <div class="form-group col-md-3">
+                    <label for="GoodSubCode" class="col-form-label">کد زیر مجموعه </label>
+                    <input type="text" class="form-control" id="GoodSubCode" formControlName="GoodSubCode"
+                      maxlength="100" autocomplete="off" />
+                  </div>
+
+
+
+                  <div class="form-group col-md-3">
+                    <label for="SellPriceType" class="col-form-label">نرخ فروش </label>
+                    <select formControlName="SellPriceType" id="SellPriceType" class="form-control custom-select"
+                      data-toggle="select2" (change)="onSellPriceTypeChange()">
+                      <option [value]="item.id" *ngFor="let item of SellPriceType_Lookup">{{item.name}}</option>
+                    </select>
+                  </div>
+
+
+                </div>
+
+
+
+
+                <div class="row col-md-12">
+
+                  <div class="form-group col-md-3">
+                    <label for="GoodType" class="col-form-label">نوع کالا </label>
+                    <select formControlName="GoodType" id="GoodType" class="form-control custom-select"
+                      data-toggle="select2">
+                      <option [value]="item.aType" *ngFor="let item of GoodType_lookup">{{item.aType}}</option>
+                    </select>
+                  </div>
+
+
+                  <div class="form-group col-md-3">
+                    <label for="Type" class="col-form-label">ماهیت کالا</label>
+
+                    <select formControlName="Type" id="Type" class="form-control custom-select" data-toggle="select2">
+                      <option [value]="item.id" *ngFor="let item of Type_Lookup">{{item.name}}</option>
+                    </select>
+                  </div>
+
+
+
+                  <div class="form-group col-md-3">
+                    <label for="UsedGood" class="col-form-label">مدل کالا</label>
+
+                    <select formControlName="UsedGood" id="UsedGood" class="form-control custom-select"
+                      data-toggle="select2">
+                      <option [value]="item.id" *ngFor="let item of UsedGood_Lookup">{{item.name}}</option>
+                    </select>
+                  </div>
+
+
+                </div>
+
+
+
+                <div class="form-group col-md-12">
+                  <label for="GoodName" class="col-form-label">نام کالا </label>
+                  <input type="text" class="form-control" id="GoodName" formControlName="GoodName" maxlength="400"
+                    autocomplete="off" />
+                </div>
+
+
+                <div class="row col-md-12">
+
+
+                  <div class="form-group col-md-3">
+                    <label for="Isbn" class="col-form-label">شایک </label>
+                    <input type="text" class="form-control" id="Isbn" formControlName="Isbn" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+
+                  <div class="form-group col-md-3">
+                    <label for="FirstBarCode" class="col-form-label"> بارکداز شایک </label>
+                    <input type="text" class="form-control" id="FirstBarCode" formControlName="FirstBarCode"
+                      maxlength="100" autocomplete="off" />
+                  </div>
+
+
+                  <div class="form-group col-md-3">
+
+                  </div>
+
+
+                  <div class="form-group col-md-3">
+                    <label for="BarCodePrintState" class="col-form-label">بارکد روی جلد</label>
+                    <select formControlName="BarCodePrintState" id="BarCodePrintState"
+                      class="form-control custom-select" data-toggle="select2">
+                      <option [value]="item.name" *ngFor="let item of BarCodePrintState_Lookup">{{item.name}}</option>
+                    </select>
+                  </div>
+
+                </div>
+
+
+
+
+
+
+
+                <div class="row col-md-12">
+
+
+                  <div class="form-group col-md-4">
+                    <label for="SellPrice1" class="col-form-label">نرخ فروش 1 </label>
+                    <input type="number" class="form-control" id="SellPrice1" formControlName="SellPrice1"
+                      maxlength="100" autocomplete="off" />
+                  </div>
+
+
+                  <div class="form-group col-md-4">
+                    <label for="SellPrice2" class="col-form-label">نرخ فروش 2 </label>
+                    <input type="number" class="form-control" id="SellPrice2" formControlName="SellPrice2"
+                      maxlength="100" autocomplete="off" />
+                  </div>
+
+
+                  <div class="form-group col-md-4">
+                    <label for="SellPrice3" class="col-form-label">نرخ فروش 3 </label>
+                    <input type="number" class="form-control" id="SellPrice3" formControlName="SellPrice3"
+                      maxlength="100" autocomplete="off" />
+                  </div>
+                </div>
+
+
+
+                <div class="row col-md-12">
+
+
+                  <div class="form-group col-md-4">
+                    <label for="SellPrice4" class="col-form-label">نرخ فروش 4 </label>
+                    <input type="number" class="form-control" id="SellPrice4" formControlName="SellPrice4"
+                      maxlength="100" autocomplete="off" />
+                  </div>
+
+
+                  <div class="form-group col-md-4">
+                    <label for="SellPrice5" class="col-form-label">نرخ فروش 5 </label>
+                    <input type="number" class="form-control" id="SellPrice5" formControlName="SellPrice5"
+                      maxlength="100" autocomplete="off" />
+                  </div>
+
+
+                  <div class="form-group col-md-4">
+                    <label for="SellPrice6" class="col-form-label">نرخ فروش 6 </label>
+                    <input type="number" class="form-control" id="SellPrice6" formControlName="SellPrice6"
+                      maxlength="100" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="row col-md-12">
+
+                  <div class="form-group col-md-4">
+                    <label for="MinSellPrice" class="col-form-label">حداقل قیمت فروش </label>
+                    <input type="number" class="form-control" id="MinSellPrice" formControlName="MinSellPrice"
+                      maxlength="100" autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-4">
+
+                  </div>
+
+                  <div class="form-group col-md-4">
+                    <label for="MaxSellPrice" class="col-form-label">فی ناخالص </label>
+                    <input type="number" (change)="onMaxPriceTypeChange()" class="form-control" id="MaxSellPrice"
+                      formControlName="MaxSellPrice" maxlength="100" autocomplete="off" />
+                  </div>
+
+
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
       <div class="card">
-        <div class="card-body row">
+        <div class="card-body">
+          <div class="col-sm-6">
+            <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
+              (click)="submit('base_exit')">
+              <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره و خروج
+            </a>
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+              (click)="submit('base')">
+              <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره
+            </a>
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+              (click)="submit('base_new')">
+              <span class="btn-label"><i class="fas fa-plus"></i></span>ذخیره و جدید
+            </a>
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+              (click)="onBtnCancelClick()">
+              <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
+            </a>
+          </div>
+        </div>
+      </div>
 
 
-          <div class="row col-md-12">
 
 
-            <div class="form-group col-md-3">
-              <label for="GoodCode" class="col-form-label">کد کالا </label>
-              <input type="text" class="form-control" id="GoodCode" formControlName="GoodCode" maxlength="100"
-                autocomplete="off" [readOnly]="true" />
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="tab-pane" id="GoodExplains">
+
+
+
+
+
+
+
+      <form [formGroup]="EditForm_Explain" (ngSubmit)="submit('')" id="submitForm">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body row">
+
+
+
+                <div class="row col-md-12">
+
+
+                  <div class="form-group col-md-3">
+                    <label for="GoodCode" class="col-form-label">کد کالا </label>
+                    <input type="text" class="form-control" id="GoodCode" formControlName="GoodCode" maxlength="100"
+                      autocomplete="off" [readOnly]="true" />
+                  </div>
+
+
+                  <div class="form-group col-md-3">
+                    <label for="GoodSubCode" class="col-form-label">کد زیر مجموعه </label>
+                    <input type="text" class="form-control" id="GoodSubCode" formControlName="GoodSubCode"
+                      maxlength="100" autocomplete="off" [readOnly]="true" />
+                  </div>
+
+
+
+                </div>
+
+
+
+
+
+
+                <div class="form-group col-md-12">
+                  <label for="GoodName" class="col-form-label">نام کالا </label>
+                  <input type="text" class="form-control" id="GoodName" formControlName="GoodName" maxlength="400"
+                    autocomplete="off" [readOnly]="true" />
+                </div>
+
+
+
+                <div class="form-group col-md-12">
+                  <label for="GoodExplain1" class="col-form-label">توضیحات 1</label>
+                  <input type="text" class="form-control" id="GoodExplain1" formControlName="GoodExplain1"
+                    maxlength="200" autocomplete="off" />
+                </div>
+
+                <div class="form-group col-md-12">
+                  <label for="GoodExplain2" class="col-form-label">توضیحات 2</label>
+                  <input type="text" class="form-control" id="GoodExplain2" formControlName="GoodExplain2"
+                    maxlength="200" autocomplete="off" />
+                </div>
+
+                <div class="form-group col-md-12">
+                  <label for="GoodExplain3" class="col-form-label">توضیحات 3</label>
+                  <input type="text" class="form-control" id="GoodExplain3" formControlName="GoodExplain3"
+                    maxlength="200" autocomplete="off" />
+                </div>
+
+                <div class="form-group col-md-12">
+                  <label for="GoodExplain4" class="col-form-label">توضیحات 4</label>
+                  <input type="text" class="form-control" id="GoodExplain4" formControlName="GoodExplain4"
+                    maxlength="200" autocomplete="off" />
+                </div>
+
+                <div class="form-group col-md-12">
+                  <label for="GoodExplain5" class="col-form-label">توضیحات 5</label>
+                  <input type="text" class="form-control" id="GoodExplain5" formControlName="GoodExplain5"
+                    maxlength="200" autocomplete="off" />
+                </div>
+
+                <div class="form-group col-md-12">
+                  <label for="GoodExplain6" class="col-form-label">توضیحات 6</label>
+                  <input type="text" class="form-control" id="GoodExplain6" formControlName="GoodExplain6"
+                    maxlength="200" autocomplete="off" />
+                </div>
+
+
+
+              </div>
             </div>
+          </div>
+        </div>
+      </form>
 
-            <div class="form-group col-md-3">
-              <label for="GoodType" class="col-form-label">نوع کالا </label>
-              <select formControlName="GoodType" id="GoodType" class="form-control custom-select" data-toggle="select2">
-                <option [value]="item.aType" *ngFor="let item of GoodType_lookup">{{item.aType}}</option>
-              </select>
+      <div class="card">
+        <div class="card-body">
+          <div class="col-sm-6">
+            <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
+              (click)="submit('explain_exit')">
+              <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره و خروج
+            </a>
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+              (click)="submit('explain')">
+              <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره
+            </a>
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+              (click)="submit('explain_new')">
+              <span class="btn-label"><i class="fas fa-plus"></i></span>ذخیره و جدید
+            </a>
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+              (click)="onBtnCancelClick()">
+              <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
+            </a>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+    <div class="tab-pane show" id="GoodComplete">
+
+
+
+
+
+      <form [formGroup]="EditForm_Complete" (ngSubmit)="submit('')" id="submitForm">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body row">
+
+
+
+                <div class="row col-md-12">
+
+
+                  <div class="form-group col-md-3">
+                    <label for="GoodCode" class="col-form-label">کد کالا </label>
+                    <input type="text" class="form-control" id="GoodCode" formControlName="GoodCode" maxlength="100"
+                      autocomplete="off" [readOnly]="true" />
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="GoodSubCode" class="col-form-label">کد زیر مجموعه </label>
+                    <input type="text" class="form-control" id="GoodSubCode" formControlName="GoodSubCode"
+                      maxlength="100" autocomplete="off" [readOnly]="true" />
+                  </div>
+
+
+
+                </div>
+
+
+
+
+
+                <div class="form-group col-md-12">
+                  <label for="GoodName" class="col-form-label">نام کالا </label>
+                  <input type="text" class="form-control" id="GoodName" formControlName="GoodName" maxlength="400"
+                    autocomplete="off" [readOnly]="true" />
+                </div>
+
+
+                <div class="row col-md-12">
+
+                  <div class="form-group col-md-3">
+                    <label for="MinAmount" class="col-form-label">حداقل تعداد </label>
+                    <input type="number" class="form-control" id="MinAmount" formControlName="MinAmount" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="MaxAmount" class="col-form-label">حداکثر تعداد</label>
+                    <input type="number" class="form-control" id="MaxAmount" formControlName="MaxAmount" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="SefareshPoint" class="col-form-label">نقطه سفارش </label>
+                    <input type="number" class="form-control" id="SefareshPoint" formControlName="SefareshPoint"
+                      maxlength="100" autocomplete="off" />
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="CriticalPoint" class="col-form-label">نقطه سفارش بحرانی</label>
+                    <input type="number" class="form-control" id="CriticalPoint" formControlName="CriticalPoint"
+                      maxlength="100" autocomplete="off" />
+                  </div>
+
+
+                </div>
+
+
+
+
+
+
+                <div class="row col-md-12">
+
+
+                  <div class="form-group col-md-3">
+                    <label for="MinBuyPrice" class="col-form-label">آخرین مصوبه قیمت خرید </label>
+                    <input type="number" class="form-control" id="MinBuyPrice" formControlName="MinBuyPrice"
+                      maxlength="100" autocomplete="off" />
+                  </div>
+
+
+                  <div class="form-group col-md-3">
+                    <label for="MaxBuyPrice" class="col-form-label">آخرین درصد خرید </label>
+                    <input type="number" class="form-control" id="MaxBuyPrice" formControlName="MaxBuyPrice"
+                      maxlength="100" autocomplete="off" />
+                  </div>
+
+
+                  <div class="form-group col-md-3">
+                    <label for="Tax" class="col-form-label">ارزش افزوده </label>
+                    <input type="number" class="form-control" id="Tax" formControlName="Tax" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="MayorTax" class="col-form-label">عوارض شهرداری </label>
+                    <input type="number" class="form-control" id="MayorTax" formControlName="MayorTax" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+                </div>
+
+
+              </div>
             </div>
+          </div>
+        </div>
+      </form>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="col-sm-6">
+            <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
+              (click)="submit('base_exit')">
+              <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره و خروج
+            </a>
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+              (click)="submit('base')">
+              <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره
+            </a>
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+              (click)="submit('base_new')">
+              <span class="btn-label"><i class="fas fa-plus"></i></span>ذخیره و جدید
+            </a>
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+              (click)="onBtnCancelClick()">
+              <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
+            </a>
+          </div>
+        </div>
+      </div>
 
 
 
-            <div class="form-group col-md-3">
-              <label for="Isbn" class="col-form-label">شایک </label>
-              <input type="text" class="form-control" id="Isbn" formControlName="Isbn" maxlength="100"
-                autocomplete="off" />
+
+
+
+    </div>
+
+    <div class="tab-pane" id="GoodProperty">
+
+
+
+      <form [formGroup]="EditForm_Property" (ngSubmit)="submit('')" id="submitForm">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body row">
+
+
+
+                <div class="row col-md-12">
+
+
+                  <div class="form-group col-md-3">
+                    <label for="GoodCode" class="col-form-label">کد کالا </label>
+                    <input type="text" class="form-control" id="GoodCode" formControlName="GoodCode" maxlength="100"
+                      autocomplete="off" [readOnly]="true" />
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="GoodSubCode" class="col-form-label">کد زیر مجموعه </label>
+                    <input type="text" class="form-control" id="GoodSubCode" formControlName="GoodSubCode"
+                      maxlength="100" autocomplete="off" [readOnly]="true" />
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="GoodType" class="col-form-label">نوع کالا </label>
+                    <input type="text" class="form-control" id="GoodType" formControlName="GoodType" maxlength="100"
+                      autocomplete="off" [readOnly]="true" />
+                  </div>
+
+
+
+                </div>
+
+
+
+
+
+                <div class="form-group col-md-12">
+                  <label for="GoodName" class="col-form-label">نام کالا </label>
+                  <input type="text" class="form-control" id="GoodName" formControlName="GoodName" maxlength="400"
+                    autocomplete="off" [readOnly]="true" />
+                </div>
+
+
+                <div class="row col-md-12">
+
+
+
+                  <ng-container *ngIf="checkPropertyValueMap('Nvarchar1')">
+                    <div class="form-group col-md-3">
+                      <label for="Nvarchar1" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar1') }}</label>
+                      <ng-container *ngIf="PropertyHasCHOICES('Nvarchar1'); else Nvarchar1nonChoices">
+                        <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                        <select formControlName="Nvarchar1" id="Nvarchar1" class="form-control custom-select"
+                          data-toggle="select2">
+                          <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar1')">{{
+                            item._text }}</option>
+                        </select>
+                      </ng-container>
+                      <ng-template #Nvarchar1nonChoices>
+                        <input type="text" class="form-control" id="Nvarchar1" formControlName="Nvarchar1"
+                          maxlength="100" autocomplete="off" />
+                      </ng-template>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="checkPropertyValueMap('Nvarchar2')">
+                    <div class="form-group col-md-3">
+                      <label for="Nvarchar2" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar2') }}</label>
+                      <ng-container *ngIf="PropertyHasCHOICES('Nvarchar2'); else Nvarchar2nonChoices">
+                        <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                        <select formControlName="Nvarchar2" id="Nvarchar2" class="form-control custom-select"
+                          data-toggle="select2">
+                          <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar2')">{{
+                            item._text }}</option>
+                        </select>
+                      </ng-container>
+                      <ng-template #Nvarchar2nonChoices>
+                        <input type="text" class="form-control" id="Nvarchar2" formControlName="Nvarchar2"
+                          maxlength="100" autocomplete="off" />
+                      </ng-template>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="checkPropertyValueMap('Nvarchar3')">
+                    <div class="form-group col-md-3">
+                      <label for="Nvarchar3" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar3') }}</label>
+                      <ng-container *ngIf="PropertyHasCHOICES('Nvarchar3'); else Nvarchar3nonChoices">
+                        <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                        <select formControlName="Nvarchar3" id="Nvarchar3" class="form-control custom-select"
+                          data-toggle="select2">
+                          <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar3')">{{
+                            item._text }}</option>
+                        </select>
+                      </ng-container>
+                      <ng-template #Nvarchar3nonChoices>
+                        <input type="text" class="form-control" id="Nvarchar3" formControlName="Nvarchar3"
+                          maxlength="100" autocomplete="off" />
+                      </ng-template>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="checkPropertyValueMap('Nvarchar4')">
+                    <div class="form-group col-md-3">
+                      <label for="Nvarchar4" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar4') }}</label>
+                      <ng-container *ngIf="PropertyHasCHOICES('Nvarchar4'); else Nvarchar4nonChoices">
+                        <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                        <select formControlName="Nvarchar4" id="Nvarchar4" class="form-control custom-select"
+                          data-toggle="select2">
+                          <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar4')">{{
+                            item._text }}</option>
+                        </select>
+                      </ng-container>
+                      <ng-template #Nvarchar4nonChoices>
+                        <input type="text" class="form-control" id="Nvarchar4" formControlName="Nvarchar4"
+                          maxlength="100" autocomplete="off" />
+                      </ng-template>
+                    </div>
+                  </ng-container>
+
+
+                </div>
+
+                <div class="row col-md-12">
+
+
+                  <ng-container *ngIf="checkPropertyValueMap('Nvarchar5')">
+                    <div class="form-group col-md-3">
+                      <label for="Nvarchar5" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar5') }}</label>
+                      <ng-container *ngIf="PropertyHasCHOICES('Nvarchar5'); else Nvarchar5nonChoices">
+                        <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                        <select formControlName="Nvarchar5" id="Nvarchar5" class="form-control custom-select"
+                          data-toggle="select2">
+                          <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar5')">{{
+                            item._text }}</option>
+                        </select>
+                      </ng-container>
+                      <ng-template #Nvarchar5nonChoices>
+                        <input type="text" class="form-control" id="Nvarchar5" formControlName="Nvarchar5"
+                          maxlength="100" autocomplete="off" />
+                      </ng-template>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="checkPropertyValueMap('Nvarchar6')">
+                    <div class="form-group col-md-3">
+                      <label for="Nvarchar6" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar6') }}</label>
+                      <ng-container *ngIf="PropertyHasCHOICES('Nvarchar6'); else Nvarchar6nonChoices">
+                        <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                        <select formControlName="Nvarchar6" id="Nvarchar6" class="form-control custom-select"
+                          data-toggle="select2">
+                          <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar6')">{{
+                            item._text }}</option>
+                        </select>
+                      </ng-container>
+                      <ng-template #Nvarchar6nonChoices>
+                        <input type="text" class="form-control" id="Nvarchar6" formControlName="Nvarchar6"
+                          maxlength="100" autocomplete="off" />
+                      </ng-template>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="checkPropertyValueMap('Nvarchar7')">
+                    <div class="form-group col-md-3">
+                      <label for="Nvarchar7" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar7') }}</label>
+                      <ng-container *ngIf="PropertyHasCHOICES('Nvarchar7'); else Nvarchar7nonChoices">
+                        <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                        <select formControlName="Nvarchar7" id="Nvarchar7" class="form-control custom-select"
+                          data-toggle="select2">
+                          <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar7')">{{
+                            item._text }}</option>
+                        </select>
+                      </ng-container>
+                      <ng-template #Nvarchar7nonChoices>
+                        <input type="text" class="form-control" id="Nvarchar7" formControlName="Nvarchar7"
+                          maxlength="100" autocomplete="off" />
+                      </ng-template>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="checkPropertyValueMap('Nvarchar8')">
+                    <div class="form-group col-md-3">
+                      <label for="Nvarchar8" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar8') }}</label>
+                      <ng-container *ngIf="PropertyHasCHOICES('Nvarchar8'); else Nvarchar8nonChoices">
+                        <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                        <select formControlName="Nvarchar8" id="Nvarchar8" class="form-control custom-select"
+                          data-toggle="select2">
+                          <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar8')">{{
+                            item._text }}</option>
+                        </select>
+                      </ng-container>
+                      <ng-template #Nvarchar8nonChoices>
+                        <input type="text" class="form-control" id="Nvarchar8" formControlName="Nvarchar8"
+                          maxlength="100" autocomplete="off" />
+                      </ng-template>
+                    </div>
+                  </ng-container>
+
+
+                  <div class="row col-md-12">
+
+
+                    <ng-container *ngIf="checkPropertyValueMap('Nvarchar9')">
+                      <div class="form-group col-md-3">
+                        <label for="Nvarchar9" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar9') }}</label>
+                        <ng-container *ngIf="PropertyHasCHOICES('Nvarchar9'); else Nvarchar9nonChoices">
+                          <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                          <select formControlName="Nvarchar9" id="Nvarchar9" class="form-control custom-select"
+                            data-toggle="select2">
+                            <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar9')">{{
+                              item._text }}</option>
+                          </select>
+                        </ng-container>
+                        <ng-template #Nvarchar9nonChoices>
+                          <input type="text" class="form-control" id="Nvarchar9" formControlName="Nvarchar9"
+                            maxlength="100" autocomplete="off" />
+                        </ng-template>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="checkPropertyValueMap('Nvarchar10')">
+                      <div class="form-group col-md-3">
+                        <label for="Nvarchar10" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar10') }}</label>
+                        <ng-container *ngIf="PropertyHasCHOICES('Nvarchar10'); else Nvarchar10nonChoices">
+                          <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                          <select formControlName="Nvarchar10" id="Nvarchar10" class="form-control custom-select"
+                            data-toggle="select2">
+                            <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar10')">{{
+                              item._text }}</option>
+                          </select>
+                        </ng-container>
+                        <ng-template #Nvarchar10nonChoices>
+                          <input type="text" class="form-control" id="Nvarchar10" formControlName="Nvarchar10"
+                            maxlength="100" autocomplete="off" />
+                        </ng-template>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="checkPropertyValueMap('Nvarchar11')">
+                      <div class="form-group col-md-3">
+                        <label for="Nvarchar11" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar11') }}</label>
+                        <ng-container *ngIf="PropertyHasCHOICES('Nvarchar11'); else Nvarchar11nonChoices">
+                          <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                          <select formControlName="Nvarchar11" id="Nvarchar11" class="form-control custom-select"
+                            data-toggle="select2">
+                            <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar11')">{{
+                              item._text }}</option>
+                          </select>
+                        </ng-container>
+                        <ng-template #Nvarchar11nonChoices>
+                          <input type="text" class="form-control" id="Nvarchar11" formControlName="Nvarchar11"
+                            maxlength="100" autocomplete="off" />
+                        </ng-template>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="checkPropertyValueMap('Nvarchar12')">
+                      <div class="form-group col-md-3">
+                        <label for="Nvarchar12" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar12') }}</label>
+                        <ng-container *ngIf="PropertyHasCHOICES('Nvarchar12'); else Nvarchar12nonChoices">
+                          <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                          <select formControlName="Nvarchar12" id="Nvarchar12" class="form-control custom-select"
+                            data-toggle="select2">
+                            <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar12')">{{
+                              item._text }}</option>
+                          </select>
+                        </ng-container>
+                        <ng-template #Nvarchar12nonChoices>
+                          <input type="text" class="form-control" id="Nvarchar12" formControlName="Nvarchar12"
+                            maxlength="100" autocomplete="off" />
+                        </ng-template>
+                      </div>
+                    </ng-container>
+
+
+                  </div>
+
+                  <div class="row col-md-12">
+
+                    <ng-container *ngIf="checkPropertyValueMap('Nvarchar13')">
+                      <div class="form-group col-md-3">
+                        <label for="Nvarchar13" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar13') }}</label>
+                        <ng-container *ngIf="PropertyHasCHOICES('Nvarchar13'); else Nvarchar13nonChoices">
+                          <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                          <select formControlName="Nvarchar13" id="Nvarchar13" class="form-control custom-select"
+                            data-toggle="select2">
+                            <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar13')">{{
+                              item._text }}</option>
+                          </select>
+                        </ng-container>
+                        <ng-template #Nvarchar13nonChoices>
+                          <input type="text" class="form-control" id="Nvarchar13" formControlName="Nvarchar13"
+                            maxlength="100" autocomplete="off" />
+                        </ng-template>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="checkPropertyValueMap('Nvarchar14')">
+                      <div class="form-group col-md-3">
+                        <label for="Nvarchar14" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar14') }}</label>
+                        <ng-container *ngIf="PropertyHasCHOICES('Nvarchar14'); else Nvarchar14nonChoices">
+                          <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                          <select formControlName="Nvarchar14" id="Nvarchar14" class="form-control custom-select"
+                            data-toggle="select2">
+                            <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar14')">{{
+                              item._text }}</option>
+                          </select>
+                        </ng-container>
+                        <ng-template #Nvarchar14nonChoices>
+                          <input type="text" class="form-control" id="Nvarchar14" formControlName="Nvarchar14"
+                            maxlength="100" autocomplete="off" />
+                        </ng-template>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="checkPropertyValueMap('Nvarchar15')">
+                      <div class="form-group col-md-3">
+                        <label for="Nvarchar15" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar15') }}</label>
+                        <ng-container *ngIf="PropertyHasCHOICES('Nvarchar15'); else Nvarchar15nonChoices">
+                          <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                          <select formControlName="Nvarchar15" id="Nvarchar15" class="form-control custom-select"
+                            data-toggle="select2">
+                            <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar15')">{{
+                              item._text }}</option>
+                          </select>
+                        </ng-container>
+                        <ng-template #Nvarchar15nonChoices>
+                          <input type="text" class="form-control" id="Nvarchar15" formControlName="Nvarchar15"
+                            maxlength="100" autocomplete="off" />
+                        </ng-template>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="checkPropertyValueMap('Nvarchar16')">
+                      <div class="form-group col-md-3">
+                        <label for="Nvarchar16" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar16') }}</label>
+                        <ng-container *ngIf="PropertyHasCHOICES('Nvarchar16'); else Nvarchar16nonChoices">
+                          <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                          <select formControlName="Nvarchar16" id="Nvarchar16" class="form-control custom-select"
+                            data-toggle="select2">
+                            <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar16')">{{
+                              item._text }}</option>
+                          </select>
+                        </ng-container>
+                        <ng-template #Nvarchar16nonChoices>
+                          <input type="text" class="form-control" id="Nvarchar16" formControlName="Nvarchar16"
+                            maxlength="100" autocomplete="off" />
+                        </ng-template>
+                      </div>
+                    </ng-container>
+
+
+                  </div>
+
+                  <div class="row col-md-12">
+
+
+                    <ng-container *ngIf="checkPropertyValueMap('Nvarchar17')">
+                      <div class="form-group col-md-3">
+                        <label for="Nvarchar17" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar17') }}</label>
+                        <ng-container *ngIf="PropertyHasCHOICES('Nvarchar17'); else Nvarchar17nonChoices">
+                          <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                          <select formControlName="Nvarchar17" id="Nvarchar17" class="form-control custom-select"
+                            data-toggle="select2">
+                            <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar17')">{{
+                              item._text }}</option>
+                          </select>
+                        </ng-container>
+                        <ng-template #Nvarchar17nonChoices>
+                          <input type="text" class="form-control" id="Nvarchar17" formControlName="Nvarchar17"
+                            maxlength="100" autocomplete="off" />
+                        </ng-template>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="checkPropertyValueMap('Nvarchar18')">
+                      <div class="form-group col-md-3">
+                        <label for="Nvarchar18" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar18') }}</label>
+                        <ng-container *ngIf="PropertyHasCHOICES('Nvarchar18'); else Nvarchar18nonChoices">
+                          <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                          <select formControlName="Nvarchar18" id="Nvarchar18" class="form-control custom-select"
+                            data-toggle="select2">
+                            <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar18')">{{
+                              item._text }}</option>
+                          </select>
+                        </ng-container>
+                        <ng-template #Nvarchar18nonChoices>
+                          <input type="text" class="form-control" id="Nvarchar18" formControlName="Nvarchar18"
+                            maxlength="100" autocomplete="off" />
+                        </ng-template>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="checkPropertyValueMap('Nvarchar19')">
+                      <div class="form-group col-md-3">
+                        <label for="Nvarchar19" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar19') }}</label>
+                        <ng-container *ngIf="PropertyHasCHOICES('Nvarchar19'); else Nvarchar19nonChoices">
+                          <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                          <select formControlName="Nvarchar19" id="Nvarchar19" class="form-control custom-select"
+                            data-toggle="select2">
+                            <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar19')">{{
+                              item._text }}</option>
+                          </select>
+                        </ng-container>
+                        <ng-template #Nvarchar19nonChoices>
+                          <input type="text" class="form-control" id="Nvarchar19" formControlName="Nvarchar19"
+                            maxlength="100" autocomplete="off" />
+                        </ng-template>
+                      </div>
+                    </ng-container>
+
+
+
+
+
+
+                    <ng-container *ngIf="checkPropertyValueMap('Nvarchar20')">
+                      <div class="form-group col-md-3">
+                        <label for="Nvarchar20" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar20') }}</label>
+                        <ng-container *ngIf="PropertyHasCHOICES('Nvarchar20'); else Nvarchar20nonChoices">
+                          <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                          <select formControlName="Nvarchar20" id="Nvarchar20" class="form-control custom-select"
+                            data-toggle="select2">
+                            <option [value]="item._text" *ngFor="let item of GetChoicesArray('Nvarchar20')">{{
+                              item._text }}</option>
+                          </select>
+                        </ng-container>
+                        <ng-template #Nvarchar20nonChoices>
+                          <input type="text" class="form-control" id="Nvarchar20" formControlName="Nvarchar20"
+                            maxlength="100" autocomplete="off" />
+                        </ng-template>
+                      </div>
+                    </ng-container>
+
+
+
+
+                  </div>
+
+
+
+
+                  <div class="row col-md-12">
+
+                    <ng-container *ngIf="checkPropertyValueMap('Int1')">
+
+                      <div class="form-group col-md-2">
+                        <label for="Int1" class="col-form-label">{{getDisplayNamesdsd('Int1')}}</label>
+                        <input type="number" class="form-control" id="Int1" formControlName="Int1" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Int2')">
+                      <div class="form-group col-md-2">
+                        <label for="Int2" class="col-form-label">{{getDisplayNamesdsd('Int2')}}</label>
+                        <input type="number" class="form-control" id="Int2" formControlName="Int2" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Int3')">
+                      <div class="form-group col-md-2">
+                        <label for="Int3" class="col-form-label">{{getDisplayNamesdsd('Int3')}}</label>
+                        <input type="number" class="form-control" id="Int3" formControlName="Int3" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Int4')">
+                      <div class="form-group col-md-2">
+                        <label for="Int4" class="col-form-label">{{getDisplayNamesdsd('Int4')}}</label>
+                        <input type="number" class="form-control" id="Int4" formControlName="Int4" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Int5')">
+                      <div class="form-group col-md-2">
+                        <label for="Int5" class="col-form-label">{{getDisplayNamesdsd('Int5')}}</label>
+                        <input type="number" class="form-control" id="Int5" formControlName="Int5" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                  </div>
+
+
+
+
+                  <div class="row col-md-12">
+
+
+                    <ng-container *ngIf="checkPropertyValueMap('Int6')">
+
+                      <div class="form-group col-md-2">
+                        <label for="Int6" class="col-form-label">{{getDisplayNamesdsd('Int6')}}</label>
+                        <input type="number" class="form-control" id="Int6" formControlName="Int6" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Int7')">
+                      <div class="form-group col-md-2">
+                        <label for="Int7" class="col-form-label">{{getDisplayNamesdsd('Int7')}}</label>
+                        <input type="number" class="form-control" id="Int7" formControlName="Int7" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Int8')">
+                      <div class="form-group col-md-2">
+                        <label for="Int8" class="col-form-label">{{getDisplayNamesdsd('Int8')}}</label>
+                        <input type="number" class="form-control" id="Int8" formControlName="Int8" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Int9')">
+                      <div class="form-group col-md-2">
+                        <label for="Int9" class="col-form-label">{{getDisplayNamesdsd('Int9')}}</label>
+                        <input type="number" class="form-control" id="Int9" formControlName="Int9" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Int10')">
+                      <div class="form-group col-md-2">
+                        <label for="Int10" class="col-form-label">{{getDisplayNamesdsd('Int10')}}</label>
+                        <input type="number" class="form-control" id="Int10" formControlName="Int10" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                  </div>
+
+
+                  <div class="row col-md-12">
+
+                    <ng-container *ngIf="checkPropertyValueMap('Float1')">
+                      <div class="form-group col-md-2">
+                        <label for="Float1" class="col-form-label">{{getDisplayNamesdsd('Float1')}}</label>
+                        <input type="number" class="form-control" id="Float1" formControlName="Float1" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Float2')">
+
+                      <div class="form-group col-md-2">
+                        <label for="Float2" class="col-form-label">{{getDisplayNamesdsd('Float2')}}</label>
+                        <input type="number" class="form-control" id="Float2" formControlName="Float2" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Float3')">
+
+                      <div class="form-group col-md-2">
+                        <label for="Float3" class="col-form-label">{{getDisplayNamesdsd('Float3')}}</label>
+                        <input type="number" class="form-control" id="Float3" formControlName="Float3" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Float4')">
+
+
+                      <div class="form-group col-md-2">
+                        <label for="Float4" class="col-form-label">{{getDisplayNamesdsd('Float4')}}</label>
+                        <input type="number" class="form-control" id="Float4" formControlName="Float4" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Float5')">
+
+
+                      <div class="form-group col-md-2">
+                        <label for="Float5" class="col-form-label">{{getDisplayNamesdsd('Float5')}}</label>
+                        <input type="number" class="form-control" id="Float5" formControlName="Float5" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+
+                  </div>
+
+
+                  <div class="row col-md-12">
+
+
+                    <ng-container *ngIf="checkPropertyValueMap('Float6')">
+
+                      <div class="form-group col-md-2">
+                        <label for="Float6" class="col-form-label">{{getDisplayNamesdsd('Float6')}}</label>
+                        <input type="number" class="form-control" id="Float6" formControlName="Float6" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Float7')">
+
+                      <div class="form-group col-md-2">
+                        <label for="Float7" class="col-form-label">{{getDisplayNamesdsd('Float7')}}</label>
+                        <input type="number" class="form-control" id="Float7" formControlName="Float7" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Float8')">
+
+                      <div class="form-group col-md-2">
+                        <label for="Float8" class="col-form-label">{{getDisplayNamesdsd('Float8')}}</label>
+                        <input type="number" class="form-control" id="Float8" formControlName="Float8" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Float9')">
+
+                      <div class="form-group col-md-2">
+                        <label for="Float9" class="col-form-label">{{getDisplayNamesdsd('Float9')}}</label>
+                        <input type="number" class="form-control" id="Float9" formControlName="Float9" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Float10')">
+
+
+                      <div class="form-group col-md-2">
+                        <label for="Float10" class="col-form-label">{{getDisplayNamesdsd('Float10')}}</label>
+                        <input type="number" class="form-control" id="Float10" formControlName="Float10" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+
+                  </div>
+
+
+                  <div class="row col-md-12">
+
+                    <ng-container *ngIf="checkPropertyValueMap('Text1')">
+                      <div class="form-group col-md-12">
+                        <label for="Text1" class="col-form-label">{{getDisplayNamesdsd('Text1')}}</label>
+                        <input type="text" class="form-control" id="Text1" formControlName="Text1" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Text2')">
+                      <div class="form-group col-md-12">
+                        <label for="Text2" class="col-form-label">{{getDisplayNamesdsd('Text2')}}</label>
+                        <input type="text" class="form-control" id="Text2" formControlName="Text2" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Text3')">
+                      <div class="form-group col-md-12">
+                        <label for="Text3" class="col-form-label">{{getDisplayNamesdsd('Text3')}}</label>
+                        <input type="text" class="form-control" id="Text3" formControlName="Text3" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Text4')">
+                      <div class="form-group col-md-12">
+                        <label for="Text4" class="col-form-label">{{getDisplayNamesdsd('Text4')}}</label>
+                        <input type="text" class="form-control" id="Text4" formControlName="Text4" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="checkPropertyValueMap('Text5')">
+                      <div class="form-group col-md-12">
+                        <label for="Text5" class="col-form-label">{{getDisplayNamesdsd('Text5')}}</label>
+                        <input type="text" class="form-control" id="Text5" formControlName="Text5" maxlength="100"
+                          autocomplete="off" />
+                      </div>
+                    </ng-container>
+
+
+                  </div>
+
+
+
+
+
+
+
+
+
+
+                </div>
+              </div>
             </div>
-
-
-
-            <div class="form-group col-md-3">
-              <label for="SellPriceType" class="col-form-label">نرخ فروش </label>
-              <select formControlName="SellPriceType" id="SellPriceType" class="form-control custom-select"
-                data-toggle="select2" (change)="onSellPriceTypeChange()">
-                <option [value]="item.id" *ngFor="let item of SellPriceType_Lookup">{{item.name}}</option>
-              </select>
-            </div>
-
-
           </div>
+        </div>
+      </form>
 
-          <div class="form-group col-md-12">
-            <label for="GoodName" class="col-form-label">نام کالا </label>
-            <input type="text" class="form-control" id="GoodName" formControlName="GoodName" maxlength="400"
-              autocomplete="off" />
+      <div class="card">
+        <div class="card-body">
+          <div class="col-sm-6">
+            <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
+              (click)="submit('base_exit')">
+              <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره و خروج
+            </a>
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+              (click)="submit('base')">
+              <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره
+            </a>
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+              (click)="submit('base_new')">
+              <span class="btn-label"><i class="fas fa-plus"></i></span>ذخیره و جدید
+            </a>
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+              (click)="onBtnCancelClick()">
+              <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
+            </a>
           </div>
-
-          <div class="row col-md-12">
-
-            <div class="form-group col-md-4">
-              <label for="MinSellPrice" class="col-form-label">حداقل قیمت فروش </label>
-              <input type="number" class="form-control" id="MinSellPrice" formControlName="MinSellPrice" maxlength="100"
-                autocomplete="off" />
-            </div>
-
-            <div class="form-group col-md-4">
-              <label for="MaxSellPrice" class="col-form-label">فی ناخالص </label>
-              <input type="number" (change)="onMaxPriceTypeChange()" class="form-control" id="MaxSellPrice"
-                formControlName="MaxSellPrice" maxlength="100" autocomplete="off" />
-            </div>
+        </div>
+      </div>
 
 
-          </div>
 
 
-          <div class="form-group col-md-4">
-            <label for="SellPrice1" class="col-form-label">نرخ فروش 1 </label>
-            <input type="number" class="form-control" id="SellPrice1" formControlName="SellPrice1" maxlength="100"
-              autocomplete="off" />
-          </div>
 
 
-          <div class="form-group col-md-4">
-            <label for="SellPrice2" class="col-form-label">نرخ فروش 2 </label>
-            <input type="number" class="form-control" id="SellPrice2" formControlName="SellPrice2" maxlength="100"
-              autocomplete="off" />
-          </div>
+
+    </div>
 
 
-          <div class="form-group col-md-4">
-            <label for="SellPrice3" class="col-form-label">نرخ فروش 3 </label>
-            <input type="number" class="form-control" id="SellPrice3" formControlName="SellPrice3" maxlength="100"
-              autocomplete="off" />
-          </div>
 
 
-          <div class="form-group col-md-4">
-            <label for="SellPrice4" class="col-form-label">نرخ فروش 4 </label>
-            <input type="number" class="form-control" id="SellPrice4" formControlName="SellPrice4" maxlength="100"
-              autocomplete="off" />
-          </div>
+
+    <div class="tab-pane" id="GoodRelations">
 
 
-          <div class="form-group col-md-4">
-            <label for="SellPrice5" class="col-form-label">نرخ فروش 5 </label>
-            <input type="number" class="form-control" id="SellPrice5" formControlName="SellPrice5" maxlength="100"
-              autocomplete="off" />
-          </div>
+      <div class="row col-md-12">
 
 
-          <div class="form-group col-md-4">
-            <label for="SellPrice6" class="col-form-label">نرخ فروش 6 </label>
-            <input type="number" class="form-control" id="SellPrice6" formControlName="SellPrice6" maxlength="100"
-              autocomplete="off" />
-          </div>
+        <div class="form-group col-md-3">
+          <label for="GoodCode" class="col-form-label">کد کالا </label>
+          <input type="text" class="form-control" placeholder="{{GoodCode_str}}" [readOnly]="true" />
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="GoodSubCode" class="col-form-label">کد زیر مجموعه </label>
+          <input type="text" class="form-control" placeholder="{{GoodSubCode_str}}" [readOnly]="true" />
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="GoodType" class="col-form-label">نوع کالا </label>
+          <input type="text" class="form-control" placeholder="{{GoodType_str}}" [readOnly]="true" />
+        </div>
+
+      </div>
+
+      <div class="form-group col-md-12">
+        <label for="GoodName" class="col-form-label">نام کالا </label>
+        <input type="text" class="form-control" placeholder="{{GoodName_str}}" [readOnly]="true" />
+      </div>
+
+      <div class="row col-md-12">
 
 
-          <div class="form-group col-md-12">
-            <label for="GoodExplain1" class="col-form-label">نوضیحات 1</label>
-            <input type="text" class="form-control" id="GoodExplain1" formControlName="GoodExplain1" maxlength="200"
-              autocomplete="off" />
-          </div>
+        <div class="col-md-12">
 
-          <div class="form-group col-md-12">
-            <label for="GoodExplain2" class="col-form-label">نوضیحات 2</label>
-            <input type="text" class="form-control" id="GoodExplain2" formControlName="GoodExplain2" maxlength="200"
-              autocomplete="off" />
-          </div>
+          <label for="GoodName" class="col-form-label">Stacklist </label>
 
-          <div class="form-group col-md-12">
-            <label for="GoodExplain3" class="col-form-label">نوضیحات 3</label>
-            <input type="text" class="form-control" id="GoodExplain3" formControlName="GoodExplain3" maxlength="200"
-              autocomplete="off" />
-          </div>
 
-          <div class="form-group col-md-12">
-            <label for="GoodExplain4" class="col-form-label">نوضیحات 4</label>
-            <input type="text" class="form-control" id="GoodExplain4" formControlName="GoodExplain4" maxlength="200"
-              autocomplete="off" />
-          </div>
+          <table class="table table-bordered-5 align-middle gs-0 gy-4  border border-dark">
+            <thead>
+              <tr class="fw-bolder ">
+                <th class="min-w-15px">کد</th>
+                <th class="min-w-50px">Name</th>
+                <th class="min-w-50px">Amount</th>
+                <th class="min-w-50px">ReservedAmount</th>
+                <th class="min-w-50px">StackRef</th>
+                <th class="min-w-50px">ActiveStack</th>
 
-          <div class="form-group col-md-12">
-            <label for="GoodExplain5" class="col-form-label">نوضیحات 5</label>
-            <input type="text" class="form-control" id="GoodExplain5" formControlName="GoodExplain5" maxlength="200"
-              autocomplete="off" />
-          </div>
 
-          <div class="form-group col-md-12">
-            <label for="GoodExplain6" class="col-form-label">نوضیحات 6</label>
-            <input type="text" class="form-control" id="GoodExplain6" formControlName="GoodExplain6" maxlength="200"
-              autocomplete="off" />
-          </div>
+              </tr>
+            </thead>
+            <tbody *ngFor="let item of Stack_list; let i = index">
+              <tr>
+                <td>{{ i }}</td>
+
+                <td>{{ item.Name }}</td>
+                <td>{{ item.Amount }}</td>
+                <td>{{ item.ReservedAmount }}</td>
+                <td>{{ item.StackRef }}</td>
+                <td>{{ item.ActiveStack }}</td>
+
+              </tr>
+            </tbody>
+          </table>
 
 
 
         </div>
+
+
+        <div class="col-md-12 ">
+          <label for="GoodName" class="col-form-label">Group list </label>
+          <table class="table table-bordered-5 align-middle gs-0 gy-4  border border-dark">
+            <thead>
+              <tr class="fw-bolder">
+                <th class="min-w-15px">کد</th>
+                <th class="min-w-50px">GroupCode</th>
+                <th class="min-w-50px">Name</th>
+              </tr>
+            </thead>
+            <tbody *ngFor="let item of Group_list; let i = index">
+              <tr>
+                <td>{{ i }}</td>
+                <td>{{ item.GoodGroupRef }}</td>
+                <td>{{ item.Name }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+
+        <div class="col-md-12">
+
+          <label for="imagelist" class="col-form-label">imagelist </label>
+
+          <div class="table-responsive">
+
+            <table class="table table-bordered-5 align-middle gs-0 gy-4  border border-dark">
+              <thead>
+                <tr class="fw-bolder ">
+                  <th class="min-w-15px">کد</th>
+                  <th class="min-w-50px">ClassName</th>
+                  <th class="min-w-50px">FileName</th>
+
+
+                </tr>
+              </thead>
+              <tbody *ngFor="let item of Image_list; let i = index">
+                <tr>
+                  <td>{{ i }}</td>
+
+                  <td>{{ item.ClassName }}</td>
+                  <td>{{ item.FileName }}</td>
+
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+
+
+
+        </div>
+
+
+        <div class="col-md-12">
+
+          <label for="GoodName" class="col-form-label">person </label>
+
+        </div>
+
+
+
       </div>
     </div>
-  </div>
-</form>
-
-<div class="card">
-  <div class="card-body">
-    <div class="col-sm-6">
-      <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
-        (click)="submit('exit')">
-        <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره و خروج
-      </a>
-      <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
-        (click)="submit('')">
-        <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره
-      </a>
-      <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
-        (click)="submit('new')">
-        <span class="btn-label"><i class="fas fa-plus"></i></span>ذخیره و جدید
-      </a>
-      <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
-        (click)="onBtnCancelClick()">
-        <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
-      </a>
-    </div>
-  </div>
-</div>
 
 
-<ng-template #formError let-control="control" let-message="message" let-validation="validation">
-  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
-    <div class="fv-plugins-message-container invalid-feedback">
-      <span role="alert">
-        {{ message }}
-      </span>
-    </div>
-  </ng-container>
-</ng-template>
+
+
+    <ng-template #formError let-control="control" let-message="message" let-validation="validation">
+      <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
+        <div class="fv-plugins-message-container invalid-feedback">
+          <span role="alert">
+            {{ message }}
+          </span>
+        </div>
+      </ng-container>
+    </ng-template>

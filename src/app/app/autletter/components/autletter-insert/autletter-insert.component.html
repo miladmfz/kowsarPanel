@@ -1,29 +1,70 @@
-<form cForm>
+<div class="row">
+  <div class="col-12">
+    <div class="page-title-box">
+      <h4 class="page-title">ایجاد تیکت جدید</h4>
+    </div>
+  </div>
+</div>
 
-  <div class="mb-3">
-    <label cLabel for="dateInput">تاریخ:</label>
-    <div class="input-group">
-      <ng-persian-datepicker [uiIsVisible]="false">
-        <input id="dateInput" type="text" [formControl]="dateValue" readonly class="form-control" />
-      </ng-persian-datepicker>
-      <div class="input-group-append">
+<form [formGroup]="EditForm" (ngSubmit)="submit('')" id="submitForm">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body row">
 
+          <div class="form-group col-md-3">
+            <label for="dateValue" class="col-form-label">تاریخ</label>
+            <div>
+              <ng-persian-datepicker style="position: absolute; z-index: 1;" [uiTheme]="customTheme"
+                [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
+                <input class="form-control" id="dateValue" type="text" formControlName="dateValue" />
+              </ng-persian-datepicker>
+            </div>
+
+
+          </div>
+
+          <div></div>
+
+          <div class="form-group col-md-12 mt-5">
+            <label for="titleFormControl" class="col-form-label">عنوان تیکت </label>
+            <input type="text" class="form-control" id="titleFormControl" formControlName="titleFormControl"
+              maxlength="100" autocomplete="off" />
+          </div>
+          <div class="form-group col-md-12">
+            <label for="descriptionFormControl" class="col-form-label">شرح تیکت </label>
+
+            <textarea type="text" class="form-control" id="descriptionFormControl"
+              formControlName="descriptionFormControl" maxlength="100" autocomplete="off">
+
+              </textarea>
+          </div>
+
+
+        </div>
       </div>
     </div>
   </div>
-
-  <div class="mb-3">
-    <label cLabel for="titleInput">عنوان تیکت:</label>
-    <input cFormControl [formControl]="titleFormControl" placeholder="عنوان" class="form-control" />
-  </div>
-
-  <div class="mb-3">
-    <label cLabel for="descriptionTextarea">شرح تیکت:</label>
-    <textarea cFormControl [formControl]="descriptionFormControl" placeholder="شرح" rows="3"
-      class="form-control"></textarea>
-  </div>
-  <div class="mb-3">
-    <!-- Add a button with a click event handler -->
-    <button type="button" class="btn btn-primary" (click)="logFormData()">ارسال تیکت </button>
-  </div>
 </form>
+
+<div class="card">
+  <div class="card-body">
+    <div class="col-sm-6">
+      <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
+        (click)="submit('')">
+        <span class="btn-label"><i class="fas fa-check-double"></i></span>ارسال تیکت </a>
+
+    </div>
+  </div>
+</div>
+
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
+    <div class="fv-plugins-message-container invalid-feedback">
+      <span role="alert">
+        {{ message }}
+      </span>
+    </div>
+  </ng-container>
+</ng-template>

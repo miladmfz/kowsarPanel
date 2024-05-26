@@ -7,6 +7,7 @@ import {
   CommonModule,
   HashLocationStrategy,
   LocationStrategy,
+  PathLocationStrategy,
 } from '@angular/common';
 import { HttpService } from './app-shell/framework-services/http.service';
 import { BrowserModule } from '@angular/platform-browser';
@@ -17,7 +18,6 @@ import { UnauthorizedComponent } from './auth/unauthorized/unauthorized.componen
 import { CallbackComponent } from './auth/callback/callback.component';
 import { AppRoutingModule } from './app-routing.module';
 import { LocalStorageService } from './app-shell/framework-services/local.storage.service';
-import { AuthenticationService } from './app-shell/framework-services/authentication.service';
 
 @NgModule({
   declarations: [AppComponent, UnauthorizedComponent, CallbackComponent],
@@ -34,7 +34,6 @@ import { AuthenticationService } from './app-shell/framework-services/authentica
   exports: [],
   providers: [
     LocalStorageService,
-    AuthenticationService,
     HttpService,
     {
       provide: HTTP_INTERCEPTORS,
@@ -49,4 +48,4 @@ import { AuthenticationService } from './app-shell/framework-services/authentica
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

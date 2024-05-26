@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ApplicationWebApiService } from '../../../services/ApplicationWebApi.service';
 import { ActivatedRoute } from '@angular/router';
 import { UntypedFormBuilder } from '@angular/forms';
 
 import { Location } from '@angular/common';
+import { BrokerWebApiService } from '../../../services/BrokerWebApi.service';
 
 
 @Component({
@@ -13,7 +13,7 @@ import { Location } from '@angular/common';
 export class BrokerColumnEditComponent implements OnInit {
 
   constructor(
-    private repo: ApplicationWebApiService,
+    private repo: BrokerWebApiService,
     private route: ActivatedRoute,
     private formBuilder: UntypedFormBuilder,
     private location: Location
@@ -63,7 +63,8 @@ export class BrokerColumnEditComponent implements OnInit {
 
   ngOnInit() {
 
-    this.TagName = "Insert app column"
+    this.TagName = "تعریف تنظیم جدول جدید"
+
     this.GetGoodType()
 
 
@@ -116,7 +117,6 @@ export class BrokerColumnEditComponent implements OnInit {
     this.selected_obj_Property = this.Propertys.find(prop => prop.PropertyName === this.selected_PropertyName);
 
     const subString = this.selected_obj_Property.PropertyValueMap.substring(0, 3);
-    console.log(subString);
 
 
 
@@ -158,6 +158,20 @@ export class BrokerColumnEditComponent implements OnInit {
     this.selected_obj_Detail = this.Lookup_item.find(prop => prop.Text === this.selected_DetailLookup);
 
   }
+
+
+
+
+  // دریافت داده‌ها از طریق HTTP یا محاسبه دیگر
+  checkPropertyValueMap(textvalue: string) {
+    for (const property of this.Propertys) {
+      if (property.PropertyValueMap === textvalue) {
+        return true; // اگر مقدار PropertyValueMap برابر با "Nvarchar6" باشد، true را برمی‌گرداند
+      }
+    }
+    return false; // اگر هیچ مقداری مطابقت نداشته باشد، false را برمی‌گرداند
+  }
+
 
 
 
@@ -207,6 +221,10 @@ export class BrokerColumnEditComponent implements OnInit {
 
 
 }
+
+
+
+
 
 
 

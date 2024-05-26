@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { KowsarWebApiService } from '../../../services/KowsarWebApi.service';
 import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
-import { SettingService } from 'src/app/app-shell/framework-services/setting.service';
 import { FormControl } from '@angular/forms';
 import { CellActionGoodList } from '../../Good/good-list/cell-action-good-ist';
 
@@ -17,10 +16,9 @@ export class GoodsgrpListComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: KowsarWebApiService,
-    localStorageService: LocalStorageService,
-    settingService: SettingService
+    localStorageService: LocalStorageService
   ) {
-    super(localStorageService, settingService);
+    super(localStorageService);
   }
 
 
@@ -67,14 +65,14 @@ export class GoodsgrpListComponent extends AgGridBaseComponent
         field: 'GroupCode',
         headerName: 'کد',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
       {
         field: 'Name',
         headerName: 'نام کالا  ',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
 
@@ -157,7 +155,7 @@ LoadList() {
 
   this.repo.GetOrdergroupList(this.GroupCode_str).subscribe(e => {
     this.items = e;
-    console.log(this.items);
+     this.items);
 
   });
 

@@ -1,9 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ApplicationWebApiService } from '../../../services/ApplicationWebApi.service';
 import { ActivatedRoute } from '@angular/router';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environment/environment';
+import { BrokerWebApiService } from '../../../services/BrokerWebApi.service';
 
 
 @Component({
@@ -15,7 +15,7 @@ import { environment } from 'src/environment/environment';
 export class BrokerReportComponent implements OnInit {
 
   constructor(
-    private repo: ApplicationWebApiService,
+    private repo: BrokerWebApiService,
     private route: ActivatedRoute,
     private formBuilder: UntypedFormBuilder,
     private http: HttpClient
@@ -64,7 +64,7 @@ export class BrokerReportComponent implements OnInit {
     this.http.post<any>(environment.baseUrl_KowsarWeb + 'UploadImage', data).subscribe(
       (response) => {
 
-        console.log(response)
+
         this.fetchImageData();
       },
       (error) => {

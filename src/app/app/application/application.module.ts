@@ -27,6 +27,13 @@ import { OrderColumnComponent } from './components/Order/order-column/order-colu
 import { OrderColumnEditComponent } from './components/Order/order-column-edit/order-column-edit.component';
 import { OrderCustomerComponent } from './components/Order/order-customer/order-customer.component';
 import { ApplicationRoutingModule } from './application-routing.module';
+import { OrderReportComponent } from './components/Order/order-report/order-report.component';
+import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
+import { OrderGoodComponent } from './components/Order/order-good/order-good.component';
+import { OrderCellActionGoodList } from './components/Order/order-good/order-cell-action-good-ist';
+import { OrderGoodEditComponent } from './components/Order/order-good-edit/order-good-edit.component';
+import { CellActionOcrList } from './components/Ocr/ocr-list/cell-action-ocr-list';
+import { TrueFalseStateCellRenderer } from './components/tools/truefalse-state-label-cell';
 
 @NgModule({
   imports: [
@@ -37,6 +44,8 @@ import { ApplicationRoutingModule } from './application-routing.module';
     PhoenixFrameworkModule,
     AgGridModule,
     ApplicationRoutingModule,
+    NgPersianDatepickerModule,
+
   ],
   declarations: [
     ApplicationComponent,
@@ -59,14 +68,21 @@ import { ApplicationRoutingModule } from './application-routing.module';
     OcrColumnEditComponent,
     OcrListComponent,
     OcrFactorDetailComponent,
-
+    CellActionOcrList,
 
     OrderSettingComponent,
     OrderDetailComponent,
     OrderColumnComponent,
     OrderColumnEditComponent,
     OrderCustomerComponent,
+    OrderReportComponent,
+    OrderGoodComponent,
+    OrderGoodEditComponent,
+    OrderCellActionGoodList,
 
+
+
+    TrueFalseStateCellRenderer,
   ]
 })
 export class ApplicationModule { }

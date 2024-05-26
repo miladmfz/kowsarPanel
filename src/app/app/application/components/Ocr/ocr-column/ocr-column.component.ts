@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ApplicationWebApiService } from '../../../services/ApplicationWebApi.service';
 import { ActivatedRoute } from '@angular/router';
 import { UntypedFormBuilder } from '@angular/forms';
+import { OcrWebApiService } from '../../../services/OcrWebApi.service';
 
 
 @Component({
@@ -12,7 +12,7 @@ export class OcrColumnComponent implements OnInit {
 
 
   constructor(
-    private repo: ApplicationWebApiService,
+    private repo: OcrWebApiService,
     private route: ActivatedRoute,
     private formBuilder: UntypedFormBuilder
   ) { }
@@ -41,7 +41,7 @@ export class OcrColumnComponent implements OnInit {
     this.repo.GetBasketColumnList(this.Apptype).subscribe(e => {
       this.BasketColumns = e;
 
-      console.log(this.BasketColumns)
+
 
     });
 

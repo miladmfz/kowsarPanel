@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ApplicationWebApiService } from '../../../services/ApplicationWebApi.service';
+import { BrokerWebApiService } from '../../../services/BrokerWebApi.service';
 
 @Component({
   selector: 'app-broker-list',
@@ -7,7 +7,7 @@ import { ApplicationWebApiService } from '../../../services/ApplicationWebApi.se
 })
 export class BrokerListComponent implements OnInit {
 
-  constructor(private repo: ApplicationWebApiService,) { }
+  constructor(private repo: BrokerWebApiService,) { }
   items: any[] = [];
 
 

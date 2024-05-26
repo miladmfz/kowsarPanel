@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ApplicationWebApiService } from '../../../services/ApplicationWebApi.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { OrderWebApiService } from '../../../services/OrderWebApi.service';
 
 @Component({
   selector: 'app-order-customer',
@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class OrderCustomerComponent implements OnInit {
 
   constructor(
-    private repo: ApplicationWebApiService,
+    private repo: OrderWebApiService,
     private route: ActivatedRoute,
     private router: Router
   ) { }

@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, } from '@angular/core';
-import { ApplicationWebApiService } from '../../../services/ApplicationWebApi.service';
+import { OrderWebApiService } from '../../../services/OrderWebApi.service';
 
 @Component({
   selector: 'app-order-detail',
@@ -9,7 +9,7 @@ export class OrderDetailComponent implements OnInit {
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private repo: ApplicationWebApiService,
+    private repo: OrderWebApiService,
   ) { }
 
 
@@ -32,9 +32,9 @@ export class OrderDetailComponent implements OnInit {
 
   ngOnInit() {
 
-    this.repo.GetTodeyFromServer("-100").subscribe(e => {
-      this.ToDayDate = e[0].TodeyFromServer;
-      console.log(this.ToDayDate)
+    this.repo.GetTodeyFromServer("-1").subscribe(e => {
+
+      this.ToDayDate = e[0].TodeyFromServer
       this.Getemptymiz()
       this.GetAmountItem()
       this.minMaxGood()
@@ -81,7 +81,6 @@ export class OrderDetailComponent implements OnInit {
     this.repo.GetAmountItem(this.ToDayDate, "1").subscribe(e => {
       this.itemsAmount1 = e;
 
-      console.log(this.itemsAmount1[0].Amount)
     });
 
 
@@ -108,21 +107,17 @@ export class OrderDetailComponent implements OnInit {
 
   minMaxGood() {
 
-    this.repo.minMaxGood(this.ToDayDate, "1").subscribe(e => {
+    this.repo.minMaxGood(this.ToDayDate, this.ToDayDate, "1").subscribe(e => {
       this.ItemsMax = e;
 
     });
 
 
-    this.repo.minMaxGood(this.ToDayDate, "2").subscribe(e => {
+    this.repo.minMaxGood(this.ToDayDate, this.ToDayDate, "2").subscribe(e => {
       this.ItemsMin = e;
 
     });
 
-    this.repo.minMaxGood(this.ToDayDate, "3").subscribe(e => {
-      this.ItemsZero = e;
-
-    });
 
 
 

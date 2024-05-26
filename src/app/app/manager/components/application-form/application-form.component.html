@@ -19,7 +19,7 @@
 
 
           <div class="form-group col-md-4">
-            <label for="AppBrokerCustomerCode" class="col-form-label">AppBrokerCustomerCode </label>
+            <label for="AppBrokerCustomerCode" class="col-form-label">کد سیستمی افزونه </label>
             <input type="text" class="form-control" id="AppBrokerCustomerCode" formControlName="AppBrokerCustomerCode"
               maxlength="100" autocomplete="off" [readOnly]="true" />
           </div>
@@ -28,7 +28,7 @@
 
 
           <div class="form-group col-md-4">
-            <label for="ActivationCode" class="col-form-label">ActivationCode </label>
+            <label for="ActivationCode" class="col-form-label">کد فعال سازی </label>
             <input type="text" class="form-control" id="ActivationCode" formControlName="ActivationCode" maxlength="100"
               autocomplete="off" />
           </div>
@@ -37,7 +37,7 @@
 
 
           <div class="form-group col-md-4">
-            <label for="PersianCompanyName" class="col-form-label">PersianCompanyName </label>
+            <label for="PersianCompanyName" class="col-form-label">نام فارسی افزونه </label>
             <input type="text" class="form-control" id="PersianCompanyName" formControlName="PersianCompanyName"
               maxlength="100" autocomplete="off" />
           </div>
@@ -46,7 +46,7 @@
 
 
           <div class="form-group col-md-4">
-            <label for="EnglishCompanyName" class="col-form-label">EnglishCompanyName </label>
+            <label for="EnglishCompanyName" class="col-form-label">نام انگلیسی افزونه </label>
             <input type="text" class="form-control" id="EnglishCompanyName" formControlName="EnglishCompanyName"
               maxlength="100" autocomplete="off" />
           </div>
@@ -55,7 +55,7 @@
 
 
           <div class="form-group col-md-4">
-            <label for="ServerURL" class="col-form-label">ServerURL </label>
+            <label for="ServerURL" class="col-form-label">ادرس سرور </label>
             <input type="text" class="form-control" id="ServerURL" formControlName="ServerURL" maxlength="100"
               autocomplete="off" />
           </div>
@@ -64,7 +64,7 @@
 
 
           <div class="form-group col-md-4">
-            <label for="SecendServerURL" class="col-form-label">SecendServerURL </label>
+            <label for="SecendServerURL" class="col-form-label">ادرس دوم سرور </label>
             <input type="text" class="form-control" id="SecendServerURL" formControlName="SecendServerURL"
               maxlength="100" autocomplete="off" />
           </div>
@@ -73,7 +73,7 @@
 
 
           <div class="form-group col-md-4">
-            <label for="SQLiteURL" class="col-form-label">SQLiteURL </label>
+            <label for="SQLiteURL" class="col-form-label">ادرس دیتای اولیه </label>
             <input type="text" class="form-control" id="SQLiteURL" formControlName="SQLiteURL" maxlength="100"
               autocomplete="off" />
           </div>
@@ -82,7 +82,7 @@
 
 
           <div class="form-group col-md-4">
-            <label for="AppType" class="col-form-label">AppType </label>
+            <label for="AppType" class="col-form-label">نوع نرم افرار </label>
             <input type="text" class="form-control" id="AppType" formControlName="AppType" maxlength="100"
               autocomplete="off" />
           </div>
@@ -91,7 +91,7 @@
 
 
           <div class="form-group col-md-4">
-            <label for="DbName" class="col-form-label">DbName </label>
+            <label for="DbName" class="col-form-label">نام دیتابیس </label>
             <input type="text" class="form-control" id="DbName" formControlName="DbName" maxlength="100"
               autocomplete="off" />
           </div>
@@ -100,7 +100,7 @@
 
 
           <div class="form-group col-md-4">
-            <label for="DbImageName" class="col-form-label">DbImageName </label>
+            <label for="DbImageName" class="col-form-label">نام دیتابیس عکس </label>
             <input type="text" class="form-control" id="DbImageName" formControlName="DbImageName" maxlength="100"
               autocomplete="off" />
           </div>
@@ -149,83 +149,3 @@
     </div>
   </ng-container>
 </ng-template>
-
-
-
-
-
-
-
-
-
-
-
-<!-- <div class="card">
-  <div class="card-body">
-    <h5 class="card-title">ثبت نرم افزار </h5>
-    <form>
-      <div class="form-row">
-        <div class="col-md-16 mb-3">
-          <label for="ActivationCode" class="form-label">کد فعال سازی</label>
-          <input type="text" class="form-control" id="ActivationCode" [ngModelOptions]="{ standalone: true }"
-            [(ngModel)]="formValues.ActivationCode">
-        </div>
-      </div>
-
-
-
-      <div class="form-row">
-        <div class="col-md-16 mb-3">
-
-          <label for="EnglishCompanyName" class="form-label">نام انگلیسی مجموعه</label>
-          <input type="text" class="form-control" id="EnglishCompanyName" [ngModelOptions]="{ standalone: true }"
-            [(ngModel)]="formValues.EnglishCompanyName">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="col-md-16 mb-3"> <label for="PersianCompanyName" class="form-label">نام فارسی مجموعه</label>
-          <input type="text" class="form-control" id="PersianCompanyName" [ngModelOptions]="{ standalone: true }"
-            [(ngModel)]="formValues.PersianCompanyName">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="col-md-16 mb-3"> <label for="ServerURL" class="form-label">ادرس یرور</label> <input type="text"
-            class="form-control" id="ServerURL" [ngModelOptions]="{ standalone: true }"
-            [(ngModel)]="formValues.ServerURL"> </div>
-      </div>
-      <div class="form-row">
-        <div class="col-md-16 mb-3"> <label for="SQLiteURL" class="form-label">ادرس دیتابیس</label> <input type="text"
-            class="form-control" id="SQLiteURL" [ngModelOptions]="{ standalone: true }"
-            [(ngModel)]="formValues.SQLiteURL"> </div>
-      </div>
-      <div class="form-row">
-        <div class="col-md-16 mb-3"> <label for="MaxDevice" class="form-label">تعداد دستگاه</label> <input type="text"
-            class="form-control" id="MaxDevice" [ngModelOptions]="{ standalone: true }"
-            [(ngModel)]="formValues.MaxDevice"> </div>
-      </div>
-      <div class="form-row">
-        <div class="col-md-16 mb-3"> <label for="SecendServerURL" class="form-label">ادرس دوم مجموعه</label> <input
-            type="text" class="form-control" id="SecendServerURL" [ngModelOptions]="{ standalone: true }"
-            [(ngModel)]="formValues.SecendServerURL"> </div>
-      </div>
-      <div class="form-row">
-        <div class="col-md-16 mb-3"> <label for="DbName" class="form-label">نام دیتابیس</label> <input type="text"
-            class="form-control" id="DbName" [ngModelOptions]="{ standalone: true }" [(ngModel)]="formValues.DbName">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="col-md-16 mb-3"> <label for="AppType" class="form-label">نوع نرم افزار</label> <input type="text"
-            class="form-control" id="AppType" [ngModelOptions]="{ standalone: true }" [(ngModel)]="formValues.AppType">
-        </div>
-      </div>
-
-
-
-      <div class="form-row">
-        <div class="col-md-6 mb-3">
-          <button class="btn btn-primary btn-block" type="button" (click)="logFormData()">ثبت کردن</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div> -->

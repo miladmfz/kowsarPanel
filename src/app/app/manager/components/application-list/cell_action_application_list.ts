@@ -4,8 +4,8 @@ declare var $: any;
 
 @Component({
   selector: 'edit-delete-cell-renderer',
-  template: ` <span class="btn btn-sm btn-outline-primary ">
-  <a [routerLink]="[params.editUrl, id]">
+  template: ` <span [routerLink]="[params.editUrl, id]" class="btn btn-sm btn-outline-primary ">
+  <a >
     <i class="fas fa-edit"></i>
   </a>
 </span>

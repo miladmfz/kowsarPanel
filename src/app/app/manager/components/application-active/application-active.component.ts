@@ -3,7 +3,6 @@ import { ManagerWebApiService } from '../../services/ManagerWebApi.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
-import { SettingService } from 'src/app/app-shell/framework-services/setting.service';
 
 @Component({
   selector: 'app-application-active',
@@ -17,10 +16,9 @@ export class ApplicationActiveComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: ManagerWebApiService,
-    localStorageService: LocalStorageService,
-    settingService: SettingService
+    localStorageService: LocalStorageService
   ) {
-    super(localStorageService, settingService);
+    super(localStorageService);
   }
 
   override ngOnInit(): void {
@@ -37,7 +35,7 @@ export class ApplicationActiveComponent extends AgGridBaseComponent
         field: 'BrokerStr',
         headerName: 'BrokerStr ',
         filter: 'agSetColumnFilter',
-        headerClass: 'text-danger',
+
         cellClass: 'text-center',
       },
 

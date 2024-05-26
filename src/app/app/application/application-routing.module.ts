@@ -21,6 +21,9 @@ import { OrderSettingComponent } from './components/Order/order-setting/order-se
 import { OrderCustomerComponent } from './components/Order/order-customer/order-customer.component';
 import { OrderColumnComponent } from './components/Order/order-column/order-column.component';
 import { OrderColumnEditComponent } from './components/Order/order-column-edit/order-column-edit.component';
+import { OrderReportComponent } from './components/Order/order-report/order-report.component';
+import { OrderGoodComponent } from './components/Order/order-good/order-good.component';
+import { OrderGoodEditComponent } from './components/Order/order-good-edit/order-good-edit.component';
 
 
 
@@ -196,9 +199,34 @@ const routes: Routes = [
         path: 'order-customer',
         component: OrderCustomerComponent,
         data: {
-          title: 'customer سفارشگیر',
+          title: '',
         },
       },
+      {
+        path: 'order-report',
+        component: OrderReportComponent,
+        data: {
+          title: '',
+        },
+      },
+      {
+        path: 'order-good',
+        component: OrderGoodComponent,
+        data: {
+          title: '',
+        },
+      },
+      {
+        path: 'order-good-edit/:id',
+        component: OrderGoodEditComponent,
+        data: {
+          title: '',
+        },
+      },
+
+
+
+
       {
         path: 'order-customer/:id',
         component: OrderCustomerComponent,

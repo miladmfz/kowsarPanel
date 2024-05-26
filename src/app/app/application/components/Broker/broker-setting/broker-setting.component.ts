@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ApplicationWebApiService } from '../../../services/ApplicationWebApi.service';
+import { BrokerWebApiService } from '../../../services/BrokerWebApi.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-broker-setting',
@@ -7,7 +8,7 @@ import { ApplicationWebApiService } from '../../../services/ApplicationWebApi.se
 })
 export class BrokerSettingComponent implements OnInit {
 
-  constructor(private repo: ApplicationWebApiService,) { }
+  constructor(private repo: BrokerWebApiService,) { }
   items: any = [];
   Printers: any = [];
 
@@ -20,6 +21,18 @@ export class BrokerSettingComponent implements OnInit {
   AppBroker_Status: string = '';
   AppBasketColumn_Status: string = '';
   BrokerCustomer_Status: string = '';
+
+
+  EditForm_printer = new FormGroup({
+    AppPrinterCode: new FormControl(''),
+    PrinterName: new FormControl(''),
+    PrinterExplain: new FormControl(''),
+    GoodGroups: new FormControl(''),
+    WhereClause: new FormControl(''),
+    PrintCount: new FormControl(''),
+    PrinterActive: new FormControl(''),
+    FilePath: new FormControl(''),
+  });
 
 
 
@@ -45,8 +58,7 @@ export class BrokerSettingComponent implements OnInit {
 
 
   onInputChange() {
-    console.log('User input:', this.KowsarDb_name);
-    console.log('User input:', this.KowsarImage_name);
+
 
   }
 
@@ -70,64 +82,31 @@ export class BrokerSettingComponent implements OnInit {
 
 
 
-  AppPrinterCode: string = "";
-  PrinterName: string = "";
-  PrinterExplain: string = "";
-  GoodGroups: string = "";
-  WhereClause: string = "";
-  PrintCount: string = "";
-  PrinterActive: string = "";
-  FilePath: string = "";
-
   SelectPrinter(index: any) {
-
-    this.AppPrinterCode = this.Printers[index].AppPrinterCode
-    this.PrinterName = this.Printers[index].PrinterName
-    this.PrinterExplain = this.Printers[index].PrinterExplain
-    this.GoodGroups = this.Printers[index].GoodGroups
-    this.WhereClause = this.Printers[index].WhereClause
-    this.PrintCount = this.Printers[index].PrintCount
-    this.PrinterActive = this.Printers[index].PrinterActive
-    this.FilePath = this.Printers[index].FilePath
-
-
+    this.EditForm_printer.patchValue({
+      AppPrinterCode: this.Printers[index].AppPrinterCode,
+      PrinterName: this.Printers[index].PrinterName,
+      PrinterExplain: this.Printers[index].PrinterExplain,
+      GoodGroups: this.Printers[index].GoodGroups,
+      WhereClause: this.Printers[index].WhereClause,
+      PrintCount: this.Printers[index].PrintCount,
+      PrinterActive: this.Printers[index].PrinterActive,
+      FilePath: this.Printers[index].FilePath,
+    });
   }
 
   Updateprinter() {
 
-    if (this.PrinterName !== "") {
-      this.repo.UpdatePrinter(
-        this.AppPrinterCode,
-        this.PrinterName,
-        this.PrinterExplain,
-        this.GoodGroups,
-        this.WhereClause,
-        this.PrintCount,
-        this.PrinterActive,
-        this.FilePath,
-        this.Apptype,
-      ).subscribe(e => {
+    const command = this.EditForm_printer.value
+    if (this.EditForm_printer.value.PrinterName !== "") {
+      this.repo.UpdatePrinter(command).subscribe(e => {
         location.reload();
       });
-
-      // Your code here if AppPrinterCode is equal to "0"
     }
-
-
-
-
   }
 
   CreateprinterRecord() {
-    this.AppPrinterCode = "0"
-    this.PrinterName = ""
-    this.PrinterExplain = ""
-    this.GoodGroups = ""
-    this.WhereClause = ""
-    this.PrintCount = ""
-    this.PrinterActive = ""
-    this.FilePath = ""
-
+    this.EditForm_printer.reset();
   }
 
 

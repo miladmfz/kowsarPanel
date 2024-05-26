@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AutletterWebApiService } from '../../services/AutletterWebApi.service';
 
 @Component({
@@ -13,9 +13,12 @@ export class AutletterDetailComponent implements OnInit {
   id!: string;
 
   ngOnInit() {
-    this.id = this.route.snapshot.params['id'];
-    console.log("AutletterDetailComponent=" + this.id);
-
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      var idtemp = params.get('id');
+      if (idtemp != null) {
+        this.id = idtemp;
+      }
+    });
   }
 
 }
