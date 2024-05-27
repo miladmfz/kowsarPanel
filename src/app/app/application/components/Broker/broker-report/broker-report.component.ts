@@ -61,16 +61,10 @@ export class BrokerReportComponent implements OnInit {
       image: imageData
     };
 
-    this.http.post<any>(environment.baseUrl_KowsarWeb + 'UploadImage', data).subscribe(
-      (response) => {
+    this.repo.SendImageToServer(data).subscribe((response) => {
+      this.fetchImageData();
+    });
 
-
-        this.fetchImageData();
-      },
-      (error) => {
-        console.error('Error uploading image:', error);
-      }
-    );
   }
 
 
@@ -85,18 +79,12 @@ export class BrokerReportComponent implements OnInit {
 
 
   fetchImageData() {
-    const url = environment.baseUrl + 'GetWebImagess?pixelScale=300&ClassName=Central&ObjectRef=' + this.items[0].CentralRef;
 
-    this.http.get<any>(url).subscribe(
-      (data: any) => {
+    this.repo.GetImageFromServer(this.items[0].CentralRef).subscribe((data: any) => {
 
-        this.Imageitem = `data:${Image};base64,${data.Text}`;
+      this.Imageitem = `data:${Image};base64,${data.Text}`;
 
-      },
-      (error) => {
-        console.error('Error occurred while fetching image data:', error);
-      }
-    );
+    });
   }
 
 

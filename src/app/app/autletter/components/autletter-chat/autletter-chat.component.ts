@@ -103,40 +103,21 @@ export class AutletterChatComponent implements OnInit {
 
     };
 
-    this.http.post<any>(environment.baseUrl + 'Conversation_UploadImage', data).subscribe(
-      (response) => {
+    this.repo.SendImageToServer(data).subscribe((response) => {
+      this.GetAutConversation();
+    });
 
-        this.GetAutConversation();
-      },
-      (error) => {
-        console.error('Error uploading image:', error);
-      }
-    );
   }
 
   Imageitem: string = '';
 
   GetImage(index: any): void {
-    const url = environment.baseUrl + 'GetWebImagess?pixelScale=1000&ClassName=Aut&ObjectRef=' + this.chats[index].ConversationCode;
 
-    this.http.get<any>(url).subscribe(
-      (data: any) => {
+    this.repo.GetImageFromServer(this.chats[index].ConversationCode).subscribe((data: any) => {
 
-        this.Imageitem = `data:${Image};base64,${data.Text}`;
+      this.Imageitem = `data:${Image};base64,${data.Text}`;
 
-      },
-      (error) => {
-        console.error('Error occurred while fetching image data:', error);
-      }
-    );
-
-
-  }
-
-
-
-  fetchImageData() {
-
+    });
   }
 
 

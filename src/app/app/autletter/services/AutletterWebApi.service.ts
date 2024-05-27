@@ -111,4 +111,17 @@ export class AutletterWebApiService {
 
 
 
+  SendImageToServer(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "Conversation_UploadImage", command)
+  }
+
+
+
+  GetImageFromServer(ObjectRef: string): Observable<any[]> {
+    const params = new HttpParams().append('pixelScale', '1000').append('ClassName', 'Aut').append('ObjectRef', ObjectRef)
+    return this.client.get<any[]>(this.baseUrl + "GetWebImagess", { params: params })
+
+  }
+
+
 }

@@ -208,6 +208,16 @@ export class OrderWebApiService {
 
 
 
+    SendImageToServer(command): Observable<any[]> {
+        return this.client.post<any[]>(this.baseUrl + "UploadImage", command)
+    }
+
+
+    GetImageFromServer(ObjectRef: string): Observable<any[]> {
+        const params = new HttpParams().append('pixelScale', '300').append('ClassName', 'TGood').append('ObjectRef', ObjectRef)
+        return this.client.get<any[]>(this.baseUrl + "GetWebImagess", { params: params })
+
+    }
 
 
 

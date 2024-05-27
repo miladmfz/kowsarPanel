@@ -33,7 +33,6 @@ import { OrderGoodComponent } from './components/Order/order-good/order-good.com
 import { OrderCellActionGoodList } from './components/Order/order-good/order-cell-action-good-ist';
 import { OrderGoodEditComponent } from './components/Order/order-good-edit/order-good-edit.component';
 import { CellActionOcrList } from './components/Ocr/ocr-list/cell-action-ocr-list';
-import { TrueFalseStateCellRenderer } from './components/tools/truefalse-state-label-cell';
 
 @NgModule({
   imports: [
@@ -81,8 +80,6 @@ import { TrueFalseStateCellRenderer } from './components/tools/truefalse-state-l
     OrderCellActionGoodList,
 
 
-
-    TrueFalseStateCellRenderer,
   ]
 })
 export class ApplicationModule { }

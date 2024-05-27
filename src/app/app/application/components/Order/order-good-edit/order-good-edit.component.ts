@@ -231,7 +231,6 @@ export class OrderGoodEditComponent implements OnInit {
 
 
 
-
   sendImageToServer(ObjectCode: string, imageData: string): void {
 
     const data = {
@@ -239,20 +238,13 @@ export class OrderGoodEditComponent implements OnInit {
       ObjectCode: ObjectCode,
       image: imageData
     };
-    const baseu = environment.api_Url + 'OrderWeb';
 
-    this.http.post<any>(baseu + 'UploadImage', data).subscribe(
-      (response) => {
-
-        location.reload();
-
-      },
-      (error) => {
-        console.error('Error uploading image:', error);
-      }
-    );
+    this.repo.SendImageToServer(data).subscribe((response) => {
+      location.reload();
+    });
 
   }
+
 
 
 
@@ -264,21 +256,13 @@ export class OrderGoodEditComponent implements OnInit {
   imageData: string = ''; // Variable to hold the image data
 
 
-
   fetchImageData() {
-    const url = environment.api_Url + 'OrderWeb/GetWebImagess?pixelScale=300&ClassName=TGood&ObjectRef=' + this.SingleItems[0].GoodCode;
 
-    this.http.get<any>(url).subscribe(
-      (data: any) => {
+    this.repo.GetImageFromServer(this.SingleItems[0].GoodCode).subscribe((data: any) => {
 
+      this.Imageitem = `data:${Image};base64,${data.Text}`;
 
-        this.Imageitem = `data:${Image};base64,${data.Text}`;
-
-      },
-      (error) => {
-        console.error('Error occurred while fetching image data:', error);
-      }
-    );
+    });
   }
 
 
