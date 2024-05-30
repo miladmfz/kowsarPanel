@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { LocalStorageService } from '../../framework-services/local.storage.service';
 declare var $: any;
 
 @Component({
@@ -7,19 +7,21 @@ declare var $: any;
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent implements OnInit {
-  constructor(private oidcSecurityService: OidcSecurityService) { }
+  constructor() { }
+  PhFullName = '';
+  localStorageService: LocalStorageService
+  JobPersonRef = '';
+
   ngOnInit(): void {
-    this.getUserData();
+    this.PhFullName = sessionStorage.getItem("PhFullName")
+    this.JobPersonRef = sessionStorage.getItem("JobPersonRef")
   }
-  userData = null;
+
   logout() {
-    this.oidcSecurityService
-      .logoffAndRevokeTokens()
-      .subscribe((result) => console.log(result));
+
+    sessionStorage.removeItem("ActiveDate")
+    location.reload();
+
   }
-  async getUserData() {
-    await this.oidcSecurityService.getUserData().subscribe((data) => {
-      this.userData = data;
-    });
-  }
+
 }

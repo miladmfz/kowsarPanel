@@ -38,7 +38,7 @@ export class AutletterChatComponent implements OnInit {
 
 
   ngOnInit() {
-    this.CentralRef = "4";
+    this.CentralRef = sessionStorage.getItem("CentralRef");
 
 
 

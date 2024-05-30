@@ -15,9 +15,18 @@ const routes: Routes = [
     loadChildren: () =>
       import('./app-shell/core/layout.module').then((m) => m.LayoutModule),
   },
+  {
+
+    // canActivate: [AutoLoginPartialRoutesGuard],
+
+    path: 'auth',
+    loadChildren: () =>
+      import('./auth-kowsar/auth-kowsar.module').then((m) => m.AuthKowsarModule),
+  },
 
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: 'callback', component: CallbackComponent },
+
   {
     path: '',
     redirectTo: 'error/404',

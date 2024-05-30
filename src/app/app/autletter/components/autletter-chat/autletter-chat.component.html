@@ -58,9 +58,8 @@
                       </ng-container>
                       <ng-template #notMe>
                         <li class="clearfix odd">
-                          <div class="chat-avatar"><img src="./assets/images/logo_color.png" class="rounded"
-                              alt=""><i>{{
-                              chat.CreationDate }}</i></div>
+                          <div class="chat-avatar"><img src="./assets/images/logo_color.png" class="rounded" alt="">
+                          </div>
                           <div class="conversation-text">
                             <ng-container *ngIf="chat.ConversationText === 'Image'; else notimage">
                               <div class="ctext-wrap"><i>{{ chat.Name }}</i> <i>{{ chat.CreationDate }}</i>

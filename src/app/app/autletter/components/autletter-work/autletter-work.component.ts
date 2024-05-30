@@ -119,7 +119,8 @@ export class AutletterWorkComponent
   getList() {
 
 
-    this.CentralRef = "9";
+
+    this.CentralRef = sessionStorage.getItem("CentralRef");
 
     this.repo.GetLetterFromPersoninfo(this.CentralRef).subscribe((data) => {
 

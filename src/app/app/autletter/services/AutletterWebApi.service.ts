@@ -48,8 +48,7 @@ export class AutletterWebApiService {
     Description: string,
     CentralRef: string
   ): Observable<any[]> {
-    const params = new HttpParams().append('LetterDate', LetterDate).append('title', title).append('Description', Description).append('CentralRef', CentralRef)
-    return this.client.get<any[]>(this.baseUrl + "LetterInsert", { params: params })
+    return this.client.post<any[]>(this.baseUrl + "LetterInsert", { LetterDate, title, Description, CentralRef })
   }
 
   GetLetterRowList(
@@ -77,9 +76,7 @@ export class AutletterWebApiService {
     CreatorCentral: string,
     ExecuterCentral: string
   ): Observable<any[]> {
-    const params = new HttpParams().append('LetterRef', LetterRef).append('LetterDate', LetterDate).append('Description', Description)
-      .append('CreatorCentral', CreatorCentral).append('ExecuterCentral', ExecuterCentral)
-    return this.client.get<any[]>(this.baseUrl + "AutLetterRowInsert", { params: params })
+    return this.client.post<any[]>(this.baseUrl + "AutLetterRowInsert", { LetterRef, LetterDate, Description, CreatorCentral, ExecuterCentral })
   }
 
 

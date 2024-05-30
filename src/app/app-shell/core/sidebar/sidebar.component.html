@@ -28,26 +28,26 @@
     <div class="user-box text-center">
       <img src="./assets/images/KowsarSupport.png" alt="user-img" title="Mat Helme" class="rounded-circle avatar-md" />
       <div class="dropdown">
-        <a href="#" class="text-reset dropdown-toggle h5 mt-2 mb-1 d-block fw-medium" data-bs-toggle="dropdown">{{
-          userData ? userData.name : "" }}</a>
+        <a href="#" class="text-reset dropdown-toggle h5 mt-2 mb-1 d-block fw-medium" data-bs-toggle="dropdown">
+          {{PhFullName}}</a>
         <div class="dropdown-menu user-pro-dropdown">
           <!-- item-->
-          <a href="javascript:void(0);" class="dropdown-item notify-item">
+          <!-- <a href="javascript:void(0);" class="dropdown-item notify-item">
             <i class="fe-user me-1"></i>
             <span>My Account</span>
-          </a>
+          </a> -->
 
           <!-- item-->
-          <a href="javascript:void(0);" class="dropdown-item notify-item">
+          <!-- <a href="javascript:void(0);" class="dropdown-item notify-item">
             <i class="fe-settings me-1"></i>
             <span>Settings</span>
-          </a>
+          </a> -->
 
           <!-- item-->
-          <a href="javascript:void(0);" class="dropdown-item notify-item">
+          <!-- <a href="javascript:void(0);" class="dropdown-item notify-item">
             <i class="fe-lock me-1"></i>
             <span>Lock Screen</span>
-          </a>
+          </a> -->
 
           <!-- item-->
           <a (click)="logout()" class="dropdown-item notify-item">
@@ -56,7 +56,6 @@
           </a>
         </div>
       </div>
-      <p class="text-reset">{{ userData ? userData.role[0] : "" }}</p>
     </div>
 
     <!--- Sidemenu -->
@@ -73,55 +72,61 @@
           </a>
         </li>
 
+        <ng-container *ngIf="JobPersonRef.length>0">
+          <li>
+            <a href="#kowsar" data-bs-toggle="collapse" aria-expanded="false" aria-controls="kowsar">
+              <i class="ri-layout-line"></i>
+              <span>حسابداری کوثر</span>
+              <span class="menu-arrow"></span>
+            </a>
+            <div class="collapse" id="kowsar">
+              <ul class="nav-second-level">
+                <li>
+                  <a routerLink="/kowsar/good-list"> مدیریت کالا </a>
+                </li>
+                <li>
+                  <a routerLink="/kowsar/goodsgrp-list"> گروه کالایی </a>
+                </li>
 
 
-        <li>
-          <a href="#kowsar" data-bs-toggle="collapse" aria-expanded="false" aria-controls="kowsar">
-            <i class="ri-layout-line"></i>
-            <span>حسابداری کوثر</span>
-            <span class="menu-arrow"></span>
-          </a>
-          <div class="collapse" id="kowsar">
-            <ul class="nav-second-level">
-              <li>
-                <a routerLink="/kowsar/good-list"> مدیریت کالا </a>
-              </li>
-              <li>
-                <a routerLink="/kowsar/goodsgrp-list"> گروه کالایی </a>
-              </li>
-
-
-            </ul>
-          </div>
-        </li>
+              </ul>
+            </div>
+          </li>
+        </ng-container>
 
 
 
 
 
-        <li>
-          <a href="#application" data-bs-toggle="collapse" aria-expanded="false" aria-controls="application">
-            <i class="ri-layout-line"></i>
-            <span>نرم افزار های جانبی</span>
-            <span class="menu-arrow"></span>
-          </a>
-          <div class="collapse" id="application">
-            <ul class="nav-second-level">
-              <li>
-                <a routerLink="/application/broker-detail"> بازاریابی </a>
-              </li>
-              <li>
-                <a routerLink="application/company-detail"> مشتریان </a>
-              </li>
-              <li>
-                <a routerLink="application/ocr-detail"> بایگانی </a>
-              </li>
-              <li>
-                <a routerLink="application/order-detail"> سفارشگیر </a>
-              </li>
-            </ul>
-          </div>
-        </li>
+
+        <ng-container *ngIf="JobPersonRef.length>0">
+          <li>
+            <a href="#application" data-bs-toggle="collapse" aria-expanded="false" aria-controls="application">
+              <i class="ri-layout-line"></i>
+              <span>نرم افزار های جانبی</span>
+              <span class="menu-arrow"></span>
+            </a>
+            <div class="collapse" id="application">
+              <ul class="nav-second-level">
+                <li>
+                  <a routerLink="/application/broker-detail"> بازاریابی </a>
+                </li>
+                <li>
+                  <a routerLink="application/company-detail"> مشتریان </a>
+                </li>
+                <li>
+                  <a routerLink="application/ocr-detail"> بایگانی </a>
+                </li>
+                <li>
+                  <a routerLink="application/order-detail"> سفارشگیر </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ng-container>
+
+
+
 
 
 
@@ -152,90 +157,31 @@
         </li>
 
 
-        <li>
-          <a href="#manager" data-bs-toggle="collapse" aria-expanded="false" aria-controls="manager">
-            <i class="ri-layout-line"></i>
-            <span>توسعه نرم افزار</span>
-            <span class="menu-arrow"></span>
-          </a>
-          <div class="collapse" id="manager">
-            <ul class="nav-second-level">
-              <li>
-                <a routerLink="/manager/list"> اپلیکیشن‌های کوثر </a>
-              </li>
-              <li>
-                <a routerLink="/manager/active"> اپلیکیشن‌های فعال </a>
-              </li>
-              <li>
-                <a routerLink="/manager/log"> لاگ سرور </a>
-              </li>
+        <ng-container *ngIf="JobPersonRef.length>0">
+          <li>
+            <a href="#manager" data-bs-toggle="collapse" aria-expanded="false" aria-controls="manager">
+              <i class="ri-layout-line"></i>
+              <span>توسعه نرم افزار</span>
+              <span class="menu-arrow"></span>
+            </a>
+            <div class="collapse" id="manager">
+              <ul class="nav-second-level">
+                <li>
+                  <a routerLink="/manager/list"> اپلیکیشن‌های کوثر </a>
+                </li>
+                <li>
+                  <a routerLink="/manager/active"> اپلیکیشن‌های فعال </a>
+                </li>
+                <li>
+                  <a routerLink="/manager/log"> لاگ سرور </a>
+                </li>
 
-            </ul>
-          </div>
-        </li>
-
-
-        <!-- <li>
-          <a href="#incident" data-bs-toggle="collapse" aria-expanded="false" aria-controls="incident">
-            <i class="ri-layout-line"></i>
-            <span>حادثه</span>
-            <span class="menu-arrow"></span>
-          </a>
-          <div class="collapse" id="incident">
-            <ul class="nav-second-level">
-              <li>
-                <a routerLink="incident/incident/list"> لیست </a>
-              </li>
-              <li>
-                <a routerLink="incident/incident/create">ثبت حادثه </a>
-              </li>
-            </ul>
-          </div>
-        </li> -->
-
-        <!-- 
-        <li>
-          <a href="#baseInfo" data-bs-toggle="collapse" aria-expanded="false" aria-controls="baseInfo">
-            <i class="ri-layout-line"></i>
-            <span> اطلاعات پایه</span>
-            <span class="menu-arrow"></span>
-          </a>
-          <div class="collapse" id="baseInfo">
-            <ul class="nav-second-level">
-              <li>
-                <a routerLinkActive="active" routerLink="base-info/accident-type/list">نوع حادثه</a>
-              </li>
-              <li>
-                <a routerLink="base-info/incident-item/list">پایه داری</a>
-              </li>
-              <li>
-                <a routerLink="base-info/org-unit/list">چارت سازمانی</a>
-              </li>
-            </ul>
-          </div>
-        </li>
+              </ul>
+            </div>
+          </li>
+        </ng-container>
 
 
-
-
-
-        <li>
-          <a href="#users" data-bs-toggle="collapse" aria-expanded="false" aria-controls="users1">
-            <i class="ri-layout-line"></i>
-
-            <span> کاربران</span>
-            <span class="menu-arrow"></span>
-          </a>
-
-          <div class="collapse" id="users1">
-            <ul class="nav-second-level">
-              <li>
-                <a routerLinkActive="active" routerLink="user-management/user/list">اطلاعات شماره 1</a>
-              </li>
-            </ul>
-          </div>
-        </li>
- -->
 
 
 

@@ -5,6 +5,7 @@ import {
   ACCESS_TOKEN_NAME,
   PERMISSIONS_NAME,
 } from './app-shell/framework-services/configuration';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -12,22 +13,22 @@ import {
 })
 export class AppComponent implements OnInit {
   constructor(
-    private oidcSecurityService: OidcSecurityService,
+    private readonly router: Router,
     private localStorageService: LocalStorageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     document.body.classList.remove('loading');
+    this.localStorageService.setItem(ACCESS_TOKEN_NAME, "1111111111");
+    this.localStorageService.setItem(PERMISSIONS_NAME, "1111111111");
 
-    this.oidcSecurityService
-      .checkAuth()
-      .subscribe(
-        ({ isAuthenticated, userData, accessToken, idToken, configId }) => {
-          if (isAuthenticated) {
-            this.localStorageService.setItem(ACCESS_TOKEN_NAME, accessToken);
-            this.localStorageService.setItem(PERMISSIONS_NAME, userData.role);
-          }
-        }
-      );
+    sessionStorage
+
+
+    if (!this.localStorageService.exists('ActiveDate')) {
+      this.router.navigate(['/auth/login']);
+
+    }
   }
 }
+

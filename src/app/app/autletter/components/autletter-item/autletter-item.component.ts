@@ -40,6 +40,7 @@ export class AutletterItemComponent
   records;
   title = 'لیست تیکت های ارسالی ';
   CentralRef: string = '';
+  JobPersonRef: string = '';
   Searchtarget: string = '';
   items: any[] = [];
   selectedOption: string = '0';
@@ -58,6 +59,7 @@ export class AutletterItemComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
+    this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
 
 
 
@@ -89,7 +91,7 @@ export class AutletterItemComponent
     ];
 
 
-    this.CentralRef = "4";
+    this.CentralRef = sessionStorage.getItem("CentralRef");
 
 
     this.repo.GetCentralUser().subscribe(e => {

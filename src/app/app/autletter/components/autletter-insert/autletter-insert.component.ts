@@ -36,7 +36,7 @@ export class AutletterInsertComponent implements OnInit {
 
 
   submit(action) {
-    this.CentralRef = '4';
+    this.CentralRef = sessionStorage.getItem("CentralRef");
     const command = this.EditForm.value;
     if (action == 'delete') {
       // this.incidentService.delete(command.id).subscribe((id) => {

@@ -31,6 +31,8 @@ export class AutletterListComponent
   title = 'لیست تیکت های ارسالی ';
   dateValue = new FormControl();
   CentralRef: string = '';
+  JobPersonRef: string = '';
+
   Searchtarget: string = '';
   items: any[] = [];
   TextData: string = '';
@@ -58,7 +60,7 @@ export class AutletterListComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
-
+    this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
     this.columnDefs = [
       {
         field: 'عملیات',
@@ -134,27 +136,50 @@ export class AutletterListComponent
   }
   getList() {
 
-    this.searchTerm = ''
-    this.CentralRef = ''
 
-    this.repo.GetLetterList("", "", "").subscribe((data) => {
-      this.records = data;
-    });
+
+    if (sessionStorage.getItem("JobPersonRef").length > 0) {
+      this.searchTerm = ''
+      this.CentralRef = ''
+
+      this.repo.GetLetterList("", "", "").subscribe((data) => {
+        this.records = data;
+      });
+    } else {
+      this.searchTerm = ''
+      this.CentralRef = sessionStorage.getItem("CentralRef");
+
+      this.repo.GetLetterList("", this.CentralRef, "").subscribe((data) => {
+        this.records = data;
+      });
+    }
+
+
 
   }
 
 
 
   LoadList() {
+    if (sessionStorage.getItem("JobPersonRef").length > 0) {
+      if (this.selectedOption === '0') {
+        this.CentralRef = ''
+      } else {
+        this.CentralRef = sessionStorage.getItem("CentralRef");
 
-    if (this.selectedOption === '0') {
-      this.CentralRef = ''
+      }
+      this.repo.GetLetterList(this.searchTerm, this.CentralRef, this.dateValue.value).subscribe((data) => {
+        this.records = data;
+      });
     } else {
-      this.CentralRef = '4';
+
+      this.CentralRef = sessionStorage.getItem("CentralRef");
+
+      this.repo.GetLetterList(this.searchTerm, this.CentralRef, this.dateValue.value).subscribe((data) => {
+        this.records = data;
+      });
     }
-    this.repo.GetLetterList(this.searchTerm, this.CentralRef, this.dateValue.value).subscribe((data) => {
-      this.records = data;
-    });
+
 
   }
 
