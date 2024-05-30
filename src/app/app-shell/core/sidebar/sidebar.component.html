@@ -56,6 +56,13 @@
           </a>
         </div>
       </div>
+      <ng-container *ngIf="CustName_Small.length>0">
+        <span>نام مجموعه</span>
+        <h5 class="text-danger">{{CustName_Small}}</h5>
+        <span>پشتیبانی</span>
+        <h5 class="text-danger">{{Explain}}</h5>
+      </ng-container>
+
     </div>
 
     <!--- Sidemenu -->

@@ -11,10 +11,16 @@ export class SidebarComponent implements OnInit {
   PhFullName = '';
   localStorageService: LocalStorageService
   JobPersonRef = '';
+  CustName_Small = '';
+  Explain = '';
 
   ngOnInit(): void {
     this.PhFullName = sessionStorage.getItem("PhFullName")
     this.JobPersonRef = sessionStorage.getItem("JobPersonRef")
+    this.CustName_Small = sessionStorage.getItem("CustName_Small")
+    this.Explain = sessionStorage.getItem("Explain")
+
+
   }
 
   logout() {

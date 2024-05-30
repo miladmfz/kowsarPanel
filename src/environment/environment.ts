@@ -7,14 +7,14 @@ export const environment = {
 
 
   //  Build
-  api_Url: 'http://178.131.31.161:60005/api/',
-  baseUrl: 'http://178.131.31.161:60005/api/web/',
-  baseUrl_KowsarWeb: 'http://178.131.31.161:60005/api/KowsarWeb/'
+  // api_Url: 'http://178.131.31.161:60005/api/',
+  // baseUrl: 'http://178.131.31.161:60005/api/web/',
+  // baseUrl_KowsarWeb: 'http://178.131.31.161:60005/api/KowsarWeb/'
 
   // development
-  // api_Url: 'http://localhost:60006/api/',
-  // baseUrl: 'http://localhost:60006/api/web/',
-  // baseUrl_KowsarWeb: 'http://localhost:60006/api/KowsarWeb/'
+  api_Url: 'http://localhost:60006/api/',
+  baseUrl: 'http://localhost:60006/api/web/',
+  baseUrl_KowsarWeb: 'http://localhost:60006/api/KowsarWeb/'
 
 
   // //// Qoqnos_Coffee

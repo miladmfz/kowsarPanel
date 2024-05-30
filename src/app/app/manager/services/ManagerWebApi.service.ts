@@ -77,7 +77,9 @@ export class ManagerWebApiService {
     return this.client.get<any[]>(this.baseUrl + "GetWebLog");
   }
 
-
+  GetKowsarCustomer(SearchTarget: string): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetKowsarCustomer", { SearchTarget })
+  }
 
 
 

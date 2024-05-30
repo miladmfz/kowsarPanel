@@ -13,7 +13,7 @@ import { ApplicationLogComponent } from './components/application-log/applicatio
 import { AgGridModule } from 'ag-grid-angular';
 import { CellActionApplicationList } from './components/application-list/cell_action_application_list';
 import { ValidateionStateCellManageApplicationRenderer } from './components/application-list/validation-state-label-cell-manage-application';
-import { ProfileComponent } from './components/profile/profile.component';
+import { CustomerComponent } from './components/customer/customer.component';
 
 
 @NgModule({
@@ -31,7 +31,7 @@ import { ProfileComponent } from './components/profile/profile.component';
     ApplicationLogComponent,
     CellActionApplicationList,
     ValidateionStateCellManageApplicationRenderer,
-    ProfileComponent
+    CustomerComponent
 
   ],
 })

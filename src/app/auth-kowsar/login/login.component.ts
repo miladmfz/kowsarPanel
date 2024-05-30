@@ -50,6 +50,8 @@ export class LoginComponent implements OnInit {
         sessionStorage.setItem("PersonInfoRef", data.users[0].PersonInfoRef)
         sessionStorage.setItem("PhFullName", data.users[0].PhFullName)
         sessionStorage.setItem("UserName", data.users[0].UserName)
+        sessionStorage.setItem("CustName_Small", data.users[0].CustName_Small)
+        sessionStorage.setItem("Explain", data.users[0].Explain)
 
         this.router.navigate(['']);
       }

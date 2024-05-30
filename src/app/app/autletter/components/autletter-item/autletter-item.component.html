@@ -1,6 +1,7 @@
-<div class="card">
-  <div class="card-body">
-    <ng-container *ngIf="JobPersonRef.length>0">
+<ng-container *ngIf="JobPersonRef.length>0">
+  <div class="card">
+    <div class="card-body">
+
 
       <form [formGroup]="EditForm" (ngSubmit)="submit('')" id="submitForm">
         <div class="row">
@@ -43,21 +44,30 @@
         </div>
       </form>
 
-    </ng-container>
 
+
+    </div>
   </div>
-</div>
 
-
+</ng-container>
 
 <div class="card">
   <div class="card-body">
     <h4 class="card-title">{{ title }}</h4>
 
-    <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" class="ag-theme-material"
-      [rowData]="records" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
-      [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)" [pagination]="true"
-      [frameworkComponents]="frameworkComponents" [context]="context">
-    </ag-grid-angular>
+    <ng-container *ngIf="records.length==0">
+      <h4 class="card-title text-danger">هنوز ارجاعی داده نشده است</h4>
+
+    </ng-container>
+    <ng-container *ngIf="records.length>0">
+      <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" class="ag-theme-material"
+        [rowData]="records" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
+        [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)" [pagination]="true"
+        [frameworkComponents]="frameworkComponents" [context]="context">
+      </ag-grid-angular>
+    </ng-container>
+
+
+
   </div>
 </div>
