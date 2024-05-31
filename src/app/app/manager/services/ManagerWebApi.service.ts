@@ -11,7 +11,9 @@ export class ManagerWebApiService {
 
   constructor(private client: HttpClient) { }
 
-  baseUrl = environment.baseUrl;
+  baseUrl = environment.api_Url + "web/";
+  kowsarweb_baseUrl = environment.api_Url + "kowsarweb/";
+
 
   headers = new HttpHeaders()
 
@@ -78,7 +80,7 @@ export class ManagerWebApiService {
   }
 
   GetKowsarCustomer(SearchTarget: string): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "GetKowsarCustomer", { SearchTarget })
+    return this.client.post<any[]>(this.kowsarweb_baseUrl + "GetKowsarCustomer", { SearchTarget })
   }
 
 

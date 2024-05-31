@@ -18,12 +18,20 @@ export class AutletterInsertComponent implements OnInit {
     descriptionFormControl: new FormControl(''),
   });
 
+  ToDayDate: string = "";
 
 
 
 
   CentralRef: string = '';
   ngOnInit() {
+
+    this.repo.GetTodeyFromServer().subscribe((data: any) => {
+
+      this.ToDayDate = data[0].TodeyFromServer
+
+    });
+
   }
 
   customTheme: Partial<IDatepickerTheme> = {
@@ -44,7 +52,7 @@ export class AutletterInsertComponent implements OnInit {
       // });
     }
 
-    this.repo.LetterInsert(this.EditForm.value.dateValue, this.EditForm.value.titleFormControl, this.EditForm.value.descriptionFormControl, this.CentralRef).subscribe(e => {
+    this.repo.LetterInsert(this.ToDayDate, this.EditForm.value.titleFormControl, this.EditForm.value.descriptionFormControl, this.CentralRef).subscribe(e => {
       const intValue = parseInt(e[0].LetterCode, 10);
       if (!isNaN(intValue) && intValue > 0) {
         this.router.navigate(['/autletter/list']);

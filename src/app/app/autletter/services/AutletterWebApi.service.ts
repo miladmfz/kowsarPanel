@@ -23,6 +23,9 @@ export class AutletterWebApiService {
 
 
   //////////////////////////////////////////////////////////////////////
+  GetTodeyFromServer(): Observable<any[]> {
+    return this.client.get<any[]>(this.baseUrl + "GetTodeyFromServer")
+  }
 
 
   GetLetterList(

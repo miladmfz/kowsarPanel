@@ -55,10 +55,17 @@ export class AutletterItemComponent
   users: any[] = [];
 
 
+  ToDayDate: string = "";
 
 
   override ngOnInit(): void {
     super.ngOnInit();
+
+    this.repo.GetTodeyFromServer().subscribe((data: any) => {
+
+      this.ToDayDate = data[0].TodeyFromServer
+
+    });
     this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
 
 
@@ -133,7 +140,7 @@ export class AutletterItemComponent
 
 
 
-    this.repo.AutLetterRowInsert(this.TextData, this.EditForm.value.dateValue, this.EditForm.value.descriptionFormControl, this.CentralRef, this.EditForm.value.selectedUserId.toString()).subscribe(e => {
+    this.repo.AutLetterRowInsert(this.TextData, this.ToDayDate, this.EditForm.value.descriptionFormControl, this.CentralRef, this.EditForm.value.selectedUserId.toString()).subscribe(e => {
       const intValue = parseInt(e[0].LetterRef, 10);
       if (!isNaN(intValue) && intValue > 0) {
         this.router.navigate(['/autletter/list']);

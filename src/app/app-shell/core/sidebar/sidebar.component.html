@@ -144,11 +144,17 @@
         <li>
           <a href="#autletter" data-bs-toggle="collapse" aria-expanded="false" aria-controls="autletter">
             <i class="ri-layout-line"></i>
-            <span>تیکت ها</span>
+            <span>پشتیبانی</span>
             <span class="menu-arrow"></span>
           </a>
           <div class="collapse" id="autletter">
             <ul class="nav-second-level">
+              <ng-container *ngIf="JobPersonRef.length>0">
+                <li>
+                  <a routerLink="/manager/customer">لیست مشتریان</a>
+                </li>
+              </ng-container>
+
               <li>
                 <a routerLink="/autletter/insert"> ایجاد تیکت جدید </a>
               </li>

@@ -4,6 +4,7 @@ import { ApplicationFormComponent } from './components/application-form/applicat
 import { ApplicationListComponent } from './components/application-list/application-list.component';
 import { ApplicationActiveComponent } from './components/application-active/application-active.component';
 import { ApplicationLogComponent } from './components/application-log/application-log.component';
+import { CustomerComponent } from './components/customer/customer.component';
 
 
 const routes: Routes = [
@@ -32,6 +33,10 @@ const routes: Routes = [
         component: ApplicationLogComponent,
       },
 
+      {
+        path: 'customer',
+        component: CustomerComponent,
+      },
 
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       { path: '**', redirectTo: 'list', pathMatch: 'full' },

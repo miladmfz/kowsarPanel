@@ -23,7 +23,7 @@ export class CustomerComponent
 
 
   records;
-  title = 'لیست کالاها ';
+  title = 'لیست مشتریان کوثر  ';
   Searchtarget: string = '';
 
   onInputChange() {
@@ -60,6 +60,13 @@ export class CustomerComponent
       {
         field: 'Phone',
         headerName: 'شماره تماس',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+      },
+
+      {
+        field: 'Mobile',
+        headerName: 'موبایل',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
       },
