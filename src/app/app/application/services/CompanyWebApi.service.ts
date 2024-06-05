@@ -13,10 +13,9 @@ export class CompanyWebApiService {
     headers = new HttpHeaders()
         .set('content-type', 'application/json')
         .set('Access-Control-Allow-Origin', '*')
-        .set('UserGuid', sessionStorage.getItem('UserGuid') + "")
+        .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
 
-    CompanyWeb_url = environment.api_Url + "CompanyWeb/";
-    baseUrl = this.CompanyWeb_url;
+    baseUrl = environment.api_Url + "CompanyWeb/";
 
 
 

@@ -7,30 +7,24 @@ import { environment } from 'src/environment/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthKowsarWebApiService {
+export class CustomerWebApiService {
 
   constructor(private client: HttpClient) { }
 
-  baseUrl = environment.api_Url + "Support/";
+  kowsarweb_baseUrl = environment.api_Url + "Support/";
+
 
   headers = new HttpHeaders()
 
     .set('content-type', 'application/json')
     .set('Access-Control-Allow-Origin', '*')
-    .set('UserGuid', sessionStorage.getItem('UserGuid') + "")
+    .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
 
 
 
-
-  ////////////////////////////////////////////////////////////////////
-
-
-
-  IsUser(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "IsUser", command);
+  GetKowsarCustomer(SearchTarget: string): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarweb_baseUrl + "GetKowsarCustomer", { SearchTarget })
   }
-
-
 
 
 

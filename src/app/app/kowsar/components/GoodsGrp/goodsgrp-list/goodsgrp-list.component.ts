@@ -83,11 +83,11 @@ export class GoodsgrpListComponent extends AgGridBaseComponent
   getList() {
 
 
-    this.repo.GetOrdergroupList(this.GroupCode_str).subscribe((data) => {
-      this.records = data;
+    // this.repo.GetOrdergroupList(this.GroupCode_str).subscribe((data) => {
+    //   this.records = data;
 
 
-    });
+    // });
 
 
   }

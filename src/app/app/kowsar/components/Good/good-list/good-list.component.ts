@@ -100,10 +100,10 @@ export class GoodListComponent extends AgGridBaseComponent
   getList() {
 
 
-    this.repo.GetOrderGoodList("30", this.Searchtarget, "0").subscribe((data) => {
-      this.records = data;
+    // this.repo.GetOrderGoodList("30", this.Searchtarget, "0").subscribe((data) => {
+    //   this.records = data;
 
-    });
+    // });
 
 
 

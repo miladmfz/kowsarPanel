@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { AutletterWebApiService } from '../../services/AutletterWebApi.service';
+import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 
 @Component({
   selector: 'app-autletter-detail',

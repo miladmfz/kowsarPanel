@@ -11,15 +11,14 @@ export class ManagerWebApiService {
 
   constructor(private client: HttpClient) { }
 
-  baseUrl = environment.api_Url + "web/";
-  kowsarweb_baseUrl = environment.api_Url + "kowsarweb/";
+  baseUrl = environment.api_Url + "SupportApp/";
 
 
   headers = new HttpHeaders()
 
     .set('content-type', 'application/json')
     .set('Access-Control-Allow-Origin', '*')
-    .set('UserGuid', sessionStorage.getItem('UserGuid') + "")
+    .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
 
 
 
@@ -78,12 +77,6 @@ export class ManagerWebApiService {
   GetWebLog(): Observable<any[]> {
     return this.client.get<any[]>(this.baseUrl + "GetWebLog");
   }
-
-  GetKowsarCustomer(SearchTarget: string): Observable<any[]> {
-    return this.client.post<any[]>(this.kowsarweb_baseUrl + "GetKowsarCustomer", { SearchTarget })
-  }
-
-
 
 
 }

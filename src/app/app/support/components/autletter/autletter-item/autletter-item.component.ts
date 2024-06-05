@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AutletterWebApiService } from '../../services/AutletterWebApi.service';
+import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 import { FormControl, FormGroup } from '@angular/forms';
-import { IActiveDate } from 'ng-persian-datepicker';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
@@ -99,19 +98,10 @@ export class AutletterItemComponent
 
 
     this.CentralRef = sessionStorage.getItem("CentralRef");
-
-
     this.repo.GetCentralUser().subscribe(e => {
       this.users = e;
 
     });
-
-    const cachedData = sessionStorage.getItem('AutLetterRowCache');
-
-    if (cachedData) {
-      this.items = JSON.parse(cachedData);
-    }
-
 
 
 
@@ -119,7 +109,6 @@ export class AutletterItemComponent
       this.records = data;
       this.repo.SetAlarmOff(data[0].LetterRowCode).subscribe(e => { });
 
-      sessionStorage.setItem('AutLetterRowCache', JSON.stringify(this.items));
     });
 
 
@@ -143,7 +132,7 @@ export class AutletterItemComponent
     this.repo.AutLetterRowInsert(this.TextData, this.ToDayDate, this.EditForm.value.descriptionFormControl, this.CentralRef, this.EditForm.value.selectedUserId.toString()).subscribe(e => {
       const intValue = parseInt(e[0].LetterRef, 10);
       if (!isNaN(intValue) && intValue > 0) {
-        this.router.navigate(['/autletter/list']);
+        this.router.navigate(['/support/letter-list']);
       } else {
         console.log("insert nashod")
       }

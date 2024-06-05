@@ -11,15 +11,15 @@ export class AutletterWebApiService {
   constructor(private client: HttpClient) { }
 
 
-  baseUrl = environment.baseUrl;
 
   headers = new HttpHeaders()
 
     .set('content-type', 'application/json')
     .set('Access-Control-Allow-Origin', '*')
-    .set('UserGuid', sessionStorage.getItem('UserGuid') + "")
+    .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
 
 
+  baseUrl = environment.api_Url + "Support/";
 
 
   //////////////////////////////////////////////////////////////////////

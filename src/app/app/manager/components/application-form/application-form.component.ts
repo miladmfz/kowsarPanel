@@ -167,181 +167,20 @@ export class ApplicationFormComponent implements OnInit {
   }
 
   handleCreateEditOps(action, id) {
-    //debugger
-    //if (action == 'new') {
+
     this.EditForm.reset();
     //this.title = 'ایجاد کاربر جدید';
     this.Code = '';
     document.getElementById('ActivationCode').focus();
     //} else if (action == 'exit') {
-    //  this.router.navigateByUrl('/user-management/user/list');
+    //   
     //} else {
     //  this.title = 'ویرایش کاربر';
-    //  this.router.navigateByUrl(`/user-management/user/edit/${id}`);
+    //   
     //}
 
     this.notificationService.succeded(operationSuccessful);
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-implements OnInit {
-
-  constructor(private repo: ManagerWebApiService, private route: ActivatedRoute, private location: Location, private router: Router) { }
-
-
-
-  @Input() TextData: string = '';
-
-  SingleItems: any[] = [];
-
-
-  formValues: any = {};
-  id!: string;
-
-
-
-
-
-  logFormData() {
-     'Form data:', this.formValues);
-
-    if (this.id == "0") {
-       " ersal baraye create ");
-
-      this.router.navigate(['/baseinformation/broker/list']);
-
-      this.repo.InsertAppBrokerCustomer(
-        this.formValues.ActivationCode,
-        this.formValues.EnglishCompanyName,
-        this.formValues.PersianCompanyName,
-        this.formValues.ServerURL,
-        this.formValues.SQLiteURL,
-        this.formValues.MaxDevice,
-        this.formValues.SecendServerURL,
-        this.formValues.DbName,
-        this.formValues.AppType
-
-      ).subscribe(e => {
-
-
-        if (e[0].AppBrokerCustomerCode.length > 0) {
-          this.location.back();
-
-        }
-
-
-
-      });
-
-
-       this.formValues);
-
-    } else {
-     
-    }
-
-
-  }
-
-
-
-
-
-  LoadFromUrl(id: string) {
-
-
-
-    this.repo.GetAppBrokerCustomerByCode(this.id).subscribe(e => {
-
-
-
-      this.SingleItems = e;
-       this.SingleItems);
-      this.LoadDataSet();
-      // Save the updated data to localStorage
-
-    });
-
-
-
-
-  }
-
-
-
-
-  LoadDataSet() {
-    this.formValues = {
-      ActivationCode: this.SingleItems[0].ActivationCode,
-      EnglishCompanyName: this.SingleItems[0].EnglishCompanyName,
-      PersianCompanyName: this.SingleItems[0].PersianCompanyName,
-      ServerURL: this.SingleItems[0].ServerURL,
-      SQLiteURL: this.SingleItems[0].SQLiteURL,
-      MaxDevice: this.SingleItems[0].MaxDevice,
-      SecendServerURL: this.SingleItems[0].SecendServerURL,
-      DbName: this.SingleItems[0].DbName,
-      AppType: this.SingleItems[0].AppType,
-    };
-
-  }
-
-
-  EmptyForm() {
-    this.formValues = {
-      ActivationCode: '',
-      EnglishCompanyName: '',
-      PersianCompanyName: '',
-      ServerURL: '',
-      SQLiteURL: '',
-      MaxDevice: '',
-      SecendServerURL: '',
-      DbName: '',
-      AppType: '',
-    };
-
-
-  }
-
-
-
-
-
-  ngOnInit() {
-    this.EmptyForm()
-    this.id = this.route.snapshot.params['id'];
-    this.LoadFromUrl(this.id);
-
-  }
-
-
-
-
-}
-
-
-*/
-
-
 
 

@@ -14,13 +14,11 @@ export class BrokerWebApiService {
 
         .set('content-type', 'application/json')
         .set('Access-Control-Allow-Origin', '*')
+        .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
 
-        .set('UserGuid', sessionStorage.getItem('UserGuid') + "")
 
+    baseUrl = environment.api_Url + "BrokerWeb/";
 
-    BrokerWeb_url = environment.api_Url + "BrokerWeb/";
-
-    baseUrl = this.BrokerWeb_url;
 
 
 

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AutletterWebApiService } from '../../services/AutletterWebApi.service';
 import { FormControl } from '@angular/forms';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { Router } from '@angular/router';
@@ -7,6 +6,7 @@ import { LocalStorageService } from 'src/app/app-shell/framework-services/local.
 import { CellActionAutletterWork } from './cell-action-autletter-work';
 import { ValidateionStateCellAutletterRenderer } from '../autletter-list/validation-state-label-cell-autletter';
 import { ValidateionStateCellAutletterWorkRenderer } from './validation-state-label-cell-autletter-work';
+import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 
 @Component({
   selector: 'app-autletter-work',

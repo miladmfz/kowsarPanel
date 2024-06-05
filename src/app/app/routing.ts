@@ -24,9 +24,9 @@ const Routing: Routes = [
       import('../app/manager/manager.module').then((m) => m.ManagerModule)
   },
   {
-    path: 'autletter',
+    path: 'support',
     loadChildren: () =>
-      import('../app/autletter/autletter.module').then((m) => m.AutLetterModule)
+      import('../app/support/support.module').then((m) => m.SupportModule)
   },
 
 ];

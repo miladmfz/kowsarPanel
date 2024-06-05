@@ -1,20 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
-import { ManagerWebApiService } from '../../services/ManagerWebApi.service';
 import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
+import { CustomerWebApiService } from 'src/app/app/support/services/CustomerWebApi.service';
 
 @Component({
-  selector: 'app-customer',
-  templateUrl: './customer.component.html',
+  selector: 'app-customer-list',
+  templateUrl: './customer-list.component.html',
 })
-export class CustomerComponent
-  extends AgGridBaseComponent
+export class CustomerListComponent extends AgGridBaseComponent
   implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private repo: ManagerWebApiService,
+    private repo: CustomerWebApiService,
     localStorageService: LocalStorageService
   ) {
     super(localStorageService);
@@ -94,115 +93,3 @@ export class CustomerComponent
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-implements OnInit {
-
-constructor(
-private repo: KowsarWebApiService,
-private route: ActivatedRoute,
-
-) { }
-
-items: any[] = [];
-TextData: string = '';
-selectedOption: string = '0';
-dateValue = new FormControl();
-id: string = "0";
-
-Searchtarget: string = '';
-CentralRef: string = '';
-GroupCode_str: string = '0';
-
-
-
-ngOnInit() {
-
-if (this.route.snapshot.params['id']) {
-this.id = this.route.snapshot.params['id'];
-}
-
-if (parseInt(this.id) > 0) {
-this.GroupCode_str = this.id
-this.LoadList();
-} else {
-this.repo.kowsar_info("AppOrder_DefaultGroupCode").subscribe(e => {
-
-this.GroupCode_str = e[0].DataValue
-this.LoadList();
-});
-}
-
-
-
-}
-
-
-onInputChange() {
-
-}
-
-
-LoadList() {
-
-this.repo.GetOrderGoodList("30", this.Searchtarget, this.GroupCode_str).subscribe(e => {
-this.items = e;
-this.items);
-
-});
-
-}
-
-
-
-
-
-
-}
-*/

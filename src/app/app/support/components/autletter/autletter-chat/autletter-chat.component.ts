@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AutletterWebApiService } from '../../services/AutletterWebApi.service';
+import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environment/environment';
@@ -39,14 +39,7 @@ export class AutletterChatComponent implements OnInit {
 
   ngOnInit() {
     this.CentralRef = sessionStorage.getItem("CentralRef");
-
-
-
     this.GetAutConversation();
-
-
-
-
   }
 
   GetAutConversation() {

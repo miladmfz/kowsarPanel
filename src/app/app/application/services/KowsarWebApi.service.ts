@@ -11,16 +11,14 @@ export class KowsarWebApiService {
 
   constructor(private client: HttpClient) { }
 
-  //baseUrl = environment.baseUrl_KowsarWeb;
 
   headers = new HttpHeaders()
     .set('content-type', 'application/json')
     .set('Access-Control-Allow-Origin', '*')
-    .set('UserGuid', sessionStorage.getItem('UserGuid') + "")
+    .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
 
 
-  KowsarWeb_url = environment.api_Url + "KowsarWeb/";
-  baseUrl = this.KowsarWeb_url;
+  baseUrl = environment.api_Url + "KowsarWeb/";
 
 
 

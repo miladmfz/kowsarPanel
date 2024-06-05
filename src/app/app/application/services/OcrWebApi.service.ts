@@ -11,16 +11,14 @@ export class OcrWebApiService {
 
     constructor(private client: HttpClient) { }
 
-    //baseUrl = environment.baseUrl_KowsarWeb;
     headers = new HttpHeaders()
 
         .set('content-type', 'application/json')
         .set('Access-Control-Allow-Origin', '*')
-        .set('UserGuid', sessionStorage.getItem('UserGuid') + "")
+        .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
 
-    OcrWeb_url = environment.api_Url + "OcrWeb/";
+    baseUrl = environment.api_Url + "OcrWeb/";
 
-    baseUrl = this.OcrWeb_url;
 
 
     //*********************************************************** */

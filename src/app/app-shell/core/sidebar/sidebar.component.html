@@ -79,7 +79,7 @@
           </a>
         </li>
 
-        <ng-container *ngIf="JobPersonRef.length>0">
+        <!-- <ng-container *ngIf="JobPersonRef.length>0">
           <li>
             <a href="#kowsar" data-bs-toggle="collapse" aria-expanded="false" aria-controls="kowsar">
               <i class="ri-layout-line"></i>
@@ -133,7 +133,7 @@
         </ng-container>
 
 
-
+ -->
 
 
 
@@ -142,27 +142,27 @@
 
 
         <li>
-          <a href="#autletter" data-bs-toggle="collapse" aria-expanded="false" aria-controls="autletter">
+          <a href="#support" data-bs-toggle="collapse" aria-expanded="false" aria-controls="support">
             <i class="ri-layout-line"></i>
             <span>پشتیبانی</span>
             <span class="menu-arrow"></span>
           </a>
-          <div class="collapse" id="autletter">
+          <div class="collapse" id="support">
             <ul class="nav-second-level">
               <ng-container *ngIf="JobPersonRef.length>0">
                 <li>
-                  <a routerLink="/manager/customer">لیست مشتریان</a>
+                  <a routerLink="/support/customer-list">لیست مشتریان</a>
                 </li>
               </ng-container>
 
               <li>
-                <a routerLink="/autletter/insert"> ایجاد تیکت جدید </a>
+                <a routerLink="/support/letter-insert"> ایجاد تیکت جدید </a>
               </li>
               <li>
-                <a routerLink="/autletter/list"> لیست تمامی تیکت ها </a>
+                <a routerLink="/support/letter-list"> لیست تمامی تیکت ها </a>
               </li>
               <li>
-                <a routerLink="/autletter/mywork"> وضعیت تیکت های من </a>
+                <a routerLink="/support/letter-mywork"> وضعیت تیکت های من </a>
               </li>
 
             </ul>

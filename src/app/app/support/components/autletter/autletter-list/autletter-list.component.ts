@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AutletterWebApiService } from '../../services/AutletterWebApi.service';
+import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 import { FormControl } from '@angular/forms';
 import { IActiveDate } from 'ng-persian-datepicker';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
@@ -67,7 +67,7 @@ export class AutletterListComponent
         pinned: 'left',
         cellRenderer: CellActionAutletterList,
         cellRendererParams: {
-          editUrl: '/autletter/detail',
+          editUrl: '/support/letter-detail',
         },
         width: 50,
       },
@@ -187,7 +187,7 @@ export class AutletterListComponent
 
 
   navigateToEdit(id) {
-    this.router.navigate(['/autletter/detail', id]);
+    this.router.navigate(['/support/letter-detail', id]);
   }
 }
 

@@ -11,16 +11,14 @@ export class OrderWebApiService {
 
     constructor(private client: HttpClient) { }
 
-    //baseUrl = environment.baseUrl_KowsarWeb;
     headers = new HttpHeaders()
 
         .set('content-type', 'application/json')
         .set('Access-Control-Allow-Origin', '*')
-        .set('UserGuid', sessionStorage.getItem('UserGuid') + "")
+        .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
 
 
-    OrderWeb_url = environment.api_Url + "OrderWeb/";
-    baseUrl = this.OrderWeb_url;
+    baseUrl = environment.api_Url + "OrderWeb/";
 
 
 
