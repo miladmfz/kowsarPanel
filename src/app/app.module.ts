@@ -28,10 +28,6 @@ import { LocalStorageService } from './app-shell/framework-services/local.storag
   exports: [],
   providers: [
     LocalStorageService,
-    {
-      provide: LocationStrategy,
-      useClass: PathLocationStrategy
-    },
   ],
   bootstrap: [AppComponent],
 })

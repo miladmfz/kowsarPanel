@@ -12,15 +12,9 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
-    if (sessionStorage.getItem("ActiveDate") != null) {
-      this.router.navigate(['/dashboard']);
-    } else {
-      this.router.navigate(['/auth/login']);
-
-    }
-
-
+    // if (sessionStorage.getItem("ActiveDate") == null) {
+    //   this.router.navigate(['/auth/login']);
+    // }
   }
 }
 
