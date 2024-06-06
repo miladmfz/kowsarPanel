@@ -13,15 +13,7 @@
     url('./assets/fonts/iransans/IRANSansWeb(FaNum)_Bold.ttf') format('truetype');
 }
 
-@font-face {
-  font-family: IRANSans_FaNum;
-  font-style: normal;
-  src: url('./assets/fonts/iransans/IRANSansWeb(FaNum).eot');
-  src: url('./assets/fonts/iransans/IRANSansWeb(FaNum).eot?#iefix') format('embedded-opentype'),
-    url('./assets/fonts/iransans/IRANSansWeb(FaNum).woff2') format('woff2'),
-    url('./assets/fonts/iransans/IRANSansWeb(FaNum).woff') format('woff'),
-    url('./assets/fonts/iransans/IRANSansWeb(FaNum).ttf') format('truetype');
-}
+
 
 * {
   font-family: IRANSans_Bold;

@@ -2,11 +2,9 @@
   <div class="card">
     <div class="py-2 px-3 border-bottom border-light card-body">
       <div class="d-flex py-1">
-
         <div class="flex-1">
-          <h5 class="mt-0 mb-0 font-15"><a class="text-reset" href="/apps/contacts/profile"> مکالمات اخیر</a></h5>
+          <h5 class="mt-0 mb-0 font-15"><a class="text-reset">مکالمات اخیر</a></h5>
         </div>
-
       </div>
     </div>
     <div class="card-body">
@@ -21,29 +19,28 @@
                 style="height: 100%; overflow: hidden scroll;">
                 <div class="simplebar-content" style="padding: 0px;">
                   <ul class="conversation-list chat-app-conversation">
-
-
-
-
                     <div *ngFor="let chat of chats; let i = index">
                       <ng-container *ngIf="chat.CentralRef === CentralRef; else notMe">
                         <li class="clearfix">
-                          <div class="chat-avatar"><img src="./assets/images/logo_color.png" class="rounded" alt="">
+                          <div class="chat-avatar">
+                            <img src="./assets/images/logo_color.png" class="rounded" alt="">
                           </div>
                           <div class="conversation-text">
                             <ng-container *ngIf="chat.ConversationText === 'Image'; else notimage">
-
-                              <div class="ctext-wrap"><i>{{ chat.Name }}</i> <i>{{ chat.CreationDate }}</i>
-                                <p (click)="GetImage(i)" data-toggle="modal" data-target="#DbSetupModal">
-                                  ((نمایش تصویر ))
-                                </p>
+                              <div class="ctext-wrap">
+                                <i>{{ chat.Name }}</i>
+                                <i>{{ chat.CreationDate }}</i>
                                 <i class="fe-paperclip"></i>
+                                <button (click)="GetImage(i)" class="rounded-pill btn btn-outline-info"
+                                  data-bs-toggle="modal" data-bs-target="#verticallyCenteredModal">
+                                  ((نمایش تصویر))
+                                </button>
                               </div>
-
-
                             </ng-container>
                             <ng-template #notimage>
-                              <div class="ctext-wrap"><i>{{ chat.Name }}</i> <i>{{ chat.CreationDate }}</i>
+                              <div class="ctext-wrap">
+                                <i>{{ chat.Name }}</i>
+                                <i>{{ chat.CreationDate }}</i>
                                 <p>{{ chat.ConversationText }}</p>
                               </div>
                             </ng-template>
@@ -58,21 +55,28 @@
                       </ng-container>
                       <ng-template #notMe>
                         <li class="clearfix odd">
-                          <div class="chat-avatar"><img src="./assets/images/logo_color.png" class="rounded" alt="">
+                          <div class="chat-avatar">
+                            <img src="./assets/images/logo_color.png" class="rounded" alt="">
                           </div>
                           <div class="conversation-text">
                             <ng-container *ngIf="chat.ConversationText === 'Image'; else notimage">
-                              <div class="ctext-wrap"><i>{{ chat.Name }}</i> <i>{{ chat.CreationDate }}</i>
-
-                                <div class="ctext-wrap"><i>{{ chat.Name }}</i> <i>{{ chat.CreationDate }}</i>
-                                  <p (click)="GetImage(i)" data-toggle="modal" data-target="#DbSetupModal">برای نمایش
-                                    کلیک کنید</p>
-
+                              <div class="ctext-wrap">
+                                <i>{{ chat.Name }}</i>
+                                <i>{{ chat.CreationDate }}</i>
+                                <div class="ctext-wrap">
+                                  <i>{{ chat.ConversationText }}</i>
+                                  <i class="fe-paperclip"></i>
+                                  <button (click)="GetImage(i)" class="rounded-pill btn btn-outline-info"
+                                    data-bs-toggle="modal" data-bs-target="#verticallyCenteredModal">
+                                    ((نمایش تصویر))
+                                  </button>
                                 </div>
                               </div>
                             </ng-container>
                             <ng-template #notimage>
-                              <div class="ctext-wrap"><i>{{ chat.Name }}</i> <i>{{ chat.CreationDate }}</i>
+                              <div class="ctext-wrap">
+                                <i>{{ chat.Name }}</i>
+                                <i>{{ chat.CreationDate }}</i>
                                 <p>{{ chat.ConversationText }}</p>
                               </div>
                             </ng-template>
@@ -86,11 +90,6 @@
                         </li>
                       </ng-template>
                     </div>
-
-
-
-
-
                   </ul>
                 </div>
               </div>
@@ -110,38 +109,27 @@
         <div class="col">
           <div class="mt-3 bg-light p-3 rounded">
             <form novalidate="" name="chat-form" id="chat-form">
-
-
               <div class="row">
                 <div class="col mb-2 mb-sm-0">
                   <div>
-
                     <input [(ngModel)]="newMessage" class="border-10 form-control" name="newMessage"
                       placeholder="متن پیام..." />
-
                   </div>
                 </div>
                 <div class="col-sm-auto">
                   <div class="btn-group">
-
                     <a class="btn btn-light" (click)="fileInput.click()">
                       <i class="fe-paperclip"></i>
                     </a>
-
                     <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput
                       style="display: none;">
-
                     <button type="submit" class="btn btn-success chat-send w-100" (click)="sendMessage()">
                       <i class="fe-send">
                       </i>
                     </button>
-
-
                   </div>
                 </div>
               </div>
-
-
             </form>
           </div>
         </div>
@@ -151,24 +139,21 @@
 </div>
 
 
-
-
-
-<div class="modal fade" #DbSetupModal tabindex="-1" role="dialog" aria-labelledby="DbSetupModalLabel"
+<div class="modal fade" id="verticallyCenteredModal" tabindex="-1" aria-labelledby="verticallyCenteredModalLabel"
   aria-hidden="true">
-  <div class="modal-dialog modal-xl" role="document">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"> نمایش عکس</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h5 class="modal-title" id="verticallyCenteredModalLabel"> نمایش عکس</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <img [src]="Imageitem" alt="No Photo">
+        <div class="modal-body">
+          <img [src]="Imageitem" alt="No Photo">
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
       </div>
     </div>
   </div>

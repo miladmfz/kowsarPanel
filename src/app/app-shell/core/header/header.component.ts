@@ -1,24 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit {
-  constructor(private oidcSecurityService: OidcSecurityService) { }
+  constructor() { }
   userData = null;
   ngOnInit(): void {
     this.getUserData();
   }
   logout() {
-    // this.oidcSecurityService
-    //   .logoffAndRevokeTokens()
-    //   .subscribe((result) =>  result));
+
   }
   async getUserData() {
-    // await this.oidcSecurityService.getUserData().subscribe((data) => {
-    //   this.userData = data;
-    // });
+
   }
 }

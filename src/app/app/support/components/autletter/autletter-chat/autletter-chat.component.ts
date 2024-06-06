@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 import { FormControl } from '@angular/forms';
@@ -11,6 +11,9 @@ import { environment } from 'src/environment/environment';
 
 })
 export class AutletterChatComponent implements OnInit {
+
+
+
 
   constructor(
     private repo: AutletterWebApiService,
@@ -46,6 +49,7 @@ export class AutletterChatComponent implements OnInit {
     this.chats = [];
     this.repo.GetAutConversation(this.TextData).subscribe(e => {
       this.chats = e;
+
     });
 
   }

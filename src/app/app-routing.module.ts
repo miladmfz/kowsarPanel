@@ -1,15 +1,10 @@
 import { NgModule } from '@angular/core';
-import { DashboardComponent } from './app-shell/core/dashboard/dashboard.component';
 import { RouterModule, Routes } from '@angular/router';
-import { UnauthorizedComponent } from './auth/unauthorized/unauthorized.component';
-import { CallbackComponent } from './auth/callback/callback.component';
-import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
-import { AppComponent } from './app.component';
+
 
 const routes: Routes = [
   {
 
-    // canActivate: [AutoLoginPartialRoutesGuard],
 
     path: '',
     loadChildren: () =>
@@ -17,15 +12,12 @@ const routes: Routes = [
   },
   {
 
-    // canActivate: [AutoLoginPartialRoutesGuard],
 
     path: 'auth',
     loadChildren: () =>
       import('./auth-kowsar/auth-kowsar.module').then((m) => m.AuthKowsarModule),
   },
 
-  { path: 'unauthorized', component: UnauthorizedComponent },
-  { path: 'callback', component: CallbackComponent },
 
   {
     path: '',

@@ -29,7 +29,7 @@ export class AutletterWorkComponent
   records;
   title = 'لیست تیکت های من ';
   dateValue = new FormControl();
-  CentralRef: string = '';
+  PersonInfoCode: string = '';
   Searchtarget: string = '';
 
   onInputChange() {
@@ -49,7 +49,7 @@ export class AutletterWorkComponent
         pinned: 'left',
         cellRenderer: CellActionAutletterWork,
         cellRendererParams: {
-          editUrl: '/autletter/detail',
+          editUrl: '/support/letter-detail',
         },
         width: 50,
       },
@@ -82,7 +82,7 @@ export class AutletterWorkComponent
       },
 
       {
-        field: 'CreatorName',
+        field: 'OwnerName',
         headerName: 'ایجاد کننده',
         filter: 'agSetColumnFilter',
 
@@ -120,9 +120,9 @@ export class AutletterWorkComponent
 
 
 
-    this.CentralRef = sessionStorage.getItem("CentralRef");
+    this.PersonInfoCode = sessionStorage.getItem("PersonInfoRef");
 
-    this.repo.GetLetterFromPersoninfo(this.CentralRef).subscribe((data) => {
+    this.repo.GetLetterFromPersoninfo(this.PersonInfoCode).subscribe((data) => {
 
       this.records = data;
 
@@ -132,7 +132,8 @@ export class AutletterWorkComponent
   }
 
   navigateToEdit(id) {
-    this.router.navigate(['/autletter/detail', id]);
+    this.router.navigate(['/support/letter-detail', id]);
   }
+
 }
 

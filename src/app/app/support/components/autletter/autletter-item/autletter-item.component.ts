@@ -122,9 +122,7 @@ export class AutletterItemComponent
 
     const command = this.EditForm.value;
     if (action == 'delete') {
-      // this.incidentService.delete(command.id).subscribe((id) => {
-      //   this.handleCreateEditOps(action, id);
-      // });
+
     }
 
 

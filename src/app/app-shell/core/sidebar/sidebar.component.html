@@ -79,6 +79,9 @@
           </a>
         </li>
 
+
+
+
         <!-- <ng-container *ngIf="JobPersonRef.length>0">
           <li>
             <a href="#kowsar" data-bs-toggle="collapse" aria-expanded="false" aria-controls="kowsar">
@@ -99,13 +102,13 @@
               </ul>
             </div>
           </li>
-        </ng-container>
+        </ng-container> -->
 
 
 
 
 
-
+        <!-- 
         <ng-container *ngIf="JobPersonRef.length>0">
           <li>
             <a href="#application" data-bs-toggle="collapse" aria-expanded="false" aria-controls="application">
@@ -130,10 +133,9 @@
               </ul>
             </div>
           </li>
-        </ng-container>
+        </ng-container> -->
 
 
- -->
 
 
 
@@ -161,9 +163,12 @@
               <li>
                 <a routerLink="/support/letter-list"> لیست تمامی تیکت ها </a>
               </li>
-              <li>
-                <a routerLink="/support/letter-mywork"> وضعیت تیکت های من </a>
-              </li>
+
+              <ng-container *ngIf="JobPersonRef.length>0">
+                <li>
+                  <a routerLink="/support/letter-mywork"> وضعیت تیکت های من </a>
+                </li>
+              </ng-container>
 
             </ul>
           </div>

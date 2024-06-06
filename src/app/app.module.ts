@@ -11,20 +11,14 @@ import {
 } from '@angular/common';
 import { HttpService } from './app-shell/framework-services/http.service';
 import { BrowserModule } from '@angular/platform-browser';
-import { ExceptionInterceptor } from './app-shell/framework-services/exception.interceptor.service';
-import { SecurityInterceptor } from './app-shell/framework-services/security.interceptor.service';
-import { AuthConfigModule } from './auth/auth-config.module';
-import { UnauthorizedComponent } from './auth/unauthorized/unauthorized.component';
-import { CallbackComponent } from './auth/callback/callback.component';
 import { AppRoutingModule } from './app-routing.module';
 import { LocalStorageService } from './app-shell/framework-services/local.storage.service';
 
 @NgModule({
-  declarations: [AppComponent, UnauthorizedComponent, CallbackComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AuthConfigModule,
     CommonModule,
     HttpClientModule,
     RouterModule,
@@ -34,16 +28,9 @@ import { LocalStorageService } from './app-shell/framework-services/local.storag
   exports: [],
   providers: [
     LocalStorageService,
-    HttpService,
     {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ExceptionInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: SecurityInterceptor,
-      multi: true,
+      provide: LocationStrategy,
+      useClass: PathLocationStrategy
     },
   ],
   bootstrap: [AppComponent],

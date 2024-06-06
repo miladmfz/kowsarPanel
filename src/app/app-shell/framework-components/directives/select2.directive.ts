@@ -1,7 +1,6 @@
 import { Directive, EventEmitter, ElementRef, AfterViewInit, Input, Output, OnChanges, SimpleChanges, Renderer2 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import * as _ from 'lodash';
-import { ACCESS_TOKEN_NAME } from '../../framework-services/configuration';
 import { LocalStorageService } from '../../framework-services/local.storage.service';
 
 
@@ -77,7 +76,6 @@ export class Select2Directive implements AfterViewInit {
         };
 
         if (this.ajaxUrl) {
-            const token = this.localStorageService.getItem(ACCESS_TOKEN_NAME);
             var searchTerm = this.searchTerm;
             var baseUrl = `${''}${this.ajaxUrl}`;
             config["ajax"] = {
@@ -92,10 +90,7 @@ export class Select2Directive implements AfterViewInit {
                     return `${baseUrl}/${term}`
                 },
                 dataType: 'json',
-                headers: {
-                    "Authorization": "Bearer " + token,
-                    "Content-Type": "application/json",
-                },
+
                 processResults: function (data) {
                     return {
                         results: $.map(data, function (item) {
