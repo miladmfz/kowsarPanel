@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
-import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
 import { CustomerWebApiService } from 'src/app/app/support/services/CustomerWebApi.service';
 
 @Component({
@@ -14,9 +13,8 @@ export class CustomerListComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: CustomerWebApiService,
-    localStorageService: LocalStorageService
   ) {
-    super(localStorageService);
+    super();
   }
 
 

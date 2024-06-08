@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ManagerWebApiService } from '../../services/ManagerWebApi.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { Router } from '@angular/router';
-import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
 
 @Component({
   selector: 'app-application-active',
@@ -16,9 +15,8 @@ export class ApplicationActiveComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: ManagerWebApiService,
-    localStorageService: LocalStorageService
   ) {
-    super(localStorageService);
+    super();
   }
 
   override ngOnInit(): void {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class LocalStorageService {
+export class SessionStorageService {
   getItem(name: string): string {
     return JSON.parse(sessionStorage.getItem(name));
   }

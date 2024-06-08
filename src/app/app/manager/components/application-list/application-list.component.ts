@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ManagerWebApiService } from '../../services/ManagerWebApi.service';
 import { Router } from '@angular/router';
-import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
-import { EditDeleteCellRenderer } from 'src/app/app-shell/framework-components/ag-grid/edit-delete-cell-btn';
 import { CellActionApplicationList } from './cell_action_application_list';
 import { ValidateionStateCellManageApplicationRenderer } from './validation-state-label-cell-manage-application';
 @Component({
@@ -19,9 +17,8 @@ export class ApplicationListComponent
   constructor(
     private readonly router: Router,
     private repo: ManagerWebApiService,
-    localStorageService: LocalStorageService
   ) {
-    super(localStorageService);
+    super();
   }
 
 

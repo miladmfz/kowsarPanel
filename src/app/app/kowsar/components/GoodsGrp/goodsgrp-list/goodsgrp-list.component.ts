@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { KowsarWebApiService } from '../../../services/KowsarWebApi.service';
-import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
 import { FormControl } from '@angular/forms';
 import { CellActionGoodList } from '../../Good/good-list/cell-action-good-ist';
 
@@ -16,9 +15,8 @@ export class GoodsgrpListComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: KowsarWebApiService,
-    localStorageService: LocalStorageService
   ) {
-    super(localStorageService);
+    super();
   }
 
 

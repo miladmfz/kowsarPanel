@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { LocalStorageService } from '../../framework-services/local.storage.service';
 import { FormGroup } from '@angular/forms';
 declare var $: any;
 
@@ -12,7 +11,7 @@ export class AppSharedDataComponent implements OnInit {
   currentCompanyGuid;
   SomeGlobalSetting;
 
-  constructor(readonly localStorageService: LocalStorageService) {
+  constructor() {
   }
 
   ngOnInit() { }

@@ -6,14 +6,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
   constructor() { }
-  userData = null;
   ngOnInit(): void {
-    this.getUserData();
   }
-  logout() {
 
-  }
-  async getUserData() {
-
-  }
 }

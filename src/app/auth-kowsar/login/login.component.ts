@@ -25,6 +25,11 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading = false
+
+    if (sessionStorage.getItem("ActiveDate") != null) {
+      this.router.navigate(['/auth/login']);
+    }
+
   }
 
 

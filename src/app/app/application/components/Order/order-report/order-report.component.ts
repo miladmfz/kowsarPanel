@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { OrderWebApiService } from '../../../services/OrderWebApi.service';
-import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
@@ -17,9 +16,8 @@ export class OrderReportComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: OrderWebApiService,
-    localStorageService: LocalStorageService
   ) {
-    super(localStorageService);
+    super();
   }
 
   Filter_Lookup: Base_Lookup[] = [

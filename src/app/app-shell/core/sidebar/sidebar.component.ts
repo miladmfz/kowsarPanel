@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { LocalStorageService } from '../../framework-services/local.storage.service';
 declare var $: any;
 
 @Component({
@@ -9,7 +8,6 @@ declare var $: any;
 export class SidebarComponent implements OnInit {
   constructor() { }
   PhFullName = '';
-  localStorageService: LocalStorageService
   JobPersonRef = '';
   CustName_Small = '';
   Explain = '';

@@ -4,7 +4,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
-import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
 @Component({
   selector: 'app-autletter-item',
   templateUrl: './autletter-item.component.html',
@@ -16,9 +15,8 @@ export class AutletterItemComponent
   constructor(
     private router: Router,
     private repo: AutletterWebApiService,
-    localStorageService: LocalStorageService
   ) {
-    super(localStorageService);
+    super();
   }
 
 

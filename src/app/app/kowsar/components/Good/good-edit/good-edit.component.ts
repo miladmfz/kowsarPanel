@@ -3,11 +3,9 @@ import { KowsarWebApiService } from '../../../services/KowsarWebApi.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormControl, FormGroup, UntypedFormBuilder } from '@angular/forms';
 import { Location } from '@angular/common';
-import { operationSuccessful } from 'src/app/app-shell/framework-components/app-messages';
 import { Base_Lookup, GoodType_lookup } from '../../../lookup-type';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import * as convert from 'xml-js';
-import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 @Component({
   selector: 'app-good-edit',
@@ -23,9 +21,8 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     private readonly notificationService: NotificationService,
     private readonly router: Router,
     private location: Location,
-    localStorageService: LocalStorageService,
   ) {
-    super(localStorageService);
+    super();
   }
 
 
@@ -766,7 +763,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     //} else {
     //  
     //}
-    this.notificationService.succeded(operationSuccessful);
   }
 
 

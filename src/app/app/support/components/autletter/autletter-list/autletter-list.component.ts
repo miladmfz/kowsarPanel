@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 import { FormControl } from '@angular/forms';
-import { IActiveDate } from 'ng-persian-datepicker';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { Router } from '@angular/router';
-import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
 import { CellActionAutletterList } from './cell-action-autletter-list';
 import { ValidateionStateCellAutletterRenderer } from './validation-state-label-cell-autletter';
 
@@ -20,9 +18,8 @@ export class AutletterListComponent
   constructor(
     private router: Router,
     private repo: AutletterWebApiService,
-    localStorageService: LocalStorageService
   ) {
-    super(localStorageService);
+    super();
   }
 
 

@@ -1,8 +1,8 @@
 /*
-Template Name: Minton - Admin & Dashboard Template
-Author: CoderThemes
-Website: https://coderthemes.com/
-Contact: support@coderthemes.com
+Template Name: Minton - KowsarPanel
+Author: MFZ
+Website: http://www.kits.ir/
+Contact: MIlad.mfz73@gmail.com
 File: Sales Dashboard
 */
 

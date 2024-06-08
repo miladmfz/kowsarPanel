@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { OcrWebApiService } from '../../../services/OcrWebApi.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { Router } from '@angular/router';
-import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CellActionOcrList } from './cell-action-ocr-list';
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
@@ -17,9 +16,8 @@ export class OcrListComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: OcrWebApiService,
-    localStorageService: LocalStorageService
   ) {
-    super(localStorageService);
+    super();
   }
 
 

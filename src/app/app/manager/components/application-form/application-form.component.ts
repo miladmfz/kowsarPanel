@@ -4,7 +4,6 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
-import { operationSuccessful } from 'src/app/app-shell/framework-components/app-messages';
 @Component({
   selector: 'app-application-form',
   templateUrl: './application-form.component.html',
@@ -179,7 +178,6 @@ export class ApplicationFormComponent implements OnInit {
     //   
     //}
 
-    this.notificationService.succeded(operationSuccessful);
   }
 }
 

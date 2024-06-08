@@ -9,12 +9,14 @@ import { Router } from '@angular/router';
 export class AppComponent implements OnInit {
   constructor(
     private readonly router: Router,
+
   ) { }
 
   ngOnInit(): void {
-    // if (sessionStorage.getItem("ActiveDate") == null) {
-    //   this.router.navigate(['/auth/login']);
-    // }
+    if (sessionStorage.getItem("ActiveDate") == null) {
+      this.router.navigate(['/auth/login']);
+    }
+
+
   }
 }
-

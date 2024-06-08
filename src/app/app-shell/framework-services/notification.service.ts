@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { operationSuccessful } from '../framework-components/app-messages';
 declare var $: any;
 
 @Injectable()
 export class NotificationService {
-    succeded(message: string = operationSuccessful) {
+    succeded(message: string = "عملیات با موفقیت انجام شد.") {
         //debugger;
         $.NotificationApp.send(
             "موفقیت",

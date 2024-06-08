@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { LocalStorageService } from './local.storage.service';
 import { NotificationService } from './notification.service';
+import { SessionStorageService } from './local.storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AgGridStateService {
 
-  constructor(private readonly localStorageService: LocalStorageService,
+  constructor(private readonly sessionstorage: SessionStorageService,
     private readonly notificationService: NotificationService) { }
 
   private makeStorageName(name: string): string {
@@ -17,13 +17,13 @@ export class AgGridStateService {
   saveState(gridColumnApi: any, name: string): void {
     const colState = JSON.stringify(gridColumnApi.getColumnState());
     const storageName = this.makeStorageName(name);
-    this.localStorageService.setItem(storageName, colState);
+    this.sessionstorage.setItem(storageName, colState);
     this.notificationService.succeded("حالت جدول با موفقیت ذخیره شد.");
   }
 
   restoreState(gridColumnApi: any, name: string): boolean {
     const storageName = this.makeStorageName(name);
-    const colState = JSON.parse(this.localStorageService.getItem(storageName));
+    const colState = JSON.parse(this.sessionstorage.getItem(storageName));
     if (!colState) {
       return false;
     }
@@ -39,8 +39,8 @@ export class AgGridStateService {
   resetState(gridColumnApi: any, name: string): void {
     gridColumnApi.resetColumnState();
     const storageName = this.makeStorageName(name);
-    if (this.localStorageService.exists(storageName)) {
-      this.localStorageService.removeItem(storageName);
+    if (this.sessionstorage.exists(storageName)) {
+      this.sessionstorage.removeItem(storageName);
     }
 
     this.notificationService.succeded("برگشت جدول به حالت پیش فرض با موفقیت انجام شد.");

@@ -8,7 +8,6 @@ import { ValidateionStateCellRenderer } from '../ag-grid/validation-state-label-
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { AppSharedDataComponent } from '../app-shared-data/app-shared-data.component';
 import { ImageCellRenderer } from '../ag-grid/image-cell-renderer';
-import { LocalStorageService } from '../../framework-services/local.storage.service';
 import { AG_GRID_LOCALE_FA } from './locale.fa';
 import { Module } from './ag-grid-module';
 declare var Swal: any;
@@ -43,10 +42,9 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
   @Output() afterGridReady = new EventEmitter<number>();
 
   constructor(
-    localStorageService: LocalStorageService,
     @Inject(Boolean) hasPinnedRow = false
   ) {
-    super(localStorageService);
+    super();
 
     this.defaultColDef = {
       flex: 1,

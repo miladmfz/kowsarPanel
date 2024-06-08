@@ -12,7 +12,6 @@ import { RightSliderComponent } from './right-slider/right-slider.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { RouterModule, Routes } from '@angular/router';
 import { Routing } from '../../app/routing';
-import { LocalStorageService } from '../framework-services/local.storage.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { PhoenixFrameworkModule } from '../framework-components/framework.module';
@@ -44,9 +43,8 @@ const routes: Routes = [
   ],
   providers: [
     { provide: LocationStrategy, useClass: PathLocationStrategy },
-    LocalStorageService,
     NotificationService,
-    SwalService,
+    // SwalService,
   ],
   exports: [RouterModule],
 })
