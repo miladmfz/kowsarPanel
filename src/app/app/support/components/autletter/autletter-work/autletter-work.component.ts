@@ -51,9 +51,8 @@ export class AutletterWorkComponent
         width: 50,
       },
       {
-        field: 'AlarmActive',
+        field: 'وضعیت تیکت',
         cellRenderer: ValidateionStateCellAutletterWorkRenderer,
-
         cellClass: 'text-center',
       },
       {

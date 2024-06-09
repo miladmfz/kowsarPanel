@@ -26,10 +26,18 @@
   <div class="h-100" data-simplebar>
     <!-- User box -->
     <div class="user-box text-center">
-      <img src="./assets/images/KowsarSupport.png" alt="user-img" title="Mat Helme" class="rounded-circle avatar-md" />
+
+      <ng-container *ngIf="Imageitem.length>100">
+        <img [src]="Imageitem" alt="No Photo" class="rounded-circle avatar-xl">
+      </ng-container>
+      <ng-container *ngIf="Imageitem.length<100">
+        <img src="./assets/images/KowsarSupport.png" alt="user-img" title="Mat Helme" class="rounded-circle avatar-xl">
+
+      </ng-container>
       <div class="dropdown">
         <a href="#" class="text-reset dropdown-toggle h5 mt-2 mb-1 d-block fw-medium" data-bs-toggle="dropdown">
-          {{PhFullName}}</a>
+          {{PhFullName}}
+          <i class="fe-user me-1"></i></a>
         <div class="dropdown-menu user-pro-dropdown">
           <!-- item-->
           <!-- <a href="javascript:void(0);" class="dropdown-item notify-item">
@@ -154,6 +162,9 @@
               <ng-container *ngIf="JobPersonRef.length>0">
                 <li>
                   <a routerLink="/support/customer-list">لیست مشتریان</a>
+                </li>
+                <li>
+                  <a routerLink="/support/central-list">لیست اجزای پایه</a>
                 </li>
               </ng-container>
 

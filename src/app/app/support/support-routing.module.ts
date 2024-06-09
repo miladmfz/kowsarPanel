@@ -8,17 +8,23 @@ import { AutletterItemComponent } from './components/autletter/autletter-item/au
 import { AutletterDetailComponent } from './components/autletter/autletter-detail/autletter-detail.component';
 import { AutletterInsertComponent } from './components/autletter/autletter-insert/autletter-insert.component';
 import { AutletterWorkComponent } from './components/autletter/autletter-work/autletter-work.component';
+import { CentralListComponent } from './components/central/central-list/central-list.component';
+import { CentralEditComponent } from './components/central/central-edit/central-edit.component';
 
 
 const routes: Routes = [
   {
     path: '',
     children: [
-
       { path: 'customer-list', component: CustomerListComponent, },
 
       { path: 'customer-edit', component: CustomerEditComponent, },
       { path: 'customer-edit/:id', component: CustomerEditComponent, },
+
+      { path: 'central-list', component: CentralListComponent, },
+
+      { path: 'central-edit', component: CentralEditComponent, },
+      { path: 'central-edit/:id', component: CentralEditComponent, },
 
 
       { path: 'letter-list', component: AutletterListComponent, },

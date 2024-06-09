@@ -41,18 +41,16 @@
 
                 <div class="me-3">
                   <label for="fileInput" class="position-relative">
+
                     <ng-container *ngIf="Imageitem.length>100">
-                      <img [src]="Imageitem" alt="No Photo" class="rounded avatar-md"
-                        (mouseover)="showUploadText = true" (mouseleave)="showUploadText = false"
-                        (click)="fileInput.click()">
+                      <img [src]="Imageitem" alt="No Photo" class="rounded-circle" (click)="fileInput.click()">
                     </ng-container>
                     <ng-container *ngIf="Imageitem.length<100">
-                      <img src="./assets/images/nophoto.jpg" alt="No Photo" class="rounded avatar-md"
-                        style="width: 150px; height: 150px; border-radius: 5%; cursor: pointer;"
-                        (mouseover)="showUploadText = true" (mouseleave)="showUploadText = false"
+                      <img src="./assets/images/nophoto.png" alt="No Photo" class="rounded-circle"
                         (click)="fileInput.click()">
-
                     </ng-container>
+
+
 
                     <span
                       class="upload-text position-absolute top-50 start-50 translate-middle text-white fw-bold opacity-50 transition-opacity"

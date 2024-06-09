@@ -16,6 +16,9 @@ import { CellActionAutletterList } from './components/autletter/autletter-list/c
 import { ValidateionStateCellAutletterRenderer } from './components/autletter/autletter-list/validation-state-label-cell-autletter';
 import { ValidateionStateCellAutletterWorkRenderer } from './components/autletter/autletter-work/validation-state-label-cell-autletter-work';
 import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
+import { CellActionCentralList } from './components/central/central-list/cell-action-central-list';
+import { CentralEditComponent } from './components/central/central-edit/central-edit.component';
+import { CentralListComponent } from './components/central/central-list/central-list.component';
 
 
 @NgModule({
@@ -32,6 +35,9 @@ import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
     CustomerEditComponent,
     CustomerListComponent,
 
+    CentralEditComponent,
+    CentralListComponent,
+
     AutletterListComponent,
     AutletterInsertComponent,
     AutletterItemComponent,
@@ -41,6 +47,7 @@ import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
 
     CellActionAutletterWork,
     CellActionAutletterList,
+    CellActionCentralList,
 
     ValidateionStateCellAutletterRenderer,
     ValidateionStateCellAutletterWorkRenderer,
