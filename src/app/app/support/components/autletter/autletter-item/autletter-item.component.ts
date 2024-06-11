@@ -34,7 +34,7 @@ export class AutletterItemComponent
 
 
 
-  records;
+  records: any[] = [];
   title = 'لیست تیکت های ارسالی ';
   CentralRef: string = '';
   JobPersonRef: string = '';

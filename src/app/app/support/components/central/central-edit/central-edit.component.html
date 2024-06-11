@@ -26,44 +26,45 @@
 
             </label>
             <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput style="display: none;">
+
           </div>
 
 
           <div class="form-group col-md-12">
             <div class="form-group col-md-4">
-              <label for="CentralCode" class="col-form-label">CentralCode </label>
+              <label for="CentralCode" class="col-form-label">کد سیستمی </label>
               <input type="text" class="form-control" id="CentralCode" formControlName="CentralCode" maxlength="100"
                 autocomplete="off" readonly />
             </div>
           </div>
 
           <div class="form-group col-md-4">
-            <label for="Title" class="col-form-label">Title </label>
+            <label for="Title" class="col-form-label">عنوان </label>
             <input type="text" class="form-control" id="Title" formControlName="Title" maxlength="100"
               autocomplete="off" readonly />
           </div>
           <div class="form-group col-md-4">
-            <label for="Name" class="col-form-label">Name </label>
+            <label for="Name" class="col-form-label">نام مجموعه </label>
             <input type="text" class="form-control" id="Name" formControlName="Name" maxlength="100" autocomplete="off"
               readonly />
           </div>
           <div class="form-group col-md-4">
-            <label for="FName" class="col-form-label">FName </label>
+            <label for="FName" class="col-form-label">اسم </label>
             <input type="text" class="form-control" id="FName" formControlName="FName" maxlength="100"
               autocomplete="off" readonly />
           </div>
           <div class="form-group col-md-4">
-            <label for="Manager" class="col-form-label">Manager </label>
+            <label for="Manager" class="col-form-label">مدیریت </label>
             <input type="text" class="form-control" id="Manager" formControlName="Manager" maxlength="100"
               autocomplete="off" readonly />
           </div>
           <div class="form-group col-md-4">
-            <label for="Delegacy" class="col-form-label">Delegacy </label>
+            <label for="Delegacy" class="col-form-label">نماینده </label>
             <input type="text" class="form-control" id="Delegacy" formControlName="Delegacy" maxlength="100"
               autocomplete="off" readonly />
           </div>
           <div class="form-group col-md-4">
-            <label for="CentralName" class="col-form-label">CentralName </label>
+            <label for="CentralName" class="col-form-label">نام کامل </label>
             <input type="text" class="form-control" id="CentralName" formControlName="CentralName" maxlength="100"
               autocomplete="off" readonly />
           </div>
@@ -80,7 +81,7 @@
     <div class="col-sm-6">
       <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
         (change)="onFileSelected($event)">
-        <span class="btn-label"><i class="fas fa-check-double"></i></span>Upload image
+        <span class="btn-label"><i class="fas fa-check-double"></i></span>بازگزاری عکس
       </a>
       <!-- <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
         (click)="submit('')">

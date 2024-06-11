@@ -12,6 +12,7 @@ import { ImageCellRenderer } from './ag-grid/image-cell-renderer';
 import { AgGridModule } from 'ag-grid-angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { LicenseManager } from '@ag-grid-enterprise/all-modules';
 
 @NgModule({
   declarations: [
@@ -41,5 +42,7 @@ import { RouterModule } from '@angular/router';
 })
 export class PhoenixFrameworkModule {
   constructor() {
+    LicenseManager.setLicenseKey("MjAwMDAwMDAwMDAwMA==5a5ea3be8a8aaa9b54ce7186663066431");
+
   }
 }

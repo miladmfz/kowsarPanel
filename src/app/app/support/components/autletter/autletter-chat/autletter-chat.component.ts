@@ -1,9 +1,8 @@
-import { Component, Input, OnInit, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environment/environment';
 
 @Component({
   selector: 'app-autletter-chat',
@@ -18,10 +17,13 @@ export class AutletterChatComponent implements OnInit {
   constructor(
     private repo: AutletterWebApiService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private elementRef: ElementRef
 
   ) { }
   @Input() TextData: string = '';
+
+
 
 
   chats: any[] = [];
@@ -49,7 +51,6 @@ export class AutletterChatComponent implements OnInit {
     this.chats = [];
     this.repo.GetAutConversation(this.TextData).subscribe(e => {
       this.chats = e;
-
     });
 
   }
@@ -116,11 +117,6 @@ export class AutletterChatComponent implements OnInit {
 
     });
   }
-
-
-
-
-
 
 
 }

@@ -19,7 +19,7 @@
                 style="height: 100%; overflow: hidden scroll;">
                 <div class="simplebar-content" style="padding: 0px;">
                   <ul class="conversation-list chat-app-conversation">
-                    <div *ngFor="let chat of chats; let i = index">
+                    <div *ngFor="let chat of chats; let i = index" class="item-sdsd" #itemsss>
                       <ng-container *ngIf="chat.CentralRef === CentralRef; else notMe">
                         <li class="clearfix">
                           <div class="chat-avatar">
