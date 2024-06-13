@@ -19,7 +19,7 @@ import { AgGridModule } from 'ag-grid-angular';
   declarations: [
     AuthKowsarComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
   ]
 })
 export class AuthKowsarModule { }

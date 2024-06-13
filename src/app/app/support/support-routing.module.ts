@@ -10,6 +10,8 @@ import { AutletterInsertComponent } from './components/autletter/autletter-inser
 import { AutletterWorkComponent } from './components/autletter/autletter-work/autletter-work.component';
 import { CentralListComponent } from './components/central/central-list/central-list.component';
 import { CentralEditComponent } from './components/central/central-edit/central-edit.component';
+import { ProfileViewComponent } from './components/profile/profile-view/profile-view.component';
+import { ProfileEditComponent } from './components/profile/profile-edit/profile-edit.component';
 
 
 const routes: Routes = [
@@ -40,6 +42,10 @@ const routes: Routes = [
       { path: 'letter-insert', component: AutletterInsertComponent, },
       { path: 'letter-mywork', component: AutletterWorkComponent, },
 
+
+
+      { path: 'profile', component: ProfileViewComponent, },
+      { path: 'profile-edit', component: ProfileEditComponent, },
 
 
 

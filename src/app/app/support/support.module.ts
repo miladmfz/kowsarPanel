@@ -19,6 +19,8 @@ import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { CellActionCentralList } from './components/central/central-list/cell-action-central-list';
 import { CentralEditComponent } from './components/central/central-edit/central-edit.component';
 import { CentralListComponent } from './components/central/central-list/central-list.component';
+import { ProfileEditComponent } from './components/profile/profile-edit/profile-edit.component';
+import { ProfileViewComponent } from './components/profile/profile-view/profile-view.component';
 
 
 @NgModule({
@@ -34,6 +36,11 @@ import { CentralListComponent } from './components/central/central-list/central-
   declarations: [
     CustomerEditComponent,
     CustomerListComponent,
+
+
+    ProfileEditComponent,
+    ProfileViewComponent,
+
 
     CentralEditComponent,
     CentralListComponent,

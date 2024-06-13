@@ -39,23 +39,24 @@
           {{PhFullName}}
           <i class="fe-user me-1"></i></a>
         <div class="dropdown-menu user-pro-dropdown">
-          <!-- item-->
-          <!-- <a href="javascript:void(0);" class="dropdown-item notify-item">
-            <i class="fe-user me-1"></i>
-            <span>My Account</span>
-          </a> -->
 
           <!-- item-->
-          <!-- <a href="javascript:void(0);" class="dropdown-item notify-item">
+          <a routerLink="/support/profile" class="dropdown-item notify-item">
+            <i class="fe-user me-1"></i>
+            <span>حساب کاربری</span>
+          </a>
+
+          <!-- item-->
+          <a href="javascript:void(0);" class="dropdown-item notify-item">
             <i class="fe-settings me-1"></i>
             <span>Settings</span>
-          </a> -->
+          </a>
 
           <!-- item-->
-          <!-- <a href="javascript:void(0);" class="dropdown-item notify-item">
+          <a href="javascript:void(0);" class="dropdown-item notify-item">
             <i class="fe-lock me-1"></i>
             <span>Lock Screen</span>
-          </a> -->
+          </a>
 
           <!-- item-->
           <a (click)="logout()" class="dropdown-item notify-item">
@@ -116,7 +117,7 @@
 
 
 
-        <!-- 
+
         <ng-container *ngIf="JobPersonRef.length>0">
           <li>
             <a href="#application" data-bs-toggle="collapse" aria-expanded="false" aria-controls="application">
@@ -141,7 +142,7 @@
               </ul>
             </div>
           </li>
-        </ng-container> -->
+        </ng-container>
 
 
 
