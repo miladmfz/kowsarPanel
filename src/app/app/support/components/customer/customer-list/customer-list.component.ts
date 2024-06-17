@@ -41,24 +41,28 @@ export class CustomerListComponent extends AgGridBaseComponent
         headerName: 'نام مشتری  ',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'Manager',
         headerName: 'مدیریت',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'Explain',
         headerName: 'پشتیبانی',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'Phone',
         headerName: 'شماره تماس',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
+        minWidth: 150
       },
 
       {
@@ -66,6 +70,7 @@ export class CustomerListComponent extends AgGridBaseComponent
         headerName: 'موبایل',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
+        minWidth: 150
       },
     ];
 
