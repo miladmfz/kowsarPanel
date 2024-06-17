@@ -5,11 +5,11 @@ declare var $: any;
 @Component({
   selector: 'edit-delete-cell-renderer',
   template: ` 
-  <span class="btn btn-sm btn-outline-primary ">
+  <!-- <span class="btn btn-sm btn-outline-primary ">
   <a [routerLink]="[params.editUrl, id]">
     <i class="fas fa-edit"></i>
   </a>
-  </span>
+  </span> -->
   `,
 
 })

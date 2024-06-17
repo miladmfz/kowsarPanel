@@ -33,22 +33,22 @@ export class ApplicationLogComponent extends AgGridBaseComponent
         field: 'ClassName',
         headerName: 'ClassName ',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'CreationDate',
         headerName: 'CreationDate',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'LogValue',
         headerName: 'LogValue',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'TagName',

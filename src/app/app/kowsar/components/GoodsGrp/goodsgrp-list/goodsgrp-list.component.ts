@@ -56,22 +56,22 @@ export class GoodsgrpListComponent extends AgGridBaseComponent
         cellRendererParams: {
           editUrl: '/kowsar/good-list',
         },
-        width: 50,
+        minWidth: 80
       },
 
       {
         field: 'GroupCode',
         headerName: 'کد',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'Name',
         headerName: 'نام کالا  ',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
 
     ];

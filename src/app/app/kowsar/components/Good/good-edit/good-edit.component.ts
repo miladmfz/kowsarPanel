@@ -231,29 +231,29 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       //   cellRendererParams: {
       //     editUrl: '/kowsar/good-edit',
       //   },
-      //   width: 50,
+      //    minWidth: 80
       // },
 
       {
         field: 'FileName',
         headerName: 'FileName',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'IsDefaultImage',
         headerName: 'IsDefaultImage',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'KsrImageCode',
         headerName: 'KsrImageCode',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       }
     ];
 
@@ -265,49 +265,49 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       //   cellRendererParams: {
       //     editUrl: '/kowsar/good-edit',
       //   },
-      //   width: 50,
+      //    minWidth: 80
       // },
 
       {
         field: 'GoodCode',
         headerName: 'کد',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'GoodName',
         headerName: 'نام کالا  ',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'MaxSellPrice',
         headerName: ' قیمت ناخالص',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       }, {
         field: 'GoodCode',
         headerName: 'کد',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'GoodName',
         headerName: 'نام کالا  ',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'MaxSellPrice',
         headerName: ' قیمت ناخالص',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
 
     ];
@@ -321,49 +321,49 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       //   cellRendererParams: {
       //     editUrl: '/kowsar/good-edit',
       //   },
-      //   width: 50,
+      //    minWidth: 80
       // },
 
       {
         field: 'GoodCode',
         headerName: 'کد',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'GoodName',
         headerName: 'نام کالا  ',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'MaxSellPrice',
         headerName: ' قیمت ناخالص',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       }, {
         field: 'GoodCode',
         headerName: 'کد',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'GoodName',
         headerName: 'نام کالا  ',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'MaxSellPrice',
         headerName: ' قیمت ناخالص',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
 
     ];

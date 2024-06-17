@@ -43,5 +43,12 @@ export class CentralWebApiService {
 
   }
 
+  GetApplicationForMenu(): Observable<any[]> {
+    return this.client.get<any[]>(this.kowsarweb_baseUrl + "GetApplicationForMenu")
+
+  }
+
+
+
 
 }

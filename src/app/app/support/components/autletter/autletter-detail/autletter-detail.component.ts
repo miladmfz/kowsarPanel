@@ -11,12 +11,14 @@ export class AutletterDetailComponent implements OnInit {
   constructor(private repo: AutletterWebApiService, private route: ActivatedRoute,) { }
 
   id!: string;
+  JobPersonRef: string = '';
 
   ngOnInit() {
     this.route.paramMap.subscribe((params: ParamMap) => {
       var idtemp = params.get('id');
       if (idtemp != null) {
         this.id = idtemp;
+        this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
       }
     });
   }

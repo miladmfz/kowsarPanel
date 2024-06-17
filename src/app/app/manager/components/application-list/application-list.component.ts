@@ -41,29 +41,29 @@ export class ApplicationListComponent
         field: 'AppBrokerCustomerCode',
         headerName: 'کد',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'ActivationCode',
         headerName: 'کد فعال سازی',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'PersianCompanyName',
         headerName: 'نام فارسی',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'EnglishCompanyName',
         headerName: 'نام انگلیسی',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'AppType',

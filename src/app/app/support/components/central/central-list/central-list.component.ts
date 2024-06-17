@@ -57,49 +57,63 @@ export class CentralListComponent extends AgGridBaseComponent
         cellRendererParams: {
           editUrl: '/support/central-edit',
         },
-        width: 50,
+        width: 80,
       },
       {
         field: 'CentralCode',
         headerName: 'CentralCode',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
-      },
-      {
-        field: 'Title',
-        headerName: 'Title',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
+        width: 80,
       },
       {
         field: 'Name',
         headerName: 'Name',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
+        minWidth: 300
+
       },
+      {
+        field: 'Title',
+        headerName: 'Title',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+
+      },
+
       {
         field: 'FName',
         headerName: 'FName',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
+        minWidth: 150
+
       },
       {
         field: 'Manager',
         headerName: 'Manager',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
+        minWidth: 150
+
       },
       {
         field: 'Delegacy',
         headerName: 'Delegacy',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
+        minWidth: 150
+
       },
       {
         field: 'CentralName',
         headerName: 'CentralName',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
+        minWidth: 150
+
       },
 
     ];

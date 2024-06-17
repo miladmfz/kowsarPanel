@@ -1,51 +1,49 @@
-<ng-container *ngIf="JobPersonRef.length>0">
-  <div class="card">
-    <div class="card-body">
+<div class="card">
+  <div class="card-body">
 
 
-      <form [formGroup]="EditForm" (ngSubmit)="submit('')" id="submitForm">
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-body row">
+    <form [formGroup]="EditForm" (ngSubmit)="submit('')" id="submitForm">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body row">
 
-                <div class="form-group col-md-3">
-                  <label for="dateValue" class="col-form-label">تاریخ</label>
-                  <h5>{{ToDayDate}}</h5>
-
-                </div>
-                <div class="form-group col-md-4 mx-3">
-                  <label for="selectedUserId" class="col-form-label">کاربر </label>
-                  <select formControlName="selectedUserId" id="selectedUserId" class="form-control custom-select"
-                    data-toggle="select2">
-                    <option *ngFor=" let user of users" [value]="user.CentralCode">{{ user.CentralName }}</option>
-                  </select>
-                </div>
-
-                <div class="form-group col-md-12">
-                  <label for="descriptionFormControl" class="col-form-label">شرح </label>
-                  <input type="text" class="form-control" id="descriptionFormControl"
-                    formControlName="descriptionFormControl" maxlength="100" autocomplete="off" />
-                </div>
-                <div class="col-sm-6 m-3">
-                  <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
-                    (click)="submit('')">
-                    <span class="btn-label"><i class="fas fa-check-double"></i></span>ارسال </a>
-
-                </div>
+              <div class="form-group col-md-3">
+                <label for="dateValue" class="col-form-label">تاریخ</label>
+                <h5>{{ToDayDate}}</h5>
 
               </div>
+              <div class="form-group col-md-4 mx-3">
+                <label for="selectedUserId" class="col-form-label">کاربر </label>
+                <select formControlName="selectedUserId" id="selectedUserId" class="form-control custom-select"
+                  data-toggle="select2">
+                  <option *ngFor=" let user of users" [value]="user.CentralCode">{{ user.CentralName }}</option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-12">
+                <label for="descriptionFormControl" class="col-form-label">شرح </label>
+                <input type="text" class="form-control" id="descriptionFormControl"
+                  formControlName="descriptionFormControl" maxlength="100" autocomplete="off" />
+              </div>
+              <div class="col-sm-6 m-3">
+                <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
+                  (click)="submit('')">
+                  <span class="btn-label"><i class="fas fa-check-double"></i></span>ارسال </a>
+
+              </div>
+
             </div>
           </div>
         </div>
-      </form>
+      </div>
+    </form>
 
 
 
-    </div>
   </div>
+</div>
 
-</ng-container>
 
 <div class="card">
   <div class="card-body">
@@ -56,10 +54,11 @@
 
     </ng-container>
     <ng-container *ngIf="records.length>0">
-      <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" class="ag-theme-material"
+      <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" class="ag-theme-alpine"
         [rowData]="records" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
-        [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)" [pagination]="true"
-        [frameworkComponents]="frameworkComponents" [context]="context">
+        [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)"
+        (cellClicked)="onCellClicked($event)" [pagination]="true" [frameworkComponents]="frameworkComponents"
+        [context]="context">
       </ag-grid-angular>
     </ng-container>
 

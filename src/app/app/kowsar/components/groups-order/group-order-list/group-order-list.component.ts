@@ -3,7 +3,6 @@ import { FormControl } from '@angular/forms';
 import { KowsarWebApiService } from '../../../services/KowsarWebApi.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { Router } from '@angular/router';
-import { LocalStorageService } from 'src/app/app-shell/framework-services/local.storage.service';
 import { CellActionGoodOrderList } from '../../goods_order/good-order-list/cell-action-good-order-list';
 @Component({
   selector: 'app-group-list',
@@ -16,9 +15,8 @@ export class GroupOrderListComponent
   constructor(
     private readonly router: Router,
     private repo: KowsarWebApiService,
-    localStorageService: LocalStorageService
   ) {
-    super(localStorageService);
+    super();
   }
 
 
@@ -58,7 +56,7 @@ export class GroupOrderListComponent
         cellRendererParams: {
           editUrl: '/kowsar/good-list',
         },
-        width: 50,
+        minWidth: 80
       },
 
       {
@@ -83,11 +81,11 @@ export class GroupOrderListComponent
   getList() {
 
 
-    this.repo.GetOrdergroupList(this.GroupCode_str).subscribe((data) => {
-      this.records = data;
+    // this.repo.GetOrdergroupList(this.GroupCode_str).subscribe((data) => {
+    //   this.records = data;
 
 
-    });
+    // });
 
 
   }

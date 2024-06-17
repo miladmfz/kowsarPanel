@@ -46,17 +46,7 @@
             <span>حساب کاربری</span>
           </a>
 
-          <!-- item-->
-          <a href="javascript:void(0);" class="dropdown-item notify-item">
-            <i class="fe-settings me-1"></i>
-            <span>Settings</span>
-          </a>
 
-          <!-- item-->
-          <a href="javascript:void(0);" class="dropdown-item notify-item">
-            <i class="fe-lock me-1"></i>
-            <span>Lock Screen</span>
-          </a>
 
           <!-- item-->
           <a (click)="logout()" class="dropdown-item notify-item">
@@ -116,33 +106,59 @@
 
 
 
+        <ng-container *ngIf="array_applications.length>0">
+          <ng-container *ngIf="JobPersonRef.length>0">
+            <li>
+              <a href="#application" data-bs-toggle="collapse" aria-expanded="false" aria-controls="application">
+                <i class="ri-layout-line"></i>
+                <span>نرم افزار های جانبی</span>
+                <span class="menu-arrow"></span>
+              </a>
+              <div class="collapse" id="application">
+                <ul class="nav-second-level">
 
 
-        <ng-container *ngIf="JobPersonRef.length>0">
-          <li>
-            <a href="#application" data-bs-toggle="collapse" aria-expanded="false" aria-controls="application">
-              <i class="ri-layout-line"></i>
-              <span>نرم افزار های جانبی</span>
-              <span class="menu-arrow"></span>
-            </a>
-            <div class="collapse" id="application">
-              <ul class="nav-second-level">
-                <li>
-                  <a routerLink="/application/broker-detail"> بازاریابی </a>
-                </li>
-                <li>
-                  <a routerLink="application/company-detail"> مشتریان </a>
-                </li>
-                <li>
-                  <a routerLink="application/ocr-detail"> بایگانی </a>
-                </li>
-                <li>
-                  <a routerLink="application/order-detail"> سفارشگیر </a>
-                </li>
-              </ul>
-            </div>
-          </li>
+
+
+                  <ng-container *ngIf="appbroker.length>0">
+                    <li>
+                      <a routerLink="/application/broker-detail"> بازاریابی </a>
+                    </li>
+
+                  </ng-container>
+
+                  <ng-container *ngIf="appocr.length>0">
+
+                    <li>
+                      <a routerLink="application/ocr-detail"> بایگانی </a>
+                    </li>
+
+                  </ng-container>
+
+
+
+                  <ng-container *ngIf="apporder.length>0">
+
+                    <li>
+                      <a routerLink="application/order-detail"> سفارشگیر </a>
+                    </li>
+                  </ng-container>
+
+
+
+                  <!-- <li>
+                    <a routerLink="application/company-detail"> مشتریان </a>
+                  </li> -->
+
+                </ul>
+              </div>
+            </li>
+          </ng-container>
         </ng-container>
+
+
+
+
 
 
 

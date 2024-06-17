@@ -33,8 +33,8 @@ export class ApplicationActiveComponent extends AgGridBaseComponent
         field: 'BrokerStr',
         headerName: 'BrokerStr ',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
 
     ];

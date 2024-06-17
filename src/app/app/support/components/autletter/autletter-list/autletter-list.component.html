@@ -26,8 +26,8 @@
           <div class="form-group col-md-3">
             <label for="datePicker" class="col-form-label">تاریخ</label>
             <div>
-              <ng-persian-datepicker style="position: absolute; z-index: 1;" [uiTheme]="customTheme"
-                [uiHideOnOutsideClick]="false" [uiHideAfterSelectDate]="true">
+              <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
+                [uiHideAfterSelectDate]="true">
                 <input class="form-control" id="datePicker" type="text" [formControl]="dateValue" />
               </ng-persian-datepicker>
             </div>
@@ -53,32 +53,38 @@
           <span class="btn-label"><i class="fas fa-eye-slash"></i></span>حذف
           جستجو
         </a>
-        <div class="btn-group">
-          <!-- *hasPermission="['Public']" -->
-          <button type="button" class="btn btn-light waves-effect waves-light m-1 dropdown-toggle" id="exportdropdown"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            دریافت خروجی <i class="mdi mdi-chevron-down"></i>
+        <!-- <div class="btn-group">
+        <button type="button" class="btn btn-light waves-effect waves-light m-1 dropdown-toggle" id="exportdropdown"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          دریافت خروجی <i class="mdi mdi-chevron-down"></i>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="exportdropdown">
+          <button class="dropdown-item" type="button" (click)="onExportExcel()">
+            Excel <i class="fas fa-file-excel"></i>
           </button>
-          <div class="dropdown-menu" aria-labelledby="exportdropdown">
-            <button class="dropdown-item" type="button" (click)="onExportExcel()">
-              Excel <i class="fas fa-file-excel"></i>
-            </button>
-            <button class="dropdown-item" type="button" (click)="onExportCSV()">
-              CSV <i class="fas fa-file-csv"></i>
-            </button>
+          <button class="dropdown-item" type="button" (click)="onExportCSV()">
+            CSV <i class="fas fa-file-csv"></i>
+          </button>
 
 
-          </div>
         </div>
+      </div> -->
       </div>
 
 
     </div>
 
-    <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" class="ag-theme-material"
-      [rowData]="records" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
-      [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)" [pagination]="true"
-      [frameworkComponents]="frameworkComponents" [context]="context">
+
+
+    <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
+      [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
+      [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+      [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine" [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true"
+      (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)">
+
+
     </ag-grid-angular>
+
   </div>
 </div>

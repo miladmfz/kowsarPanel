@@ -55,6 +55,8 @@ export class AutletterListComponent
   }
 
 
+
+
   override ngOnInit(): void {
     super.ngOnInit();
     this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
@@ -66,65 +68,68 @@ export class AutletterListComponent
         cellRendererParams: {
           editUrl: '/support/letter-detail',
         },
-        width: 50,
+        width: 80,
       },
       {
-        field: 'AlarmActive',
+        field: 'وضعیت',
         cellRenderer: ValidateionStateCellAutletterRenderer,
-
         cellClass: 'text-center',
+        minWidth: 80
+
       },
       {
         field: 'LetterTitle',
         headerName: 'عنوان تیکت',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 200
       },
       {
         field: 'LetterDescription',
         headerName: 'متن تیکت',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 200
       },
       {
         field: 'LetterDate',
         headerName: 'تاریخ تیکت	',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
 
       {
         field: 'CreatorName',
         headerName: 'ایجاد کننده',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
+
       },
 
       {
         field: 'RowsCount',
         headerName: 'تعداد ارجاع',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
+
       },
 
       {
         field: 'RowExecutorName',
         headerName: 'کاربر فعلی	',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'RowLetterDate',
         headerName: 'تاریخ ارجاع',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
 
     ];

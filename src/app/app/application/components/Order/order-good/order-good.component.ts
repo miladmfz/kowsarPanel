@@ -4,6 +4,7 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { OrderWebApiService } from '../../../services/OrderWebApi.service';
 import { FormControl } from '@angular/forms';
 import { OrderCellActionGoodList } from './order-cell-action-good-ist';
+import { CellActionAutletterWork } from 'src/app/app/support/components/autletter/autletter-work/cell-action-autletter-work';
 
 @Component({
   selector: 'app-order-good',
@@ -48,25 +49,33 @@ export class OrderGoodComponent extends AgGridBaseComponent
         cellRendererParams: {
           editUrl: '/application/order-good-edit',
         },
-        width: 50,
+        width: 80,
       },
+
+
       {
         field: 'GoodName',
         headerName: 'نام کالا  ',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
+        minWidth: 150,
+
       },
       {
         field: 'MaxSellPrice',
         headerName: 'قیمت',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
+        minWidth: 150,
+
       },
       {
         field: 'GoodExplain1',
         headerName: 'گروه',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
+        minWidth: 150,
+
       },
 
     ];

@@ -73,22 +73,22 @@ export class AutletterItemComponent
         field: 'RowExecutorName',
         headerName: 'کاربر',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'RowLetterDate',
         headerName: 'تاریخ',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'LetterRowDescription',
         headerName: 'شرح	',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
 
 

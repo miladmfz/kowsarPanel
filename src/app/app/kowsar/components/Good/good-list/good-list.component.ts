@@ -46,49 +46,49 @@ export class GoodListComponent extends AgGridBaseComponent
         cellRendererParams: {
           editUrl: '/kowsar/good-edit',
         },
-        width: 50,
+        minWidth: 80
       },
 
       {
         field: 'GoodCode',
         headerName: 'کد',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'GoodName',
         headerName: 'نام کالا  ',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'MaxSellPrice',
         headerName: ' قیمت ناخالص',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       }, {
         field: 'GoodCode',
         headerName: 'کد',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'GoodName',
         headerName: 'نام کالا  ',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'MaxSellPrice',
         headerName: ' قیمت ناخالص',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
 
     ];

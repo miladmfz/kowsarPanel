@@ -37,9 +37,9 @@
 
     </div>
 
-    <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" class="ag-theme-material"
-      [rowData]="records" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
-      [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)" [pagination]="true"
+    <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" class="ag-theme-alpine" [rowData]="records"
+      [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
+      [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
       [frameworkComponents]="frameworkComponents" [context]="context">
     </ag-grid-angular>
   </div>

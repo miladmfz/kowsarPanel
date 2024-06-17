@@ -58,7 +58,7 @@ export class OcrListComponent extends AgGridBaseComponent
         cellRendererParams: {
           editUrl: '/application/ocr-factor-detail',
         },
-        width: 50,
+        width: 80,
       },
 
 
@@ -66,49 +66,51 @@ export class OcrListComponent extends AgGridBaseComponent
         field: 'dbname',
         headerName: 'نام دیتابیس',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
+      },
+
+      {
+        field: 'CustName',
+        headerName: 'نام مشتری',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 250
       },
       {
         field: 'FactorDate',
         headerName: 'تاریخ فاکتور',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
-      }, {
-        field: 'CustName',
-        headerName: 'نام مشتری',
-        filter: 'agSetColumnFilter',
-
-        cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'CustomerCode',
         headerName: 'کد مشتری',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'Explain',
         headerName: 'توضیحات',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'CustomerPath',
         headerName: 'منطقه',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'AppFactorState',
         headerName: 'وضعیت فاکتور',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
 
     ];

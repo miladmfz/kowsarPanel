@@ -48,64 +48,62 @@ export class AutletterWorkComponent
         cellRendererParams: {
           editUrl: '/support/letter-detail',
         },
-        width: 50,
+        width: 80,
       },
       {
         field: 'وضعیت تیکت',
         cellRenderer: ValidateionStateCellAutletterWorkRenderer,
         cellClass: 'text-center',
+
+
+        minWidth: 80
+
       },
       {
         field: 'LetterTitle',
         headerName: 'عنوان تیکت',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 300
       },
       {
         field: 'LetterDescription',
         headerName: 'متن تیکت',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 300
       },
       {
         field: 'LetterDate',
         headerName: 'تاریخ تیکت	',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
 
       {
         field: 'OwnerName',
         headerName: 'ایجاد کننده',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
 
-      {
-        field: 'RowsCount',
-        headerName: 'تعداد ارجاع',
-        filter: 'agSetColumnFilter',
 
-        cellClass: 'text-center',
-      },
 
       {
         field: 'RowExecutorName',
         headerName: 'کاربر فعلی	',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
       {
         field: 'RowLetterDate',
         headerName: 'تاریخ ارجاع',
         filter: 'agSetColumnFilter',
-
         cellClass: 'text-center',
+        minWidth: 150
       },
 
     ];
@@ -131,5 +129,10 @@ export class AutletterWorkComponent
     this.router.navigate(['/support/letter-detail', id]);
   }
 
+
 }
+
+
+
+
 

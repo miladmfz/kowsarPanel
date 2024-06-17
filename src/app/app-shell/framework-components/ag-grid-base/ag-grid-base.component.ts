@@ -25,7 +25,7 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
   public defaultColDef;
   public columnDefs: any[];
   public columnDefs1: any[];
-
+  CellClickedEven
   public columnDefs2: any[];
 
   public columnDefs3: any[];
@@ -47,17 +47,19 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
     super();
 
     this.defaultColDef = {
+      lockVisible: true,
       flex: 1,
       resizable: true,
       filter: true,
       sortable: true,
-      minWidth: 100,
       enableValue: true,
       enableRowGroup: true,
       enablePivot: true,
+      autosizeThiscolumn: true,
+      onCellClicked: () =>
+        console.log('Cell was clicked'),
     };
 
-    this.autoGroupColumnDef = { minWidth: 150 };
     this.rowGroupPanelShow = 'always';
     this.pivotPanelShow = 'always';
 
@@ -81,6 +83,11 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
     this.localeText = AG_GRID_LOCALE_FA;
   }
 
+  public rowData: any[];
+
+  private lastClickedCellId: string | null = null;
+  private clickCount: number = 0;
+  private readonly resizeThreshold: number = 2; // Threshold for double click
   public components: { [p: string]: any } = {
     editDeleteCellRenderer: EditDeleteCellRenderer,
     imageCellRenderer: ImageCellRenderer,
@@ -141,5 +148,27 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
     this.gridColumnApi = params.columnApi;
 
     this.gridApi.hideOverlay();
+  }
+  onCellClicked(event) {
+    const clickedCellId = event.column.getId() + '_' + event.rowIndex;
+    if (clickedCellId === this.lastClickedCellId) {
+      this.clickCount++;
+    } else {
+      this.clickCount = 1;
+      this.lastClickedCellId = clickedCellId;
+    }
+
+    if (this.clickCount === this.resizeThreshold) {
+      // Perform action when double click threshold is reached
+      this.resizeColumn(event.column);
+      this.clickCount = 0;
+    }
+  }
+
+  resizeColumn(column: any) {
+    if (this.gridApi && this.gridColumnApi) {
+      const columnId = column.getColId();
+      this.gridColumnApi.autoSizeColumn(columnId);
+    }
   }
 }
