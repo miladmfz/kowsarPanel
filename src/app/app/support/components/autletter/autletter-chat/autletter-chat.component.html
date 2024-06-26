@@ -1,9 +1,9 @@
 <div>
   <div class="card">
-    <div class="py-2 px-3 border-bottom border-light card-body">
+    <div class="border-bottom border-light card-body">
       <div class="d-flex py-1">
         <div class="flex-1">
-          <h5 class="mt-0 mb-0 font-15"><a class="text-reset">مکالمات اخیر</a></h5>
+          <h5><a class="text-reset">مکالمات اخیر</a></h5>
         </div>
       </div>
     </div>
@@ -18,8 +18,10 @@
               <div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content"
                 style="height: 100%; overflow: hidden scroll;">
                 <div class="simplebar-content" style="padding: 0px;">
-                  <ul class="conversation-list chat-app-conversation">
-                    <div *ngFor="let chat of chats; let i = index" class="item-sdsd" #itemsss>
+
+
+                  <ul class="conversation-list chat-app-conversation" #itemListRef>
+                    <div *ngFor="let chat of chats; let i = index" class="item-sdsd" #listItem>
                       <ng-container *ngIf="chat.CentralRef === CentralRef; else notMe">
                         <li class="clearfix">
                           <div class="chat-avatar">
@@ -91,6 +93,7 @@
                       </ng-template>
                     </div>
                   </ul>
+
                 </div>
               </div>
             </div>

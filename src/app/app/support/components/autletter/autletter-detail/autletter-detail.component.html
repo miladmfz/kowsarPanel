@@ -1,52 +1,26 @@
 <div class="card-body">
-    <h4 class="header-title mb-4"> ویرایش کالا</h4>
-
-    <ul class="nav nav-pills navtab-bg nav-justified">
-
-
-
-        <li class="nav-item">
-            <a href="#chat" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
-                <span class="d-inline-block d-sm-none"><i class="mdi mdi-email-variant"></i></span>
-                <span class="d-none d-sm-inline-block">مکاتبات </span>
-            </a>
-        </li>
-
-        <ng-container *ngIf="JobPersonRef.length>0">
-
+    <ng-container *ngIf="JobPersonRef.length>0">
+        <ul class="nav nav-pills navtab-bg nav-justified">
+            <li class="nav-item">
+                <a href="#chat" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
+                    <span class="d-inline-block d-sm-none"><i class="mdi mdi-email-variant"></i></span>
+                    <span class="d-none d-sm-inline-block">مکاتبات </span>
+                </a>
+            </li>
             <li class="nav-item">
                 <a href="#detail" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
                     <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
                     <span class="d-none d-sm-inline-block">روند ارحاع تیکت</span>
                 </a>
             </li>
-        </ng-container>
-
-
-
-    </ul>
-
-
-
-
+        </ul>
+    </ng-container>
     <div class="tab-content">
-
         <div class="tab-pane active" id="chat">
             <app-autletter-chat [TextData]="id"></app-autletter-chat>
-
         </div>
-
         <div class="tab-pane" id="detail">
-
             <app-autletter-item [TextData]="id"></app-autletter-item>
-
         </div>
-
-
-
-
-
-
-
     </div>
 </div>

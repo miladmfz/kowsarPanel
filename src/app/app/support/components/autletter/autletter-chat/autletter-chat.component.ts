@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 import { FormControl } from '@angular/forms';
@@ -18,7 +18,8 @@ export class AutletterChatComponent implements OnInit {
     private repo: AutletterWebApiService,
     private router: Router,
     private http: HttpClient,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private renderer: Renderer2,
 
   ) { }
   @Input() TextData: string = '';
@@ -51,9 +52,13 @@ export class AutletterChatComponent implements OnInit {
     this.chats = [];
     this.repo.GetAutConversation(this.TextData).subscribe(e => {
       this.chats = e;
+      setTimeout(() => {
+        this.scrollToListItem();
+      }, 200);
     });
 
   }
+
 
 
 
@@ -118,6 +123,123 @@ export class AutletterChatComponent implements OnInit {
     });
   }
 
+
+
+
+
+
+
+  basketsum!: string
+  isDesktop: boolean = true;
+  loading: boolean = true;
+
+  menuId!: string;
+  mizname: string = '';
+
+
+
+  @ViewChild('listsContainer') listsContainer!: ElementRef;
+  @ViewChild('groupList') groupList!: ElementRef;
+  @ViewChild('itemList') itemList!: ElementRef;
+  @ViewChild('basketList') basketList!: ElementRef;
+  @ViewChild('itemListRef', { static: false }) itemListRef!: ElementRef;
+  @ViewChild('itemElement', { static: false }) itemElement!: ElementRef[];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  scrollToListItem(): void {
+    const secondItem = this.elementRef.nativeElement.querySelector('.item-sdsd:nth-last-child(-n+2)');
+    const lastItem = this.elementRef.nativeElement.querySelector('.item-sdsd:last-child');
+
+    if (lastItem) {
+      lastItem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  onListScroll(event: any) {
+    const listElement = event.target;
+
+
+    const listItemElements1 = listElement.querySelectorAll('li');
+
+    listItemElements1.forEach((itemElement: any) => {
+      const titleElement = itemElement.querySelector('.card-Goodcode');
+
+      const rect = itemElement.getBoundingClientRect();
+      const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
+      const titleText = titleElement.textContent.trim();
+
+
+    });
+
+
+
+
+
+
+    const listItemElements = listElement.querySelectorAll('li');
+
+    listItemElements.forEach((itemElement: any) => {
+      const titleElement = itemElement.querySelector('.card-grp');
+
+      const rect = itemElement.getBoundingClientRect();
+      const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
+      // console.log('*********************************');
+      // console.log('rect:', rect.top);
+      // console.log('rect.bottom:', rect.bottom);
+      // console.log('window.innerHeight:', window.innerHeight);
+      // console.log('isVisible:', isVisible);
+      if (isVisible && titleElement) {
+
+      }
+    });
+
+  }
+
+  addScrollingToElement(element: HTMLElement, headerHeight: number): void {
+    this.renderer.setStyle(element, 'overflow-y', 'auto');
+    this.renderer.setStyle(element, 'max-height', `calc(100vh - ${headerHeight}px)`);
+
+  }
+  ngAfterViewInit(): void {
+
+    const headerContainer = this.listsContainer.nativeElement.previousElementSibling;
+    const headerHeight = headerContainer.offsetHeight;
+    this.renderer.setStyle(headerContainer, 'position', 'sticky');
+    this.renderer.setStyle(headerContainer, 'top', '0');
+
+    this.addScrollingToElement(this.groupList.nativeElement, headerHeight);
+    this.addScrollingToElement(this.itemList.nativeElement, headerHeight);
+
+    if (this.basketList) {
+      this.addScrollingToElement(this.basketList.nativeElement, headerHeight);
+    }
+
+
+
+
+
+  }
 
 }
 
