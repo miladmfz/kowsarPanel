@@ -9,10 +9,8 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './autletter-chat.component.html',
 
 })
+
 export class AutletterChatComponent implements OnInit {
-
-
-
 
   constructor(
     private repo: AutletterWebApiService,
@@ -63,17 +61,12 @@ export class AutletterChatComponent implements OnInit {
 
 
   sendMessage() {
+
     if (this.newMessage.trim() !== '') {
-
       this.repo.Conversation_Insert(this.TextData, this.CentralRef, this.newMessage).subscribe(e => {
-
         this.newMessage = '';
         this.GetAutConversation();
-
       });
-
-
-
     }
 
 
@@ -112,6 +105,9 @@ export class AutletterChatComponent implements OnInit {
 
   }
 
+
+
+
   Imageitem: string = '';
 
   GetImage(index: any): void {
@@ -144,26 +140,6 @@ export class AutletterChatComponent implements OnInit {
   @ViewChild('basketList') basketList!: ElementRef;
   @ViewChild('itemListRef', { static: false }) itemListRef!: ElementRef;
   @ViewChild('itemElement', { static: false }) itemElement!: ElementRef[];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

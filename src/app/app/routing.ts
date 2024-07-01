@@ -29,6 +29,12 @@ const Routing: Routes = [
       import('../app/support/support.module').then((m) => m.SupportModule)
   },
 
+  {
+    path: 'document',
+    loadChildren: () =>
+      import('../app/document/document.module').then((m) => m.DocumentModule)
+  },
+
 ];
 
 export { Routing };
