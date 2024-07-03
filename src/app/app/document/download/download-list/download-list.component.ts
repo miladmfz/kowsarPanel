@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { DownloadWebApiService } from '../../services/DownloadWebApi.service';
 import { FormControl } from '@angular/forms';
+import { CellActionDownload } from './cell-action-download';
 
 @Component({
   selector: 'app-download-list',
@@ -25,7 +26,7 @@ export class DownloadListComponent extends AgGridBaseComponent
   dateValue = new FormControl();
   PersonInfoCode: string = '';
   Searchtarget: string = '';
-
+  JobPersonRef: string = '';
   onInputChange() {
     if (this.Searchtarget == "") {
       this.Searchtarget = ""
@@ -37,16 +38,23 @@ export class DownloadListComponent extends AgGridBaseComponent
   override ngOnInit(): void {
     super.ngOnInit();
 
+
+    this.JobPersonRef = sessionStorage.getItem("JobPersonRef")
+
+
+
+
+
     this.columnDefs = [
-      // {
-      //   field: 'عملیات',
-      //   pinned: 'left',
-      //   cellRenderer: CellActionAutletterWork,
-      //   cellRendererParams: {
-      //     editUrl: '/support/letter-detail',
-      //   },
-      //   width: 80,
-      // },
+      {
+        field: 'عملیات',
+        pinned: 'left',
+        cellRenderer: CellActionDownload,
+        cellRendererParams: {
+          editUrl: '/support/letter-detail',
+        },
+        width: 80,
+      },
       // {
       //   field: 'وضعیت تیکت',
       //   cellRenderer: ValidateionStateCellAutletterWorkRenderer,
@@ -124,9 +132,50 @@ export class DownloadListComponent extends AgGridBaseComponent
   }
 
 
+
+
+
+  btnToDownload(code): void {
+    /*
+        this.repo.downloadFile(code).subscribe(response => {
+          const contentDispositionHeader = response.headers.get('Content-Disposition');
+          const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          const matches = filenameRegex.exec(contentDispositionHeader);
+          let fileName = 'download.zip'; // Default file name
+    
+          if (matches != null && matches[1]) {
+            fileName = matches[1].replace(/['"]/g, '');
+          }
+    
+          const downloadLink = document.createElement('a');
+          downloadLink.href = window.URL.createObjectURL(response.body);
+          downloadLink.setAttribute('download', fileName);
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+        }, error => {
+          console.error('Error downloading file: ', error);
+        });
+    
+    */
+
+
+
+    this.repo.downloadFile(code).subscribe(blob => {
+      console.log(blob)
+      const downloadLink = document.createElement('a');
+      downloadLink.href = window.URL.createObjectURL(blob);
+      downloadLink.download = 'KowsarDownload.zip'; // Set desired file name here
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }, error => {
+      console.error('Error downloading file: ', error);
+    });
+  }
+
+
 }
-
-
 
 
 

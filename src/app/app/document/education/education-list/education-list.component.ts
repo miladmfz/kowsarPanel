@@ -62,14 +62,7 @@ export class EducationListComponent extends AgGridBaseComponent
         headerName: 'عنوان',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'ClassName',
-        headerName: 'دسته بندی',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
+        minWidth: 250
       },
       {
         field: 'FileName',
@@ -78,16 +71,6 @@ export class EducationListComponent extends AgGridBaseComponent
         cellClass: 'text-center',
         minWidth: 150
       },
-
-      {
-        field: 'Type',
-        headerName: 'نوع',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 80
-      },
-
-
 
       {
         field: 'FilePath',
@@ -110,7 +93,7 @@ export class EducationListComponent extends AgGridBaseComponent
   }
   getList() {
 
-    this.repo.KowsarAttachUrl(this.PersonInfoCode).subscribe((data) => {
+    this.repo.KowsarAttachUrl(this.Searchtarget).subscribe((data) => {
 
       this.records = data;
 
@@ -123,6 +106,7 @@ export class EducationListComponent extends AgGridBaseComponent
   navigateToEdit(id) {
     this.router.navigate(['/document/download-edit', id]);
   }
+
 
 
 }

@@ -120,7 +120,7 @@ export class DownloadEditComponent implements OnInit {
       reader.onload = (e: any) => {
         const imageData = e.target.result.split(',')[1]; // Get base64 data (remove the header)
         this.selectedImage = e.target.result; // Get the base64 image data
-        this.selectedFileName = file.name.replace(' ', '');
+        this.selectedFileName = file.name.replace(' ', '').split('.')[0];
         this.selectedFileSize = Math.round(file.size / 1024); // Convert size to KB and round it
         this.selectedFileType = file.type.split('/')[1]
         console.log(`File Name: ${this.selectedFileName.replace(' ', '')}`)

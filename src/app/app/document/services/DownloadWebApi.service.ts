@@ -31,6 +31,23 @@ export class DownloadWebApiService {
   }
 
 
+  GetAttachFile(Code: string): Observable<any[]> {
+    const params = new HttpParams().append('Code', Code)
+    return this.client.get<any[]>(this.baseUrl + "GetAttachFile", { params: params })
+  }
+
+  downloadFile(code: string): Observable<Blob> {
+    const url = `${this.baseUrl}GetAttachFile`;
+    const params = { Code: code };
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.client.get(url, {
+      params: params,
+      headers: headers,
+      responseType: 'blob' // Important! This tells HttpClient to parse the response as Blob
+    });
+  }
+
 
   KowsarAttachFile(SearchTarget: string): Observable<any[]> {
     return this.client.post<any[]>(this.baseUrl + "KowsarAttachFile", { SearchTarget })

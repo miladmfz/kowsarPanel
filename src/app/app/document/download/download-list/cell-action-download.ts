@@ -5,23 +5,31 @@ declare var $: any;
 @Component({
     selector: 'edit-delete-cell-renderer',
     template: ` 
-  <span>
+
+  <span *ngIf="ClassName=='Web_url'" >
   <a [href]="FilePath"  class="btn btn-sm btn-outline-primary ">
     <i class="fas fa-eye"></i>
+  </a>
+  </span>
+  <span  *ngIf="ClassName=='Web_download'" (click)="btnToDownload()" class="btn btn-sm btn-outline-primary ">
+  <a >
+    <i class="fas fa-download"></i>
   </a>
   </span>
   `,
 
 })
 
-export class CellActionEducation implements ICellRendererAngularComp {
+export class CellActionDownload implements ICellRendererAngularComp {
     params: any;
     canEdit: true;
     canDelete: true;
     canView: true;
     id: 0;
     FilePath: string;
+    Code: string;
 
+    ClassName: string;
     refresh(params: any): boolean {
         return true;
     }
@@ -42,11 +50,17 @@ export class CellActionEducation implements ICellRendererAngularComp {
         if (params.data.FilePath) {
             this.FilePath = params.data.FilePath;
         }
+        if (params.data.ClassName) {
+            this.ClassName = params.data.ClassName;
+        }
+        if (params.data.AttachedFileCode) {
+            this.Code = params.data.AttachedFileCode;
+        }
+    }
+    btnToDownload() {
+        this.params.context.componentParent.btnToDownload(this.params.data.AttachedFileCode);
     }
 
-    btnDeleteClicked(arg) {
-        this.params.context.componentParent.delete(this.params.data.FilePath);
-    }
 
 
 }

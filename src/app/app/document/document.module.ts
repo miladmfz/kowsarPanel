@@ -11,6 +11,7 @@ import { EducationListComponent } from './education/education-list/education-lis
 import { EducationEditComponent } from './education/education-edit/education-edit.component';
 import { EducationItemComponent } from './education/education-item/education-item.component';
 import { CellActionEducation } from './education/education-list/cell-action-education-work';
+import { CellActionDownload } from './download/download-list/cell-action-download';
 
 
 
@@ -35,7 +36,7 @@ import { CellActionEducation } from './education/education-list/cell-action-educ
     EducationItemComponent,
 
     CellActionEducation,
-
+    CellActionDownload,
 
   ]
 })
