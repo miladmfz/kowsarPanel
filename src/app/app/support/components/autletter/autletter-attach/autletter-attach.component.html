@@ -1,0 +1,112 @@
+<div class="row">
+  <div class="col-12">
+    <div class="page-title-box">
+      <h4 class="page-title">ایجاد رکورد جدید
+      </h4>
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="EditForm" (ngSubmit)="submit('')" id="submitForm">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body row">
+
+
+          <div class="form-group col-md-12">
+            <label for="Title" class="col-form-label">عنوان </label>
+            <input type="text" class="form-control" id="Title" formControlName="Title" maxlength="100"
+              autocomplete="off" />
+          </div>
+
+
+
+          <div class="card">
+            <div class="card-body">
+              <div class="col-sm-6">
+                <a href="javascript:void(0)" type="button" class="btn btn-info waves-effect waves-light mr-1"
+                  (click)="fileInput.click()">
+                  <span class="btn-label"><i class="fas fa-check-double"></i></span>انتخاب فایل </a>
+                <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput style="display: none;">
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="selectedImage" class="mt-3 text-center">
+            <h5>فایل انتخاب شده</h5>
+
+            <p>نام فایل: {{ selectedFileName }}</p>
+            <p>نوع فایل: {{ selectedFileType }}</p>
+
+            <p>حجم فایل: {{ selectedFileSize }} KB</p>
+          </div>
+
+
+
+          <ng-container *ngIf="selectedFileName.length>0">
+            <div class="col-sm-6">
+              <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
+                (click)="submit('')">
+                <span class="btn-label"><i class="fas fa-check-double"></i></span>ارسال </a>
+
+            </div>
+
+          </ng-container>
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+<div class="card">
+  <div class="card-body">
+    <div class="table-responsive ">
+
+      <table class="table table-bordered align-middle gs-0 gy-4">
+        <thead>
+          <tr class="fw-bolder ">
+            <th class="min-w-10px"></th>
+            <th class="min-w-125px">نام عنوان</th>
+            <th class="min-w-125px">شرح</th>
+            <th class="min-w-50px">تاریخ </th>
+            <th class="min-w-50px">فعالیت</th>
+
+          </tr>
+        </thead>
+        <tbody *ngFor="let item of attachfiles_array; let i = index">
+          <tr>
+            <td>{{i}}</td>
+            <td>{{ item.Title }}</td>
+            <td>{{ item.FileName }}</td>
+            <td>{{ item.CreationDate }}</td>
+            <td>
+              <button class="rounded-pill btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#printerModal"
+                (click)="SelectPrinter(i)">
+                دانلود
+              </button>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
+    <div class="fv-plugins-message-container invalid-feedback">
+      <span role="alert">
+        {{ message }}
+      </span>
+    </div>
+  </ng-container>
+</ng-template>

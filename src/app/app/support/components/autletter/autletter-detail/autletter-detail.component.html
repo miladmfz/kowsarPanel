@@ -1,26 +1,39 @@
 <div class="card-body">
-    <ng-container *ngIf="JobPersonRef.length>0">
-        <ul class="nav nav-pills navtab-bg nav-justified">
-            <li class="nav-item">
-                <a href="#chat" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
-                    <span class="d-inline-block d-sm-none"><i class="mdi mdi-email-variant"></i></span>
-                    <span class="d-none d-sm-inline-block">مکاتبات </span>
-                </a>
-            </li>
+    <ul class="nav nav-pills navtab-bg nav-justified">
+        <li class="nav-item">
+            <a href="#chat" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
+                <span class="d-inline-block d-sm-none"><i class="mdi mdi-email-variant"></i></span>
+                <span class="d-none d-sm-inline-block">مکاتبات </span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#attach" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+                <span class="d-none d-sm-inline-block">پیوست</span>
+            </a>
+        </li>
+
+
+        <ng-container *ngIf="JobPersonRef.length>0">
+
             <li class="nav-item">
                 <a href="#detail" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
                     <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
                     <span class="d-none d-sm-inline-block">روند ارحاع تیکت</span>
                 </a>
             </li>
-        </ul>
-    </ng-container>
+        </ng-container>
+    </ul>
+
     <div class="tab-content">
         <div class="tab-pane active" id="chat">
             <app-autletter-chat [TextData]="id"></app-autletter-chat>
         </div>
         <div class="tab-pane" id="detail">
             <app-autletter-item [TextData]="id"></app-autletter-item>
+        </div>
+        <div class="tab-pane" id="attach">
+            <app-autletter-attach [TextData]="id"></app-autletter-attach>
         </div>
     </div>
 </div>

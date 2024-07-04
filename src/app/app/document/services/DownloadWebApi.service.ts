@@ -36,9 +36,9 @@ export class DownloadWebApiService {
     return this.client.get<any[]>(this.baseUrl + "GetAttachFile", { params: params })
   }
 
-  downloadFile(code: string): Observable<Blob> {
+  downloadFile(code: string, classname: string, ObjectRef: string): Observable<Blob> {
     const url = `${this.baseUrl}GetAttachFile`;
-    const params = { Code: code };
+    const params = { AttachedFileCode: code, ClassName: classname, ObjectRef: ObjectRef };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
     return this.client.get(url, {
@@ -54,8 +54,8 @@ export class DownloadWebApiService {
   }
 
 
-  SaveDocKowsar(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "SaveDocKowsar", command)
+  SetAttachFile(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "SetAttachFile", command)
   }
 
 

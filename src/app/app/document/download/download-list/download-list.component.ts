@@ -135,7 +135,7 @@ export class DownloadListComponent extends AgGridBaseComponent
 
 
 
-  btnToDownload(code): void {
+  btnToDownload(AttachedFileCode): void {
     /*
         this.repo.downloadFile(code).subscribe(response => {
           const contentDispositionHeader = response.headers.get('Content-Disposition');
@@ -161,7 +161,7 @@ export class DownloadListComponent extends AgGridBaseComponent
 
 
 
-    this.repo.downloadFile(code).subscribe(blob => {
+    this.repo.downloadFile(AttachedFileCode, "Web_download", "0").subscribe(blob => {
       console.log(blob)
       const downloadLink = document.createElement('a');
       downloadLink.href = window.URL.createObjectURL(blob);

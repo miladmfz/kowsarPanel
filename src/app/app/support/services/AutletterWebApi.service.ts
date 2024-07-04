@@ -124,4 +124,27 @@ export class AutletterWebApiService {
   }
 
 
+  SetAttachFile(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "SetAttachFile", command)
+  }
+
+
+  GetAttachFileList(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetAttachFileList", command)
+  }
+
+  downloadFile(code: string, classname: string, ObjectRef: string): Observable<Blob> {
+    const url = `${this.baseUrl}GetAttachFile`;
+    const params = { AttachedFileCode: code, ClassName: classname, ObjectRef: ObjectRef };
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.client.get(url, {
+      params: params,
+      headers: headers,
+      responseType: 'blob' // Important! This tells HttpClient to parse the response as Blob
+    });
+  }
+
+
+
 }

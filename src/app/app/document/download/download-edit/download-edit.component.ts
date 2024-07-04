@@ -15,6 +15,7 @@ export class DownloadEditComponent implements OnInit {
   EditForm = new FormGroup({
     Title: new FormControl(''),
     FileName: new FormControl(''),
+    ObjectRef: new FormControl('0'),
     ClassName: new FormControl(''),
     Type: new FormControl(''),
     FilePath: new FormControl(''),
@@ -154,10 +155,8 @@ export class DownloadEditComponent implements OnInit {
 
     console.log(command)
 
-    this.repo.SaveDocKowsar(command).subscribe((data) => {
+    this.repo.SetAttachFile(command).subscribe((data) => {
       this.router.navigate(['/document/download-list']);
-
-
     });
 
 
