@@ -12,16 +12,11 @@
     <div class="col-12">
       <div class="card">
         <div class="card-body row">
-
-
           <div class="form-group col-md-12">
             <label for="Title" class="col-form-label">عنوان </label>
             <input type="text" class="form-control" id="Title" formControlName="Title" maxlength="100"
               autocomplete="off" />
           </div>
-
-
-
           <div class="card">
             <div class="card-body">
               <div class="col-sm-6">
@@ -32,30 +27,19 @@
               </div>
             </div>
           </div>
-
           <div *ngIf="selectedImage" class="mt-3 text-center">
             <h5>فایل انتخاب شده</h5>
-
             <p>نام فایل: {{ selectedFileName }}</p>
             <p>نوع فایل: {{ selectedFileType }}</p>
-
             <p>حجم فایل: {{ selectedFileSize }} KB</p>
           </div>
-
-
-
           <ng-container *ngIf="selectedFileName.length>0">
             <div class="col-sm-6">
               <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
                 (click)="submit('')">
                 <span class="btn-label"><i class="fas fa-check-double"></i></span>ارسال </a>
-
             </div>
-
           </ng-container>
-
-
-
         </div>
       </div>
     </div>
@@ -66,7 +50,6 @@
 <div class="card">
   <div class="card-body">
     <div class="table-responsive ">
-
       <table class="table table-bordered align-middle gs-0 gy-4">
         <thead>
           <tr class="fw-bolder ">
@@ -75,7 +58,6 @@
             <th class="min-w-125px">شرح</th>
             <th class="min-w-50px">تاریخ </th>
             <th class="min-w-50px">فعالیت</th>
-
           </tr>
         </thead>
         <tbody *ngFor="let item of attachfiles_array; let i = index">
@@ -90,12 +72,10 @@
                 دانلود
               </button>
             </td>
-
           </tr>
         </tbody>
       </table>
     </div>
-
   </div>
 </div>
 

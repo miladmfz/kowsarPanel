@@ -1,27 +1,52 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
-import { CustomerWebApiService } from 'src/app/app/support/services/CustomerWebApi.service';
+import { FactorWebApiService } from '../../../services/FactorWebApi.service';
+import { IDatepickerTheme } from 'ng-persian-datepicker';
+import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-customer-list',
-  templateUrl: './customer-list.component.html',
+  selector: 'app-shopfactor-list',
+  templateUrl: './shopfactor-list.component.html',
 })
-export class CustomerListComponent extends AgGridBaseComponent
+export class ShopfactorListComponent extends AgGridBaseComponent
   implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private repo: CustomerWebApiService,
+    private basewebapi: FactorWebApiService,
   ) {
     super();
   }
 
 
 
-  records;
-  title = 'لیست مشتریان کوثر  ';
+  start_dateValue = new FormControl();
+  End_dateValue = new FormControl();
+
+  CentralRef: string = '';
+  JobPersonRef: string = '';
+
   Searchtarget: string = '';
+  items: any[] = [];
+  TextData: string = '';
+  selectedOption: string = '0';
+
+  searchTerm: string = '';
+
+
+
+  customTheme: Partial<IDatepickerTheme> = {
+    selectedBackground: '#D68E3A',
+    selectedText: '#FFFFFF',
+
+  };
+
+
+
+
+  records;
+  title = ' فاکتور های فروشگاهی  ';
 
   onInputChange() {
     if (this.Searchtarget == "") {
@@ -33,6 +58,7 @@ export class CustomerListComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
+
     this.columnDefs = [
 
       {
@@ -57,33 +83,13 @@ export class CustomerListComponent extends AgGridBaseComponent
         minWidth: 150
       },
       {
-        field: 'AppNumber',
-        headerName: 'نسخه نرم افزار',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'DatabaseNumber',
-        headerName: 'دیتابیس',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'LockNumber',
-        headerName: 'تعداد قفل',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
         field: 'Phone',
         headerName: 'شماره تماس',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         minWidth: 150
       },
+
       {
         field: 'Mobile',
         headerName: 'موبایل',
@@ -102,28 +108,11 @@ export class CustomerListComponent extends AgGridBaseComponent
   getList() {
 
 
-    this.repo.GetKowsarCustomer(this.Searchtarget).subscribe((data: any) => {
-      this.records = data.Customers;
-
-    });
-
-
-  }
-
-
-
-  Edit_Customer_Explain(CustomerCode) {
-
-  }
-  Edit_Customer_Property(CustomerCode) {
 
   }
 
 
 }
-
-
-
 
 
 

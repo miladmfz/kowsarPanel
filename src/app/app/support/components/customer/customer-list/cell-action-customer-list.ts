@@ -5,13 +5,12 @@ declare var $: any;
 @Component({
     selector: 'edit-delete-cell-renderer',
     template: ` 
-
-  <span *ngIf="ClassName=='Web_url'" >
-  <a [href]="FilePath"  class="btn btn-sm btn-outline-primary ">
+<span  >
+  <a  (click)="Edit_Customer_Explain()" class="btn btn-sm btn-outline-primary ">
     <i class="fas fa-eye"></i>
   </a>
   </span>
-  <span  *ngIf="ClassName=='Web_download'" (click)="btnToDownload()" class="btn btn-sm btn-outline-primary ">
+  <span   (click)="Edit_Customer_Property()" class="btn btn-sm btn-outline-primary ">
   <a >
     <i class="fas fa-download"></i>
   </a>
@@ -20,16 +19,13 @@ declare var $: any;
 
 })
 
-export class CellActionDownload implements ICellRendererAngularComp {
+export class CellActionCustomerList implements ICellRendererAngularComp {
     params: any;
     canEdit: true;
     canDelete: true;
     canView: true;
     id: 0;
-    FilePath: string;
-    Code: string;
 
-    ClassName: string;
     refresh(params: any): boolean {
         return true;
     }
@@ -47,22 +43,18 @@ export class CellActionDownload implements ICellRendererAngularComp {
             this.canView = params.canView;
         }
 
-        if (params.data.FilePath) {
-            this.FilePath = params.data.FilePath;
-        }
-        if (params.data.ClassName) {
-            this.ClassName = params.data.ClassName;
-        }
-        if (params.data.AttachedFileCode) {
-            this.Code = params.data.AttachedFileCode;
+        if (params.data.CustomerCode) {
+            this.id = params.data.CustomerCode;
         }
     }
 
-
-    btnToDownload() {
-        this.params.context.componentParent.btnToDownload(this.params.data.AttachedFileCode);
+    Edit_Customer_Explain() {
+        this.params.context.componentParent.Edit_Customer_Explain(this.params.data.CustomerCode);
     }
 
 
+    Edit_Customer_Property() {
+        this.params.context.componentParent.Edit_Customer_Property(this.params.data.CustomerCode);
+    }
 
 }

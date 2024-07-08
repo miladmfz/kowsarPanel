@@ -78,7 +78,32 @@
           </a>
         </li>
 
+        <ng-container *ngIf="JobPersonRef.length>0">
+          <li>
+            <a href="#factor" data-bs-toggle="collapse" aria-expanded="false" aria-controls="factor">
+              <i class="fas fa-cash-register"></i>
+              <span>فروش</span>
+              <span class="menu-arrow"></span>
+            </a>
+            <div class="collapse" id="factor">
+              <ul class="nav-second-level">
 
+
+                <li>
+                  <a routerLink="/factor/factor-list">فاکتور فروش</a>
+                </li>
+
+                <!-- <li>
+                  <a routerLink="/factor/shopfactor-list">فاکتور فروشگاهی</a>
+                </li>
+
+                <li>
+                  <a routerLink="/factor/prefactor-list">پیش فاکتور </a>
+                </li> -->
+              </ul>
+            </div>
+          </li>
+        </ng-container>
 
 
         <!-- <ng-container *ngIf="JobPersonRef.length>0">
@@ -100,7 +125,7 @@
 
               </ul>
             </div>
-          </li>
+          </li> fas fa-cash-register
         </ng-container> -->
 
 

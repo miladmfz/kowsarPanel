@@ -34,6 +34,12 @@ const Routing: Routes = [
     loadChildren: () =>
       import('../app/document/document.module').then((m) => m.DocumentModule)
   },
+  {
+    path: 'factor',
+    loadChildren: () =>
+      import('../app/factor/factor.module').then((m) => m.FactorModule)
+  },
+
 
 ];
 
