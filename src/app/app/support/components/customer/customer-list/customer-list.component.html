@@ -42,3 +42,87 @@
 
   </div>
 </div>
+
+<div class="modal fade" id="customerexplain" tabindex="-1" aria-labelledby="customerexplainLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="customerexplainLabel">Explain</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="explain_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="EditForm_explain" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+                  <div class="form-group col-md-12">
+                    <label for="Explain" class="col-form-label">پشتیبانی </label>
+                    <input type="text" class="form-control" id="Explain" formControlName="Explain" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="explain_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="Set_Customer_Explain()">بروزرسانی</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="customerproperty" tabindex="-1" aria-labelledby="customerpropertyLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="customerpropertyLabel">خصوصیت اضافه</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="property_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="EditForm_property" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+                  <div class="form-group col-md-12">
+                    <label for="AppNumber" class="col-form-label">نسخه نرم افزار </label>
+                    <input type="text" class="form-control" id="AppNumber" formControlName="AppNumber" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+                  <div class="form-group col-md-12">
+                    <label for="DatabaseNumber" class="col-form-label">دیتابیس </label>
+                    <input type="text" class="form-control" id="DatabaseNumber" formControlName="DatabaseNumber"
+                      maxlength="100" autocomplete="off" />
+                  </div>
+                  <div class="form-group col-md-12">
+                    <label for="LockNumber" class="col-form-label">تعداد قفل </label>
+                    <input type="text" class="form-control" id="LockNumber" formControlName="LockNumber" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="property_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="Set_Customer_Property()">بروزرسانی</button>
+      </div>
+    </div>
+  </div>
+</div>
