@@ -126,6 +126,8 @@ export class CustomerListComponent extends AgGridBaseComponent
 
   EditForm_explain = new FormGroup({
     Explain: new FormControl(''),
+    ObjectRef: new FormControl('0'),
+
   });
 
 
@@ -133,6 +135,8 @@ export class CustomerListComponent extends AgGridBaseComponent
     AppNumber: new FormControl(''),
     DatabaseNumber: new FormControl(''),
     LockNumber: new FormControl(''),
+    ObjectRef: new FormControl('0'),
+
   });
 
 
@@ -147,6 +151,7 @@ export class CustomerListComponent extends AgGridBaseComponent
       if (customer.CustomerCode == CustomerCode) {
         this.EditForm_explain.patchValue({
           Explain: customer.Explain,
+          ObjectRef: customer.CustomerCode,
         });
       }
 
@@ -165,6 +170,8 @@ export class CustomerListComponent extends AgGridBaseComponent
           AppNumber: customer.AppNumber,
           DatabaseNumber: customer.DatabaseNumber,
           LockNumber: customer.LockNumber,
+          ObjectRef: customer.CustomerCode,
+
         });
       }
 
@@ -178,13 +185,26 @@ export class CustomerListComponent extends AgGridBaseComponent
   Set_Customer_Explain() {
 
     //// send explian to server
+
+    this.repo.EditCustomerExplain(this.EditForm_explain.value).subscribe((data: any) => {
+      this.explain_dialog_close()
+      this.getList()
+      this.EditForm_explain.reset()
+    });
+
+
+
   }
 
 
 
   Set_Customer_Property() {
     //// send Property to server
-
+    this.repo.EditCustomerProperty(this.EditForm_property.value).subscribe((data: any) => {
+      this.property_dialog_close()
+      this.getList()
+      this.EditForm_property.reset()
+    });
   }
 
 

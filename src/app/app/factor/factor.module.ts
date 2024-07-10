@@ -10,6 +10,9 @@ import { ShopfactorListComponent } from './components/shopfactor/shopfactor-list
 import { ShopfactorEditComponent } from './components/shopfactor/shopfactor-edit/shopfactor-edit.component';
 import { PrefactorListComponent } from './components/prefactor/prefactor-list/prefactor-list.component';
 import { PrefactorEditComponent } from './components/prefactor/prefactor-edit/prefactor-edit.component';
+import { CellActionFactorList } from './components/factor/factor-list/cell-action-factor-list';
+import { CellActionFactorRowsEdit } from './components/factor/factor-edit/cell-action-factorrows-edit';
+import { CellActionGoodEdit } from './components/factor/factor-edit/cell-action-good-edit';
 
 @NgModule({
   imports: [
@@ -28,6 +31,10 @@ import { PrefactorEditComponent } from './components/prefactor/prefactor-edit/pr
     ShopfactorEditComponent,
     PrefactorListComponent,
     PrefactorEditComponent,
+
+    CellActionFactorList,
+    CellActionGoodEdit,
+    CellActionFactorRowsEdit,
 
   ]
 })

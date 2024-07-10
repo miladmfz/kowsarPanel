@@ -29,4 +29,14 @@ export class CustomerWebApiService {
 
 
 
+
+  EditCustomerProperty(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarweb_baseUrl + "EditCustomerProperty", command)
+  }
+
+
+  EditCustomerExplain(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarweb_baseUrl + "EditCustomerExplain", command)
+  }
+
 }

@@ -56,7 +56,7 @@
               <!-- <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
                 [(ngModel)]="Searchtarget" (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" /> -->
               <a type="button" class="btn btn-primary waves-effect waves-light m-1" (click)="getList()">
-                <span class="btn-label"><i class="fas fa-plus"></i></span>جستجو
+                <span class="btn-label"><i class="fas fa-search"></i></span>جستجو
               </a>
               <a type="button" class="btn btn-success waves-effect waves-light m-1"
                 [routerLink]="['/factor/factor-edit']">
@@ -92,12 +92,18 @@
 
 
 
-          <ag-grid-angular #agGrid id="myGrid" style="height: 700px; width: auto" class="ag-theme-alpine"
-            [rowData]="records" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
-            [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)"
-            (cellClicked)="onCellClicked($event)" [pagination]="true" [frameworkComponents]="frameworkComponents"
-            [context]="context">
+          <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
+            [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
+            [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
+            [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
+            [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
+            [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+            (selectionChanged)="onSelectionChanged($event)">
           </ag-grid-angular>
+
+
+
+
         </div>
       </div>
 
@@ -107,7 +113,66 @@
 
 
 
+
     </div>
 
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="factorproperty" tabindex="-1" aria-labelledby="factorpropertyLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="factorpropertyLabel">خصوصیت اضافه</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="property_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="EditForm_factor_property" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+                  <div class="form-group col-md-12">
+                    <label for="starttime" class="col-form-label">شروع</label>
+                    <input type="text" class="form-control" id="starttime" formControlName="starttime" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label for="Endtime" class="col-form-label">پایان</label>
+                    <input type="text" class="form-control" id="Endtime" formControlName="Endtime" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label for="worktime" class="col-form-label">مدت کار</label>
+                    <input type="text" class="form-control" id="worktime" formControlName="worktime" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label for="Barbary" class="col-form-label">شرح</label>
+                    <input type="text" class="form-control" id="Barbary" formControlName="Barbary" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="property_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="Set_factor_Property()">بروزرسانی</button>
+      </div>
+    </div>
   </div>
 </div>

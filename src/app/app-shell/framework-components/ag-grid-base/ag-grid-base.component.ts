@@ -31,6 +31,7 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
   public columnDefs3: any[];
   public columnDefs4: any[];
 
+  public selectedRows: any[];
 
   public localeText: any;
   public autoGroupColumnDef;
@@ -56,6 +57,7 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
       enableRowGroup: true,
       enablePivot: true,
       autosizeThiscolumn: true,
+      rowSelection: "multiple",
       onCellClicked: () =>
         console.log('Cell was clicked'),
     };
@@ -170,5 +172,14 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
       const columnId = column.getColId();
       this.gridColumnApi.autoSizeColumn(columnId);
     }
+  }
+
+
+
+
+  onSelectionChanged(event) {
+    const selectedRows = event.api.getSelectedRows();
+    this.selectedRows = selectedRows
+    console.log('Selected rows:', selectedRows);
   }
 }

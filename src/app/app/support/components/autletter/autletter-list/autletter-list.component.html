@@ -41,7 +41,7 @@
         <!-- <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
           [(ngModel)]="Searchtarget" (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" /> -->
         <a type="button" class="btn btn-primary waves-effect waves-light m-1" (click)="LoadList()">
-          <span class="btn-label"><i class="fas fa-plus"></i></span>جستجو
+          <span class="btn-label"><i class="fas fa-search"></i></span>جستجو
         </a>
         <a type="button" class="btn btn-success waves-effect waves-light m-1" [routerLink]="['/support/letter-insert']">
           <span class="btn-label"><i class="fas fa-plus"></i></span>جدید
@@ -81,10 +81,7 @@
       [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
       [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine" [columnDefs]="columnDefs"
       [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true"
-      (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)">
-
-
+      [rowSelection]="'multiple'" (selectionChanged)="onSelectionChanged($event)">
     </ag-grid-angular>
-
   </div>
 </div>

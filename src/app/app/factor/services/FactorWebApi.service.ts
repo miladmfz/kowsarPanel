@@ -14,12 +14,27 @@ export class FactorWebApiService {
 
 
   headers = new HttpHeaders()
-
     .set('content-type', 'application/json')
     .set('Access-Control-Allow-Origin', '*')
     .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
 
-  kowsarWebUrl = environment.api_Url + "kowsarWeb/";
+
+
+
+
+  kowsarWebUrl = environment.api_Url + "Support/";
+
+
+
+
+  GetFactor(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "GetFactor", command)
+  }
+
+
+  EditFactorProperty(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "EditFactorProperty", command)
+  }
 
 
 
@@ -29,20 +44,21 @@ export class FactorWebApiService {
   }
 
 
-  GetProperty(Where: string): Observable<any[]> {
-    const params = new HttpParams().append('Where', Where)
-    return this.client.get<any[]>(this.kowsarWebUrl + "GetProperty", { params: params })
-  }
+  // GetProperty(Where: string): Observable<any[]> {
+  //   const params = new HttpParams().append('Where', Where)
+  //   return this.client.get<any[]>(this.kowsarWebUrl + "GetProperty", { params: params })
+  // }
 
 
-  Good_Insert(command): Observable<any[]> {
-
-    return this.client.post<any[]>(this.kowsarWebUrl + "GoodInsert", command)
-  }
-
+  // Good_Insert(command): Observable<any[]> {
+  //   return this.client.post<any[]>(this.kowsarWebUrl + "GoodInsert", command)
+  // }
 
 
-
+  // GetProperty(Where: string): Observable<any[]> {
+  //   const params = new HttpParams().append('Where', Where)
+  //   return this.client.get<any[]>(this.kowsarWebUrl + "GetProperty", { params: params })
+  // }
 
 
 }
