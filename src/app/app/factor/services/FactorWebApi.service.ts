@@ -25,6 +25,18 @@ export class FactorWebApiService {
   kowsarWebUrl = environment.api_Url + "Support/";
 
 
+  GetKowsarCustomer(SearchTarget: string): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "GetKowsarCustomer", { SearchTarget })
+  }
+
+
+  GetGoodListSupport(SearchTarget: string): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "GetGoodListSupport", { SearchTarget })
+  }
+
+
+
+
 
 
   GetFactor(command): Observable<any[]> {
@@ -35,12 +47,43 @@ export class FactorWebApiService {
   EditFactorProperty(command): Observable<any[]> {
     return this.client.post<any[]>(this.kowsarWebUrl + "EditFactorProperty", command)
   }
+  WebFactorInsert(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "WebFactorInsert", command)
+  }
 
+  WebFactorInsertRow(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "WebFactorInsertRow", command)
+  }
+
+
+
+
+  GetWebFactorSupport(FactorCode: string): Observable<any[]> {
+    const params = new HttpParams().append('FactorCode', FactorCode)
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetWebFactorSupport", { params: params })
+  }
+
+
+  GetWebFactorRowsSupport(FactorCode: string): Observable<any[]> {
+    const params = new HttpParams().append('FactorCode', FactorCode)
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetWebFactorRowsSupport", { params: params })
+  }
+
+
+
+  DeleteWebFactorRowsSupport(FactorRowCode: string): Observable<any[]> {
+    const params = new HttpParams().append('FactorRowCode', FactorRowCode)
+    return this.client.get<any[]>(this.kowsarWebUrl + "DeleteWebFactorRowsSupport", { params: params })
+  }
 
 
   GetObjectTypeFromDbSetup(ObjectType: string): Observable<any[]> {
     const params = new HttpParams().append('ObjectType', ObjectType)
     return this.client.get<any[]>(this.kowsarWebUrl + "GetObjectTypeFromDbSetup", { params: params })
+  }
+
+  GetTodeyFromServer(): Observable<any[]> {
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetTodeyFromServer",)
   }
 
 

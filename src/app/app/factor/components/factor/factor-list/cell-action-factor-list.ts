@@ -6,6 +6,11 @@ declare var $: any;
     selector: 'edit-delete-cell-renderer',
     template: ` 
 
+  <span   (click)="NavigateToEdit()" class="btn btn-sm btn-outline-primary mx-1" data-toggle="tooltip" title="خصوصیت اضافه ">
+  <a >
+    <i class="  fas fa-shopping-cart"></i>
+  </a>
+  </span>
   <span   (click)="Edit_Customer_Property()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="خصوصیت اضافه ">
   <a >
     <i class=" far fa-file-alt"></i>
@@ -45,6 +50,9 @@ export class CellActionFactorList implements ICellRendererAngularComp {
     }
 
 
+    NavigateToEdit() {
+        this.params.context.componentParent.navigateToEdit(this.params.data.FactorCode);
+    }
     Edit_Customer_Property() {
         this.params.context.componentParent.Edit_factor_Property(this.params.data.FactorCode);
     }

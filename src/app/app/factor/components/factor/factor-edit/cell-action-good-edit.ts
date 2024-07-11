@@ -6,9 +6,9 @@ declare var $: any;
     selector: 'edit-delete-cell-renderer',
     template: ` 
 
-  <span   (click)="Edit_Customer_Property()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="خصوصیت اضافه ">
+  <span   (click)="AddGoodToBasket()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="خصوصیت اضافه ">
   <a >
-    <i class=" far fa-file-alt"></i>
+    <i class="fas fa-cart-plus"></i>
   </a>
   </span>
   `,
@@ -45,8 +45,8 @@ export class CellActionGoodEdit implements ICellRendererAngularComp {
     }
 
 
-    Edit_Customer_Property() {
-        this.params.context.componentParent.Edit_factor_Property(this.params.data.GoodCode);
+    AddGoodToBasket() {
+        this.params.context.componentParent.AddGoodToBasket(this.params.data.GoodCode);
     }
 
 }

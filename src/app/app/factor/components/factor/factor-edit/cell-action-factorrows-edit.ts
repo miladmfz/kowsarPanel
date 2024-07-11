@@ -6,9 +6,9 @@ declare var $: any;
     selector: 'edit-delete-cell-renderer',
     template: ` 
 
-  <span   (click)="Edit_Customer_Property()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="خصوصیت اضافه ">
+  <span  (click)="btnDeleteClicked(2)" class="btn btn-sm btn-outline-danger " data-toggle="tooltip" title="خصوصیت اضافه ">
   <a >
-    <i class=" far fa-file-alt"></i>
+    <i class=" fas fa-trash"></i>
   </a>
   </span>
   `,
@@ -40,13 +40,12 @@ export class CellActionFactorRowsEdit implements ICellRendererAngularComp {
         }
 
         if (params.data.FactorCode) {
-            this.id = params.data.FactorCode;
+            this.id = params.data.FactorRowCode;
         }
     }
 
 
-    Edit_Customer_Property() {
-        this.params.context.componentParent.Edit_factor_Property(this.params.data.FactorCode);
+    btnDeleteClicked(arg) {
+        this.params.context.componentParent.delete(this.params.data.FactorRowCode);
     }
-
 }

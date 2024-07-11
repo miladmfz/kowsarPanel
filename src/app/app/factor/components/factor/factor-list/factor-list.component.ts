@@ -70,7 +70,7 @@ export class FactorListComponent extends AgGridBaseComponent
         cellRendererParams: {
           editUrl: '/support/letter-detail',
         },
-        width: 80,
+        width: 150,
       },
       {
         field: 'FactorDate',
@@ -227,7 +227,9 @@ export class FactorListComponent extends AgGridBaseComponent
     this.renderer.removeAttribute(modal, 'role');
   }
 
-
+  navigateToEdit(id) {
+    this.router.navigate(['/factor/factor-edit', id]);
+  }
 }
 
 

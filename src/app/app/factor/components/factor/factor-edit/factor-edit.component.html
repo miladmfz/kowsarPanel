@@ -8,44 +8,65 @@
           <h4 class="card-title">{{ title }}</h4>
           <div class="row mb-3">
             <!-- Search Input -->
-            <form [formGroup]="EditForm_factor_property" id="submitForm">
+            <form [formGroup]="EditForm_Factor_Header" id="submitForm">
               <div class="row">
                 <div class="col-12">
                   <div class="card">
                     <div class="card-body row">
 
                       <div class="form-group col-md-3">
-                        <label for="FactorCode" class="col-form-label">کد فاکتور</label>
-                        <input type="text" class="form-control" id="FactorCode" formControlName="FactorCode"
-                          maxlength="100" autocomplete="off" />
-                      </div>
-
-
-                      <div class="form-group col-md-3">
                         <label for="FactorDate" class="col-form-label"> تاریخ فاکتور </label>
                         <input type="text" class="form-control" id="FactorDate" formControlName="FactorDate"
-                          maxlength="100" autocomplete="off" />
+                          maxlength="100" autocomplete="off" readonly />
                       </div>
 
-                      <div class="form-group col-md-3">
+                      <div class=" form-group col-md-2">
                         <label for="CustomerCode" class="col-form-label">کد مشتری </label>
-                        <input type="text" class="form-control" id="CustomerCode" formControlName="CustomerCode"
-                          maxlength="100" autocomplete="off" />
+
+                        <ng-container *ngIf="FactorCode.length>0">
+
+                          <input type="text" class="form-control" id="CustomerCode" formControlName="CustomerCode"
+                            placeholder="نمایش مشتریان" maxlength="100" autocomplete="off" readonly />
+
+                        </ng-container>
+
+                        <ng-container *ngIf="FactorCode.length==0">
+                          <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+                          <input type="text" class="form-control" id="CustomerCode" formControlName="CustomerCode"
+                            placeholder="نمایش مشتریان" maxlength="100" autocomplete="off" readonly
+                            (click)="GetCustomer()" />
+
+                        </ng-container>
+
                       </div>
 
+                      <div class="form-group col-md-4">
+                        <label for="CustName" class="col-form-label">نام مشتری</label>
+                        <input type="text" class="form-control" id="CustName" formControlName="CustName" maxlength="100"
+                          autocomplete="off" readonly />
+                      </div>
                       <div class="form-group col-md-3">
-                        <label for="CustomerName" class="col-form-label">نام مشتری</label>
-                        <input type="text" class="form-control" id="CustomerName" formControlName="CustomerName"
-                          maxlength="100" autocomplete="off" />
+                        <label for="BrokerName" class="col-form-label">نام پشتیبان</label>
+                        <input type="text" class="form-control" id="BrokerName" formControlName="BrokerName"
+                          maxlength="100" autocomplete="off" readonly />
                       </div>
 
+                      <ng-container *ngIf="FactorCode.length==0">
+                        <div class="form-group col-md-12">
+                          <label for="Explain" class="col-form-label">توضیحات</label>
+                          <input type="text" class="form-control" id="Explain" formControlName="Explain" maxlength="100"
+                            autocomplete="off" />
+                        </div>
+                      </ng-container>
 
-                      <div class="form-group col-md-12">
-                        <label for="Explain" class="col-form-label">توضیحات</label>
-                        <input type="text" class="form-control" id="Explain" formControlName="Explain" maxlength="100"
-                          autocomplete="off" />
-                      </div>
-
+                      <ng-container *ngIf="FactorCode.length>0">
+                        <div class="form-group col-md-12">
+                          <label for="Explain" class="col-form-label">توضیحات</label>
+                          <input type="text" class="form-control" id="Explain" formControlName="Explain" maxlength="100"
+                            autocomplete="off" readonly />
+                        </div>
+                      </ng-container>
 
 
 
@@ -59,30 +80,26 @@
 
           </div>
 
-          <div class="row mb-2">
+
+          <div class="row">
             <div class="col-sm-12">
+              <a type="button" class="btn btn-success waves-effect waves-light " (click)="Factor_Header_insert()">
+                <span class="btn-label"><i class="fas fa-plus"></i></span>ایجاد فاکتور
+              </a>
+              <ng-container *ngIf="FactorCode.length>0">
 
+                <a type="button" class="btn btn-primary waves-effect waves-light m-1">
+                  <span class=" btn-label"><i class="fas fa-search"></i></span>اصلاح فاکتور
+                </a>
+              </ng-container>
 
-
-
-            </div>
-
-
-          </div>
-
-
-          <div class="row mb-2">
-            <div class="col-sm-12">
               <!-- 
 
               <div class=" col-md-5">
                 <a type="button" class="btn btn-primary waves-effect waves-light m-1" (click)="getList()">
                   <span class="btn-label"><i class="fas fa-search"></i></span>جستجو
                 </a>
-                <a type="button" class="btn btn-success waves-effect waves-light m-1"
-                  [routerLink]="['/factor/factor-edit']">
-                  <span class="btn-label"><i class="fas fa-plus"></i></span>جدید
-                </a>
+
                 <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
                   <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
                 </a>
@@ -99,42 +116,69 @@
 
 
 
-          <div class="col-sm-12 row">
 
-            <div class="col-sm-6">
-              <h4 class="card-title">لیست کالاها</h4>
 
-              <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
-                [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
-                [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
-                [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context"
-                class="ag-theme-alpine" [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
-                [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
-                (selectionChanged)="onSelectionChanged($event)">
-              </ag-grid-angular>
+
+
+
+
+          <ng-container *ngIf="FactorCode.length>0">
+
+            <div class="col-sm-12 row">
+              <ng-container *ngIf="ShowGoodList">
+                <div class="col-sm-6">
+
+                  <div class="row">
+                    <h4 class="card-title col-sm-3">لیست کالاها</h4>
+                    <a type="button" class="btn btn-soft-danger rounded-pill waves-effect waves-light col-sm-3 m-1"
+                      (click)="taggelShowGoodList()">
+                      بستن کالاها
+                    </a>
+                  </div>
+
+
+
+                  <input cFormControl type="text" class="form-control my-1" placeholder="جستجو..." type="text"
+                    [(ngModel)]="Searchtarget_Good" (ngModelChange)="onInputChange_Good()"
+                    [ngModelOptions]="{ standalone: true }" />
+                  <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records_good"
+                    [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
+                    [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)"
+                    (cellClicked)="onCellClicked($event)" [pagination]="true"
+                    [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
+                    [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
+                    [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+                    (selectionChanged)="onSelectionChanged($event)">
+                  </ag-grid-angular>
+                </div>
+              </ng-container>
+              <div class="col-sm-6">
+                <div class="row">
+                  <h4 class="card-title col-sm-3">لیست اقلام فاکتور شده</h4>
+
+
+
+                  <ng-container *ngIf="!ShowGoodList">
+                    <a type="button" class="btn btn-soft-info rounded-pill waves-effect waves-light col-sm-3 m-1"
+                      (click)="taggelShowGoodList()">
+                      اضافه کردن
+                    </a>
+                  </ng-container>
+
+
+                </div>
+                <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records_factorrows"
+                  [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText"
+                  [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)"
+                  (cellClicked)="onCellClicked($event)" [pagination]="true" [frameworkComponents]="frameworkComponents"
+                  [context]="context" class="ag-theme-alpine" [defaultColDef]="defaultColDef"
+                  [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true"
+                  [rowSelection]="'multiple'" (selectionChanged)="onSelectionChanged($event)">
+                </ag-grid-angular>
+              </div>
+
             </div>
-
-            <div class="col-sm-6">
-              <h4 class="card-title">لیست اقلام فاکتور شده</h4>
-
-              <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records_factorrows"
-                [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
-                [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
-                [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context"
-                class="ag-theme-alpine" [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
-                [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
-                (selectionChanged)="onSelectionChanged($event)">
-              </ag-grid-angular>
-            </div>
-
-          </div>
-
-
-
-
-
-
-
+          </ng-container>
 
 
 
@@ -162,56 +206,42 @@
 
 
 
-<div class="modal fade" id="factorproperty" tabindex="-1" aria-labelledby="factorpropertyLabel" aria-hidden="true">
+<div class="modal fade" id="customerlist" tabindex="-1" aria-labelledby="customerlistLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content" style="background-color: #d1dce7;">
       <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="factorpropertyLabel">خصوصیت اضافه</h5>
+        <h5 class="modal-title" id="customerlistLabel">لیست مشتریان</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-          (click)="property_dialog_close()"></button>
+          (click)="customer_dialog_close()"></button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="EditForm_factor_property" id="submitForm">
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-body row">
+        <div class="row mb-2">
+          <div class="col-sm-12">
+            <div class="form-group">
 
-                  <div class="form-group col-md-12">
-                    <label for="starttime" class="col-form-label">شروع</label>
-                    <input type="text" class="form-control" id="starttime" formControlName="starttime" maxlength="100"
-                      autocomplete="off" />
-                  </div>
+              <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
+                [(ngModel)]="Searchtarget_customer" (ngModelChange)="onInputChange_Customer()"
+                [ngModelOptions]="{ standalone: true }" />
 
-                  <div class="form-group col-md-12">
-                    <label for="Endtime" class="col-form-label">پایان</label>
-                    <input type="text" class="form-control" id="Endtime" formControlName="Endtime" maxlength="100"
-                      autocomplete="off" />
-                  </div>
-
-                  <div class="form-group col-md-12">
-                    <label for="worktime" class="col-form-label">مدت کار</label>
-                    <input type="text" class="form-control" id="worktime" formControlName="worktime" maxlength="100"
-                      autocomplete="off" />
-                  </div>
-
-                  <div class="form-group col-md-12">
-                    <label for="Barbary" class="col-form-label">شرح</label>
-                    <input type="text" class="form-control" id="Barbary" formControlName="Barbary" maxlength="100"
-                      autocomplete="off" />
-                  </div>
-
-                </div>
-              </div>
             </div>
           </div>
-        </form>
+
+
+        </div>
+
+        <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" [rowData]="records_customer"
+          [columnDefs]="columnDefs3" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
+          [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+          [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
+          [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true"
+          [rowSelection]="'single'" (selectionChanged)="onSelectionChanged($event)">
+        </ag-grid-angular>
 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-          (click)="property_dialog_close()">بستن</button>
-        <button type="button" class="btn btn-primary" (click)="Set_factor_Property()">بروزرسانی</button>
+          (click)="customer_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="Set_Customer()">انتخاب</button>
       </div>
     </div>
   </div>
