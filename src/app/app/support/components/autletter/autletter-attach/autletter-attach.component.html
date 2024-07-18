@@ -32,8 +32,17 @@
             <p>نام فایل: {{ selectedFileName }}</p>
             <p>نوع فایل: {{ selectedFileType }}</p>
             <p>حجم فایل: {{ selectedFileSize }} KB</p>
+            <p *ngIf="selectedFileSize>10240" class="text-danger">
+              حجم فایل بیشتر از 10 مگابایت است
+            </p>
+            <p *ngIf="selectedFileSize<10240" class="text-success">
+              حجم فایل مورد تایید می باشد </p>
+
+
+
+
           </div>
-          <ng-container *ngIf="selectedFileName.length>0">
+          <ng-container *ngIf="selectedFileName.length>0 && selectedFileSize<10240">
             <div class="col-sm-6">
               <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
                 (click)="submit('')">
@@ -68,7 +77,7 @@
             <td>{{ item.CreationDate }}</td>
             <td>
               <button class="rounded-pill btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#printerModal"
-                (click)="SelectPrinter(i)">
+                (click)="DownloadAttach(i)">
                 دانلود
               </button>
             </td>

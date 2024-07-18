@@ -21,7 +21,7 @@ export class CustomerListComponent extends AgGridBaseComponent
     super();
   }
 
-
+  PhAddress3: string = '';
 
   records;
   title = 'لیست مشتریان کوثر  ';
@@ -37,6 +37,7 @@ export class CustomerListComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
+    this.PhAddress3 = sessionStorage.getItem("PhAddress3")
     this.columnDefs = [
       {
         field: 'عملیات',
@@ -132,9 +133,22 @@ export class CustomerListComponent extends AgGridBaseComponent
 
 
   EditForm_property = new FormGroup({
+    CustName_Small: new FormControl(''),
     AppNumber: new FormControl(''),
     DatabaseNumber: new FormControl(''),
     LockNumber: new FormControl(''),
+    Address: new FormControl(''),
+    CityName: new FormControl(''),
+    OstanName: new FormControl(''),
+    Delegacy: new FormControl(''),
+    Manager: new FormControl(''),
+    Phone: new FormControl(''),
+    PostCode: new FormControl(''),
+    Mobile: new FormControl(''),
+    MobileName: new FormControl(''),
+    ZipCode: new FormControl(''),
+    Email: new FormControl(''),
+    Fax: new FormControl(''),
     ObjectRef: new FormControl('0'),
 
   });
@@ -167,10 +181,24 @@ export class CustomerListComponent extends AgGridBaseComponent
 
       if (customer.CustomerCode == CustomerCode) {
         this.EditForm_property.patchValue({
+          CustName_Small: customer.CustName_Small,
+
           AppNumber: customer.AppNumber,
           DatabaseNumber: customer.DatabaseNumber,
           LockNumber: customer.LockNumber,
           ObjectRef: customer.CustomerCode,
+          Address: customer.Address,
+          CityName: customer.CityName,
+          OstanName: customer.OstanName,
+          Delegacy: customer.Delegacy,
+          Manager: customer.Manager,
+          Phone: customer.Phone,
+          PostCode: customer.PostCode,
+          Mobile: customer.Mobile,
+          MobileName: customer.MobileName,
+          ZipCode: customer.ZipCode,
+          Email: customer.Email,
+          Fax: customer.Fax,
 
         });
       }

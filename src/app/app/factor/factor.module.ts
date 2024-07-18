@@ -13,6 +13,7 @@ import { PrefactorEditComponent } from './components/prefactor/prefactor-edit/pr
 import { CellActionFactorList } from './components/factor/factor-list/cell-action-factor-list';
 import { CellActionFactorRowsEdit } from './components/factor/factor-edit/cell-action-factorrows-edit';
 import { CellActionGoodEdit } from './components/factor/factor-edit/cell-action-good-edit';
+import { CellActionFactorCustomerEdit } from './components/factor/factor-edit/cell-action-factor-customer-edit';
 
 @NgModule({
   imports: [
@@ -35,7 +36,7 @@ import { CellActionGoodEdit } from './components/factor/factor-edit/cell-action-
     CellActionFactorList,
     CellActionGoodEdit,
     CellActionFactorRowsEdit,
-
+    CellActionFactorCustomerEdit,
   ]
 })
 export class FactorModule { }

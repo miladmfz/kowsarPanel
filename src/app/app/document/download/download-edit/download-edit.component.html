@@ -101,6 +101,11 @@
               <p>نوع فایل: {{ selectedFileType }}</p>
 
               <p>حجم فایل: {{ selectedFileSize }} KB</p>
+              <p *ngIf="selectedFileSize>10240" class="text-danger">
+                حجم فایل بیشتر از 10 مگابایت است
+              </p>
+              <p *ngIf="selectedFileSize<10240" class="text-success">
+                حجم فایل مورد تایید می باشد </p>
             </div>
           </ng-container>
 
@@ -116,12 +121,16 @@
 
 <div class="card">
   <div class="card-body">
-    <div class="col-sm-6">
-      <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
-        (click)="submit('')">
-        <span class="btn-label"><i class="fas fa-check-double"></i></span>ارسال </a>
+    <ng-container *ngIf="selectedFileSize<10240">
 
-    </div>
+      <div class="col-sm-6">
+        <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
+          (click)="submit('')">
+          <span class="btn-label"><i class="fas fa-check-double"></i></span>ارسال </a>
+
+      </div>
+    </ng-container>
+
   </div>
 </div>
 

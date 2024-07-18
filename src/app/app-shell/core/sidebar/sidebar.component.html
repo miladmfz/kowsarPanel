@@ -62,6 +62,19 @@
         <h5 class="text-danger">{{Explain}}</h5>
       </ng-container>
 
+
+
+
+      <ng-container *ngIf="AlarmActive_Row>0">
+        <h5 class="text-danger">ارجاع جدید دارید</h5>
+      </ng-container>
+
+      <ng-container *ngIf="AlarmActtive_Conversation>0">
+
+        <h5 class="text-danger">پیام جدید دارید</h5>
+      </ng-container>
+
+
     </div>
 
     <!--- Sidemenu -->

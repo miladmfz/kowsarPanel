@@ -25,6 +25,15 @@ export class AutletterItemComponent
     descriptionFormControl: new FormControl(''),
     selectedUserId: new FormControl(0),
   });
+
+
+  set_Alarm = new FormGroup({
+    LetterRef: new FormControl(''),
+    CentralRef: new FormControl('0'),
+  });
+
+
+
   customTheme: Partial<IDatepickerTheme> = {
     selectedBackground: '#D68E3A',
     selectedText: '#FFFFFF',
@@ -102,10 +111,15 @@ export class AutletterItemComponent
     });
 
 
+    this.set_Alarm.patchValue({
+      LetterRef: this.TextData,
+      CentralRef: this.CentralRef,
+    });
 
     this.repo.GetLetterRowList(this.TextData).subscribe((data) => {
       this.records = data;
-      this.repo.SetAlarmOff(data[0].LetterRowCode).subscribe(e => { });
+      this.repo.SetAlarmOff(this.set_Alarm.value).subscribe(e => { });
+
 
     });
 

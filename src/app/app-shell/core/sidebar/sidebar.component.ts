@@ -18,6 +18,9 @@ export class SidebarComponent implements OnInit {
   imageData: string = '';
   Imageitem: string = '';
 
+  AlarmActive_Row: number = 0;
+  AlarmActtive_Conversation: number = 0;
+
 
   apporder: string = '';
   appbroker: string = '';
@@ -33,6 +36,10 @@ export class SidebarComponent implements OnInit {
     this.CustName_Small = sessionStorage.getItem("CustName_Small")
     this.Explain = sessionStorage.getItem("Explain")
     this.CentralRef = sessionStorage.getItem("CentralRef")
+
+    this.AlarmActive_Row = parseInt(sessionStorage.getItem("AlarmActive_Row"))
+    this.AlarmActtive_Conversation = parseInt(sessionStorage.getItem("AlarmActtive_Conversation"))
+
     this.fetchImageData()
   }
 
@@ -53,6 +60,22 @@ export class SidebarComponent implements OnInit {
       this.Imageitem = `data:${Image};base64,${data.Text}`;
 
     });
+
+
+
+    this.repo.GetNotification(sessionStorage.getItem("PersonInfoRef")).subscribe((data: any) => {
+
+
+      sessionStorage.setItem("AlarmActive_Row", data.users[0].AlarmActive_Row)
+      sessionStorage.setItem("AlarmActtive_Conversation", data.users[0].AlarmActtive_Conversation)
+
+      this.AlarmActive_Row = parseInt(sessionStorage.getItem("AlarmActive_Row"))
+      this.AlarmActtive_Conversation = parseInt(sessionStorage.getItem("AlarmActtive_Conversation"))
+
+    });
+
+
+
 
     this.repo.GetApplicationForMenu().subscribe((data: any) => {
 

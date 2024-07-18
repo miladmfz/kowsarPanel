@@ -49,6 +49,13 @@ export class CentralWebApiService {
   }
 
 
+  GetNotification(PersonInfoCode: string): Observable<any[]> {
+    const params = new HttpParams().append('PersonInfoCode', PersonInfoCode)
+    return this.client.get<any[]>(this.kowsarweb_baseUrl + "GetNotification", { params: params })
+
+  }
+
+
 
 
 }

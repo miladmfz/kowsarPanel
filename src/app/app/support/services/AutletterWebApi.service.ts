@@ -28,13 +28,10 @@ export class AutletterWebApiService {
   }
 
 
-  GetLetterList(
-    SearchTarget: string,
-    CentralRef: string,
-    CreationDate: string
-  ): Observable<any[]> {
-    const params = new HttpParams().append('SearchTarget', SearchTarget).append('CentralRef', CentralRef).append('CreationDate', CreationDate)
-    return this.client.get<any[]>(this.baseUrl + "GetLetterList", { params: params })
+  GetLetterList(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "GetLetterList", command)
+
   }
 
   GetLetterFromPersoninfo(
@@ -92,11 +89,8 @@ export class AutletterWebApiService {
   }
 
 
-  SetAlarmOff(
-    LetterRowCode: string
-  ): Observable<any[]> {
-    const params = new HttpParams().append('LetterRowCode', LetterRowCode)
-    return this.client.get<any[]>(this.baseUrl + "SetAlarmOff", { params: params })
+  SetAlarmOff(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "SetAlarmOff", command)
   }
 
 

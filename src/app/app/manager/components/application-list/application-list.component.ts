@@ -34,7 +34,7 @@ export class ApplicationListComponent
         cellRendererParams: {
           editUrl: '/manager/form',
         },
-        width: 10,
+        width: 150,
       },
 
       {

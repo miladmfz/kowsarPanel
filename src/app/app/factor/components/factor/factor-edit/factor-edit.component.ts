@@ -2,12 +2,13 @@ import { Component, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { FactorWebApiService } from '../../../services/FactorWebApi.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { CellActionFactorList } from '../factor-list/cell-action-factor-list';
 import { CellActionFactorRowsEdit } from './cell-action-factorrows-edit';
 import Swal from 'sweetalert2';
 import { CellActionGoodEdit } from './cell-action-good-edit';
+import { CellActionFactorCustomerEdit } from './cell-action-factor-customer-edit';
 
 @Component({
   selector: 'app-factor-edit',
@@ -131,7 +132,15 @@ export class FactorEditComponent extends AgGridBaseComponent
     ];
 
     this.columnDefs3 = [
-
+      {
+        field: 'عملیات',
+        pinned: 'left',
+        cellRenderer: CellActionFactorCustomerEdit,
+        cellRendererParams: {
+          editUrl: '/support/letter-detail',
+        },
+        width: 80,
+      },
       {
         field: 'CustName_Small',
         headerName: 'نام مشتری  ',
@@ -147,7 +156,13 @@ export class FactorEditComponent extends AgGridBaseComponent
         cellClass: 'text-center',
         minWidth: 150
       },
-
+      {
+        field: 'Explain',
+        headerName: 'پشتیبانی',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
     ];
 
     if (this.FactorCode.length > 0) {
@@ -206,7 +221,7 @@ export class FactorEditComponent extends AgGridBaseComponent
     FactorCode: new FormControl(''),
     FactorDate: new FormControl(''),
     CustName: new FormControl(''),
-    CustomerCode: new FormControl(''),
+    CustomerCode: new FormControl('', Validators.required),
     Explain: new FormControl(''),
     BrokerName: new FormControl(''),
     BrokerRef: new FormControl('0'),
@@ -234,6 +249,12 @@ export class FactorEditComponent extends AgGridBaseComponent
 
   Factor_Header_insert() {
 
+    this.EditForm_Factor_Header.markAllAsTouched();
+    if (!this.EditForm_Factor_Header.valid) return;
+
+    this.EditForm_Factor_Header.patchValue({
+      BrokerRef: sessionStorage.getItem("BrokerCode")
+    });
     this.repo.WebFactorInsert(this.EditForm_Factor_Header.value).subscribe((data: any) => {
       this.router.navigate(['/factor/factor-edit', data.Factors[0].FactorCode]);
 
@@ -275,6 +296,7 @@ export class FactorEditComponent extends AgGridBaseComponent
     this.EditForm_Factor_Header.patchValue({
       CustName: this.selectedRows[0].CustName_Small,
       CustomerCode: this.selectedRows[0].CustomerCode,
+      BrokerName: sessionStorage.getItem("BrokerName")
     });
     this.selectedRows = []
     this.customer_dialog_close()
@@ -358,6 +380,67 @@ export class FactorEditComponent extends AgGridBaseComponent
 
   }
 
+
+
+
+
+
+
+
+
+  Customer_property = new FormGroup({
+    AppNumber: new FormControl(''),
+    DatabaseNumber: new FormControl(''),
+    LockNumber: new FormControl(''),
+    Address: new FormControl(''),
+    CityName: new FormControl(''),
+    OstanName: new FormControl(''),
+
+    ObjectRef: new FormControl('0'),
+
+  });
+
+
+  Show_Customer_Property(CustomerCode) {
+
+    this.property_dialog_show()
+    this.records_customer.forEach((customer: any) => {
+
+      if (customer.CustomerCode == CustomerCode) {
+        this.Customer_property.patchValue({
+          AppNumber: customer.AppNumber,
+          DatabaseNumber: customer.DatabaseNumber,
+          LockNumber: customer.LockNumber,
+          ObjectRef: customer.CustomerCode,
+          Address: customer.Address,
+          CityName: customer.CityName,
+          OstanName: customer.OstanName,
+
+        });
+      }
+
+
+    })
+  }
+
+
+
+
+
+  property_dialog_show() {
+    const modal = this.renderer.selectRootElement('#factorcustomerproperty', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  property_dialog_close() {
+    const modal = this.renderer.selectRootElement('#factorcustomerproperty', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
 
 
 

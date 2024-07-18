@@ -28,13 +28,18 @@ export class LoginComponent implements OnInit {
 
     if (sessionStorage.getItem("ActiveDate") != null) {
       this.router.navigate(['/auth/login']);
+    } else {
+
     }
 
   }
 
 
+  showPassword: boolean = false;
 
-
+  toggleShowPassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   submit(action) {
     this.isLoading = true
@@ -57,6 +62,15 @@ export class LoginComponent implements OnInit {
         sessionStorage.setItem("UserName", data.users[0].UserName)
         sessionStorage.setItem("CustName_Small", data.users[0].CustName_Small)
         sessionStorage.setItem("Explain", data.users[0].Explain)
+
+        sessionStorage.setItem("PhAddress3", data.users[0].PhAddress3)
+        sessionStorage.setItem("BrokerCode", data.users[0].BrokerCode)
+        sessionStorage.setItem("BrokerName", data.users[0].BrokerName)
+
+        sessionStorage.setItem("AlarmActive_Row", data.users[0].AlarmActive_Row)
+        sessionStorage.setItem("AlarmActtive_Conversation", data.users[0].AlarmActtive_Conversation)
+
+
         console.log(sessionStorage.getItem("ActiveDate"))
 
         this.router.navigate(['/dashboard']);

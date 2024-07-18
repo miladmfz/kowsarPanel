@@ -11,10 +11,24 @@
 
         <!-- <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
           [(ngModel)]="Searchtarget" (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" /> -->
-        <a type="button" class="btn btn-success waves-effect waves-light m-1"
-          [routerLink]="['/document/download-edit']">
-          <span class="btn-label"><i class="fas fa-plus"></i></span>جدید
-        </a>
+
+
+
+
+
+        <ng-container *ngIf="JobPersonRef.length>0">
+          <a type="button" class="btn btn-success waves-effect waves-light m-1"
+            [routerLink]="['/document/download-edit']">
+            <span class="btn-label"><i class="fas fa-plus"></i></span>جدید
+          </a>
+
+        </ng-container>
+
+
+
+
+
+
         <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
           <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
         </a>

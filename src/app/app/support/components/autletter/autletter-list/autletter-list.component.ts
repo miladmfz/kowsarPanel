@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { Router } from '@angular/router';
@@ -30,13 +30,12 @@ export class AutletterListComponent
   CentralRef: string = '';
   JobPersonRef: string = '';
 
-  Searchtarget: string = '';
   items: any[] = [];
   TextData: string = '';
   selectedOption: string = '0';
 
   searchTerm: string = '';
-
+  ToDayDate: string = '';
 
 
   customTheme: Partial<IDatepickerTheme> = {
@@ -45,13 +44,11 @@ export class AutletterListComponent
 
   };
 
-
-
   onInputChange() {
-    if (this.Searchtarget == "") {
-      this.Searchtarget = ""
+    if (this.searchTerm == "") {
+      this.searchTerm = ""
     }
-    this.getList()
+    this.LoadList()
   }
 
 
@@ -133,25 +130,61 @@ export class AutletterListComponent
       },
 
     ];
+    this.repo.GetTodeyFromServer().subscribe((data: any) => {
 
-    this.getList();
+      this.ToDayDate = data[0].TodeyFromServer
+      this.getList();
+    });
+
+
   }
+
+
+
+  EditForm_autletter = new FormGroup({
+    SearchTarget: new FormControl(''),
+    CentralRef: new FormControl(''),
+    CreationDate: new FormControl(''),
+
+  });
+
+
+
+
   getList() {
 
 
 
+
     if (sessionStorage.getItem("JobPersonRef").length > 0) {
+
       this.searchTerm = ''
       this.CentralRef = ''
 
-      this.repo.GetLetterList("", "", "").subscribe((data) => {
+
+      this.EditForm_autletter.patchValue({
+        SearchTarget: '',
+        CentralRef: '',
+        CreationDate: '',
+      });
+
+
+      this.repo.GetLetterList(this.EditForm_autletter.value).subscribe((data) => {
         this.records = data;
       });
     } else {
+
+      this.EditForm_autletter.patchValue({
+        SearchTarget: '',
+        CentralRef: sessionStorage.getItem("CentralRef"),
+        CreationDate: this.ToDayDate,
+      });
+
+
       this.searchTerm = ''
       this.CentralRef = sessionStorage.getItem("CentralRef");
 
-      this.repo.GetLetterList("", this.CentralRef, "").subscribe((data) => {
+      this.repo.GetLetterList(this.EditForm_autletter.value).subscribe((data) => {
         this.records = data;
       });
     }
@@ -163,24 +196,44 @@ export class AutletterListComponent
 
 
   LoadList() {
-    if (sessionStorage.getItem("JobPersonRef").length > 0) {
-      if (this.selectedOption === '0') {
-        this.CentralRef = ''
-      } else {
-        this.CentralRef = sessionStorage.getItem("CentralRef");
 
+
+
+    this.EditForm_autletter.patchValue({
+      SearchTarget: this.searchTerm,
+      CentralRef: sessionStorage.getItem("CentralRef"),
+      CreationDate: this.dateValue.value,
+    });
+
+
+    if (sessionStorage.getItem("JobPersonRef").length > 0) {
+      if (this.selectedOption == '0') {
+        this.CentralRef = ''
+        this.EditForm_autletter.patchValue({
+          CentralRef: this.CentralRef,
+        });
+      } else {
+
+
+        this.CentralRef = sessionStorage.getItem("CentralRef");
+        this.EditForm_autletter.patchValue({
+          CentralRef: this.CentralRef,
+        });
       }
-      this.repo.GetLetterList(this.searchTerm, this.CentralRef, this.dateValue.value).subscribe((data) => {
-        this.records = data;
-      });
+
     } else {
 
       this.CentralRef = sessionStorage.getItem("CentralRef");
-
-      this.repo.GetLetterList(this.searchTerm, this.CentralRef, this.dateValue.value).subscribe((data) => {
-        this.records = data;
+      this.EditForm_autletter.patchValue({
+        CentralRef: this.CentralRef,
       });
+
     }
+
+
+    this.repo.GetLetterList(this.EditForm_autletter.value).subscribe((data) => {
+      this.records = data;
+    });
 
 
   }

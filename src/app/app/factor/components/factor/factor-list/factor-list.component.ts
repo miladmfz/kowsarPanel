@@ -34,7 +34,7 @@ export class FactorListComponent extends AgGridBaseComponent
   items: any[] = [];
   TextData: string = '';
   selectedOption: string = '0';
-
+  BrokerRef: string = '';
   searchTerm: string = '';
 
 
@@ -61,6 +61,18 @@ export class FactorListComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
+    if (sessionStorage.getItem("PhAddress3") == '100') {
+      this.BrokerRef = ''
+
+    } else {
+      this.BrokerRef = sessionStorage.getItem("BrokerCode")
+
+    }
+
+
+
+
+
 
     this.columnDefs = [
       {
@@ -86,13 +98,25 @@ export class FactorListComponent extends AgGridBaseComponent
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         minWidth: 150
-      }, {
-        field: 'OwnerName',
+      },
+
+
+      {
+        field: 'BrokerNameWithoutType',
         headerName: 'نام پشتیبان',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         minWidth: 150
-      }, {
+      },
+      // {
+      //   field: 'OwnerName',
+      //   headerName: 'ایجاد کننده',
+      //   filter: 'agSetColumnFilter',
+      //   cellClass: 'text-center',
+      //   minWidth: 150
+      // },
+
+      {
         field: 'starttime',
         headerName: 'شروع',
         filter: 'agSetColumnFilter',
@@ -133,6 +157,7 @@ export class FactorListComponent extends AgGridBaseComponent
       StartDateTarget: this.start_dateValue.value,
       EndDateTarget: this.End_dateValue.value,
       SearchTarget: this.Searchtarget,
+      BrokerRef: this.BrokerRef,
       isShopFactor: "0",
     });
 
@@ -150,6 +175,7 @@ export class FactorListComponent extends AgGridBaseComponent
     StartDateTarget: new FormControl(''),
     EndDateTarget: new FormControl(''),
     SearchTarget: new FormControl(''),
+    BrokerRef: new FormControl(''),
     isShopFactor: new FormControl('0'),
 
   });

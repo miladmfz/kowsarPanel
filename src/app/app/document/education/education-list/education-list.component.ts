@@ -26,6 +26,7 @@ export class EducationListComponent extends AgGridBaseComponent
   dateValue = new FormControl();
   PersonInfoCode: string = '';
   Searchtarget: string = '';
+  JobPersonRef: string = '';
 
   onInputChange() {
     if (this.Searchtarget == "") {
@@ -37,6 +38,7 @@ export class EducationListComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
+    this.JobPersonRef = sessionStorage.getItem("JobPersonRef")
 
     this.columnDefs = [
       {

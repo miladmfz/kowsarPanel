@@ -50,7 +50,9 @@ export class AutletterAttachComponent implements OnInit {
   selectedFileSize: number = 0;
   selectedFileType: string = '';
 
-
+  isFileSizeExceeded(): boolean {
+    return this.selectedFileSize > 10240; // 10 MB in KB
+  }
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
@@ -116,7 +118,7 @@ export class AutletterAttachComponent implements OnInit {
   }
 
 
-  SelectPrinter(index: any) {
+  DownloadAttach(index: any) {
 
     this.repo.downloadFile(this.attachfiles_array[index].AttachedFileCode, "AutLetter", this.TextData).subscribe(blob => {
       console.log(blob)

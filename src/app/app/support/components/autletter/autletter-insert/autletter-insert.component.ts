@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 import { Router } from '@angular/router';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
+import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 
 @Component({
   selector: 'app-autletter-insert',
@@ -20,6 +21,16 @@ export class AutletterInsertComponent implements OnInit {
 
   ToDayDate: string = "";
 
+  Title_Lookup: Base_Lookup[] = [
+    { id: "پشتیبانی فنی", name: "پشتیبانی فنی" },
+    { id: "امور مالی و تمدید پشتیبانی", name: "امور مالی و تمدید پشتیبانی" },
+    { id: "حسابداری", name: "حسابداری" },
+    { id: "آموزش و سوال نرم افزاری", name: "آموزش و سوال نرم افزاری" },
+    { id: "سایت Site", name: "سایت Site" },
+    { id: "اپلیکیشن موبایلی mobile Application", name: "اپلیکیشن موبایلی mobile Application" },
+    { id: "همسان سازی  Replication", name: "همسان سازی  Replication" },
+    { id: "درخواست فاکتور", name: "درخواست فاکتور" },
+  ]
 
 
 

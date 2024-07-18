@@ -8,7 +8,7 @@
           <h4 class="card-title">{{ title }}</h4>
           <div class="row mb-3">
             <!-- Search Input -->
-            <form [formGroup]="EditForm_Factor_Header" id="submitForm">
+            <form [formGroup]="EditForm_Factor_Header" (ngSubmit)="Factor_Header_insert()" id="submitForm">
               <div class="row">
                 <div class="col-12">
                   <div class="card">
@@ -33,9 +33,25 @@
                         <ng-container *ngIf="FactorCode.length==0">
                           <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
 
-                          <input type="text" class="form-control" id="CustomerCode" formControlName="CustomerCode"
-                            placeholder="نمایش مشتریان" maxlength="100" autocomplete="off" readonly
-                            (click)="GetCustomer()" />
+
+
+
+
+                          <input type="text" class="form-control" id="CustomerCode" (click)="GetCustomer()"
+                            placeholder="نمایش مشتریان" formControlName="CustomerCode" maxlength="100"
+                            autocomplete="off" [ngClass]="{
+                              'is-invalid':
+                              EditForm_Factor_Header.controls['CustomerCode'].invalid &&
+                              EditForm_Factor_Header.controls['CustomerCode'].touched,
+                              'is-valid':
+                              EditForm_Factor_Header.controls['CustomerCode'].valid &&
+                              EditForm_Factor_Header.controls['CustomerCode'].touched
+                            }" />
+                          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                              validation: 'required',
+                              message: 'اجباری است',
+                              control: EditForm_Factor_Header.controls['CustomerCode']
+                            }"></ng-container>
 
                         </ng-container>
 
@@ -68,6 +84,58 @@
                         </div>
                       </ng-container>
 
+                      <div class="row">
+                        <div class="col-sm-12">
+
+
+                          <ng-container *ngIf="FactorCode.length>0">
+
+                            <a type="button" class="btn btn-success waves-effect waves-light "
+                              [routerLink]="['/factor/factor-edit']">
+                              <span class="btn-label"><i class="fas fa-plus"></i>
+                              </span>ایجاد فاکتور جدید
+                            </a>
+                          </ng-container>
+
+                          <ng-container *ngIf="FactorCode.length==0">
+                            <a type="button" class="btn btn-success waves-effect waves-light "
+                              (click)="Factor_Header_insert()">
+                              <span class="btn-label"><i class="fas fa-plus"></i>
+                              </span>ثبت فاکتور </a>
+
+
+                          </ng-container>
+
+
+
+
+                          <ng-container *ngIf="FactorCode.length>0">
+
+                            <a type="button" class="btn btn-primary waves-effect waves-light m-1">
+                              <span class=" btn-label"><i class="fas fa-search"></i></span>اصلاح فاکتور
+                            </a>
+                          </ng-container>
+
+                          <!-- 
+            
+                          <div class=" col-md-5">
+                            <a type="button" class="btn btn-primary waves-effect waves-light m-1" (click)="getList()">
+                              <span class="btn-label"><i class="fas fa-search"></i></span>جستجو
+                            </a>
+            
+                            <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
+                              <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
+                            </a>
+                            <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="removeAllFilters()">
+                              <span class="btn-label"><i class="fas fa-eye-slash"></i></span>حذف
+                              جستجو
+                            </a>
+            
+                          </div> -->
+
+
+                        </div>
+                      </div>
 
 
                     </div>
@@ -81,38 +149,6 @@
           </div>
 
 
-          <div class="row">
-            <div class="col-sm-12">
-              <a type="button" class="btn btn-success waves-effect waves-light " (click)="Factor_Header_insert()">
-                <span class="btn-label"><i class="fas fa-plus"></i></span>ایجاد فاکتور
-              </a>
-              <ng-container *ngIf="FactorCode.length>0">
-
-                <a type="button" class="btn btn-primary waves-effect waves-light m-1">
-                  <span class=" btn-label"><i class="fas fa-search"></i></span>اصلاح فاکتور
-                </a>
-              </ng-container>
-
-              <!-- 
-
-              <div class=" col-md-5">
-                <a type="button" class="btn btn-primary waves-effect waves-light m-1" (click)="getList()">
-                  <span class="btn-label"><i class="fas fa-search"></i></span>جستجو
-                </a>
-
-                <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
-                  <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
-                </a>
-                <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="removeAllFilters()">
-                  <span class="btn-label"><i class="fas fa-eye-slash"></i></span>حذف
-                  جستجو
-                </a>
-
-              </div> -->
-
-
-            </div>
-          </div>
 
 
 
@@ -207,7 +243,7 @@
 
 
 <div class="modal fade" id="customerlist" tabindex="-1" aria-labelledby="customerlistLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content" style="background-color: #d1dce7;">
       <div class="modal-header" style="background-color: #949494;">
         <h5 class="modal-title" id="customerlistLabel">لیست مشتریان</h5>
@@ -246,3 +282,77 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="factorcustomerproperty" tabindex="-1" aria-labelledby="factorcustomerpropertyLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #e7d1d6;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="factorcustomerpropertyLabel">جزئیات</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="property_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="Customer_property" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+                  <div class="form-group col-md-12">
+                    <label for="AppNumber" class="col-form-label">نسخه نرم افزار </label>
+                    <input type="text" class="form-control" id="AppNumber" formControlName="AppNumber" maxlength="100"
+                      autocomplete="off" readonly />
+                  </div>
+                  <div class="form-group col-md-12">
+                    <label for="DatabaseNumber" class="col-form-label">دیتابیس </label>
+                    <input type="text" class="form-control" id="DatabaseNumber" formControlName="DatabaseNumber"
+                      maxlength="100" autocomplete="off" readonly />
+                  </div>
+                  <div class="form-group col-md-12">
+                    <label for="LockNumber" class="col-form-label">تعداد قفل </label>
+                    <input type="text" class="form-control" id="LockNumber" formControlName="LockNumber" maxlength="100"
+                      autocomplete="off" readonly />
+                  </div>
+                  <div class="form-group col-md-12">
+                    <label for="Address" class="col-form-label">آدرس </label>
+                    <input type="text" class="form-control" id="Address" formControlName="Address" maxlength="100"
+                      autocomplete="off" readonly />
+                  </div>
+                  <div class="form-group col-md-12">
+                    <label for="CityName" class="col-form-label">شهر </label>
+                    <input type="text" class="form-control" id="CityName" formControlName="CityName" maxlength="100"
+                      autocomplete="off" readonly />
+                  </div>
+                  <div class="form-group col-md-12">
+                    <label for="OstanName" class="col-form-label">استان </label>
+                    <input type="text" class="form-control" id="OstanName" formControlName="OstanName" maxlength="100"
+                      autocomplete="off" readonly />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="property_dialog_close()">بستن</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
+    <div class="fv-plugins-message-container invalid-feedback">
+      <span role="alert">
+        {{ message }}
+      </span>
+    </div>
+  </ng-container>
+</ng-template>
