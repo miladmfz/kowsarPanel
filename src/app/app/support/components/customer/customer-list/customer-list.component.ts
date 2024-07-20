@@ -26,6 +26,7 @@ export class CustomerListComponent extends AgGridBaseComponent
   records;
   title = 'لیست مشتریان کوثر  ';
   Searchtarget: string = '';
+  loading: boolean = true;
 
   onInputChange() {
     if (this.Searchtarget == "") {
@@ -114,9 +115,10 @@ export class CustomerListComponent extends AgGridBaseComponent
 
   getList() {
 
-
+    this.loading = true
     this.repo.GetKowsarCustomer(this.Searchtarget).subscribe((data: any) => {
       this.records = data.Customers;
+      this.loading = false
 
     });
 

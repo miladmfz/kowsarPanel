@@ -14,7 +14,7 @@
                       src="./assets/images/logo-light.png" alt="" height="22"></span></a></div>
               <p class="text-muted mb-4 mt-3">لطفا نام کاربری و رمز عبور خود را وارد کنید</p>
             </div>
-
+            <!-- 
             <form [formGroup]="LoginForm" (ngSubmit)="submit('')" id="submitForm">
               <div class="row">
                 <div class="col-12">
@@ -78,6 +78,72 @@
 
 
 
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form> -->
+            <form [formGroup]="LoginForm" (ngSubmit)="submit('')" id="submitForm" autocomplete="on">
+              <div class="row">
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-body row">
+
+                      <div class="form-group col-md-12">
+                        <label for="UName" class="col-form-label">
+                          <span class="text-danger">*</span>
+                          نام کاربری
+                        </label>
+                        <input type="text" class="form-control" id="UName" formControlName="UName" maxlength="100"
+                          autocomplete="username" [ngClass]="{
+                            'is-invalid':
+                            LoginForm.controls['UName'].invalid &&
+                            LoginForm.controls['UName'].touched,
+                            'is-valid':
+                            LoginForm.controls['UName'].valid &&
+                            LoginForm.controls['UName'].touched
+                          }" />
+                        <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                            validation: 'required',
+                            message: 'اجباری است',
+                            control: LoginForm.controls['UName']
+                          }"></ng-container>
+                      </div>
+
+                      <div class="form-group col-md-12">
+                        <label for="UPass" class="col-form-label">
+                          <span class="text-danger">*</span>
+                          رمز عبور
+                        </label>
+                        <div class="input-group">
+                          <input type="password" class="form-control" id="UPass" formControlName="UPass" maxlength="100"
+                            autocomplete="current-password" [ngClass]="{
+                              'is-invalid': LoginForm.controls['UPass'].invalid && LoginForm.controls['UPass'].touched,
+                              'is-valid': LoginForm.controls['UPass'].valid && LoginForm.controls['UPass'].touched
+                            }" [type]="showPassword ? 'text' : 'password'" />
+                          <div class="input-group-append">
+                            <span class="input-group-text" (click)="toggleShowPassword()">
+                              <i [class]="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+                            </span>
+                          </div>
+                        </div>
+                        <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                            validation: 'required',
+                            message: 'اجباری است',
+                            control: LoginForm.controls['UPass']
+                          }"></ng-container>
+                      </div>
+
+                      <div class="card">
+                        <div class="card-body">
+                          <div class="form-group col-md-12">
+                            <div class="text-center d-grid">
+                              <button type="submit" class="btn btn-primary">ورود</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
                     </div>
                   </div>

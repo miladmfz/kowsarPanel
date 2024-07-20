@@ -37,6 +37,7 @@ export class AutletterListComponent
   searchTerm: string = '';
   ToDayDate: string = '';
 
+  loading: boolean = true;
 
   customTheme: Partial<IDatepickerTheme> = {
     selectedBackground: '#D68E3A',
@@ -145,7 +146,7 @@ export class AutletterListComponent
     SearchTarget: new FormControl(''),
     CentralRef: new FormControl(''),
     CreationDate: new FormControl(''),
-
+    OwnCentralRef: new FormControl(''),
   });
 
 
@@ -153,43 +154,36 @@ export class AutletterListComponent
 
   getList() {
 
+    this.loading = true
 
 
 
     if (sessionStorage.getItem("JobPersonRef").length > 0) {
-
       this.searchTerm = ''
       this.CentralRef = ''
-
-
       this.EditForm_autletter.patchValue({
         SearchTarget: '',
         CentralRef: '',
         CreationDate: '',
-      });
-
-
-      this.repo.GetLetterList(this.EditForm_autletter.value).subscribe((data) => {
-        this.records = data;
+        OwnCentralRef: sessionStorage.getItem("CentralRef")
       });
     } else {
-
       this.EditForm_autletter.patchValue({
         SearchTarget: '',
         CentralRef: sessionStorage.getItem("CentralRef"),
         CreationDate: this.ToDayDate,
+        OwnCentralRef: sessionStorage.getItem("CentralRef")
+
       });
-
-
       this.searchTerm = ''
       this.CentralRef = sessionStorage.getItem("CentralRef");
-
-      this.repo.GetLetterList(this.EditForm_autletter.value).subscribe((data) => {
-        this.records = data;
-      });
     }
 
+    this.repo.GetLetterList(this.EditForm_autletter.value).subscribe((data) => {
+      this.records = data;
+      this.loading = false
 
+    });
 
   }
 
@@ -198,11 +192,13 @@ export class AutletterListComponent
   LoadList() {
 
 
-
+    this.loading = true
     this.EditForm_autletter.patchValue({
       SearchTarget: this.searchTerm,
       CentralRef: sessionStorage.getItem("CentralRef"),
       CreationDate: this.dateValue.value,
+      OwnCentralRef: sessionStorage.getItem("CentralRef")
+
     });
 
 
@@ -233,6 +229,8 @@ export class AutletterListComponent
 
     this.repo.GetLetterList(this.EditForm_autletter.value).subscribe((data) => {
       this.records = data;
+      this.loading = false
+
     });
 
 

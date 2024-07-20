@@ -37,6 +37,7 @@ export class FactorListComponent extends AgGridBaseComponent
   BrokerRef: string = '';
   searchTerm: string = '';
 
+  loading: boolean = true;
 
 
   customTheme: Partial<IDatepickerTheme> = {
@@ -160,9 +161,11 @@ export class FactorListComponent extends AgGridBaseComponent
       BrokerRef: this.BrokerRef,
       isShopFactor: "0",
     });
+    this.loading = true
 
     this.repo.GetFactor(this.EditForm_factor.value).subscribe((data: any) => {
       this.records = data.Factors;
+      this.loading = false
 
     });
 

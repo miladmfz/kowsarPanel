@@ -35,7 +35,7 @@ export class CentralListComponent extends AgGridBaseComponent
   selectedOption: string = '0';
 
   searchTerm: string = '';
-
+  loading: boolean = true;
 
 
 
@@ -125,8 +125,10 @@ export class CentralListComponent extends AgGridBaseComponent
   getList() {
 
 
+    this.loading = true
     this.repo.GetKowsarCentral(this.Searchtarget).subscribe((data: any) => {
       this.records = data.Centrals;
+      this.loading = false
 
     });
 

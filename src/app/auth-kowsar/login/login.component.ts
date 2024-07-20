@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthKowsarWebApiService } from '../services/AuthKowsarWebApi.service';
 import { Router } from '@angular/router';
 
@@ -9,23 +9,33 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private repo: AuthKowsarWebApiService, private readonly router: Router,
+  constructor(private repo: AuthKowsarWebApiService, private readonly router: Router, private fb: FormBuilder
   ) {
-
+    this.LoginForm = this.fb.group({
+      UName: ['', Validators.required],
+      UPass: ['', Validators.required],
+    });
 
   }
 
   isLoading: boolean = false;
+  LoginForm: FormGroup;
 
-  LoginForm = new FormGroup({
-    UName: new FormControl('', Validators.required),
-    UPass: new FormControl('', Validators.required),
-  });
+  // LoginForm = new FormGroup({
+  //   UName: new FormControl('', Validators.required),
+  //   UPass: new FormControl('', Validators.required),
+  // });
+  @ViewChild('username') usernameField: ElementRef;
 
-
+  ngAfterViewInit() {
+    this.usernameField.nativeElement.focus();
+  }
   ngOnInit() {
     this.isLoading = false
-
+    this.LoginForm = this.fb.group({
+      UName: ['', Validators.required],
+      UPass: ['', Validators.required],
+    });
     if (sessionStorage.getItem("ActiveDate") != null) {
       this.router.navigate(['/auth/login']);
     } else {

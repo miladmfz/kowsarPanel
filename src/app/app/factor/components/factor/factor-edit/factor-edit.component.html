@@ -14,7 +14,7 @@
                   <div class="card">
                     <div class="card-body row">
 
-                      <div class="form-group col-md-3">
+                      <div class="form-group col-md-2">
                         <label for="FactorDate" class="col-form-label"> تاریخ فاکتور </label>
                         <input type="text" class="form-control" id="FactorDate" formControlName="FactorDate"
                           maxlength="100" autocomplete="off" readonly />
@@ -39,7 +39,7 @@
 
                           <input type="text" class="form-control" id="CustomerCode" (click)="GetCustomer()"
                             placeholder="نمایش مشتریان" formControlName="CustomerCode" maxlength="100"
-                            autocomplete="off" [ngClass]="{
+                            autocomplete="off" readonly [ngClass]="{
                               'is-invalid':
                               EditForm_Factor_Header.controls['CustomerCode'].invalid &&
                               EditForm_Factor_Header.controls['CustomerCode'].touched,
@@ -111,8 +111,17 @@
 
                           <ng-container *ngIf="FactorCode.length>0">
 
-                            <a type="button" class="btn btn-primary waves-effect waves-light m-1">
-                              <span class=" btn-label"><i class="fas fa-search"></i></span>اصلاح فاکتور
+                            <a (click)="deleteFactor()" type="button"
+                              class="btn btn-danger waves-effect waves-light m-1">
+                              <span class=" btn-label"><i class="fas fa-trash"></i></span>حذف فاکتور
+                            </a>
+                          </ng-container>
+
+
+                          <ng-container *ngIf="FactorCode.length>0">
+
+                            <a (click)="GoBack()" type="button" class="btn btn-info waves-effect waves-light m-1">
+                              <span class=" btn-label"><i class="fas fa-arrow"></i></span>بازگشت
                             </a>
                           </ng-container>
 
@@ -165,7 +174,7 @@
                 <div class="col-sm-6">
 
                   <div class="row">
-                    <h4 class="card-title col-sm-3">لیست کالاها</h4>
+                    <h4 class="card-title col-sm-6">لیست کالاها</h4>
                     <a type="button" class="btn btn-soft-danger rounded-pill waves-effect waves-light col-sm-3 m-1"
                       (click)="taggelShowGoodList()">
                       بستن کالاها
@@ -190,7 +199,7 @@
               </ng-container>
               <div class="col-sm-6">
                 <div class="row">
-                  <h4 class="card-title col-sm-3">لیست اقلام فاکتور شده</h4>
+                  <h4 class="card-title col-sm-6">لیست اقلام فاکتور شده</h4>
 
 
 
@@ -254,17 +263,21 @@
         <div class="row mb-2">
           <div class="col-sm-12">
             <div class="form-group">
-
-              <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
+              <input #modalsearch type="text" class="form-control" placeholder="جستجو..."
                 [(ngModel)]="Searchtarget_customer" (ngModelChange)="onInputChange_Customer()"
                 [ngModelOptions]="{ standalone: true }" />
-
             </div>
           </div>
-
-
         </div>
 
+        <!-- Show loading indicator when data is being fetched -->
+        <div *ngIf="loading" class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
+        <!-- Show grid when data is available -->
         <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" [rowData]="records_customer"
           [columnDefs]="columnDefs3" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
           [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
@@ -272,6 +285,7 @@
           [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true"
           [rowSelection]="'single'" (selectionChanged)="onSelectionChanged($event)">
         </ag-grid-angular>
+
 
       </div>
       <div class="modal-footer">
@@ -282,6 +296,10 @@
     </div>
   </div>
 </div>
+
+
+
+
 
 <div class="modal fade" id="factorcustomerproperty" tabindex="-1" aria-labelledby="factorcustomerpropertyLabel"
   aria-hidden="true">

@@ -75,6 +75,10 @@ export class FactorWebApiService {
     const params = new HttpParams().append('FactorRowCode', FactorRowCode)
     return this.client.get<any[]>(this.kowsarWebUrl + "DeleteWebFactorRowsSupport", { params: params })
   }
+  DeleteWebFactorSupport(FactorCode: string): Observable<any[]> {
+    const params = new HttpParams().append('FactorCode', FactorCode)
+    return this.client.get<any[]>(this.kowsarWebUrl + "DeleteWebFactorSupport", { params: params })
+  }
 
 
   GetObjectTypeFromDbSetup(ObjectType: string): Observable<any[]> {

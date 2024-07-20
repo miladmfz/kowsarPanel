@@ -6,12 +6,12 @@ declare var $: any;
     selector: 'edit-delete-cell-renderer',
     template: ` 
 
-  <span   (click)="NavigateToEdit()" class="btn btn-sm btn-outline-primary mx-1" data-toggle="tooltip" title="خصوصیت اضافه ">
+  <span   (click)="NavigateToEdit()" class="btn btn-sm btn-outline-primary mx-1" data-toggle="tooltip" title="اقلام ">
   <a >
     <i class="  fas fa-shopping-cart"></i>
   </a>
   </span>
-  <span   (click)="Edit_Customer_Property()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="خصوصیت اضافه ">
+  <span   (click)="Edit_Customer_Property()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="خصوصیت  ">
   <a >
     <i class=" far fa-file-alt"></i>
   </a>

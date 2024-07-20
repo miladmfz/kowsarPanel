@@ -1,14 +1,13 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { FactorWebApiService } from '../../../services/FactorWebApi.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { IDatepickerTheme } from 'ng-persian-datepicker';
-import { CellActionFactorList } from '../factor-list/cell-action-factor-list';
 import { CellActionFactorRowsEdit } from './cell-action-factorrows-edit';
 import Swal from 'sweetalert2';
 import { CellActionGoodEdit } from './cell-action-good-edit';
 import { CellActionFactorCustomerEdit } from './cell-action-factor-customer-edit';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-factor-edit',
@@ -21,7 +20,8 @@ export class FactorEditComponent extends AgGridBaseComponent
     private readonly router: Router,
     private repo: FactorWebApiService,
     private renderer: Renderer2,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location,
   ) {
     super();
   }
@@ -283,11 +283,16 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
 
+  @ViewChild('modalsearch') modalsearch: ElementRef;
 
   GetCustomer() {
+    this.customer_dialog_show()
+    this.loading = true;
+
     this.repo.GetKowsarCustomer(this.Searchtarget_customer).subscribe((data: any) => {
       this.records_customer = data.Customers;
-      this.customer_dialog_show()
+      this.loading = false;
+
     });
   }
 
@@ -301,8 +306,14 @@ export class FactorEditComponent extends AgGridBaseComponent
     this.selectedRows = []
     this.customer_dialog_close()
   }
+  GoBack() {
+    this.location.back();
+
+  }
 
 
+
+  loading: boolean = true;
 
 
   customer_dialog_show() {
@@ -311,6 +322,8 @@ export class FactorEditComponent extends AgGridBaseComponent
     this.renderer.setStyle(modal, 'display', 'block');
     this.renderer.setAttribute(modal, 'aria-modal', 'true');
     this.renderer.setAttribute(modal, 'role', 'dialog');
+    this.modalsearch.nativeElement.focus();
+
   }
   customer_dialog_close() {
     const modal = this.renderer.selectRootElement('#customerlist', true);
@@ -322,7 +335,64 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
 
+  deleteFactor() {
+    if (this.records_factorrows && this.records_factorrows.length > 0) {
 
+      this.fireAlarmFactorRow().then((result) => {
+        if (result.dismiss === Swal.DismissReason.cancel) {
+          this.dismissDeleteSwal1(result);
+        }
+      });
+
+    } else {
+      this.fireDeleteFactor().then((result) => {
+        if (result.isConfirmed) {
+          this.deletefactorRecord()
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          this.dismissDeleteSwal1(result);
+        }
+      });
+    }
+
+  }
+
+
+
+  fireDeleteFactor() {
+    return Swal.fire({
+      title: 'آیا از حذف این ردیف اطمینان دارید؟',
+      text: 'درصورت حذف دیگر قادر به بازیابی ردیف فوق نخواهید بود.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'بله، اطمینان دارم.',
+
+      cancelButtonText: 'بستن پنجره',
+      customClass: {
+        confirmButton: 'btn btn-success mx-2',
+
+        cancelButton: 'btn btn-danger',
+      },
+      buttonsStyling: false,
+    });
+  }
+
+
+
+
+  fireAlarmFactorRow() {
+    return Swal.fire({
+      title: 'این فاکتور دارای اقلام می باشد',
+      icon: 'warning',
+      showCancelButton: false,
+      cancelButtonText: 'بستن پنجره',
+      customClass: {
+        confirmButton: 'btn btn-success mx-2',
+
+        cancelButton: 'btn btn-danger',
+      },
+      buttonsStyling: false,
+    });
+  }
 
 
 
@@ -353,7 +423,7 @@ export class FactorEditComponent extends AgGridBaseComponent
 
   dismissDeleteSwal1(t) {
     if (t.dismiss === Swal.DismissReason.cancel) {
-      Swal.fire('Cancelled', 'Your record is safe :)', 'error');
+      Swal.fire('کنسل شد', 'اطلاعات تغییری نکرد', 'error');
     }
   }
 
@@ -379,6 +449,21 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
   }
+
+  deletefactorRecord() {
+
+
+    this.repo.DeleteWebFactorSupport(this.FactorCode).subscribe((data: any) => {
+
+      this.location.back();
+    });
+
+
+
+  }
+
+
+
 
 
 
