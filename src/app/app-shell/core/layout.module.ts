@@ -16,7 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { PhoenixFrameworkModule } from '../framework-components/framework.module';
 import { NotificationService } from '../framework-services/notification.service';
-import { SwalService } from '../framework-services/swal.service';
+
 const routes: Routes = [
   {
     path: '',

@@ -1,11 +1,12 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, Renderer2, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { CustomerWebApiService } from 'src/app/app/support/services/CustomerWebApi.service';
 import { CellActionCustomerList } from './cell-action-customer-list';
 import { forEachChild } from 'typescript';
 import { FormControl, FormGroup } from '@angular/forms';
-
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 @Component({
   selector: 'app-customer-list',
   templateUrl: './customer-list.component.html',
@@ -25,14 +26,54 @@ export class CustomerListComponent extends AgGridBaseComponent
 
   records;
   title = 'لیست مشتریان کوثر  ';
-  Searchtarget: string = '';
   loading: boolean = true;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Searchtarget: string = '';
+  private searchSubject: Subject<string> = new Subject();
+
+
+
+  ngOnDestroy(): void {
+    this.searchSubject.unsubscribe();
+  }
+
+
+
   onInputChange() {
-    if (this.Searchtarget == "") {
-      this.Searchtarget = ""
+
+    if (this.Searchtarget == " ") {
+      this.Searchtarget = "%"
     }
-    this.getList()
+
+    this.searchSubject.next(this.Searchtarget);
+
+
   }
 
 
@@ -107,7 +148,15 @@ export class CustomerListComponent extends AgGridBaseComponent
       },
     ];
 
-    this.getList();
+    this.searchSubject.pipe(
+      debounceTime(1000)  // 1 second debounce time
+    ).subscribe(searchText => {
+      console.log(searchText)
+      this.getList();
+    });
+    this.searchSubject.next(this.Searchtarget);
+
+
   }
 
 

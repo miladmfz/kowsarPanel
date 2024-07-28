@@ -93,17 +93,15 @@
 
           <!-- Show loading indicator when data is being fetched -->
           <div *ngIf="loading" class="text-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
+            <span class="loader"></span>
+
           </div>
 
           <!-- Show grid when data is available -->
-          <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" [rowData]="records"
+          <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
             [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
             [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
             [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
-            [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
             [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
             (selectionChanged)="onSelectionChanged($event)">
           </ag-grid-angular>

@@ -15,6 +15,7 @@ import { CellActionFactorRowsEdit } from './components/factor/factor-edit/cell-a
 import { CellActionGoodEdit } from './components/factor/factor-edit/cell-action-good-edit';
 import { CellActionFactorCustomerEdit } from './components/factor/factor-edit/cell-action-factor-customer-edit';
 
+
 @NgModule({
   imports: [
     CommonModule,

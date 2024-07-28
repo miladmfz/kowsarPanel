@@ -3,10 +3,9 @@ import { Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { CentralWebApiService } from '../../../services/CentralWebApi.service';
 import { FormControl } from '@angular/forms';
-import { IDatepickerTheme } from 'ng-persian-datepicker';
-import { CellActionAutletterList } from '../../autletter/autletter-list/cell-action-autletter-list';
 import { CellActionCentralList } from './cell-action-central-list';
-
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 @Component({
   selector: 'app-central-list',
   templateUrl: './central-list.component.html',
@@ -37,14 +36,20 @@ export class CentralListComponent extends AgGridBaseComponent
   searchTerm: string = '';
   loading: boolean = true;
 
+  private searchSubject: Subject<string> = new Subject();
 
+  ngOnDestroy(): void {
+    this.searchSubject.unsubscribe();
+  }
 
   onInputChange() {
-    if (this.Searchtarget == "") {
-      this.Searchtarget = ""
+    if (this.Searchtarget == " ") {
+      this.Searchtarget = "%"
     }
-    this.getList()
+    this.searchSubject.next(this.Searchtarget);
   }
+
+
 
 
   override ngOnInit(): void {
@@ -118,7 +123,15 @@ export class CentralListComponent extends AgGridBaseComponent
 
     ];
 
-    this.getList();
+    this.searchSubject.pipe(
+      debounceTime(1000)  // 1 second debounce time
+    ).subscribe(searchText => {
+      console.log(searchText)
+      this.getList();
+    });
+    this.searchSubject.next(this.Searchtarget);
+
+
   }
 
 

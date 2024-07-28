@@ -17,7 +17,9 @@
                   [(ngModel)]="Searchtarget" (ngModelChange)="onInputChange()"
                   [ngModelOptions]="{ standalone: true }" />
 
+
               </div>
+
             </div>
 
             <div class="btn-group col-sm-4">
@@ -48,9 +50,8 @@
           <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
             [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
             [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
-            [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
-            [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
-            [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+            [pagination]="true" [context]="context" class="ag-theme-alpine" [columnDefs]="columnDefs"
+            [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
             (selectionChanged)="onSelectionChanged($event)">
           </ag-grid-angular>
         </div>

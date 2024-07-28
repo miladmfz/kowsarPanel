@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CentralWebApiService } from '../../../services/CentralWebApi.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -12,8 +12,10 @@ export class CentralEditComponent implements OnInit {
 
   constructor(
     private repo: CentralWebApiService,
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
+    private route: ActivatedRoute,
+    private router: Router,
+    private renderer: Renderer2,
+
   ) { }
 
   Code: string = '';
@@ -91,7 +93,7 @@ export class CentralEditComponent implements OnInit {
     this.repo.GetImageFromServer(this.Code).subscribe((data: any) => {
 
       this.Imageitem = `data:${Image};base64,${data.Text}`;
-
+      this.Loading_Modal_Response_close()
     });
   }
 
@@ -99,7 +101,7 @@ export class CentralEditComponent implements OnInit {
 
 
   getDetails() {
-
+    this.Loading_Modal_Response_show()
     this.repo.GetCentralById(this.Code).subscribe((data: any) => {
 
       this.EditForm_Central.patchValue({
@@ -125,6 +127,21 @@ export class CentralEditComponent implements OnInit {
   }
 
 
+
+  Loading_Modal_Response_show() {
+    const modal = this.renderer.selectRootElement('#loadingresponse', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  Loading_Modal_Response_close() {
+    const modal = this.renderer.selectRootElement('#loadingresponse', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
 
 
 }

@@ -84,6 +84,60 @@
                         </div>
                       </ng-container>
 
+
+                      <ng-container *ngIf="FactorCode.length>0">
+                        <form [formGroup]="EditForm_factor_property" id="submitForm">
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="card">
+                                <div class="card-body row">
+
+                                  <div class="form-group col-md-2">
+                                    <label for="starttime" class="col-form-label">شروع</label>
+                                    <input type="text" class="form-control" id="starttime" formControlName="starttime"
+                                      maxlength="100" autocomplete="off" readonly />
+                                  </div>
+
+                                  <div class="form-group col-md-2">
+                                    <label for="Endtime" class="col-form-label">پایان</label>
+                                    <input type="text" class="form-control" id="Endtime" formControlName="Endtime"
+                                      maxlength="100" autocomplete="off" readonly />
+                                  </div>
+
+                                  <div class="form-group col-md-2">
+                                    <label for="worktime" class="col-form-label">مدت کار</label>
+                                    <input type="text" class="form-control" id="worktime" formControlName="worktime"
+                                      maxlength="100" autocomplete="off" readonly />
+                                  </div>
+
+                                  <div class="form-group col-md-2">
+                                    <label for="Barbary" class="col-form-label">شرح</label>
+                                    <input type="text" class="form-control" id="Barbary" formControlName="Barbary"
+                                      maxlength="100" autocomplete="off" readonly />
+                                  </div>
+
+
+                                  <div class="form-group col-md-3">
+                                    <label for="Barbary" class="col-form-label">.</label>
+
+                                    <a type="button" class="form-control btn btn-primary waves-effect waves-light "
+                                      (click)="factor_property_dialog_show()">
+                                      <span class="btn-label"><i class="fas fa-file-alt"></i>
+                                      </span>اصلاح اطلاعات </a>
+                                  </div>
+
+
+
+
+
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </ng-container>
+
                       <div class="row">
                         <div class="col-sm-12">
 
@@ -187,12 +241,10 @@
                     [(ngModel)]="Searchtarget_Good" (ngModelChange)="onInputChange_Good()"
                     [ngModelOptions]="{ standalone: true }" />
                   <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records_good"
-                    [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
-                    [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)"
-                    (cellClicked)="onCellClicked($event)" [pagination]="true"
+                    [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+                    (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
                     [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
-                    [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
-                    [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+                    [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
                     (selectionChanged)="onSelectionChanged($event)">
                   </ag-grid-angular>
                 </div>
@@ -213,9 +265,8 @@
 
                 </div>
                 <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records_factorrows"
-                  [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText"
-                  [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)"
-                  (cellClicked)="onCellClicked($event)" [pagination]="true" [frameworkComponents]="frameworkComponents"
+                  [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+                  (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
                   [context]="context" class="ag-theme-alpine" [defaultColDef]="defaultColDef"
                   [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true"
                   [rowSelection]="'multiple'" (selectionChanged)="onSelectionChanged($event)">
@@ -282,8 +333,7 @@
           [columnDefs]="columnDefs3" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
           [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
           [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
-          [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true"
-          [rowSelection]="'single'" (selectionChanged)="onSelectionChanged($event)">
+          [suppressRowClickSelection]="true" [rowSelection]="'single'" (selectionChanged)="onSelectionChanged($event)">
         </ag-grid-angular>
 
 
@@ -374,3 +424,108 @@
     </div>
   </ng-container>
 </ng-template>
+
+
+
+
+
+<div class="modal fade" id="factorproperty" tabindex="-1" aria-labelledby="factorpropertyLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="factorpropertyLabel">خصوصیت اضافه</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="factor_property_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="EditForm_factor_property" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+                  <!-- 
+                  <div class="container">
+                    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+                      <div class="form-group col-md-3">
+                        <label for="timePicker" class="col-form-label">زمان</label>
+                        <div>
+                          <input placeholder="انتخاب زمان" aria-label="انتخاب زمان" [ngxTimepicker]="timePicker"
+                            formControlName="time" readonly>
+                          <ngx-material-timepicker #timePicker [enableKeyboardInput]="true"></ngx-material-timepicker>
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                  </div> -->
+
+
+                  <!-- <div class="24hr-example">
+                    <input aria-label="24hr format" placeholder="24hr format" readonly [format]="24"
+                      [ngxTimepicker]="fullTime" />
+                    <ngx-material-timepicker #fullTime></ngx-material-timepicker>
+                  </div>
+ -->
+                  <!-- <div class="form-group col-md-3">
+                    <label for="timePicker" class="col-form-label">زمان</label>
+                    <div>
+                      <input placeholder="انتخاب زمان" aria-label="انتخاب زمان" [ngxTimepicker]="timePicker"
+                        formControlName="time" readonly>
+                      <ngx-material-timepicker #timePicker [enableKeyboardInput]="true"></ngx-material-timepicker>
+                    </div>
+                  </div> -->
+
+                  <div class="form-group col-md-12">
+                    <label for="starttime" class="col-form-label">شروع</label>
+                    <input type="text" class="form-control" id="starttime" formControlName="starttime" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label for="Endtime" class="col-form-label">پایان</label>
+                    <input type="text" class="form-control" id="Endtime" formControlName="Endtime" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label for="worktime" class="col-form-label">مدت کار</label>
+                    <input type="text" class="form-control" id="worktime" formControlName="worktime" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label for="Barbary" class="col-form-label">شرح</label>
+                    <input type="text" class="form-control" id="Barbary" formControlName="Barbary" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="factor_property_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="Set_factor_Property()">بروزرسانی</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="loadingresponse" tabindex="-1" aria-labelledby="loadingresponseLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7; border-radius: 10px; border: none;">
+      <div class="modal-body d-flex justify-content-center align-items-center" style="height: 150px;">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="ms-3">لطفا منتظر بمانید</div>
+      </div>
+    </div>
+  </div>
+</div>

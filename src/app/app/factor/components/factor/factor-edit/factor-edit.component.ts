@@ -2,12 +2,14 @@ import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/co
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { FactorWebApiService } from '../../../services/FactorWebApi.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CellActionFactorRowsEdit } from './cell-action-factorrows-edit';
 import Swal from 'sweetalert2';
 import { CellActionGoodEdit } from './cell-action-good-edit';
 import { CellActionFactorCustomerEdit } from './cell-action-factor-customer-edit';
 import { Location } from '@angular/common';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-factor-edit',
@@ -15,6 +17,7 @@ import { Location } from '@angular/common';
 })
 export class FactorEditComponent extends AgGridBaseComponent
   implements OnInit {
+  myForm: FormGroup;
 
   constructor(
     private readonly router: Router,
@@ -22,9 +25,33 @@ export class FactorEditComponent extends AgGridBaseComponent
     private renderer: Renderer2,
     private route: ActivatedRoute,
     private location: Location,
+    private fb: FormBuilder
   ) {
     super();
+    this.myForm = this.fb.group({
+      time: ['']
+    });
   }
+  time: Date = new Date();
+  onSubmit() {
+    console.log(this.myForm.value);
+  }
+
+
+  AddGoodToBasket(GoodCode) {
+    this.Loading_Modal_Response_show()
+    this.GoodForm.patchValue({
+      FactorRef: this.FactorCode,
+      GoodRef: GoodCode,
+    });
+
+    this.repo.WebFactorInsertRow(this.GoodForm.value).subscribe((data: any) => {
+
+      this.GetFactorrows()
+    });
+
+  }
+
 
 
   FactorCode: string = '';
@@ -43,23 +70,40 @@ export class FactorEditComponent extends AgGridBaseComponent
 
   title = 'فاکتور فروش';
 
+  EditForm_factor_property = new FormGroup({
+    starttime: new FormControl(''),
+    Endtime: new FormControl(''),
+    worktime: new FormControl(''),
+    Barbary: new FormControl(''),
+    ObjectRef: new FormControl('0'),
 
+  });
+
+
+
+
+
+  private searchSubject_customer: Subject<string> = new Subject();
+  private searchSubject_Good: Subject<string> = new Subject();
+  ngOnDestroy(): void {
+    this.searchSubject_customer.unsubscribe();
+    this.searchSubject_Good.unsubscribe();
+
+  }
 
   onInputChange_Customer() {
-    if (this.Searchtarget_customer == "") {
-      this.Searchtarget_customer = ""
-    }
-    this.GetCustomer()
 
+    this.searchSubject_customer.next(this.Searchtarget_customer);
   }
+
 
   onInputChange_Good() {
-    if (this.Searchtarget_Good == "") {
-      this.Searchtarget_Good = ""
-    }
-    this.GetGood()
+
+    this.searchSubject_Good.next(this.Searchtarget_Good);
+
 
   }
+
 
 
 
@@ -173,10 +217,28 @@ export class FactorEditComponent extends AgGridBaseComponent
     }
 
 
+
+    this.searchSubject_customer.pipe(
+      debounceTime(1000)  // 1 second debounce time
+    ).subscribe(searchText => {
+      this.GetCustomer();
+    });
+
+
+
+    this.searchSubject_Good.pipe(
+      debounceTime(1000)  // 1 second debounce time
+    ).subscribe(searchText => {
+      this.GetGood();
+    });
+
+
+
   }
 
   GetFactor() {
 
+    this.Loading_Modal_Response_show()
 
 
     this.repo.GetWebFactorSupport(this.FactorCode).subscribe((data: any) => {
@@ -189,6 +251,16 @@ export class FactorEditComponent extends AgGridBaseComponent
         BrokerName: data.Factors[0].BrokerName,
         BrokerRef: data.Factors[0].BrokerRef,
       });
+
+      this.EditForm_factor_property.patchValue({
+        starttime: data.Factors[0].starttime,
+        Endtime: data.Factors[0].Endtime,
+        worktime: data.Factors[0].worktime,
+        Barbary: data.Factors[0].Barbary,
+        ObjectRef: data.Factors[0].FactorCode,
+      });
+
+
     });
 
 
@@ -201,6 +273,7 @@ export class FactorEditComponent extends AgGridBaseComponent
     this.repo.GetWebFactorRowsSupport(this.FactorCode).subscribe((data: any) => {
 
       this.records_factorrows = data.Factors
+      this.Loading_Modal_Response_close()
 
     });
   }
@@ -232,22 +305,14 @@ export class FactorEditComponent extends AgGridBaseComponent
     GoodRef: new FormControl(''),
   });
 
-  AddGoodToBasket(GoodCode) {
-    this.GoodForm.patchValue({
-      FactorRef: this.FactorCode,
-      GoodRef: GoodCode,
-    });
 
-    this.repo.WebFactorInsertRow(this.GoodForm.value).subscribe((data: any) => {
-      this.GetFactorrows()
-    });
-
-  }
 
 
 
 
   Factor_Header_insert() {
+
+    this.Loading_Modal_Response_show()
 
     this.EditForm_Factor_Header.markAllAsTouched();
     if (!this.EditForm_Factor_Header.valid) return;
@@ -511,6 +576,18 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
 
+  Set_factor_Property() {
+
+    this.Loading_Modal_Response_show()
+
+    this.repo.EditFactorProperty(this.EditForm_factor_property.value).subscribe((data: any) => {
+
+      location.reload();
+    });
+
+
+
+  }
 
   property_dialog_show() {
     const modal = this.renderer.selectRootElement('#factorcustomerproperty', true);
@@ -526,6 +603,42 @@ export class FactorEditComponent extends AgGridBaseComponent
     this.renderer.removeAttribute(modal, 'aria-modal');
     this.renderer.removeAttribute(modal, 'role');
   }
+
+
+
+  factor_property_dialog_show() {
+    const modal = this.renderer.selectRootElement('#factorproperty', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  factor_property_dialog_close() {
+    const modal = this.renderer.selectRootElement('#factorproperty', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
+
+  Loading_Modal_Response_show() {
+    const modal = this.renderer.selectRootElement('#loadingresponse', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  Loading_Modal_Response_close() {
+    const modal = this.renderer.selectRootElement('#loadingresponse', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
 
 
 
