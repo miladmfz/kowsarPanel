@@ -25,7 +25,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxMaterialTimepickerModule.setOpts('ar-AE', 'arab')
+    NgxMaterialTimepickerModule
   ],
   exports: [],
   providers: [

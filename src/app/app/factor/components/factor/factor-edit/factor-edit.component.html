@@ -444,57 +444,6 @@
               <div class="card">
                 <div class="card-body row">
 
-                  <!-- 
-                  <div class="container">
-                    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
-                      <div class="form-group col-md-3">
-                        <label for="timePicker" class="col-form-label">زمان</label>
-                        <div>
-                          <input placeholder="انتخاب زمان" aria-label="انتخاب زمان" [ngxTimepicker]="timePicker"
-                            formControlName="time" readonly>
-                          <ngx-material-timepicker #timePicker [enableKeyboardInput]="true"></ngx-material-timepicker>
-                        </div>
-                      </div>
-                      <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                  </div> -->
-
-
-                  <!-- <div class="24hr-example">
-                    <input aria-label="24hr format" placeholder="24hr format" readonly [format]="24"
-                      [ngxTimepicker]="fullTime" />
-                    <ngx-material-timepicker #fullTime></ngx-material-timepicker>
-                  </div>
- -->
-                  <!-- <div class="form-group col-md-3">
-                    <label for="timePicker" class="col-form-label">زمان</label>
-                    <div>
-                      <input placeholder="انتخاب زمان" aria-label="انتخاب زمان" [ngxTimepicker]="timePicker"
-                        formControlName="time" readonly>
-                      <ngx-material-timepicker #timePicker [enableKeyboardInput]="true"></ngx-material-timepicker>
-                    </div>
-                  </div> -->
-
-                  <!-- 
-
-                  <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false" [timeEnable]="true"
-                    [uiHideAfterSelectDate]="true" (change)="onDateChange($event)" dateFormat="YYYY-MM-DD HH:mm:ss">
-                    <input class="form-control" id="datePicker" type="text" [formControl]="dateValue" />
-                  </ng-persian-datepicker>
-
-                  <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false" [timeEnable]="true"
-                    [uiHideAfterSelectDate]="true" dateFormat="YYYY-MM-DD HH:mm:ss" (onSelect)="onDateChange($event)">
-                    <input class="form-control" id="datePicker" type="text" [formControl]="dateValue" />
-                  </ng-persian-datepicker> -->
-
-
-
-                  <!-- <input [ngxMatTimepicker]="picker">
-                  <ngx-mat-timepicker #picker></ngx-mat-timepicker>  
- -->
-
-
-
 
 
 
@@ -505,20 +454,33 @@
 
                   <div class="form-group col-md-12">
                     <label for="starttime" class="col-form-label">شروع</label>
-                    <input type="text" class="form-control" id="starttime" formControlName="starttime" maxlength="100"
-                      autocomplete="off" />
+
+
+                    <ng-persian-datepicker [uiTodayBtnEnable]="false" [uiMonthView]="false" [uiTodayBtnEnable]="false"
+                      [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [timeEnable]="true"
+                      [uiHideAfterSelectDate]="true" (change)="updateStart_Time($event)"
+                      dateFormat="YYYY-MM-DD HH:mm:ss">
+                      <input class="form-control" id="datePickerstart" type="text" [formControl]="Start_Time" />
+                    </ng-persian-datepicker>
+
                   </div>
 
                   <div class="form-group col-md-12">
                     <label for="Endtime" class="col-form-label">پایان</label>
-                    <input type="text" class="form-control" id="Endtime" formControlName="Endtime" maxlength="100"
-                      autocomplete="off" />
+
+
+                    <ng-persian-datepicker [uiTodayBtnEnable]="false" [uiMonthView]="false" [uiTodayBtnEnable]="false"
+                      [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [timeEnable]="true"
+                      [uiHideAfterSelectDate]="true" (change)="updateEnd_Time($event)" dateFormat="YYYY-MM-DD HH:mm:ss">
+                      <input class="form-control" id="datePickerend" type="text" [formControl]="End_Time" />
+                    </ng-persian-datepicker>
                   </div>
+
 
                   <div class="form-group col-md-12">
                     <label for="worktime" class="col-form-label">مدت کار</label>
                     <input type="text" class="form-control" id="worktime" formControlName="worktime" maxlength="100"
-                      autocomplete="off" />
+                      (click)="GetWorkTime()" autocomplete="off" />
                   </div>
 
                   <div class="form-group col-md-12">

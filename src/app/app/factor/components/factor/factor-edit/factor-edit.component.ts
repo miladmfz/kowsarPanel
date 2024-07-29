@@ -18,34 +18,149 @@ import { IDatepickerTheme } from 'ng-persian-datepicker';
 })
 export class FactorEditComponent extends AgGridBaseComponent
   implements OnInit {
+  myForm: FormGroup;
+  Start_Time = new FormControl();
+  End_Time = new FormControl();
+
+  Start_str = new FormControl();
+  End_str = new FormControl();
 
 
 
+  selectedfactor: any
   constructor(
     private readonly router: Router,
     private repo: FactorWebApiService,
     private renderer: Renderer2,
     private route: ActivatedRoute,
     private location: Location,
+    private fb: FormBuilder
   ) {
     super();
-    this.dateValue.valueChanges.subscribe((value) => {
-      this.updateDateTime(value);
+
+
+    this.Start_Time.valueChanges.subscribe((value) => {
+      this.updateStart_Time(value);
     });
-    this.timeValue.valueChanges.subscribe((value) => {
-      this.updateTime(value);
+
+    this.End_Time.valueChanges.subscribe((value) => {
+      this.updateEnd_Time(value);
     });
+
 
   }
 
 
-  dateValue = new FormControl();
 
+
+
+  updateStart_Time(value: any) {
+    const selectedDate = new Date(value);
+    if (isNaN(selectedDate.getTime())) {
+      return;
+    }
+
+    const hours = selectedDate.getHours().toString().padStart(2, '0');
+    const minutes = selectedDate.getMinutes().toString().padStart(2, '0');
+    const timeString = `${hours}:${minutes}`;
+
+    const inputElement = document.getElementById('datePickerstart') as HTMLInputElement;
+    inputElement.value = timeString;
+    this.EditForm_factor_property.patchValue({
+      starttime: timeString,
+
+    });
+  }
+
+
+  updateEnd_Time(value: any) {
+    const selectedDate = new Date(value);
+    if (isNaN(selectedDate.getTime())) {
+      return;
+    }
+
+    const hours = selectedDate.getHours().toString().padStart(2, '0');
+    const minutes = selectedDate.getMinutes().toString().padStart(2, '0');
+    const timeString = `${hours}:${minutes}`;
+
+    const inputElement = document.getElementById('datePickerend') as HTMLInputElement;
+    inputElement.value = timeString;
+    this.EditForm_factor_property.patchValue({
+      Endtime: timeString,
+
+    });
+  }
+
+
+
+
+
+
+
+
+  private timeStringToDate(timeString: string): Date {
+    const [hours, minutes] = timeString.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0); // set hours, minutes, seconds, and milliseconds
+    return date;
+  }
+
+
+
+  GetWorkTime() {
+
+    const start1 = this.timeStringToDate(this.EditForm_factor_property.value.starttime);
+    const end1 = this.timeStringToDate(this.EditForm_factor_property.value.Endtime);
+    let duration = (end1.getTime() - start1.getTime()) / 1000 / 60; // duration in minutes
+    this.EditForm_factor_property.patchValue({
+      worktime: duration + "",
+
+    });
+
+    if (duration < 0) {
+      this.EditForm_factor_property.patchValue({
+        worktime: "0",
+
+      });
+    }
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  time: Date = new Date();
+  onSubmit() {
+    console.log(this.myForm.value);
+  }
   customTheme: Partial<IDatepickerTheme> = {
     selectedBackground: '#D68E3A',
     selectedText: '#FFFFFF',
 
   };
+
 
 
   AddGoodToBasket(GoodCode) {
@@ -60,53 +175,6 @@ export class FactorEditComponent extends AgGridBaseComponent
       this.GetFactorrows()
     });
 
-  }
-
-  timeValue = new FormControl();
-
-
-
-  updateTime(value: any) {
-    // در صورت نیاز به پردازش مقدار انتخاب‌شده
-    console.log("Selected time:", value);
-  }
-
-
-
-  onDateChange(event: any) {
-    const value = event.value; // فرض کنید event.value شامل تاریخ و زمان است
-    this.updateDateTime(value);
-  }
-
-  updateDateTime(value: any) {
-    // Log the received value to the console
-    console.log("Received value:", value);
-
-    // Parse the date using Date constructor
-    const selectedDate = new Date(value);
-
-    // Log the parsed date to the console
-    console.log("Parsed date:", selectedDate);
-
-    // Check if the date is valid
-    if (isNaN(selectedDate.getTime())) {
-      console.error("Invalid date");
-      return;
-    }
-
-    // Extract hours and minutes
-    const hours = selectedDate.getHours().toString().padStart(2, '0');
-    const minutes = selectedDate.getMinutes().toString().padStart(2, '0');
-
-    // Format the time string
-    const timeString = `${hours}:${minutes}`;
-
-    // Update the input value
-    const inputElement = document.getElementById('datePicker') as HTMLInputElement;
-    inputElement.value = timeString;
-
-    // Log the time string to the console
-    console.log("Time string:", timeString);
   }
 
 
@@ -299,6 +367,9 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
     this.repo.GetWebFactorSupport(this.FactorCode).subscribe((data: any) => {
+      this.selectedfactor = data.Factors[0]
+
+
       this.EditForm_Factor_Header.patchValue({
         FactorCode: data.Factors[0].FactorCode,
         FactorDate: data.Factors[0].FactorDate,
@@ -664,6 +735,15 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
   factor_property_dialog_show() {
+
+    const inputElement1 = document.getElementById('datePickerstart') as HTMLInputElement;
+    inputElement1.value = this.selectedfactor.starttime;
+
+    const inputElement2 = document.getElementById('datePickerend') as HTMLInputElement;
+    inputElement2.value = this.selectedfactor.Endtime;
+
+
+
     const modal = this.renderer.selectRootElement('#factorproperty', true);
     this.renderer.addClass(modal, 'show');
     this.renderer.setStyle(modal, 'display', 'block');
