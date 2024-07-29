@@ -10,6 +10,7 @@ import { CellActionFactorCustomerEdit } from './cell-action-factor-customer-edit
 import { Location } from '@angular/common';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { IDatepickerTheme } from 'ng-persian-datepicker';
 
 @Component({
   selector: 'app-factor-edit',
@@ -17,7 +18,8 @@ import { debounceTime } from 'rxjs/operators';
 })
 export class FactorEditComponent extends AgGridBaseComponent
   implements OnInit {
-  myForm: FormGroup;
+
+
 
   constructor(
     private readonly router: Router,
@@ -25,17 +27,25 @@ export class FactorEditComponent extends AgGridBaseComponent
     private renderer: Renderer2,
     private route: ActivatedRoute,
     private location: Location,
-    private fb: FormBuilder
   ) {
     super();
-    this.myForm = this.fb.group({
-      time: ['']
+    this.dateValue.valueChanges.subscribe((value) => {
+      this.updateDateTime(value);
     });
+    this.timeValue.valueChanges.subscribe((value) => {
+      this.updateTime(value);
+    });
+
   }
-  time: Date = new Date();
-  onSubmit() {
-    console.log(this.myForm.value);
-  }
+
+
+  dateValue = new FormControl();
+
+  customTheme: Partial<IDatepickerTheme> = {
+    selectedBackground: '#D68E3A',
+    selectedText: '#FFFFFF',
+
+  };
 
 
   AddGoodToBasket(GoodCode) {
@@ -50,6 +60,53 @@ export class FactorEditComponent extends AgGridBaseComponent
       this.GetFactorrows()
     });
 
+  }
+
+  timeValue = new FormControl();
+
+
+
+  updateTime(value: any) {
+    // در صورت نیاز به پردازش مقدار انتخاب‌شده
+    console.log("Selected time:", value);
+  }
+
+
+
+  onDateChange(event: any) {
+    const value = event.value; // فرض کنید event.value شامل تاریخ و زمان است
+    this.updateDateTime(value);
+  }
+
+  updateDateTime(value: any) {
+    // Log the received value to the console
+    console.log("Received value:", value);
+
+    // Parse the date using Date constructor
+    const selectedDate = new Date(value);
+
+    // Log the parsed date to the console
+    console.log("Parsed date:", selectedDate);
+
+    // Check if the date is valid
+    if (isNaN(selectedDate.getTime())) {
+      console.error("Invalid date");
+      return;
+    }
+
+    // Extract hours and minutes
+    const hours = selectedDate.getHours().toString().padStart(2, '0');
+    const minutes = selectedDate.getMinutes().toString().padStart(2, '0');
+
+    // Format the time string
+    const timeString = `${hours}:${minutes}`;
+
+    // Update the input value
+    const inputElement = document.getElementById('datePicker') as HTMLInputElement;
+    inputElement.value = timeString;
+
+    // Log the time string to the console
+    console.log("Time string:", timeString);
   }
 
 

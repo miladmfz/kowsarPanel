@@ -22,6 +22,7 @@ export class AutletterInsertComponent implements OnInit {
   ToDayDate: string = "";
 
   Title_Lookup: Base_Lookup[] = [
+    { id: "ارتباط با همکاران", name: "ارتباط با همکاران" },
     { id: "پشتیبانی فنی", name: "پشتیبانی فنی" },
     { id: "امور مالی و تمدید پشتیبانی", name: "امور مالی و تمدید پشتیبانی" },
     { id: "حسابداری", name: "حسابداری" },

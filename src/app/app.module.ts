@@ -12,6 +12,7 @@ import {
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { AuthConfigModule } from './auth/auth-config.module';
 import { AppRoutingModule } from './app-routing.module';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,6 +25,7 @@ import { AppRoutingModule } from './app-routing.module';
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxMaterialTimepickerModule.setOpts('ar-AE', 'arab')
   ],
   exports: [],
   providers: [
