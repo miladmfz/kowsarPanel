@@ -11,11 +11,11 @@ declare var $: any;
     <i class="  fas fa-shopping-cart"></i>
   </a>
   </span>
-  <span   (click)="Edit_Customer_Property()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="خصوصیت  ">
+  <!-- <span   (click)="Edit_Customer_Property()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="خصوصیت  ">
   <a >
     <i class=" far fa-file-alt"></i>
   </a>
-  </span>
+  </span> -->
   `,
 
 })

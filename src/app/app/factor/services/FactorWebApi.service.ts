@@ -91,6 +91,19 @@ export class FactorWebApiService {
   }
 
 
+
+  Support_StartFactorTime(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "Support_StartFactorTime", command)
+  }
+
+  Support_EndFactorTime(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "Support_EndFactorTime", command)
+  }
+
+  Support_ExplainFactor(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "Support_ExplainFactor", command)
+  }
+
   // GetProperty(Where: string): Observable<any[]> {
   //   const params = new HttpParams().append('Where', Where)
   //   return this.client.get<any[]>(this.kowsarWebUrl + "GetProperty", { params: params })

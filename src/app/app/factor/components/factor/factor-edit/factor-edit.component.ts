@@ -39,13 +39,13 @@ export class FactorEditComponent extends AgGridBaseComponent
     super();
 
 
-    this.Start_Time.valueChanges.subscribe((value) => {
-      this.updateStart_Time(value);
-    });
+    // this.Start_Time.valueChanges.subscribe((value) => {
+    //   this.updateStart_Time(value);
+    // });
 
-    this.End_Time.valueChanges.subscribe((value) => {
-      this.updateEnd_Time(value);
-    });
+    // this.End_Time.valueChanges.subscribe((value) => {
+    //   this.updateEnd_Time(value);
+    // });
 
 
   }
@@ -54,42 +54,42 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
 
-  updateStart_Time(value: any) {
-    const selectedDate = new Date(value);
-    if (isNaN(selectedDate.getTime())) {
-      return;
-    }
+  // updateStart_Time(value: any) {
+  //   const selectedDate = new Date(value);
+  //   if (isNaN(selectedDate.getTime())) {
+  //     return;
+  //   }
 
-    const hours = selectedDate.getHours().toString().padStart(2, '0');
-    const minutes = selectedDate.getMinutes().toString().padStart(2, '0');
-    const timeString = `${hours}:${minutes}`;
+  //   const hours = selectedDate.getHours().toString().padStart(2, '0');
+  //   const minutes = selectedDate.getMinutes().toString().padStart(2, '0');
+  //   const timeString = `${hours}:${minutes}`;
 
-    const inputElement = document.getElementById('datePickerstart') as HTMLInputElement;
-    inputElement.value = timeString;
-    this.EditForm_factor_property.patchValue({
-      starttime: timeString,
+  //   const inputElement = document.getElementById('datePickerstart') as HTMLInputElement;
+  //   inputElement.value = timeString;
+  //   this.EditForm_factor_property.patchValue({
+  //     starttime: timeString,
 
-    });
-  }
+  //   });
+  // }
 
 
-  updateEnd_Time(value: any) {
-    const selectedDate = new Date(value);
-    if (isNaN(selectedDate.getTime())) {
-      return;
-    }
+  // updateEnd_Time(value: any) {
+  //   const selectedDate = new Date(value);
+  //   if (isNaN(selectedDate.getTime())) {
+  //     return;
+  //   }
 
-    const hours = selectedDate.getHours().toString().padStart(2, '0');
-    const minutes = selectedDate.getMinutes().toString().padStart(2, '0');
-    const timeString = `${hours}:${minutes}`;
+  //   const hours = selectedDate.getHours().toString().padStart(2, '0');
+  //   const minutes = selectedDate.getMinutes().toString().padStart(2, '0');
+  //   const timeString = `${hours}:${minutes}`;
 
-    const inputElement = document.getElementById('datePickerend') as HTMLInputElement;
-    inputElement.value = timeString;
-    this.EditForm_factor_property.patchValue({
-      Endtime: timeString,
+  //   const inputElement = document.getElementById('datePickerend') as HTMLInputElement;
+  //   inputElement.value = timeString;
+  //   this.EditForm_factor_property.patchValue({
+  //     Endtime: timeString,
 
-    });
-  }
+  //   });
+  // }
 
 
 
@@ -440,10 +440,11 @@ export class FactorEditComponent extends AgGridBaseComponent
 
   Factor_Header_insert() {
 
-    this.Loading_Modal_Response_show()
+
 
     this.EditForm_Factor_Header.markAllAsTouched();
     if (!this.EditForm_Factor_Header.valid) return;
+    this.Loading_Modal_Response_show()
 
     this.EditForm_Factor_Header.patchValue({
       BrokerRef: sessionStorage.getItem("BrokerCode")
@@ -460,7 +461,14 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
 
+  logCurrentTime(): void {
+    const currentTime = new Date();
+    const hours = currentTime.getHours().toString().padStart(2, '0');
+    const minutes = currentTime.getMinutes().toString().padStart(2, '0');
+    const timeString = `${hours}:${minutes}`;
 
+    console.log('Correct time:', timeString);
+  }
 
 
 
@@ -736,11 +744,11 @@ export class FactorEditComponent extends AgGridBaseComponent
 
   factor_property_dialog_show() {
 
-    const inputElement1 = document.getElementById('datePickerstart') as HTMLInputElement;
-    inputElement1.value = this.selectedfactor.starttime;
+    // const inputElement1 = document.getElementById('datePickerstart') as HTMLInputElement;
+    // inputElement1.value = this.selectedfactor.starttime;
 
-    const inputElement2 = document.getElementById('datePickerend') as HTMLInputElement;
-    inputElement2.value = this.selectedfactor.Endtime;
+    // const inputElement2 = document.getElementById('datePickerend') as HTMLInputElement;
+    // inputElement2.value = this.selectedfactor.Endtime;
 
 
 

@@ -14,7 +14,6 @@ import { CellActionFactorList } from './components/factor/factor-list/cell-actio
 import { CellActionFactorRowsEdit } from './components/factor/factor-edit/cell-action-factorrows-edit';
 import { CellActionGoodEdit } from './components/factor/factor-edit/cell-action-good-edit';
 import { CellActionFactorCustomerEdit } from './components/factor/factor-edit/cell-action-factor-customer-edit';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 
 @NgModule({
@@ -25,7 +24,6 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
     NgPersianDatepickerModule,
     ReactiveFormsModule,
     AgGridModule,
-    NgxMaterialTimepickerModule.setOpts('ar-AE', 'arab'),
   ],
   declarations: [
 
