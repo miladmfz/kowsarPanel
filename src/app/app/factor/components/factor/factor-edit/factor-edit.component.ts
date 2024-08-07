@@ -19,11 +19,6 @@ import { IDatepickerTheme } from 'ng-persian-datepicker';
 export class FactorEditComponent extends AgGridBaseComponent
   implements OnInit {
   myForm: FormGroup;
-  Start_Time = new FormControl();
-  End_Time = new FormControl();
-
-  Start_str = new FormControl();
-  End_str = new FormControl();
 
 
 
@@ -39,57 +34,7 @@ export class FactorEditComponent extends AgGridBaseComponent
     super();
 
 
-    // this.Start_Time.valueChanges.subscribe((value) => {
-    //   this.updateStart_Time(value);
-    // });
-
-    // this.End_Time.valueChanges.subscribe((value) => {
-    //   this.updateEnd_Time(value);
-    // });
-
-
   }
-
-
-
-
-
-  // updateStart_Time(value: any) {
-  //   const selectedDate = new Date(value);
-  //   if (isNaN(selectedDate.getTime())) {
-  //     return;
-  //   }
-
-  //   const hours = selectedDate.getHours().toString().padStart(2, '0');
-  //   const minutes = selectedDate.getMinutes().toString().padStart(2, '0');
-  //   const timeString = `${hours}:${minutes}`;
-
-  //   const inputElement = document.getElementById('datePickerstart') as HTMLInputElement;
-  //   inputElement.value = timeString;
-  //   this.EditForm_factor_property.patchValue({
-  //     starttime: timeString,
-
-  //   });
-  // }
-
-
-  // updateEnd_Time(value: any) {
-  //   const selectedDate = new Date(value);
-  //   if (isNaN(selectedDate.getTime())) {
-  //     return;
-  //   }
-
-  //   const hours = selectedDate.getHours().toString().padStart(2, '0');
-  //   const minutes = selectedDate.getMinutes().toString().padStart(2, '0');
-  //   const timeString = `${hours}:${minutes}`;
-
-  //   const inputElement = document.getElementById('datePickerend') as HTMLInputElement;
-  //   inputElement.value = timeString;
-  //   this.EditForm_factor_property.patchValue({
-  //     Endtime: timeString,
-
-  //   });
-  // }
 
 
 
@@ -107,7 +52,43 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
 
-  GetWorkTime() {
+
+
+  Set_StartFactorTime() {
+    this.Loading_Modal_Response_show()
+
+    const currentTime = new Date();
+    const hours = currentTime.getHours().toString().padStart(2, '0');
+    const minutes = currentTime.getMinutes().toString().padStart(2, '0');
+    const timeString = `${hours}:${minutes}`;
+
+
+    this.EditForm_factor_property.patchValue({
+      starttime: timeString,
+
+    });
+
+    this.repo.Support_StartFactorTime(this.EditForm_factor_property.value).subscribe((data: any) => {
+
+      location.reload();
+    });
+
+
+  }
+
+
+  Set_EndFactorTime() {
+    this.Loading_Modal_Response_show()
+
+    const currentTime = new Date();
+    const hours = currentTime.getHours().toString().padStart(2, '0');
+    const minutes = currentTime.getMinutes().toString().padStart(2, '0');
+    const timeString = `${hours}:${minutes}`;
+
+    this.EditForm_factor_property.patchValue({
+      Endtime: timeString,
+
+    });
 
     const start1 = this.timeStringToDate(this.EditForm_factor_property.value.starttime);
     const end1 = this.timeStringToDate(this.EditForm_factor_property.value.Endtime);
@@ -124,12 +105,29 @@ export class FactorEditComponent extends AgGridBaseComponent
       });
     }
 
+
+    this.repo.Support_EndFactorTime(this.EditForm_factor_property.value).subscribe((data: any) => {
+
+      location.reload();
+    });
+
+
+
   }
 
 
+  Set_ExplianFactorTime() {
+
+    this.Loading_Modal_Response_show()
+
+    this.repo.Support_ExplainFactor(this.EditForm_factor_property.value).subscribe((data: any) => {
+
+      location.reload();
+    });
 
 
 
+  }
 
 
 
@@ -177,6 +175,9 @@ export class FactorEditComponent extends AgGridBaseComponent
 
   }
 
+
+  Start_FactorTime: string = '';
+  End_FactorTime: string = '';
 
 
   FactorCode: string = '';
@@ -389,6 +390,17 @@ export class FactorEditComponent extends AgGridBaseComponent
       });
 
 
+      this.Start_FactorTime = data.Factors[0].starttime
+      this.End_FactorTime = data.Factors[0].Endtime
+
+
+
+
+      if (this.Start_FactorTime.length == 0) {
+        this.Set_StartFactorTime()
+      }
+
+
     });
 
 
@@ -461,14 +473,6 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
 
-  logCurrentTime(): void {
-    const currentTime = new Date();
-    const hours = currentTime.getHours().toString().padStart(2, '0');
-    const minutes = currentTime.getMinutes().toString().padStart(2, '0');
-    const timeString = `${hours}:${minutes}`;
-
-    console.log('Correct time:', timeString);
-  }
 
 
 
@@ -712,18 +716,10 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
 
-  Set_factor_Property() {
-
-    this.Loading_Modal_Response_show()
-
-    this.repo.EditFactorProperty(this.EditForm_factor_property.value).subscribe((data: any) => {
-
-      location.reload();
-    });
 
 
 
-  }
+
 
   property_dialog_show() {
     const modal = this.renderer.selectRootElement('#factorcustomerproperty', true);

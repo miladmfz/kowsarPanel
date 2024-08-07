@@ -14,13 +14,13 @@
                   <div class="card">
                     <div class="card-body row">
 
-                      <div class="form-group col-md-2">
+                      <div class="form-group col-md-4">
                         <label for="FactorDate" class="col-form-label"> تاریخ فاکتور </label>
                         <input type="text" class="form-control" id="FactorDate" formControlName="FactorDate"
                           maxlength="100" autocomplete="off" readonly />
                       </div>
 
-                      <div class=" form-group col-md-2">
+                      <div class=" form-group col-md-4">
                         <label for="CustomerCode" class="col-form-label">کد مشتری </label>
 
                         <ng-container *ngIf="FactorCode.length>0">
@@ -58,18 +58,19 @@
                       </div>
 
                       <div class="form-group col-md-4">
-                        <label for="CustName" class="col-form-label">نام مشتری</label>
-                        <input type="text" class="form-control" id="CustName" formControlName="CustName" maxlength="100"
-                          autocomplete="off" readonly />
-                      </div>
-                      <div class="form-group col-md-3">
                         <label for="BrokerName" class="col-form-label">نام پشتیبان</label>
                         <input type="text" class="form-control" id="BrokerName" formControlName="BrokerName"
                           maxlength="100" autocomplete="off" readonly />
                       </div>
+                      <div class="form-group col-md-4">
+                        <label for="CustName" class="col-form-label">نام مشتری</label>
+                        <input type="text" class="form-control" id="CustName" formControlName="CustName" maxlength="100"
+                          autocomplete="off" readonly />
+                      </div>
+
 
                       <ng-container *ngIf="FactorCode.length==0">
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-8">
                           <label for="Explain" class="col-form-label">توضیحات</label>
                           <input type="text" class="form-control" id="Explain" formControlName="Explain" maxlength="100"
                             autocomplete="off" />
@@ -77,7 +78,7 @@
                       </ng-container>
 
                       <ng-container *ngIf="FactorCode.length>0">
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-8">
                           <label for="Explain" class="col-form-label">توضیحات</label>
                           <input type="text" class="form-control" id="Explain" formControlName="Explain" maxlength="100"
                             autocomplete="off" readonly />
@@ -96,55 +97,46 @@
                                 <div class="card-body row">
 
 
-                                  <div class="form-group col-md-2">
-                                    <label for="starttime" class="col-form-label"> .</label>
-                                    <a (click)="GoBack()" type="button"
-                                      class="btn btn-info waves-effect waves-light m-1">
-                                      <span class=" btn-label"><i class="fas fa-arrow"></i></span>شروع کار
-                                    </a>
-                                  </div>
 
 
-                                  <div class="form-group col-md-2">
-                                    <label for="starttime" class="col-form-label"> .</label>
+                                  <ng-container *ngIf="Start_FactorTime.length>1">
+                                    <div class="form-group col-md-3">
+                                      <label for="starttime" class="col-form-label">شروع</label>
+                                      <input type="text" class="form-control" id="starttime" formControlName="starttime"
+                                        maxlength="100" autocomplete="off" readonly />
+                                    </div>
 
-                                    <a (click)="GoBack()" type="button"
-                                      class="btn btn-info waves-effect waves-light m-1">
-                                      <span class=" btn-label"><i class="fas fa-arrow"></i></span>پایان گار
-                                    </a>
-                                  </div>
+                                    <div class="form-group col-md-3">
+                                      <label for="Endtime" class="col-form-label">پایان</label>
+                                      <input type="text" class="form-control" id="Endtime" formControlName="Endtime"
+                                        maxlength="100" autocomplete="off" readonly />
+                                    </div>
 
-                                  <div class="form-group col-md-2">
-                                    <label for="starttime" class="col-form-label">شروع</label>
-                                    <input type="text" class="form-control" id="starttime" formControlName="starttime"
-                                      maxlength="100" autocomplete="off" readonly />
-                                  </div>
+                                    <div class="form-group col-md-3">
+                                      <label for="worktime" class="col-form-label">مدت </label>
+                                      <input type="text" class="form-control" id="worktime" formControlName="worktime"
+                                        maxlength="100" autocomplete="off" readonly />
+                                    </div>
 
-                                  <div class="form-group col-md-2">
-                                    <label for="Endtime" class="col-form-label">پایان</label>
-                                    <input type="text" class="form-control" id="Endtime" formControlName="Endtime"
-                                      maxlength="100" autocomplete="off" readonly />
-                                  </div>
 
-                                  <div class="form-group col-md-2">
-                                    <label for="worktime" class="col-form-label">مدت کار</label>
-                                    <input type="text" class="form-control" id="worktime" formControlName="worktime"
-                                      maxlength="100" autocomplete="off" readonly />
-                                  </div>
+                                    <div class="form-group col-md-9">
+                                      <label for="Barbary" class="col-form-label">شرح</label>
+                                      <input type="text" class="form-control" id="Barbary" formControlName="Barbary"
+                                        maxlength="100" autocomplete="off" readonly />
+                                    </div>
 
-                                  <div class="form-group col-md-3">
-                                    <label for="Barbary" class="col-form-label">.</label>
+                                    <div class="form-group col-md-3">
+                                      <label for="Barbary" class="col-form-label">.</label>
 
-                                    <a type="button" class="form-control btn btn-primary waves-effect waves-light "
-                                      (click)="factor_property_dialog_show()">
-                                      <span class="btn-label"><i class="fas fa-file-alt"></i>
-                                      </span>اصلاح اطلاعات </a>
-                                  </div>
-                                  <div class="form-group col-md-9">
-                                    <label for="Barbary" class="col-form-label">شرح</label>
-                                    <input type="text" class="form-control" id="Barbary" formControlName="Barbary"
-                                      maxlength="100" autocomplete="off" readonly />
-                                  </div>
+                                      <a type="button" class="form-control btn btn-primary waves-effect waves-light "
+                                        (click)="factor_property_dialog_show()">
+                                        <span class="btn-label"><i class="fas fa-file-alt"></i>
+                                        </span>اصلاح</a>
+                                    </div>
+
+                                  </ng-container>
+
+
 
 
 
@@ -167,6 +159,24 @@
 
 
                           <ng-container *ngIf="FactorCode.length>0">
+
+
+                            <!-- <ng-container *ngIf="Start_FactorTime.length==0">
+                              <a (click)="Set_StartFactorTime()" type="button"
+                                class="btn btn-purple waves-effect waves-light m-1">
+                                <span class=" btn-label"><i class="fas fa-arrow"></i></span>شروع کار
+                              </a>
+                            </ng-container> -->
+
+                            <ng-container *ngIf="Start_FactorTime.length>1">
+                              <ng-container *ngIf="End_FactorTime.length==0">
+                                <a (click)="Set_EndFactorTime()" type="button"
+                                  class="btn btn-purple waves-effect waves-light m-1">
+                                  <span class=" btn-label"><i class="fas fa-arrow"></i></span>پایان گار
+                                </a>
+                              </ng-container>
+                            </ng-container>
+
 
                             <a type="button" class="btn btn-success waves-effect waves-light "
                               [routerLink]="['/factor/factor-edit']">
@@ -531,7 +541,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
           (click)="factor_property_dialog_close()">بستن</button>
-        <button type="button" class="btn btn-primary" (click)="Set_factor_Property()">بروزرسانی</button>
+        <button type="button" class="btn btn-primary" (click)="Set_ExplianFactorTime()">بروزرسانی</button>
       </div>
     </div>
   </div>
