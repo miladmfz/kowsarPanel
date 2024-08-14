@@ -15,10 +15,9 @@ export class DownloadWebApiService {
 
   headers = new HttpHeaders()
 
-    .set('content-type', 'application/json')
+    .set('Content-Type', 'application/json')
     .set('Access-Control-Allow-Origin', '*')
-    .set('UserGuid', sessionStorage.getItem('UserGuid') + "")
-
+    .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
 
 
 
@@ -27,13 +26,13 @@ export class DownloadWebApiService {
 
 
   GetTodeyFromServer(): Observable<any[]> {
-    return this.client.get<any[]>(this.baseUrl + "GetTodeyFromServer")
+    return this.client.get<any[]>(this.baseUrl + "GetTodeyFromServer", { headers: this.headers })
   }
 
 
   GetAttachFile(Code: string): Observable<any[]> {
     const params = new HttpParams().append('Code', Code)
-    return this.client.get<any[]>(this.baseUrl + "GetAttachFile", { params: params })
+    return this.client.get<any[]>(this.baseUrl + "GetAttachFile", { headers: this.headers, params: params })
   }
 
   downloadFile(code: string, classname: string, ObjectRef: string): Observable<Blob> {
@@ -50,12 +49,12 @@ export class DownloadWebApiService {
 
 
   KowsarAttachFile(SearchTarget: string): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "KowsarAttachFile", { SearchTarget })
+    return this.client.post<any[]>(this.baseUrl + "KowsarAttachFile", { SearchTarget }, { headers: this.headers })
   }
 
 
   SetAttachFile(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "SetAttachFile", command)
+    return this.client.post<any[]>(this.baseUrl + "SetAttachFile", command, { headers: this.headers })
   }
 
 

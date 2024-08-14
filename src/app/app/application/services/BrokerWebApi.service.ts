@@ -12,7 +12,7 @@ export class BrokerWebApiService {
     constructor(private client: HttpClient) { }
     headers = new HttpHeaders()
 
-        .set('content-type', 'application/json')
+        .set('Content-Type', 'application/json')
         .set('Access-Control-Allow-Origin', '*')
         .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
 
@@ -27,51 +27,51 @@ export class BrokerWebApiService {
     //------------------------------------------------
 
     UploadImage(ObjectCode: string, image: string): Observable<any[]> {
-        return this.client.post<any[]>(this.baseUrl + "UploadImage", { ObjectCode, image });
+        return this.client.post<any[]>(this.baseUrl + "UploadImage", { ObjectCode, image }, { headers: this.headers });
     }
 
 
     GetBrokers(): Observable<any[]> {
 
-        return this.client.get<any[]>(this.baseUrl + "GetBrokers");
+        return this.client.get<any[]>(this.baseUrl + "GetBrokers", { headers: this.headers });
     }
 
 
 
     GetBrokerDetail(BrokerCode: string): Observable<any[]> {
         const params = new HttpParams().append('BrokerCode', BrokerCode)
-        return this.client.get<any[]>(this.baseUrl + "GetBrokerDetail", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "GetBrokerDetail", { headers: this.headers, params: params })
     }
 
 
     GetPrefactorBroker(BrokerCode: string, Days: string): Observable<any[]> {
         const params = new HttpParams().append('BrokerCode', BrokerCode).append('Days', Days)
-        return this.client.get<any[]>(this.baseUrl + "GetPrefactorBroker", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "GetPrefactorBroker", { headers: this.headers, params: params })
     }
 
 
 
     GetCDCustName(BrokerCode: string, Days: string): Observable<any[]> {
         const params = new HttpParams().append('BrokerCode', BrokerCode).append('Days', Days)
-        return this.client.get<any[]>(this.baseUrl + "GetCDCustName", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "GetCDCustName", { headers: this.headers, params: params })
     }
 
 
 
     GetCDPreFactorDate(BrokerCode: string, Days: string): Observable<any[]> {
         const params = new HttpParams().append('BrokerCode', BrokerCode).append('Days', Days)
-        return this.client.get<any[]>(this.baseUrl + "GetCDPreFactorDate", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "GetCDPreFactorDate", { headers: this.headers, params: params })
     }
 
     CreateAppBroker(KowsarDb: string, KowsarImage: string): Observable<any[]> {
         const params = new HttpParams().append('KowsarDb', KowsarDb).append('KowsarImage', KowsarImage)
-        return this.client.get<any[]>(this.baseUrl + "CreateAppBroker", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "CreateAppBroker", { headers: this.headers, params: params })
     }
 
 
     BrokerCustomerRefresh(): Observable<any[]> {
         const params = new HttpParams()
-        return this.client.get<any[]>(this.baseUrl + "BrokerCustomerRefresh");
+        return this.client.get<any[]>(this.baseUrl + "BrokerCustomerRefresh", { headers: this.headers });
     }
 
 
@@ -81,19 +81,19 @@ export class BrokerWebApiService {
 
     BasketColumnCard(Where: string, AppType: string): Observable<any[]> {
         const params = new HttpParams().append('Where', Where).append('AppType', AppType)
-        return this.client.get<any[]>(this.baseUrl + "BasketColumnCard", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "BasketColumnCard", { headers: this.headers, params: params })
     }
 
 
     Web_GetDbsetupObject(Where: string): Observable<any[]> {
         const params = new HttpParams().append('Where', Where)
-        return this.client.get<any[]>(this.baseUrl + "Web_GetDbsetupObject", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "Web_GetDbsetupObject", { headers: this.headers, params: params })
     }
 
 
     CreateBasketColumn(Where: string): Observable<any[]> {
         const params = new HttpParams().append('Where', Where)
-        return this.client.get<any[]>(this.baseUrl + "CreateBasketColumn", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "CreateBasketColumn", { headers: this.headers, params: params })
     }
 
 
@@ -101,17 +101,17 @@ export class BrokerWebApiService {
 
     GetBasketColumnList(AppType: string): Observable<any[]> {
         const params = new HttpParams().append('AppType', AppType)
-        return this.client.get<any[]>(this.baseUrl + "GetBasketColumnList", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "GetBasketColumnList", { headers: this.headers, params: params })
     }
 
 
     GetGoodType(): Observable<any[]> {
         const params = new HttpParams()
-        return this.client.get<any[]>(this.baseUrl + "GetGoodType");
+        return this.client.get<any[]>(this.baseUrl + "GetGoodType", { headers: this.headers });
     }
     GetProperty(Where: string): Observable<any[]> {
         const params = new HttpParams().append('Where', Where)
-        return this.client.get<any[]>(this.baseUrl + "GetProperty", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "GetProperty", { headers: this.headers, params: params })
     }
 
     InsertSingleColumn(
@@ -128,7 +128,7 @@ export class BrokerWebApiService {
             .append('ObjectType', ObjectType).append('DetailVisible', DetailVisible)
             .append('ListVisible', ListVisible).append('SearchVisible', SearchVisible)
             .append('ColumnType', ColumnType).append('AppType', AppType)
-        return this.client.get<any[]>(this.baseUrl + "InsertSingleColumn", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "InsertSingleColumn", { headers: this.headers, params: params })
     }
 
 
@@ -136,18 +136,18 @@ export class BrokerWebApiService {
 
     UpdateDbSetup(DataValue: string, KeyId: string): Observable<any[]> {
         const params = new HttpParams().append('DataValue', DataValue).append('KeyId', KeyId)
-        return this.client.get<any[]>(this.baseUrl + "UpdateDbSetup", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "UpdateDbSetup", { headers: this.headers, params: params })
     }
 
 
 
     GetAppPrinter(AppType: string): Observable<any[]> {
         const params = new HttpParams().append('AppType', AppType)
-        return this.client.get<any[]>(this.baseUrl + "GetAppPrinter", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "GetAppPrinter", { headers: this.headers, params: params })
     }
 
     UpdatePrinter(command): Observable<any[]> {
-        return this.client.post<any[]>(this.baseUrl + "UpdatePrinter", { command });
+        return this.client.post<any[]>(this.baseUrl + "UpdatePrinter", command, { headers: this.headers });
 
     }
 
@@ -173,28 +173,28 @@ export class BrokerWebApiService {
 
     OcrFactorList(SearchTarget: string): Observable<any[]> {
         const params = new HttpParams().append('SearchTarget', SearchTarget)
-        return this.client.get<any[]>(this.baseUrl + "OcrFactorList", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "OcrFactorList", { headers: this.headers, params: params })
     }
     ocrGetFactorDetail(AppOCRFactorCode: string): Observable<any[]> {
         const params = new HttpParams().append('AppOCRFactorCode', AppOCRFactorCode)
-        return this.client.get<any[]>(this.baseUrl + "ocrGetFactorDetail", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "ocrGetFactorDetail", { headers: this.headers, params: params })
     }
 
     ExitDelivery(AppOCRFactorCode: string): Observable<any[]> {
         const params = new HttpParams().append('AppOCRFactorCode', AppOCRFactorCode)
-        return this.client.get<any[]>(this.baseUrl + "ExitDelivery", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "ExitDelivery", { headers: this.headers, params: params })
     }
 
 
 
     SendImageToServer(command): Observable<any[]> {
-        return this.client.post<any[]>(this.baseUrl + "UploadImage", command)
+        return this.client.post<any[]>(this.baseUrl + "UploadImage", command, { headers: this.headers })
     }
 
 
     GetImageFromServer(ObjectRef: string): Observable<any[]> {
         const params = new HttpParams().append('pixelScale', '300').append('ClassName', 'Central').append('ObjectRef', ObjectRef)
-        return this.client.get<any[]>(this.baseUrl + "GetWebImagess", { params: params })
+        return this.client.get<any[]>(this.baseUrl + "GetWebImagess", { headers: this.headers, params: params })
 
     }
 

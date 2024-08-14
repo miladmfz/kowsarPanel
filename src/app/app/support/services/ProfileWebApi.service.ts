@@ -15,9 +15,9 @@ export class ProfileWebApiService {
 
   headers = new HttpHeaders()
 
-    .set('content-type', 'application/json')
+    .set('Content-Type', 'application/json')
     .set('Access-Control-Allow-Origin', '*')
-    .set('UserGuid', sessionStorage.getItem('UserGuid') + "")
+    .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
 
 
 
@@ -28,12 +28,12 @@ export class ProfileWebApiService {
 
   GetKowsarPersonInfo(PersonInfoCode: string): Observable<any[]> {
     const params = new HttpParams().append('PersonInfoCode', PersonInfoCode)
-    return this.client.get<any[]>(this.baseUrl + "GetKowsarPersonInfo", { params: params })
+    return this.client.get<any[]>(this.baseUrl + "GetKowsarPersonInfo", { headers: this.headers, params: params })
   }
 
 
   UpdatePersonInfo(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "UpdatePersonInfo", command)
+    return this.client.post<any[]>(this.baseUrl + "UpdatePersonInfo", command, { headers: this.headers })
   }
 
 

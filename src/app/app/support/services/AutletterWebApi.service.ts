@@ -14,7 +14,7 @@ export class AutletterWebApiService {
 
   headers = new HttpHeaders()
 
-    .set('content-type', 'application/json')
+    .set('Content-Type', 'application/json')
     .set('Access-Control-Allow-Origin', '*')
     .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
 
@@ -30,7 +30,7 @@ export class AutletterWebApiService {
 
   GetLetterList(command): Observable<any[]> {
 
-    return this.client.post<any[]>(this.baseUrl + "GetLetterList", command)
+    return this.client.post<any[]>(this.baseUrl + "GetLetterList", command, { headers: this.headers })
 
   }
 
@@ -38,7 +38,7 @@ export class AutletterWebApiService {
     PersonInfoCode: string
   ): Observable<any[]> {
     const params = new HttpParams().append('PersonInfoCode', PersonInfoCode)
-    return this.client.get<any[]>(this.baseUrl + "GetLetterFromPersoninfo", { params: params })
+    return this.client.get<any[]>(this.baseUrl + "GetLetterFromPersoninfo", { headers: this.headers, params: params })
   }
 
 
@@ -48,21 +48,21 @@ export class AutletterWebApiService {
     Description: string,
     CentralRef: string
   ): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "LetterInsert", { LetterDate, title, Description, CentralRef })
+    return this.client.post<any[]>(this.baseUrl + "LetterInsert", { LetterDate, title, Description, CentralRef }, { headers: this.headers })
   }
 
   GetLetterRowList(
     LetterRef: string
   ): Observable<any[]> {
     const params = new HttpParams().append('LetterRef', LetterRef)
-    return this.client.get<any[]>(this.baseUrl + "GetLetterRowList", { params: params })
+    return this.client.get<any[]>(this.baseUrl + "GetLetterRowList", { headers: this.headers, params: params })
   }
 
 
   GetCentralUser(
   ): Observable<any[]> {
     const params = new HttpParams()
-    return this.client.get<any[]>(this.baseUrl + "GetCentralUser");
+    return this.client.get<any[]>(this.baseUrl + "GetCentralUser", { headers: this.headers });
   }
 
 
@@ -76,7 +76,7 @@ export class AutletterWebApiService {
     CreatorCentral: string,
     ExecuterCentral: string
   ): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "AutLetterRowInsert", { LetterRef, LetterDate, Description, CreatorCentral, ExecuterCentral })
+    return this.client.post<any[]>(this.baseUrl + "AutLetterRowInsert", { LetterRef, LetterDate, Description, CreatorCentral, ExecuterCentral }, { headers: this.headers })
   }
 
 
@@ -85,12 +85,12 @@ export class AutletterWebApiService {
     LetterRef: string
   ): Observable<any[]> {
     const params = new HttpParams().append('LetterRef', LetterRef)
-    return this.client.get<any[]>(this.baseUrl + "GetAutConversation", { params: params })
+    return this.client.get<any[]>(this.baseUrl + "GetAutConversation", { headers: this.headers, params: params })
   }
 
 
   SetAlarmOff(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "SetAlarmOff", command)
+    return this.client.post<any[]>(this.baseUrl + "SetAlarmOff", command, { headers: this.headers })
   }
 
 
@@ -100,31 +100,31 @@ export class AutletterWebApiService {
     , ConversationText: string
   ): Observable<any[]> {
     const params = new HttpParams().append('LetterRef', LetterRef).append('CentralRef', CentralRef).append('ConversationText', ConversationText)
-    return this.client.post<any[]>(this.baseUrl + "Conversation_Insert", { LetterRef, CentralRef, ConversationText })
+    return this.client.post<any[]>(this.baseUrl + "Conversation_Insert", { LetterRef, CentralRef, ConversationText }, { headers: this.headers })
   }
 
 
 
   SendImageToServer(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "Conversation_UploadImage", command)
+    return this.client.post<any[]>(this.baseUrl + "Conversation_UploadImage", command, { headers: this.headers })
   }
 
 
 
   GetImageFromServer(ObjectRef: string): Observable<any[]> {
     const params = new HttpParams().append('pixelScale', '1000').append('ClassName', 'Aut').append('ObjectRef', ObjectRef)
-    return this.client.get<any[]>(this.baseUrl + "GetWebImagess", { params: params })
+    return this.client.get<any[]>(this.baseUrl + "GetWebImagess", { headers: this.headers, params: params })
 
   }
 
 
   SetAttachFile(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "SetAttachFile", command)
+    return this.client.post<any[]>(this.baseUrl + "SetAttachFile", command, { headers: this.headers })
   }
 
 
   GetAttachFileList(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "GetAttachFileList", command)
+    return this.client.post<any[]>(this.baseUrl + "GetAttachFileList", command, { headers: this.headers })
   }
 
   downloadFile(code: string, classname: string, ObjectRef: string): Observable<Blob> {

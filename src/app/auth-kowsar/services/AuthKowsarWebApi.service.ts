@@ -15,9 +15,9 @@ export class AuthKowsarWebApiService {
 
   headers = new HttpHeaders()
 
-    .set('content-type', 'application/json')
+    .set('Content-Type', 'application/json')
     .set('Access-Control-Allow-Origin', '*')
-    .set('UserGuid', sessionStorage.getItem('UserGuid') + "")
+    .set('UserGuid', "X")
 
 
 
@@ -27,7 +27,7 @@ export class AuthKowsarWebApiService {
 
 
   IsUser(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "IsUser", command);
+    return this.client.post<any[]>(this.baseUrl + "IsUser", command, { headers: this.headers });
   }
 
 

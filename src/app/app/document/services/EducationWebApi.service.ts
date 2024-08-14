@@ -15,9 +15,9 @@ export class EducationWebApiService {
 
   headers = new HttpHeaders()
 
-    .set('content-type', 'application/json')
+    .set('Content-Type', 'application/json')
     .set('Access-Control-Allow-Origin', '*')
-    .set('UserGuid', sessionStorage.getItem('UserGuid') + "")
+    .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
 
 
 
@@ -26,13 +26,13 @@ export class EducationWebApiService {
 
 
   GetTodeyFromServer(): Observable<any[]> {
-    return this.client.get<any[]>(this.baseUrl + "GetTodeyFromServer")
+    return this.client.get<any[]>(this.baseUrl + "GetTodeyFromServer", { headers: this.headers })
   }
 
 
 
   KowsarAttachUrl(SearchTarget: string): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "KowsarAttachUrl", { SearchTarget })
+    return this.client.post<any[]>(this.baseUrl + "KowsarAttachUrl", { SearchTarget }, { headers: this.headers })
   }
 
 

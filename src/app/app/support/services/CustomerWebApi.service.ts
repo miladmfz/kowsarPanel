@@ -16,14 +16,14 @@ export class CustomerWebApiService {
 
   headers = new HttpHeaders()
 
-    .set('content-type', 'application/json')
+    .set('Content-Type', 'application/json')
     .set('Access-Control-Allow-Origin', '*')
     .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
 
 
 
   GetKowsarCustomer(SearchTarget: string): Observable<any[]> {
-    return this.client.post<any[]>(this.kowsarweb_baseUrl + "GetKowsarCustomer", { SearchTarget })
+    return this.client.post<any[]>(this.kowsarweb_baseUrl + "GetKowsarCustomer", { SearchTarget }, { headers: this.headers })
   }
 
 
@@ -31,12 +31,12 @@ export class CustomerWebApiService {
 
 
   EditCustomerProperty(command): Observable<any[]> {
-    return this.client.post<any[]>(this.kowsarweb_baseUrl + "EditCustomerProperty", command)
+    return this.client.post<any[]>(this.kowsarweb_baseUrl + "EditCustomerProperty", command, { headers: this.headers })
   }
 
 
   EditCustomerExplain(command): Observable<any[]> {
-    return this.client.post<any[]>(this.kowsarweb_baseUrl + "EditCustomerExplain", command)
+    return this.client.post<any[]>(this.kowsarweb_baseUrl + "EditCustomerExplain", command, { headers: this.headers })
   }
 
 }
