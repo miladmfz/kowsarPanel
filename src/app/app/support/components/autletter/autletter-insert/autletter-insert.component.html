@@ -21,18 +21,38 @@
 
           <div></div>
 
-          <div class="form-group col-md-12">
+          <div class="form-group col-md-4">
             <label for="titleFormControl" class="col-form-label">عنوان تیکت </label>
             <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
 
-            <select formControlName="titleFormControl" id="titleFormControl" class="form-control custom-select"
-              data-toggle="select2">
+            <select formControlName="titleFormControl" id="titleFormControl" class="form-control custom-select">
               <option [value]="item.id" *ngFor="let item of Title_Lookup">{{item.name}}</option>
             </select>
 
-
-
           </div>
+          <ng-container *ngIf="JobPersonRef.length>0">
+            <div class="form-group col-md-4">
+              <label for="LetterPriority" class="col-form-label">الویت </label>
+              <select formControlName="LetterPriority" id="LetterPriority" class="form-control custom-select">
+                <option [value]="item.aType" *ngFor="let item of LetterPriority_lookup">{{item.aType}}</option>
+              </select>
+            </div>
+
+
+
+            <div class="form-group col-md-4">
+              <label for="LetterState" class="col-form-label">وضعیت </label>
+              <select formControlName="LetterState" id="LetterState" class="form-control custom-select">
+                <option [value]="item.aType" *ngFor="let item of LetterState_lookup">{{item.aType}}</option>
+              </select>
+            </div>
+
+
+          </ng-container>
+
+
+
+
           <div class="form-group col-md-12">
             <label for="descriptionFormControl" class="col-form-label">شرح تیکت </label>
 

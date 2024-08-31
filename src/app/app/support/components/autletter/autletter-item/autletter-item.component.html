@@ -8,16 +8,25 @@
           <div class="card">
             <div class="card-body row">
 
-              <div class="form-group col-md-3">
+              <div class="form-group col-md-2">
                 <label for="dateValue" class="col-form-label">تاریخ</label>
                 <h5>{{ToDayDate}}</h5>
 
               </div>
-              <div class="form-group col-md-4 mx-3">
+              <div class="form-group col-md-4">
                 <label for="selectedUserId" class="col-form-label">کاربر </label>
                 <select formControlName="selectedUserId" id="selectedUserId" class="form-control custom-select"
                   data-toggle="select2">
                   <option *ngFor=" let user of users" [value]="user.CentralCode">{{ user.CentralName }}</option>
+                </select>
+              </div>
+
+
+              <div class="form-group col-md-3">
+                <label for="LetterPriority" class="col-form-label">الویت </label>
+                <select formControlName="LetterPriority" id="LetterPriority" class="form-control custom-select">
+                  <option *ngFor=" let item of LetterPriority_lookup" [value]="item.aType">{{ item.aType }}
+                  </option>
                 </select>
               </div>
 
@@ -64,5 +73,49 @@
 
 
 
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="autletterrowmodal" tabindex="-1" aria-labelledby="autletterrowmodalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="autletterrowmodalLabel">Explain</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="explain_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="EditForm_explain" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+                  <div class="form-group col-md-12">
+                    <label for="LetterState" class="col-form-label">وضعیت </label>
+                    <select formControlName="LetterState" id="LetterState" class="form-control custom-select">
+                      <option *ngFor=" let item of LetterState_lookup" [value]="item.aType">{{ item.aType }}
+                      </option>
+                    </select>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="explain_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="Set_Autletterrow_Property()">بروزرسانی</button>
+
+
+      </div>
+    </div>
   </div>
 </div>

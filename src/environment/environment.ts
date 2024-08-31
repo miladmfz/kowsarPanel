@@ -8,9 +8,12 @@ export const environment = {
 
   //  Build
   //api_Url: 'http://178.131.31.161:60005/api/',
+  api_Url: 'http://192.110.110.219:60005/api/',
 
   // development
-  api_Url: 'http://localhost:60006/api/',
+  //api_Url: 'http://localhost:60006/api/',
+
+
 
 
   // //// Qoqnos_Coffee

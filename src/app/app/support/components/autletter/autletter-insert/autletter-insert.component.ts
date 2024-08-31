@@ -4,6 +4,7 @@ import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWe
 import { Router } from '@angular/router';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
+import { DbSetup_lookup } from '../../../lookup-type';
 
 @Component({
   selector: 'app-autletter-insert',
@@ -17,6 +18,8 @@ export class AutletterInsertComponent implements OnInit {
     dateValue: new FormControl(''),
     titleFormControl: new FormControl(''),
     descriptionFormControl: new FormControl(''),
+    LetterState: new FormControl('درحال انجام'),
+    LetterPriority: new FormControl('عادی'),
   });
 
   ToDayDate: string = "";
@@ -33,16 +36,31 @@ export class AutletterInsertComponent implements OnInit {
     { id: "درخواست فاکتور", name: "درخواست فاکتور" },
   ]
 
+  LetterState_lookup: DbSetup_lookup[] = []
+  LetterPriority_lookup: DbSetup_lookup[] = []
+  JobPersonRef: string = '';
 
 
   CentralRef: string = '';
   ngOnInit() {
+    this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
 
     this.repo.GetTodeyFromServer().subscribe((data: any) => {
 
       this.ToDayDate = data[0].TodeyFromServer
 
     });
+
+    this.repo.GetObjectTypeFromDbSetup("AutomationLetterState").subscribe((data: any) => {
+
+      this.LetterState_lookup = data.ObjectTypes
+    });
+
+    this.repo.GetObjectTypeFromDbSetup("AutomationLetterPriority").subscribe((data: any) => {
+
+      this.LetterPriority_lookup = data.ObjectTypes
+    });
+
 
   }
 
@@ -64,15 +82,23 @@ export class AutletterInsertComponent implements OnInit {
 
     }
 
-    this.repo.LetterInsert(this.ToDayDate, this.EditForm.value.titleFormControl, this.EditForm.value.descriptionFormControl, this.CentralRef).subscribe(e => {
-      const intValue = parseInt(e[0].LetterCode, 10);
-      if (!isNaN(intValue) && intValue > 0) {
-        this.router.navigate(['/support/letter-list']);
-      } else {
-        console.log("insert nashod")
-      }
+    this.repo.LetterInsert(
+      this.ToDayDate,
+      this.EditForm.value.titleFormControl,
+      this.EditForm.value.descriptionFormControl,
+      this.EditForm.value.LetterState,
+      this.EditForm.value.LetterPriority,
+      this.CentralRef
+    )
+      .subscribe(e => {
+        const intValue = parseInt(e[0].LetterCode, 10);
+        if (!isNaN(intValue) && intValue > 0) {
+          this.router.navigate(['/support/letter-list']);
+        } else {
+          console.log("insert nashod")
+        }
 
-    });
+      });
 
 
 

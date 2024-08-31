@@ -23,6 +23,7 @@ import { ProfileEditComponent } from './components/profile/profile-edit/profile-
 import { ProfileViewComponent } from './components/profile/profile-view/profile-view.component';
 import { AutletterAttachComponent } from './components/autletter/autletter-attach/autletter-attach.component';
 import { CellActionCustomerList } from './components/customer/customer-list/cell-action-customer-list';
+import { CellActionAutletterRowList } from './components/autletter/autletter-item/cell-action-autletterrow-list';
 
 
 @NgModule({
@@ -59,6 +60,8 @@ import { CellActionCustomerList } from './components/customer/customer-list/cell
     CellActionAutletterList,
     CellActionCentralList,
     CellActionCustomerList,
+    CellActionAutletterRowList,
+
 
     ValidateionStateCellAutletterRenderer,
     ValidateionStateCellAutletterWorkRenderer,

@@ -46,9 +46,11 @@ export class AutletterWebApiService {
     LetterDate: string,
     title: string,
     Description: string,
+    LetterState: string,
+    LetterPriority: string,
     CentralRef: string
   ): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "LetterInsert", { LetterDate, title, Description, CentralRef }, { headers: this.headers })
+    return this.client.post<any[]>(this.baseUrl + "LetterInsert", { LetterDate, title, Description, LetterState, LetterPriority, CentralRef }, { headers: this.headers })
   }
 
   GetLetterRowList(
@@ -73,10 +75,12 @@ export class AutletterWebApiService {
     LetterRef: string,
     LetterDate: string,
     Description: string,
+    LetterState: string,
+    LetterPriority: string,
     CreatorCentral: string,
     ExecuterCentral: string
   ): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "AutLetterRowInsert", { LetterRef, LetterDate, Description, CreatorCentral, ExecuterCentral }, { headers: this.headers })
+    return this.client.post<any[]>(this.baseUrl + "AutLetterRowInsert", { LetterRef, LetterDate, Description, LetterState, LetterPriority, CreatorCentral, ExecuterCentral }, { headers: this.headers })
   }
 
 
@@ -88,10 +92,23 @@ export class AutletterWebApiService {
     return this.client.get<any[]>(this.baseUrl + "GetAutConversation", { headers: this.headers, params: params })
   }
 
+  GetAutletterById(
+    LetterCode: string
+  ): Observable<any[]> {
+    const params = new HttpParams().append('LetterCode', LetterCode)
+    return this.client.get<any[]>(this.baseUrl + "GetAutletterById", { headers: this.headers, params: params })
+  }
+
+
 
   SetAlarmOff(command): Observable<any[]> {
     return this.client.post<any[]>(this.baseUrl + "SetAlarmOff", command, { headers: this.headers })
   }
+
+  Update_AutletterRow(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "Update_AutletterRow", command, { headers: this.headers })
+  }
+
 
 
   Conversation_Insert(
@@ -104,6 +121,11 @@ export class AutletterWebApiService {
   }
 
 
+
+  GetObjectTypeFromDbSetup(ObjectType: string): Observable<any[]> {
+    const params = new HttpParams().append('ObjectType', ObjectType)
+    return this.client.get<any[]>(this.baseUrl + "GetObjectTypeFromDbSetup", { headers: this.headers, params: params })
+  }
 
   SendImageToServer(command): Observable<any[]> {
     return this.client.post<any[]>(this.baseUrl + "Conversation_UploadImage", command, { headers: this.headers })

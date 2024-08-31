@@ -1,9 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Renderer2 } from '@angular/core';
 import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
+import { DbSetup_lookup } from '../../../lookup-type';
+import { CellActionAutletterRowList } from './cell-action-autletterrow-list';
 @Component({
   selector: 'app-autletter-item',
   templateUrl: './autletter-item.component.html',
@@ -15,6 +17,8 @@ export class AutletterItemComponent
   constructor(
     private router: Router,
     private repo: AutletterWebApiService,
+
+    private renderer: Renderer2
   ) {
     super();
   }
@@ -23,6 +27,8 @@ export class AutletterItemComponent
   EditForm = new FormGroup({
     dateValue: new FormControl(''),
     descriptionFormControl: new FormControl(''),
+    LetterState: new FormControl(''),
+    LetterPriority: new FormControl('عادی'),
     selectedUserId: new FormControl(0),
   });
 
@@ -62,6 +68,8 @@ export class AutletterItemComponent
 
 
   ToDayDate: string = "";
+  LetterState_lookup: DbSetup_lookup[] = []
+  LetterPriority_lookup: DbSetup_lookup[] = []
 
 
   override ngOnInit(): void {
@@ -72,12 +80,34 @@ export class AutletterItemComponent
       this.ToDayDate = data[0].TodeyFromServer
 
     });
+
+    this.repo.GetObjectTypeFromDbSetup("AutomationLetterState").subscribe((data: any) => {
+
+      this.LetterState_lookup = data.ObjectTypes
+    });
+
+    this.repo.GetObjectTypeFromDbSetup("AutomationLetterPriority").subscribe((data: any) => {
+
+      this.LetterPriority_lookup = data.ObjectTypes
+    });
+
+
+
+
     this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
 
 
 
     this.columnDefs = [
-
+      {
+        field: 'عملیات',
+        pinned: 'left',
+        cellRenderer: CellActionAutletterRowList,
+        cellRendererParams: {
+          editUrl: '/support/letter-detail',
+        },
+        width: 100,
+      },
       {
         field: 'RowExecutorName',
         headerName: 'کاربر',
@@ -93,13 +123,19 @@ export class AutletterItemComponent
         minWidth: 150
       },
       {
+        field: 'LetterRowState',
+        headerName: 'LetterRowState	',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
         field: 'LetterRowDescription',
         headerName: 'شرح	',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         minWidth: 150
       },
-
 
     ];
 
@@ -116,14 +152,21 @@ export class AutletterItemComponent
       CentralRef: this.CentralRef,
     });
 
+
+
+    this.Get_LetterRowList()
+
+  }
+
+
+  Get_LetterRowList() {
+
     this.repo.GetLetterRowList(this.TextData).subscribe((data) => {
       this.records = data;
-      this.repo.SetAlarmOff(this.set_Alarm.value).subscribe(e => { });
+      //this.repo.SetAlarmOff(this.set_Alarm.value).subscribe(e => { });
 
 
     });
-
-
 
   }
 
@@ -139,7 +182,15 @@ export class AutletterItemComponent
 
 
 
-    this.repo.AutLetterRowInsert(this.TextData, this.ToDayDate, this.EditForm.value.descriptionFormControl, this.CentralRef, this.EditForm.value.selectedUserId.toString()).subscribe(e => {
+    this.repo.AutLetterRowInsert(
+      this.TextData,
+      this.ToDayDate,
+      this.EditForm.value.descriptionFormControl,
+      this.EditForm.value.LetterState,
+      this.EditForm.value.LetterPriority,
+      this.CentralRef,
+      this.EditForm.value.selectedUserId.toString()
+    ).subscribe(e => {
       const intValue = parseInt(e[0].LetterRef, 10);
       if (!isNaN(intValue) && intValue > 0) {
         this.router.navigate(['/support/letter-list']);
@@ -153,7 +204,54 @@ export class AutletterItemComponent
 
   }
 
+  EditForm_explain = new FormGroup({
+    ObjectRef: new FormControl('0'),
+    LetterState: new FormControl(''),
 
+  });
+
+
+
+  Get_Autletterrow_Property(LetterRowCode, LetterState) {
+
+    this.EditForm_explain.patchValue({
+      ObjectRef: LetterRowCode,
+      LetterState: LetterState,
+    });
+
+
+
+    this.explain_dialog_show()
+
+
+  }
+
+
+
+
+  Set_Autletterrow_Property() {
+    console.log(this.EditForm_explain)
+    this.repo.Update_AutletterRow(this.EditForm_explain.value).subscribe((data: any) => {
+      this.explain_dialog_close()
+      this.Get_LetterRowList()
+    });
+  }
+
+
+  explain_dialog_show() {
+    const modal = this.renderer.selectRootElement('#autletterrowmodal', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  explain_dialog_close() {
+    const modal = this.renderer.selectRootElement('#autletterrowmodal', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
 
 
 }
