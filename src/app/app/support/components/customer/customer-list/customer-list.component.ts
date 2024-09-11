@@ -88,7 +88,7 @@ export class CustomerListComponent extends AgGridBaseComponent
         cellRendererParams: {
           editUrl: '/support/letter-detail',
         },
-        width: 150,
+        width: 200,
       },
       {
         field: 'CustName_Small',
@@ -182,8 +182,30 @@ export class CustomerListComponent extends AgGridBaseComponent
 
   });
 
-
   EditForm_property = new FormGroup({
+    CustName_Small: new FormControl(''),
+    AppNumber: new FormControl(''),
+    DatabaseNumber: new FormControl(''),
+    LockNumber: new FormControl(''),
+    Address: new FormControl(''),
+    CityName: new FormControl(''),
+    OstanName: new FormControl(''),
+    Delegacy: new FormControl(''),
+    Manager: new FormControl(''),
+    Phone: new FormControl(''),
+    PostCode: new FormControl(''),
+    Mobile: new FormControl(''),
+    MobileName: new FormControl(''),
+    ZipCode: new FormControl(''),
+    Email: new FormControl(''),
+    Fax: new FormControl(''),
+    ObjectRef: new FormControl('0'),
+
+  });
+
+
+
+  ShowForm_property = new FormGroup({
     CustName_Small: new FormControl(''),
     AppNumber: new FormControl(''),
     DatabaseNumber: new FormControl(''),
@@ -225,9 +247,46 @@ export class CustomerListComponent extends AgGridBaseComponent
   }
 
 
-  Edit_Customer_Property(CustomerCode) {
+
+  Show_Customer_Property(CustomerCode) {
 
     this.property_dialog_show()
+    this.records.forEach((customer: any) => {
+
+      if (customer.CustomerCode == CustomerCode) {
+
+        this.ShowForm_property.patchValue({
+          CustName_Small: customer.CustName_Small,
+
+          AppNumber: customer.AppNumber,
+          DatabaseNumber: customer.DatabaseNumber,
+          LockNumber: customer.LockNumber,
+          ObjectRef: customer.CustomerCode,
+          Address: customer.Address,
+          CityName: customer.CityName,
+          OstanName: customer.OstanName,
+          Delegacy: customer.Delegacy,
+          Manager: customer.Manager,
+          Phone: customer.Phone,
+          PostCode: customer.PostCode,
+          Mobile: customer.Mobile,
+          MobileName: customer.MobileName,
+          ZipCode: customer.ZipCode,
+          Email: customer.Email,
+          Fax: customer.Fax,
+
+        });
+
+      }
+
+
+    })
+  }
+
+
+  Edit_Customer_Property(CustomerCode) {
+
+    this.Edit_property_dialog_show()
     this.records.forEach((customer: any) => {
 
       if (customer.CustomerCode == CustomerCode) {
@@ -262,25 +321,18 @@ export class CustomerListComponent extends AgGridBaseComponent
 
 
   Set_Customer_Explain() {
-
-    //// send explian to server
-
     this.repo.EditCustomerExplain(this.EditForm_explain.value).subscribe((data: any) => {
       this.explain_dialog_close()
       this.getList()
       this.EditForm_explain.reset()
     });
-
-
-
   }
 
 
 
   Set_Customer_Property() {
-    //// send Property to server
     this.repo.EditCustomerProperty(this.EditForm_property.value).subscribe((data: any) => {
-      this.property_dialog_close()
+      this.Edit_property_dialog_close()
       this.getList()
       this.EditForm_property.reset()
     });
@@ -319,7 +371,20 @@ export class CustomerListComponent extends AgGridBaseComponent
     this.renderer.removeAttribute(modal, 'role');
   }
 
-
+  Edit_property_dialog_show() {
+    const modal = this.renderer.selectRootElement('#editcustomerproperty', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  Edit_property_dialog_close() {
+    const modal = this.renderer.selectRootElement('#editcustomerproperty', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
 
 
 }

@@ -6,11 +6,16 @@ declare var $: any;
     selector: 'edit-delete-cell-renderer',
     template: ` 
 <span  >
-  <a  (click)="Edit_Customer_Explain()" class="btn btn-sm btn-outline-primary mx-1 " data-toggle="tooltip" title="پشتیبانی">
+  <a  (click)="Edit_Customer_Explain()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="پشتیبانی">
     <i class="fas fa-edit"></i>
   </a>
   </span>
-  <span   (click)="Edit_Customer_Property()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="خصوصیت اضافه ">
+  <span   (click)="Edit_Customer_Property()" class="btn btn-sm btn-outline-primary mx-1 " data-toggle="tooltip" title="خصوصیت اضافه ">
+  <a >
+    <i class=" fas fa-user-edit"></i>
+  </a>
+  </span>
+  <span   (click)="Show_Customer_Property()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="خصوصیت اضافه ">
   <a >
     <i class=" far fa-file-alt"></i>
   </a>
@@ -52,6 +57,10 @@ export class CellActionCustomerList implements ICellRendererAngularComp {
         this.params.context.componentParent.Edit_Customer_Explain(this.params.data.CustomerCode);
     }
 
+
+    Show_Customer_Property() {
+        this.params.context.componentParent.Show_Customer_Property(this.params.data.CustomerCode);
+    }
 
     Edit_Customer_Property() {
         this.params.context.componentParent.Edit_Customer_Property(this.params.data.CustomerCode);
