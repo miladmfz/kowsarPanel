@@ -30,7 +30,11 @@
         </div>
       </div>
     </div>
-
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
     <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" class="ag-theme-alpine" [rowData]="records"
       [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
       [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"

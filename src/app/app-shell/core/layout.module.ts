@@ -16,6 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { PhoenixFrameworkModule } from '../framework-components/framework.module';
 import { NotificationService } from '../framework-services/notification.service';
+import { NotifierModule } from 'angular-notifier';
 
 const routes: Routes = [
   {
@@ -32,6 +33,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     HttpClientModule,
     PhoenixFrameworkModule,
+    NotifierModule
 
   ],
   declarations: [

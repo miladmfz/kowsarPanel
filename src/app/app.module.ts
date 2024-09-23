@@ -12,6 +12,7 @@ import {
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { AuthConfigModule } from './auth/auth-config.module';
 import { AppRoutingModule } from './app-routing.module';
+import { NotifierModule } from 'angular-notifier';
 
 
 
@@ -26,6 +27,7 @@ import { AppRoutingModule } from './app-routing.module';
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+    NotifierModule,
 
   ],
   exports: [],

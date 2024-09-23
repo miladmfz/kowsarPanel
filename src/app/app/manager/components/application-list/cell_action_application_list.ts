@@ -9,6 +9,11 @@ declare var $: any;
     <i class="fas fa-edit"></i>
   </a>
 </span>
+<span   (click)="CheckPort()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="خصوصیت اضافه ">
+  <a >
+    <i class=" far fa-file-alt"></i>
+  </a>
+  </span>
 `,
 
 })
@@ -44,4 +49,10 @@ export class CellActionApplicationList implements ICellRendererAngularComp {
 
     this.params.context.componentParent.delete(this.params.data.AppBrokerCustomerCode);
   }
+
+  CheckPort() {
+    this.params.context.componentParent.CheckPort(this.params.data);
+  }
+
+
 }

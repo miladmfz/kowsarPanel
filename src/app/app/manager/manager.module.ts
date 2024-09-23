@@ -13,6 +13,9 @@ import { ApplicationLogComponent } from './components/application-log/applicatio
 import { AgGridModule } from 'ag-grid-angular';
 import { CellActionApplicationList } from './components/application-list/cell_action_application_list';
 import { ValidateionStateCellManageApplicationRenderer } from './components/application-list/validation-state-label-cell-manage-application';
+import { AddressCellManageApplicationRenderer } from './components/application-list/address-label-cell-manage-application copy';
+import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
+import { NotifierModule } from 'angular-notifier';
 
 
 @NgModule({
@@ -21,7 +24,8 @@ import { ValidateionStateCellManageApplicationRenderer } from './components/appl
     ManagerRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    AgGridModule
+    AgGridModule,
+    NotifierModule
   ],
   declarations: [
     ApplicationFormComponent,
@@ -30,8 +34,12 @@ import { ValidateionStateCellManageApplicationRenderer } from './components/appl
     ApplicationLogComponent,
     CellActionApplicationList,
     ValidateionStateCellManageApplicationRenderer,
+    AddressCellManageApplicationRenderer
 
-
+  ],
+  providers: [
+    NotificationService
+    // SwalService,
   ],
 })
 export class ManagerModule { }

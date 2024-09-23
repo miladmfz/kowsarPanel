@@ -66,6 +66,16 @@ export class ManagerWebApiService {
     return this.client.post<any[]>(this.baseUrl + "UpdateAppBrokerCustomer", { ActivationCode, EnglishCompanyName, PersianCompanyName, ServerURL, SQLiteURL, MaxDevice, SecendServerURL, DbName, AppType }, { headers: this.headers })
   }
 
+  CheckPort(
+    Ip: string,
+    Port: string,
+  ): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "CheckPort", { Ip, Port }, { headers: this.headers })
+  }
+
+
+
 
 
   GetActiveApplication(): Observable<any[]> {
