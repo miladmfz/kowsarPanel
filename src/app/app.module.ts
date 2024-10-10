@@ -13,6 +13,7 @@ import { BrowserModule, Title } from '@angular/platform-browser';
 import { AuthConfigModule } from './auth/auth-config.module';
 import { AppRoutingModule } from './app-routing.module';
 import { NotifierModule } from 'angular-notifier';
+import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
 
 
 
@@ -28,7 +29,6 @@ import { NotifierModule } from 'angular-notifier';
     FormsModule,
     ReactiveFormsModule,
     NotifierModule,
-
   ],
   exports: [],
   providers: [

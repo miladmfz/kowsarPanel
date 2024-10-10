@@ -7,6 +7,7 @@ import { GoodListComponent } from './components/Good/good-list/good-list.compone
 import { GoodEditComponent } from './components/Good/good-edit/good-edit.component';
 import { GoodsgrpListComponent } from './components/GoodsGrp/goodsgrp-list/goodsgrp-list.component';
 import { GoodsgrpEditComponent } from './components/GoodsGrp/goodsgrp-edit/goodsgrp-edit.component';
+import { GoodTestComponent } from './components/Good/good-test/good-test.component';
 
 
 const routes: Routes = [
@@ -29,6 +30,11 @@ const routes: Routes = [
 
       { path: 'goodsgrp-edit', component: GoodsgrpEditComponent, },
       { path: 'goodsgrp-edit/:id', component: GoodsgrpEditComponent, },
+
+
+
+      { path: 'good-test', component: GoodTestComponent, },
+      { path: 'good-test/:id', component: GoodTestComponent, },
 
 
 

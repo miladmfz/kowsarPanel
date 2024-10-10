@@ -29,6 +29,14 @@ export class KowsarWebApiService {
   }
 
 
+  GetLastGoodData(): Observable<any[]> {
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetLastGoodData", { headers: this.headers })
+  }
+
+
+
+
+
   GetProperty(Where: string): Observable<any[]> {
     const params = new HttpParams().append('Where', Where)
     return this.client.get<any[]>(this.kowsarWebUrl + "GetProperty", { headers: this.headers, params: params })

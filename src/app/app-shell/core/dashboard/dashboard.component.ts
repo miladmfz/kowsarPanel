@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IDatepickerTheme } from 'ng-persian-datepicker';
 
 @Component({
   selector: 'app-dashboard',

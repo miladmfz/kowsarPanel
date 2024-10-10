@@ -21,7 +21,11 @@ export class AutletterInsertComponent implements OnInit {
     LetterState: new FormControl('درحال انجام'),
     LetterPriority: new FormControl('عادی'),
   });
+  customTheme: Partial<IDatepickerTheme> = {
+    selectedBackground: '#D68E3A',
+    selectedText: '#FFFFFF',
 
+  };
   ToDayDate: string = "";
 
   Title_Lookup: Base_Lookup[] = [
@@ -64,11 +68,7 @@ export class AutletterInsertComponent implements OnInit {
 
   }
 
-  customTheme: Partial<IDatepickerTheme> = {
-    selectedBackground: '#D68E3A',
-    selectedText: '#FFFFFF',
 
-  };
 
 
 

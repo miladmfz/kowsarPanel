@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { KowsarWebApiService } from '../../../services/KowsarWebApi.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { FormControl, FormGroup, UntypedFormBuilder } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, UntypedFormBuilder } from '@angular/forms';
 import { Location } from '@angular/common';
 import { Base_Lookup, GoodType_lookup } from '../../../lookup-type';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
@@ -12,9 +12,7 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
   templateUrl: './good-edit.component.html',
 })
 export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
-  title = 'ایجاد نوع داده انتخابی';
-  Code: string = '';
-  GoodTypeStr: string = '';
+
   constructor(
     private repo: KowsarWebApiService,
     private readonly route: ActivatedRoute,
@@ -27,10 +25,60 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
+  override ngOnInit(): void {
+    super.ngOnInit();
+    this.GetObjectTypeFromDbSetup()
 
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      var id = params.get('id');
+      if (id != null) {
+        this.Code = id;
+
+
+        if (parseInt(this.Code) > 0) {
+          this.getDetails();
+        } else {
+          this.EditForm_Base_reset()
+        }
+
+        this.GetColumnTable();
+      }
+    });
+
+
+  }
+
+
+
+
+  Add_To_KowsarTemplate() {
+    (this.KowsarTemplate.get('Goods') as FormArray).push(
+      this.EditForm_Base
+    );
+
+    return JSON.stringify(this.KowsarTemplate.value)
+  }
+
+
+
+
+
+  // #region Test
+
+  // #endregion
+
+
+
+
+
+  // #region Declare
+  title = 'ایجاد نوع داده انتخابی';
+  Code: string = '';
+  GoodTypeStr: string = '';
   Image_list: any[] = [];
   Group_list: any[] = [];
   Stack_list: any[] = [];
+  GoodType_lookup: GoodType_lookup[] = []
 
 
 
@@ -41,6 +89,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   GoodSubCode_str: string = "";
   GoodType_str: string = "";
   GoodName_str: string = "";
+
+  KowsarTemplate = new FormGroup({
+    Goods: new FormArray([])
+  });
 
 
   EditForm_Base = new FormGroup({
@@ -62,7 +114,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     SellPrice4: new FormControl(0),
     SellPrice5: new FormControl(0),
     SellPrice6: new FormControl(0),
+    DefaultRatio: new FormControl(1),
+    DefaultRatioValue: new FormControl(1),
+    DefaultUnitValue: new FormControl(1),
   });
+
   EditForm_Explain = new FormGroup({
     GoodCode: new FormControl(0),
     GoodSubCode: new FormControl(0),
@@ -166,31 +222,157 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   ]
 
 
-  GoodType_lookup: GoodType_lookup[] = []
+
+  // #endregion
 
 
 
 
 
 
+  // #region Load_data
 
+  getDetails() {
+    this.repo.GetGood_base(this.Code).subscribe((data: any) => {
 
-  override ngOnInit(): void {
-    super.ngOnInit();
-    //debugger
-    this.GetObjectTypeFromDbSetup()
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      var id = params.get('id');
-      if (id != null) {
-        this.Code = id;
-        this.getDetails();
-      }
+      this.EditForm_Base.patchValue({
+        GoodCode: data.Goods[0].GoodCode,
+        GoodType: data.Goods[0].GoodType,
+        GoodName: data.Goods[0].GoodName,
+        Type: data.Goods[0].Type,
+        UsedGood: data.Goods[0].UsedGood,
+        GoodSubCode: data.Goods[0].GoodSubCode,
+        MinSellPrice: data.Goods[0].MinSellPrice,
+        MaxSellPrice: data.Goods[0].MaxSellPrice,
+        Isbn: data.Goods[0].Isbn,
+        FirstBarCode: data.Goods[0].FirstBarCode,
+        BarCodePrintState: data.Goods[0].BarCodePrintState,
+        SellPriceType: data.Goods[0].SellPriceType,
+        SellPrice1: data.Goods[0].SellPrice1,
+        SellPrice2: data.Goods[0].SellPrice2,
+        SellPrice3: data.Goods[0].SellPrice3,
+        SellPrice4: data.Goods[0].SellPrice4,
+        SellPrice5: data.Goods[0].SellPrice5,
+        SellPrice6: data.Goods[0].SellPrice6,
+      });
+
+      this.GoodCode_str = data.Goods[0].GoodCode
+      this.GoodSubCode_str = data.Goods[0].GoodSubCode
+      this.GoodType_str = data.Goods[0].GoodType
+      this.GoodName_str = data.Goods[0].GoodName
+      this.GetGood_Relations()
+    });
+
+    this.repo.GetGood_Explain(this.Code).subscribe((data: any) => {
+
+      this.EditForm_Explain.patchValue({
+        GoodCode: data.Goods[0].GoodCode,
+        GoodSubCode: data.Goods[0].GoodSubCode,
+        GoodName: data.Goods[0].GoodName,
+        GoodExplain1: data.Goods[0].GoodExplain1,
+        GoodExplain2: data.Goods[0].GoodExplain2,
+        GoodExplain3: data.Goods[0].GoodExplain3,
+        GoodExplain4: data.Goods[0].GoodExplain4,
+        GoodExplain5: data.Goods[0].GoodExplain5,
+        GoodExplain6: data.Goods[0].GoodExplain6,
+      });
     });
 
 
-    this.GetColumnTable();
+
+    this.repo.GetGood_Complete(this.Code).subscribe((data: any) => {
+
+      this.EditForm_Complete.patchValue({
+        GoodCode: data.Goods[0].GoodCode,
+        GoodName: data.Goods[0].GoodName,
+        GoodSubCode: data.Goods[0].GoodSubCode,
+        MaxSellPrice: data.Goods[0].MaxSellPrice,
+        MinSellPrice: data.Goods[0].MinSellPrice,
+        MinAmount: data.Goods[0].MinAmount,
+        MaxAmount: data.Goods[0].MaxAmount,
+        SefareshPoint: data.Goods[0].SefareshPoint,
+        MinBuyPrice: data.Goods[0].MinBuyPrice,
+        MaxBuyPrice: data.Goods[0].MaxBuyPrice,
+        CriticalPoint: data.Goods[0].CriticalPoint,
+        MayorTax: data.Goods[0].MayorTax,
+        Tax: data.Goods[0].Tax,
+      });
+    });
+
+    this.repo.GetGood_Propertys(this.Code).subscribe((data: any) => {
+
+      this.GoodTypeStr = data.Goods[0].GoodType;
+      this.EditForm_Property.patchValue({
+        GoodCode: data.Goods[0].GoodCode,
+        GoodName: data.Goods[0].GoodName,
+        GoodType: data.Goods[0].GoodType,
+        Nvarchar1: data.Goods[0].Nvarchar1,
+        Nvarchar2: data.Goods[0].Nvarchar2,
+        Nvarchar3: data.Goods[0].Nvarchar3,
+        Nvarchar4: data.Goods[0].Nvarchar4,
+        Nvarchar5: data.Goods[0].Nvarchar5,
+        Nvarchar6: data.Goods[0].Nvarchar6,
+        Nvarchar7: data.Goods[0].Nvarchar7,
+        Nvarchar8: data.Goods[0].Nvarchar8,
+        Nvarchar9: data.Goods[0].Nvarchar9,
+        Nvarchar10: data.Goods[0].Nvarchar10,
+        Nvarchar11: data.Goods[0].Nvarchar11,
+        Nvarchar12: data.Goods[0].Nvarchar12,
+        Nvarchar13: data.Goods[0].Nvarchar13,
+        Nvarchar14: data.Goods[0].Nvarchar14,
+        Nvarchar15: data.Goods[0].Nvarchar15,
+        Nvarchar16: data.Goods[0].Nvarchar16,
+        Nvarchar17: data.Goods[0].Nvarchar17,
+        Nvarchar18: data.Goods[0].Nvarchar18,
+        Nvarchar19: data.Goods[0].Nvarchar19,
+        Nvarchar20: data.Goods[0].Nvarchar20,
+        Int1: data.Goods[0].Int1,
+        Int2: data.Goods[0].Int2,
+        Int3: data.Goods[0].Int3,
+        Int4: data.Goods[0].Int4,
+        Int5: data.Goods[0].Int5,
+        Int6: data.Goods[0].Int6,
+        Int7: data.Goods[0].Int7,
+        Int8: data.Goods[0].Int8,
+        Int9: data.Goods[0].Int9,
+        Int10: data.Goods[0].Int10,
+        Float1: data.Goods[0].Float1,
+        Float2: data.Goods[0].Float2,
+        Float3: data.Goods[0].Float3,
+        Float4: data.Goods[0].Float4,
+        Float5: data.Goods[0].Float5,
+        Float6: data.Goods[0].Float6,
+        Float7: data.Goods[0].Float7,
+        Float8: data.Goods[0].Float8,
+        Float9: data.Goods[0].Float9,
+        Float10: data.Goods[0].Float10,
+        Text1: data.Goods[0].Text1,
+        Text2: data.Goods[0].Text2,
+        Text3: data.Goods[0].Text3,
+        Text4: data.Goods[0].Text4,
+        Text5: data.Goods[0].Text5,
+      });
+
+      this.repo.GetProperty(this.GoodTypeStr).subscribe(e => {
+
+        this.Propertys = e;
+
+
+
+      });
+    });
+
+
+
+
+
+
 
   }
+
+
+
+
 
   GetGood_Relations() {
 
@@ -220,7 +402,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     // });
 
   }
-
 
   GetColumnTable() {
     this.columnDefs1 = [
@@ -372,8 +553,28 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   }
 
+  GetLastGoodData() {
+    this.repo.GetLastGoodData().subscribe((data: any) => {
 
+      this.GoodType_lookup = data.ObjectTypes
 
+      this.EditForm_Base.patchValue({
+
+        Type: data.Goods[0].Type,
+        UsedGood: data.Goods[0].UsedGood,
+        MinSellPrice: 0,
+        MaxSellPrice: 0,
+        BarCodePrintState: data.Goods[0].BarCodePrintState,
+        SellPriceType: data.Goods[0].SellPriceType,
+        SellPrice1: 0,
+        SellPrice2: 0,
+        SellPrice3: 0,
+        SellPrice4: 0,
+        SellPrice5: 0,
+        SellPrice6: 0,
+      });
+    });
+  }
 
   GetObjectTypeFromDbSetup() {
     this.repo.GetObjectTypeFromDbSetup("GoodType").subscribe((data: any) => {
@@ -381,159 +582,45 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       this.GoodType_lookup = data.ObjectTypes
 
 
+
+    });
+  }
+
+  EditForm_Base_reset() {
+    this.GetLastGoodData()
+
+
+    this.GoodType_lookup.forEach((item: GoodType_lookup) => {
+      if (item.IsDefault == "True") {
+        this.EditForm_Base.patchValue({
+          GoodType: item.aType
+        });
+      }
     });
 
+    this.EditForm_Base.patchValue({
+      GoodCode: 0,
+      GoodName: '',
+      GoodSubCode: 0,
+      Isbn: '',
+      FirstBarCode: '',
+    });
+
+
+    this.KowsarTemplate.patchValue({
+      Goods: []
+    });
 
 
   }
 
 
-
-
-
-  getDetails() {
-    this.repo.GetGood_base(this.Code).subscribe((data: any) => {
-
-      this.EditForm_Base.patchValue({
-        GoodCode: data.Goods[0].GoodCode,
-        GoodType: data.Goods[0].GoodType,
-        GoodName: data.Goods[0].GoodName,
-        Type: data.Goods[0].Type,
-        UsedGood: data.Goods[0].UsedGood,
-        GoodSubCode: data.Goods[0].GoodSubCode,
-        MinSellPrice: data.Goods[0].MinSellPrice,
-        MaxSellPrice: data.Goods[0].MaxSellPrice,
-        Isbn: data.Goods[0].Isbn,
-        FirstBarCode: data.Goods[0].FirstBarCode,
-        BarCodePrintState: data.Goods[0].BarCodePrintState,
-        SellPriceType: data.Goods[0].SellPriceType,
-        SellPrice1: data.Goods[0].SellPrice1,
-        SellPrice2: data.Goods[0].SellPrice2,
-        SellPrice3: data.Goods[0].SellPrice3,
-        SellPrice4: data.Goods[0].SellPrice4,
-        SellPrice5: data.Goods[0].SellPrice5,
-        SellPrice6: data.Goods[0].SellPrice6,
-      });
-
-      this.GoodCode_str = data.Goods[0].GoodCode
-      this.GoodSubCode_str = data.Goods[0].GoodSubCode
-      this.GoodType_str = data.Goods[0].GoodType
-      this.GoodName_str = data.Goods[0].GoodName
-      this.GetGood_Relations()
-    });
-
-    this.repo.GetGood_Explain(this.Code).subscribe((data: any) => {
-
-      this.EditForm_Explain.patchValue({
-        GoodCode: data.Goods[0].GoodCode,
-        GoodSubCode: data.Goods[0].GoodSubCode,
-        GoodName: data.Goods[0].GoodName,
-        GoodExplain1: data.Goods[0].GoodExplain1,
-        GoodExplain2: data.Goods[0].GoodExplain2,
-        GoodExplain3: data.Goods[0].GoodExplain3,
-        GoodExplain4: data.Goods[0].GoodExplain4,
-        GoodExplain5: data.Goods[0].GoodExplain5,
-        GoodExplain6: data.Goods[0].GoodExplain6,
-      });
-    });
-
-
-
-    this.repo.GetGood_Complete(this.Code).subscribe((data: any) => {
-
-      this.EditForm_Complete.patchValue({
-        GoodCode: data.Goods[0].GoodCode,
-        GoodName: data.Goods[0].GoodName,
-        GoodSubCode: data.Goods[0].GoodSubCode,
-        MaxSellPrice: data.Goods[0].MaxSellPrice,
-        MinSellPrice: data.Goods[0].MinSellPrice,
-        MinAmount: data.Goods[0].MinAmount,
-        MaxAmount: data.Goods[0].MaxAmount,
-        SefareshPoint: data.Goods[0].SefareshPoint,
-        MinBuyPrice: data.Goods[0].MinBuyPrice,
-        MaxBuyPrice: data.Goods[0].MaxBuyPrice,
-        CriticalPoint: data.Goods[0].CriticalPoint,
-        MayorTax: data.Goods[0].MayorTax,
-        Tax: data.Goods[0].Tax,
-      });
-    });
-
-    this.repo.GetGood_Propertys(this.Code).subscribe((data: any) => {
-
-      this.GoodTypeStr = data.Goods[0].GoodType;
-      this.EditForm_Property.patchValue({
-        GoodCode: data.Goods[0].GoodCode,
-        GoodName: data.Goods[0].GoodName,
-        GoodType: data.Goods[0].GoodType,
-        Nvarchar1: data.Goods[0].Nvarchar1,
-        Nvarchar2: data.Goods[0].Nvarchar2,
-        Nvarchar3: data.Goods[0].Nvarchar3,
-        Nvarchar4: data.Goods[0].Nvarchar4,
-        Nvarchar5: data.Goods[0].Nvarchar5,
-        Nvarchar6: data.Goods[0].Nvarchar6,
-        Nvarchar7: data.Goods[0].Nvarchar7,
-        Nvarchar8: data.Goods[0].Nvarchar8,
-        Nvarchar9: data.Goods[0].Nvarchar9,
-        Nvarchar10: data.Goods[0].Nvarchar10,
-        Nvarchar11: data.Goods[0].Nvarchar11,
-        Nvarchar12: data.Goods[0].Nvarchar12,
-        Nvarchar13: data.Goods[0].Nvarchar13,
-        Nvarchar14: data.Goods[0].Nvarchar14,
-        Nvarchar15: data.Goods[0].Nvarchar15,
-        Nvarchar16: data.Goods[0].Nvarchar16,
-        Nvarchar17: data.Goods[0].Nvarchar17,
-        Nvarchar18: data.Goods[0].Nvarchar18,
-        Nvarchar19: data.Goods[0].Nvarchar19,
-        Nvarchar20: data.Goods[0].Nvarchar20,
-        Int1: data.Goods[0].Int1,
-        Int2: data.Goods[0].Int2,
-        Int3: data.Goods[0].Int3,
-        Int4: data.Goods[0].Int4,
-        Int5: data.Goods[0].Int5,
-        Int6: data.Goods[0].Int6,
-        Int7: data.Goods[0].Int7,
-        Int8: data.Goods[0].Int8,
-        Int9: data.Goods[0].Int9,
-        Int10: data.Goods[0].Int10,
-        Float1: data.Goods[0].Float1,
-        Float2: data.Goods[0].Float2,
-        Float3: data.Goods[0].Float3,
-        Float4: data.Goods[0].Float4,
-        Float5: data.Goods[0].Float5,
-        Float6: data.Goods[0].Float6,
-        Float7: data.Goods[0].Float7,
-        Float8: data.Goods[0].Float8,
-        Float9: data.Goods[0].Float9,
-        Float10: data.Goods[0].Float10,
-        Text1: data.Goods[0].Text1,
-        Text2: data.Goods[0].Text2,
-        Text3: data.Goods[0].Text3,
-        Text4: data.Goods[0].Text4,
-        Text5: data.Goods[0].Text5,
-      });
-
-      this.repo.GetProperty(this.GoodTypeStr).subscribe(e => {
-
-        this.Propertys = e;
-
-
-
-      });
-    });
+  // #endregion
 
 
 
 
-
-
-
-  }
-
-
-
-
-
-
+  // #region Func
 
   // دریافت داده‌ها از طریق HTTP یا محاسبه دیگر
   checkPropertyValueMap(textvalue: string) {
@@ -633,9 +720,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
 
-
-
-
   onSellPriceTypeChange() {
 
     const maxSellPrice: number = this.EditForm_Base.value.MaxSellPrice;
@@ -685,16 +769,12 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   }
 
+  // #endregion
 
 
 
 
 
-
-
-  onBtnCancelClick() {
-    this.router.navigateByUrl('incident/incident/list');
-  }
 
 
 
@@ -704,54 +784,123 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   submit(action) {
 
     const command = this.EditForm_Base.value;
-    if (action == 'delete') {
+
+
+
+
+
+    if (action == 'base_exit') {
       // this.incidentService.delete(command.id).subscribe((id) => {
       //   this.handleCreateEditOps(action, id);
       // });
-    }
-
-    if (this.Code != "0") {
 
 
-      this.repo.Good_Update_base(command).subscribe(e => {
-
-
-        if (e[0].AppBrokerCustomerCode.length > 0) {
-
-          if (action == 'exit') {
-            this.location.back();
-          } else if (action == 'new') {
-            window.location.reload();
-          }
-        }
-
+    } else if (action == 'base_new') {
+      this.KowsarTemplate.patchValue({
+        Goods: []
       });
 
+      (this.KowsarTemplate.get('Goods') as FormArray).push(
+        this.EditForm_Base
+      );
 
-
-    } else {
-
-      this.repo.Good_Insert(command).subscribe(e => {
-
-
-        if (e[0].AppBrokerCustomerCode.length > 0) {
-
-          if (action == 'exit') {
-            this.location.back();
-          } else if (action == 'new') {
-            window.location.reload();
-          }
-        }
-
-
-      });
-
-
-
-
+      console.log(JSON.stringify(this.KowsarTemplate.value))
+      this.EditForm_Base_reset()
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+    
+    
+        if (action == 'delete') {
+          // this.incidentService.delete(command.id).subscribe((id) => {
+          //   this.handleCreateEditOps(action, id);
+          // });
+        }
+    
+        if (this.Code != "0") {
+    
+    
+          this.repo.Good_Update_base(command).subscribe(e => {
+    
+    
+            if (e[0].AppBrokerCustomerCode.length > 0) {
+    
+              if (action == 'exit') {
+                this.location.back();
+              } else if (action == 'new') {
+                window.location.reload();
+              }
+            }
+    
+          });
+    
+    
+    
+        } else {
+    
+          // this.repo.Good_Insert(command).subscribe(e => {
+    
+    
+          //   if (e[0].AppBrokerCustomerCode.length > 0) {
+    
+          //     if (action == 'exit') {
+          //       this.location.back();
+          //     } else if (action == 'new') {
+          //       window.location.reload();
+          //     }
+          //   }
+    
+    
+          // });
+    
+    
+    
+    
+        }
+    */
   }
+
+
+
+
 
   handleCreateEditOps(action, id) {
 
@@ -763,6 +912,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     //} else {
     //  
     //}
+  }
+
+  onBtnCancelClick() {
+    this.router.navigateByUrl('incident/incident/list');
   }
 
 

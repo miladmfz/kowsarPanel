@@ -17,6 +17,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { PhoenixFrameworkModule } from '../framework-components/framework.module';
 import { NotificationService } from '../framework-services/notification.service';
 import { NotifierModule } from 'angular-notifier';
+import { FullCalendarModule } from '@fullcalendar/angular'; // import the main module
+import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
+import { AgGridModule } from 'ag-grid-angular';
 
 const routes: Routes = [
   {
@@ -33,7 +36,9 @@ const routes: Routes = [
     ReactiveFormsModule,
     HttpClientModule,
     PhoenixFrameworkModule,
-    NotifierModule
+    NotifierModule,
+    FullCalendarModule,
+    AgGridModule,
 
   ],
   declarations: [
@@ -52,3 +57,5 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class LayoutModule { }
+
+

@@ -14,6 +14,7 @@ import { GoodEditComponent } from './components/Good/good-edit/good-edit.compone
 import { CellActionGoodList } from './components/Good/good-list/cell-action-good-ist';
 import { GoodsgrpListComponent } from './components/GoodsGrp/goodsgrp-list/goodsgrp-list.component';
 import { GoodsgrpEditComponent } from './components/GoodsGrp/goodsgrp-edit/goodsgrp-edit.component';
+import { GoodTestComponent } from './components/Good/good-test/good-test.component';
 
 
 
@@ -33,6 +34,7 @@ import { GoodsgrpEditComponent } from './components/GoodsGrp/goodsgrp-edit/goods
   declarations: [
     GoodListComponent,
     GoodEditComponent,
+    GoodTestComponent,
     CellActionGoodList,
     GoodsgrpListComponent,
     GoodsgrpEditComponent,

@@ -31,6 +31,7 @@ import { OrderGoodEditComponent } from './components/Order/order-good-edit/order
 
 
 
+
 const routes: Routes = [
   {
     path: '',
