@@ -34,7 +34,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       if (id != null) {
         this.Code = id;
 
-
+        this.Code_int = parseInt(this.Code);
         if (parseInt(this.Code) > 0) {
           this.getDetails();
         } else {
@@ -74,6 +74,8 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   // #region Declare
   title = 'ایجاد نوع داده انتخابی';
   Code: string = '';
+  Code_int: number = 0;
+
   GoodTypeStr: string = '';
   Image_list: any[] = [];
   Group_list: any[] = [];
@@ -101,13 +103,14 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     GoodName: new FormControl(''),
     Type: new FormControl(0),
     UsedGood: new FormControl(0),
-    GoodSubCode: new FormControl(0),
+    GoodMainCode: new FormControl(''),
+    GoodSubCode: new FormControl(''),
     MinSellPrice: new FormControl(0),
     MaxSellPrice: new FormControl(0),
     Isbn: new FormControl(''),
     FirstBarCode: new FormControl(''),
-    BarCodePrintState: new FormControl(''),
-    SellPriceType: new FormControl(''),
+    BarCodePrintState: new FormControl('ندارد'),
+    SellPriceType: new FormControl('1'),
     SellPrice1: new FormControl(0),
     SellPrice2: new FormControl(0),
     SellPrice3: new FormControl(0),
@@ -211,8 +214,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   ]
 
   UsedGood_Lookup: Base_Lookup[] = [
-    { id: "True", name: "دست دوم" },
-    { id: "False", name: "کالای نو" }
+    { id: "0", name: "کالای نو" },
+    { id: "1", name: "دست دوم" },
+    { id: "2", name: "در حد نو" },
+
   ]
 
   Type_Lookup: Base_Lookup[] = [
@@ -554,26 +559,25 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
   GetLastGoodData() {
-    this.repo.GetLastGoodData().subscribe((data: any) => {
+    // this.repo.GetLastGoodData().subscribe((data: any) => {
 
-      this.GoodType_lookup = data.ObjectTypes
 
-      this.EditForm_Base.patchValue({
+    //   this.EditForm_Base.patchValue({
 
-        Type: data.Goods[0].Type,
-        UsedGood: data.Goods[0].UsedGood,
-        MinSellPrice: 0,
-        MaxSellPrice: 0,
-        BarCodePrintState: data.Goods[0].BarCodePrintState,
-        SellPriceType: data.Goods[0].SellPriceType,
-        SellPrice1: 0,
-        SellPrice2: 0,
-        SellPrice3: 0,
-        SellPrice4: 0,
-        SellPrice5: 0,
-        SellPrice6: 0,
-      });
-    });
+    //     Type: data.Goods[0].Type,
+    //     UsedGood: data.Goods[0].UsedGood,
+    //     MinSellPrice: 0,
+    //     MaxSellPrice: 0,
+    //     BarCodePrintState: data.Goods[0].BarCodePrintState,
+    //     SellPriceType: data.Goods[0].SellPriceType,
+    //     SellPrice1: 0,
+    //     SellPrice2: 0,
+    //     SellPrice3: 0,
+    //     SellPrice4: 0,
+    //     SellPrice5: 0,
+    //     SellPrice6: 0,
+    //   });
+    // });
   }
 
   GetObjectTypeFromDbSetup() {
@@ -589,19 +593,26 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   EditForm_Base_reset() {
     this.GetLastGoodData()
 
+    this.repo.GetObjectTypeFromDbSetup("GoodType").subscribe((data: any) => {
 
-    this.GoodType_lookup.forEach((item: GoodType_lookup) => {
-      if (item.IsDefault == "True") {
-        this.EditForm_Base.patchValue({
-          GoodType: item.aType
-        });
-      }
+      data.ObjectTypes.forEach((item: GoodType_lookup) => {
+        if (item.IsDefault == "True") {
+          this.EditForm_Base.patchValue({
+            GoodType: item.aType
+          });
+        }
+      });
+
+
     });
+
+
 
     this.EditForm_Base.patchValue({
       GoodCode: 0,
       GoodName: '',
-      GoodSubCode: 0,
+      GoodSubCode: '',
+      GoodMainCode: '',
       Isbn: '',
       FirstBarCode: '',
     });
@@ -786,10 +797,17 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     const command = this.EditForm_Base.value;
 
 
+    if (action == 'base') {
+
+      // route ba GoodCode hminja
 
 
+      // this.incidentService.delete(command.id).subscribe((id) => {
+      //   this.handleCreateEditOps(action, id);
+      // });
 
-    if (action == 'base_exit') {
+
+    } else if (action == 'base_exit') {
       // this.incidentService.delete(command.id).subscribe((id) => {
       //   this.handleCreateEditOps(action, id);
       // });

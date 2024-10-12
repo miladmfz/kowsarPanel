@@ -16,31 +16,34 @@
         <span class="d-none d-sm-inline-block">اطلاعات کالا</span>
       </a>
     </li>
-    <li class="nav-item">
-      <a href="#GoodExplains" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
-        <span class="d-inline-block d-sm-none"><i class="mdi mdi-email-variant"></i></span>
-        <span class="d-none d-sm-inline-block">توضیحات کالا </span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a href="#GoodComplete" data-bs-toggle="tab" aria-expanded="true" class="nav-link">
-        <span class="d-inline-block d-sm-none"><i class="mdi mdi-account"></i></span>
-        <span class="d-none d-sm-inline-block">اطلاعات تکمیلی</span>
-      </a>
-    </li>
+    <ng-container *ngIf="Code_int>0">
+      <li class="nav-item">
+        <a href="#GoodExplains" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+          <span class="d-inline-block d-sm-none"><i class="mdi mdi-email-variant"></i></span>
+          <span class="d-none d-sm-inline-block">توضیحات کالا </span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#GoodComplete" data-bs-toggle="tab" aria-expanded="true" class="nav-link">
+          <span class="d-inline-block d-sm-none"><i class="mdi mdi-account"></i></span>
+          <span class="d-none d-sm-inline-block">اطلاعات تکمیلی</span>
+        </a>
+      </li>
 
-    <li class="nav-item">
-      <a href="#GoodProperty" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
-        <span class="d-inline-block d-sm-none"><i class="mdi mdi-cog"></i></span>
-        <span class="d-none d-sm-inline-block">خصوصیت اضافه</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a href="#GoodRelations" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
-        <span class="d-inline-block d-sm-none"><i class="mdi mdi-cog"></i></span>
-        <span class="d-none d-sm-inline-block">ارتباطات کالا</span>
-      </a>
-    </li>
+      <li class="nav-item">
+        <a href="#GoodProperty" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+          <span class="d-inline-block d-sm-none"><i class="mdi mdi-cog"></i></span>
+          <span class="d-none d-sm-inline-block">خصوصیت اضافه</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#GoodRelations" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+          <span class="d-inline-block d-sm-none"><i class="mdi mdi-cog"></i></span>
+          <span class="d-none d-sm-inline-block">ارتباطات کالا</span>
+        </a>
+      </li>
+    </ng-container>
+
 
 
   </ul>
@@ -73,16 +76,16 @@
                   </div>
 
                   <div class="form-group col-md-3">
-                    <label for="GoodCode" class="col-form-label">کد اصلی</label>
-                    <input type="text" class="form-control" id="GoodCode" formControlName="GoodCode" maxlength="100"
-                      autocomplete="off" [readOnly]="true" />
+                    <label for="GoodMainCode" class="col-form-label">کد اصلی</label>
+                    <input type="text" class="form-control" id="GoodMainCode" formControlName="GoodMainCode"
+                      maxlength="100" autocomplete="off" />
                   </div>
 
 
                   <div class="form-group col-md-3">
                     <label for="GoodSubCode" class="col-form-label">کد زیر مجموعه </label>
-                    <input type="text" class="form-control" id="GoodSubCode" formControlName="GoodSubCode"
-                      maxlength="100" autocomplete="off" />
+                    <input type="text" class="form-control" id="GoodSubCode" formControlName="GoodSubCode" maxlength="3"
+                      autocomplete="off" />
                   </div>
 
 
