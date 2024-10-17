@@ -1,0 +1,158 @@
+<!-- <div class="card">
+  <h5 class="card-title d-flex justify-content-center align-items-center position-relative my-3">{{TagName}}</h5>
+  <div class="row">
+
+    <div class="card-body col-6">
+      <form>
+        <div class="form-row">
+          <div class="col-md-16 mb-3">
+            <label for="ActivationCode" class="form-label">GoodCode </label>
+
+            <h3>{{formValues.GoodCode}}</h3>
+          </div>
+        </div>
+
+
+        <div class="form-row">
+          <div class="col-md-16 mb-3"> <label for="GoodName" class="form-label">نام فارسی </label>
+            <input type="text" class="form-control" id="GoodName" [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="formValues.GoodName">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-md-16 mb-3">
+
+            <label for="GoodExplain5" class="form-label">نام انگلیسی </label>
+            <input type="text" class="form-control" id="GoodExplain5" [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="formValues.GoodExplain5">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-md-16 mb-3"> <label for="MaxSellprice" class="form-label">SellPrice </label> <input
+              type="number" class="form-control" id="MaxSellprice" [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="formValues.MaxSellprice"> </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-md-16 mb-3"> <label for="GoodExplain1" class="form-label">GoodExplain1 </label> <input
+              type="text" class="form-control" id="GoodExplain1" [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="formValues.GoodExplain1"> </div>
+        </div>
+        <div class="form-row">
+          <div class="col-md-16 mb-3"> <label for="GoodExplain2" class="form-label">GoodExplain2 </label> <input
+              type="text" class="form-control" id="GoodExplain2" [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="formValues.GoodExplain2"> </div>
+        </div>
+        <div class="form-row">
+          <div class="col-md-16 mb-3"> <label for="GoodExplain3" class="form-label"> </label> <input type="text"
+              class="form-control" id="GoodExplain3" [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="formValues.GoodExplain3"> </div>
+        </div>
+        <div class="form-row">
+          <div class="col-md-16 mb-3"> <label for="GoodExplain4" class="form-label">GoodExplain4 </label> <input
+              type="text" class="form-control" id="GoodExplain4" [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="formValues.GoodExplain4">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-md-6 mb-3">
+            <button class="btn btn-primary btn-block" type="button" (click)="logFormData()">ثبت کردن</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+
+
+
+    <div class="card-body col-5 m-2">
+
+
+      <label>Good Image </label>
+      <div class="my-4 d-flex justify-content-center align-items-center position-relative">
+        <label for="fileInput" class="position-relative">
+
+          <ng-container *ngIf="Imageitem.length>100">
+            <img [src]="Imageitem" alt="No Photo"
+              style="width: 150px; height: 150px; border-radius: 5%; cursor: pointer;"
+              (mouseover)="showUploadText = true" (mouseleave)="showUploadText = false" (click)="fileInput.click()">
+          </ng-container>
+          <ng-container *ngIf="Imageitem.length<100">
+            <img src="./assets/images/nophoto.jpg" alt="No Photo"
+              style="width: 150px; height: 150px; border-radius: 5%; cursor: pointer;"
+              (mouseover)="showUploadText = true" (mouseleave)="showUploadText = false" (click)="fileInput.click()">
+
+          </ng-container>
+
+
+
+          <span
+            class="upload-text position-absolute top-50 start-50 translate-middle text-white fw-bold opacity-50 transition-opacity"
+            [ngClass]="{'opacity-100': showUploadText}">Upload</span>
+        </label>
+        <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput style="display: none;">
+      </div>
+
+
+
+      <c-button-group [formGroup]="btnRadioGroup2">
+        <input class="btn-check" formControlName="activestack" id="radio1-grp2" type="radio" value="NotActive" />
+        <label (click)="setRadioValue('NotActive')" cButton cFormCheckLabel color="danger" for="radio1-grp2"
+          variant="outline">
+
+          Not Active
+        </label>
+
+        <input class="btn-check" formControlName="activestack" id="radio2-grp2" type="radio" value="Active" />
+        <label (click)="setRadioValue('Active')" cButton cFormCheckLabel color="success" for="radio2-grp2"
+          variant="outline">
+          Active
+        </label>
+
+
+      </c-button-group>
+
+      <div class="my-4 ">
+        <label f>Group list </label>
+        <div class="table-responsive">
+
+          <table class="table table-bordered align-middle gs-0 gy-4">
+            <thead>
+              <tr class="fw-bolder ">
+
+                <th class="min-w-50px">Name</th>
+                <th class="min-w-50px">GoodGroupRef </th>
+                <th class="min-w-50px">action </th>
+
+              </tr>
+            </thead>
+            <tbody *ngFor="let item of items_Grp">
+
+              <tr>
+
+                <td>{{ item.Name }}</td>
+                <td>{{ item.GoodGroupRef }}</td>
+                <td>
+
+                  <a class="btn btn-danger text-white btn-sm mx-1" (click)="DeleteGoodGroupCode(item.GoodGroupCode)">
+                    delete
+                  </a>
+
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+
+      </div>
+
+
+    </div>
+  </div>
+
+</div> -->

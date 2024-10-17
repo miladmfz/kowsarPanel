@@ -106,16 +106,10 @@ export class ApplicationListComponent
           title: data.PersianCompanyName + ' پورت فعال می باشد. ',
           icon: 'success',
         });
-
-
       } else {
         //this.notificationService.error('Port is closed');
         Swal.fire(data.PersianCompanyName + ' اتصال پورت برقرار نیست ', 'error');
-
       }
-
-
-
     });
 
   }

@@ -1,0 +1,100 @@
+<div class="row">
+  <div class="col-12">
+    <div class="page-title-box">
+      <h4 class="page-title">ایجاد تیکت جدید</h4>
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="EditForm" (ngSubmit)="submit('')" id="submitForm">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body row">
+
+          <div class="form-group col-md-3">
+            <label for="dateValue" class="col-form-label">تاریخ</label>
+            <div>
+              <h5>{{ToDayDate}}</h5>
+            </div>
+          </div>
+
+          <div></div>
+
+          <div class="form-group col-md-4">
+            <label for="titleFormControl" class="col-form-label">عنوان تیکت </label>
+            <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+
+            <select formControlName="titleFormControl" id="titleFormControl" class="form-control custom-select">
+              <option [value]="item.id" *ngFor="let item of Title_Lookup">{{item.name}}</option>
+            </select>
+
+          </div>
+          <ng-container *ngIf="JobPersonRef.length>0">
+            <div class="form-group col-md-4">
+              <label for="LetterPriority" class="col-form-label">الویت </label>
+              <select formControlName="LetterPriority" id="LetterPriority" class="form-control custom-select">
+                <option [value]="item.aType" *ngFor="let item of LetterPriority_lookup">{{item.aType}}</option>
+              </select>
+            </div>
+
+
+
+            <div class="form-group col-md-4">
+              <label for="LetterState" class="col-form-label">وضعیت </label>
+              <select formControlName="LetterState" id="LetterState" class="form-control custom-select">
+                <option [value]="item.aType" *ngFor="let item of LetterState_lookup">{{item.aType}}</option>
+              </select>
+            </div>
+
+
+          </ng-container>
+
+
+
+
+          <div class="form-group col-md-12">
+            <label for="descriptionFormControl" class="col-form-label">شرح تیکت </label>
+
+            <textarea type="text" class="form-control" id="descriptionFormControl"
+              formControlName="descriptionFormControl" maxlength="100" autocomplete="off">
+
+              </textarea>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="form-group col-md-3">
+  <label for="datePicker" class="col-form-label">تاریخ</label>
+  <div>
+    <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false" [uiHideAfterSelectDate]="true">
+      <input class="form-control" id="datePicker" type="text" />
+    </ng-persian-datepicker>
+  </div>
+
+</div>
+<div class="card">
+  <div class="card-body">
+    <div class="col-sm-6">
+      <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
+        (click)="submit('')">
+        <span class="btn-label"><i class="fas fa-check-double"></i></span>ارسال تیکت </a>
+
+    </div>
+  </div>
+</div>
+
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
+    <div class="fv-plugins-message-container invalid-feedback">
+      <span role="alert">
+        {{ message }}
+      </span>
+    </div>
+  </ng-container>
+</ng-template>

@@ -1,0 +1,185 @@
+<div class="card">
+  <div class="card-header">
+    <ul class="nav nav-pills nav-fill">
+
+
+      <li class="nav-item">
+        <a class="nav-link active" data-bs-toggle="pill" [routerLink]="['/application/order-detail']">پنل سفارشگیر</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/order-good']"> مدیریت آیتم </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/order-customer']">
+          حساب پرسنل</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/order-report']"> گزارش </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/order-setting']"> تنظیمات سفارشگیر</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card-body">
+    <div class="tab-content">
+
+      <div class="tab-pane fade show active" role="tabpanel">
+
+
+
+        <div class="row">
+          <div class="col-xl-3 col-md-6">
+            <div class="widget-bg-color-icon card border border-info">
+              <div class="card-body card-body">
+                <div class="d-flex align-items-start">
+                  <div class="avatar-lg rounded-circle bg-icon-success"><i
+                      class="font-24 avatar-title mdi-lg mdi mdi-home-roof"></i></div>
+                  <div class="flex-1 text-end  align-self-center">
+                    <h3 class="mt-0"><span><span>میز خالی = {{items1.length}}</span></span></h3>
+                    <h4 class="text-muted mb-0"><span>روف</span></h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6">
+            <div class="widget-bg-color-icon card border border-info">
+              <div class="card-body card-body">
+                <div class="d-flex align-items-start">
+                  <div class="avatar-lg rounded-circle bg-icon-primary"><i
+                      class="font-24 avatar-title  mdi mdi-flower"></i></div>
+
+                  <div class="flex-1 text-end align-self-center">
+                    <h3 class="mt-0"><span><span>میز خالی = {{items2.length}}</span></span></h3>
+                    <h4 class="text-muted mb-0">حیاط</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6">
+            <div class="widget-bg-color-icon card border border-info">
+              <div class="card-body card-body">
+                <div class="d-flex align-items-start">
+                  <div class="avatar-lg rounded-circle bg-icon-danger"><i
+                      class="font-24 avatar-title mdi mdi-bookshelf"></i></div>
+                  <div class="flex-1 text-end align-self-center">
+                    <h3 class="mt-0"><span><span>میز خالی = {{items3.length}}</span></span></h3>
+                    <h4 class="text-muted mb-0">همایش</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6 ">
+            <div class="widget-bg-color-icon card border border-info">
+              <div class="card-body card-body">
+                <div class="d-flex align-items-start">
+                  <div class="avatar-lg rounded-circle bg-icon-purple"><i
+                      class="font-24 avatar-title mdi mdi-table-chair"></i></div>
+                  <div class="flex-1 text-end align-self-center">
+                    <h3 class="mt-0"><span><span>میز خالی = {{items4.length}}</span></span></h3>
+                    <h4 class="text-muted mb-0">تراس</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+        <div class="p-2 mb-lg-0 card border border-info ">
+          <table class="mb-0 table table-sm table-borderless">
+            <tbody>
+              <tr>
+                <th colspan="2">
+                  <h5 class="font-15 m-0">لیست کاری مجموعه</h5>
+                </th>
+              </tr>
+              <tr>
+                <th scope="row">تعداد کل:</th>
+                <td>{{ itemsAmount1[0].Amount }}</td>
+              </tr>
+              <tr>
+                <th scope="row">آشپزخانه :</th>
+                <td>{{ itemsAmount2[0].Amount }}</td>
+              </tr>
+              <tr>
+                <th scope="row">بار :</th>
+                <td>{{ itemsAmount3[0].Amount }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+
+        <div class="card mb-4">
+          <div class="card-body">
+
+
+            <div class="container ">
+              <div class="row">
+
+                <div class="col-md-6 card ">
+                  <label class="col-form-label">کمترین فروش روز </label>
+
+                  <div class="table-responsive border border-info">
+                    <table class="table table-bordered align-middle gs-0 gy-4">
+                      <thead>
+                        <tr class="fw-bolder">
+                          <th class="min-w-125px">نام</th>
+                          <th class="min-w-20px">تعداد</th>
+                        </tr>
+                      </thead>
+                      <tbody *ngFor="let item of ItemsMax">
+                        <tr>
+                          <td>{{ item.GoodName }}</td>
+                          <td>{{ item.Amount }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="col-md-6 card ">
+                  <label class="col-form-label">بیشترین فروش روز </label>
+
+                  <div class="table-responsive border border-info">
+                    <table class="table table-bordered align-middle gs-0 gy-4">
+                      <thead>
+                        <tr class="fw-bolder">
+                          <th class="min-w-125px">نام</th>
+                          <th class="min-w-20px">تعداد</th>
+                        </tr>
+                      </thead>
+                      <tbody *ngFor="let item of ItemsMin">
+                        <tr>
+                          <td>{{ item.GoodName }}</td>
+                          <td>{{ item.Amount }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+
+
+      </div>
+
+    </div>
+  </div>
+</div>

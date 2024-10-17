@@ -1,0 +1,154 @@
+<div class="card">
+  <div class="card-header">
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item">
+        <a class="nav-link  " data-bs-toggle="pill" [routerLink]="['/application/ocr-detail']">پنل توزیع و
+          بایگانی</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link active" data-bs-toggle="pill" [routerLink]="['/application/ocr-list']">لیست توزیع و
+          بایگانی</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/ocr-setting']">تنظیمات توزیع و
+          بایگانی</a>
+      </li>
+    </ul>
+  </div>
+
+
+  <div class="card-body">
+    <div class="tab-content">
+
+      <div class="tab-pane fade show active" role="tabpanel">
+
+
+
+
+        <form [formGroup]="EditForm_Base" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+
+
+
+                  <div class="form-group col-md-3"><label for="AppBrokerRef" class="col-form-label">کد
+                      بازاریاب</label><input type="text" class="form-control" id="AppBrokerRef"
+                      formControlName="AppBrokerRef" maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="AppControlDate" class="col-form-label">تاریخ کنترل
+                      انبار</label><input type="text" class="form-control" id="AppControlDate"
+                      formControlName="AppControlDate" maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="AppControler" class="col-form-label">کنترل
+                      کننده</label><input type="text" class="form-control" id="AppControler"
+                      formControlName="AppControler" maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="AppDeliverDate" class="col-form-label">تاریخ
+                      تحویل</label><input type="text" class="form-control" id="AppDeliverDate"
+                      formControlName="AppDeliverDate" maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+
+                  <div class="form-group col-md-3"><label for="AppDeliverer" class="col-form-label">تحویل
+                      دهنده</label><input type="text" class="form-control" id="AppDeliverer"
+                      formControlName="AppDeliverer" maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="AppFactorRef" class="col-form-label">کد
+                      فاکتور</label><input type="text" class="form-control" id="AppFactorRef"
+                      formControlName="AppFactorRef" maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="AppFactorState" class="col-form-label">وضعیت
+                      فاکتور</label><input type="text" class="form-control" id="AppFactorState"
+                      formControlName="AppFactorState" maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="AppIsControled" class="col-form-label">وضعیت کنترل
+                      انبار</label><input type="text" class="form-control" id="AppIsControled"
+                      formControlName="AppIsControled" maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="AppIsPacked" class="col-form-label">وضعیت بسته
+                      بندی</label><input type="text" class="form-control" id="AppIsPacked" formControlName="AppIsPacked"
+                      maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="AppIsDelivered" class="col-form-label">وضعیت
+                      تحویل</label><input type="text" class="form-control" id="AppIsDelivered"
+                      formControlName="AppIsDelivered" maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+
+                  <div class="form-group col-md-3"><label for="AppOCRFactorCode" class="col-form-label">کد بایگانی
+                    </label><input type="text" class="form-control" id="AppOCRFactorCode"
+                      formControlName="AppOCRFactorCode" maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="AppPackCount" class="col-form-label">تعداد
+                      بسته</label><input type="text" class="form-control" id="AppPackCount"
+                      formControlName="AppPackCount" maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="AppPackDate" class="col-form-label">تاریخ بسته بندی
+                    </label><input type="text" class="form-control" id="AppPackDate" formControlName="AppPackDate"
+                      maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="AppPackDeliverDate" class="col-form-label">تاریخ تحویل
+                      بسته</label><input type="text" class="form-control" id="AppPackDeliverDate"
+                      formControlName="AppPackDeliverDate" maxlength="100" autocomplete="off" [readOnly]="true" />
+                  </div>
+                  <div class="form-group col-md-3"><label for="AppPacker" class="col-form-label">بسته بند</label><input
+                      type="text" class="form-control" id="AppPacker" formControlName="AppPacker" maxlength="100"
+                      autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="AppReader" class="col-form-label">خواننده</label><input
+                      type="text" class="form-control" id="AppReader" formControlName="AppReader" maxlength="100"
+                      autocomplete="off" [readOnly]="true" /> </div>
+
+                  <div class="form-group col-md-3"><label for="BrokerName" class="col-form-label">نام
+                      بازاریاب</label><input type="text" class="form-control" id="BrokerName"
+                      formControlName="BrokerName" maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="CustName" class="col-form-label">نام مشتری</label><input
+                      type="text" class="form-control" id="CustName" formControlName="CustName" maxlength="100"
+                      autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="Ersall" class="col-form-label">ارسال</label><input
+                      type="text" class="form-control" id="Ersall" formControlName="Ersall" maxlength="100"
+                      autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="FactorDate" class="col-form-label">تاریخ
+                      فاکتور</label><input type="text" class="form-control" id="FactorDate" formControlName="FactorDate"
+                      maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="FactorPrivateCode" class="col-form-label">کد فاکتور
+                      فروش</label><input type="text" class="form-control" id="FactorPrivateCode"
+                      formControlName="FactorPrivateCode" maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="HasSignature" class="col-form-label">دارای
+                      امضا</label><input type="text" class="form-control" id="HasSignature"
+                      formControlName="HasSignature" maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="IsEdited" class="col-form-label">اصلاح شده</label><input
+                      type="text" class="form-control" id="IsEdited" formControlName="IsEdited" maxlength="100"
+                      autocomplete="off" [readOnly]="true" /> </div>
+                  <div class="form-group col-md-3"><label for="customercode" class="col-form-label">کد
+                      مشتری</label><input type="text" class="form-control" id="customercode"
+                      formControlName="customercode" maxlength="100" autocomplete="off" [readOnly]="true" /> </div>
+
+
+
+
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div class="form-group row mb-3">
+
+          <button class="btn btn-warning text-white col-sm-5 mx-2" [routerLink]="['/application/ocr-list']"
+            type="button">بازگشت</button>
+
+          <ng-container
+            *ngIf="EditForm_Base.value.AppIsDelivered =='True' && EditForm_Base.value.HasSignature =='False'">
+            <button class="btn btn-danger text-white col-sm-5 mx-2" (click)="ExitDelivery()" type="button">انتقال به
+              آماده تحویل</button>
+
+
+          </ng-container>
+
+          <!-- class="col-sm-3 col-form-label" -->
+
+        </div>
+
+
+
+
+
+
+
+      </div>
+
+    </div>
+  </div>
+</div>

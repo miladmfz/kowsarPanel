@@ -1,0 +1,331 @@
+<div class="card">
+  <div class="card-header">
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item">
+        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/company-detail']">پنل مشتریان
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" data-bs-toggle="pill" [routerLink]="['/application/company-setting']">تنظیمات پشتریان
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body">
+    <div class="tab-content">
+
+      <div class="tab-pane fade show active" role="tabpanel">
+
+
+
+        <div class="card">
+          <h5 class="card-header">ساختن تنظیم جدول</h5>
+          <div class="card-body">
+            <div class="card-body">
+              <h5 class="card-title">ایجاد فیلد های مورد نیاز برای نمایش در نرم افزار های قابل استفاده</h5>
+
+              <h5 *ngIf="BasketColumns.length<1" class="card-text">{{AppBasketColumn_Status}}</h5>
+              <a *ngIf="BasketColumns.length>0" [routerLink]="['/application/broker-column']"
+                class="btn btn-primary">اصلاح تنظیم جدول</a>
+
+              <a *ngIf="BasketColumns.length<1" (click)="CreateAppBasketColumn()" class="btn btn-primary">ایجاد تنظیم
+                جدول</a>
+            </div>
+          </div>
+        </div>
+
+
+
+
+        <div>
+
+          <h3 class="card-title align-items-start flex-column">
+            <span class="card-label ">تنظیمات پایه نرم افزار:</span>
+          </h3>
+
+
+          <!-- End::header Table  -->
+          <!-- begin::Table container -->
+          <div class="table-responsive">
+
+            <table class="table table-bordered align-middle gs-0 gy-4">
+              <thead>
+                <tr class="fw-bolder ">
+                  <th class="min-w-125px"></th>
+                  <th class="min-w-125px">ردیف</th>
+                  <th class="min-w-125px">عنوان</th>
+                  <th class="min-w-50px">مقدار</th>
+                  <th class="min-w-125px">شرح</th>
+                  <th class="min-w-125px">گروه </th>
+                  <th class="min-w-50px">فعالیت</th>
+                </tr>
+              </thead>
+              <tbody *ngFor="let item of items; let i = index">
+                <tr>
+                  <td>{{ i+1 }}</td>
+                  <td>{{ item.KeyId }}</td>
+                  <td>{{ item.KeyValue }}</td>
+                  <td>{{ item.DataValue }}</td>
+                  <td>{{ item.Description }}</td>
+                  <td>{{ item.SubSystem }}</td>
+                  <!-- <td>
+                    <button [cModalToggle]="verticallyCenteredModal.id" (click)="SelectDbSetup(i)" cButton>
+                      تغییر</button>
+                  </td> -->
+
+
+                  <td>
+                    <button class="rounded-pill btn btn-outline-info" type="button" data-bs-toggle="modal"
+                      data-bs-target="#verticallyCenteredModal" (click)="SelectDbSetup(i)">
+                      تغییر
+                    </button>
+                  </td>
+
+
+
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- end::Table container -->
+        </div>
+        <!-- end::DBSetup -->
+
+
+
+        <!-- begin::printer -->
+        <div>
+          <!-- begin::header Table  -->
+
+          <!-- <c-row class="justify-content-between my-3">
+            <c-col xs="4">
+              <h3 class="card-title align-items-start flex-column">
+                <span class="card-label ">لیست پرینتر های تعریف شده:</span>
+              </h3>
+            </c-col>
+            <c-col xs="4">
+              <button class="btn btn-success text-white" type="button" [cModalToggle]="printerModal.id"
+                (click)="CreateprinterRecord()">ایجاد پرینتر جدید</button>
+            </c-col>
+          </c-row> -->
+
+
+          <div class="row justify-content-between my-3">
+            <div class="col-md-6">
+              <h3 class="card-title align-items-start flex-column">
+                <span class="card-label">لیست پرینتر های تعریف شده:</span>
+              </h3>
+            </div>
+            <div class="col-md-6">
+              <button class="rounded-pill btn btn-outline-success" type="button" data-bs-toggle="modal"
+                data-bs-target="#printerModal" (click)="CreateprinterRecord()">ایجاد پرینتر جدید</button>
+            </div>
+          </div>
+
+          <!-- End::header Table  -->
+          <!-- begin::Table container -->
+          <div class="table-responsive ">
+
+            <table class="table table-bordered align-middle gs-0 gy-4">
+              <thead>
+                <tr class="fw-bolder ">
+                  <th class="min-w-10px"></th>
+                  <th class="min-w-125px">نام سیستمی پرینتر</th>
+                  <th class="min-w-125px">شرح</th>
+                  <th class="min-w-50px">گروه نمایشی</th>
+                  <th class="min-w-125px">شرط نمایش</th>
+                  <th class="min-w-50px">تعداد پرینت</th>
+                  <th class="min-w-50px">فعال /غیرفعال</th>
+                  <th class="min-w-50px">فعالیت</th>
+
+                </tr>
+              </thead>
+              <tbody *ngFor="let item of Printers; let i = index">
+                <tr>
+                  <td>{{i}}</td>
+                  <td>{{ item.PrinterName }}</td>
+                  <td>{{ item.PrinterExplain }}</td>
+                  <td>{{ item.GoodGroups }}</td>
+                  <td>{{ item.WhereClause }}</td>
+                  <td>{{ item.PrintCount }}</td>
+                  <td>
+                    <span *ngIf="item.PrinterActive == 'True'">
+                      <span class="bg-soft-success text-success" style="padding: 3px">فعال</span>
+                    </span>
+                    <span *ngIf="item.PrinterActive == 'False'">
+                      <span class="bg-soft-danger text-danger" style="padding: 3px">غیرفعال</span>
+                    </span>
+                  </td>
+
+                  <!-- <td>
+                    <button [cModalToggle]="printerModal.id" (click)="SelectPrinter(i)" cButton>
+                      تغییر</button>
+                  </td> -->
+
+
+                  <td>
+                    <button class="rounded-pill btn btn-outline-info" type="button" data-bs-toggle="modal"
+                      data-bs-target="#printerModal" (click)="SelectPrinter(i)">
+                      تغییر
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- end::Table container -->
+        </div>
+        <!-- end::printer -->
+
+
+
+
+
+
+
+
+
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- <c-modal #verticallyCenteredModal alignment="center" id="verticallyCenteredModal">
+  <c-modal-header>
+    <h5 cModalTitle>تنظیمات پایه</h5>
+    <button [cModalToggle]="verticallyCenteredModal.id" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    <c-row class="mb-3">
+      <label [sm]="2" cCol cLabel="col" for="staticEmail" class="mx-1">
+        شرح
+      </label>
+      <c-col [sm]="9">
+        <input cFormControl id="staticEmail" plaintext readonly type="text" value="{{selected_des}}" />
+      </c-col>
+    </c-row>
+
+    <c-row class="mb-3">
+      <label cLabel="col" class="col-sm-2" for="inputPassword">
+        مقدار
+      </label>
+      <c-col [sm]="10">
+
+        <input cFormControl placeholder="{{selected_value}}" type="text" [(ngModel)]="selected_value"
+          [ngModelOptions]="{ standalone: true }" />
+      </c-col>
+    </c-row>
+  </c-modal-body>
+  <c-modal-footer>
+    <button [cModalToggle]="verticallyCenteredModal.id" cButton color="secondary">
+      Close
+    </button>
+    <button cButton color="primary" (click)="UpdateDbSetup()">update</button>
+  </c-modal-footer>
+</c-modal> -->
+
+
+
+<div class="modal fade" id="verticallyCenteredModal" tabindex="-1" aria-labelledby="verticallyCenteredModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="verticallyCenteredModalLabel">تنظیمات پایه</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3 row">
+          <label for="staticEmail" class="col-sm-2 col-form-label">شرح</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ selected_des }}">
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="inputPassword" class="col-sm-2 col-form-label">مقدار</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputPassword" placeholder="{{ selected_value }}"
+              [(ngModel)]="selected_value">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="UpdateDbSetup()">به‌روزرسانی</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" #printerModal id="printerModal" tabindex="-1" aria-labelledby="printerModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="printerModalLabel">جزییات پرینتر</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="EditForm_printer" (submit)="Updateprinter()">
+
+
+          <div class="form-group col-md-12">
+            <label for="PrinterName" class="col-form-label">نام پا ادرس چاپگر</label>
+            <input type="text" class="form-control" id="PrinterName" formControlName="PrinterName" maxlength="400"
+              autocomplete="off" />
+          </div>
+
+          <div class="form-group col-md-12">
+            <label for="PrinterExplain" class="col-form-label">توضیحات چاپگر</label>
+            <input type="text" class="form-control" id="PrinterExplain" formControlName="PrinterExplain" maxlength="400"
+              autocomplete="off" />
+          </div>
+
+          <div class="form-group col-md-12">
+            <label for="GoodGroups" class="col-form-label">کد گروه برای چاپگر</label>
+            <input type="text" class="form-control" id="GoodGroups" formControlName="GoodGroups" maxlength="400"
+              autocomplete="off" />
+          </div>
+
+
+          <div class="form-group col-md-12">
+            <label for="WhereClause" class="col-form-label">شرط چاپگر</label>
+            <input type="text" class="form-control" id="WhereClause" formControlName="WhereClause" maxlength="400"
+              autocomplete="off" />
+          </div>
+          <div class="form-group col-md-12">
+            <label for="PrintCount" class="col-form-label">تعداد چاپ </label>
+            <input type="text" class="form-control" id="PrintCount" formControlName="PrintCount" maxlength="400"
+              autocomplete="off" />
+          </div>
+
+          <div class="form-group col-md-12">
+            <label for="PrinterActive" class="col-form-label">فعال بودن چاپگر</label>
+            <input type="text" class="form-control" id="PrinterActive" formControlName="PrinterActive" maxlength="400"
+              autocomplete="off" />
+          </div>
+          <div class="form-group col-md-12">
+            <label for="FilePath" class="col-form-label">ادرس فایل چاپگر</label>
+            <input type="text" class="form-control" id="FilePath" formControlName="FilePath" maxlength="400"
+              autocomplete="off" />
+          </div>
+
+
+
+        </form>
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-primary" (click)="Updateprinter()">ثبت اطلاعات</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>

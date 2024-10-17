@@ -1,0 +1,42 @@
+@import 'ag-grid-enterprise/dist/styles/ag-grid.css';
+@import 'ag-grid-enterprise/dist/styles/ag-theme-alpine.css';
+@import 'ag-grid-enterprise/dist/styles/ag-theme-alpine.css';
+@import 'ag-grid-enterprise/dist/styles/ag-theme-balham.css';
+
+@font-face {
+  font-family: IRANSans_Bold;
+  font-style: normal;
+  src: url('./assets/fonts/iransans/IRANSansWeb(FaNum)_Bold.eot');
+  src: url('./assets/fonts/iransans/IRANSansWeb(FaNum)_Bold.eot?#iefix') format('embedded-opentype'),
+    url('./assets/fonts/iransans/IRANSansWeb(FaNum)_Bold.woff2') format('woff2'),
+    url('./assets/fonts/iransans/IRANSansWeb(FaNum)_Bold.woff') format('woff'),
+    url('./assets/fonts/iransans/IRANSansWeb(FaNum)_Bold.ttf') format('truetype');
+}
+
+
+
+* {
+  font-family: IRANSans_Bold;
+}
+
+.modal-header .btn-close {
+  margin: 0;
+}
+
+.table {
+  direction: rtl;
+}
+
+app-custom-button {
+  padding-right: 1px;
+  padding-left: 1px;
+}
+
+.mdi-set,
+.mdi:before {
+  font-size: 28px !important;
+}
+
+.page-title-box {
+  margin: 0 -27px 20px;
+}
