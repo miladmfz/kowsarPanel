@@ -6,11 +6,18 @@
   <meta charset="utf-8" />
   <title>کوثر سامانه پرداز</title>
 
+  <!-- For older iOS devices (still used in some cases) -->
+
+
   <base href="/" />
 
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="کوثر">
+  <!-- For Android and other mobile browsers -->
+  <meta name="mobile-web-app-capable" content="yes">
+
+
   <link rel="apple-touch-icon" href="./assets/images/favicon.ico">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -20,13 +27,32 @@
   <!-- plugin css -->
 
 
+  <link href="./assets/libs/multiselect/css/multi-select.css" rel="stylesheet" type="text/css" />
+  <link href="./assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+  <link href="./assets/libs/selectize/css/selectize.bootstrap3.css" rel="stylesheet" type="text/css" />
 
+  <link href="./assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+  <link href="./assets/libs/jquery-toast-plugin/jquery.toast.min.css" rel="stylesheet" type="text/css" />
+  <link href="./assets/libs/jstree/themes/default/style.min.css" rel="stylesheet" type="text/css" />
+
+  <link href="./assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+  <link href="./assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css" rel="stylesheet"
+    type="text/css" />
+  <link href="./assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet"
+    type="text/css" />
+  <link href="./assets/libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css" rel="stylesheet"
+    type="text/css" />
+
+  <!-- App css -->
   <link href="./assets/css/modern/bootstrap-rtl.min.css" rel="stylesheet" id="bs-default-stylesheet" />
   <link href="./assets/css/modern/app-rtl.min.css" rel="stylesheet" id="app-default-stylesheet" />
-  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css' rel='stylesheet' />
-  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js'></script>
 
+  <link href="./assets/css/modern/bootstrap-dark-rtl.min.css" rel="stylesheet" id="bs-dark-stylesheet" />
+  <link href="./assets/css/modern/app-dark-rtl.min.css" rel="stylesheet" id="app-dark-stylesheet" />
+
+  <!-- icons -->
   <link href="./assets/css/icons.min.css" rel="stylesheet" />
+
 </head>
 
 <body data-layout-mode="detached"
@@ -34,7 +60,20 @@
   <app-root></app-root>
 
   <script src="./assets/js/vendor.min.js"></script>
-  <script type="module" src="./assets/js/app.min.js"></script>
+  <script src="./assets/libs/select2/js/select2.min.js"></script>
+  <script src="./assets/libs/jquery-knob/jquery.knob.min.js" defer></script>
+  <script src="./assets/libs/sweetalert2/sweetalert2.min.js"></script>
+  <script src="./assets/libs/jquery-toast-plugin/jquery.toast.min.js"></script>
+  <script src="./assets/libs/jstree/jstree.min.js"></script>
+  <script src="./assets/libs/apexcharts/apexcharts.min.js"></script>
+  <!-- App init -->
+  <script src="./assets/js/pages/toastr.init.js"></script>
+
+  <script src="./assets/js/app.min.js"></script>
+
+
+
+
 </body>
 
 </html>

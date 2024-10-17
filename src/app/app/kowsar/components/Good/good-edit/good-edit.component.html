@@ -74,7 +74,7 @@
                     <input type="text" class="form-control" id="GoodCode" formControlName="GoodCode" maxlength="100"
                       autocomplete="off" [readOnly]="true" />
                   </div>
-
+                  <!-- 
                   <div class="form-group col-md-3">
                     <label for="GoodMainCode" class="col-form-label">کد اصلی</label>
                     <input type="text" class="form-control" id="GoodMainCode" formControlName="GoodMainCode"
@@ -86,6 +86,24 @@
                     <label for="GoodSubCode" class="col-form-label">کد زیر مجموعه </label>
                     <input type="text" class="form-control" id="GoodSubCode" formControlName="GoodSubCode" maxlength="3"
                       autocomplete="off" />
+                  </div> -->
+                  <div class="form-group col-md-3">
+                    <label for="Type" class="col-form-label">ماهیت کالا</label>
+
+                    <select formControlName="Type" id="Type" class="form-control custom-select" data-toggle="select2">
+                      <option [value]="item.id" *ngFor="let item of Type_Lookup">{{item.name}}</option>
+                    </select>
+                  </div>
+
+
+
+                  <div class="form-group col-md-3">
+                    <label for="UsedGood" class="col-form-label">مدل کالا</label>
+
+                    <select formControlName="UsedGood" id="UsedGood" class="form-control custom-select"
+                      data-toggle="select2">
+                      <option [value]="item.id" *ngFor="let item of UsedGood_Lookup">{{item.name}}</option>
+                    </select>
                   </div>
 
 
@@ -115,24 +133,6 @@
                   </div>
 
 
-                  <div class="form-group col-md-3">
-                    <label for="Type" class="col-form-label">ماهیت کالا</label>
-
-                    <select formControlName="Type" id="Type" class="form-control custom-select" data-toggle="select2">
-                      <option [value]="item.id" *ngFor="let item of Type_Lookup">{{item.name}}</option>
-                    </select>
-                  </div>
-
-
-
-                  <div class="form-group col-md-3">
-                    <label for="UsedGood" class="col-form-label">مدل کالا</label>
-
-                    <select formControlName="UsedGood" id="UsedGood" class="form-control custom-select"
-                      data-toggle="select2">
-                      <option [value]="item.id" *ngFor="let item of UsedGood_Lookup">{{item.name}}</option>
-                    </select>
-                  </div>
 
 
                 </div>
@@ -141,8 +141,22 @@
 
                 <div class="form-group col-md-12">
                   <label for="GoodName" class="col-form-label">نام کالا </label>
+                  <span class="text-danger">*</span>
+
                   <input type="text" class="form-control" id="GoodName" formControlName="GoodName" maxlength="400"
-                    autocomplete="off" />
+                    autocomplete="off" [ngClass]="{
+                      'is-invalid':
+                      EditForm_Base.controls['GoodName'].invalid &&
+                      EditForm_Base.controls['GoodName'].touched,
+                      'is-valid':
+                      EditForm_Base.controls['GoodName'].valid &&
+                      EditForm_Base.controls['GoodName'].touched
+                    }" />
+                  <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_Base.controls['GoodName']
+                                            }"></ng-container>
                 </div>
 
 
@@ -263,20 +277,20 @@
 
       <div class="card">
         <div class="card-body">
-          <div class="col-sm-6">
-            <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
+          <div class="col-sm-12">
+            <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mx-1"
               (click)="submit('base_exit')">
               <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره و خروج
             </a>
-            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mx-1"
               (click)="submit('base')">
               <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره و ادامه
             </a>
-            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mx-1"
               (click)="submit('base_new')">
               <span class="btn-label"><i class="fas fa-plus"></i></span>ذخیره و جدید
             </a>
-            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mx-1"
               (click)="onBtnCancelClick()">
               <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
             </a>
@@ -395,20 +409,17 @@
 
       <div class="card">
         <div class="card-body">
-          <div class="col-sm-6">
-            <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
+          <div class="col-sm-12">
+            <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mx-1"
               (click)="submit('explain_exit')">
               <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره و خروج
             </a>
-            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mx-1"
               (click)="submit('explain')">
               <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره
             </a>
-            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
-              (click)="submit('explain_new')">
-              <span class="btn-label"><i class="fas fa-plus"></i></span>ذخیره و جدید
-            </a>
-            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+
+            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mx-1"
               (click)="onBtnCancelClick()">
               <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
             </a>

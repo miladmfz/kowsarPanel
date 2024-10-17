@@ -120,6 +120,16 @@ export class KowsarWebApiService {
 
 
 
+  GoodCrudService(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.kowsarWebUrl + "GoodCrudService", command, { headers: this.headers })
+
+  }
+
+  GetGoodList(): Observable<any[]> {
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetGoodList", { headers: this.headers })
+  }
+
 
 
 }

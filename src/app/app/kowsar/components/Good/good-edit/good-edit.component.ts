@@ -1,12 +1,14 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { KowsarWebApiService } from '../../../services/KowsarWebApi.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { FormArray, FormControl, FormGroup, UntypedFormBuilder } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { Base_Lookup, GoodType_lookup } from '../../../lookup-type';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import * as convert from 'xml-js';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-good-edit',
   templateUrl: './good-edit.component.html',
@@ -27,6 +29,18 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   override ngOnInit(): void {
     super.ngOnInit();
+
+
+
+
+
+
+
+
+
+
+
+
     this.GetObjectTypeFromDbSetup()
 
     this.route.paramMap.subscribe((params: ParamMap) => {
@@ -97,14 +111,20 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   });
 
 
+
+
+  JsonForm = new FormGroup({
+    JsonData: new FormControl(""),
+  });
+
   EditForm_Base = new FormGroup({
     GoodCode: new FormControl(0),
     GoodType: new FormControl(''),
-    GoodName: new FormControl(''),
+    GoodName: new FormControl('', Validators.required),
     Type: new FormControl(0),
     UsedGood: new FormControl(0),
-    GoodMainCode: new FormControl(''),
-    GoodSubCode: new FormControl(''),
+    // GoodMainCode: new FormControl(''),
+    // GoodSubCode: new FormControl(''),
     MinSellPrice: new FormControl(0),
     MaxSellPrice: new FormControl(0),
     Isbn: new FormControl(''),
@@ -238,6 +258,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   // #region Load_data
 
   getDetails() {
+    this.EditForm_Base.reset();
+    this.EditForm_Explain.reset();
+    this.EditForm_Complete.reset();
+    this.EditForm_Property.reset();
+
     this.repo.GetGood_base(this.Code).subscribe((data: any) => {
 
       this.EditForm_Base.patchValue({
@@ -246,7 +271,9 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         GoodName: data.Goods[0].GoodName,
         Type: data.Goods[0].Type,
         UsedGood: data.Goods[0].UsedGood,
-        GoodSubCode: data.Goods[0].GoodSubCode,
+        // GoodSubCode: data.Goods[0].GoodSubCode,
+        // GoodMainCode: data.Goods[0].GoodMainCode,
+
         MinSellPrice: data.Goods[0].MinSellPrice,
         MaxSellPrice: data.Goods[0].MaxSellPrice,
         Isbn: data.Goods[0].Isbn,
@@ -268,6 +295,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       this.GetGood_Relations()
     });
 
+
     this.repo.GetGood_Explain(this.Code).subscribe((data: any) => {
 
       this.EditForm_Explain.patchValue({
@@ -285,87 +313,88 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
-    this.repo.GetGood_Complete(this.Code).subscribe((data: any) => {
+    // this.repo.GetGood_Complete(this.Code).subscribe((data: any) => {
 
-      this.EditForm_Complete.patchValue({
-        GoodCode: data.Goods[0].GoodCode,
-        GoodName: data.Goods[0].GoodName,
-        GoodSubCode: data.Goods[0].GoodSubCode,
-        MaxSellPrice: data.Goods[0].MaxSellPrice,
-        MinSellPrice: data.Goods[0].MinSellPrice,
-        MinAmount: data.Goods[0].MinAmount,
-        MaxAmount: data.Goods[0].MaxAmount,
-        SefareshPoint: data.Goods[0].SefareshPoint,
-        MinBuyPrice: data.Goods[0].MinBuyPrice,
-        MaxBuyPrice: data.Goods[0].MaxBuyPrice,
-        CriticalPoint: data.Goods[0].CriticalPoint,
-        MayorTax: data.Goods[0].MayorTax,
-        Tax: data.Goods[0].Tax,
-      });
-    });
-
-    this.repo.GetGood_Propertys(this.Code).subscribe((data: any) => {
-
-      this.GoodTypeStr = data.Goods[0].GoodType;
-      this.EditForm_Property.patchValue({
-        GoodCode: data.Goods[0].GoodCode,
-        GoodName: data.Goods[0].GoodName,
-        GoodType: data.Goods[0].GoodType,
-        Nvarchar1: data.Goods[0].Nvarchar1,
-        Nvarchar2: data.Goods[0].Nvarchar2,
-        Nvarchar3: data.Goods[0].Nvarchar3,
-        Nvarchar4: data.Goods[0].Nvarchar4,
-        Nvarchar5: data.Goods[0].Nvarchar5,
-        Nvarchar6: data.Goods[0].Nvarchar6,
-        Nvarchar7: data.Goods[0].Nvarchar7,
-        Nvarchar8: data.Goods[0].Nvarchar8,
-        Nvarchar9: data.Goods[0].Nvarchar9,
-        Nvarchar10: data.Goods[0].Nvarchar10,
-        Nvarchar11: data.Goods[0].Nvarchar11,
-        Nvarchar12: data.Goods[0].Nvarchar12,
-        Nvarchar13: data.Goods[0].Nvarchar13,
-        Nvarchar14: data.Goods[0].Nvarchar14,
-        Nvarchar15: data.Goods[0].Nvarchar15,
-        Nvarchar16: data.Goods[0].Nvarchar16,
-        Nvarchar17: data.Goods[0].Nvarchar17,
-        Nvarchar18: data.Goods[0].Nvarchar18,
-        Nvarchar19: data.Goods[0].Nvarchar19,
-        Nvarchar20: data.Goods[0].Nvarchar20,
-        Int1: data.Goods[0].Int1,
-        Int2: data.Goods[0].Int2,
-        Int3: data.Goods[0].Int3,
-        Int4: data.Goods[0].Int4,
-        Int5: data.Goods[0].Int5,
-        Int6: data.Goods[0].Int6,
-        Int7: data.Goods[0].Int7,
-        Int8: data.Goods[0].Int8,
-        Int9: data.Goods[0].Int9,
-        Int10: data.Goods[0].Int10,
-        Float1: data.Goods[0].Float1,
-        Float2: data.Goods[0].Float2,
-        Float3: data.Goods[0].Float3,
-        Float4: data.Goods[0].Float4,
-        Float5: data.Goods[0].Float5,
-        Float6: data.Goods[0].Float6,
-        Float7: data.Goods[0].Float7,
-        Float8: data.Goods[0].Float8,
-        Float9: data.Goods[0].Float9,
-        Float10: data.Goods[0].Float10,
-        Text1: data.Goods[0].Text1,
-        Text2: data.Goods[0].Text2,
-        Text3: data.Goods[0].Text3,
-        Text4: data.Goods[0].Text4,
-        Text5: data.Goods[0].Text5,
-      });
-
-      this.repo.GetProperty(this.GoodTypeStr).subscribe(e => {
-
-        this.Propertys = e;
+    //   this.EditForm_Complete.patchValue({
+    //     GoodCode: data.Goods[0].GoodCode,
+    //     GoodName: data.Goods[0].GoodName,
+    //     GoodSubCode: data.Goods[0].GoodSubCode,
+    //     MaxSellPrice: data.Goods[0].MaxSellPrice,
+    //     MinSellPrice: data.Goods[0].MinSellPrice,
+    //     MinAmount: data.Goods[0].MinAmount,
+    //     MaxAmount: data.Goods[0].MaxAmount,
+    //     SefareshPoint: data.Goods[0].SefareshPoint,
+    //     MinBuyPrice: data.Goods[0].MinBuyPrice,
+    //     MaxBuyPrice: data.Goods[0].MaxBuyPrice,
+    //     CriticalPoint: data.Goods[0].CriticalPoint,
+    //     MayorTax: data.Goods[0].MayorTax,
+    //     Tax: data.Goods[0].Tax,
+    //   });
+    // });
 
 
+    // this.repo.GetGood_Propertys(this.Code).subscribe((data: any) => {
 
-      });
-    });
+    //   this.GoodTypeStr = data.Goods[0].GoodType;
+    //   this.EditForm_Property.patchValue({
+    //     GoodCode: data.Goods[0].GoodCode,
+    //     GoodName: data.Goods[0].GoodName,
+    //     GoodType: data.Goods[0].GoodType,
+    //     Nvarchar1: data.Goods[0].Nvarchar1,
+    //     Nvarchar2: data.Goods[0].Nvarchar2,
+    //     Nvarchar3: data.Goods[0].Nvarchar3,
+    //     Nvarchar4: data.Goods[0].Nvarchar4,
+    //     Nvarchar5: data.Goods[0].Nvarchar5,
+    //     Nvarchar6: data.Goods[0].Nvarchar6,
+    //     Nvarchar7: data.Goods[0].Nvarchar7,
+    //     Nvarchar8: data.Goods[0].Nvarchar8,
+    //     Nvarchar9: data.Goods[0].Nvarchar9,
+    //     Nvarchar10: data.Goods[0].Nvarchar10,
+    //     Nvarchar11: data.Goods[0].Nvarchar11,
+    //     Nvarchar12: data.Goods[0].Nvarchar12,
+    //     Nvarchar13: data.Goods[0].Nvarchar13,
+    //     Nvarchar14: data.Goods[0].Nvarchar14,
+    //     Nvarchar15: data.Goods[0].Nvarchar15,
+    //     Nvarchar16: data.Goods[0].Nvarchar16,
+    //     Nvarchar17: data.Goods[0].Nvarchar17,
+    //     Nvarchar18: data.Goods[0].Nvarchar18,
+    //     Nvarchar19: data.Goods[0].Nvarchar19,
+    //     Nvarchar20: data.Goods[0].Nvarchar20,
+    //     Int1: data.Goods[0].Int1,
+    //     Int2: data.Goods[0].Int2,
+    //     Int3: data.Goods[0].Int3,
+    //     Int4: data.Goods[0].Int4,
+    //     Int5: data.Goods[0].Int5,
+    //     Int6: data.Goods[0].Int6,
+    //     Int7: data.Goods[0].Int7,
+    //     Int8: data.Goods[0].Int8,
+    //     Int9: data.Goods[0].Int9,
+    //     Int10: data.Goods[0].Int10,
+    //     Float1: data.Goods[0].Float1,
+    //     Float2: data.Goods[0].Float2,
+    //     Float3: data.Goods[0].Float3,
+    //     Float4: data.Goods[0].Float4,
+    //     Float5: data.Goods[0].Float5,
+    //     Float6: data.Goods[0].Float6,
+    //     Float7: data.Goods[0].Float7,
+    //     Float8: data.Goods[0].Float8,
+    //     Float9: data.Goods[0].Float9,
+    //     Float10: data.Goods[0].Float10,
+    //     Text1: data.Goods[0].Text1,
+    //     Text2: data.Goods[0].Text2,
+    //     Text3: data.Goods[0].Text3,
+    //     Text4: data.Goods[0].Text4,
+    //     Text5: data.Goods[0].Text5,
+    //   });
+
+    //   this.repo.GetProperty(this.GoodTypeStr).subscribe(e => {
+
+    //     this.Propertys = e;
+
+
+
+    //   });
+    // });
 
 
 
@@ -559,32 +588,24 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
   GetLastGoodData() {
-    // this.repo.GetLastGoodData().subscribe((data: any) => {
+    this.repo.GetLastGoodData().subscribe((data: any) => {
+      this.router.navigateByUrl('kowsar/good-edit', data.Goods[0].GoodCode);
 
 
-    //   this.EditForm_Base.patchValue({
-
-    //     Type: data.Goods[0].Type,
-    //     UsedGood: data.Goods[0].UsedGood,
-    //     MinSellPrice: 0,
-    //     MaxSellPrice: 0,
-    //     BarCodePrintState: data.Goods[0].BarCodePrintState,
-    //     SellPriceType: data.Goods[0].SellPriceType,
-    //     SellPrice1: 0,
-    //     SellPrice2: 0,
-    //     SellPrice3: 0,
-    //     SellPrice4: 0,
-    //     SellPrice5: 0,
-    //     SellPrice6: 0,
-    //   });
-    // });
+    });
   }
 
   GetObjectTypeFromDbSetup() {
     this.repo.GetObjectTypeFromDbSetup("GoodType").subscribe((data: any) => {
 
       this.GoodType_lookup = data.ObjectTypes
-
+      data.ObjectTypes.forEach((item: GoodType_lookup) => {
+        if (item.IsDefault == "True") {
+          this.EditForm_Base.patchValue({
+            GoodType: item.aType
+          });
+        }
+      });
 
 
     });
@@ -611,8 +632,8 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     this.EditForm_Base.patchValue({
       GoodCode: 0,
       GoodName: '',
-      GoodSubCode: '',
-      GoodMainCode: '',
+      // GoodSubCode: '',
+      // GoodMainCode: '',
       Isbn: '',
       FirstBarCode: '',
     });
@@ -786,62 +807,215 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
-
-
+  dismissDeleteSwal1(t) {
+    if (t.dismiss === Swal.DismissReason.cancel) {
+      Swal.fire('کنسل شد', 'اطلاعات تغییری نکرد', 'error');
+    }
+  }
 
 
 
 
   submit(action) {
 
-    const command = this.EditForm_Base.value;
-
-
     if (action == 'base') {
 
-      // route ba GoodCode hminja
+      this.EditForm_Base.markAllAsTouched();
 
 
-      // this.incidentService.delete(command.id).subscribe((id) => {
-      //   this.handleCreateEditOps(action, id);
-      // });
+      if (!this.EditForm_Base.valid) return;
 
-
-    } else if (action == 'base_exit') {
-      // this.incidentService.delete(command.id).subscribe((id) => {
-      //   this.handleCreateEditOps(action, id);
-      // });
-
-
-    } else if (action == 'base_new') {
-      //       this.KowsarTemplate.patchValue({
-      //         Goods: []
-      //       });
-
-      //       // Clear the FormArray first
-      // (this.KowsarTemplate.get('Goods') as FormArray).clear();
-
-      // // Reset the form with default values if needed
-      // this.KowsarTemplate.reset({
-      //   Goods: [], // Default value for Goods
-      //   // Other form controls can be specified here
-      // });
-      // Clear the FormArray first
       (this.KowsarTemplate.get('Goods') as FormArray).clear();
-
-      // Now reset the entire form
-      //this.KowsarTemplate.reset();
-
-
-
-
-
       (this.KowsarTemplate.get('Goods') as FormArray).push(
         this.EditForm_Base
       );
 
       console.log(JSON.stringify(this.KowsarTemplate.value))
-      this.EditForm_Base_reset()
+
+      this.JsonForm.patchValue({
+        JsonData: JSON.stringify(this.KowsarTemplate.value)
+      });
+
+
+      this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+
+
+
+        if (data.response.Errormessage.length > 0) {
+
+          this.notificationService.succeded();
+          this.GetLastGoodData()
+
+        }
+
+        if (data.Goods[0].ErrorMessage == "") {
+          this.notificationService.succeded();
+          this.GetLastGoodData()
+        } else {
+          this.notificationService.error(data.Goods[0].ErrorMessage);
+        }
+
+      });
+
+
+
+
+
+
+    } else if (action == 'base_exit') {
+
+      this.EditForm_Base.markAllAsTouched();
+      if (!this.EditForm_Base.valid) return;
+
+
+
+      (this.KowsarTemplate.get('Goods') as FormArray).clear();
+      (this.KowsarTemplate.get('Goods') as FormArray).push(
+        this.EditForm_Base
+      );
+
+      console.log(JSON.stringify(this.KowsarTemplate.value))
+
+      this.JsonForm.patchValue({
+        JsonData: JSON.stringify(this.KowsarTemplate.value)
+      });
+
+
+      this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+        if (data.response.Errormessage.length > 0) {
+
+          this.notificationService.succeded();
+          this.location.back()
+        }
+        if (data.Goods[0].ErrorMessage == "") {
+          this.notificationService.succeded();
+          this.location.back()
+        } else {
+          this.notificationService.error(data.Goods[0].ErrorMessage);
+
+        }
+      });
+
+
+
+
+    } else if (action == 'base_new') {
+      this.EditForm_Base.markAllAsTouched();
+      if (!this.EditForm_Base.valid) return;
+
+      (this.KowsarTemplate.get('Goods') as FormArray).clear();
+      (this.KowsarTemplate.get('Goods') as FormArray).push(
+        this.EditForm_Base
+      );
+
+      console.log(JSON.stringify(this.KowsarTemplate.value))
+
+      this.JsonForm.patchValue({
+        JsonData: JSON.stringify(this.KowsarTemplate.value)
+      });
+
+
+      this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+        if (data.response.Errormessage.length > 0) {
+
+          this.notificationService.succeded();
+          this.EditForm_Base_reset()
+        }
+
+        if (data.Goods[0].ErrorMessage == "") {
+          this.notificationService.succeded();
+
+          this.EditForm_Base_reset()
+        } else {
+          this.notificationService.error(data.Goods[0].ErrorMessage);
+
+        }
+
+
+      });
+
+
+    }
+
+
+
+
+
+
+
+    if (action == 'explain') {
+
+      (this.KowsarTemplate.get('Goods') as FormArray).clear();
+      (this.KowsarTemplate.get('Goods') as FormArray).push(
+        this.EditForm_Explain
+      );
+
+      console.log(JSON.stringify(this.KowsarTemplate.value))
+
+      this.JsonForm.patchValue({
+        JsonData: JSON.stringify(this.KowsarTemplate.value)
+      });
+
+      console.log(JSON.stringify(this.KowsarTemplate.value))
+
+      this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+
+        if (data.response.Errormessage.length > 0) {
+
+          this.notificationService.succeded();
+
+        }
+
+        if (data.Goods[0].ErrorMessage == "") {
+          this.notificationService.succeded();
+
+          location.reload()
+        } else {
+          this.notificationService.error(data.Goods[0].ErrorMessage);
+        }
+
+
+
+      });
+
+    } else if (action == 'explain_exit') {
+
+
+
+      (this.KowsarTemplate.get('Goods') as FormArray).clear();
+      (this.KowsarTemplate.get('Goods') as FormArray).push(
+        this.EditForm_Explain
+      );
+
+      console.log(JSON.stringify(this.KowsarTemplate.value))
+
+      this.JsonForm.patchValue({
+        JsonData: JSON.stringify(this.KowsarTemplate.value)
+      });
+
+      console.log(JSON.stringify(this.KowsarTemplate.value))
+
+      this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+
+        if (data.response.Errormessage.length > 0) {
+
+          this.notificationService.succeded();
+          this.location.back()
+        }
+
+
+        if (data.Goods[0].ErrorMessage == "") {
+          this.notificationService.succeded();
+          this.location.back()
+        } else {
+          this.notificationService.error(data.Goods[0].ErrorMessage);
+        }
+
+
+      });
+
+
+
     }
 
 
@@ -857,81 +1031,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
-    
-    
-        if (action == 'delete') {
-          // this.incidentService.delete(command.id).subscribe((id) => {
-          //   this.handleCreateEditOps(action, id);
-          // });
-        }
-    
-        if (this.Code != "0") {
-    
-    
-          this.repo.Good_Update_base(command).subscribe(e => {
-    
-    
-            if (e[0].AppBrokerCustomerCode.length > 0) {
-    
-              if (action == 'exit') {
-                this.location.back();
-              } else if (action == 'new') {
-                window.location.reload();
-              }
-            }
-    
-          });
-    
-    
-    
-        } else {
-    
-          // this.repo.Good_Insert(command).subscribe(e => {
-    
-    
-          //   if (e[0].AppBrokerCustomerCode.length > 0) {
-    
-          //     if (action == 'exit') {
-          //       this.location.back();
-          //     } else if (action == 'new') {
-          //       window.location.reload();
-          //     }
-          //   }
-    
-    
-          // });
-    
-    
-    
-    
-        }
-    */
   }
 
 
@@ -951,10 +1050,23 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
   onBtnCancelClick() {
-    this.router.navigateByUrl('incident/incident/list');
+    this.location.back()
   }
 
-
+  fireAlarm_GoodAdd(text) {
+    return Swal.fire({
+      title: text,
+      icon: 'warning',
+      showConfirmButton: false,
+      showCancelButton: true,
+      cancelButtonText: 'بستن پنجره',
+      customClass: {
+        confirmButton: 'btn btn-success mx-2',
+        cancelButton: 'btn btn-danger',
+      },
+      buttonsStyling: false,
+    });
+  }
 
 
 }

@@ -11,6 +11,7 @@ import { Location } from '@angular/common';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
+import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 
 @Component({
   selector: 'app-factor-edit',
@@ -29,7 +30,9 @@ export class FactorEditComponent extends AgGridBaseComponent
     private renderer: Renderer2,
     private route: ActivatedRoute,
     private location: Location,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private readonly notificationService: NotificationService,
+
   ) {
     super();
 
@@ -69,7 +72,7 @@ export class FactorEditComponent extends AgGridBaseComponent
     });
 
     this.repo.Support_StartFactorTime(this.EditForm_factor_property.value).subscribe((data: any) => {
-
+      this.notificationService.succeded("");
       location.reload();
     });
 
@@ -462,6 +465,8 @@ export class FactorEditComponent extends AgGridBaseComponent
       BrokerRef: sessionStorage.getItem("BrokerCode")
     });
     this.repo.WebFactorInsert(this.EditForm_Factor_Header.value).subscribe((data: any) => {
+      this.notificationService.succeded();
+
       this.router.navigate(['/factor/factor-edit', data.Factors[0].FactorCode]);
 
 
@@ -543,18 +548,14 @@ export class FactorEditComponent extends AgGridBaseComponent
   deleteFactor() {
     if (this.records_factorrows && this.records_factorrows.length > 0) {
 
-      this.fireAlarmFactorRow().then((result) => {
-        if (result.dismiss === Swal.DismissReason.cancel) {
-          this.dismissDeleteSwal1(result);
-        }
-      });
-
+      this.notificationService.error('این فاکتور دارای اقلام می باشد');
     } else {
       this.fireDeleteFactor().then((result) => {
         if (result.isConfirmed) {
           this.deletefactorRecord()
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-          this.dismissDeleteSwal1(result);
+          this.notificationService.warning('اطلاعات تغییری نکرد');
+
         }
       });
     }
@@ -584,22 +585,6 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
 
-  fireAlarmFactorRow() {
-    return Swal.fire({
-      title: 'این فاکتور دارای اقلام می باشد',
-      icon: 'warning',
-      showCancelButton: false,
-      cancelButtonText: 'بستن پنجره',
-      customClass: {
-        confirmButton: 'btn btn-success mx-2',
-
-        cancelButton: 'btn btn-danger',
-      },
-      buttonsStyling: false,
-    });
-  }
-
-
 
 
 
@@ -619,25 +604,15 @@ export class FactorEditComponent extends AgGridBaseComponent
     });
   }
 
-  fireDeleteSucceededSwal1() {
-    Swal.fire({
-      title: 'ردیف فوق با موفقیت حذف شد.',
-      icon: 'success',
-    });
-  }
 
-  dismissDeleteSwal1(t) {
-    if (t.dismiss === Swal.DismissReason.cancel) {
-      Swal.fire('کنسل شد', 'اطلاعات تغییری نکرد', 'error');
-    }
-  }
 
   delete(id) {
     this.fireDeleteSwal1().then((result) => {
       if (result.isConfirmed) {
         this.deleteRecord(id);
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        this.dismissDeleteSwal1(result);
+        this.notificationService.warning('اطلاعات تغییری نکرد');
+
       }
     });
   }
@@ -648,7 +623,7 @@ export class FactorEditComponent extends AgGridBaseComponent
     this.repo.DeleteWebFactorRowsSupport(id).subscribe((data: any) => {
       this.GetFactorrows()
 
-      this.fireDeleteSucceededSwal1();
+      this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
     });
 
 
@@ -659,7 +634,7 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
     this.repo.DeleteWebFactorSupport(this.FactorCode).subscribe((data: any) => {
-
+      this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
       this.location.back();
     });
 

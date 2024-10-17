@@ -4,6 +4,7 @@ import { KowsarWebApiService } from '../../../services/KowsarWebApi.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { FormControl } from '@angular/forms';
 import { CellActionGoodList } from './cell-action-good-ist';
+import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 
 @Component({
   selector: 'app-good-list',
@@ -15,6 +16,8 @@ export class GoodListComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: KowsarWebApiService,
+    private readonly notificationService: NotificationService,
+
   ) {
     super();
   }
@@ -46,7 +49,7 @@ export class GoodListComponent extends AgGridBaseComponent
         cellRendererParams: {
           editUrl: '/kowsar/good-edit',
         },
-        minWidth: 80
+        Width: 10
       },
 
       {
@@ -70,22 +73,34 @@ export class GoodListComponent extends AgGridBaseComponent
         cellClass: 'text-center',
         minWidth: 150
       }, {
-        field: 'GoodCode',
-        headerName: 'کد',
+        field: 'MinSellPrice',
+        headerName: ' قیمت خالص',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         minWidth: 150
       },
       {
-        field: 'GoodName',
-        headerName: 'نام کالا  ',
+        field: 'GoodType',
+        headerName: 'نوع کالا  ',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         minWidth: 150
       },
       {
-        field: 'MaxSellPrice',
-        headerName: ' قیمت ناخالص',
+        field: 'GoodExplain1',
+        headerName: ' مشخصه1 ',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      }, {
+        field: 'GoodExplain2',
+        headerName: 'مشخصه2',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      }, {
+        field: 'GoodExplain3',
+        headerName: 'مشخصه3',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         minWidth: 150
@@ -98,10 +113,10 @@ export class GoodListComponent extends AgGridBaseComponent
   getList() {
 
 
-    // this.repo.GetOrderGoodList("30", this.Searchtarget, "0").subscribe((data) => {
-    //   this.records = data;
+    this.repo.GetGoodList().subscribe((data: any) => {
+      this.records = data.Goods;
 
-    // });
+    });
 
 
 
