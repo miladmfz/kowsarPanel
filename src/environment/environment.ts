@@ -22,4 +22,8 @@ export const environment = {
 
 
 };
+let api_Url = 'http://localhost:60006/api/';
 
+export function getServiceUrl() {
+  return `${api_Url}`;
+}

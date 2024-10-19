@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import {
   CommonModule,
@@ -14,6 +14,7 @@ import { AuthConfigModule } from './auth/auth-config.module';
 import { AppRoutingModule } from './app-routing.module';
 import { NotifierModule } from 'angular-notifier';
 import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
+import { ExceptionInterceptor } from './app-shell/framework-services/exception.interceptor.service';
 
 
 
@@ -32,10 +33,16 @@ import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
   ],
   exports: [],
   providers: [
+
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy
     },
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: ExceptionInterceptor,
+    //   multi: true,
+    // },
     Title
   ],
   bootstrap: [AppComponent],

@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environment/environment';
+import { environment, getServiceUrl } from 'src/environment/environment';
+import { HttpService } from 'src/app/app-shell/framework-services/http.service';
+import { ServiceBase } from 'src/app/app-shell/framework-services/service.base';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +22,7 @@ export class KowsarWebApiService {
     .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
 
   kowsarWebUrl = environment.api_Url + "kowsarWeb/";
+
 
 
 
@@ -129,6 +132,7 @@ export class KowsarWebApiService {
   GetGoodList(): Observable<any[]> {
     return this.client.get<any[]>(this.kowsarWebUrl + "GetGoodList", { headers: this.headers })
   }
+
 
 
 
