@@ -135,6 +135,18 @@ export class KowsarWebApiService {
 
 
 
+  GetStacks(): Observable<any[]> {
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetStacks", { headers: this.headers })
+  }
+
+
+
+  GetGoodsGrp(): Observable<any[]> {
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetGoodsGrp", { headers: this.headers })
+  }
+
+
+
 
 }
 

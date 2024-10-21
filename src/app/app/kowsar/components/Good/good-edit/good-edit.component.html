@@ -1455,18 +1455,21 @@
           </div>
           <div class="modal-body">
 
-            <!-- <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" [rowData]="records_customer"
-          [columnDefs]="columnDefs3" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
-          [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-          [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
-          [suppressRowClickSelection]="true" [rowSelection]="'single'" (selectionChanged)="onSelectionChanged($event)">
-        </ag-grid-angular> -->
+            <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="base_Stack_list"
+              [columnDefs]="columnDefs4" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+              (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+              [context]="context" class="ag-theme-alpine" [defaultColDef]="defaultColDef"
+              [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+              (selectionChanged)="onSelectionChanged($event)">
+            </ag-grid-angular>
+
+
 
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
               (click)="stack_dialog_close()">بستن</button>
-            <!-- <button type="button" class="btn btn-primary" (click)="Set_Customer()">انتخاب</button> -->
+            <button type="button" class="btn btn-primary" (click)="SetStack()">انتخاب</button>
           </div>
         </div>
       </div>
@@ -1474,7 +1477,7 @@
 
 
 
-
+    GetGoodsGrp
 
 
 
@@ -1490,19 +1493,28 @@
           <div class="modal-body">
 
 
-            <!-- <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" [rowData]="records_customer"
-          [columnDefs]="columnDefs3" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
-          [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-          [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
-          [suppressRowClickSelection]="true" [rowSelection]="'single'" (selectionChanged)="onSelectionChanged($event)">
-        </ag-grid-angular> -->
+            <!-- <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: auto" [rowData]="rowData"
+              [columnDefs]="columnDefs6" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+              [pagination]="true" [context]="context" class="ag-theme-alpine" [defaultColDef]="defaultColDef"
+              [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+              (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged($event)"
+              (cellClicked)="onCellClicked($event)" [treeData]="true" [getDataPath]="getDataPath"></ag-grid-angular> -->
+
+            <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: auto" [rowData]="rowData"
+              [columnDefs]="columnDefs6" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+              [pagination]="true" [context]="context" class="ag-theme-alpine" [defaultColDef]="defaultColDef"
+              [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+              (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged($event)"
+              (cellClicked)="onCellClicked($event)" (rowDoubleClicked)="onRowDoubleClicked($event)" [treeData]="true"
+              [getDataPath]="getDataPath">
+            </ag-grid-angular>
 
 
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
               (click)="group_dialog_close()">بستن</button>
-            <!-- <button type="button" class="btn btn-primary" (click)="Set_Customer()">انتخاب</button> -->
+            <button type="button" class="btn btn-primary" (click)="SetGroup()">انتخاب</button>
           </div>
         </div>
       </div>

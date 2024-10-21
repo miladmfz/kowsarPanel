@@ -1,4 +1,4 @@
-import { AllModules } from '@ag-grid-enterprise/all-modules';
+import { AllModules, GridApi, ColumnApi } from '@ag-grid-enterprise/all-modules';
 import { ConfirmationStateCellRenderer } from '../ag-grid/confirmation-state-label-cell';
 import { EditDeleteCellRenderer } from '../ag-grid/edit-delete-cell-btn';
 import { GoToDocumentCellBtnRenderer } from '../ag-grid/go-to-document-cell-btn-renderer';
@@ -10,6 +10,8 @@ import { AppSharedDataComponent } from '../app-shared-data/app-shared-data.compo
 import { ImageCellRenderer } from '../ag-grid/image-cell-renderer';
 import { AG_GRID_LOCALE_FA } from './locale.fa';
 import { Module } from './ag-grid-module';
+
+
 declare var Swal: any;
 
 @Component({
@@ -23,6 +25,8 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
   public;
   modules: Module[] = AllModules;
   public defaultColDef;
+  public defaultColDef1;
+
   public columnDefs: any[];
   public columnDefs1: any[];
   CellClickedEven
@@ -30,6 +34,8 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
 
   public columnDefs3: any[];
   public columnDefs4: any[];
+  public columnDefs5: any[];
+  public columnDefs6: any[];
 
   public selectedRows: any[];
 
@@ -62,6 +68,7 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
         console.log('Cell was clicked'),
     };
 
+
     this.rowGroupPanelShow = 'always';
     this.pivotPanelShow = 'always';
 
@@ -83,6 +90,10 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
 
     this.context = { componentParent: this };
     this.localeText = AG_GRID_LOCALE_FA;
+
+
+
+
   }
 
   public rowData: any[];
@@ -99,6 +110,8 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
     isCanceledCellRenderer: IsCanceledCellRenderer,
     goToDocumentCellRenderer: GoToDocumentCellBtnRenderer,
   };
+
+
 
   fireDeleteSwal() {
     return Swal.fire({
@@ -151,8 +164,50 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
 
     this.gridApi.hideOverlay();
   }
+  // onCellClicked(event) {
+  //   const clickedCellId = event.column.getId() + '_' + event.rowIndex;
+  //   if (clickedCellId === this.lastClickedCellId) {
+  //     this.clickCount++;
+  //   } else {
+  //     this.clickCount = 1;
+  //     this.lastClickedCellId = clickedCellId;
+  //   }
+
+  //   if (this.clickCount === this.resizeThreshold) {
+  //     // Perform action when double click threshold is reached
+  //     this.resizeColumn(event.column);
+  //     this.clickCount = 0;
+  //   }
+  // }
+
+
+
+  resizeColumn(column: any) {
+    if (this.gridColumnApi) {
+      const columnId = column.getColId();
+      this.gridColumnApi.autoSizeColumn(columnId);
+    }
+  }
+
+  onSelectionChanged(event) {
+    this.selectedRows = event.api.getSelectedRows();
+    console.log('Selected rows:', this.selectedRows);
+  }
+
+
+
+
+
+
   onCellClicked(event) {
     const clickedCellId = event.column.getId() + '_' + event.rowIndex;
+
+    // Only check for clicks on the group cells
+    if (event.node && event.node.group) {
+      event.node.setExpanded(!event.node.expanded); // Toggle expansion
+    }
+
+    // Handle double-click detection
     if (clickedCellId === this.lastClickedCellId) {
       this.clickCount++;
     } else {
@@ -161,25 +216,25 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
     }
 
     if (this.clickCount === this.resizeThreshold) {
-      // Perform action when double click threshold is reached
       this.resizeColumn(event.column);
       this.clickCount = 0;
     }
   }
 
-  resizeColumn(column: any) {
-    if (this.gridApi && this.gridColumnApi) {
-      const columnId = column.getColId();
-      this.gridColumnApi.autoSizeColumn(columnId);
+  onRowDoubleClicked(event) {
+    if (event.node && event.node.group) {
+      event.node.setExpanded(!event.node.expanded); // Toggle expansion on double-click
     }
   }
 
 
 
 
-  onSelectionChanged(event) {
-    const selectedRows = event.api.getSelectedRows();
-    this.selectedRows = selectedRows
-    console.log('Selected rows:', selectedRows);
-  }
 }
+
+
+
+
+
+
+

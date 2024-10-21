@@ -24,25 +24,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   ) {
     super();
   }
-  override ngOnInit(): void {
-    super.ngOnInit();
-    this.GetObjectTypeFromDbSetup()
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      var id = params.get('id');
-      if (id != null) {
-        this.Code = id;
-
-        this.Code_int = parseInt(this.Code);
-        if (parseInt(this.Code) > 0) {
-          this.getDetails();
-        } else {
-          this.EditForm_Base_reset()
-        }
-
-        this.GetColumnTable();
-      }
-    });
-  }
 
 
 
@@ -54,6 +35,12 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   GoodTypeStr: string = '';
   Image_list: any[] = [];
   Group_list: any[] = [];
+  base_Group_list: any[] = [];
+  base_Group_list1: any[] = [];
+
+
+  base_Stack_list: any[] = [];
+
   Stack_list: any[] = [];
   originalValues: any = {};
   changedValues: any = {}; // Object to store changed values
@@ -83,6 +70,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
   EditForm_Base = new FormGroup({
+    GoodIndex: new FormControl("1"),
     GoodCode: new FormControl(0),
     GoodType: new FormControl(''),
     GoodName: new FormControl('', Validators.required),
@@ -137,6 +125,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
   EditForm_Explain_temp = new FormGroup({
+
     GoodCode: new FormControl(0),
     GoodSubCode: new FormControl(0),
     GoodName: new FormControl(''),
@@ -150,6 +139,8 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
   EditForm_Explain = new FormGroup({
+    GoodIndex: new FormControl("1"),
+
     GoodCode: new FormControl(0),
     GoodSubCode: new FormControl(0),
     GoodName: new FormControl(''),
@@ -162,6 +153,8 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   });
 
   EditForm_Complete = new FormGroup({
+    GoodIndex: new FormControl("1"),
+
     GoodCode: new FormControl(0),
     GoodSubCode: new FormControl(0),
     GoodName: new FormControl(''),
@@ -195,6 +188,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
   EditForm_Property = new FormGroup({
+    GoodIndex: new FormControl("1"),
 
     GoodCode: new FormControl(0),
     GoodName: new FormControl(''),
@@ -328,6 +322,13 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   // #endregion
 
 
+
+
+
+
+
+
+
   // #region Load_data
 
   getDetails() {
@@ -342,6 +343,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
     this.LoadData_complete()
 
+    this.LoadData_GetStacks()
+
+
+    this.LoadData_GetGoodsGrp()
+
     // this.LoadData_property()
 
 
@@ -349,6 +355,34 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
+  LoadData_GetStacks() {
+
+    // Initial data fetch
+    this.repo.GetStacks().subscribe((data: any) => {
+      this.base_Stack_list = data.Stacks
+
+    });
+
+  }
+
+
+  LoadData_GetGoodsGrp() {
+
+    // Initial data fetch
+    this.repo.GetGoodsGrp().subscribe((data: any) => {
+      this.base_Group_list = data.GoodsGrps
+      this.base_Group_list1 = data.GoodsGrps
+      this.rowData = this.buildTree(this.base_Group_list);
+
+    });
+
+  }
+
+
+
+
+
+  // Sample data from the API
 
 
 
@@ -410,7 +444,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       this.GoodSubCode_str = data.Goods[0].GoodSubCode
       this.GoodType_str = data.Goods[0].GoodType
       this.GoodName_str = data.Goods[0].GoodName
-      this.GetGood_Relations()
+
+      this.GetGood_Stacks_Relations()
+      this.GetGood_Images_Relations()
+      this.GetGood_Groups_Relations()
 
       this.EditForm_Base.valueChanges.subscribe((value) => {
         this.trackChanges(value);
@@ -649,35 +686,24 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
 
-
-  GetGood_Relations() {
-
-    this.repo.GetGood_Images(this.Code).subscribe((e: any) => {
-      this.Image_list = e.Goods;
-    });
-
-    this.repo.GetGood_Groups(this.Code).subscribe((e: any) => {
-      this.Group_list = e.Goods;
-    });
-
-
+  GetGood_Stacks_Relations() {
     this.repo.GetGood_Stacks(this.Code).subscribe((e: any) => {
       this.Stack_list = e.Goods;
     });
-
-
-    // this.repo.getgroups(this.Code).subscribe((data) => {
-    //   this.Grouprecords = data;
-
-    // });
-
-
-    // this.repo.getstack(this.Code).subscribe((data) => {
-    //   this.Stackrecords = data;
-
-    // });
-
   }
+
+  GetGood_Images_Relations() {
+    this.repo.GetGood_Images(this.Code).subscribe((e: any) => {
+      this.Image_list = e.Goods;
+    });
+  }
+
+  GetGood_Groups_Relations() {
+    this.repo.GetGood_Groups(this.Code).subscribe((e: any) => {
+      this.Group_list = e.Goods;
+    });
+  }
+
 
   GetColumnTable() {
 
@@ -740,14 +766,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       //   },
       //    minWidth: 80
       // },
-
-      {
-        field: 'GoodGroupRef',
-        headerName: 'کد',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
       {
         field: 'Name',
         headerName: 'نام   ',
@@ -755,6 +773,14 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         cellClass: 'text-center',
         minWidth: 150
       },
+      {
+        field: 'GoodGroupCode',
+        headerName: 'کد',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+
 
     ];
 
@@ -787,6 +813,140 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
     ];
 
+    this.columnDefs4 = [
+      // {
+      //   field: 'عملیات',
+      //   pinned: 'left',
+      //   cellRenderer: CellActionGoodList,
+      //   cellRendererParams: {
+      //     editUrl: '/kowsar/good-edit',
+      //   },
+      //    minWidth: 80
+      // },
+
+      {
+        field: 'Name',
+        headerName: 'نام انبار',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150,
+        checkboxSelection: true,
+      },
+      {
+        field: 'L1',
+        headerName: 'L1',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 50,
+      }, {
+        field: 'L2',
+        headerName: 'L2',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 50,
+      }, {
+        field: 'L3',
+        headerName: 'L3',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 50,
+      }, {
+        field: 'L4',
+        headerName: 'L4',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 50,
+      }, {
+        field: 'L5',
+        headerName: 'L5',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 50,
+      },
+      {
+        field: 'StackCode',
+        headerName: 'کد',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+
+
+    ];
+
+
+    this.columnDefs5 = [
+      // {
+      //   field: 'عملیات',
+      //   pinned: 'left',
+      //   cellRenderer: CellActionGoodList,
+      //   cellRendererParams: {
+      //     editUrl: '/kowsar/good-edit',
+      //   },
+      //    minWidth: 80
+      // },
+
+      {
+        field: 'Name',
+        headerName: 'نام گروه',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150,
+        checkboxSelection: true,
+      },
+      {
+        field: 'L1',
+        headerName: 'L1',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 50,
+      }, {
+        field: 'L2',
+        headerName: 'L2',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 50,
+      }, {
+        field: 'L3',
+        headerName: 'L3',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 50,
+      }, {
+        field: 'L4',
+        headerName: 'L4',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 50,
+      }, {
+        field: 'L5',
+        headerName: 'L5',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 50,
+      },
+      {
+        field: 'GroupCode',
+        headerName: 'کد',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+
+
+    ];
+
+    this.columnDefs6 = [
+      {
+        headerName: 'Group Name',
+        field: 'name', // Adjust according to your data structure
+        cellRenderer: 'agGroupCellRenderer', // Use AG Grid's group cell renderer
+        cellRendererParams: {
+          suppressCount: true, // Optional, if you don't want to show child counts
+        },
+      },
+      // Add additional column definitions as necessary
+    ];
 
 
   }
@@ -850,7 +1010,179 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   // #endregion
 
 
+
+
+
+
+
+  KowsarTemplate11 = new FormGroup({
+    Goods: new FormArray([])
+  });
+
+
+
+
+
+
+
+  GoodToStack = new FormGroup({
+    GoodIndex: new FormControl("1"),
+    GoodCode: new FormControl(""),
+    StackRef: new FormArray([])
+  });
+
+  GoodToGroup = new FormGroup({
+    GoodIndex: new FormControl("1"),
+    GoodCode: new FormControl(""),
+    GoodGroup: new FormArray([])
+  });
+
+
+
+  // List of strings to patch
+
   // #region Func
+
+
+  SetStack() {
+
+    console.log(this.selectedRows);
+
+    this.GoodToStack.patchValue({
+      GoodCode: this.Code,
+    });
+
+    (this.GoodToStack.get('StackRef') as FormArray).clear();
+
+    // (this.GoodToStack.get('StackRef') as FormArray).push(new FormControl(parseInt(this.selectedRows[0].StackCode, 10)));
+    // Assuming selectedRows is an array of objects with a property StackCode
+    this.selectedRows.forEach(row => {
+      const stackCodeInt = parseInt(row.StackCode, 10);
+      (this.GoodToStack.get('StackRef') as FormArray).push(new FormControl(stackCodeInt));
+    });
+
+
+    console.log(this.GoodToStack.value);
+
+
+
+
+    (this.KowsarTemplate.get('Goods') as FormArray).clear();
+    (this.KowsarTemplate.get('Goods') as FormArray).push(this.GoodToStack);
+
+    console.log(this.KowsarTemplate.value);
+
+
+    console.log(JSON.stringify(this.KowsarTemplate.value));
+
+    this.JsonForm.patchValue({
+      JsonData: JSON.stringify(this.KowsarTemplate.value)
+    });
+
+
+    console.log(this.JsonForm.value);
+
+
+
+    this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+
+      if (data.response.Errormessage.length > 0) {
+        this.changedValues = {};
+        this.GetGood_Stacks_Relations()
+        this.selectedRows = []
+        this.stack_dialog_close()
+      }
+
+      if (data.Goods[0].ErrorMessage == "") {
+
+        this.notificationService.succeded();
+        this.GetGood_Stacks_Relations()
+        this.selectedRows = []
+        this.stack_dialog_close()
+
+      } else {
+        this.notificationService.error(data.Goods[0].ErrorMessage);
+
+      }
+
+
+    });
+
+
+
+
+  }
+
+
+
+  SetGroup() {
+
+    console.log(this.selectedRows);
+
+    this.GoodToGroup.patchValue({
+      GoodCode: this.Code,
+    });
+
+    (this.GoodToGroup.get('GoodGroup') as FormArray).clear();
+
+    // (this.GoodToGroup.get('GoodGroup') as FormArray).push(new FormControl(parseInt(this.selectedRows[0].StackCode, 10)));
+    // Assuming selectedRows is an array of objects with a property StackCode
+    this.selectedRows.forEach(row => {
+      const GroupCodeInt = parseInt(row.GroupCode, 10);
+      (this.GoodToGroup.get('GoodGroup') as FormArray).push(new FormControl(GroupCodeInt));
+    });
+
+
+    console.log(this.GoodToGroup.value);
+
+
+
+
+    (this.KowsarTemplate.get('Goods') as FormArray).clear();
+    (this.KowsarTemplate.get('Goods') as FormArray).push(this.GoodToGroup);
+
+    console.log(this.KowsarTemplate.value);
+
+
+    console.log(JSON.stringify(this.KowsarTemplate.value));
+
+    this.JsonForm.patchValue({
+      JsonData: JSON.stringify(this.KowsarTemplate.value)
+    });
+
+
+    console.log(this.JsonForm.value);
+
+
+
+    this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+
+      if (data.response.Errormessage.length > 0) {
+        this.changedValues = {};
+        this.GetGood_Groups_Relations()
+        this.selectedRows = []
+        this.group_dialog_close()
+      }
+
+      if (data.Goods[0].ErrorMessage == "") {
+
+        this.notificationService.succeded();
+        this.GetGood_Groups_Relations()
+        this.selectedRows = []
+        this.group_dialog_close()
+
+      } else {
+        this.notificationService.error(data.Goods[0].ErrorMessage);
+
+      }
+
+
+    });
+
+
+
+
+  }
 
 
   onBtnCancelClick() {
@@ -1128,7 +1460,12 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   // #endregion
 
 
-  // #region modal
+
+
+
+
+
+  // #region submit
 
   submit(action) {
 
@@ -1305,6 +1642,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       }
 
     }
+
 
 
 
@@ -1547,6 +1885,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   // #endregion
 
 
+
+
+
+
+
   // #region modal
 
   AddStack() {
@@ -1591,4 +1934,196 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   // #endregion
 
+
+
+
+
+
+
+
+
+
+
+
+  public gridOptions: GridOptions;
+
+  buildTree(data: RowData[]): RowData[] {
+    const tree: RowData[] = [];
+    const map: { [key: string]: RowData } = {};
+
+    data.forEach(item => {
+      // Create a map entry for each item
+      map[item.GroupCode] = item;
+
+      // Initialize the children array
+      item.children = item.children || [];
+    });
+
+    data.forEach(item => {
+      if (item.L1 === '0') {
+        // Level 1 (root level)
+        tree.push(item);
+      } else {
+        // Add to the corresponding parent
+        const parent = map[item.L1];
+        if (parent) {
+          parent.children.push(item);
+        }
+      }
+    });
+
+    return tree;
+  }
+
+
+
+  private flattenTree(node: any): any {
+    const { name, children } = node;
+    return {
+      name,
+      children: children.map((child: any) => this.flattenTree(child)),
+    };
+  }
+
+  getDataPath = (data: RowData) => {
+    const path: string[] = [];
+
+    if (data.L1 === '0') {
+      path.push(data.Name); // Root level
+    } else if (data.L2 === '0') {
+      path.push('1', data.Name); // Child of 1
+    } else if (data.L3 === '0') {
+      path.push('1', '12', data.Name); // Child of 12
+    } else if (data.L4 === '0') {
+      path.push('1', '12', '123', data.Name); // Child of 123
+    }
+
+    return path;
+  };
+
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+    this.GetObjectTypeFromDbSetup()
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      var id = params.get('id');
+      if (id != null) {
+        this.Code = id;
+
+        this.Code_int = parseInt(this.Code);
+        if (parseInt(this.Code) > 0) {
+          this.getDetails();
+        } else {
+          this.EditForm_Base_reset()
+        }
+
+        this.GetColumnTable();
+      }
+    });
+
+
+
+    interface RowData {
+      GroupCode: string;
+      L1: string;
+      L2: string;
+      L3: string;
+      L4: string;
+      L5: string;
+      Name: string;
+      children?: RowData[]; // Optional children property
+    }
+
+    function buildTree(data: RowData[]): RowData[] {
+      const tree: RowData[] = [];
+      const map: { [key: string]: RowData } = {};
+
+      // Create a map for each item and initialize children array
+      data.forEach(item => {
+        map[item.GroupCode] = item;
+        item.children = item.children || []; // Initialize children
+      });
+
+      // Construct the tree
+      data.forEach(item => {
+        if (item.L1 === '0') {
+          // Level 1 (root level)
+          tree.push(item);
+        } else {
+          // Find the parent and add the current item as a child
+          const parent = map[item.L1];
+          if (parent) {
+            parent.children.push(item);
+          }
+        }
+      });
+
+      return tree;
+    }
+
+    // Example usage
+    const flatData: RowData[] = [
+      { GroupCode: '1', L1: '0', L2: '0', L3: '0', L4: '0', L5: '0', Name: '1' },
+      { GroupCode: '2', L1: '1', L2: '0', L3: '0', L4: '0', L5: '0', Name: '12' },
+      { GroupCode: '3', L1: '1', L2: '2', L3: '0', L4: '0', L5: '0', Name: '123' },
+      { GroupCode: '4', L1: '1', L2: '2', L3: '3', L4: '0', L5: '0', Name: '1234' },
+      { GroupCode: '5', L1: '1', L2: '0', L3: '0', L4: '0', L5: '0', Name: '15' },
+    ];
+
+    // Build the tree structure
+    const treeData = buildTree(flatData);
+
+    // Assign to AG Grid rowData
+    this.rowData = treeData;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    this.gridOptions = {
+      // Configure your grid options here
+      getDataPath: this.getDataPath.bind(this),
+      // Add other options like columnDefs, etc.
+    };
+
+    // Example data
+
+
+    console.log('Row Data:', JSON.stringify(this.rowData, null, 2)); // Log the row data structure
+
+
+
+  }
+
+
+
+
+
+
+}
+
+
+
+import { GridOptions } from 'ag-grid-community';
+
+
+interface RowData {
+  GroupCode: string;
+  L1: string;
+  L2: string;
+  L3: string;
+  L4: string;
+  L5: string;
+  Name: string;
+  children?: RowData[]; // Add children as an optional property
 }
