@@ -7,6 +7,11 @@ import { Base_Lookup, GoodType_lookup } from '../../../lookup-type';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import * as convert from 'xml-js';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
+import { GridOptions } from 'ag-grid-community';
+import { CellActionGoodEditImage } from './cell-action-good-edit-image';
+import { Observable, tap } from 'rxjs';
+import { CellActionGoodImageBtn } from './cell-action-good-edit-image-btn';
+import { CellActionGoodGroupBtn } from './cell-action-good-edit-group-btn';
 
 @Component({
   selector: 'app-good-edit',
@@ -25,13 +30,32 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     super();
   }
 
+  override ngOnInit(): void {
+    super.ngOnInit();
+    this.GetObjectTypeFromDbSetup()
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      var id = params.get('id');
+      if (id != null) {
+        this.Code = id;
+
+        this.Code_int = parseInt(this.Code);
+        if (parseInt(this.Code) > 0) {
+          this.getDetails();
+        } else {
+          this.EditForm_Base_reset()
+        }
+
+        this.GetColumnTable();
+      }
+    });
+  }
 
 
   // #region Declare
   title = 'ایجاد نوع داده انتخابی';
   Code: string = '';
   Code_int: number = 0;
-
+  Imageitem: string = '';
   GoodTypeStr: string = '';
   Image_list: any[] = [];
   Group_list: any[] = [];
@@ -68,6 +92,27 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     JsonData: new FormControl(""),
   });
 
+
+
+
+  GoodToStack = new FormGroup({
+    GoodIndex: new FormControl("1"),
+    GoodCode: new FormControl(""),
+    StackRef: new FormArray([])
+  });
+
+  GoodToGroup = new FormGroup({
+    GoodIndex: new FormControl("1"),
+    GoodCode: new FormControl(""),
+    GoodGroup: new FormArray([])
+  });
+
+
+  GoodToProperty = new FormGroup({
+    GoodIndex: new FormControl("1"),
+    GoodCode: new FormControl(""),
+    PropertyValue: new FormControl("")
+  });
 
   EditForm_Base = new FormGroup({
     GoodIndex: new FormControl("1"),
@@ -122,6 +167,14 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   });
 
 
+  propertyDto = new FormGroup({
+
+    ObjectType: new FormControl(''),
+    ClassName: new FormControl(''),
+    PropertyName: new FormControl(''),
+    PropertyType: new FormControl(''),
+    PropertyValueMap: new FormControl(''),
+  });
 
 
   EditForm_Explain_temp = new FormGroup({
@@ -326,12 +379,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
-
-
-
   // #region Load_data
 
   getDetails() {
+    this.Loading_Modal_Response_show()
+
     this.EditForm_Base.reset();
     this.EditForm_Explain.reset();
     this.EditForm_Complete.reset();
@@ -348,7 +400,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
     this.LoadData_GetGoodsGrp()
 
-    // this.LoadData_property()
+    this.LoadData_property()
 
 
   }
@@ -366,17 +418,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
 
-  LoadData_GetGoodsGrp() {
 
-    // Initial data fetch
-    this.repo.GetGoodsGrp().subscribe((data: any) => {
-      this.base_Group_list = data.GoodsGrps
-      this.base_Group_list1 = data.GoodsGrps
-      this.rowData = this.buildTree(this.base_Group_list);
-
-    });
-
-  }
 
 
 
@@ -390,8 +432,9 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
-    this.repo.GetGood_base(this.Code).subscribe((data: any) => {
 
+    this.repo.GetGood_base(this.Code).subscribe((data: any) => {
+      this.Loading_Modal_Response_close()
       this.EditForm_Base.patchValue({
         GoodCode: data.Goods[0].GoodCode,
         GoodType: data.Goods[0].GoodType,
@@ -675,9 +718,14 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
       this.changedValues = {};
 
-      this.repo.GetProperty(this.GoodTypeStr).subscribe(e => {
+      this.propertyDto.patchValue({
 
-        this.Propertys = e;
+        ObjectType: this.GoodTypeStr,
+      });
+
+      this.repo.GetProperty(this.propertyDto.value).subscribe((data: any) => {
+
+        this.Propertys = data.Propertys;
 
 
 
@@ -757,15 +805,15 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     ];
 
     this.columnDefs2 = [
-      // {
-      //   field: 'عملیات',
-      //   pinned: 'left',
-      //   cellRenderer: CellActionGoodList,
-      //   cellRendererParams: {
-      //     editUrl: '/kowsar/good-edit',
-      //   },
-      //    minWidth: 80
-      // },
+      {
+        field: 'عملیات',
+        pinned: 'left',
+        cellRenderer: CellActionGoodGroupBtn,
+        cellRendererParams: {
+          editUrl: '/kowsar/good-edit',
+        },
+        width: 100
+      },
       {
         field: 'Name',
         headerName: 'نام   ',
@@ -786,16 +834,23 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
     this.columnDefs3 = [
-      // {
-      //   field: 'عملیات',
-      //   pinned: 'left',
-      //   cellRenderer: CellActionGoodList,
-      //   cellRendererParams: {
-      //     editUrl: '/kowsar/good-edit',
-      //   },
-      //    minWidth: 80
-      // },
-
+      {
+        field: 'عملیات',
+        pinned: 'left',
+        cellRenderer: CellActionGoodImageBtn,
+        cellRendererParams: {
+          editUrl: '/kowsar/good-edit',
+        },
+        width: 150
+      },
+      {
+        field: 'عملیات',
+        cellRenderer: CellActionGoodEditImage,
+        cellRendererParams: {
+          editUrl: '/kowsar/good-edit',
+        },
+        width: 150
+      },
       {
         field: 'ClassName',
         headerName: 'کد',
@@ -939,11 +994,13 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     this.columnDefs6 = [
       {
         headerName: 'Group Name',
-        field: 'name', // Adjust according to your data structure
+        field: 'ame', // Adjust according to your data structure
         cellRenderer: 'agGroupCellRenderer', // Use AG Grid's group cell renderer
         cellRendererParams: {
           suppressCount: true, // Optional, if you don't want to show child counts
         },
+        checkboxSelection: true,
+        getDataPath: this.getDataPath
       },
       // Add additional column definitions as necessary
     ];
@@ -1014,33 +1071,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
-
-  KowsarTemplate11 = new FormGroup({
-    Goods: new FormArray([])
-  });
-
-
-
-
-
-
-
-  GoodToStack = new FormGroup({
-    GoodIndex: new FormControl("1"),
-    GoodCode: new FormControl(""),
-    StackRef: new FormArray([])
-  });
-
-  GoodToGroup = new FormGroup({
-    GoodIndex: new FormControl("1"),
-    GoodCode: new FormControl(""),
-    GoodGroup: new FormArray([])
-  });
-
-
-
-  // List of strings to patch
-
   // #region Func
 
 
@@ -1082,9 +1112,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
     console.log(this.JsonForm.value);
 
+    this.Loading_Modal_Response_show()
 
 
     this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+      this.Loading_Modal_Response_close()
 
       if (data.response.Errormessage.length > 0) {
         this.changedValues = {};
@@ -1113,9 +1145,52 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   }
 
+  GetImageFromKsr(pixel, KsrImageCode): Observable<any> {
+
+    return this.repo.GetImageFromServer(pixel, KsrImageCode).pipe(tap((data: any) => { })
+    );
+  }
+
+  DeleteImagefromGood(KsrImageCode) {
+    this.Loading_Modal_Response_show()
+
+    this.repo.DeleteKsrImageCode(KsrImageCode).subscribe(e => {
+      this.Loading_Modal_Response_close()
+
+      this.notificationService.succeded();
+      this.GetGood_Images_Relations()
+    });
+  }
+
+
+  DeleteGroupfromGood(GoodGroupCode) {
+    this.Loading_Modal_Response_show()
+
+    this.repo.DeleteGoodGroupCode(GoodGroupCode).subscribe(e => {
+      this.Loading_Modal_Response_close()
+
+      this.notificationService.succeded();
+      this.GetGood_Groups_Relations()
+    });
+  }
+
+
+  ShowImageModal(pixel, KsrImageCode) {
+    this.Loading_Modal_Response_show()
+
+    this.repo.GetImageFromServer(pixel, KsrImageCode).subscribe((data: any) => {
+      this.Loading_Modal_Response_close()
+
+      this.showimage_dialog_show();
+      this.Imageitem = `data:image;base64,${data.Text}`;
+
+    });
+  }
+
 
 
   SetGroup() {
+    this.Loading_Modal_Response_show()
 
     console.log(this.selectedRows);
 
@@ -1156,6 +1231,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
     this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+      this.Loading_Modal_Response_close()
 
       if (data.response.Errormessage.length > 0) {
         this.changedValues = {};
@@ -1206,11 +1282,14 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     for (var property of this.Propertys) {
 
       if (property.PropertyValueMap === textvalue) {
-        if (textvalue == "Nvarchar20") {
-          this.parseXmlToJson(property.PropertySchema)
-        }
+        // if (textvalue == "Nvarchar20") {
+        //   this.parseXmlToJson(property.PropertySchema)
 
+        // }
+
+        //return property.DisplayName;
         return this.getDisplayName(property.PropertySchema);
+
       }
     }
 
@@ -1405,6 +1484,68 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   }
 
+  changedValues_cansel_property() {
+
+
+
+    this.EditForm_Property.patchValue({
+      GoodCode: this.EditForm_Property_temp.value.GoodCode,
+      GoodName: this.EditForm_Property_temp.value.GoodName,
+      GoodType: this.EditForm_Property_temp.value.GoodType,
+      Nvarchar1: this.EditForm_Property_temp.value.Nvarchar1,
+      Nvarchar2: this.EditForm_Property_temp.value.Nvarchar2,
+      Nvarchar3: this.EditForm_Property_temp.value.Nvarchar3,
+      Nvarchar4: this.EditForm_Property_temp.value.Nvarchar4,
+      Nvarchar5: this.EditForm_Property_temp.value.Nvarchar5,
+      Nvarchar6: this.EditForm_Property_temp.value.Nvarchar6,
+      Nvarchar7: this.EditForm_Property_temp.value.Nvarchar7,
+      Nvarchar8: this.EditForm_Property_temp.value.Nvarchar8,
+      Nvarchar9: this.EditForm_Property_temp.value.Nvarchar9,
+      Nvarchar10: this.EditForm_Property_temp.value.Nvarchar10,
+      Nvarchar11: this.EditForm_Property_temp.value.Nvarchar11,
+      Nvarchar12: this.EditForm_Property_temp.value.Nvarchar12,
+      Nvarchar13: this.EditForm_Property_temp.value.Nvarchar13,
+      Nvarchar14: this.EditForm_Property_temp.value.Nvarchar14,
+      Nvarchar15: this.EditForm_Property_temp.value.Nvarchar15,
+      Nvarchar16: this.EditForm_Property_temp.value.Nvarchar16,
+      Nvarchar17: this.EditForm_Property_temp.value.Nvarchar17,
+      Nvarchar18: this.EditForm_Property_temp.value.Nvarchar18,
+      Nvarchar19: this.EditForm_Property_temp.value.Nvarchar19,
+      Nvarchar20: this.EditForm_Property_temp.value.Nvarchar20,
+      Int1: this.EditForm_Property_temp.value.Int1,
+      Int2: this.EditForm_Property_temp.value.Int2,
+      Int3: this.EditForm_Property_temp.value.Int3,
+      Int4: this.EditForm_Property_temp.value.Int4,
+      Int5: this.EditForm_Property_temp.value.Int5,
+      Int6: this.EditForm_Property_temp.value.Int6,
+      Int7: this.EditForm_Property_temp.value.Int7,
+      Int8: this.EditForm_Property_temp.value.Int8,
+      Int9: this.EditForm_Property_temp.value.Int9,
+      Int10: this.EditForm_Property_temp.value.Int10,
+      Float1: this.EditForm_Property_temp.value.Float1,
+      Float2: this.EditForm_Property_temp.value.Float2,
+      Float3: this.EditForm_Property_temp.value.Float3,
+      Float4: this.EditForm_Property_temp.value.Float4,
+      Float5: this.EditForm_Property_temp.value.Float5,
+      Float6: this.EditForm_Property_temp.value.Float6,
+      Float7: this.EditForm_Property_temp.value.Float7,
+      Float8: this.EditForm_Property_temp.value.Float8,
+      Float9: this.EditForm_Property_temp.value.Float9,
+      Float10: this.EditForm_Property_temp.value.Float10,
+      Text1: this.EditForm_Property_temp.value.Text1,
+      Text2: this.EditForm_Property_temp.value.Text2,
+      Text3: this.EditForm_Property_temp.value.Text3,
+      Text4: this.EditForm_Property_temp.value.Text4,
+      Text5: this.EditForm_Property_temp.value.Text5,
+    });
+
+    this.changedValues = {};
+
+
+  }
+
+
+
 
   changedValues_cansel_complete() {
 
@@ -1443,17 +1584,22 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
 
+
   sendImageToServer(ObjectCode: string, imageData: string): void {
+    this.Loading_Modal_Response_show()
 
     const data = {
       ClassName: "TGood",
       ObjectCode: ObjectCode,
       image: imageData
     };
+    console.log(data)
 
-    // this.repo.SendImageToServer(data).subscribe((response) => {
-    //   this.fetchImageData();
-    // });
+    this.repo.SendImageToServer(data).subscribe((response) => {
+      this.Loading_Modal_Response_close()
+      this.notificationService.succeded()
+      this.GetGood_Images_Relations();
+    });
 
   }
 
@@ -1503,8 +1649,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
           JsonData: JSON.stringify(this.KowsarTemplate.value)
         });
 
+        this.Loading_Modal_Response_show()
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+          this.Loading_Modal_Response_close()
 
 
 
@@ -1565,8 +1713,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
           JsonData: JSON.stringify(this.KowsarTemplate.value)
         });
 
+        this.Loading_Modal_Response_show()
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+          this.Loading_Modal_Response_close()
+
           if (data.response.Errormessage.length > 0) {
 
             this.notificationService.succeded();
@@ -1619,8 +1770,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
           JsonData: JSON.stringify(this.KowsarTemplate.value)
         });
 
+        this.Loading_Modal_Response_show()
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+          this.Loading_Modal_Response_close()
+
           if (data.response.Errormessage.length > 0) {
             this.changedValues = {};
             this.notificationService.succeded();
@@ -1675,8 +1829,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         });
 
         console.log(JSON.stringify(this.KowsarTemplate.value))
+        this.Loading_Modal_Response_show()
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+          this.Loading_Modal_Response_close()
 
           if (data.response.Errormessage.length > 0) {
 
@@ -1728,8 +1884,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         });
 
         console.log(JSON.stringify(this.KowsarTemplate.value))
+        this.Loading_Modal_Response_show()
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+          this.Loading_Modal_Response_close()
 
           if (data.response.Errormessage.length > 0) {
 
@@ -1785,8 +1943,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         });
 
         console.log(JSON.stringify(this.KowsarTemplate.value))
+        this.Loading_Modal_Response_show()
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+          this.Loading_Modal_Response_close()
 
           if (data.response.Errormessage.length > 0) {
 
@@ -1838,8 +1998,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         });
 
         console.log(JSON.stringify(this.KowsarTemplate.value))
+        this.Loading_Modal_Response_show()
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+          this.Loading_Modal_Response_close()
 
           if (data.response.Errormessage.length > 0) {
 
@@ -1869,6 +2031,135 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     }
 
 
+    if (action == 'property') {
+
+
+
+
+
+
+      if (Object.keys(this.changedValues).length > 0) {
+
+        const formGroup = new FormGroup(
+          Object.keys(this.changedValues).reduce((acc, key) => {
+            acc[key] = new FormControl(this.changedValues[key]);
+            return acc;
+          }, {})
+        );
+
+        this.GoodToProperty.patchValue({
+          GoodCode: this.Code,
+          PropertyValue: JSON.parse(JSON.stringify(formGroup.value)),
+        });
+
+
+
+        (this.KowsarTemplate.get('Goods') as FormArray).clear();
+        (this.KowsarTemplate.get('Goods') as FormArray).push(this.GoodToProperty);
+
+
+
+        console.log(JSON.stringify(this.KowsarTemplate.value))
+
+        this.JsonForm.patchValue({
+          JsonData: JSON.stringify(this.KowsarTemplate.value)
+        });
+
+        console.log(JSON.stringify(this.KowsarTemplate.value))
+        this.Loading_Modal_Response_show()
+
+        this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+          this.Loading_Modal_Response_close()
+
+          if (data.response.Errormessage.length > 0) {
+
+            this.notificationService.succeded();
+            this.changedValues = {};
+          }
+
+          if (data.Goods[0].ErrorMessage == "") {
+            this.notificationService.succeded();
+            this.changedValues = {};
+            location.reload()
+          } else {
+            this.notificationService.error(data.Goods[0].ErrorMessage);
+          }
+
+
+
+        });
+
+
+      } else {
+        console.log('No changes detected');
+      }
+
+
+    } else if (action == 'property_exit') {
+
+
+      if (Object.keys(this.changedValues).length > 0) {
+
+        const formGroup = new FormGroup(
+          Object.keys(this.changedValues).reduce((acc, key) => {
+            acc[key] = new FormControl(this.changedValues[key]);
+            return acc;
+          }, {})
+        );
+
+        this.GoodToProperty.patchValue({
+          GoodCode: this.Code,
+          PropertyValue: JSON.parse(JSON.stringify(formGroup.value)),
+        });
+
+
+
+
+        (this.KowsarTemplate.get('Goods') as FormArray).clear();
+        (this.KowsarTemplate.get('Goods') as FormArray).push(this.GoodToProperty);
+
+
+
+        console.log(JSON.stringify(this.KowsarTemplate.value))
+
+        this.JsonForm.patchValue({
+          JsonData: JSON.stringify(this.KowsarTemplate.value)
+        });
+
+        console.log(JSON.stringify(this.KowsarTemplate.value))
+        this.Loading_Modal_Response_show()
+
+        this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+          this.Loading_Modal_Response_close()
+
+          if (data.response.Errormessage.length > 0) {
+
+            this.notificationService.succeded();
+            this.location.back()
+            location.reload()
+          }
+
+
+          if (data.Goods[0].ErrorMessage == "") {
+            this.notificationService.succeded();
+            location.reload()
+            this.location.back()
+          } else {
+            this.notificationService.error(data.Goods[0].ErrorMessage);
+          }
+
+
+        });
+
+
+      } else {
+        console.log('No changes detected');
+      }
+
+
+
+
+    }
 
 
 
@@ -1931,6 +2222,39 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     this.renderer.removeAttribute(modal, 'role');
   }
 
+  showimage_dialog_show() {
+    const modal = this.renderer.selectRootElement('#showimagemodal', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  showimage_dialog_close() {
+    const modal = this.renderer.selectRootElement('#showimagemodal', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
+  Loading_Modal_Response_show() {
+    const modal = this.renderer.selectRootElement('#loadingresponse', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  Loading_Modal_Response_close() {
+    const modal = this.renderer.selectRootElement('#loadingresponse', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
+
 
   // #endregion
 
@@ -1947,166 +2271,154 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   public gridOptions: GridOptions;
 
-  buildTree(data: RowData[]): RowData[] {
-    const tree: RowData[] = [];
-    const map: { [key: string]: RowData } = {};
 
-    data.forEach(item => {
-      // Create a map entry for each item
-      map[item.GroupCode] = item;
 
-      // Initialize the children array
-      item.children = item.children || [];
-    });
 
-    data.forEach(item => {
-      if (item.L1 === '0') {
-        // Level 1 (root level)
-        tree.push(item);
+  getDataPath = (data: Group) => {
+    const path: string[] = [];
+
+    // Construct the path based on L1, L2, L3, L4, and L5
+    if (data.L1 !== '0') {
+      const parentL1 = this.findGroupByCode(data.L1);
+      if (parentL1) {
+        path.push(parentL1.Name); // Add the L1 parent group name
+      }
+    }
+
+    if (data.L2 !== '0') {
+      const parentL2 = this.findGroupByCode(data.L2);
+      if (parentL2) {
+        path.push(parentL2.Name); // Add the L2 parent group name
+      }
+    }
+
+    if (data.L3 !== '0') {
+      const parentL3 = this.findGroupByCode(data.L3);
+      if (parentL3) {
+        path.push(parentL3.Name); // Add the L3 parent group name
+      }
+    }
+
+    if (data.L4 !== '0') {
+      const parentL4 = this.findGroupByCode(data.L4);
+      if (parentL4) {
+        path.push(parentL4.Name); // Add the L4 parent group name
+      }
+    }
+
+    // Finally, add the current group's name
+    path.push(data.Name);
+
+    return path;
+  };
+
+  // Helper method to find a group by its GroupCode
+  findGroupByCode(groupCode: string): Group | undefined {
+    return this.base_Group_list.find(group => group.GroupCode === groupCode);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+  buildTree(groups: Group[]): Group[] {
+    const groupMap = new Map<string, Group>();
+
+    // Step 1: Create a map of groups for easy lookup
+    for (const group of groups) {
+      group.children = [];
+      groupMap.set(group.GroupCode, group);
+    }
+
+    // Step 2: Build the tree structure
+    const tree: Group[] = [];
+
+    for (const group of groups) {
+      const { L1, L2, L3, L4, L5, GroupCode } = group;
+
+      // Determine the parent based on the L values
+      let parent: Group | undefined;
+
+      if (L1 === '0') {
+        // Top-level group (L1 is 0)
+        tree.push(group);
       } else {
-        // Add to the corresponding parent
-        const parent = map[item.L1];
+        // Find the appropriate parent group
+        if (L2 === '0') {
+          parent = groupMap.get(L1); // Parent is L1
+        } else if (L3 === '0') {
+          parent = groupMap.get(L2); // Parent is L2
+        } else if (L4 === '0') {
+          parent = groupMap.get(L3); // Parent is L3
+        } else if (L5 === '0') {
+          parent = groupMap.get(L4); // Parent is L4
+        } else {
+          parent = groupMap.get(L5); // Parent is L5
+        }
+
+        // If a parent is found, push this group to its children's array
         if (parent) {
-          parent.children.push(item);
+          parent.children.push(group);
         }
       }
-    });
+    }
 
     return tree;
   }
 
 
 
-  private flattenTree(node: any): any {
-    const { name, children } = node;
-    return {
-      name,
-      children: children.map((child: any) => this.flattenTree(child)),
-    };
+  onRowSelected(event: any) {
+    const selected = event.node.isSelected();
+    const groupCode = event.data.GroupCode;
+
+    // Find all children of the selected group
+    const childNodes = this.gridApi.getAllNodes().filter(node => node.data.L1 === groupCode);
+
+    // Check or uncheck all child nodes based on the selected state of the parent node
+    childNodes.forEach(childNode => {
+      childNode.setSelected(selected);
+    });
   }
 
-  getDataPath = (data: RowData) => {
-    const path: string[] = [];
-
-    if (data.L1 === '0') {
-      path.push(data.Name); // Root level
-    } else if (data.L2 === '0') {
-      path.push('1', data.Name); // Child of 1
-    } else if (data.L3 === '0') {
-      path.push('1', '12', data.Name); // Child of 12
-    } else if (data.L4 === '0') {
-      path.push('1', '12', '123', data.Name); // Child of 123
-    }
-
-    return path;
-  };
 
 
-  override ngOnInit(): void {
-    super.ngOnInit();
-    this.GetObjectTypeFromDbSetup()
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      var id = params.get('id');
-      if (id != null) {
-        this.Code = id;
 
-        this.Code_int = parseInt(this.Code);
-        if (parseInt(this.Code) > 0) {
-          this.getDetails();
-        } else {
-          this.EditForm_Base_reset()
-        }
 
-        this.GetColumnTable();
-      }
+
+
+  LoadData_GetGoodsGrp() {
+
+    // Initial data fetch
+    this.repo.GetGoodsGrp().subscribe((data: any) => {
+      this.base_Group_list = data.GoodsGrps
+
+      const treeStructure = this.buildTree(data.GoodsGrps);
+      console.log(JSON.stringify(treeStructure, null, 2));
+
+      // this.gridOptions = {
+      //   // Configure your grid options here
+      //   getDataPath: this.getDataPath.bind(this),
+      //   // Add other options like columnDefs, etc.
+      // };
+
+      // // Example data
+
+
+      // console.log('Row Data:', JSON.stringify(this.buildTree(this.base_Group_list), null, 2)); // Log the row data structure
+
+
     });
 
-
-
-    interface RowData {
-      GroupCode: string;
-      L1: string;
-      L2: string;
-      L3: string;
-      L4: string;
-      L5: string;
-      Name: string;
-      children?: RowData[]; // Optional children property
-    }
-
-    function buildTree(data: RowData[]): RowData[] {
-      const tree: RowData[] = [];
-      const map: { [key: string]: RowData } = {};
-
-      // Create a map for each item and initialize children array
-      data.forEach(item => {
-        map[item.GroupCode] = item;
-        item.children = item.children || []; // Initialize children
-      });
-
-      // Construct the tree
-      data.forEach(item => {
-        if (item.L1 === '0') {
-          // Level 1 (root level)
-          tree.push(item);
-        } else {
-          // Find the parent and add the current item as a child
-          const parent = map[item.L1];
-          if (parent) {
-            parent.children.push(item);
-          }
-        }
-      });
-
-      return tree;
-    }
-
-    // Example usage
-    const flatData: RowData[] = [
-      { GroupCode: '1', L1: '0', L2: '0', L3: '0', L4: '0', L5: '0', Name: '1' },
-      { GroupCode: '2', L1: '1', L2: '0', L3: '0', L4: '0', L5: '0', Name: '12' },
-      { GroupCode: '3', L1: '1', L2: '2', L3: '0', L4: '0', L5: '0', Name: '123' },
-      { GroupCode: '4', L1: '1', L2: '2', L3: '3', L4: '0', L5: '0', Name: '1234' },
-      { GroupCode: '5', L1: '1', L2: '0', L3: '0', L4: '0', L5: '0', Name: '15' },
-    ];
-
-    // Build the tree structure
-    const treeData = buildTree(flatData);
-
-    // Assign to AG Grid rowData
-    this.rowData = treeData;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    this.gridOptions = {
-      // Configure your grid options here
-      getDataPath: this.getDataPath.bind(this),
-      // Add other options like columnDefs, etc.
-    };
-
-    // Example data
-
-
-    console.log('Row Data:', JSON.stringify(this.rowData, null, 2)); // Log the row data structure
-
-
-
   }
-
-
-
 
 
 
@@ -2114,10 +2426,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
-import { GridOptions } from 'ag-grid-community';
 
 
-interface RowData {
+
+
+interface Group {
   GroupCode: string;
   L1: string;
   L2: string;
@@ -2125,5 +2438,13 @@ interface RowData {
   L4: string;
   L5: string;
   Name: string;
-  children?: RowData[]; // Add children as an optional property
+  children?: Group[];
 }
+
+
+
+
+// Example usage:
+
+
+

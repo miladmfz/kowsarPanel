@@ -49,7 +49,7 @@ export class GoodListComponent extends AgGridBaseComponent
         cellRendererParams: {
           editUrl: '/kowsar/good-edit',
         },
-        Width: 10
+        width: 100
       },
 
       {

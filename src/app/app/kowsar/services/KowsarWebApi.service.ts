@@ -40,11 +40,6 @@ export class KowsarWebApiService {
 
 
 
-  GetProperty(Where: string): Observable<any[]> {
-    const params = new HttpParams().append('Where', Where)
-    return this.client.get<any[]>(this.kowsarWebUrl + "GetProperty", { headers: this.headers, params: params })
-  }
-
 
   Good_Insert(command): Observable<any[]> {
 
@@ -129,6 +124,7 @@ export class KowsarWebApiService {
 
   }
 
+
   GetGoodList(): Observable<any[]> {
     return this.client.get<any[]>(this.kowsarWebUrl + "GetGoodList", { headers: this.headers })
   }
@@ -145,6 +141,36 @@ export class KowsarWebApiService {
     return this.client.get<any[]>(this.kowsarWebUrl + "GetGoodsGrp", { headers: this.headers })
   }
 
+
+  GetProperty(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.kowsarWebUrl + "GetProperty", command, { headers: this.headers })
+
+  }
+
+  SendImageToServer(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "UploadImage", command, { headers: this.headers })
+  }
+
+  GetImageFromServer(Pixel: string, KsrImageCode: string): Observable<any[]> {
+    const params = new HttpParams().append('Pixel', Pixel).append('KsrImageCode', KsrImageCode)
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetImageFromKsr", { headers: this.headers, params: params })
+
+  }
+
+
+  DeleteGoodGroupCode(Where: string): Observable<any[]> {
+    const params = new HttpParams().append('Where', Where)
+    return this.client.get<any[]>(this.kowsarWebUrl + "DeleteGoodGroupCode", { headers: this.headers, params: params })
+
+  }
+
+
+  DeleteKsrImageCode(Where: string): Observable<any[]> {
+    const params = new HttpParams().append('Where', Where)
+    return this.client.get<any[]>(this.kowsarWebUrl + "DeleteKsrImageCode", { headers: this.headers, params: params })
+
+  }
 
 
 

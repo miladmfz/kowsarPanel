@@ -16,18 +16,23 @@
           <div class="me-3">
             <label for="fileInput" class="position-relative">
               <ng-container *ngIf="Imageitem.length>100">
-                <img [src]="Imageitem" alt="No Photo" class="rounded-circle" (click)="fileInput.click()">
+                <img [src]="Imageitem" alt="No Photo" class="rounded-circle">
               </ng-container>
               <ng-container *ngIf="Imageitem.length<100">
-                <img src="./assets/images/nophoto.png" alt="No Photo" class="rounded-circle"
-                  (click)="fileInput.click()">
+                <img src="./assets/images/nophoto.png" alt="No Photo" class="rounded-circle">
               </ng-container>
 
-
             </label>
-            <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput style="display: none;">
 
           </div>
+
+          <div class="col-md-12 d-flex align-items-center">
+            <button class="btn btn-link mx-2 text-info" style="font-size: 18px; padding: 10px 20px;"
+              (click)="fileInput.click()">اضافه کردن عکس</button>
+            <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput style="display: none;"
+              (click)="$event.stopPropagation()">
+          </div>
+
 
 
           <div class="form-group col-md-12">
@@ -79,10 +84,10 @@
 <div class="card">
   <div class="card-body">
     <div class="col-sm-6">
-      <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
+      <!-- <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
         (change)="onFileSelected($event)">
         <span class="btn-label"><i class="fas fa-check-double"></i></span>بازگزاری عکس
-      </a>
+      </a> -->
       <!-- <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
         (click)="submit('')">
         <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره

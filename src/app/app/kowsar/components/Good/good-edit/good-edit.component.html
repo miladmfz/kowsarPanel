@@ -1296,28 +1296,54 @@
         </div>
       </form>
 
-      <div class="card">
-        <div class="card-body">
-          <div class="col-sm-6">
-            <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
-              (click)="submit('base_exit')">
-              <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره و خروج
-            </a>
-            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
-              (click)="submit('base')">
-              <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره
-            </a>
-            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
-              (click)="submit('base_new')">
-              <span class="btn-label"><i class="fas fa-plus"></i></span>ذخیره و جدید
-            </a>
-            <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
-              (click)="onBtnCancelClick()">
-              <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
-            </a>
+
+
+
+
+
+      <ng-container *ngIf="changedValues_show()">
+
+        <div class="card">
+          <div class="card-body">
+            <div class="col-sm-12">
+              <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mx-1"
+                (click)="submit('property_exit')">
+                <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره و خروج
+              </a>
+              <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mx-1"
+                (click)="submit('property')">
+                <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره
+              </a>
+
+              <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mx-1"
+                (click)="changedValues_cansel_property()">
+                <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
+              </a>
+
+
+            </div>
           </div>
         </div>
-      </div>
+      </ng-container>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1399,11 +1425,16 @@
 
         <div class="col-md-12">
 
+
+
           <div class="col-md-12 d-flex align-items-center">
             <label for="imagelist" class="col-form-label">لیست عکس </label>
+
             <button class="btn btn-link mx-2 text-info" (click)="fileInput.click()">اضافه کردن عکس</button>
-            <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput style="display: none;">
+            <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput style="display: none;"
+              (click)="$event.stopPropagation()">
           </div>
+
 
 
           <ag-grid-angular #agGrid id="myGrid" style="height: 250px; width: auto" [rowData]="Image_list"
@@ -1477,7 +1508,6 @@
 
 
 
-    GetGoodsGrp
 
 
 
@@ -1493,14 +1523,7 @@
           <div class="modal-body">
 
 
-            <!-- <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: auto" [rowData]="rowData"
-              [columnDefs]="columnDefs6" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
-              [pagination]="true" [context]="context" class="ag-theme-alpine" [defaultColDef]="defaultColDef"
-              [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
-              (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged($event)"
-              (cellClicked)="onCellClicked($event)" [treeData]="true" [getDataPath]="getDataPath"></ag-grid-angular> -->
-
-            <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: auto" [rowData]="rowData"
+            <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: auto" [rowData]="base_Group_list"
               [columnDefs]="columnDefs6" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
               [pagination]="true" [context]="context" class="ag-theme-alpine" [defaultColDef]="defaultColDef"
               [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
@@ -1515,6 +1538,50 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
               (click)="group_dialog_close()">بستن</button>
             <button type="button" class="btn btn-primary" (click)="SetGroup()">انتخاب</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+    <div class="modal fade" id="showimagemodal" tabindex="-1" aria-labelledby="showimagemodalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="background-color: #d1dce7;">
+          <div class="modal-header" style="background-color: #949494;">
+            <h5 class="modal-title" id="showimagemodalLabel">لیست گروه ها</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+              (click)="showimage_dialog_close()"></button>
+          </div>
+          <div class="modal-body">
+
+            <img [src]="Imageitem" alt="No Photo">
+
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+              (click)="showimage_dialog_close()">بستن</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="modal fade" id="loadingresponse" tabindex="-1" aria-labelledby="loadingresponseLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background-color: #d1dce7; border-radius: 10px; border: none;">
+          <div class="modal-body d-flex justify-content-center align-items-center" style="height: 150px;">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="ms-3">لطفا منتظر بمانید</div>
           </div>
         </div>
       </div>
