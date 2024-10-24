@@ -33,7 +33,7 @@
       </li>
 
       <li class="nav-item">
-        <a href="#GoodProperty" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+        <a href="#GoodProperty" data-bs-toggle="tab" aria-expanded="false" class="nav-link" (click)="Checkproperty()">
           <span class="d-inline-block d-sm-none"><i class="mdi mdi-cog"></i></span>
           <span class="d-none d-sm-inline-block">خصوصیت اضافه</span>
         </a>
@@ -205,13 +205,24 @@
 
                   <div class="form-group col-md-4">
                     <label for="SellPrice1" class="col-form-label">نرخ فروش 1 </label>
+
+                    <ng-container *ngIf="SellPriceType_Str=='1'">
+                      <span class="text-danger mx-2">%</span>
+                    </ng-container>
+
+
+
                     <input type="number" class="form-control" id="SellPrice1" formControlName="SellPrice1"
                       maxlength="100" autocomplete="off" />
                   </div>
 
 
                   <div class="form-group col-md-4">
+
                     <label for="SellPrice2" class="col-form-label">نرخ فروش 2 </label>
+                    <ng-container *ngIf="SellPriceType_Str=='1'">
+                      <span class="text-danger mx-2">%</span>
+                    </ng-container>
                     <input type="number" class="form-control" id="SellPrice2" formControlName="SellPrice2"
                       maxlength="100" autocomplete="off" />
                   </div>
@@ -219,6 +230,9 @@
 
                   <div class="form-group col-md-4">
                     <label for="SellPrice3" class="col-form-label">نرخ فروش 3 </label>
+                    <ng-container *ngIf="SellPriceType_Str=='1'">
+                      <span class="text-danger mx-2">%</span>
+                    </ng-container>
                     <input type="number" class="form-control" id="SellPrice3" formControlName="SellPrice3"
                       maxlength="100" autocomplete="off" />
                   </div>
@@ -231,6 +245,9 @@
 
                   <div class="form-group col-md-4">
                     <label for="SellPrice4" class="col-form-label">نرخ فروش 4 </label>
+                    <ng-container *ngIf="SellPriceType_Str=='1'">
+                      <span class="text-danger mx-2">%</span>
+                    </ng-container>
                     <input type="number" class="form-control" id="SellPrice4" formControlName="SellPrice4"
                       maxlength="100" autocomplete="off" />
                   </div>
@@ -238,6 +255,9 @@
 
                   <div class="form-group col-md-4">
                     <label for="SellPrice5" class="col-form-label">نرخ فروش 5 </label>
+                    <ng-container *ngIf="SellPriceType_Str=='1'">
+                      <span class="text-danger mx-2">%</span>
+                    </ng-container>
                     <input type="number" class="form-control" id="SellPrice5" formControlName="SellPrice5"
                       maxlength="100" autocomplete="off" />
                   </div>
@@ -245,6 +265,9 @@
 
                   <div class="form-group col-md-4">
                     <label for="SellPrice6" class="col-form-label">نرخ فروش 6 </label>
+                    <ng-container *ngIf="SellPriceType_Str=='1'">
+                      <span class="text-danger mx-2">%</span>
+                    </ng-container>
                     <input type="number" class="form-control" id="SellPrice6" formControlName="SellPrice6"
                       maxlength="100" autocomplete="off" />
                   </div>
@@ -1486,12 +1509,20 @@
           </div>
           <div class="modal-body">
 
-            <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="base_Stack_list"
+            <!-- <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="base_Stack_list"
               [columnDefs]="columnDefs4" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
               (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
               [context]="context" class="ag-theme-alpine" [defaultColDef]="defaultColDef"
               [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
               (selectionChanged)="onSelectionChanged($event)">
+            </ag-grid-angular> -->
+            <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: auto" [rowData]="base_Stack_list"
+              [columnDefs]="columnDefs6" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+              [pagination]="true" [context]="context" class="ag-theme-alpine" [defaultColDef]="defaultColDef"
+              [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+              (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged($event)"
+              (cellClicked)="onCellClicked($event)" (rowDoubleClicked)="onRowDoubleClicked($event)" [treeData]="true"
+              [getDataPath]="getDataPath_stack">
             </ag-grid-angular>
 
 
@@ -1529,7 +1560,7 @@
               [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
               (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged($event)"
               (cellClicked)="onCellClicked($event)" (rowDoubleClicked)="onRowDoubleClicked($event)" [treeData]="true"
-              [getDataPath]="getDataPath">
+              [getDataPath]="getDataPath_group">
             </ag-grid-angular>
 
 

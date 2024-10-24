@@ -36,19 +36,56 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     this.route.paramMap.subscribe((params: ParamMap) => {
       var id = params.get('id');
       if (id != null) {
+        console.log("in if null")
+
         this.Code = id;
 
         this.Code_int = parseInt(this.Code);
         if (parseInt(this.Code) > 0) {
+          console.log("in if")
           this.getDetails();
         } else {
+          console.log("in else")
+
           this.EditForm_Base_reset()
         }
 
         this.GetColumnTable();
+      } else {
+        console.log("in null else")
+
+        this.EditForm_Base_reset()
+        this.GetColumnTable();
       }
     });
   }
+
+
+  getDetails() {
+    this.Loading_Modal_Response_show()
+
+    this.EditForm_Base.reset();
+    this.EditForm_Explain.reset();
+    this.EditForm_Complete.reset();
+    this.EditForm_Property.reset();
+
+    this.LoadData_base()
+
+    this.LoadData_explain()
+
+    this.LoadData_complete()
+
+    this.LoadData_GetStacks()
+
+
+    this.LoadData_GetGoodsGrp()
+
+    this.LoadData_property()
+
+
+  }
+
+
 
 
   // #region Declare
@@ -57,6 +94,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   Code_int: number = 0;
   Imageitem: string = '';
   GoodTypeStr: string = '';
+  SellPriceType_Str: string = '';
+
+  Errormsg_property: string = '';
+
   Image_list: any[] = [];
   Group_list: any[] = [];
   base_Group_list: any[] = [];
@@ -381,37 +422,30 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   // #region Load_data
 
-  getDetails() {
-    this.Loading_Modal_Response_show()
-
-    this.EditForm_Base.reset();
-    this.EditForm_Explain.reset();
-    this.EditForm_Complete.reset();
-    this.EditForm_Property.reset();
-
-    this.LoadData_base()
-
-    this.LoadData_explain()
-
-    this.LoadData_complete()
-
-    this.LoadData_GetStacks()
 
 
-    this.LoadData_GetGoodsGrp()
 
-    this.LoadData_property()
+  LoadData_GetGoodsGrp() {
 
+    // Initial data fetch
+    this.repo.GetGoodsGrp().subscribe((data: any) => {
+      this.base_Group_list = data.GoodsGrps
+
+      const treeStructure = this.buildTree_group(data.GoodsGrps);
+
+
+
+    });
 
   }
-
-
 
   LoadData_GetStacks() {
 
     // Initial data fetch
     this.repo.GetStacks().subscribe((data: any) => {
       this.base_Stack_list = data.Stacks
+
+      const treeStructure = this.buildTree_stack(data.Stacks);
 
     });
 
@@ -435,6 +469,8 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
     this.repo.GetGood_base(this.Code).subscribe((data: any) => {
       this.Loading_Modal_Response_close()
+      this.SellPriceType_Str = data.Goods[0].SellPriceType
+
       this.EditForm_Base.patchValue({
         GoodCode: data.Goods[0].GoodCode,
         GoodType: data.Goods[0].GoodType,
@@ -546,7 +582,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
       // Initialize the form's original state to compare changes later
       this.originalValues = { ...this.EditForm_Explain.value };
-      console.log()
       this.changedValues = {};
     });
 
@@ -603,133 +638,336 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   }
 
+
+  // Assuming this is part of an asynchronous operation or a function
+  Checkproperty() {
+    if (this.Errormsg_property.length > 0) {
+      console.log("ssd")
+      this.setinitial_property()
+    }
+  }
+  setinitial_property() {
+
+
+    this.EditForm_Property.valueChanges.subscribe((value) => {
+      this.trackChanges(value);
+    });
+
+    // Initialize the form's original state to compare changes later
+    this.originalValues = { ...this.EditForm_Property.value };
+    this.EditForm_Property.patchValue({
+      GoodCode: parseInt(this.Code),
+      Nvarchar1: "",
+    });
+
+    const formGroup = new FormGroup(
+      Object.keys(this.changedValues).reduce((acc, key) => {
+        acc[key] = new FormControl(this.changedValues[key]);
+        return acc;
+      }, {})
+    );
+
+    this.GoodToProperty.patchValue({
+      GoodCode: this.Code,
+      PropertyValue: JSON.parse(JSON.stringify(formGroup.value)),
+    });
+
+
+
+    (this.KowsarTemplate.get('Goods') as FormArray).clear();
+    (this.KowsarTemplate.get('Goods') as FormArray).push(this.GoodToProperty);
+
+    this.JsonForm.patchValue({
+      JsonData: JSON.stringify(this.KowsarTemplate.value)
+    });
+
+    this.Loading_Modal_Response_show()
+
+    this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+      this.Loading_Modal_Response_close()
+
+      if (data.response.Errormessage.length > 0) {
+
+        this.notificationService.succeded();
+        this.changedValues = {};
+        this.LoadData_property()
+      }
+
+      if (data.Goods[0].ErrorMessage == "") {
+        this.notificationService.succeded();
+        this.changedValues = {};
+        location.reload()
+        this.LoadData_property()
+      } else {
+        this.notificationService.error(data.Goods[0].ErrorMessage);
+      }
+
+
+
+    });
+
+
+
+  }
+
   LoadData_property() {
     this.repo.GetGood_Propertys(this.Code).subscribe((data: any) => {
-
-      this.GoodTypeStr = data.Goods[0].GoodType;
-      this.EditForm_Property.patchValue({
-        GoodCode: data.Goods[0].GoodCode,
-        GoodName: data.Goods[0].GoodName,
-        GoodType: data.Goods[0].GoodType,
-        Nvarchar1: data.Goods[0].Nvarchar1,
-        Nvarchar2: data.Goods[0].Nvarchar2,
-        Nvarchar3: data.Goods[0].Nvarchar3,
-        Nvarchar4: data.Goods[0].Nvarchar4,
-        Nvarchar5: data.Goods[0].Nvarchar5,
-        Nvarchar6: data.Goods[0].Nvarchar6,
-        Nvarchar7: data.Goods[0].Nvarchar7,
-        Nvarchar8: data.Goods[0].Nvarchar8,
-        Nvarchar9: data.Goods[0].Nvarchar9,
-        Nvarchar10: data.Goods[0].Nvarchar10,
-        Nvarchar11: data.Goods[0].Nvarchar11,
-        Nvarchar12: data.Goods[0].Nvarchar12,
-        Nvarchar13: data.Goods[0].Nvarchar13,
-        Nvarchar14: data.Goods[0].Nvarchar14,
-        Nvarchar15: data.Goods[0].Nvarchar15,
-        Nvarchar16: data.Goods[0].Nvarchar16,
-        Nvarchar17: data.Goods[0].Nvarchar17,
-        Nvarchar18: data.Goods[0].Nvarchar18,
-        Nvarchar19: data.Goods[0].Nvarchar19,
-        Nvarchar20: data.Goods[0].Nvarchar20,
-        Int1: data.Goods[0].Int1,
-        Int2: data.Goods[0].Int2,
-        Int3: data.Goods[0].Int3,
-        Int4: data.Goods[0].Int4,
-        Int5: data.Goods[0].Int5,
-        Int6: data.Goods[0].Int6,
-        Int7: data.Goods[0].Int7,
-        Int8: data.Goods[0].Int8,
-        Int9: data.Goods[0].Int9,
-        Int10: data.Goods[0].Int10,
-        Float1: data.Goods[0].Float1,
-        Float2: data.Goods[0].Float2,
-        Float3: data.Goods[0].Float3,
-        Float4: data.Goods[0].Float4,
-        Float5: data.Goods[0].Float5,
-        Float6: data.Goods[0].Float6,
-        Float7: data.Goods[0].Float7,
-        Float8: data.Goods[0].Float8,
-        Float9: data.Goods[0].Float9,
-        Float10: data.Goods[0].Float10,
-        Text1: data.Goods[0].Text1,
-        Text2: data.Goods[0].Text2,
-        Text3: data.Goods[0].Text3,
-        Text4: data.Goods[0].Text4,
-        Text5: data.Goods[0].Text5,
-      });
-
-
-      this.EditForm_Property_temp.patchValue({
-        GoodCode: this.EditForm_Property.value.GoodCode,
-        GoodName: this.EditForm_Property.value.GoodName,
-        GoodType: this.EditForm_Property.value.GoodType,
-        Nvarchar1: this.EditForm_Property.value.Nvarchar1,
-        Nvarchar2: this.EditForm_Property.value.Nvarchar2,
-        Nvarchar3: this.EditForm_Property.value.Nvarchar3,
-        Nvarchar4: this.EditForm_Property.value.Nvarchar4,
-        Nvarchar5: this.EditForm_Property.value.Nvarchar5,
-        Nvarchar6: this.EditForm_Property.value.Nvarchar6,
-        Nvarchar7: this.EditForm_Property.value.Nvarchar7,
-        Nvarchar8: this.EditForm_Property.value.Nvarchar8,
-        Nvarchar9: this.EditForm_Property.value.Nvarchar9,
-        Nvarchar10: this.EditForm_Property.value.Nvarchar10,
-        Nvarchar11: this.EditForm_Property.value.Nvarchar11,
-        Nvarchar12: this.EditForm_Property.value.Nvarchar12,
-        Nvarchar13: this.EditForm_Property.value.Nvarchar13,
-        Nvarchar14: this.EditForm_Property.value.Nvarchar14,
-        Nvarchar15: this.EditForm_Property.value.Nvarchar15,
-        Nvarchar16: this.EditForm_Property.value.Nvarchar16,
-        Nvarchar17: this.EditForm_Property.value.Nvarchar17,
-        Nvarchar18: this.EditForm_Property.value.Nvarchar18,
-        Nvarchar19: this.EditForm_Property.value.Nvarchar19,
-        Nvarchar20: this.EditForm_Property.value.Nvarchar20,
-        Int1: this.EditForm_Property.value.Int1,
-        Int2: this.EditForm_Property.value.Int2,
-        Int3: this.EditForm_Property.value.Int3,
-        Int4: this.EditForm_Property.value.Int4,
-        Int5: this.EditForm_Property.value.Int5,
-        Int6: this.EditForm_Property.value.Int6,
-        Int7: this.EditForm_Property.value.Int7,
-        Int8: this.EditForm_Property.value.Int8,
-        Int9: this.EditForm_Property.value.Int9,
-        Int10: this.EditForm_Property.value.Int10,
-        Float1: this.EditForm_Property.value.Float1,
-        Float2: this.EditForm_Property.value.Float2,
-        Float3: this.EditForm_Property.value.Float3,
-        Float4: this.EditForm_Property.value.Float4,
-        Float5: this.EditForm_Property.value.Float5,
-        Float6: this.EditForm_Property.value.Float6,
-        Float7: this.EditForm_Property.value.Float7,
-        Float8: this.EditForm_Property.value.Float8,
-        Float9: this.EditForm_Property.value.Float9,
-        Float10: this.EditForm_Property.value.Float10,
-        Text1: this.EditForm_Property.value.Text1,
-        Text2: this.EditForm_Property.value.Text2,
-        Text3: this.EditForm_Property.value.Text3,
-        Text4: this.EditForm_Property.value.Text4,
-        Text5: this.EditForm_Property.value.Text5,
-      });
-      this.EditForm_Property.valueChanges.subscribe((value) => {
-        this.trackChanges(value);
-      });
-
-      // Initialize the form's original state to compare changes later
-      this.originalValues = { ...this.EditForm_Property.value };
-
-      this.changedValues = {};
-
-      this.propertyDto.patchValue({
-
-        ObjectType: this.GoodTypeStr,
-      });
-
-      this.repo.GetProperty(this.propertyDto.value).subscribe((data: any) => {
-
-        this.Propertys = data.Propertys;
+      if (data.response) {
+        this.Errormsg_property = data.response.Errormessage
+        console.log("property " + data.response.Errormessage)
+      } else {
+        this.Errormsg_property = ""
+        this.GoodTypeStr = data.Goods[0].GoodType;
+        this.EditForm_Property.patchValue({
+          GoodCode: data.Goods[0].GoodCode,
+          GoodName: data.Goods[0].GoodName,
+          GoodType: data.Goods[0].GoodType,
+          Nvarchar1: data.Goods[0].Nvarchar1,
+          Nvarchar2: data.Goods[0].Nvarchar2,
+          Nvarchar3: data.Goods[0].Nvarchar3,
+          Nvarchar4: data.Goods[0].Nvarchar4,
+          Nvarchar5: data.Goods[0].Nvarchar5,
+          Nvarchar6: data.Goods[0].Nvarchar6,
+          Nvarchar7: data.Goods[0].Nvarchar7,
+          Nvarchar8: data.Goods[0].Nvarchar8,
+          Nvarchar9: data.Goods[0].Nvarchar9,
+          Nvarchar10: data.Goods[0].Nvarchar10,
+          Nvarchar11: data.Goods[0].Nvarchar11,
+          Nvarchar12: data.Goods[0].Nvarchar12,
+          Nvarchar13: data.Goods[0].Nvarchar13,
+          Nvarchar14: data.Goods[0].Nvarchar14,
+          Nvarchar15: data.Goods[0].Nvarchar15,
+          Nvarchar16: data.Goods[0].Nvarchar16,
+          Nvarchar17: data.Goods[0].Nvarchar17,
+          Nvarchar18: data.Goods[0].Nvarchar18,
+          Nvarchar19: data.Goods[0].Nvarchar19,
+          Nvarchar20: data.Goods[0].Nvarchar20,
+          Int1: data.Goods[0].Int1,
+          Int2: data.Goods[0].Int2,
+          Int3: data.Goods[0].Int3,
+          Int4: data.Goods[0].Int4,
+          Int5: data.Goods[0].Int5,
+          Int6: data.Goods[0].Int6,
+          Int7: data.Goods[0].Int7,
+          Int8: data.Goods[0].Int8,
+          Int9: data.Goods[0].Int9,
+          Int10: data.Goods[0].Int10,
+          Float1: data.Goods[0].Float1,
+          Float2: data.Goods[0].Float2,
+          Float3: data.Goods[0].Float3,
+          Float4: data.Goods[0].Float4,
+          Float5: data.Goods[0].Float5,
+          Float6: data.Goods[0].Float6,
+          Float7: data.Goods[0].Float7,
+          Float8: data.Goods[0].Float8,
+          Float9: data.Goods[0].Float9,
+          Float10: data.Goods[0].Float10,
+          Text1: data.Goods[0].Text1,
+          Text2: data.Goods[0].Text2,
+          Text3: data.Goods[0].Text3,
+          Text4: data.Goods[0].Text4,
+          Text5: data.Goods[0].Text5,
+        });
 
 
+        this.EditForm_Property_temp.patchValue({
+          GoodCode: this.EditForm_Property.value.GoodCode,
+          GoodName: this.EditForm_Property.value.GoodName,
+          GoodType: this.EditForm_Property.value.GoodType,
+          Nvarchar1: this.EditForm_Property.value.Nvarchar1,
+          Nvarchar2: this.EditForm_Property.value.Nvarchar2,
+          Nvarchar3: this.EditForm_Property.value.Nvarchar3,
+          Nvarchar4: this.EditForm_Property.value.Nvarchar4,
+          Nvarchar5: this.EditForm_Property.value.Nvarchar5,
+          Nvarchar6: this.EditForm_Property.value.Nvarchar6,
+          Nvarchar7: this.EditForm_Property.value.Nvarchar7,
+          Nvarchar8: this.EditForm_Property.value.Nvarchar8,
+          Nvarchar9: this.EditForm_Property.value.Nvarchar9,
+          Nvarchar10: this.EditForm_Property.value.Nvarchar10,
+          Nvarchar11: this.EditForm_Property.value.Nvarchar11,
+          Nvarchar12: this.EditForm_Property.value.Nvarchar12,
+          Nvarchar13: this.EditForm_Property.value.Nvarchar13,
+          Nvarchar14: this.EditForm_Property.value.Nvarchar14,
+          Nvarchar15: this.EditForm_Property.value.Nvarchar15,
+          Nvarchar16: this.EditForm_Property.value.Nvarchar16,
+          Nvarchar17: this.EditForm_Property.value.Nvarchar17,
+          Nvarchar18: this.EditForm_Property.value.Nvarchar18,
+          Nvarchar19: this.EditForm_Property.value.Nvarchar19,
+          Nvarchar20: this.EditForm_Property.value.Nvarchar20,
+          Int1: this.EditForm_Property.value.Int1,
+          Int2: this.EditForm_Property.value.Int2,
+          Int3: this.EditForm_Property.value.Int3,
+          Int4: this.EditForm_Property.value.Int4,
+          Int5: this.EditForm_Property.value.Int5,
+          Int6: this.EditForm_Property.value.Int6,
+          Int7: this.EditForm_Property.value.Int7,
+          Int8: this.EditForm_Property.value.Int8,
+          Int9: this.EditForm_Property.value.Int9,
+          Int10: this.EditForm_Property.value.Int10,
+          Float1: this.EditForm_Property.value.Float1,
+          Float2: this.EditForm_Property.value.Float2,
+          Float3: this.EditForm_Property.value.Float3,
+          Float4: this.EditForm_Property.value.Float4,
+          Float5: this.EditForm_Property.value.Float5,
+          Float6: this.EditForm_Property.value.Float6,
+          Float7: this.EditForm_Property.value.Float7,
+          Float8: this.EditForm_Property.value.Float8,
+          Float9: this.EditForm_Property.value.Float9,
+          Float10: this.EditForm_Property.value.Float10,
+          Text1: this.EditForm_Property.value.Text1,
+          Text2: this.EditForm_Property.value.Text2,
+          Text3: this.EditForm_Property.value.Text3,
+          Text4: this.EditForm_Property.value.Text4,
+          Text5: this.EditForm_Property.value.Text5,
+        });
+        this.EditForm_Property.valueChanges.subscribe((value) => {
+          this.trackChanges(value);
+        });
 
-      });
+        // Initialize the form's original state to compare changes later
+        this.originalValues = { ...this.EditForm_Property.value };
+
+        this.changedValues = {};
+
+        this.propertyDto.patchValue({
+
+          ObjectType: this.GoodTypeStr,
+        });
+
+        this.repo.GetProperty(this.propertyDto.value).subscribe((data: any) => {
+
+          this.Propertys = data.Propertys;
+
+
+
+        });
+      }
+
+      // this.GoodTypeStr = data.Goods[0].GoodType;
+      // this.EditForm_Property.patchValue({
+      //   GoodCode: data.Goods[0].GoodCode,
+      //   GoodName: data.Goods[0].GoodName,
+      //   GoodType: data.Goods[0].GoodType,
+      //   Nvarchar1: data.Goods[0].Nvarchar1,
+      //   Nvarchar2: data.Goods[0].Nvarchar2,
+      //   Nvarchar3: data.Goods[0].Nvarchar3,
+      //   Nvarchar4: data.Goods[0].Nvarchar4,
+      //   Nvarchar5: data.Goods[0].Nvarchar5,
+      //   Nvarchar6: data.Goods[0].Nvarchar6,
+      //   Nvarchar7: data.Goods[0].Nvarchar7,
+      //   Nvarchar8: data.Goods[0].Nvarchar8,
+      //   Nvarchar9: data.Goods[0].Nvarchar9,
+      //   Nvarchar10: data.Goods[0].Nvarchar10,
+      //   Nvarchar11: data.Goods[0].Nvarchar11,
+      //   Nvarchar12: data.Goods[0].Nvarchar12,
+      //   Nvarchar13: data.Goods[0].Nvarchar13,
+      //   Nvarchar14: data.Goods[0].Nvarchar14,
+      //   Nvarchar15: data.Goods[0].Nvarchar15,
+      //   Nvarchar16: data.Goods[0].Nvarchar16,
+      //   Nvarchar17: data.Goods[0].Nvarchar17,
+      //   Nvarchar18: data.Goods[0].Nvarchar18,
+      //   Nvarchar19: data.Goods[0].Nvarchar19,
+      //   Nvarchar20: data.Goods[0].Nvarchar20,
+      //   Int1: data.Goods[0].Int1,
+      //   Int2: data.Goods[0].Int2,
+      //   Int3: data.Goods[0].Int3,
+      //   Int4: data.Goods[0].Int4,
+      //   Int5: data.Goods[0].Int5,
+      //   Int6: data.Goods[0].Int6,
+      //   Int7: data.Goods[0].Int7,
+      //   Int8: data.Goods[0].Int8,
+      //   Int9: data.Goods[0].Int9,
+      //   Int10: data.Goods[0].Int10,
+      //   Float1: data.Goods[0].Float1,
+      //   Float2: data.Goods[0].Float2,
+      //   Float3: data.Goods[0].Float3,
+      //   Float4: data.Goods[0].Float4,
+      //   Float5: data.Goods[0].Float5,
+      //   Float6: data.Goods[0].Float6,
+      //   Float7: data.Goods[0].Float7,
+      //   Float8: data.Goods[0].Float8,
+      //   Float9: data.Goods[0].Float9,
+      //   Float10: data.Goods[0].Float10,
+      //   Text1: data.Goods[0].Text1,
+      //   Text2: data.Goods[0].Text2,
+      //   Text3: data.Goods[0].Text3,
+      //   Text4: data.Goods[0].Text4,
+      //   Text5: data.Goods[0].Text5,
+      // });
+
+
+      // this.EditForm_Property_temp.patchValue({
+      //   GoodCode: this.EditForm_Property.value.GoodCode,
+      //   GoodName: this.EditForm_Property.value.GoodName,
+      //   GoodType: this.EditForm_Property.value.GoodType,
+      //   Nvarchar1: this.EditForm_Property.value.Nvarchar1,
+      //   Nvarchar2: this.EditForm_Property.value.Nvarchar2,
+      //   Nvarchar3: this.EditForm_Property.value.Nvarchar3,
+      //   Nvarchar4: this.EditForm_Property.value.Nvarchar4,
+      //   Nvarchar5: this.EditForm_Property.value.Nvarchar5,
+      //   Nvarchar6: this.EditForm_Property.value.Nvarchar6,
+      //   Nvarchar7: this.EditForm_Property.value.Nvarchar7,
+      //   Nvarchar8: this.EditForm_Property.value.Nvarchar8,
+      //   Nvarchar9: this.EditForm_Property.value.Nvarchar9,
+      //   Nvarchar10: this.EditForm_Property.value.Nvarchar10,
+      //   Nvarchar11: this.EditForm_Property.value.Nvarchar11,
+      //   Nvarchar12: this.EditForm_Property.value.Nvarchar12,
+      //   Nvarchar13: this.EditForm_Property.value.Nvarchar13,
+      //   Nvarchar14: this.EditForm_Property.value.Nvarchar14,
+      //   Nvarchar15: this.EditForm_Property.value.Nvarchar15,
+      //   Nvarchar16: this.EditForm_Property.value.Nvarchar16,
+      //   Nvarchar17: this.EditForm_Property.value.Nvarchar17,
+      //   Nvarchar18: this.EditForm_Property.value.Nvarchar18,
+      //   Nvarchar19: this.EditForm_Property.value.Nvarchar19,
+      //   Nvarchar20: this.EditForm_Property.value.Nvarchar20,
+      //   Int1: this.EditForm_Property.value.Int1,
+      //   Int2: this.EditForm_Property.value.Int2,
+      //   Int3: this.EditForm_Property.value.Int3,
+      //   Int4: this.EditForm_Property.value.Int4,
+      //   Int5: this.EditForm_Property.value.Int5,
+      //   Int6: this.EditForm_Property.value.Int6,
+      //   Int7: this.EditForm_Property.value.Int7,
+      //   Int8: this.EditForm_Property.value.Int8,
+      //   Int9: this.EditForm_Property.value.Int9,
+      //   Int10: this.EditForm_Property.value.Int10,
+      //   Float1: this.EditForm_Property.value.Float1,
+      //   Float2: this.EditForm_Property.value.Float2,
+      //   Float3: this.EditForm_Property.value.Float3,
+      //   Float4: this.EditForm_Property.value.Float4,
+      //   Float5: this.EditForm_Property.value.Float5,
+      //   Float6: this.EditForm_Property.value.Float6,
+      //   Float7: this.EditForm_Property.value.Float7,
+      //   Float8: this.EditForm_Property.value.Float8,
+      //   Float9: this.EditForm_Property.value.Float9,
+      //   Float10: this.EditForm_Property.value.Float10,
+      //   Text1: this.EditForm_Property.value.Text1,
+      //   Text2: this.EditForm_Property.value.Text2,
+      //   Text3: this.EditForm_Property.value.Text3,
+      //   Text4: this.EditForm_Property.value.Text4,
+      //   Text5: this.EditForm_Property.value.Text5,
+      // });
+      // this.EditForm_Property.valueChanges.subscribe((value) => {
+      //   this.trackChanges(value);
+      // });
+
+      // // Initialize the form's original state to compare changes later
+      // this.originalValues = { ...this.EditForm_Property.value };
+
+      // this.changedValues = {};
+
+      // this.propertyDto.patchValue({
+
+      //   ObjectType: this.GoodTypeStr,
+      // });
+
+      // this.repo.GetProperty(this.propertyDto.value).subscribe((data: any) => {
+
+      //   this.Propertys = data.Propertys;
+
+
+
+      // });
+
     });
   }
 
@@ -868,127 +1106,18 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
     ];
 
-    this.columnDefs4 = [
-      // {
-      //   field: 'عملیات',
-      //   pinned: 'left',
-      //   cellRenderer: CellActionGoodList,
-      //   cellRendererParams: {
-      //     editUrl: '/kowsar/good-edit',
-      //   },
-      //    minWidth: 80
-      // },
-
-      {
-        field: 'Name',
-        headerName: 'نام انبار',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150,
-        checkboxSelection: true,
-      },
-      {
-        field: 'L1',
-        headerName: 'L1',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 50,
-      }, {
-        field: 'L2',
-        headerName: 'L2',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 50,
-      }, {
-        field: 'L3',
-        headerName: 'L3',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 50,
-      }, {
-        field: 'L4',
-        headerName: 'L4',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 50,
-      }, {
-        field: 'L5',
-        headerName: 'L5',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 50,
-      },
-      {
-        field: 'StackCode',
-        headerName: 'کد',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-
-
-    ];
-
-
     this.columnDefs5 = [
-      // {
-      //   field: 'عملیات',
-      //   pinned: 'left',
-      //   cellRenderer: CellActionGoodList,
-      //   cellRendererParams: {
-      //     editUrl: '/kowsar/good-edit',
-      //   },
-      //    minWidth: 80
-      // },
-
       {
-        field: 'Name',
-        headerName: 'نام گروه',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150,
+        headerName: 'Stack Name',
+        field: 'ame', // Adjust according to your data structure
+        cellRenderer: 'agGroupCellRenderer', // Use AG Grid's group cell renderer
+        cellRendererParams: {
+          suppressCount: true, // Optional, if you don't want to show child counts
+        },
         checkboxSelection: true,
+        getDataPath: this.getDataPath_stack
       },
-      {
-        field: 'L1',
-        headerName: 'L1',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 50,
-      }, {
-        field: 'L2',
-        headerName: 'L2',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 50,
-      }, {
-        field: 'L3',
-        headerName: 'L3',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 50,
-      }, {
-        field: 'L4',
-        headerName: 'L4',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 50,
-      }, {
-        field: 'L5',
-        headerName: 'L5',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 50,
-      },
-      {
-        field: 'GroupCode',
-        headerName: 'کد',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-
-
+      // Add additional column definitions as necessary
     ];
 
     this.columnDefs6 = [
@@ -1000,7 +1129,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
           suppressCount: true, // Optional, if you don't want to show child counts
         },
         checkboxSelection: true,
-        getDataPath: this.getDataPath
+        getDataPath: this.getDataPath_group
       },
       // Add additional column definitions as necessary
     ];
@@ -1044,7 +1173,14 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
     });
 
+    this.EditForm_Base.valueChanges.subscribe((value) => {
+      this.trackChanges(value);
+    });
 
+    // Initialize the form's original state to compare changes later
+    this.originalValues = { ...this.EditForm_Base.value };
+
+    this.changedValues = {};
 
     this.EditForm_Base.patchValue({
       GoodCode: 0,
@@ -1074,9 +1210,200 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   // #region Func
 
 
+  public gridOptions: GridOptions;
+  getDataPath_group = (data: Group) => {
+    const path: string[] = [];
+
+    // Construct the path based on L1, L2, L3, L4, and L5
+    if (data.L1 !== '0') {
+      const parentL1 = this.findGroupByCode(data.L1);
+      if (parentL1) {
+        path.push(parentL1.Name); // Add the L1 parent group name
+      }
+    }
+
+    if (data.L2 !== '0') {
+      const parentL2 = this.findGroupByCode(data.L2);
+      if (parentL2) {
+        path.push(parentL2.Name); // Add the L2 parent group name
+      }
+    }
+
+    if (data.L3 !== '0') {
+      const parentL3 = this.findGroupByCode(data.L3);
+      if (parentL3) {
+        path.push(parentL3.Name); // Add the L3 parent group name
+      }
+    }
+
+    if (data.L4 !== '0') {
+      const parentL4 = this.findGroupByCode(data.L4);
+      if (parentL4) {
+        path.push(parentL4.Name); // Add the L4 parent group name
+      }
+    }
+
+    // Finally, add the current group's name
+    path.push(data.Name);
+
+    return path;
+  };
+
+  // Helper method to find a group by its GroupCode
+  findGroupByCode(groupCode: string): Group | undefined {
+    return this.base_Group_list.find(group => group.GroupCode === groupCode);
+  }
+
+
+
+  getDataPath_stack = (data: Stack) => {
+    const path: string[] = [];
+
+    // Construct the path based on L1, L2, L3, L4, and L5
+    if (data.L1 !== '0') {
+      const parentL1 = this.findstackByCode(data.L1);
+      if (parentL1) {
+        path.push(parentL1.Name); // Add the L1 parent group name
+      }
+    }
+
+    if (data.L2 !== '0') {
+      const parentL2 = this.findstackByCode(data.L2);
+      if (parentL2) {
+        path.push(parentL2.Name); // Add the L2 parent group name
+      }
+    }
+
+    if (data.L3 !== '0') {
+      const parentL3 = this.findstackByCode(data.L3);
+      if (parentL3) {
+        path.push(parentL3.Name); // Add the L3 parent group name
+      }
+    }
+
+    if (data.L4 !== '0') {
+      const parentL4 = this.findstackByCode(data.L4);
+      if (parentL4) {
+        path.push(parentL4.Name); // Add the L4 parent group name
+      }
+    }
+
+    // Finally, add the current group's name
+    path.push(data.Name);
+
+    return path;
+  };
+
+  // Helper method to find a group by its GroupCode
+  findstackByCode(StackCode: string): Group | undefined {
+    return this.base_Stack_list.find(stack => stack.StackCode === StackCode);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+  buildTree_stack(stacks: Stack[]): Stack[] {
+    const stackMap = new Map<string, Stack>();
+
+    for (const stack of stacks) {
+      stack.children = [];
+      stackMap.set(stack.StackCode, stack);
+    }
+
+    // Step 2: Build the tree structure
+    const tree: Stack[] = [];
+
+    for (const stack of stacks) {
+      const { L1, L2, L3, L4, L5, StackCode } = stack;
+
+      // Determine the parent based on the L values
+      let parent: Stack | undefined;
+
+      if (L1 === '0') {
+        // Top-level group (L1 is 0)
+        tree.push(stack);
+      } else {
+        // Find the appropriate parent group
+        if (L2 === '0') {
+          parent = stackMap.get(L1); // Parent is L1
+        } else if (L3 === '0') {
+          parent = stackMap.get(L2); // Parent is L2
+        } else if (L4 === '0') {
+          parent = stackMap.get(L3); // Parent is L3
+        } else if (L5 === '0') {
+          parent = stackMap.get(L4); // Parent is L4
+        } else {
+          parent = stackMap.get(L5); // Parent is L5
+        }
+
+        // If a parent is found, push this group to its children's array
+        if (parent) {
+          parent.children.push(stack);
+        }
+      }
+    }
+
+    return tree;
+  }
+
+
+  buildTree_group(groups: Group[]): Group[] {
+    const groupMap = new Map<string, Group>();
+
+    // Step 1: Create a map of groups for easy lookup
+    for (const group of groups) {
+      group.children = [];
+      groupMap.set(group.GroupCode, group);
+    }
+
+    // Step 2: Build the tree structure
+    const tree: Group[] = [];
+
+    for (const group of groups) {
+      const { L1, L2, L3, L4, L5, GroupCode } = group;
+
+      // Determine the parent based on the L values
+      let parent: Group | undefined;
+
+      if (L1 === '0') {
+        // Top-level group (L1 is 0)
+        tree.push(group);
+      } else {
+        // Find the appropriate parent group
+        if (L2 === '0') {
+          parent = groupMap.get(L1); // Parent is L1
+        } else if (L3 === '0') {
+          parent = groupMap.get(L2); // Parent is L2
+        } else if (L4 === '0') {
+          parent = groupMap.get(L3); // Parent is L3
+        } else if (L5 === '0') {
+          parent = groupMap.get(L4); // Parent is L4
+        } else {
+          parent = groupMap.get(L5); // Parent is L5
+        }
+
+        // If a parent is found, push this group to its children's array
+        if (parent) {
+          parent.children.push(group);
+        }
+      }
+    }
+
+    return tree;
+  }
+
+
+
   SetStack() {
 
-    console.log(this.selectedRows);
 
     this.GoodToStack.patchValue({
       GoodCode: this.Code,
@@ -1092,25 +1419,12 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     });
 
 
-    console.log(this.GoodToStack.value);
-
-
-
-
     (this.KowsarTemplate.get('Goods') as FormArray).clear();
     (this.KowsarTemplate.get('Goods') as FormArray).push(this.GoodToStack);
-
-    console.log(this.KowsarTemplate.value);
-
-
-    console.log(JSON.stringify(this.KowsarTemplate.value));
 
     this.JsonForm.patchValue({
       JsonData: JSON.stringify(this.KowsarTemplate.value)
     });
-
-
-    console.log(this.JsonForm.value);
 
     this.Loading_Modal_Response_show()
 
@@ -1192,7 +1506,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   SetGroup() {
     this.Loading_Modal_Response_show()
 
-    console.log(this.selectedRows);
 
     this.GoodToGroup.patchValue({
       GoodCode: this.Code,
@@ -1208,7 +1521,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     });
 
 
-    console.log(this.GoodToGroup.value);
 
 
 
@@ -1216,17 +1528,15 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     (this.KowsarTemplate.get('Goods') as FormArray).clear();
     (this.KowsarTemplate.get('Goods') as FormArray).push(this.GoodToGroup);
 
-    console.log(this.KowsarTemplate.value);
 
 
-    console.log(JSON.stringify(this.KowsarTemplate.value));
+
 
     this.JsonForm.patchValue({
       JsonData: JSON.stringify(this.KowsarTemplate.value)
     });
 
 
-    console.log(this.JsonForm.value);
 
 
 
@@ -1364,6 +1674,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   onSellPriceTypeChange() {
 
+    this.SellPriceType_Str = this.EditForm_Base.value.SellPriceType
     const maxSellPrice: number = this.EditForm_Base.value.MaxSellPrice;
     const sellPrice1: number = this.EditForm_Base.value.SellPrice1;
     const sellPrice2: number = this.EditForm_Base.value.SellPrice2;
@@ -1593,7 +1904,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       ObjectCode: ObjectCode,
       image: imageData
     };
-    console.log(data)
 
     this.repo.SendImageToServer(data).subscribe((response) => {
       this.Loading_Modal_Response_close()
@@ -1643,7 +1953,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
         (this.KowsarTemplate.get('Goods') as FormArray).push(formGroup);
-        console.log(JSON.stringify(this.KowsarTemplate.value))
 
         this.JsonForm.patchValue({
           JsonData: JSON.stringify(this.KowsarTemplate.value)
@@ -1654,29 +1963,57 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
           this.Loading_Modal_Response_close()
 
+          const result = JSON.parse(data.Goods[0].Result);
 
+          // Check if there are Goods in the parsed result and access GoodCode
+          if (result.Goods && result.Goods[0].ErrMessage === "") {
+            this.notificationService.succeded();
+            this.changedValues = {};
+
+            this.Code = result.Goods[0].GoodCode; // Set the GoodCode
+            console.log("GoodCode:", this.Code);
+            this.router.navigate(['/kowsar/good-edit', result.Goods[0].GoodCode]);
+
+          } else {
+            this.notificationService.error(result.Goods[0].ErrMessage);
+          }
 
           if (data.response.Errormessage.length > 0) {
 
             this.notificationService.succeded();
             this.changedValues = {};
             this.GetLastGoodData()
+            // this.getDetails();
 
           }
 
-          if (data.Goods[0].ErrorMessage == "") {
-            this.notificationService.succeded();
-            this.changedValues = {};
-            this.GetLastGoodData()
-          } else {
+          if (data.Goods[0].ErrorMessage.length > 0) {
+
+
             this.notificationService.error(data.Goods[0].ErrorMessage);
+
+
           }
+
+
+
 
         });
 
 
 
+
+
       }
+
+
+      this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+        this.Loading_Modal_Response_close();
+
+        // Parse the Result string to get the JSON object
+
+      });
+
 
 
     } else if (action == 'base_exit') {
@@ -1707,7 +2044,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
         (this.KowsarTemplate.get('Goods') as FormArray).push(formGroup);
 
-        console.log(JSON.stringify(this.KowsarTemplate.value))
 
         this.JsonForm.patchValue({
           JsonData: JSON.stringify(this.KowsarTemplate.value)
@@ -1759,12 +2095,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         (this.KowsarTemplate.get('Goods') as FormArray).push(formGroup);
 
 
-        // (this.KowsarTemplate.get('Goods') as FormArray).clear();
-        // (this.KowsarTemplate.get('Goods') as FormArray).push(
-        //   this.EditForm_Base
-        // );
-
-        // console.log(JSON.stringify(this.KowsarTemplate.value))
 
         this.JsonForm.patchValue({
           JsonData: JSON.stringify(this.KowsarTemplate.value)
@@ -1804,7 +2134,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
     if (action == 'explain') {
-      console.log("0")
       if (Object.keys(this.changedValues).length > 0) {
 
 
@@ -1822,13 +2151,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         (this.KowsarTemplate.get('Goods') as FormArray).push(formGroup);
 
 
-        console.log(JSON.stringify(this.KowsarTemplate.value))
 
         this.JsonForm.patchValue({
           JsonData: JSON.stringify(this.KowsarTemplate.value)
         });
 
-        console.log(JSON.stringify(this.KowsarTemplate.value))
         this.Loading_Modal_Response_show()
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
@@ -1838,12 +2165,14 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
             this.notificationService.succeded();
             this.changedValues = {};
+            this.getDetails();
+
           }
 
           if (data.Goods[0].ErrorMessage == "") {
             this.notificationService.succeded();
             this.changedValues = {};
-            location.reload()
+            this.getDetails();
           } else {
             this.notificationService.error(data.Goods[0].ErrorMessage);
           }
@@ -1852,7 +2181,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
         });
       } else {
-        console.log('No changes detected');
       }
 
 
@@ -1877,13 +2205,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
-        console.log(JSON.stringify(this.KowsarTemplate.value))
 
         this.JsonForm.patchValue({
           JsonData: JSON.stringify(this.KowsarTemplate.value)
         });
 
-        console.log(JSON.stringify(this.KowsarTemplate.value))
         this.Loading_Modal_Response_show()
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
@@ -1893,13 +2219,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
             this.notificationService.succeded();
             this.location.back()
-            location.reload()
           }
 
 
           if (data.Goods[0].ErrorMessage == "") {
             this.notificationService.succeded();
-            location.reload()
             this.location.back()
           } else {
             this.notificationService.error(data.Goods[0].ErrorMessage);
@@ -1908,7 +2232,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
         });
       } else {
-        console.log('No changes detected');
       }
 
 
@@ -1918,7 +2241,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
     if (action == 'complete') {
-      console.log("0")
       if (Object.keys(this.changedValues).length > 0) {
 
 
@@ -1936,13 +2258,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         (this.KowsarTemplate.get('Goods') as FormArray).push(formGroup);
 
 
-        console.log(JSON.stringify(this.KowsarTemplate.value))
 
         this.JsonForm.patchValue({
           JsonData: JSON.stringify(this.KowsarTemplate.value)
         });
 
-        console.log(JSON.stringify(this.KowsarTemplate.value))
         this.Loading_Modal_Response_show()
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
@@ -1957,7 +2277,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
           if (data.Goods[0].ErrorMessage == "") {
             this.notificationService.succeded();
             this.changedValues = {};
-            location.reload()
+            this.location.back()
           } else {
             this.notificationService.error(data.Goods[0].ErrorMessage);
           }
@@ -1966,7 +2286,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
         });
       } else {
-        console.log('No changes detected');
       }
 
 
@@ -1991,13 +2310,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
-        console.log(JSON.stringify(this.KowsarTemplate.value))
 
         this.JsonForm.patchValue({
           JsonData: JSON.stringify(this.KowsarTemplate.value)
         });
 
-        console.log(JSON.stringify(this.KowsarTemplate.value))
         this.Loading_Modal_Response_show()
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
@@ -2022,7 +2339,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
         });
       } else {
-        console.log('No changes detected');
       }
 
 
@@ -2059,13 +2375,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
-        console.log(JSON.stringify(this.KowsarTemplate.value))
 
         this.JsonForm.patchValue({
           JsonData: JSON.stringify(this.KowsarTemplate.value)
         });
 
-        console.log(JSON.stringify(this.KowsarTemplate.value))
         this.Loading_Modal_Response_show()
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
@@ -2075,12 +2389,13 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
             this.notificationService.succeded();
             this.changedValues = {};
+            this.getDetails();
           }
 
           if (data.Goods[0].ErrorMessage == "") {
             this.notificationService.succeded();
             this.changedValues = {};
-            location.reload()
+            this.getDetails();
           } else {
             this.notificationService.error(data.Goods[0].ErrorMessage);
           }
@@ -2091,7 +2406,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
       } else {
-        console.log('No changes detected');
       }
 
 
@@ -2120,13 +2434,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
-        console.log(JSON.stringify(this.KowsarTemplate.value))
 
         this.JsonForm.patchValue({
           JsonData: JSON.stringify(this.KowsarTemplate.value)
         });
 
-        console.log(JSON.stringify(this.KowsarTemplate.value))
         this.Loading_Modal_Response_show()
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
@@ -2136,14 +2448,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
             this.notificationService.succeded();
             this.location.back()
-            location.reload()
           }
 
 
           if (data.Goods[0].ErrorMessage == "") {
             this.notificationService.succeded();
-            location.reload()
-            this.location.back()
           } else {
             this.notificationService.error(data.Goods[0].ErrorMessage);
           }
@@ -2153,7 +2462,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
       } else {
-        console.log('No changes detected');
       }
 
 
@@ -2269,156 +2577,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
-  public gridOptions: GridOptions;
 
 
 
 
-  getDataPath = (data: Group) => {
-    const path: string[] = [];
-
-    // Construct the path based on L1, L2, L3, L4, and L5
-    if (data.L1 !== '0') {
-      const parentL1 = this.findGroupByCode(data.L1);
-      if (parentL1) {
-        path.push(parentL1.Name); // Add the L1 parent group name
-      }
-    }
-
-    if (data.L2 !== '0') {
-      const parentL2 = this.findGroupByCode(data.L2);
-      if (parentL2) {
-        path.push(parentL2.Name); // Add the L2 parent group name
-      }
-    }
-
-    if (data.L3 !== '0') {
-      const parentL3 = this.findGroupByCode(data.L3);
-      if (parentL3) {
-        path.push(parentL3.Name); // Add the L3 parent group name
-      }
-    }
-
-    if (data.L4 !== '0') {
-      const parentL4 = this.findGroupByCode(data.L4);
-      if (parentL4) {
-        path.push(parentL4.Name); // Add the L4 parent group name
-      }
-    }
-
-    // Finally, add the current group's name
-    path.push(data.Name);
-
-    return path;
-  };
-
-  // Helper method to find a group by its GroupCode
-  findGroupByCode(groupCode: string): Group | undefined {
-    return this.base_Group_list.find(group => group.GroupCode === groupCode);
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-  buildTree(groups: Group[]): Group[] {
-    const groupMap = new Map<string, Group>();
-
-    // Step 1: Create a map of groups for easy lookup
-    for (const group of groups) {
-      group.children = [];
-      groupMap.set(group.GroupCode, group);
-    }
-
-    // Step 2: Build the tree structure
-    const tree: Group[] = [];
-
-    for (const group of groups) {
-      const { L1, L2, L3, L4, L5, GroupCode } = group;
-
-      // Determine the parent based on the L values
-      let parent: Group | undefined;
-
-      if (L1 === '0') {
-        // Top-level group (L1 is 0)
-        tree.push(group);
-      } else {
-        // Find the appropriate parent group
-        if (L2 === '0') {
-          parent = groupMap.get(L1); // Parent is L1
-        } else if (L3 === '0') {
-          parent = groupMap.get(L2); // Parent is L2
-        } else if (L4 === '0') {
-          parent = groupMap.get(L3); // Parent is L3
-        } else if (L5 === '0') {
-          parent = groupMap.get(L4); // Parent is L4
-        } else {
-          parent = groupMap.get(L5); // Parent is L5
-        }
-
-        // If a parent is found, push this group to its children's array
-        if (parent) {
-          parent.children.push(group);
-        }
-      }
-    }
-
-    return tree;
-  }
-
-
-
-  onRowSelected(event: any) {
-    const selected = event.node.isSelected();
-    const groupCode = event.data.GroupCode;
-
-    // Find all children of the selected group
-    const childNodes = this.gridApi.getAllNodes().filter(node => node.data.L1 === groupCode);
-
-    // Check or uncheck all child nodes based on the selected state of the parent node
-    childNodes.forEach(childNode => {
-      childNode.setSelected(selected);
-    });
-  }
-
-
-
-
-
-
-
-  LoadData_GetGoodsGrp() {
-
-    // Initial data fetch
-    this.repo.GetGoodsGrp().subscribe((data: any) => {
-      this.base_Group_list = data.GoodsGrps
-
-      const treeStructure = this.buildTree(data.GoodsGrps);
-      console.log(JSON.stringify(treeStructure, null, 2));
-
-      // this.gridOptions = {
-      //   // Configure your grid options here
-      //   getDataPath: this.getDataPath.bind(this),
-      //   // Add other options like columnDefs, etc.
-      // };
-
-      // // Example data
-
-
-      // console.log('Row Data:', JSON.stringify(this.buildTree(this.base_Group_list), null, 2)); // Log the row data structure
-
-
-    });
-
-  }
 
 
 
@@ -2442,9 +2604,18 @@ interface Group {
 }
 
 
+interface Stack {
+  StackCode: string;
+  L1: string;
+  L2: string;
+  L3: string;
+  L4: string;
+  L5: string;
+  Name: string;
+  children?: Stack[];
+}
 
 
-// Example usage:
 
 
 

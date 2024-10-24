@@ -7,6 +7,7 @@ export const environment = {
 
 
   //  Build
+  //api_Url: 'http://178.131.31.161:60005/api/',
   //api_Url: 'http://5.160.152.173:60005/api/',
   //api_Url: 'http://192.110.110.219:60005/api/',
 
