@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 declare var $: any;
+import { MessagesDictionary } from '../../../environment/messages.config';
 
 @Injectable()
 export class NotificationService {
@@ -25,9 +26,11 @@ export class NotificationService {
     }
 
     error(message: string, title = "خطا") {
+        const message1 = MessagesDictionary[message] || "خطای ناشناخته رخ داده است.";
+
         $.NotificationApp.send(
             title,
-            message,
+            message1,
             "top-right",
             "#bf441d",
             "error"
@@ -47,4 +50,5 @@ export class NotificationService {
 
 
 }
+
 

@@ -63,7 +63,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   getDetails() {
     this.Loading_Modal_Response_show()
-
+    this.changedValues = {};
     this.EditForm_Base.reset();
     this.EditForm_Explain.reset();
     this.EditForm_Complete.reset();
@@ -162,8 +162,8 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     GoodName: new FormControl('', Validators.required),
     Type: new FormControl(0),
     UsedGood: new FormControl(0),
-    // GoodMainCode: new FormControl(''),
-    // GoodSubCode: new FormControl(''),
+    GoodMainCode: new FormControl(''),
+    GoodSubCode: new FormControl(''),
     MinSellPrice: new FormControl(0),
     MaxSellPrice: new FormControl(0),
     Isbn: new FormControl(''),
@@ -188,8 +188,8 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     GoodName: new FormControl('', Validators.required),
     Type: new FormControl(0),
     UsedGood: new FormControl(0),
-    // GoodMainCode: new FormControl(''),
-    // GoodSubCode: new FormControl(''),
+    GoodMainCode: new FormControl(''),
+    GoodSubCode: new FormControl(''),
     MinSellPrice: new FormControl(0),
     MaxSellPrice: new FormControl(0),
     Isbn: new FormControl(''),
@@ -477,8 +477,8 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         GoodName: data.Goods[0].GoodName,
         Type: data.Goods[0].Type,
         UsedGood: data.Goods[0].UsedGood,
-        // GoodSubCode: data.Goods[0].GoodSubCode,
-        // GoodMainCode: data.Goods[0].GoodMainCode,
+        GoodSubCode: data.Goods[0].GoodSubCode,
+        GoodMainCode: data.Goods[0].GoodMainCode,
 
         MinSellPrice: data.Goods[0].MinSellPrice,
         MaxSellPrice: data.Goods[0].MaxSellPrice,
@@ -500,8 +500,8 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         GoodName: this.EditForm_Base.value.GoodName,
         Type: this.EditForm_Base.value.Type,
         UsedGood: this.EditForm_Base.value.UsedGood,
-        //GoodSubCode: this.EditForm_Base.value.GoodSubCode,
-        //GoodMainCode: this.EditForm_Base.value.GoodMainCode,
+        GoodSubCode: this.EditForm_Base.value.GoodSubCode,
+        GoodMainCode: this.EditForm_Base.value.GoodMainCode,
         MinSellPrice: this.EditForm_Base.value.MinSellPrice,
         MaxSellPrice: this.EditForm_Base.value.MaxSellPrice,
         Isbn: this.EditForm_Base.value.Isbn,
@@ -683,26 +683,18 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
     this.Loading_Modal_Response_show()
 
+
     this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
       this.Loading_Modal_Response_close()
+      const result = JSON.parse(data.Goods[0].Result);
 
-      if (data.response.Errormessage.length > 0) {
-
+      if (result.Goods && result.Goods[0].ErrMessage === "") {
         this.notificationService.succeded();
         this.changedValues = {};
-        this.LoadData_property()
-      }
-
-      if (data.Goods[0].ErrorMessage == "") {
-        this.notificationService.succeded();
-        this.changedValues = {};
-        location.reload()
         this.LoadData_property()
       } else {
-        this.notificationService.error(data.Goods[0].ErrorMessage);
+        this.notificationService.error(result.Goods[0].ErrMessage);
       }
-
-
 
     });
 
@@ -1185,8 +1177,8 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     this.EditForm_Base.patchValue({
       GoodCode: 0,
       GoodName: '',
-      // GoodSubCode: '',
-      // GoodMainCode: '',
+      GoodSubCode: '',
+      GoodMainCode: '',
       Isbn: '',
       FirstBarCode: '',
     });
@@ -1754,8 +1746,8 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       GoodName: this.EditForm_Base_temp.value.GoodName,
       Type: this.EditForm_Base_temp.value.Type,
       UsedGood: this.EditForm_Base_temp.value.UsedGood,
-      //GoodSubCode: this.EditForm_Base_temp.value.GoodSubCode,
-      //GoodMainCode: this.EditForm_Base_temp.value.GoodMainCode,
+      GoodSubCode: this.EditForm_Base_temp.value.GoodSubCode,
+      GoodMainCode: this.EditForm_Base_temp.value.GoodMainCode,
       MinSellPrice: this.EditForm_Base_temp.value.MinSellPrice,
       MaxSellPrice: this.EditForm_Base_temp.value.MaxSellPrice,
       Isbn: this.EditForm_Base_temp.value.Isbn,
@@ -1960,116 +1952,22 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
         this.Loading_Modal_Response_show()
 
+
+
+
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
           this.Loading_Modal_Response_close()
-
           const result = JSON.parse(data.Goods[0].Result);
 
-          // Check if there are Goods in the parsed result and access GoodCode
           if (result.Goods && result.Goods[0].ErrMessage === "") {
+            this.Code = result.Goods[0].GoodCode;
             this.notificationService.succeded();
-            this.changedValues = {};
-
-            this.Code = result.Goods[0].GoodCode; // Set the GoodCode
-            console.log("GoodCode:", this.Code);
             this.router.navigate(['/kowsar/good-edit', result.Goods[0].GoodCode]);
-
           } else {
             this.notificationService.error(result.Goods[0].ErrMessage);
           }
 
-          if (data.response.Errormessage.length > 0) {
-
-            this.notificationService.succeded();
-            this.changedValues = {};
-            this.GetLastGoodData()
-            // this.getDetails();
-
-          }
-
-          if (data.Goods[0].ErrorMessage.length > 0) {
-
-
-            this.notificationService.error(data.Goods[0].ErrorMessage);
-
-
-          }
-
-
-
-
         });
-
-
-
-
-
-      }
-
-
-      this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-        this.Loading_Modal_Response_close();
-
-        // Parse the Result string to get the JSON object
-
-      });
-
-
-
-    } else if (action == 'base_exit') {
-
-      this.EditForm_Base.markAllAsTouched();
-      if (!this.EditForm_Base.valid) return;
-
-
-
-      // (this.KowsarTemplate.get('Goods') as FormArray).clear();
-      // (this.KowsarTemplate.get('Goods') as FormArray).push(
-      //   this.EditForm_Base
-      // );
-
-      if (Object.keys(this.changedValues).length > 0) {
-
-
-        (this.KowsarTemplate.get('Goods') as FormArray).clear();
-
-
-        const formGroup = new FormGroup(
-          Object.keys(this.changedValues).reduce((acc, key) => {
-            acc[key] = new FormControl(this.changedValues[key]);
-            return acc;
-          }, {})
-        );
-
-
-        (this.KowsarTemplate.get('Goods') as FormArray).push(formGroup);
-
-
-        this.JsonForm.patchValue({
-          JsonData: JSON.stringify(this.KowsarTemplate.value)
-        });
-
-        this.Loading_Modal_Response_show()
-
-        this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-          this.Loading_Modal_Response_close()
-
-          if (data.response.Errormessage.length > 0) {
-
-            this.notificationService.succeded();
-            this.changedValues = {};
-            this.location.back()
-          }
-          if (data.Goods[0].ErrorMessage == "") {
-            this.notificationService.succeded();
-            this.changedValues = {};
-            this.location.back()
-          } else {
-            this.notificationService.error(data.Goods[0].ErrorMessage);
-
-          }
-        });
-
       }
 
 
@@ -2102,26 +2000,20 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
         this.Loading_Modal_Response_show()
 
+
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
           this.Loading_Modal_Response_close()
+          const result = JSON.parse(data.Goods[0].Result);
 
-          if (data.response.Errormessage.length > 0) {
-            this.changedValues = {};
+          if (result.Goods && result.Goods[0].ErrMessage === "") {
             this.notificationService.succeded();
-            this.EditForm_Base_reset()
-          }
-
-          if (data.Goods[0].ErrorMessage == "") {
-            this.notificationService.succeded();
-            this.changedValues = {};
-            this.EditForm_Base_reset()
+            location.reload()
           } else {
-            this.notificationService.error(data.Goods[0].ErrorMessage);
-
+            this.notificationService.error(result.Goods[0].ErrMessage);
           }
-
 
         });
+
 
       }
 
@@ -2160,81 +2052,23 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
           this.Loading_Modal_Response_close()
+          const result = JSON.parse(data.Goods[0].Result);
 
-          if (data.response.Errormessage.length > 0) {
-
+          if (result.Goods && result.Goods[0].ErrMessage === "") {
             this.notificationService.succeded();
-            this.changedValues = {};
-            this.getDetails();
-
-          }
-
-          if (data.Goods[0].ErrorMessage == "") {
-            this.notificationService.succeded();
-            this.changedValues = {};
-            this.getDetails();
+            this.getDetails()
           } else {
-            this.notificationService.error(data.Goods[0].ErrorMessage);
+            this.notificationService.error(result.Goods[0].ErrMessage);
           }
-
-
 
         });
+
+
+
+
+
       } else {
       }
-
-
-    } else if (action == 'explain_exit') {
-
-
-      if (Object.keys(this.changedValues).length > 0) {
-
-
-        (this.KowsarTemplate.get('Goods') as FormArray).clear();
-
-
-        const formGroup = new FormGroup(
-          Object.keys(this.changedValues).reduce((acc, key) => {
-            acc[key] = new FormControl(this.changedValues[key]);
-            return acc;
-          }, {})
-        );
-
-
-        (this.KowsarTemplate.get('Goods') as FormArray).push(formGroup);
-
-
-
-
-        this.JsonForm.patchValue({
-          JsonData: JSON.stringify(this.KowsarTemplate.value)
-        });
-
-        this.Loading_Modal_Response_show()
-
-        this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-          this.Loading_Modal_Response_close()
-
-          if (data.response.Errormessage.length > 0) {
-
-            this.notificationService.succeded();
-            this.location.back()
-          }
-
-
-          if (data.Goods[0].ErrorMessage == "") {
-            this.notificationService.succeded();
-            this.location.back()
-          } else {
-            this.notificationService.error(data.Goods[0].ErrorMessage);
-          }
-
-
-        });
-      } else {
-      }
-
-
 
 
     }
@@ -2265,83 +2099,24 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
         this.Loading_Modal_Response_show()
 
-        this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-          this.Loading_Modal_Response_close()
 
-          if (data.response.Errormessage.length > 0) {
-
-            this.notificationService.succeded();
-            this.changedValues = {};
-          }
-
-          if (data.Goods[0].ErrorMessage == "") {
-            this.notificationService.succeded();
-            this.changedValues = {};
-            this.location.back()
-          } else {
-            this.notificationService.error(data.Goods[0].ErrorMessage);
-          }
-
-
-
-        });
-      } else {
-      }
-
-
-    } else if (action == 'complete_exit') {
-
-
-      if (Object.keys(this.changedValues).length > 0) {
-
-
-        (this.KowsarTemplate.get('Goods') as FormArray).clear();
-
-
-        const formGroup = new FormGroup(
-          Object.keys(this.changedValues).reduce((acc, key) => {
-            acc[key] = new FormControl(this.changedValues[key]);
-            return acc;
-          }, {})
-        );
-
-
-        (this.KowsarTemplate.get('Goods') as FormArray).push(formGroup);
-
-
-
-
-        this.JsonForm.patchValue({
-          JsonData: JSON.stringify(this.KowsarTemplate.value)
-        });
-
-        this.Loading_Modal_Response_show()
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
           this.Loading_Modal_Response_close()
+          const result = JSON.parse(data.Goods[0].Result);
 
-          if (data.response.Errormessage.length > 0) {
-
+          if (result.Goods && result.Goods[0].ErrMessage === "") {
             this.notificationService.succeded();
-            this.location.back()
-            location.reload()
-          }
-
-
-          if (data.Goods[0].ErrorMessage == "") {
-            this.notificationService.succeded();
-            location.reload()
-            this.location.back()
+            this.getDetails()
           } else {
-            this.notificationService.error(data.Goods[0].ErrorMessage);
+            this.notificationService.error(result.Goods[0].ErrMessage);
           }
-
 
         });
+
+
       } else {
       }
-
-
 
 
     }
@@ -2382,93 +2157,27 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
         this.Loading_Modal_Response_show()
 
+
+
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
           this.Loading_Modal_Response_close()
+          const result = JSON.parse(data.Goods[0].Result);
 
-          if (data.response.Errormessage.length > 0) {
-
+          if (result.Goods && result.Goods[0].ErrMessage === "") {
             this.notificationService.succeded();
-            this.changedValues = {};
-            this.getDetails();
-          }
-
-          if (data.Goods[0].ErrorMessage == "") {
-            this.notificationService.succeded();
-            this.changedValues = {};
-            this.getDetails();
+            this.getDetails()
           } else {
-            this.notificationService.error(data.Goods[0].ErrorMessage);
+            this.notificationService.error(result.Goods[0].ErrMessage);
           }
-
-
 
         });
 
 
       } else {
       }
-
-
-    } else if (action == 'property_exit') {
-
-
-      if (Object.keys(this.changedValues).length > 0) {
-
-        const formGroup = new FormGroup(
-          Object.keys(this.changedValues).reduce((acc, key) => {
-            acc[key] = new FormControl(this.changedValues[key]);
-            return acc;
-          }, {})
-        );
-
-        this.GoodToProperty.patchValue({
-          GoodCode: this.Code,
-          PropertyValue: JSON.parse(JSON.stringify(formGroup.value)),
-        });
-
-
-
-
-        (this.KowsarTemplate.get('Goods') as FormArray).clear();
-        (this.KowsarTemplate.get('Goods') as FormArray).push(this.GoodToProperty);
-
-
-
-
-        this.JsonForm.patchValue({
-          JsonData: JSON.stringify(this.KowsarTemplate.value)
-        });
-
-        this.Loading_Modal_Response_show()
-
-        this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-          this.Loading_Modal_Response_close()
-
-          if (data.response.Errormessage.length > 0) {
-
-            this.notificationService.succeded();
-            this.location.back()
-          }
-
-
-          if (data.Goods[0].ErrorMessage == "") {
-            this.notificationService.succeded();
-          } else {
-            this.notificationService.error(data.Goods[0].ErrorMessage);
-          }
-
-
-        });
-
-
-      } else {
-      }
-
-
 
 
     }
-
 
 
 

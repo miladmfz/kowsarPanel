@@ -19,11 +19,10 @@ import { NotificationService } from 'src/app/app-shell/framework-services/notifi
 })
 export class FactorEditComponent extends AgGridBaseComponent
   implements OnInit {
-  myForm: FormGroup;
 
 
 
-  selectedfactor: any
+
   constructor(
     private readonly router: Router,
     private repo: FactorWebApiService,
@@ -33,151 +32,12 @@ export class FactorEditComponent extends AgGridBaseComponent
     private fb: FormBuilder,
     private readonly notificationService: NotificationService,
 
-  ) {
-    super();
+  ) { super(); }
 
 
-  }
-
-
-
-
-
-
-
-
-  private timeStringToDate(timeString: string): Date {
-    const [hours, minutes] = timeString.split(':').map(Number);
-    const date = new Date();
-    date.setHours(hours, minutes, 0, 0); // set hours, minutes, seconds, and milliseconds
-    return date;
-  }
-
-
-
-
-
-  Set_StartFactorTime() {
-    this.Loading_Modal_Response_show()
-
-    const currentTime = new Date();
-    const hours = currentTime.getHours().toString().padStart(2, '0');
-    const minutes = currentTime.getMinutes().toString().padStart(2, '0');
-    const timeString = `${hours}:${minutes}`;
-
-
-    this.EditForm_factor_property.patchValue({
-      starttime: timeString,
-
-    });
-
-    this.repo.Support_StartFactorTime(this.EditForm_factor_property.value).subscribe((data: any) => {
-      this.notificationService.succeded("");
-      location.reload();
-    });
-
-
-  }
-
-
-  Set_EndFactorTime() {
-    this.Loading_Modal_Response_show()
-
-    const currentTime = new Date();
-    const hours = currentTime.getHours().toString().padStart(2, '0');
-    const minutes = currentTime.getMinutes().toString().padStart(2, '0');
-    const timeString = `${hours}:${minutes}`;
-
-    this.EditForm_factor_property.patchValue({
-      Endtime: timeString,
-
-    });
-
-    const start1 = this.timeStringToDate(this.EditForm_factor_property.value.starttime);
-    const end1 = this.timeStringToDate(this.EditForm_factor_property.value.Endtime);
-    let duration = (end1.getTime() - start1.getTime()) / 1000 / 60; // duration in minutes
-    this.EditForm_factor_property.patchValue({
-      worktime: duration + "",
-
-    });
-
-    if (duration < 0) {
-      this.EditForm_factor_property.patchValue({
-        worktime: "0",
-
-      });
-    }
-
-
-    this.repo.Support_EndFactorTime(this.EditForm_factor_property.value).subscribe((data: any) => {
-
-      location.reload();
-    });
-
-
-
-  }
-
-
-  Set_ExplianFactorTime() {
-
-    this.Loading_Modal_Response_show()
-
-    this.repo.Support_ExplainFactor(this.EditForm_factor_property.value).subscribe((data: any) => {
-
-      location.reload();
-    });
-
-
-
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  myForm: FormGroup;
   time: Date = new Date();
-  onSubmit() {
-    console.log(this.myForm.value);
-  }
-  customTheme: Partial<IDatepickerTheme> = {
-    selectedBackground: '#D68E3A',
-    selectedText: '#FFFFFF',
-
-  };
-
-
-
-  AddGoodToBasket(GoodCode) {
-    this.Loading_Modal_Response_show()
-    this.GoodForm.patchValue({
-      FactorRef: this.FactorCode,
-      GoodRef: GoodCode,
-    });
-
-    this.repo.WebFactorInsertRow(this.GoodForm.value).subscribe((data: any) => {
-
-      this.GetFactorrows()
-    });
-
-  }
-
+  selectedfactor: any
 
   Start_FactorTime: string = '';
   End_FactorTime: string = '';
@@ -199,6 +59,8 @@ export class FactorEditComponent extends AgGridBaseComponent
 
   title = 'فاکتور فروش';
 
+  private searchSubject_customer: Subject<string> = new Subject();
+  private searchSubject_Good: Subject<string> = new Subject();
   EditForm_factor_property = new FormGroup({
     starttime: new FormControl(''),
     Endtime: new FormControl(''),
@@ -207,48 +69,11 @@ export class FactorEditComponent extends AgGridBaseComponent
     ObjectRef: new FormControl('0'),
 
   });
+  customTheme: Partial<IDatepickerTheme> = {
+    selectedBackground: '#D68E3A',
+    selectedText: '#FFFFFF',
 
-
-
-
-
-  private searchSubject_customer: Subject<string> = new Subject();
-  private searchSubject_Good: Subject<string> = new Subject();
-  ngOnDestroy(): void {
-    this.searchSubject_customer.unsubscribe();
-    this.searchSubject_Good.unsubscribe();
-
-  }
-
-  onInputChange_Customer() {
-
-    this.searchSubject_customer.next(this.Searchtarget_customer);
-  }
-
-
-  onInputChange_Good() {
-
-    this.searchSubject_Good.next(this.Searchtarget_Good);
-
-
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  };
 
 
   override ngOnInit(): void {
@@ -263,7 +88,20 @@ export class FactorEditComponent extends AgGridBaseComponent
       }
     });
 
+    this.Config_Declare()
 
+    if (this.FactorCode.length > 0) {
+      this.GetFactor();
+    } else {
+      this.getdate();
+
+    }
+
+  }
+
+
+
+  Config_Declare() {
 
     this.columnDefs = [
       {
@@ -338,14 +176,6 @@ export class FactorEditComponent extends AgGridBaseComponent
       },
     ];
 
-    if (this.FactorCode.length > 0) {
-      this.GetFactor();
-    } else {
-      this.getdate();
-
-    }
-
-
 
     this.searchSubject_customer.pipe(
       debounceTime(1000)  // 1 second debounce time
@@ -360,10 +190,152 @@ export class FactorEditComponent extends AgGridBaseComponent
     ).subscribe(searchText => {
       this.GetGood();
     });
+  }
+
+
+  timeStringToDate(timeString: string): Date {
+    const [hours, minutes] = timeString.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0); // set hours, minutes, seconds, and milliseconds
+    return date;
+  }
+
+
+  Set_StartFactorTime() {
+    this.Loading_Modal_Response_show()
+
+    const currentTime = new Date();
+    const hours = currentTime.getHours().toString().padStart(2, '0');
+    const minutes = currentTime.getMinutes().toString().padStart(2, '0');
+    const timeString = `${hours}:${minutes}`;
+
+
+    this.EditForm_factor_property.patchValue({
+      starttime: timeString,
+
+    });
+
+    this.repo.Support_StartFactorTime(this.EditForm_factor_property.value).subscribe((data: any) => {
+      this.notificationService.succeded();
+      this.Loading_Modal_Response_close()
+      this.GetFactor()
+    });
+
+
+  }
+
+
+  Set_EndFactorTime() {
+    this.Loading_Modal_Response_show()
+
+    const currentTime = new Date();
+    const hours = currentTime.getHours().toString().padStart(2, '0');
+    const minutes = currentTime.getMinutes().toString().padStart(2, '0');
+    const timeString = `${hours}:${minutes}`;
+
+    this.EditForm_factor_property.patchValue({
+      Endtime: timeString,
+
+    });
+
+    const start1 = this.timeStringToDate(this.EditForm_factor_property.value.starttime);
+    const end1 = this.timeStringToDate(this.EditForm_factor_property.value.Endtime);
+    let duration = (end1.getTime() - start1.getTime()) / 1000 / 60; // duration in minutes
+    this.EditForm_factor_property.patchValue({
+      worktime: duration + "",
+
+    });
+
+    if (duration < 0) {
+      this.EditForm_factor_property.patchValue({
+        worktime: "0",
+
+      });
+    }
+
+
+    this.repo.Support_EndFactorTime(this.EditForm_factor_property.value).subscribe((data: any) => {
+
+      this.notificationService.succeded();
+      this.Loading_Modal_Response_close()
+      this.GetFactor()
+    });
 
 
 
   }
+
+
+  Set_ExplianFactorTime() {
+
+    this.Loading_Modal_Response_show()
+
+    this.repo.Support_ExplainFactor(this.EditForm_factor_property.value).subscribe((data: any) => {
+
+      this.notificationService.succeded();
+      this.Loading_Modal_Response_close()
+      this.GetFactor()
+    });
+
+
+
+  }
+
+
+  AddGoodToBasket(GoodCode) {
+    this.Loading_Modal_Response_show()
+    this.GoodForm.patchValue({
+      FactorRef: this.FactorCode,
+      GoodRef: GoodCode,
+    });
+
+    this.repo.WebFactorInsertRow(this.GoodForm.value).subscribe((data: any) => {
+      this.notificationService.succeded();
+      this.Loading_Modal_Response_close()
+      this.GetFactor()
+    });
+
+  }
+
+
+
+
+
+
+
+
+  ngOnDestroy(): void {
+    this.searchSubject_customer.unsubscribe();
+    this.searchSubject_Good.unsubscribe();
+  }
+
+  onInputChange_Customer() {
+    this.searchSubject_customer.next(this.Searchtarget_customer);
+  }
+
+
+  onInputChange_Good() {
+    this.searchSubject_Good.next(this.Searchtarget_Good);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   GetFactor() {
 
@@ -465,10 +437,11 @@ export class FactorEditComponent extends AgGridBaseComponent
       BrokerRef: sessionStorage.getItem("BrokerCode")
     });
     this.repo.WebFactorInsert(this.EditForm_Factor_Header.value).subscribe((data: any) => {
+      this.FactorCode = data.Factors[0].FactorCode
+
       this.notificationService.succeded();
-
-      this.router.navigate(['/factor/factor-edit', data.Factors[0].FactorCode]);
-
+      this.Loading_Modal_Response_close()
+      this.GetFactor()
 
     });
 
@@ -514,6 +487,7 @@ export class FactorEditComponent extends AgGridBaseComponent
       BrokerName: sessionStorage.getItem("BrokerName")
     });
     this.selectedRows = []
+
     this.customer_dialog_close()
   }
   GoBack() {
@@ -714,14 +688,6 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
   factor_property_dialog_show() {
-
-    // const inputElement1 = document.getElementById('datePickerstart') as HTMLInputElement;
-    // inputElement1.value = this.selectedfactor.starttime;
-
-    // const inputElement2 = document.getElementById('datePickerend') as HTMLInputElement;
-    // inputElement2.value = this.selectedfactor.Endtime;
-
-
 
     const modal = this.renderer.selectRootElement('#factorproperty', true);
     this.renderer.addClass(modal, 'show');

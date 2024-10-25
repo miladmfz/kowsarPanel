@@ -63,16 +63,16 @@ export class SidebarComponent implements OnInit {
 
 
 
-    this.repo.GetNotification(sessionStorage.getItem("PersonInfoRef")).subscribe((data: any) => {
+    // this.repo.GetNotification(sessionStorage.getItem("PersonInfoRef")).subscribe((data: any) => {
 
 
-      sessionStorage.setItem("AlarmActive_Row", data.users[0].AlarmActive_Row)
-      sessionStorage.setItem("AlarmActtive_Conversation", data.users[0].AlarmActtive_Conversation)
+    //   sessionStorage.setItem("AlarmActive_Row", data.users[0].AlarmActive_Row)
+    //   sessionStorage.setItem("AlarmActtive_Conversation", data.users[0].AlarmActtive_Conversation)
 
-      this.AlarmActive_Row = parseInt(sessionStorage.getItem("AlarmActive_Row"))
-      this.AlarmActtive_Conversation = parseInt(sessionStorage.getItem("AlarmActtive_Conversation"))
+    //   this.AlarmActive_Row = parseInt(sessionStorage.getItem("AlarmActive_Row"))
+    //   this.AlarmActtive_Conversation = parseInt(sessionStorage.getItem("AlarmActtive_Conversation"))
 
-    });
+    // });
 
 
 
