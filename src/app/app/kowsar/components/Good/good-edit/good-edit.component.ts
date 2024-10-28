@@ -1421,14 +1421,29 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     this.Loading_Modal_Response_show()
 
 
+
     this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
       this.Loading_Modal_Response_close()
+      const result = JSON.parse(data.Goods[0].Result);
 
-      if (data.response.Errormessage.length > 0) {
+      if (result.Goods && result.Goods[0].ErrMessage === "") {
         this.changedValues = {};
         this.GetGood_Stacks_Relations()
         this.selectedRows = []
         this.stack_dialog_close()
+      } else {
+        this.notificationService.error(result.Goods[0].ErrMessage);
+      }
+
+    });
+
+
+
+    this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+      this.Loading_Modal_Response_close()
+
+      if (data.response.Errormessage.length > 0) {
+
       }
 
       if (data.Goods[0].ErrorMessage == "") {
@@ -1531,31 +1546,23 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
-
     this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
       this.Loading_Modal_Response_close()
+      const result = JSON.parse(data.Goods[0].Result);
 
-      if (data.response.Errormessage.length > 0) {
+      if (result.Goods && result.Goods[0].ErrMessage === "") {
         this.changedValues = {};
         this.GetGood_Groups_Relations()
         this.selectedRows = []
         this.group_dialog_close()
-      }
-
-      if (data.Goods[0].ErrorMessage == "") {
-
-        this.notificationService.succeded();
-        this.GetGood_Groups_Relations()
-        this.selectedRows = []
-        this.group_dialog_close()
-
       } else {
-        this.notificationService.error(data.Goods[0].ErrorMessage);
-
+        this.notificationService.error(result.Goods[0].ErrMessage);
       }
-
 
     });
+
+
+
 
 
 
