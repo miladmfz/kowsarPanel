@@ -101,6 +101,14 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
 
+
+  NewFactor() {
+
+
+    location.reload()
+
+  }
+
   Config_Declare() {
 
     this.columnDefs = [
@@ -274,6 +282,7 @@ export class FactorEditComponent extends AgGridBaseComponent
 
       this.notificationService.succeded();
       this.Loading_Modal_Response_close()
+      this.factor_property_dialog_close()
       this.GetFactor()
     });
 
