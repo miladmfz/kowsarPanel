@@ -11,19 +11,11 @@ export class BrokerListComponent implements OnInit {
   items: any[] = [];
 
 
-
-
-
   ngOnInit() {
-
-
     this.repo.GetBrokers().subscribe(e => {
       this.items = e;
 
     });
-
-
-
   }
 
 }

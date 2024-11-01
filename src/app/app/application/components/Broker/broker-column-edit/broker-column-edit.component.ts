@@ -62,26 +62,18 @@ export class BrokerColumnEditComponent implements OnInit {
 
 
   ngOnInit() {
-
     this.TagName = "تعریف تنظیم جدول جدید"
-
     this.GetGoodType()
-
-
-
-
   }
 
 
 
 
   GetGoodType() {
-
     this.repo.GetGoodType().subscribe(e => {
       this.Goodtypes = e;
       this.Goodtypes.unshift({ GoodType: "همه", IsDefault: -1 });
     });
-
   }
 
 
@@ -89,37 +81,22 @@ export class BrokerColumnEditComponent implements OnInit {
 
 
   selectGoodType() {
-
-
     if (this.selected_GoodType == "همه") {
-
       this.selected_GoodType = this.Goodtypes[1].GoodType
     }
-
     this.GetProperty()
-
-
-
   }
 
   GetProperty() {
-
     this.repo.GetProperty(this.selected_GoodType).subscribe(e => {
       this.Propertys = e;
-
     });
-
-
   }
 
 
   selectproperty() {
     this.selected_obj_Property = this.Propertys.find(prop => prop.PropertyName === this.selected_PropertyName);
-
     const subString = this.selected_obj_Property.PropertyValueMap.substring(0, 3);
-
-
-
     if (subString == "Tex") {
 
       this.ColumnType = "0"
@@ -136,33 +113,26 @@ export class BrokerColumnEditComponent implements OnInit {
     }
 
 
-
-
-
   }
 
 
   selectListlookup() {
     this.selected_obj_List = this.Lookup_item.find(prop => prop.Text === this.selected_ListLookup);
-
   }
 
 
   selectSearchlookup() {
     this.selected_obj_Search = this.Lookup_item.find(prop => prop.Text === this.selected_SearchLookup);
-
   }
 
 
   selectDetaillookup() {
     this.selected_obj_Detail = this.Lookup_item.find(prop => prop.Text === this.selected_DetailLookup);
-
   }
 
 
 
 
-  // دریافت داده‌ها از طریق HTTP یا محاسبه دیگر
   checkPropertyValueMap(textvalue: string) {
     for (const property of this.Propertys) {
       if (property.PropertyValueMap === textvalue) {
@@ -171,11 +141,6 @@ export class BrokerColumnEditComponent implements OnInit {
     }
     return false; // اگر هیچ مقداری مطابقت نداشته باشد، false را برمی‌گرداند
   }
-
-
-
-
-
 
 
 
@@ -203,19 +168,6 @@ export class BrokerColumnEditComponent implements OnInit {
 
 
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

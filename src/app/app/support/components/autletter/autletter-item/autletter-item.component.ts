@@ -24,27 +24,7 @@ export class AutletterItemComponent
   }
 
 
-  EditForm = new FormGroup({
-    dateValue: new FormControl(''),
-    descriptionFormControl: new FormControl(''),
-    LetterState: new FormControl(''),
-    LetterPriority: new FormControl('عادی'),
-    selectedUserId: new FormControl(0),
-  });
 
-
-  set_Alarm = new FormGroup({
-    LetterRef: new FormControl(''),
-    CentralRef: new FormControl('0'),
-  });
-
-
-
-  customTheme: Partial<IDatepickerTheme> = {
-    selectedBackground: '#D68E3A',
-    selectedText: '#FFFFFF',
-
-  };
 
 
 
@@ -60,8 +40,6 @@ export class AutletterItemComponent
   searchTerm: string = '';
 
 
-
-
   @Input() TextData: string = '';
 
   users: any[] = [];
@@ -72,29 +50,50 @@ export class AutletterItemComponent
   LetterPriority_lookup: DbSetup_lookup[] = []
 
 
+  EditForm = new FormGroup({
+    dateValue: new FormControl(''),
+    descriptionFormControl: new FormControl(''),
+    LetterState: new FormControl(''),
+    LetterPriority: new FormControl('عادی'),
+    selectedUserId: new FormControl(0),
+  });
+
+
+  set_Alarm = new FormGroup({
+    LetterRef: new FormControl(''),
+    CentralRef: new FormControl('0'),
+  });
+
+
+  EditForm_explain = new FormGroup({
+    ObjectRef: new FormControl('0'),
+    LetterState: new FormControl(''),
+
+  });
+
+  customTheme: Partial<IDatepickerTheme> = {
+    selectedBackground: '#D68E3A',
+    selectedText: '#FFFFFF',
+
+  };
+
+
+
   override ngOnInit(): void {
     super.ngOnInit();
 
-    this.repo.GetTodeyFromServer().subscribe((data: any) => {
-
-      this.ToDayDate = data[0].TodeyFromServer
-
-    });
-
-    this.repo.GetObjectTypeFromDbSetup("AutomationLetterState").subscribe((data: any) => {
-
-      this.LetterState_lookup = data.ObjectTypes
-    });
-
-    this.repo.GetObjectTypeFromDbSetup("AutomationLetterPriority").subscribe((data: any) => {
-
-      this.LetterPriority_lookup = data.ObjectTypes
-    });
-
-
-
 
     this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
+    this.CentralRef = sessionStorage.getItem("CentralRef");
+
+
+
+
+
+
+
+
+
 
 
 
@@ -140,11 +139,6 @@ export class AutletterItemComponent
     ];
 
 
-    this.CentralRef = sessionStorage.getItem("CentralRef");
-    this.repo.GetCentralUser().subscribe(e => {
-      this.users = e;
-
-    });
 
 
     this.set_Alarm.patchValue({
@@ -154,18 +148,37 @@ export class AutletterItemComponent
 
 
 
+    this.Get_init_Data()
     this.Get_LetterRowList()
 
   }
+
+  Get_init_Data() {
+    this.repo.GetTodeyFromServer().subscribe((data: any) => {
+      this.ToDayDate = data[0].TodeyFromServer
+    });
+
+    this.repo.GetObjectTypeFromDbSetup("AutomationLetterState").subscribe((data: any) => {
+      this.LetterState_lookup = data.ObjectTypes
+    });
+
+    this.repo.GetObjectTypeFromDbSetup("AutomationLetterPriority").subscribe((data: any) => {
+      this.LetterPriority_lookup = data.ObjectTypes
+    });
+
+    this.repo.GetCentralUser().subscribe(e => {
+      this.users = e;
+    });
+
+  }
+
+
 
 
   Get_LetterRowList() {
 
     this.repo.GetLetterRowList(this.TextData).subscribe((data) => {
       this.records = data;
-      //this.repo.SetAlarmOff(this.set_Alarm.value).subscribe(e => { });
-
-
     });
 
   }
@@ -195,7 +208,7 @@ export class AutletterItemComponent
       if (!isNaN(intValue) && intValue > 0) {
         this.router.navigate(['/support/letter-list']);
       } else {
-        console.log("insert nashod")
+        //Todo notification erroor
       }
 
     });
@@ -204,11 +217,6 @@ export class AutletterItemComponent
 
   }
 
-  EditForm_explain = new FormGroup({
-    ObjectRef: new FormControl('0'),
-    LetterState: new FormControl(''),
-
-  });
 
 
 
@@ -219,18 +227,13 @@ export class AutletterItemComponent
       LetterState: LetterState,
     });
 
-
-
     this.explain_dialog_show()
-
-
   }
 
 
 
 
   Set_Autletterrow_Property() {
-    console.log(this.EditForm_explain)
     this.repo.Update_AutletterRow(this.EditForm_explain.value).subscribe((data: any) => {
       this.explain_dialog_close()
       this.Get_LetterRowList()

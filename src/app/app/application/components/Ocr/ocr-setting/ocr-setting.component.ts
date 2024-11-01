@@ -14,6 +14,9 @@ export class OcrSettingComponent implements OnInit {
   BasketColumns: any = [];
   AppBasketColumn_Status: string = '';
   Apptype: string = '2';
+  selected_des: string = "";
+  selected_value: string = "";
+  selected_Key: string = "";
 
   EditForm_printer = new FormGroup({
     AppPrinterCode: new FormControl(''),
@@ -46,9 +49,6 @@ export class OcrSettingComponent implements OnInit {
     });
 
   }
-  selected_des: string = "";
-  selected_value: string = "";
-  selected_Key: string = "";
 
   SelectDbSetup(index: any) {
     this.selected_des = this.items[index].Description;

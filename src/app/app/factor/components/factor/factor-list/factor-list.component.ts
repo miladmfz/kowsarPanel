@@ -22,23 +22,24 @@ export class FactorListComponent extends AgGridBaseComponent
     super();
   }
 
+  title = 'فاکتور فروش';
+  CentralRef: string = '';
+  JobPersonRef: string = '';
+  Searchtarget: string = '';
+  TextData: string = '';
+  BrokerRef: string = '';
+  searchTerm: string = '';
+  selectedOption: string = '0';
 
+
+
+  items: any[] = [];
 
   start_dateValue = new FormControl();
   End_dateValue = new FormControl();
-
-  CentralRef: string = '';
-  JobPersonRef: string = '';
-
-  Searchtarget: string = '';
-  items: any[] = [];
-  TextData: string = '';
-  selectedOption: string = '0';
-  BrokerRef: string = '';
-  searchTerm: string = '';
-
   loading: boolean = true;
 
+  records;
 
   customTheme: Partial<IDatepickerTheme> = {
     selectedBackground: '#D68E3A',
@@ -46,10 +47,26 @@ export class FactorListComponent extends AgGridBaseComponent
 
   };
 
+  EditForm_factor = new FormGroup({
+    StartDateTarget: new FormControl(''),
+    EndDateTarget: new FormControl(''),
+    SearchTarget: new FormControl(''),
+    BrokerRef: new FormControl(''),
+    isShopFactor: new FormControl('0'),
+
+  });
+
+  EditForm_factor_property = new FormGroup({
+    starttime: new FormControl(''),
+    Endtime: new FormControl(''),
+    worktime: new FormControl(''),
+    Barbary: new FormControl(''),
+    ObjectRef: new FormControl('0'),
+
+  });
 
 
-  records;
-  title = 'فاکتور فروش';
+
 
   onInputChange() {
     if (this.Searchtarget == "") {
@@ -174,32 +191,6 @@ export class FactorListComponent extends AgGridBaseComponent
 
 
 
-  EditForm_factor = new FormGroup({
-    StartDateTarget: new FormControl(''),
-    EndDateTarget: new FormControl(''),
-    SearchTarget: new FormControl(''),
-    BrokerRef: new FormControl(''),
-    isShopFactor: new FormControl('0'),
-
-  });
-
-
-
-
-
-  EditForm_factor_property = new FormGroup({
-    starttime: new FormControl(''),
-    Endtime: new FormControl(''),
-    worktime: new FormControl(''),
-    Barbary: new FormControl(''),
-    ObjectRef: new FormControl('0'),
-
-  });
-
-
-
-
-
 
 
   Edit_factor_Property(FactorCode) {
@@ -226,9 +217,6 @@ export class FactorListComponent extends AgGridBaseComponent
 
 
   Set_factor_Property() {
-    //// send Property to server
-
-    console.log(this.selectedRows)
 
     this.repo.EditFactorProperty(this.EditForm_factor_property.value).subscribe((data: any) => {
       this.property_dialog_close()

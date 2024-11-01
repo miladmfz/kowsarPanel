@@ -45,6 +45,17 @@ export class AutletterListComponent
 
   };
 
+
+
+  EditForm_autletter = new FormGroup({
+    SearchTarget: new FormControl(''),
+    CentralRef: new FormControl(''),
+    CreationDate: new FormControl(''),
+    OwnCentralRef: new FormControl(''),
+  });
+
+
+
   onInputChange() {
     if (this.searchTerm == "") {
       this.searchTerm = ""
@@ -53,11 +64,7 @@ export class AutletterListComponent
   }
 
 
-
-
-  override ngOnInit(): void {
-    super.ngOnInit();
-    this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
+  column_declare() {
     this.columnDefs = [
       {
         field: 'عملیات',
@@ -131,6 +138,16 @@ export class AutletterListComponent
       },
 
     ];
+  }
+
+
+
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+    this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
+
+    this.column_declare()
     this.repo.GetTodeyFromServer().subscribe((data: any) => {
 
       this.ToDayDate = data[0].TodeyFromServer
@@ -139,15 +156,6 @@ export class AutletterListComponent
 
 
   }
-
-
-
-  EditForm_autletter = new FormGroup({
-    SearchTarget: new FormControl(''),
-    CentralRef: new FormControl(''),
-    CreationDate: new FormControl(''),
-    OwnCentralRef: new FormControl(''),
-  });
 
 
 

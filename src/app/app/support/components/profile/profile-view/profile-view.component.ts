@@ -57,14 +57,6 @@ export class ProfileViewComponent implements OnInit {
 
 
   ngOnInit(): void {
-    // //debugger
-    // this.route.paramMap.subscribe((params: ParamMap) => {
-    //   var id = params.get('id');
-    //   if (id != null) {
-    //     this.Code = id;
-
-    //   }
-    // });
 
     this.getDetails();
 
@@ -72,8 +64,6 @@ export class ProfileViewComponent implements OnInit {
 
 
   getDetails() {
-
-
 
     this.repo.GetKowsarPersonInfo(sessionStorage.getItem("PersonInfoRef")).subscribe((data: any) => {
       this.CentralRefCustomer = data.users[0].CentralRefCustomer
@@ -113,9 +103,6 @@ export class ProfileViewComponent implements OnInit {
 
 
     });
-
-
-
   }
 
 
@@ -128,28 +115,14 @@ export class ProfileViewComponent implements OnInit {
 
   taggel_editform_visible() {
     this.editform_visible = !this.editform_visible
-
   }
-
-
 
   submit(action) {
-
     const command = this.ProfileForm_Edit.value;
-
-
     this.repo.UpdatePersonInfo(command).subscribe((data: any) => {
-
       location.reload();
-
     });
-
-
   }
-
-
-
-
 
 
 }

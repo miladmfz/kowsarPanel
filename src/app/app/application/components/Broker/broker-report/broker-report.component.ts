@@ -33,75 +33,35 @@ export class BrokerReportComponent implements OnInit {
   CDCustNames_price: string[] = [];
   CDCustNames_name: string[] = [];
   selectedRadio: string = '';
-
-
-
   @ViewChild('imagePreview') imagePreview: ElementRef | undefined;
 
-  onFileSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const imageData = e.target.result.split(',')[1]; // Get base64 data (remove the header)
-        this.sendImageToServer(this.items[0].CentralRef, imageData); // Replace '12345' with your barcode value
-      };
-      reader.readAsDataURL(file);
-    }
-  }
 
 
+  formRadio1 = new UntypedFormGroup({
+    radio1: new UntypedFormControl('Radio0')
+  });
 
 
-  sendImageToServer(ObjectCode: string, imageData: string): void {
-
-    const data = {
-      ClassName: "Central",
-      ObjectCode: ObjectCode,
-      image: imageData
-    };
-
-    this.repo.SendImageToServer(data).subscribe((response) => {
-      this.fetchImageData();
-    });
-
-  }
-
-
-
-
-
-
+  chartBarData1: any;
+  chartBarData: any;
 
 
   imageData: string = ''; // Variable to hold the image data
 
+  showUploadText: boolean = false;
 
 
-  fetchImageData() {
-
-    this.repo.GetImageFromServer(this.items[0].CentralRef).subscribe((data: any) => {
-
-      this.Imageitem = `data:${Image};base64,${data.Text}`;
-
-    });
+  setRadioValue(value: string): void {
+    this.formRadio1.setValue({ radio1: value });
+    this.selectedRadio = value;
   }
 
 
-
-
-  showUploadText: boolean = false;
 
 
 
 
   ngOnInit() {
-
-
-
-
-
-
 
 
     this.id = this.route.snapshot.params['id'];
@@ -155,24 +115,52 @@ export class BrokerReportComponent implements OnInit {
 
 
   }
-  // Assuming DPreFactorDates is your existing array of any type
 
 
-  formRadio1 = new UntypedFormGroup({
-    radio1: new UntypedFormControl('Radio0')
-  });
 
 
-  setRadioValue(value: string): void {
-    this.formRadio1.setValue({ radio1: value });
-    this.selectedRadio = value;
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const imageData = e.target.result.split(',')[1]; // Get base64 data (remove the header)
+        this.sendImageToServer(this.items[0].CentralRef, imageData); // Replace '12345' with your barcode value
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
 
 
 
-  chartBarData1: any;
-  chartBarData: any;
+  sendImageToServer(ObjectCode: string, imageData: string): void {
+
+    const data = {
+      ClassName: "Central",
+      ObjectCode: ObjectCode,
+      image: imageData
+    };
+
+    this.repo.SendImageToServer(data).subscribe((response) => {
+      this.fetchImageData();
+    });
+
+  }
+
+
+  fetchImageData() {
+
+    this.repo.GetImageFromServer(this.items[0].CentralRef).subscribe((data: any) => {
+
+      this.Imageitem = `data:${Image};base64,${data.Text}`;
+
+    });
+  }
+
+
+
 
 
 

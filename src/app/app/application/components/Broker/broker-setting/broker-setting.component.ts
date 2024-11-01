@@ -21,7 +21,9 @@ export class BrokerSettingComponent implements OnInit {
   AppBroker_Status: string = '';
   AppBasketColumn_Status: string = '';
   BrokerCustomer_Status: string = '';
-
+  selected_des: string = "";
+  selected_value: string = "";
+  selected_Key: string = "";
 
   EditForm_printer = new FormGroup({
     AppPrinterCode: new FormControl(''),
@@ -39,8 +41,6 @@ export class BrokerSettingComponent implements OnInit {
 
   ngOnInit() {
 
-
-
     this.repo.Web_GetDbsetupObject("BrokerKowsar").subscribe(e => {
       this.items = e;
 
@@ -51,8 +51,6 @@ export class BrokerSettingComponent implements OnInit {
     });
     this.GetBasketColumnList();
 
-
-
   }
 
 
@@ -62,9 +60,7 @@ export class BrokerSettingComponent implements OnInit {
 
   }
 
-  selected_des: string = "";
-  selected_value: string = "";
-  selected_Key: string = "";
+
 
   SelectDbSetup(index: any) {
     this.selected_des = this.items[index].Description;

@@ -23,10 +23,8 @@ export class CellActionGoodEditImage implements ICellRendererAngularComp {
 
         if (params.data) {
             if (this.params.data.IMG.length < 100) {
-                console.log("IMG.length < 100");
                 this.GetImage();
             } else {
-                console.log("has Image");
                 this.Imageitem = `data:image;base64,${params.data.IMG}`;
             }
         }
@@ -38,7 +36,6 @@ export class CellActionGoodEditImage implements ICellRendererAngularComp {
         if (params.data) {
             this.Imageitem = `data:image;base64,${params.data.IMG}`;
         }
-        console.log("refresh call");
         return true;
     }
 

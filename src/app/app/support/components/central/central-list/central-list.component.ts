@@ -126,7 +126,7 @@ export class CentralListComponent extends AgGridBaseComponent
     this.searchSubject.pipe(
       debounceTime(1000)  // 1 second debounce time
     ).subscribe(searchText => {
-      console.log(searchText)
+
       this.getList();
     });
     this.searchSubject.next(this.Searchtarget);

@@ -20,22 +20,41 @@ export class AutletterChatComponent implements OnInit {
     private renderer: Renderer2,
 
   ) { }
+
+
   @Input() TextData: string = '';
 
-
-
+  descriptionFormControl = new FormControl();
+  dateValue = new FormControl();
 
   chats: any[] = [];
   users: any[] = [];
-  selectedOption: string = '0';
-  dateValue = new FormControl();
   items: any[] = [];
+
+  selectedOption: string = '0';
+
   searchTerm: string = '';
   CentralRef: string = '';
-  descriptionFormControl = new FormControl();
+  newMessage: string = '';
+  Imageitem: string = '';
+  menuId: string = '';
+  mizname: string = '';
+  basketsum: string = '';
+
+  isDesktop: boolean = true;
+  loading: boolean = true;
 
   selectedUserId: number = 0;
-  newMessage: string = '';
+
+
+
+
+  @ViewChild('listsContainer') listsContainer!: ElementRef;
+  @ViewChild('groupList') groupList!: ElementRef;
+  @ViewChild('itemList') itemList!: ElementRef;
+  @ViewChild('basketList') basketList!: ElementRef;
+  @ViewChild('itemListRef', { static: false }) itemListRef!: ElementRef;
+  @ViewChild('itemElement', { static: false }) itemElement!: ElementRef[];
 
 
 
@@ -56,8 +75,6 @@ export class AutletterChatComponent implements OnInit {
     });
 
   }
-
-
 
 
   sendMessage() {
@@ -106,10 +123,6 @@ export class AutletterChatComponent implements OnInit {
   }
 
 
-
-
-  Imageitem: string = '';
-
   GetImage(index: any): void {
 
     this.repo.GetImageFromServer(this.chats[index].ConversationCode).subscribe((data: any) => {
@@ -118,28 +131,6 @@ export class AutletterChatComponent implements OnInit {
 
     });
   }
-
-
-
-
-
-
-
-  basketsum!: string
-  isDesktop: boolean = true;
-  loading: boolean = true;
-
-  menuId!: string;
-  mizname: string = '';
-
-
-
-  @ViewChild('listsContainer') listsContainer!: ElementRef;
-  @ViewChild('groupList') groupList!: ElementRef;
-  @ViewChild('itemList') itemList!: ElementRef;
-  @ViewChild('basketList') basketList!: ElementRef;
-  @ViewChild('itemListRef', { static: false }) itemListRef!: ElementRef;
-  @ViewChild('itemElement', { static: false }) itemElement!: ElementRef[];
 
 
 
@@ -180,11 +171,7 @@ export class AutletterChatComponent implements OnInit {
 
       const rect = itemElement.getBoundingClientRect();
       const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
-      // console.log('*********************************');
-      // console.log('rect:', rect.top);
-      // console.log('rect.bottom:', rect.bottom);
-      // console.log('window.innerHeight:', window.innerHeight);
-      // console.log('isVisible:', isVisible);
+
       if (isVisible && titleElement) {
 
       }
@@ -197,6 +184,7 @@ export class AutletterChatComponent implements OnInit {
     this.renderer.setStyle(element, 'max-height', `calc(100vh - ${headerHeight}px)`);
 
   }
+
   ngAfterViewInit(): void {
 
     const headerContainer = this.listsContainer.nativeElement.previousElementSibling;

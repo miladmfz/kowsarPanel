@@ -95,7 +95,7 @@ export class AutletterInsertComponent implements OnInit {
         if (!isNaN(intValue) && intValue > 0) {
           this.router.navigate(['/support/letter-list']);
         } else {
-          console.log("insert nashod")
+          //Todo notification erroor
         }
 
       });
