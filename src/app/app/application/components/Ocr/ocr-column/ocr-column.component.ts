@@ -17,36 +17,17 @@ export class OcrColumnComponent implements OnInit {
     private formBuilder: UntypedFormBuilder
   ) { }
 
-
-
-
   Apptype: string = "2";
   BasketColumns: any[] = [];
 
   ngOnInit() {
-
-
     this.GetBasketColumnList()
-
-
-
-
   }
-
-
-
 
   GetBasketColumnList() {
-
     this.repo.GetBasketColumnList(this.Apptype).subscribe(e => {
       this.BasketColumns = e;
-
-
-
     });
-
   }
-
-
 
 }

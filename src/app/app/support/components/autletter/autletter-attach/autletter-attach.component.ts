@@ -63,9 +63,6 @@ export class AutletterAttachComponent implements OnInit {
         this.selectedFileName = file.name.replace(' ', '').split('.')[0];
         this.selectedFileSize = Math.round(file.size / 1024); // Convert size to KB and round it
         this.selectedFileType = file.type.split('/')[1]
-        console.log(`File Name: ${this.selectedFileName.replace(' ', '')}`)
-        console.log(`File Size: ${this.selectedFileSize} KB`)
-        console.log(`File Name: ${file.type.split('/')[1]}`)
 
         this.EditForm.patchValue({
           FileName: this.selectedFileName,
@@ -121,7 +118,6 @@ export class AutletterAttachComponent implements OnInit {
   DownloadAttach(index: any) {
 
     this.repo.downloadFile(this.attachfiles_array[index].AttachedFileCode, "AutLetter", this.TextData).subscribe(blob => {
-      console.log(blob)
       const downloadLink = document.createElement('a');
       downloadLink.href = window.URL.createObjectURL(blob);
       downloadLink.download = 'KowsarDownload.zip'; // Set desired file name here

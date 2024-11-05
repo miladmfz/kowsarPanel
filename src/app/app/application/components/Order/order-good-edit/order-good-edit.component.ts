@@ -43,10 +43,20 @@ export class OrderGoodEditComponent implements OnInit {
   items_Grp: any[] = [];
 
 
+  @ViewChild('imagePreview') imagePreview: ElementRef | undefined;
+
+
+  imageData: string = ''; // Variable to hold the image data
+
+  showUploadText: boolean = false;
+
+
+  btnRadioGroup2 = this.formBuilder.group({
+    activestack: this.formBuilder.control({ value: '' })
+  });
 
 
   ngOnInit() {
-
 
     this.route.paramMap.subscribe((params: ParamMap) => {
       var id = params.get('id');
@@ -55,12 +65,6 @@ export class OrderGoodEditComponent implements OnInit {
         this.LoadFromUrl(this.id);
       }
     });
-
-
-
-
-
-
 
   }
 
@@ -213,10 +217,6 @@ export class OrderGoodEditComponent implements OnInit {
   }
 
 
-
-
-  @ViewChild('imagePreview') imagePreview: ElementRef | undefined;
-
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
@@ -248,14 +248,6 @@ export class OrderGoodEditComponent implements OnInit {
 
 
 
-
-
-
-
-
-  imageData: string = ''; // Variable to hold the image data
-
-
   fetchImageData() {
 
     this.repo.GetImageFromServer(this.SingleItems[0].GoodCode).subscribe((data: any) => {
@@ -264,18 +256,6 @@ export class OrderGoodEditComponent implements OnInit {
 
     });
   }
-
-
-
-
-  showUploadText: boolean = false;
-
-
-  btnRadioGroup2 = this.formBuilder.group({
-    activestack: this.formBuilder.control({ value: '' })
-  });
-
-
 
   setRadioValue(value: string): void {
 

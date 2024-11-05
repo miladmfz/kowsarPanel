@@ -39,11 +39,18 @@ export class DownloadEditComponent implements OnInit {
   ToDayDate: string = "";
   ClassName: string = "";
   Type: string = "";
-
+  newMessage: string = '';
+  selectedImage: string | ArrayBuffer | null = null;
+  selectedFileName: string = '';
+  selectedFileSize: number = 0;
+  selectedFileType: string = '';
 
 
 
   CentralRef: string = '';
+
+
+
   ngOnInit() {
 
     this.repo.GetTodeyFromServer().subscribe((data: any) => {
@@ -56,62 +63,25 @@ export class DownloadEditComponent implements OnInit {
 
   onchangeClassName() {
 
-
-    console.log(this.ClassName)
-
-
     this.ClassName = this.EditForm.value.ClassName
 
-
-
-    console.log("ClassName = " + this.ClassName)
-    console.log("this.EditForm.value.ClassName = " + this.EditForm.value.ClassName)
-    console.log("this.EditForm.value.Type = " + this.EditForm.value.Type)
-
-
-    console.log("ClassName = " + this.EditForm.value.ClassName == "Web_url")
-
     if (this.EditForm.value.ClassName == "Web_url") {
-      console.log("0")
-
       this.EditForm.patchValue({
         Type: "URL",
       });
     } else {
-      console.log("1")
-
       this.EditForm.patchValue({
         Type: "",
       });
 
-
-
-
-
-
     }
-
-
-
-
-
-
-
-
-    console.log("ClassName = " + this.ClassName)
-    console.log("this.EditForm.value.ClassName = " + this.EditForm.value.ClassName)
-    console.log("this.EditForm.value.Type = " + this.EditForm.value.Type)
 
   }
 
   onchangeType() {
     this.Type = this.EditForm.value.Type
   }
-  newMessage: string = '';
-  selectedImage: string | ArrayBuffer | null = null;
-  selectedFileName: string = '';
-  selectedFileSize: number = 0;
-  selectedFileType: string = '';
+
 
 
   onFileSelected(event: any): void {
@@ -124,9 +94,7 @@ export class DownloadEditComponent implements OnInit {
         this.selectedFileName = file.name.replace(' ', '').split('.')[0];
         this.selectedFileSize = Math.round(file.size / 1024); // Convert size to KB and round it
         this.selectedFileType = file.type.split('/')[1]
-        console.log(`File Name: ${this.selectedFileName.replace(' ', '')}`)
-        console.log(`File Size: ${this.selectedFileSize} KB`)
-        console.log(`File Name: ${file.type.split('/')[1]}`)
+
 
         this.EditForm.patchValue({
           FileName: this.selectedFileName,
@@ -153,7 +121,6 @@ export class DownloadEditComponent implements OnInit {
 
     }
 
-    console.log(command)
 
     this.repo.SetAttachFile(command).subscribe((data) => {
       this.router.navigate(['/document/download-list']);
@@ -165,10 +132,6 @@ export class DownloadEditComponent implements OnInit {
 
 
   }
-
-
-
-
 
 
 

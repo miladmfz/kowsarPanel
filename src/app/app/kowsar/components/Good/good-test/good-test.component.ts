@@ -54,7 +54,6 @@ export class GoodTestComponent implements OnInit {
   ngOnInit() {
 
     this.Add_To_KowsarTemplate()
-    console.log(JSON.stringify(this.KowsarTemplate.value))
   }
 
 }

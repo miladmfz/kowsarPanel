@@ -23,6 +23,9 @@ export class CentralEditComponent implements OnInit {
   Imageitem: string = '';
   items: any[] = [];
 
+  imageData: string = ''; // Variable to hold the image data
+
+
   EditForm_Central = new FormGroup({
     CentralCode: new FormControl(0),
     Title: new FormControl(''),
@@ -53,7 +56,7 @@ export class CentralEditComponent implements OnInit {
 
     const file = event.target.files[0];
     if (file) {
-      console.log('Selected file:', file);
+
       const reader = new FileReader();
       reader.onload = (e: any) => {
         const imageData = e.target.result.split(',')[1]; // Get base64 data (remove the header)
@@ -78,14 +81,6 @@ export class CentralEditComponent implements OnInit {
     });
 
   }
-
-
-
-
-
-
-  imageData: string = ''; // Variable to hold the image data
-
 
 
   fetchImageData() {

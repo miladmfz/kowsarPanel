@@ -191,7 +191,7 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
 
   onSelectionChanged(event) {
     this.selectedRows = event.api.getSelectedRows();
-    console.log('Selected rows:', this.selectedRows);
+
   }
 
 

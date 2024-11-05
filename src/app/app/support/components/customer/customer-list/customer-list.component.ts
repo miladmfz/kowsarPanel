@@ -29,33 +29,91 @@ export class CustomerListComponent extends AgGridBaseComponent
   loading: boolean = true;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  selected_des: string = ''; // مقدار پیش‌فرض برای نمونه
+  selected_value: string = ''; // مقدار پیش‌فرض برای نمونه
 
   Searchtarget: string = '';
   private searchSubject: Subject<string> = new Subject();
+
+
+
+  EditForm_explain = new FormGroup({
+    Explain: new FormControl(''),
+    ObjectRef: new FormControl('0'),
+
+  });
+
+  EditForm_property = new FormGroup({
+    CustName_Small: new FormControl(''),
+    AppNumber: new FormControl(''),
+    DatabaseNumber: new FormControl(''),
+    LockNumber: new FormControl(''),
+    Address: new FormControl(''),
+    CityName: new FormControl(''),
+    OstanName: new FormControl(''),
+    Delegacy: new FormControl(''),
+    Manager: new FormControl(''),
+    Phone: new FormControl(''),
+    PostCode: new FormControl(''),
+    Mobile: new FormControl(''),
+    MobileName: new FormControl(''),
+    ZipCode: new FormControl(''),
+    Email: new FormControl(''),
+    Fax: new FormControl(''),
+    ObjectRef: new FormControl('0'),
+
+  });
+
+
+
+  ShowForm_property = new FormGroup({
+    CustName_Small: new FormControl(''),
+    AppNumber: new FormControl(''),
+    DatabaseNumber: new FormControl(''),
+    LockNumber: new FormControl(''),
+    Address: new FormControl(''),
+    CityName: new FormControl(''),
+    OstanName: new FormControl(''),
+    Delegacy: new FormControl(''),
+    Manager: new FormControl(''),
+    Phone: new FormControl(''),
+    PostCode: new FormControl(''),
+    Mobile: new FormControl(''),
+    MobileName: new FormControl(''),
+    ZipCode: new FormControl(''),
+    Email: new FormControl(''),
+    Fax: new FormControl(''),
+    ObjectRef: new FormControl('0'),
+
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -151,7 +209,7 @@ export class CustomerListComponent extends AgGridBaseComponent
     this.searchSubject.pipe(
       debounceTime(1000)  // 1 second debounce time
     ).subscribe(searchText => {
-      console.log(searchText)
+
       this.getList();
     });
     this.searchSubject.next(this.Searchtarget);
@@ -176,61 +234,7 @@ export class CustomerListComponent extends AgGridBaseComponent
 
 
 
-  EditForm_explain = new FormGroup({
-    Explain: new FormControl(''),
-    ObjectRef: new FormControl('0'),
 
-  });
-
-  EditForm_property = new FormGroup({
-    CustName_Small: new FormControl(''),
-    AppNumber: new FormControl(''),
-    DatabaseNumber: new FormControl(''),
-    LockNumber: new FormControl(''),
-    Address: new FormControl(''),
-    CityName: new FormControl(''),
-    OstanName: new FormControl(''),
-    Delegacy: new FormControl(''),
-    Manager: new FormControl(''),
-    Phone: new FormControl(''),
-    PostCode: new FormControl(''),
-    Mobile: new FormControl(''),
-    MobileName: new FormControl(''),
-    ZipCode: new FormControl(''),
-    Email: new FormControl(''),
-    Fax: new FormControl(''),
-    ObjectRef: new FormControl('0'),
-
-  });
-
-
-
-  ShowForm_property = new FormGroup({
-    CustName_Small: new FormControl(''),
-    AppNumber: new FormControl(''),
-    DatabaseNumber: new FormControl(''),
-    LockNumber: new FormControl(''),
-    Address: new FormControl(''),
-    CityName: new FormControl(''),
-    OstanName: new FormControl(''),
-    Delegacy: new FormControl(''),
-    Manager: new FormControl(''),
-    Phone: new FormControl(''),
-    PostCode: new FormControl(''),
-    Mobile: new FormControl(''),
-    MobileName: new FormControl(''),
-    ZipCode: new FormControl(''),
-    Email: new FormControl(''),
-    Fax: new FormControl(''),
-    ObjectRef: new FormControl('0'),
-
-  });
-
-
-
-
-  selected_des: string = ''; // مقدار پیش‌فرض برای نمونه
-  selected_value: string = ''; // مقدار پیش‌فرض برای نمونه
   Edit_Customer_Explain(CustomerCode) {
     this.explain_dialog_show()
     this.records.forEach((customer: any) => {

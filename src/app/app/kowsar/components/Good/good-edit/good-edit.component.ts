@@ -36,23 +36,18 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     this.route.paramMap.subscribe((params: ParamMap) => {
       var id = params.get('id');
       if (id != null) {
-        console.log("in if null")
 
         this.Code = id;
 
         this.Code_int = parseInt(this.Code);
         if (parseInt(this.Code) > 0) {
-          console.log("in if")
           this.getDetails();
         } else {
-          console.log("in else")
-
           this.EditForm_Base_reset()
         }
 
         this.GetColumnTable();
       } else {
-        console.log("in null else")
 
         this.EditForm_Base_reset()
         this.GetColumnTable();
@@ -61,29 +56,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
 
-  getDetails() {
-    this.Loading_Modal_Response_show()
-    this.changedValues = {};
-    this.EditForm_Base.reset();
-    this.EditForm_Explain.reset();
-    this.EditForm_Complete.reset();
-    this.EditForm_Property.reset();
 
-    this.LoadData_base()
-
-    this.LoadData_explain()
-
-    this.LoadData_complete()
-
-    this.LoadData_GetStacks()
-
-
-    this.LoadData_GetGoodsGrp()
-
-    this.LoadData_property()
-
-
-  }
 
 
 
@@ -422,7 +395,29 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   // #region Load_data
 
+  getDetails() {
+    this.Loading_Modal_Response_show()
+    this.changedValues = {};
+    this.EditForm_Base.reset();
+    this.EditForm_Explain.reset();
+    this.EditForm_Complete.reset();
+    this.EditForm_Property.reset();
 
+    this.LoadData_base()
+
+    this.LoadData_explain()
+
+    this.LoadData_complete()
+
+    this.LoadData_GetStacks()
+
+
+    this.LoadData_GetGoodsGrp()
+
+    this.LoadData_property()
+
+
+  }
 
 
   LoadData_GetGoodsGrp() {
@@ -642,7 +637,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   // Assuming this is part of an asynchronous operation or a function
   Checkproperty() {
     if (this.Errormsg_property.length > 0) {
-      console.log("ssd")
       this.setinitial_property()
     }
   }
@@ -706,7 +700,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     this.repo.GetGood_Propertys(this.Code).subscribe((data: any) => {
       if (data.response) {
         this.Errormsg_property = data.response.Errormessage
-        console.log("property " + data.response.Errormessage)
       } else {
         this.Errormsg_property = ""
         this.GoodTypeStr = data.Goods[0].GoodType;

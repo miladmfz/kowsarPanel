@@ -136,36 +136,11 @@ export class DownloadListComponent extends AgGridBaseComponent
 
 
   btnToDownload(AttachedFileCode): void {
-    /*
-        this.repo.downloadFile(code).subscribe(response => {
-          const contentDispositionHeader = response.headers.get('Content-Disposition');
-          const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-          const matches = filenameRegex.exec(contentDispositionHeader);
-          let fileName = 'download.zip'; // Default file name
-    
-          if (matches != null && matches[1]) {
-            fileName = matches[1].replace(/['"]/g, '');
-          }
-    
-          const downloadLink = document.createElement('a');
-          downloadLink.href = window.URL.createObjectURL(response.body);
-          downloadLink.setAttribute('download', fileName);
-          document.body.appendChild(downloadLink);
-          downloadLink.click();
-          document.body.removeChild(downloadLink);
-        }, error => {
-          console.error('Error downloading file: ', error);
-        });
-    
-    */
-
-
 
     this.repo.downloadFile(AttachedFileCode, "Web_download", "0").subscribe(blob => {
-      console.log(blob)
       const downloadLink = document.createElement('a');
       downloadLink.href = window.URL.createObjectURL(blob);
-      downloadLink.download = 'KowsarDownload.zip'; // Set desired file name here
+      downloadLink.download = 'KowsarDownload.zip';
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);

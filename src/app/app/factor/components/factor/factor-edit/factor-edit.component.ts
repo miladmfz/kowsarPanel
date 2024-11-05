@@ -21,8 +21,6 @@ export class FactorEditComponent extends AgGridBaseComponent
   implements OnInit {
 
 
-
-
   constructor(
     private readonly router: Router,
     private repo: FactorWebApiService,
@@ -34,46 +32,6 @@ export class FactorEditComponent extends AgGridBaseComponent
 
   ) { super(); }
 
-
-  myForm: FormGroup;
-  time: Date = new Date();
-  selectedfactor: any
-
-  Start_FactorTime: string = '';
-  End_FactorTime: string = '';
-
-
-  FactorCode: string = '';
-  CentralRef: string = '';
-  JobPersonRef: string = '';
-
-  ShowGoodList: boolean = false;
-
-  Searchtarget_customer: string = '';
-  Searchtarget_Good: string = '';
-
-
-  records_good;
-  records_factorrows;
-  records_customer;
-
-  title = 'فاکتور فروش';
-
-  private searchSubject_customer: Subject<string> = new Subject();
-  private searchSubject_Good: Subject<string> = new Subject();
-  EditForm_factor_property = new FormGroup({
-    starttime: new FormControl(''),
-    Endtime: new FormControl(''),
-    worktime: new FormControl(''),
-    Barbary: new FormControl(''),
-    ObjectRef: new FormControl('0'),
-
-  });
-  customTheme: Partial<IDatepickerTheme> = {
-    selectedBackground: '#D68E3A',
-    selectedText: '#FFFFFF',
-
-  };
 
 
   override ngOnInit(): void {
@@ -89,6 +47,7 @@ export class FactorEditComponent extends AgGridBaseComponent
     });
 
     this.Config_Declare()
+    this.pipe_function()
 
     if (this.FactorCode.length > 0) {
       this.GetFactor();
@@ -100,14 +59,86 @@ export class FactorEditComponent extends AgGridBaseComponent
   }
 
 
+  // #region Declare
 
 
-  NewFactor() {
+  loading: boolean = true;
 
 
-    location.reload()
+  title = 'فاکتور فروش';
+  Start_FactorTime: string = '';
+  End_FactorTime: string = '';
+  FactorCode: string = '';
+  CentralRef: string = '';
+  JobPersonRef: string = '';
+  Searchtarget_customer: string = '';
+  Searchtarget_Good: string = '';
 
-  }
+  @ViewChild('modalsearch') modalsearch: ElementRef;
+
+
+
+  time: Date = new Date();
+
+  myForm: FormGroup;
+  selectedfactor: any
+
+  ShowGoodList: boolean = false;
+
+
+  records_good;
+  records_factorrows;
+  records_customer;
+
+  private searchSubject_customer: Subject<string> = new Subject();
+  private searchSubject_Good: Subject<string> = new Subject();
+
+
+  EditForm_factor_property = new FormGroup({
+    starttime: new FormControl(''),
+    Endtime: new FormControl(''),
+    worktime: new FormControl(''),
+    Barbary: new FormControl(''),
+    ObjectRef: new FormControl('0'),
+
+  });
+
+
+  Customer_property = new FormGroup({
+    AppNumber: new FormControl(''),
+    DatabaseNumber: new FormControl(''),
+    LockNumber: new FormControl(''),
+    Address: new FormControl(''),
+    CityName: new FormControl(''),
+    OstanName: new FormControl(''),
+    ObjectRef: new FormControl('0'),
+
+  });
+
+  EditForm_Factor_Header = new FormGroup({
+    FactorCode: new FormControl(''),
+    FactorDate: new FormControl(''),
+    CustName: new FormControl(''),
+    CustomerCode: new FormControl('', Validators.required),
+    Explain: new FormControl(''),
+    BrokerName: new FormControl(''),
+    BrokerRef: new FormControl('0'),
+  });
+
+  GoodForm = new FormGroup({
+    FactorRef: new FormControl(''),
+    GoodRef: new FormControl(''),
+  });
+
+
+
+  customTheme: Partial<IDatepickerTheme> = {
+    selectedBackground: '#D68E3A',
+    selectedText: '#FFFFFF',
+
+  };
+
+
 
   Config_Declare() {
 
@@ -185,13 +216,16 @@ export class FactorEditComponent extends AgGridBaseComponent
     ];
 
 
+
+  }
+
+
+  pipe_function() {
     this.searchSubject_customer.pipe(
       debounceTime(1000)  // 1 second debounce time
     ).subscribe(searchText => {
       this.GetCustomer();
     });
-
-
 
     this.searchSubject_Good.pipe(
       debounceTime(1000)  // 1 second debounce time
@@ -199,6 +233,23 @@ export class FactorEditComponent extends AgGridBaseComponent
       this.GetGood();
     });
   }
+
+
+
+  // #endregion
+
+
+
+
+
+
+  // #region Func
+
+
+  NewFactor() {
+    location.reload()
+  }
+
 
 
   timeStringToDate(timeString: string): Date {
@@ -309,10 +360,6 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
 
-
-
-
-
   ngOnDestroy(): void {
     this.searchSubject_customer.unsubscribe();
     this.searchSubject_Good.unsubscribe();
@@ -329,22 +376,159 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
 
+  Factor_Header_insert() {
+
+
+
+    this.EditForm_Factor_Header.markAllAsTouched();
+    if (!this.EditForm_Factor_Header.valid) return;
+    this.Loading_Modal_Response_show()
+
+    this.EditForm_Factor_Header.patchValue({
+      BrokerRef: sessionStorage.getItem("BrokerCode")
+    });
+    this.repo.WebFactorInsert(this.EditForm_Factor_Header.value).subscribe((data: any) => {
+      this.FactorCode = data.Factors[0].FactorCode
+
+      this.notificationService.succeded();
+      this.Loading_Modal_Response_close()
+      this.GetFactor()
+
+    });
+
+  }
+
+
+  taggelShowGoodList() {
+    this.ShowGoodList = !this.ShowGoodList
+  }
+
+  Set_Customer() {
+    this.EditForm_Factor_Header.patchValue({
+      CustName: this.selectedRows[0].CustName_Small,
+      CustomerCode: this.selectedRows[0].CustomerCode,
+      BrokerName: sessionStorage.getItem("BrokerName")
+    });
+    this.selectedRows = []
+
+    this.customer_dialog_close()
+  }
+  GoBack() {
+    this.location.back();
+
+  }
+
+
+
+
+  deleteFactor() {
+    if (this.records_factorrows && this.records_factorrows.length > 0) {
+
+      this.notificationService.error('این فاکتور دارای اقلام می باشد');
+    } else {
+      this.fireDeleteFactor().then((result) => {
+        if (result.isConfirmed) {
+          this.deletefactorRecord()
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          this.notificationService.warning('اطلاعات تغییری نکرد');
+
+        }
+      });
+    }
+
+  }
+
+
+  fireDeleteFactor() {
+    return Swal.fire({
+      title: 'آیا از حذف این ردیف اطمینان دارید؟',
+      text: 'درصورت حذف دیگر قادر به بازیابی ردیف فوق نخواهید بود.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'بله، اطمینان دارم.',
+
+      cancelButtonText: 'بستن پنجره',
+      customClass: {
+        confirmButton: 'btn btn-success mx-2',
+
+        cancelButton: 'btn btn-danger',
+      },
+      buttonsStyling: false,
+    });
+  }
+
+
+  fireDeleteSwal1() {
+    return Swal.fire({
+      title: 'آیا از حذف این ردیف اطمینان دارید؟',
+      text: 'درصورت حذف دیگر قادر به بازیابی ردیف فوق نخواهید بود.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'بله، اطمینان دارم.',
+      cancelButtonText: 'خیر',
+      customClass: {
+        confirmButton: 'btn btn-success mx-2',
+        cancelButton: 'btn btn-danger',
+      },
+      buttonsStyling: false,
+    });
+  }
+
+
+
+  delete(id) {
+    this.fireDeleteSwal1().then((result) => {
+      if (result.isConfirmed) {
+
+        this.repo.DeleteWebFactorRowsSupport(id).subscribe((data: any) => {
+          this.GetFactorrows()
+          this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
+        });
+
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        this.notificationService.warning('اطلاعات تغییری نکرد');
+      }
+    });
+  }
+
+  deletefactorRecord() {
+    this.repo.DeleteWebFactorSupport(this.FactorCode).subscribe((data: any) => {
+      this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
+      this.location.back();
+    });
+  }
+
+
+
+  Show_Customer_Property(CustomerCode) {
+
+    this.property_dialog_show()
+    this.records_customer.forEach((customer: any) => {
+
+      if (customer.CustomerCode == CustomerCode) {
+        this.Customer_property.patchValue({
+          AppNumber: customer.AppNumber,
+          DatabaseNumber: customer.DatabaseNumber,
+          LockNumber: customer.LockNumber,
+          ObjectRef: customer.CustomerCode,
+          Address: customer.Address,
+          CityName: customer.CityName,
+          OstanName: customer.OstanName,
+
+        });
+      }
+
+
+    })
+  }
+  // #endregion
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
+  // #region Get_Data
 
   GetFactor() {
 
@@ -402,7 +586,6 @@ export class FactorEditComponent extends AgGridBaseComponent
     });
   }
 
-
   getdate() {
     this.repo.GetTodeyFromServer().subscribe(e => {
       this.EditForm_Factor_Header.patchValue({
@@ -412,70 +595,11 @@ export class FactorEditComponent extends AgGridBaseComponent
   }
 
 
-
-
-  EditForm_Factor_Header = new FormGroup({
-    FactorCode: new FormControl(''),
-    FactorDate: new FormControl(''),
-    CustName: new FormControl(''),
-    CustomerCode: new FormControl('', Validators.required),
-    Explain: new FormControl(''),
-    BrokerName: new FormControl(''),
-    BrokerRef: new FormControl('0'),
-  });
-
-  GoodForm = new FormGroup({
-    FactorRef: new FormControl(''),
-    GoodRef: new FormControl(''),
-  });
-
-
-
-
-
-
-  Factor_Header_insert() {
-
-
-
-    this.EditForm_Factor_Header.markAllAsTouched();
-    if (!this.EditForm_Factor_Header.valid) return;
-    this.Loading_Modal_Response_show()
-
-    this.EditForm_Factor_Header.patchValue({
-      BrokerRef: sessionStorage.getItem("BrokerCode")
-    });
-    this.repo.WebFactorInsert(this.EditForm_Factor_Header.value).subscribe((data: any) => {
-      this.FactorCode = data.Factors[0].FactorCode
-
-      this.notificationService.succeded();
-      this.Loading_Modal_Response_close()
-      this.GetFactor()
-
-    });
-
-  }
-
-
-
-
-
-
-
-
   GetGood() {
     this.repo.GetGoodListSupport(this.Searchtarget_Good).subscribe((data: any) => {
       this.records_good = data.Goods;
     });
   }
-  taggelShowGoodList() {
-    this.ShowGoodList = !this.ShowGoodList
-  }
-
-
-
-
-  @ViewChild('modalsearch') modalsearch: ElementRef;
 
   GetCustomer() {
     this.customer_dialog_show()
@@ -488,25 +612,15 @@ export class FactorEditComponent extends AgGridBaseComponent
     });
   }
 
-  Set_Customer() {
-    console.log(this.selectedRows)
-    this.EditForm_Factor_Header.patchValue({
-      CustName: this.selectedRows[0].CustName_Small,
-      CustomerCode: this.selectedRows[0].CustomerCode,
-      BrokerName: sessionStorage.getItem("BrokerName")
-    });
-    this.selectedRows = []
-
-    this.customer_dialog_close()
-  }
-  GoBack() {
-    this.location.back();
-
-  }
+  // #endregion
 
 
 
-  loading: boolean = true;
+
+
+
+
+  // #region Modal
 
 
   customer_dialog_show() {
@@ -525,156 +639,6 @@ export class FactorEditComponent extends AgGridBaseComponent
     this.renderer.removeAttribute(modal, 'aria-modal');
     this.renderer.removeAttribute(modal, 'role');
   }
-
-
-
-  deleteFactor() {
-    if (this.records_factorrows && this.records_factorrows.length > 0) {
-
-      this.notificationService.error('این فاکتور دارای اقلام می باشد');
-    } else {
-      this.fireDeleteFactor().then((result) => {
-        if (result.isConfirmed) {
-          this.deletefactorRecord()
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          this.notificationService.warning('اطلاعات تغییری نکرد');
-
-        }
-      });
-    }
-
-  }
-
-
-
-  fireDeleteFactor() {
-    return Swal.fire({
-      title: 'آیا از حذف این ردیف اطمینان دارید؟',
-      text: 'درصورت حذف دیگر قادر به بازیابی ردیف فوق نخواهید بود.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'بله، اطمینان دارم.',
-
-      cancelButtonText: 'بستن پنجره',
-      customClass: {
-        confirmButton: 'btn btn-success mx-2',
-
-        cancelButton: 'btn btn-danger',
-      },
-      buttonsStyling: false,
-    });
-  }
-
-
-
-
-
-
-
-  fireDeleteSwal1() {
-    return Swal.fire({
-      title: 'آیا از حذف این ردیف اطمینان دارید؟',
-      text: 'درصورت حذف دیگر قادر به بازیابی ردیف فوق نخواهید بود.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'بله، اطمینان دارم.',
-      cancelButtonText: 'خیر',
-      customClass: {
-        confirmButton: 'btn btn-success mx-2',
-        cancelButton: 'btn btn-danger',
-      },
-      buttonsStyling: false,
-    });
-  }
-
-
-
-  delete(id) {
-    this.fireDeleteSwal1().then((result) => {
-      if (result.isConfirmed) {
-        this.deleteRecord(id);
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        this.notificationService.warning('اطلاعات تغییری نکرد');
-
-      }
-    });
-  }
-
-  deleteRecord(id) {
-
-
-    this.repo.DeleteWebFactorRowsSupport(id).subscribe((data: any) => {
-      this.GetFactorrows()
-
-      this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
-    });
-
-
-
-  }
-
-  deletefactorRecord() {
-
-
-    this.repo.DeleteWebFactorSupport(this.FactorCode).subscribe((data: any) => {
-      this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
-      this.location.back();
-    });
-
-
-
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-  Customer_property = new FormGroup({
-    AppNumber: new FormControl(''),
-    DatabaseNumber: new FormControl(''),
-    LockNumber: new FormControl(''),
-    Address: new FormControl(''),
-    CityName: new FormControl(''),
-    OstanName: new FormControl(''),
-
-    ObjectRef: new FormControl('0'),
-
-  });
-
-
-  Show_Customer_Property(CustomerCode) {
-
-    this.property_dialog_show()
-    this.records_customer.forEach((customer: any) => {
-
-      if (customer.CustomerCode == CustomerCode) {
-        this.Customer_property.patchValue({
-          AppNumber: customer.AppNumber,
-          DatabaseNumber: customer.DatabaseNumber,
-          LockNumber: customer.LockNumber,
-          ObjectRef: customer.CustomerCode,
-          Address: customer.Address,
-          CityName: customer.CityName,
-          OstanName: customer.OstanName,
-
-        });
-      }
-
-
-    })
-  }
-
-
-
-
-
 
 
 
@@ -728,6 +692,12 @@ export class FactorEditComponent extends AgGridBaseComponent
     this.renderer.removeAttribute(modal, 'aria-modal');
     this.renderer.removeAttribute(modal, 'role');
   }
+
+
+
+  // #endregion
+
+
 
 
 

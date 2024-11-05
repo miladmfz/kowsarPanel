@@ -17,34 +17,17 @@ export class BrokerColumnComponent implements OnInit {
     private formBuilder: UntypedFormBuilder
   ) { }
 
-
-
-
   Apptype: string = "1";
   BasketColumns: any[] = [];
 
   ngOnInit() {
-
-
     this.GetBasketColumnList()
-
-
-
-
   }
-
-
-
 
   GetBasketColumnList() {
-
     this.repo.GetBasketColumnList(this.Apptype).subscribe(e => {
       this.BasketColumns = e;
-
     });
-
   }
-
-
 
 }

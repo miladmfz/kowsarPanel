@@ -18,6 +18,10 @@ export class CompanySettingComponent implements OnInit {
   BasketColumns: any = [];
   AppBasketColumn_Status: string = '';
   Apptype: string = '0';
+  selected_des: string = "";
+  selected_value: string = "";
+  selected_Key: string = "";
+
 
   EditForm_printer = new FormGroup({
     AppPrinterCode: new FormControl(''),
@@ -53,9 +57,7 @@ export class CompanySettingComponent implements OnInit {
   }
 
 
-  selected_des: string = "";
-  selected_value: string = "";
-  selected_Key: string = "";
+
 
   SelectDbSetup(index: any) {
     this.selected_des = this.items[index].Description;

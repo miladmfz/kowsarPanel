@@ -83,7 +83,6 @@ export class LoginComponent implements OnInit {
         sessionStorage.setItem("AlarmActtive_Conversation", data.users[0].AlarmActtive_Conversation)
 
 
-        console.log(sessionStorage.getItem("ActiveDate"))
 
         this.router.navigate(['/dashboard']);
       }
@@ -127,7 +126,6 @@ export class LoginComponent implements OnInit {
         sessionStorage.setItem("AlarmActtive_Conversation", data.users[0].AlarmActtive_Conversation)
 
 
-        console.log(sessionStorage.getItem("ActiveDate"))
 
         this.router.navigate(['/dashboard']);
       }
