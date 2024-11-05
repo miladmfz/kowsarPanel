@@ -4,12 +4,12 @@
     <div class="row mb-2">
       <div class="col-sm-12">
 
-        <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
-          [(ngModel)]="Searchtarget" (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" />
-        <a type="button" class="btn btn-success waves-effect waves-light m-1" [routerLink]="['/kowsar/group-edit', 0]">
+        <!-- <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
+          [(ngModel)]="Searchtarget" (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" /> -->
+        <a type="button" class="btn btn-success waves-effect waves-light m-1">
           <span class="btn-label"><i class="fas fa-plus"></i></span>جدید
         </a>
-        <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
+        <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="LoadData_GetGoodsGrp()">
           <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
         </a>
         <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="removeAllFilters()">
@@ -37,11 +37,28 @@
 
 
     </div>
+    <div class="row">
+      <div>
 
-    <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" class="ag-theme-alpine" [rowData]="records"
-      [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
-      [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-      [frameworkComponents]="frameworkComponents" [context]="context">
+      </div>
+
+      <div>
+
+      </div>
+
+
+    </div>
+
+    <ag-grid-angular #agGrid id="myGrid" style="height: 700px; width: auto" [rowData]="base_Group_list"
+      [columnDefs]="columnDefs6" [modules]="modules" [localeText]="localeText" [enableRtl]="true" [pagination]="true"
+      [context]="context" class="ag-theme-alpine" [defaultColDef]="defaultColDef"
+      [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+      (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged($event)"
+      (cellClicked)="onCellClicked($event)" (rowDoubleClicked)="onRowDoubleClicked($event)" [treeData]="true"
+      [getDataPath]="getDataPath_group">
     </ag-grid-angular>
+
+
+
   </div>
 </div>
