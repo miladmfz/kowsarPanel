@@ -122,6 +122,9 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   });
 
 
+
+
+
   GoodToProperty = new FormGroup({
     GoodIndex: new FormControl("1"),
     GoodCode: new FormControl(""),
@@ -404,7 +407,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     this.EditForm_Property.reset();
 
     this.LoadData_base()
-
     this.LoadData_explain()
 
     this.LoadData_complete()
@@ -474,7 +476,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         UsedGood: data.Goods[0].UsedGood,
         GoodSubCode: data.Goods[0].GoodSubCode,
         GoodMainCode: data.Goods[0].GoodMainCode,
-
         MinSellPrice: data.Goods[0].MinSellPrice,
         MaxSellPrice: data.Goods[0].MaxSellPrice,
         Isbn: data.Goods[0].Isbn,
@@ -1122,6 +1123,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   }
 
+  SetBarcodeFromIsbn() {
+    console.log("SetBarcodeFromIsbn")
+  }
+
   GetLastGoodData() {
     this.repo.GetLastGoodData().subscribe((data: any) => {
       this.router.navigateByUrl('kowsar/good-edit', data.Goods[0].GoodCode);
@@ -1432,27 +1437,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
-    this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-      this.Loading_Modal_Response_close()
 
-      if (data.response.Errormessage.length > 0) {
-
-      }
-
-      if (data.Goods[0].ErrorMessage == "") {
-
-        this.notificationService.succeded();
-        this.GetGood_Stacks_Relations()
-        this.selectedRows = []
-        this.stack_dialog_close()
-
-      } else {
-        this.notificationService.error(data.Goods[0].ErrorMessage);
-
-      }
-
-
-    });
 
 
 
@@ -2271,6 +2256,23 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
 
+  barcode_dialog_show() {
+    const modal = this.renderer.selectRootElement('#Barcodemodal', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  barcode_dialog_close() {
+    const modal = this.renderer.selectRootElement('#Barcodemodal', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
+
 
 
   // #endregion
@@ -2283,14 +2285,191 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
+  barcodeControl = new FormControl('');
+  showBarcodeList = false;
+  barcodeList = []; // Initialize your barcode array
+  selectedBarcode: any = null;
+
+  BarCodeModal(): void {
+    this.Loading_Modal_Response_show()
+    this.repo.GetBarcodeList(this.Code).subscribe((data: any) => {
+      this.barcode_dialog_show()
+      console.log(data.Barcodes)
+
+      if (data.Barcodes) {
+        console.log("`")
+        this.barcodeList = data.Barcodes;  // Store the list of barcode objects
+
+      } else {
+        console.log("0")
+
+        this.barcodeList = [];  // Store the list of barcode objects
+
+      }
+      this.Loading_Modal_Response_close()
+    });
+  }
+
+  addBarcode(): void {
+    const newBarcodeValue = this.barcodeControl.value;
+    if (newBarcodeValue && !this.barcodeList.some(b => b.BarCode === newBarcodeValue)) {
+      const newBarcodeItem: BarcodeItem = {
+        BarCodeId: Date.now().toString(), // Generating a temporary ID
+        GoodRef: "100",
+        BarCode: newBarcodeValue
+      };
+      this.barcodeList.push(newBarcodeItem);
+      this.barcodeControl.reset();
+    }
+  }
+
+  selectBarcode(barcode: BarcodeItem): void {
+    this.barcodeControl.reset();
+    this.selectedBarcode = barcode;
+  }
+
+  removeSelectedBarcode(): void {
+    if (this.selectedBarcode) {
+      this.barcodeList = this.barcodeList.filter(b => b.BarCodeId !== this.selectedBarcode?.BarCodeId);
+      this.selectedBarcode = null;
+    }
+  }
+  onBarCodeInputChange(): void {
+    this.selectedBarcode = null
+    // Triggered on each input change to control the visibility of the "Add" button
+    // No additional code is needed here if `*ngIf="barcodeControl.value"` is used in the template.
+  }
+
+  SetBarCode() {
+
+
+    this.Loading_Modal_Response_show()
+
+
+
+    this.BarCodeToGood.patchValue({
+      GoodCode: this.Code,
+    });
+
+    (this.BarCodeToGood.get('barcode') as FormArray).clear();
+
+    // (this.BarCodeToGood.get('barcode') as FormArray).push(new FormControl(parseInt(this.selectedRows[0].StackCode, 10)));
+    // Assuming selectedRows is an array of objects with a property StackCode
+    this.barcodeList.forEach(row => {
+      (this.BarCodeToGood.get('barcode') as FormArray).push(new FormControl(row.BarCode));
+    });
+
+
+
+
+    (this.KowsarTemplate.get('Goods') as FormArray).clear();
+    (this.KowsarTemplate.get('Goods') as FormArray).push(this.BarCodeToGood);
+
+    this.JsonForm.patchValue({
+      JsonData: JSON.stringify(this.KowsarTemplate.value)
+    });
+
+    this.Loading_Modal_Response_show()
+
+
+
+    this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+      this.Loading_Modal_Response_close()
+      const result = JSON.parse(data.Goods[0].Result);
+
+      if (result.Goods && result.Goods[0].ErrMessage === "") {
+        this.changedValues = {};
+        this.selectedRows = []
+        this.barcode_dialog_close()
+      } else {
+        this.notificationService.error(result.Goods[0].ErrMessage);
+      }
+
+    });
 
 
 
 
 
 
+  }
+
+  BarCodeToGood = new FormGroup({
+    GoodIndex: new FormControl("1"),
+    GoodCode: new FormControl(""),
+    barcode: new FormArray([])
+  });
 
 
+
+  onKeyUp(event: KeyboardEvent): void {
+
+    if (this.Code == "") {
+      let query = this.EditForm_Base.value.GoodName;
+
+      // Replace spaces with '%20'
+      query = query.replace(/ /g, '%');  // Replace all spaces with '%'
+
+
+      if (query.length >= 3) {
+        this.fetchSuggestions(query);
+      } else {
+        this.simillar_good = [];
+      }
+    }
+
+
+  }
+
+
+  fetchSuggestions(query: string) {
+    // Replace the URL below with your actual API endpoint
+
+    this.repo.GetSimilarGood(query).subscribe(
+      (data: any) => {
+        this.simillar_good = data.Goods.slice(0, 5); // Limit to top 5 results
+        console.log(this.simillar_good);
+      },
+      (error) => {
+        console.error('Error fetching suggestions', error);
+      }
+    );
+
+
+
+
+
+  }
+
+  selectSuggestion(simillar_good): void {
+
+
+    this.EditForm_Base.patchValue({
+      GoodType: simillar_good.GoodType,
+      GoodName: simillar_good.GoodName,
+      Type: simillar_good.Type,
+      UsedGood: simillar_good.UsedGood,
+      MinSellPrice: simillar_good.MinSellPrice,
+      MaxSellPrice: simillar_good.MaxSellPrice,
+      BarCodePrintState: simillar_good.BarCodePrintState,
+      SellPriceType: simillar_good.SellPriceType,
+      SellPrice1: simillar_good.SellPrice1,
+      SellPrice2: simillar_good.SellPrice2,
+      SellPrice3: simillar_good.SellPrice3,
+      SellPrice4: simillar_good.SellPrice4,
+      SellPrice5: simillar_good.SellPrice5,
+      SellPrice6: simillar_good.SellPrice6,
+    });
+
+
+
+
+    this.simillar_good = []
+
+
+  }
+
+  simillar_good: any[] = [];
 
 
 }
@@ -2298,6 +2477,12 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
+
+interface BarcodeItem {
+  BarCodeId: string;
+  GoodRef: string;
+  BarCode: string;
+}
 
 
 
@@ -2323,7 +2508,6 @@ interface Stack {
   Name: string;
   children?: Stack[];
 }
-
 
 
 

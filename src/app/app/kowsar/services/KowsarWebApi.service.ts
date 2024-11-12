@@ -172,6 +172,23 @@ export class KowsarWebApiService {
 
   }
 
+  GetBarcodeList(Where: string): Observable<any[]> {
+    const params = new HttpParams().append('Where', Where)
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetBarcodeList", { headers: this.headers, params: params })
+
+  }
+
+
+  GetSimilarGood(Where: string): Observable<any[]> {
+    const params = new HttpParams().append('Where', Where)
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetSimilarGood", { headers: this.headers, params: params })
+
+  }
+
+
+
+
+
 
 
 }

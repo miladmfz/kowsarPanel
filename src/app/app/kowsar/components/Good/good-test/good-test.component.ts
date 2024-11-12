@@ -1,59 +1,71 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
-
+import { KowsarWebApiService } from '../../../services/KowsarWebApi.service';
 @Component({
   selector: 'app-good-test',
   templateUrl: './good-test.component.html',
+  styleUrls: ['./good-test.component.css']
+
 })
 export class GoodTestComponent implements OnInit {
 
-  constructor() { }
+  barcodeControl = new FormControl('');
+  barcodeList: BarcodeItem[] = [];  // Array to hold objects with BarCodeId and BarCode properties
+  selectedBarcode: BarcodeItem | null = null;
+
+  constructor(private repo: KowsarWebApiService,
+  ) { }
 
 
-  EditForm_Base = new FormGroup({
-    GoodCode: new FormControl(0),
-    GoodType: new FormControl('sss'),
-    GoodName: new FormControl('sss'),
-    Type: new FormControl(0),
-    UsedGood: new FormControl(0),
-    GoodSubCode: new FormControl(0),
-    MinSellPrice: new FormControl(0),
-    MaxSellPrice: new FormControl(0),
-    Isbn: new FormControl('sssdd'),
-    FirstBarCode: new FormControl('ddss'),
-    BarCodePrintState: new FormControl('ssd'),
-    SellPriceType: new FormControl('sds'),
-    SellPrice1: new FormControl(0),
-    SellPrice2: new FormControl(0),
-    SellPrice3: new FormControl(0),
-    SellPrice4: new FormControl(0),
-    SellPrice5: new FormControl(0),
-    SellPrice6: new FormControl(0),
-  });
-
-
-
-
-
-  KowsarTemplate = new FormGroup({
-    Goods: new FormArray([])
-  });
-
-
-
-  Add_To_KowsarTemplate() {
-    (this.KowsarTemplate.get('Goods') as FormArray).push(
-      this.EditForm_Base
-    );
-    return JSON.stringify(this.KowsarTemplate.value)
+  ngOnInit(): void {
+    this.fetchBarcodes();
   }
 
-
-
-
-  ngOnInit() {
-
-    this.Add_To_KowsarTemplate()
+  fetchBarcodes(): void {
+    this.repo.GetBarcodeList("100").subscribe((data: any) => {
+      this.barcodeList = data.Barcodes;  // Store the list of barcode objects
+    });
   }
 
+  addBarcode(): void {
+    const newBarcodeValue = this.barcodeControl.value;
+    if (newBarcodeValue && !this.barcodeList.some(b => b.BarCode === newBarcodeValue)) {
+      const newBarcodeItem: BarcodeItem = {
+        BarCodeId: Date.now().toString(), // Generating a temporary ID
+        GoodRef: "100",
+        BarCode: newBarcodeValue
+      };
+      this.barcodeList.push(newBarcodeItem);
+      this.barcodeControl.reset();
+    }
+  }
+
+  selectBarcode(barcode: BarcodeItem): void {
+    this.barcodeControl.reset();
+    this.selectedBarcode = barcode;
+  }
+
+  removeSelectedBarcode(): void {
+    if (this.selectedBarcode) {
+      this.barcodeList = this.barcodeList.filter(b => b.BarCodeId !== this.selectedBarcode?.BarCodeId);
+      this.selectedBarcode = null;
+    }
+  }
+  onInputChange(): void {
+    this.selectedBarcode = null
+    // Triggered on each input change to control the visibility of the "Add" button
+    // No additional code is needed here if `*ngIf="barcodeControl.value"` is used in the template.
+  }
 }
+
+
+
+
+interface BarcodeItem {
+  BarCodeId: string;
+  GoodRef: string;
+  BarCode: string;
+}
+
+
+

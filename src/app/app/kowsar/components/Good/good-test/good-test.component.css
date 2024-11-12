@@ -1,0 +1,17 @@
+.barcode-input-container {
+    display: flex;
+
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    cursor: pointer;
+}
+
+li.selected {
+    background-color: #f0f0f0;
+}

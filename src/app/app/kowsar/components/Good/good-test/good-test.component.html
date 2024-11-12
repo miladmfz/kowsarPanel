@@ -1,3 +1,34 @@
-<p>
-  good-test works!
-</p>
+<div class="card mt-3">
+  <div class="card-body row justify-content-center">
+
+    <!-- Barcode Input and List Section -->
+    <div class="col-md-6 border border-info p-3 rounded">
+
+      <!-- Input and Action Buttons -->
+      <div class="form-group d-flex align-items-center">
+        <input class="form-control mr-2" [formControl]="barcodeControl" placeholder="Enter barcode"
+          (input)="onInputChange()" />
+
+        <!-- Add Button: Visible only when the input field has a value -->
+        <button *ngIf="barcodeControl.value" class="btn btn-success btn-sm mr-2" (click)="addBarcode()">
+          <img src="/assets/images/check-icon-white.png" alt="Add" width="20" />
+        </button>
+
+        <!-- Delete Button: Visible only when a barcode is selected -->
+        <button *ngIf="selectedBarcode" class="btn btn-danger btn-sm" (click)="removeSelectedBarcode()">
+          <img src="/assets/images/cross-icon-white.png" alt="Delete" width="20" />
+        </button>
+      </div>
+
+      <!-- Barcode List -->
+      <ul class="list-group mt-3">
+        <li *ngFor="let barcode of barcodeList" class="list-group-item list-group-item-action"
+          [class.active]="barcode === selectedBarcode" (click)="selectBarcode(barcode)">
+          {{ barcode.BarCode }}
+        </li>
+      </ul>
+
+    </div>
+
+  </div>
+</div>

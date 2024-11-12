@@ -141,12 +141,13 @@
 
 
 
+
                 <div class="form-group col-md-12">
                   <label for="GoodName" class="col-form-label">نام کالا </label>
                   <span class="text-danger">*</span>
 
                   <input type="text" class="form-control" id="GoodName" formControlName="GoodName" maxlength="400"
-                    autocomplete="off" [ngClass]="{
+                    autocomplete="off" (keyup)="onKeyUp($event)" [ngClass]="{
                       'is-invalid':
                       EditForm_Base.controls['GoodName'].invalid &&
                       EditForm_Base.controls['GoodName'].touched,
@@ -158,7 +159,21 @@
                                               validation: 'required',
                                               message: 'اجباری است',
                                               control: EditForm_Base.controls['GoodName']
-                                            }"></ng-container>
+                                            }">
+                  </ng-container>
+
+                  <ul *ngIf="simillar_good.length > 0">
+                    <li *ngFor="let single_object of simillar_good" (click)="selectSuggestion(single_object)">
+                      <span [ngStyle]="{'margin-right': '10px'}">{{' نوع: '+ single_object.GoodType }}</span>
+                      <span [ngStyle]="{'margin-right': '10px'}">
+                        {{ single_object.GoodName.length > 20 ? (single_object.GoodName | slice:0:30) + '...' :
+                        single_object.GoodName }}
+                      </span>
+                      <span [ngStyle]="{'margin-right': '10px'}">{{ ' فی خالص: '+single_object.MinSellPrice }}</span>
+                      <span>{{ ' فی ناخالص: '+single_object.MaxSellPrice }}</span>
+                    </li>
+                  </ul>
+
                 </div>
 
 
@@ -166,22 +181,27 @@
 
 
                   <div class="form-group col-md-3">
-                    <label for="Isbn" class="col-form-label">شایک </label>
+                    <label for="Isbn" class="col-form-label">شابک </label>
                     <input type="text" class="form-control" id="Isbn" formControlName="Isbn" maxlength="100"
                       autocomplete="off" />
                   </div>
 
 
                   <div class="form-group col-md-3">
-                    <label for="FirstBarCode" class="col-form-label"> بارکداز شایک </label>
+
+                    <button class=" form-control btn btn-link " (click)="SetBarcodeFromIsbn()"> بارکداز شابک</button>
                     <input type="text" class="form-control" id="FirstBarCode" formControlName="FirstBarCode"
-                      maxlength="100" autocomplete="off" />
+                      maxlength="100" autocomplete="off" readonly (click)="BarCodeModal()" />
                   </div>
+
+
 
 
                   <div class="form-group col-md-3">
 
                   </div>
+
+
 
 
                   <div class="form-group col-md-3">
@@ -1616,6 +1636,67 @@
         </div>
       </div>
     </div>
+
+
+
+
+    <div class="modal fade" id="Barcodemodal" tabindex="-1" aria-labelledby="BarcodemodalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="background-color: #d1dce7;">
+          <div class="modal-header" style="background-color: #949494;">
+            <h5 class="modal-title" id="BarcodemodalLabel">لیست بارکد ها</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+              (click)="barcode_dialog_close()"></button>
+          </div>
+          <div class="modal-body">
+            <div class="card mt-3">
+              <div class="card-body row justify-content-center">
+
+                <!-- Barcode Input and List Section -->
+                <div class="col-md-6 border border-info p-3 rounded">
+
+                  <!-- Input and Action Buttons -->
+                  <div class="form-group d-flex align-items-center">
+                    <input class="form-control mr-2" [formControl]="barcodeControl" placeholder="بارکد جدید"
+                      (input)="onBarCodeInputChange()" />
+
+                    <!-- Add Button: Visible only when the input field has a value -->
+                    <button *ngIf="barcodeControl.value" class="btn btn-success btn-sm mr-2" (click)="addBarcode()">
+                      <img src="/assets/images/check-icon-white.png" alt="Add" width="20" />
+                    </button>
+
+                    <!-- Delete Button: Visible only when a barcode is selected -->
+                    <button *ngIf="selectedBarcode" class="btn btn-danger btn-sm" (click)="removeSelectedBarcode()">
+                      <img src="/assets/images/cross-icon-white.png" alt="Delete" width="20" />
+                    </button>
+                  </div>
+
+                  <!-- Barcode List -->
+                  <ul class="list-group mt-3">
+                    <li *ngFor="let barcode of barcodeList" class="list-group-item list-group-item-action"
+                      [class.active]="barcode === selectedBarcode" (click)="selectBarcode(barcode)">
+                      {{ barcode.BarCode }}
+                    </li>
+                  </ul>
+
+                </div>
+
+              </div>
+            </div>
+
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+              (click)="barcode_dialog_close()">بستن</button>
+            <button type="button" class="btn btn-primary" (click)="SetBarCode()">ثبت</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
 
 
 
