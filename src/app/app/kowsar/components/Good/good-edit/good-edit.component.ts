@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, Renderer2, HostListener } from '@angular/core';
 import { KowsarWebApiService } from '../../../services/KowsarWebApi.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -2441,6 +2441,15 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   }
 
+
+
+
+  GotoSuggestion(simillar_good): void {
+
+    this.router.navigate(['kowsar/good-edit', simillar_good.GoodCode]);
+
+  }
+
   selectSuggestion(simillar_good): void {
 
 
@@ -2470,6 +2479,13 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
   simillar_good: any[] = [];
+  @HostListener('document:keydown.delete', ['$event'])
+  handleDeleteKey(event: KeyboardEvent) {
+
+    if (this.selectedBarcode) {
+      this.removeSelectedBarcode();
+    }
+  }
 
 
 }
@@ -2508,6 +2524,11 @@ interface Stack {
   Name: string;
   children?: Stack[];
 }
+
+
+
+
+
 
 
 

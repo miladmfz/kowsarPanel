@@ -162,17 +162,35 @@
                                             }">
                   </ng-container>
 
-                  <ul *ngIf="simillar_good.length > 0">
-                    <li *ngFor="let single_object of simillar_good" (click)="selectSuggestion(single_object)">
-                      <span [ngStyle]="{'margin-right': '10px'}">{{' نوع: '+ single_object.GoodType }}</span>
-                      <span [ngStyle]="{'margin-right': '10px'}">
-                        {{ single_object.GoodName.length > 20 ? (single_object.GoodName | slice:0:30) + '...' :
-                        single_object.GoodName }}
-                      </span>
-                      <span [ngStyle]="{'margin-right': '10px'}">{{ ' فی خالص: '+single_object.MinSellPrice }}</span>
-                      <span>{{ ' فی ناخالص: '+single_object.MaxSellPrice }}</span>
-                    </li>
-                  </ul>
+                  <table *ngIf="simillar_good.length > 0" class="table table-bordered table-hover">
+                    <thead class="table-light">
+                      <tr>
+                        <th>نوع</th>
+                        <th>نام</th>
+                        <th>فی خالص</th>
+                        <th>فی ناخالص</th>
+                        <th>عملیات</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let single_object of simillar_good">
+                        <td>{{ single_object.GoodType }}</td>
+                        <td>
+                          {{ single_object.GoodName.length > 20 ? (single_object.GoodName | slice:0:30) + '...' :
+                          single_object.GoodName }}
+                        </td>
+                        <td>{{ single_object.MinSellPrice }}</td>
+                        <td>{{ single_object.MaxSellPrice }}</td>
+                        <td>
+                          <button class="btn btn-primary btn-sm"
+                            (click)="selectSuggestion(single_object)">انتخاب</button>
+                          <button class="btn btn-secondary btn-sm"
+                            (click)="GotoSuggestion(single_object)">بازخوانی</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
 
                 </div>
 
@@ -189,9 +207,20 @@
 
                   <div class="form-group col-md-3">
 
+
                     <button class=" form-control btn btn-link " (click)="SetBarcodeFromIsbn()"> بارکداز شابک</button>
-                    <input type="text" class="form-control" id="FirstBarCode" formControlName="FirstBarCode"
-                      maxlength="100" autocomplete="off" readonly (click)="BarCodeModal()" />
+
+
+                    <ng-container *ngIf="Code.length>0">
+                      <input type="text" class="form-control" id="FirstBarCode" formControlName="FirstBarCode"
+                        maxlength="100" autocomplete="off" readonly (click)="BarCodeModal()" />
+                    </ng-container>
+
+                    <ng-container *ngIf="Code.length==0">
+                      <input type="text" class="form-control" id="FirstBarCode" formControlName="FirstBarCode"
+                        maxlength="100" autocomplete="off" />
+                    </ng-container>
+
                   </div>
 
 
@@ -1649,6 +1678,37 @@
               (click)="barcode_dialog_close()"></button>
           </div>
           <div class="modal-body">
+            <!-- <div class="card mt-3">
+              <div class="card-body row justify-content-center">
+
+                <div class="col-md-6 border border-info p-3 rounded">
+
+                  <div class="form-group d-flex align-items-center">
+                    <input class="form-control mr-2" [formControl]="barcodeControl" placeholder="بارکد جدید"
+                      (input)="onBarCodeInputChange()" />
+
+                    <button *ngIf="barcodeControl.value" class="btn btn-success btn-sm mr-2" (click)="addBarcode()">
+                      <img src="/assets/images/check-icon-white.png" alt="Add" width="20" />
+                    </button>
+
+                    <button *ngIf="selectedBarcode" class="btn btn-danger btn-sm" (click)="removeSelectedBarcode()">
+                      <img src="/assets/images/cross-icon-white.png" alt="Delete" width="20" />
+                    </button>
+                  </div>
+
+                  <ul class="list-group mt-3">
+                    <li *ngFor="let barcode of barcodeList" class="list-group-item list-group-item-action"
+                      [class.active]="barcode === selectedBarcode" (click)="selectBarcode(barcode)">
+                      {{ barcode.BarCode }}
+                    </li>
+                  </ul>
+
+                </div>
+
+              </div>
+            </div> -->
+
+
             <div class="card mt-3">
               <div class="card-body row justify-content-center">
 
@@ -1658,7 +1718,7 @@
                   <!-- Input and Action Buttons -->
                   <div class="form-group d-flex align-items-center">
                     <input class="form-control mr-2" [formControl]="barcodeControl" placeholder="بارکد جدید"
-                      (input)="onBarCodeInputChange()" />
+                      (input)="onBarCodeInputChange()" (keyup.enter)="barcodeControl.value && addBarcode()" />
 
                     <!-- Add Button: Visible only when the input field has a value -->
                     <button *ngIf="barcodeControl.value" class="btn btn-success btn-sm mr-2" (click)="addBarcode()">
@@ -1683,6 +1743,7 @@
 
               </div>
             </div>
+
 
 
           </div>

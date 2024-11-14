@@ -26,10 +26,11 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
   modules: Module[] = AllModules;
   public defaultColDef;
   public defaultColDef1;
+  CellClickedEven
 
   public columnDefs: any[];
   public columnDefs1: any[];
-  CellClickedEven
+
   public columnDefs2: any[];
 
   public columnDefs3: any[];
