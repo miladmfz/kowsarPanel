@@ -41,7 +41,7 @@ export class CellActionApplicationList implements ICellRendererAngularComp {
     }
 
     if (params.data.AppBrokerCustomerCode) {
-      this.id = params.data.AppBrokerCustomerCode;
+      this.id = params.data.ActivationCode;
     }
   }
 

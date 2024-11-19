@@ -12,6 +12,7 @@ import { CellActionGoodEditImage } from './cell-action-good-edit-image';
 import { Observable, tap } from 'rxjs';
 import { CellActionGoodImageBtn } from './cell-action-good-edit-image-btn';
 import { CellActionGoodGroupBtn } from './cell-action-good-edit-group-btn';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-good-edit',
@@ -1123,9 +1124,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   }
 
-  SetBarcodeFromIsbn() {
-    console.log("SetBarcodeFromIsbn")
-  }
 
   GetLastGoodData() {
     this.repo.GetLastGoodData().subscribe((data: any) => {
@@ -1947,7 +1945,8 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
           if (result.Goods && result.Goods[0].ErrMessage === "") {
             this.Code = result.Goods[0].GoodCode;
             this.notificationService.succeded();
-            this.router.navigate(['/kowsar/good-edit', result.Goods[0].GoodCode]);
+            this.getDetails()
+            // this.router.navigate(['/kowsar/good-edit', result.Goods[0].GoodCode]);
           } else {
             this.notificationService.error(result.Goods[0].ErrMessage);
           }
@@ -2486,6 +2485,125 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       this.removeSelectedBarcode();
     }
   }
+
+
+
+  IsbnToBarcode_frm = new FormGroup({
+    ErrMessage: new FormControl(""),
+    StandardMsg: new FormControl(""),
+    StandardMsg2: new FormControl(""),
+    ISBN: new FormControl(""),
+    DuplicateMsg: new FormControl(""),
+    ISBN2: new FormControl(""),
+    DuplicateMsg2: new FormControl(""),
+  });
+
+
+  SetBarcodeFromIsbn() {
+    if (this.Code.length > 0) {
+      this.IsbnToBarcode()
+    }
+  }
+
+
+  IsbnToBarcode() {
+
+    this.repo.IsbnToBarcode(this.EditForm_Base.value.Isbn, this.Code).subscribe((data: any) => {
+      console.log(data)
+
+      this.IsbnToBarcode_frm.patchValue({
+        ErrMessage: data.Goods[0].ErrMessage,
+        StandardMsg: data.Goods[0].StandardMsg,
+        StandardMsg2: data.Goods[0].StandardMsg2,
+        ISBN: data.Goods[0].ISBN,
+        DuplicateMsg: data.Goods[0].DuplicateMsg,
+        ISBN2: data.Goods[0].ISBN2,
+        DuplicateMsg2: data.Goods[0].DuplicateMsg2,
+      });
+
+
+      if (data.Goods[0].ErrMessage.length > 0) {
+        this.notificationService.error1(data.Goods[0].ErrMessage)
+      } else {
+        if (data.Goods[0].StandardMsg.length > 0) {
+
+          this.check_dialog_QA("بارکد از شابک", data.Goods[0].StandardMsg).then((result) => {
+            if (result.isConfirmed) {
+
+              this.EditForm_Base.patchValue({
+                GoodCode: parseInt(this.Code),
+                FirstBarCode: data.Goods[0].ISBN,
+              });
+              //TODO send addnew
+              this.submit('base')
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+              this.notificationService.warning('اطلاعات تغییری نکرد');
+            }
+          });
+        }
+        if (data.Goods[0].StandardMsg2.length > 0) {
+          this.check_dialog_QA("بارکد از شابک", data.Goods[0].StandardMsg2).then((result) => {
+            if (result.isConfirmed) {
+
+              this.check_dialog_QA("بارکد از شابک", data.Goods[0].DuplicateMsg).then((result) => {
+                if (result.isConfirmed) {
+
+                  this.EditForm_Base.patchValue({
+                    GoodCode: parseInt(this.Code),
+                    FirstBarCode: data.Goods[0].ISBN,
+                  });
+                  //TODO send addnew
+                  this.submit('base')
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                  this.notificationService.warning('اطلاعات تغییری نکرد');
+                }
+              });
+
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+              this.check_dialog_QA("بارکد از شابک", data.Goods[0].DuplicateMsg2).then((result) => {
+                if (result.isConfirmed) {
+
+                  this.EditForm_Base.patchValue({
+                    GoodCode: parseInt(this.Code),
+                    FirstBarCode: data.Goods[0].ISBN2,
+                  });
+                  //TODO send addnew
+                  this.submit('base')
+
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                  this.notificationService.warning('اطلاعات تغییری نکرد');
+                }
+              });
+
+            }
+          });
+        }
+      }
+
+    });
+  }
+
+
+
+  check_dialog_QA(title, body) {
+    return Swal.fire({
+      title: title,
+      text: body,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'بله',
+      cancelButtonText: 'خیر',
+      customClass: {
+        confirmButton: 'btn btn-success mx-2',
+
+        cancelButton: 'btn btn-danger',
+      },
+      buttonsStyling: false,
+    });
+  }
+
+
 
 
 }

@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { CellActionApplicationList } from './cell_action_application_list';
 import { ValidateionStateCellManageApplicationRenderer } from './validation-state-label-cell-manage-application';
-import { AddressCellManageApplicationRenderer } from './address-label-cell-manage-application copy';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
 
@@ -57,19 +56,32 @@ export class ApplicationListComponent
         minWidth: 150
       },
       {
+        field: 'ServerIp',
+        headerName: 'آدرس',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      }, {
+        field: 'ServerPort',
+        headerName: 'پورت',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      }, {
+        field: 'ServerPathApi',
+        headerName: 'نام پوشه',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
         field: 'AppType',
         cellRenderer: ValidateionStateCellManageApplicationRenderer,
         headerName: 'نوع نرم افزار',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
       },
-      {
-        field: 'ServerURL',
-        cellRenderer: AddressCellManageApplicationRenderer,
-        headerName: 'آدرس',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-      },
+
 
 
     ];

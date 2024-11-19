@@ -187,7 +187,10 @@ export class KowsarWebApiService {
 
 
 
+  IsbnToBarcode(Isbn: string, GoodCode: string): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "IsbnToBarcode", { Isbn, GoodCode }, { headers: this.headers })
 
+  }
 
 
 

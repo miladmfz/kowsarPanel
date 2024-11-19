@@ -4,28 +4,13 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
+import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 @Component({
   selector: 'app-application-form',
   templateUrl: './application-form.component.html',
 })
 
 export class ApplicationFormComponent implements OnInit {
-  title = 'ایجاد نوع داده انتخابی';
-  Code: string = '';
-  SingleItems: any[] = [];
-  EditForm = new FormGroup({
-    AppBrokerCustomerCode: new FormControl(''),
-    ActivationCode: new FormControl(''),
-    AppType: new FormControl(''),
-    DbImageName: new FormControl(''),
-    DbName: new FormControl(''),
-    EnglishCompanyName: new FormControl(''),
-    PersianCompanyName: new FormControl(''),
-    MaxDevice: new FormControl(''),
-    SQLiteURL: new FormControl(''),
-    SecendServerURL: new FormControl(''),
-    ServerURL: new FormControl(''),
-  });
 
 
   constructor(
@@ -36,13 +21,48 @@ export class ApplicationFormComponent implements OnInit {
     private location: Location,
   ) { }
 
+  title = 'ایجاد نوع داده انتخابی';
+  ActivationCode: string = '';
+  SingleItems: any[] = [];
+
+
+
+  EditForm = new FormGroup({
+    ActivationCode: new FormControl(''),
+    EnglishCompanyName: new FormControl(''),
+    PersianCompanyName: new FormControl(''),
+    ServerURL: new FormControl(''),
+    SQLiteURL: new FormControl('D:\\\\KowsarAcc\\\\WebApiLocation\\\\database\\\\111111\\\\KowsarDb_new.sqlite'),
+    UsedDevice: new FormControl('0'),
+    MaxDevice: new FormControl('1'),
+    SecendServerURL: new FormControl(''),
+    DbName: new FormControl(''),
+    DbImageName: new FormControl(''),
+    AppType: new FormControl('1'),
+    ServerIp: new FormControl(''),
+    ServerPort: new FormControl('60005'),
+    ServerPathApi: new FormControl('login'),
+  });
+
+
+
+
+  Type_Lookup: Base_Lookup[] = [
+    { id: "0", name: "فروش اینترنتی" },
+    { id: "1", name: "بازاریاب" },
+    { id: "2", name: "جمع آوری و توضیع" },
+    { id: "3", name: "سفارشگیر" },
+  ]
+
+
+
 
   ngOnInit() {
-    //debugger
+
     this.route.paramMap.subscribe((params: ParamMap) => {
       var id = params.get('id');
       if (id != null) {
-        this.Code = id;
+        this.ActivationCode = id;
         this.getDetails();
       }
     });
@@ -52,133 +72,50 @@ export class ApplicationFormComponent implements OnInit {
   getDetails() {
 
 
-    this.repo.GetAppBrokerCustomerByCode(this.Code).subscribe(e => {
+    this.repo.GetAppBrokerCustomerByCode(this.ActivationCode).subscribe((data: any) => {
 
-
-      this.SingleItems = e;
-      this.LoadDataSet();
+      this.EditForm.patchValue({
+        ActivationCode: data[0].ActivationCode,
+        EnglishCompanyName: data[0].EnglishCompanyName,
+        PersianCompanyName: data[0].PersianCompanyName,
+        ServerURL: data[0].ServerURL,
+        SQLiteURL: data[0].SQLiteURL,
+        UsedDevice: data[0].UsedDevice,
+        MaxDevice: data[0].MaxDevice,
+        SecendServerURL: data[0].SecendServerURL,
+        DbName: data[0].DbName,
+        DbImageName: data[0].DbImageName,
+        AppType: data[0].AppType,
+        ServerIp: data[0].ServerIp,
+        ServerPort: data[0].ServerPort,
+        ServerPathApi: data[0].ServerPathApi,
+      });
     });
 
 
   }
-
-
-  LoadDataSet() {
-    this.EditForm.patchValue({
-      AppBrokerCustomerCode: this.SingleItems[0].AppBrokerCustomerCode,
-      ActivationCode: this.SingleItems[0].ActivationCode,
-      EnglishCompanyName: this.SingleItems[0].EnglishCompanyName,
-      PersianCompanyName: this.SingleItems[0].PersianCompanyName,
-      ServerURL: this.SingleItems[0].ServerURL,
-      SQLiteURL: this.SingleItems[0].SQLiteURL,
-      MaxDevice: this.SingleItems[0].MaxDevice,
-      SecendServerURL: this.SingleItems[0].SecendServerURL,
-      DbName: this.SingleItems[0].DbName,
-      AppType: this.SingleItems[0].AppType,
-    });
-
-  }
-
 
 
 
   onBtnCancelClick() {
-    this.router.navigateByUrl('incident/incident/list');
+    this.router.navigateByUrl('manager/list');
   }
-
-
-
 
 
 
   submit(action) {
 
-    const command = this.EditForm.value;
-    if (action == 'delete') {
-      // this.incidentService.delete(command.id).subscribe((id) => {
-      //   this.handleCreateEditOps(action, id);
-      // });
-    }
+    this.repo.CrudAppBrokerCustomer(this.EditForm.value).subscribe((data: any) => {
 
-    if (this.Code != "0") {
+      if (data[0].ActivationCode.length > 0) {
+        this.ActivationCode = data[0].ActivationCode;
+        this.getDetails();
+      }
 
-
-      this.repo.UpdateAppBrokerCustomer(
-        this.EditForm.value.ActivationCode,
-        this.EditForm.value.EnglishCompanyName,
-        this.EditForm.value.PersianCompanyName,
-        this.EditForm.value.ServerURL,
-        this.EditForm.value.SQLiteURL,
-        this.EditForm.value.MaxDevice,
-        this.EditForm.value.SecendServerURL,
-        this.EditForm.value.DbName,
-        this.EditForm.value.AppType
-
-      ).subscribe(e => {
-
-
-        if (e[0].AppBrokerCustomerCode.length > 0) {
-
-          if (action == 'exit') {
-            this.location.back();
-          } else if (action == 'new') {
-            window.location.reload();
-          }
-        }
-
-      });
-
-
-
-    } else {
-
-      this.repo.InsertAppBrokerCustomer(
-        this.EditForm.value.ActivationCode,
-        this.EditForm.value.EnglishCompanyName,
-        this.EditForm.value.PersianCompanyName,
-        this.EditForm.value.ServerURL,
-        this.EditForm.value.SQLiteURL,
-        this.EditForm.value.MaxDevice,
-        this.EditForm.value.SecendServerURL,
-        this.EditForm.value.DbName,
-        this.EditForm.value.AppType
-
-      ).subscribe(e => {
-
-
-        if (e[0].AppBrokerCustomerCode.length > 0) {
-
-          if (action == 'exit') {
-            this.location.back();
-          } else if (action == 'new') {
-            window.location.reload();
-          }
-        }
-
-
-      });
-
-
-
-
-    }
-
+    });
   }
 
-  handleCreateEditOps(action, id) {
 
-    this.EditForm.reset();
-    //this.title = 'ایجاد کاربر جدید';
-    this.Code = '';
-    document.getElementById('ActivationCode').focus();
-    //} else if (action == 'exit') {
-    //   
-    //} else {
-    //  this.title = 'ویرایش کاربر';
-    //   
-    //}
-
-  }
 }
 
 

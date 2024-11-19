@@ -211,15 +211,10 @@
                     <button class=" form-control btn btn-link " (click)="SetBarcodeFromIsbn()"> بارکداز شابک</button>
 
 
-                    <ng-container *ngIf="Code.length>0">
-                      <input type="text" class="form-control" id="FirstBarCode" formControlName="FirstBarCode"
-                        maxlength="100" autocomplete="off" readonly (click)="BarCodeModal()" />
-                    </ng-container>
 
-                    <ng-container *ngIf="Code.length==0">
-                      <input type="text" class="form-control" id="FirstBarCode" formControlName="FirstBarCode"
-                        maxlength="100" autocomplete="off" />
-                    </ng-container>
+                    <input type="text" class="form-control" id="FirstBarCode" formControlName="FirstBarCode"
+                      maxlength="100" autocomplete="off" [readonly]="Code.length > 0"
+                      (click)="Code.length > 0 ? BarCodeModal() : null" />
 
                   </div>
 

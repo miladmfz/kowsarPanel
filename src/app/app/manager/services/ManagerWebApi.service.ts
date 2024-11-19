@@ -30,40 +30,16 @@ export class ManagerWebApiService {
   }
 
 
-  GetAppBrokerCustomerByCode(AppBrokerCustomerCode: string): Observable<any[]> {
-    const params = new HttpParams().append('AppBrokerCustomerCode', AppBrokerCustomerCode)
+  GetAppBrokerCustomerByCode(ActivationCode: string): Observable<any[]> {
+    const params = new HttpParams().append('ActivationCode', ActivationCode)
     return this.client.get<any[]>(this.baseUrl + "GetAppBrokerCustomerByCode", { headers: this.headers, params: params })
   }
 
-  InsertAppBrokerCustomer(
-    ActivationCode: string,
-    EnglishCompanyName: string,
-    PersianCompanyName: string,
-    ServerURL: string,
-    SQLiteURL: string,
-    MaxDevice: string,
-    SecendServerURL: string,
-    DbName: string,
-    AppType: string
-  ): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "InsertAppBrokerCustomer", { ActivationCode, EnglishCompanyName, PersianCompanyName, ServerURL, SQLiteURL, MaxDevice, SecendServerURL, DbName, AppType }, { headers: this.headers })
-
-  }
 
 
-  UpdateAppBrokerCustomer(
-    ActivationCode: string,
-    EnglishCompanyName: string,
-    PersianCompanyName: string,
-    ServerURL: string,
-    SQLiteURL: string,
-    MaxDevice: string,
-    SecendServerURL: string,
-    DbName: string,
-    AppType: string
-  ): Observable<any[]> {
+  CrudAppBrokerCustomer(command): Observable<any[]> {
 
-    return this.client.post<any[]>(this.baseUrl + "UpdateAppBrokerCustomer", { ActivationCode, EnglishCompanyName, PersianCompanyName, ServerURL, SQLiteURL, MaxDevice, SecendServerURL, DbName, AppType }, { headers: this.headers })
+    return this.client.post<any[]>(this.baseUrl + "CrudAppBrokerCustomer", command, { headers: this.headers })
   }
 
   CheckPort(

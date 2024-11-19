@@ -36,6 +36,16 @@ export class NotificationService {
             "error"
         );
     }
+    error1(message: string, title = "خطا") {
+
+        $.NotificationApp.send(
+            title,
+            message,
+            "top-right",
+            "#bf441d",
+            "error"
+        );
+    }
 
     warning(message: string, title = "خطا") {
         $.NotificationApp.send(
