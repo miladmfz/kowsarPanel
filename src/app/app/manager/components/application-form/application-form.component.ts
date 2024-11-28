@@ -105,11 +105,14 @@ export class ApplicationFormComponent implements OnInit {
 
   submit(action) {
 
+
     this.repo.CrudAppBrokerCustomer(this.EditForm.value).subscribe((data: any) => {
 
       if (data[0].ActivationCode.length > 0) {
         this.ActivationCode = data[0].ActivationCode;
         this.getDetails();
+
+        this.notificationService.succeded()
       }
 
     });
