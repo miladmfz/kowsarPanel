@@ -184,7 +184,7 @@ export class CustomerListComponent extends AgGridBaseComponent
         minWidth: 150
       },
       {
-        field: 'LockNumber',
+        field: 'Delegacy',
         headerName: 'تعداد قفل',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
