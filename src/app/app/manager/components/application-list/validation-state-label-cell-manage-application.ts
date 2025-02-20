@@ -17,6 +17,9 @@ declare var $: any;
     <span *ngIf="state == '3'">
         <span class="text-primary" style="padding: 3px">Order</span>
     </span>
+    <span *ngIf="state == '4'">
+        <span class="text-primary" style="padding: 3px">Search</span>
+    </span>
     `,
 })
 export class ValidateionStateCellManageApplicationRenderer implements ICellRendererAngularComp {

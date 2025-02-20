@@ -33,6 +33,14 @@ import { OrderGoodComponent } from './components/Order/order-good/order-good.com
 import { OrderCellActionGoodList } from './components/Order/order-good/order-cell-action-good-ist';
 import { OrderGoodEditComponent } from './components/Order/order-good-edit/order-good-edit.component';
 import { CellActionOcrList } from './components/Ocr/ocr-list/cell-action-ocr-list';
+import { D3OrgChartComponent } from 'src/app/app-shell/framework-components/d3-org-chart/d3-org-chart.component';
+import { MintOnAreaChartComponent } from 'src/app/app-shell/framework-components/minton-area-chart/minton-area-chart.component';
+import { MintOnBarChartComponent } from 'src/app/app-shell/framework-components/minton-bar-chart/minton-bar-chart.component';
+import { MintOnDonutChartComponent } from 'src/app/app-shell/framework-components/minton-donut-chart/minton-donut-chart.component';
+import { MintOnPieChartComponent } from 'src/app/app-shell/framework-components/minton-pie-chart/minton-pie-chart.component';
+import { MintOnLineChartComponent } from 'src/app/app-shell/framework-components/minton-line-chart/minton-line-chart.component';
+import { OcrReportListComponent } from './components/Ocr/ocr-report-list/ocr-report-list.component';
+import { OcrReportChartComponent } from './components/Ocr/ocr-report-chart/ocr-report-chart.component';
 
 @NgModule({
   imports: [
@@ -44,7 +52,6 @@ import { CellActionOcrList } from './components/Ocr/ocr-list/cell-action-ocr-lis
     AgGridModule,
     ApplicationRoutingModule,
     NgPersianDatepickerModule,
-
   ],
   declarations: [
     ApplicationComponent,
@@ -67,6 +74,8 @@ import { CellActionOcrList } from './components/Ocr/ocr-list/cell-action-ocr-lis
     OcrColumnEditComponent,
     OcrListComponent,
     OcrFactorDetailComponent,
+    OcrReportListComponent,
+    OcrReportChartComponent,
     CellActionOcrList,
 
     OrderSettingComponent,
@@ -78,6 +87,8 @@ import { CellActionOcrList } from './components/Ocr/ocr-list/cell-action-ocr-lis
     OrderGoodComponent,
     OrderGoodEditComponent,
     OrderCellActionGoodList,
+
+
 
 
   ]

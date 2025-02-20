@@ -66,7 +66,9 @@ export class FactorListComponent extends AgGridBaseComponent
   });
 
 
+  submit(action) {
 
+  }
 
   onInputChange() {
     if (this.Searchtarget == "") {
@@ -172,9 +174,6 @@ export class FactorListComponent extends AgGridBaseComponent
   getList() {
 
     this.EditForm_factor.patchValue({
-      StartDateTarget: this.start_dateValue.value,
-      EndDateTarget: this.End_dateValue.value,
-      SearchTarget: this.Searchtarget,
       BrokerRef: this.BrokerRef,
       isShopFactor: "0",
     });
@@ -243,7 +242,6 @@ export class FactorListComponent extends AgGridBaseComponent
     this.renderer.removeAttribute(modal, 'aria-modal');
     this.renderer.removeAttribute(modal, 'role');
   }
-
   navigateToEdit(id) {
     this.router.navigate(['/factor/factor-edit', id]);
   }

@@ -1,0 +1,269 @@
+<div class="card">
+  <div class="card-header">
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item">
+        <a class="nav-link  " data-bs-toggle="pill" [routerLink]="['/application/ocr-detail']">پنل توزیع و
+          بایگانی</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link  " data-bs-toggle="pill" [routerLink]="['/application/ocr-report-chart']">گزارشات نموداری</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link  active" data-bs-toggle="pill" [routerLink]="['/application/ocr-report-list']">گزارشات
+          لیستی</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="pill" [routerLink]="['/application/ocr-list']">لیست توزیع و بایگانی</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/ocr-setting']">تنظیمات توزیع و
+          بایگانی</a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body">
+    <div class="tab-content">
+
+      <div class="tab-pane fade show active" role="tabpanel">
+
+
+
+
+        <div class="card">
+          <div class="card-body">
+            <div class="row mb-2">
+              <div class="col-sm-12">
+
+
+                <form [formGroup]="GetOcrPanel_frm" id="submitForm">
+                  <div class="row col-md-12">
+
+
+                    <!-- <div class="form-group col-md-9">
+                      <label for="Searchtarget" class="col-form-label">جستجو </label>
+                      <input type="text" placeholder="جستجو..." class="form-control" id="Searchtarget"
+                        formControlName="Searchtarget" maxlength="100" autocomplete="off"
+                        (ngModelChange)="onInputChange()" />
+                    </div>
+
+
+                    <div class="form-group col-md-3">
+                      <label for="SourceFlag" class="col-form-label">دیتابیس مورد نظر </label>
+                      <select formControlName="SourceFlag" id="SourceFlag" class="form-control custom-select"
+                        data-toggle="select2" (ngModelChange)="onInputChange()">
+                        <option [value]="item.id" *ngFor="let item of SourceFlag_lookup">{{
+                          item.name }}</option>
+                      </select>
+
+                    </div> -->
+
+
+                    <div class="form-group col-md-3">
+                      <label for="datePicker" class="col-form-label">از تاریخ</label>
+                      <div>
+                        <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
+                          [uiHideAfterSelectDate]="true">
+                          <input class="form-control" id="datePicker" type="text" [formControl]="start_dateValue" />
+                        </ng-persian-datepicker>
+                      </div>
+
+                    </div>
+
+                    <div class="form-group col-md-3">
+                      <label for="datePicker" class="col-form-label">تا تاریخ</label>
+                      <div>
+                        <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
+                          [uiHideAfterSelectDate]="true">
+                          <input class="form-control" id="datePicker" type="text" [formControl]="End_dateValue" />
+                        </ng-persian-datepicker>
+                      </div>
+
+                    </div>
+
+                    <div class="form-group col-md-3">
+                      <label for="State" class="col-form-label">دیتابیس مورد نظر </label>
+                      <select formControlName="State" id="State" class="form-control custom-select"
+                        data-toggle="select2" (ngModelChange)="onInputChange()">
+                        <option [value]="item.id" *ngFor="let item of ReportType_lookup">{{
+                          item.name }}</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <div class="btn-group">
+                        <!-- *hasPermission="['Public']" -->
+                        <button type="button" class="btn btn-light waves-effect waves-light m-1 dropdown-toggle"
+                          id="exportdropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                          دریافت خروجی <i class="mdi mdi-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="exportdropdown">
+                          <button class="dropdown-item" type="button" (click)="onExportExcel()">
+                            Excel <i class="fas fa-file-excel"></i>
+                          </button>
+
+                        </div>
+                      </div>
+                    </div>
+
+
+
+
+                    <div class="col-md-12">
+                      <a type="button" class="btn btn-primary waves-effect waves-light m-1" (click)="LoadList()">
+                        <span class="btn-label"><i class="fas fa-search"></i></span>جستجو
+                      </a>
+
+                    </div>
+
+
+
+                  </div>
+                </form>
+
+
+
+              </div>
+
+
+            </div>
+
+            <ng-container *ngIf="Report_State=='0'">
+
+              <h4>گزارشات لیستی</h4>
+
+              <ng-container *ngIf="loading">
+
+
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+
+
+              </ng-container>
+
+              <ng-container *ngIf="!loading">
+
+                <ag-grid-angular #agGrid id="myGrid" style="height: 700px; width: auto" class="ag-theme-alpine"
+                  [rowData]="records" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
+                  [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)"
+                  (cellClicked)="onCellClicked($event)" [pagination]="true" [frameworkComponents]="frameworkComponents"
+                  [context]="context">
+                </ag-grid-angular>
+
+              </ng-container>
+
+            </ng-container>
+
+
+            <ng-container *ngIf="Report_State=='1'">
+              <h4>گزارشات چارتی</h4>
+
+              <ng-container *ngIf="loading1">
+
+                <div class="spinner-border " role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+
+              </ng-container>
+
+              <ng-container *ngIf="!loading1">
+                <div *ngIf="data_state1.length>0">
+
+                  <h3>نمودار بسته بندی و تحویل </h3>
+
+                  <app-minton-column-chart [title]="''" [series]="columnChartData_state1"
+                    [categories]="columnChartCategories_state1"></app-minton-column-chart>
+
+                </div>
+              </ng-container>
+
+
+              <ng-container *ngIf="loading2">
+
+                <div class="spinner-border " role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+
+              </ng-container>
+
+              <ng-container *ngIf="!loading2">
+                <div *ngIf="data_state2.length>0">
+                  <h3>نمودار وضعیت فاکتورها </h3>
+                  <app-minton-pie-chart [title]="''" [series]="series_state2"
+                    [labels]="labels_state2"></app-minton-pie-chart>
+                </div>
+
+              </ng-container>
+
+              <ng-container *ngIf="loading5">
+
+                <div class="spinner-border " role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+
+              </ng-container>
+
+              <ng-container *ngIf="!loading5">
+                <div *ngIf="data_state5.length>0">
+                  <h3>نمودار کسری بر اساس طبقات </h3>
+                  <app-minton-column-chart [title]="''" [series]="columnChartData_state5"
+                    [categories]="columnChartCategories_state5"></app-minton-column-chart>
+                </div>
+
+              </ng-container>
+
+
+              <ng-container *ngIf="loading6">
+
+                <div class="spinner-border " role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+
+              </ng-container>
+
+              <ng-container *ngIf="!loading6">
+                <div *ngIf="data_state6.length>0">
+                  <h3> نمودار کسری بر اساس طبقات </h3>
+                  <app-minton-column-chart [title]="''" [series]="columnChartData_state6"
+                    [categories]="columnChartCategories_state6"></app-minton-column-chart>
+                </div>
+
+              </ng-container>
+
+
+              <ng-container *ngIf="loading7">
+
+                <div class="spinner-border " role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+
+              </ng-container>
+
+              <ng-container *ngIf="!loading7">
+                <div *ngIf="data_state7.length>0">
+                  <h3>نمودار کسری بر اساس طبقات </h3>
+                  <app-minton-column-chart [title]="''" [series]="columnChartData_state7"
+                    [categories]="columnChartCategories_state7"></app-minton-column-chart>
+                </div>
+
+              </ng-container>
+
+
+            </ng-container>
+
+
+
+
+
+
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

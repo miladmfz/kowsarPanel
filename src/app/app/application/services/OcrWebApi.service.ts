@@ -36,6 +36,21 @@ export class OcrWebApiService {
         return this.client.get<any[]>(this.baseUrl + "ExitDelivery", { headers: this.headers, params: params })
     }
 
+    GetTodeyFromServer(Day: string): Observable<any[]> {
+        const params = new HttpParams().append('Day', Day)
+        return this.client.get<any[]>(this.baseUrl + "GetTodeyFromServer", { headers: this.headers, params: params })
+    }
+
+
+    GetOcrPanel(StartDate: string, EndDate: string, State: string): Observable<any[]> {
+        const params = new HttpParams().append('StartDate', StartDate).append('EndDate', EndDate).append('State', State)
+        return this.client.get<any[]>(this.baseUrl + "GetOcrPanel", { headers: this.headers, params: params })
+    }
+
+
+
+
+
 
     //*********************************************************** */
 

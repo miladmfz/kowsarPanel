@@ -1,0 +1,162 @@
+<div class="card">
+  <div class="card-header">
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item">
+        <a class="nav-link  " data-bs-toggle="pill" [routerLink]="['/application/ocr-detail']">پنل توزیع و
+          بایگانی</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link  active" data-bs-toggle="pill" [routerLink]="['/application/ocr-report-chart']">گزارشات
+          نموداری</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link  " data-bs-toggle="pill" [routerLink]="['/application/ocr-report-list']">گزارشات
+          لیستی</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="pill" [routerLink]="['/application/ocr-list']">لیست توزیع و بایگانی</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/ocr-setting']">تنظیمات توزیع و
+          بایگانی</a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body">
+    <div class="tab-content">
+
+      <div class="tab-pane fade show active" role="tabpanel">
+
+        <div class="card">
+          <div class="card-body">
+            <div class="row mb-2">
+              <div class="col-sm-12">
+
+
+
+                <ng-container *ngIf="loading1">
+
+                  <div class="spinner-border " role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+
+                </ng-container>
+
+                <ng-container *ngIf="!loading1">
+                  <div *ngIf="data_state1.length>0">
+
+                    <h3>نمودار بسته بندی و تحویل </h3>
+
+
+                    <app-minton-column-chart [title]="''" [series]="columnChartData_state1"
+                      [categories]="columnChartCategories_state1"></app-minton-column-chart>
+
+                  </div>
+                </ng-container>
+
+
+
+
+                <div class="row">
+                  <div class="col-md-6">
+
+                    <ng-container *ngIf="loading3">
+
+                      <div class="spinner-border " role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+
+                    </ng-container>
+
+                    <ng-container *ngIf="!loading3">
+                      <div *ngIf="data_state3.length>0">
+
+                        <h3>نمودار جمع آوری بر اساس نوع اقلام </h3>
+
+                        <app-minton-pie-chart [title]="''" [series]="series_state3"
+                          [labels]="labels_state3"></app-minton-pie-chart>
+                      </div>
+
+                    </ng-container>
+
+
+                  </div>
+                  <div class="col-md-6">
+
+
+                    <ng-container *ngIf="loading4">
+
+                      <div class="spinner-border " role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+
+                    </ng-container>
+
+                    <ng-container *ngIf="!loading4">
+                      <div *ngIf="data_state4.length>0">
+
+                        <h3>نمودار جمع آوری بر اساس تعداد کالا </h3>
+
+                        <app-minton-pie-chart [title]="''" [series]="series_state4"
+                          [labels]="labels_state4"></app-minton-pie-chart>
+
+                      </div>
+
+                    </ng-container>
+
+                  </div>
+                </div>
+
+
+                <ng-container *ngIf="loading2">
+
+                  <div class="spinner-border " role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+
+                </ng-container>
+
+                <ng-container *ngIf="!loading2">
+                  <div *ngIf="data_state2.length>0">
+                    <h3>نمودار وضعیت فاکتورها </h3>
+
+
+                    <app-minton-pie-chart [title]="''" [series]="series_state2"
+                      [labels]="labels_state2"></app-minton-pie-chart>
+                  </div>
+
+                </ng-container>
+
+
+
+                <ng-container *ngIf="loading5">
+
+                  <div class="spinner-border " role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+
+                </ng-container>
+
+                <ng-container *ngIf="!loading5">
+                  <div *ngIf="data_state5.length>0">
+
+                    <h3>نمودار کسری بر اساس طبقات</h3>
+
+                    <app-minton-column-chart [title]="''" [series]="columnChartData_state5"
+                      [categories]="columnChartCategories_state5"></app-minton-column-chart>
+                  </div>
+
+                </ng-container>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

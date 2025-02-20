@@ -24,6 +24,8 @@ import { OrderColumnEditComponent } from './components/Order/order-column-edit/o
 import { OrderReportComponent } from './components/Order/order-report/order-report.component';
 import { OrderGoodComponent } from './components/Order/order-good/order-good.component';
 import { OrderGoodEditComponent } from './components/Order/order-good-edit/order-good-edit.component';
+import { OcrReportListComponent } from './components/Ocr/ocr-report-list/ocr-report-list.component';
+import { OcrReportChartComponent } from './components/Ocr/ocr-report-chart/ocr-report-chart.component';
 
 
 
@@ -136,6 +138,19 @@ const routes: Routes = [
         component: OcrDetailComponent,
         data: {
           title: ' پنل توزیع و بایگانی',
+        },
+      },
+      {
+        path: 'ocr-report-list',
+        component: OcrReportListComponent,
+        data: {
+          title: 'گزارشات لیستی',
+        },
+      }, {
+        path: 'ocr-report-chart',
+        component: OcrReportChartComponent,
+        data: {
+          title: ' گزارشات نموداری',
         },
       },
       {

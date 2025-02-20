@@ -24,7 +24,6 @@
   </div>
 
   <div class="h-100" data-simplebar>
-    <!-- User box -->
     <div class="user-box text-center">
       <ng-container *ngIf="Imageitem.length>100">
         <img [src]="Imageitem" alt="No Photo" class="rounded-circle avatar-xl">
@@ -37,12 +36,12 @@
           {{PhFullName}}
           <i class="fe-user me-1"></i></a>
         <div class="dropdown-menu user-pro-dropdown">
-          <!-- item-->
+
           <a routerLink="/support/profile" class="dropdown-item notify-item">
             <i class="fe-user me-1"></i>
             <span>حساب کاربری</span>
           </a>
-          <!-- item-->
+
           <a (click)="logout()" class="dropdown-item notify-item">
             <i class="fe-log-out me-1"></i>
             <span>خروج</span>
@@ -70,7 +69,6 @@
 
     </div>
 
-    <!--- Sidemenu -->
 
     <div id="sidebar-menu">
       <ul id="side-menu">
@@ -104,13 +102,6 @@
                   <a routerLink="/factor/factor-list">لیست فاکتور فروش </a>
                 </li>
 
-                <!-- <li>
-                  <a routerLink="/factor/shopfactor-list">فاکتور فروشگاهی</a>
-                </li>
-
-                <li>
-                  <a routerLink="/factor/prefactor-list">پیش فاکتور </a>
-                </li> -->
 
               </ul>
             </div>
@@ -134,9 +125,6 @@
                 <li>
                   <a routerLink="/kowsar/goodsgrp-list"> گروه کالایی </a>
                 </li>
-                <!-- <li>
-                  <a routerLink="/kowsar/good-test">Test</a>
-                </li> -->
 
               </ul>
             </div>
@@ -287,13 +275,6 @@
 
 
 
-
-
-
-
-
-
-
       </ul>
     </div>
     <!-- End Sidebar -->
@@ -303,3 +284,173 @@
   <!-- Sidebar -left -->
 </div>
 <!-- Left Sidebar End -->
+
+
+
+
+
+
+
+
+<!-- <div class="left-side-menu">
+  <div class="logo-box">
+    <a href="index.html" class="logo logo-dark text-center">
+      <span class="logo-sm">
+        <img src="./assets/images/logo-sm-dark.png" alt="" height="24" />
+      </span>
+      <span class="logo-lg">
+        <img src="./assets/images/logo-dark.png" alt="" height="20" />
+      </span>
+    </a>
+
+    <a href="index.html" class="logo logo-light text-center">
+      <span class="logo-sm">
+        <img src="./assets/images/logo-sm.png" alt="" height="24" />
+      </span>
+      <span class="logo-lg">
+        <img src="./assets/images/logo-light.png" alt="" height="20" />
+      </span>
+    </a>
+  </div>
+
+  <div class="h-100" data-simplebar>
+    
+    <div class="user-box text-center">
+      <ng-container *ngIf="Imageitem.length>100">
+        <img [src]="Imageitem" alt="No Photo" class="rounded-circle avatar-xl">
+      </ng-container>
+      <ng-container *ngIf="Imageitem.length<100">
+        <img src="./assets/images/KowsarSupport.png" alt="user-img" title="Mat Helme" class="rounded-circle avatar-xl">
+      </ng-container>
+      <div class="dropdown">
+        <a href="#" class="text-reset dropdown-toggle h5 mt-2 mb-1 d-block fw-medium" data-bs-toggle="dropdown">
+          {{PhFullName}}
+          <i class="fe-user me-1"></i></a>
+        <div class="dropdown-menu user-pro-dropdown">
+        
+          <a routerLink="/support/profile" class="dropdown-item notify-item">
+            <i class="fe-user me-1"></i>
+            <span>حساب کاربری</span>
+          </a>
+         
+          <a (click)="logout()" class="dropdown-item notify-item">
+            <i class="fe-log-out me-1"></i>
+            <span>خروج</span>
+          </a>
+        </div>
+      </div>
+
+
+      <ng-container *ngIf="CustName_Small.length>0">
+        <span>نام مجموعه</span>
+        <h5 class="text-danger">{{CustName_Small}}</h5>
+        <span>پشتیبانی</span>
+        <h5 class="text-danger">{{Explain}}</h5>
+      </ng-container>
+
+
+      <ng-container *ngIf="AlarmActive_Row>0">
+        <h5 class="text-danger">ارجاع جدید دارید</h5>
+      </ng-container>
+
+
+      <ng-container *ngIf="AlarmActtive_Conversation>0">
+        <h5 class="text-danger">پیام جدید دارید</h5>
+      </ng-container>
+
+    </div>
+
+
+    <div id="sidebar-menu">
+      <ul id="side-menu">
+        <li class="menu-title">منوی برنامه</li>
+
+        <li>
+          <a routerLink="/dashboard" routerLinkActive="active" data-bs-toggle="collapse" aria-expanded="false"
+            aria-controls="sidebarDashboards" class="waves-effect">
+            <i class="ri-dashboard-line"></i>
+            <span> داشبورد </span>
+          </a>
+        </li>
+
+
+        <ng-container *ngIf="array_applications.length>0">
+          <ng-container *ngIf="JobPersonRef.length>0">
+            <li>
+              <a href="#application" data-bs-toggle="collapse" aria-expanded="false" aria-controls="application">
+                <i class="ri-apps-line"></i>
+                <span>نرم افزار های جانبی</span>
+                <span class="menu-arrow"></span>
+              </a>
+              <div class="collapse" id="application">
+                <ul class="nav-second-level">
+
+
+
+
+                  <ng-container *ngIf="appbroker.length>0">
+                    <li>
+                      <a routerLink="/application/broker-detail"> بازاریابی </a>
+                    </li>
+
+                  </ng-container>
+
+                  <ng-container *ngIf="appocr.length>0">
+
+                    <li>
+                      <a routerLink="application/ocr-detail"> بایگانی </a>
+                    </li>
+
+                  </ng-container>
+
+
+
+                  <ng-container *ngIf="apporder.length>0">
+
+                    <li>
+                      <a routerLink="application/order-detail"> سفارشگیر </a>
+                    </li>
+                  </ng-container>
+
+
+
+                </ul>
+              </div>
+            </li>
+          </ng-container>
+        </ng-container>
+
+
+
+
+
+
+
+
+
+        <ng-container *ngIf="JobPersonRef.length>0">
+          <li>
+            <a href="#manager" data-bs-toggle="collapse" aria-expanded="false" aria-controls="manager">
+              <i class="ri-code-box-line"></i>
+              <span>توسعه نرم افزار</span>
+              <span class="menu-arrow"></span>
+            </a>
+            <div class="collapse" id="manager">
+              <ul class="nav-second-level">
+
+                <li>
+                  <a routerLink="/manager/log"> لاگ سرور </a>
+                </li>
+
+              </ul>
+            </div>
+          </li>
+        </ng-container>
+
+
+      </ul>
+    </div>
+
+    <div class="clearfix"></div>
+  </div>
+</div> -->

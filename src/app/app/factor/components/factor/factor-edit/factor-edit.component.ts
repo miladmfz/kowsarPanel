@@ -247,7 +247,7 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
   NewFactor() {
-    location.reload()
+    this.router.navigate(['/factor/factor-edit']);
   }
 
 

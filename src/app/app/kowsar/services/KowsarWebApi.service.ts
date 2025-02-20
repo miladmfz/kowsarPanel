@@ -130,7 +130,6 @@ export class KowsarWebApiService {
   }
 
 
-
   GetStacks(): Observable<any[]> {
     return this.client.get<any[]>(this.kowsarWebUrl + "GetStacks", { headers: this.headers })
   }
@@ -191,6 +190,22 @@ export class KowsarWebApiService {
     return this.client.post<any[]>(this.kowsarWebUrl + "IsbnToBarcode", { Isbn, GoodCode }, { headers: this.headers })
 
   }
+
+
+
+  GetGoods(): Observable<any[]> {
+
+    return this.client.post<any[]>(this.kowsarWebUrl + "GetGoods", { headers: this.headers })
+
+  }
+
+  GetGridSchema(Where: string): Observable<any[]> {
+    const params = new HttpParams().append('Where', Where)
+
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetGridSchema", { headers: this.headers, params: params })
+  }
+
+
 
 
 

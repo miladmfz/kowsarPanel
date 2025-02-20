@@ -13,6 +13,13 @@ import { AgGridModule } from 'ag-grid-angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { LicenseManager } from '@ag-grid-enterprise/all-modules';
+import { MintOnAreaChartComponent } from './minton-area-chart/minton-area-chart.component';
+import { MintOnBarChartComponent } from './minton-bar-chart/minton-bar-chart.component';
+import { MintOnDonutChartComponent } from './minton-donut-chart/minton-donut-chart.component';
+import { MintOnPieChartComponent } from './minton-pie-chart/minton-pie-chart.component';
+import { MintOnLineChartComponent } from './minton-line-chart/minton-line-chart.component';
+import { MintOnColumnChartComponent } from './minton-column-chart/minton-column-chart.component';
+import { MintonRadialChartComponent } from './minton-radial-chart/minton-radial-chart.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +32,15 @@ import { LicenseManager } from '@ag-grid-enterprise/all-modules';
     AgGridToolsComponent,
     D3OrgChartComponent,
     AppSharedDataComponent,
+    MintOnAreaChartComponent,
+    MintOnBarChartComponent,
+    MintOnDonutChartComponent,
+    MintOnPieChartComponent,
+    MintOnLineChartComponent,
+    MintOnColumnChartComponent,
+    MintonRadialChartComponent,
+
+
   ],
   imports: [
     CommonModule,
@@ -37,6 +53,13 @@ import { LicenseManager } from '@ag-grid-enterprise/all-modules';
     AgGridToolsComponent,
     D3OrgChartComponent,
     AppSharedDataComponent,
+    MintOnAreaChartComponent,
+    MintOnBarChartComponent,
+    MintOnDonutChartComponent,
+    MintOnPieChartComponent,
+    MintOnLineChartComponent,
+    MintOnColumnChartComponent,
+    MintonRadialChartComponent,
 
   ]
 })

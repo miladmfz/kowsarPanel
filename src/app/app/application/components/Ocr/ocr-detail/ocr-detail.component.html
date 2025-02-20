@@ -2,9 +2,17 @@
   <div class="card-header">
     <ul class="nav nav-pills nav-fill">
       <li class="nav-item">
-        <a class="nav-link active " data-bs-toggle="pill" [routerLink]="['/application/ocr-detail']">پنل توزیع و
-          بایگانی</a>
+        <a class="nav-link active " data-bs-toggle="pill" [routerLink]="['/application/ocr-detail']">پنل نمایشگر</a>
       </li>
+
+      <li class="nav-item">
+        <a class="nav-link  " data-bs-toggle="pill" [routerLink]="['/application/ocr-report-chart']">پنل مدیریتی</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link  " data-bs-toggle="pill" [routerLink]="['/application/ocr-report-list']">گزارشات </a>
+      </li>
+
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="pill" [routerLink]="['/application/ocr-list']">لیست توزیع و بایگانی</a>
       </li>
@@ -19,60 +27,120 @@
 
       <div class="tab-pane fade show active" role="tabpanel">
 
-        <!-- 
-
-        <c-row class="m-3">
-          <c-col xl="3" md="6" sm="6">
-            <c-widget-stat-b #widgetStatB1inv="cWidgetStatB" [title]="'Widget title'" class="mb-4" color="info" inverse
-              text=" Lorem ipsum dolor sit amet enim." value="89.9%">
-              <c-progress [white]="widgetStatB1inv.inverse" class="my-2" thin>
-                <c-progress-bar [value]="100"></c-progress-bar>
-              </c-progress>
-            </c-widget-stat-b>
-          </c-col>
-
-          <c-col xl="3" md="6" sm="6">
-            <c-widget-stat-b #widgetStatB1inv="cWidgetStatB" [title]="'Widget title'" class="mb-4" color="warning"
-              inverse text=" Lorem ipsum dolor sit amet enim." value="89.9%">
-              <c-progress [white]="widgetStatB1inv.inverse" class="my-2" thin>
-                <c-progress-bar [value]="100"></c-progress-bar>
-              </c-progress>
-            </c-widget-stat-b>
-          </c-col>
-
-          <c-col xl="3" md="6" sm="6">
-            <c-widget-stat-b #widgetStatB1inv="cWidgetStatB" [title]="'Widget title'" class="mb-4" color="success"
-              inverse text=" Lorem ipsum dolor sit amet enim." value="89.9%">
-              <c-progress [white]="widgetStatB1inv.inverse" class="my-2" thin>
-                <c-progress-bar [value]="100"></c-progress-bar>
-              </c-progress>
-            </c-widget-stat-b>
-          </c-col>
-
-          <c-col xl="3" md="6" sm="6">
-            <c-widget-stat-b #widgetStatB1inv="cWidgetStatB" [title]="'Widget title'" class="mb-4" color="danger"
-              inverse text=" Lorem ipsum dolor sit amet enim." value="89.9%">
-              <c-progress [white]="widgetStatB1inv.inverse" class="my-2" thin>
-                <c-progress-bar [value]="100"></c-progress-bar>
-              </c-progress>
-            </c-widget-stat-b>
-          </c-col>
-        </c-row>
- -->
+        <div class="row">
 
 
 
 
+          <div class="col-md-4">
+            <ng-container *ngIf="loading1">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="!loading1">
+              <div class="d-flex align-items-start border border-info p-1">
+                <app-minton-radial-chart [percentage]="radial_value_1" [label]="' '"></app-minton-radial-chart>
+                <div class="flex-1 text-center align-self-center">
+                  <h3 class=""><span>{{radial_value_11}}</span></h3>
+                  <h4 class="text-muted ">مانده انبار</h4>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="col-md-4">
+            <ng-container *ngIf="loading2">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="!loading2">
+              <div class="d-flex align-items-start border border-info p-1">
+                <app-minton-radial-chart [percentage]="radial_value_2" [label]="' '"></app-minton-radial-chart>
+                <div class="flex-1 text-center align-self-center">
+                  <h3 class=""><span>{{radial_value_22}}</span></h3>
+                  <h4 class="text-muted ">مانده بسته بندی </h4>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="col-md-4">
+            <ng-container *ngIf="loading3">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="!loading3">
+              <div class="d-flex align-items-start border border-info p-1">
+                <app-minton-radial-chart [percentage]="radial_value_3" [label]="'label'"></app-minton-radial-chart>
+                <div class="flex-1 text-center align-self-center">
+                  <h3 class=""><span>{{radial_value_33}}</span></h3>
+                  <h4 class="text-muted ">مانده تحویل</h4>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="col-md-6 p-3">
 
 
 
+            <ng-container *ngIf="loading4">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!loading4">
+              <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" class="ag-theme-alpine"
+                [rowData]="record_factor_headers" [columnDefs]="columnDefs1" [modules]="modules"
+                [localeText]="localeText" [defaultColDef]="defaultColDef" [enableRtl]="true"
+                (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+                [frameworkComponents]="frameworkComponents" [context]="context">
+              </ag-grid-angular>
+            </ng-container>
+            <ng-container *ngIf="loading5">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </ng-container>
 
+            <ng-container *ngIf="!loading5">
+              <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" class="ag-theme-alpine"
+                [rowData]="record_factor_rows" [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText"
+                [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)"
+                (cellClicked)="onCellClicked($event)" [pagination]="true" [frameworkComponents]="frameworkComponents"
+                [context]="context">
+              </ag-grid-angular>
+            </ng-container>
 
+          </div>
 
+          <div class="col-md-6 p-3">
+            <ng-container *ngIf="loading6">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </ng-container>
 
+            <ng-container *ngIf="!loading6">
 
+              <ag-grid-angular #agGrid id="myGrid" style="height: 800px; width: auto" class="ag-theme-alpine"
+                [rowData]="records_ocr_factors" [columnDefs]="columnDefs3" [modules]="modules" [localeText]="localeText"
+                [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)"
+                (cellClicked)="onCellClicked($event)" [pagination]="true" [frameworkComponents]="frameworkComponents"
+                [context]="context">
+              </ag-grid-angular>
+
+            </ng-container>
+          </div>
+
+        </div>
       </div>
-
     </div>
   </div>
 </div>

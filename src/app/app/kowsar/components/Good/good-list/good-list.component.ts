@@ -23,7 +23,6 @@ export class GoodListComponent extends AgGridBaseComponent
   }
 
 
-
   records;
   title = 'لیست کالاها ';
   dateValue = new FormControl();
@@ -41,99 +40,81 @@ export class GoodListComponent extends AgGridBaseComponent
   override ngOnInit(): void {
     super.ngOnInit();
 
-    this.columnDefs = [
-      {
-        field: 'عملیات',
-        pinned: 'left',
-        cellRenderer: CellActionGoodList,
-        cellRendererParams: {
-          editUrl: '/kowsar/good-edit',
-        },
-        width: 100
-      },
-
-      {
-        field: 'GoodCode',
-        headerName: 'کد',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'GoodName',
-        headerName: 'نام کالا  ',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'MaxSellPrice',
-        headerName: ' قیمت ناخالص',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      }, {
-        field: 'MinSellPrice',
-        headerName: ' قیمت خالص',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'GoodType',
-        headerName: 'نوع کالا  ',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'GoodExplain1',
-        headerName: ' مشخصه1 ',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      }, {
-        field: 'GoodExplain2',
-        headerName: 'مشخصه2',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      }, {
-        field: 'GoodExplain3',
-        headerName: 'مشخصه3',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-
-    ];
 
     this.getList();
   }
+
   getList() {
 
-
-    this.repo.GetGoodList().subscribe((data: any) => {
-      this.records = data.Goods;
-
-    });
-
-
-
+    this.getGridSchema()
 
   }
+
+  getGridSchema() {
+    this.repo.GetGridSchema('TGood').subscribe((data: any) => {
+      if (data && data.GridSchemas && data.GridSchemas.length > 0) {
+        this.columnDefs = data.GridSchemas.filter(schema => schema.Visible === "True").map(schema => ({
+          field: schema.FieldName,
+          headerName: schema.Caption,
+          cellClass: 'text-center',
+          filter: 'agSetColumnFilter',
+          sortable: true,
+          resizable: true,
+          minWidth: parseInt(schema.Width) + 100,
+          valueFormatter: schema.Separator === '1' ? this.customNumberFormatter : undefined
+        }));
+
+        this.columnDefs.unshift({
+          field: 'عملیات',
+          pinned: 'left',
+          cellRenderer: CellActionGoodList,
+          cellRendererParams: {
+            editUrl: '/kowsar/good-edit',
+          },
+          width: 100,
+          sortable: false,
+          filter: false,
+          // resizable: false
+        });
+      }
+
+      this.repo.GetGoods().subscribe((data: any) => {
+        this.records = data.Goods;
+      });
+    });
+  }
+
 
   navigateToEdit(id) {
     this.router.navigate(['/kowsar/good-edit', id]);
   }
+
+  customNumberFormatter(params) {
+    if (params.value === null || params.value === undefined) {
+      return ''; // اگر مقدار خالی است، چیزی نمایش نده.
+    }
+
+    // اطمینان حاصل کن که مقدار یک عدد است
+    let value = parseFloat(params.value);
+    if (isNaN(value)) {
+      return params.value; // اگر مقدار عددی نیست، همان مقدار اولیه را برگردان.
+    }
+
+    // فرمت اعداد با کاما برای جداسازی هر سه رقم و حذف صفرهای اضافی در اعشار
+    let formattedValue = value.toLocaleString('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 20 // حداکثر تعداد رقم‌های اعشار را بزرگ بگیر تا هنگام حذف، دقیق باشد.
+    });
+
+    // حذف صفرهای اضافی اعشاری اگر لازم باشد
+    if (formattedValue.indexOf('.') > -1) {
+      formattedValue = formattedValue.replace(/\.?0+$/, '');
+    }
+
+    return formattedValue;
+  }
+
 }
-
-
-
-
-
-
-
 
 
 
