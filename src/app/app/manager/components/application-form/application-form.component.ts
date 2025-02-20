@@ -52,6 +52,8 @@ export class ApplicationFormComponent implements OnInit {
     { id: "1", name: "بازاریاب" },
     { id: "2", name: "جمع آوری و توضیع" },
     { id: "3", name: "سفارشگیر" },
+    { id: "4", name: "جستجو کالا" },
+
   ]
 
 
