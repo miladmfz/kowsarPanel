@@ -10,7 +10,7 @@ declare var $: any;
     <i class="fas fa-edit"></i>
   </a>
   </span>
-  <span   (click)="Edit_Customer_Property()" class="btn btn-sm btn-outline-primary mx-1 " data-toggle="tooltip" title="خصوصیت اضافه ">
+  <span   (click)="Edit_Customer_Property()" class="btn btn-sm btn-outline-primary mx-1 " data-toggle="tooltip" title="اطلاعات مشتری">
   <a >
     <i class=" fas fa-user-edit"></i>
   </a>

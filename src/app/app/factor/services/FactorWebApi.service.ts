@@ -104,6 +104,22 @@ export class FactorWebApiService {
     return this.client.post<any[]>(this.kowsarWebUrl + "Support_ExplainFactor", command, { headers: this.headers })
   }
 
+
+  GetFactors(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.kowsarWebUrl + "GetFactors", { headers: this.headers })
+
+  }
+
+
+  GetGridSchema(Where: string): Observable<any[]> {
+    const params = new HttpParams().append('Where', Where)
+
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetGridSchema", { headers: this.headers, params: params })
+  }
+
+
+
   // GetProperty(Where: string): Observable<any[]> {
   //   const params = new HttpParams().append('Where', Where)
   //   return this.client.get<any[]>(this.kowsarWebUrl + "GetProperty", { headers: this.headers, params: params })

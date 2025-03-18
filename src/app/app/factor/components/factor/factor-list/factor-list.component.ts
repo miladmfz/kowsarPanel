@@ -65,9 +65,7 @@ export class FactorListComponent extends AgGridBaseComponent
 
   });
 
-
   submit(action) {
-
   }
 
   onInputChange() {
@@ -89,102 +87,157 @@ export class FactorListComponent extends AgGridBaseComponent
 
     }
 
+    // this.columnDefs = [
+    //   {
+    //     field: 'عملیات',
+    //     pinned: 'left',
+    //     cellRenderer: CellActionFactorList,
+    //     cellRendererParams: {
+    //       editUrl: '/support/letter-detail',
+    //     },
+    //     width: 150,
+    //   },
+    //   {
+    //     field: 'FactorDate',
+    //     headerName: 'تاریخ فاکتور',
+    //     filter: 'agSetColumnFilter',
+    //     cellClass: 'text-center',
+    //     minWidth: 150,
+
+    //   },
+    //   {
+    //     field: 'CustomerName',
+    //     headerName: 'نام مشتری',
+    //     filter: 'agSetColumnFilter',
+    //     cellClass: 'text-center',
+    //     minWidth: 150
+    //   },
 
 
+    //   {
+    //     field: 'BrokerNameWithoutType',
+    //     headerName: 'نام پشتیبان',
+    //     filter: 'agSetColumnFilter',
+    //     cellClass: 'text-center',
+    //     minWidth: 150
+    //   },
+    //   // {
+    //   //   field: 'OwnerName',
+    //   //   headerName: 'ایجاد کننده',
+    //   //   filter: 'agSetColumnFilter',
+    //   //   cellClass: 'text-center',
+    //   //   minWidth: 150
+    //   // },
 
+    //   {
+    //     field: 'starttime',
+    //     headerName: 'شروع',
+    //     filter: 'agSetColumnFilter',
+    //     cellClass: 'text-center',
+    //     minWidth: 100
+    //   }, {
+    //     field: 'Endtime',
+    //     headerName: 'پایان',
+    //     filter: 'agSetColumnFilter',
+    //     cellClass: 'text-center',
+    //     minWidth: 100
+    //   }, {
+    //     field: 'worktime',
+    //     headerName: 'مدت کار',
+    //     filter: 'agSetColumnFilter',
+    //     cellClass: 'text-center',
+    //     minWidth: 80
+    //   }, {
+    //     field: 'Barbary',
+    //     headerName: 'شرح',
+    //     filter: 'agSetColumnFilter',
+    //     cellClass: 'text-center',
+    //     minWidth: 150
+    //   },
+    // ];
 
+    this.getList();
+    // setTimeout(() => {
 
-    this.columnDefs = [
-      {
-        field: 'عملیات',
-        pinned: 'left',
-        cellRenderer: CellActionFactorList,
-        cellRendererParams: {
-          editUrl: '/support/letter-detail',
-        },
-        width: 150,
-      },
-      {
-        field: 'FactorDate',
-        headerName: 'تاریخ فاکتور',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150,
-
-      },
-      {
-        field: 'CustomerName',
-        headerName: 'نام مشتری',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-
-
-      {
-        field: 'BrokerNameWithoutType',
-        headerName: 'نام پشتیبان',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      // {
-      //   field: 'OwnerName',
-      //   headerName: 'ایجاد کننده',
-      //   filter: 'agSetColumnFilter',
-      //   cellClass: 'text-center',
-      //   minWidth: 150
-      // },
-
-      {
-        field: 'starttime',
-        headerName: 'شروع',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 100
-      }, {
-        field: 'Endtime',
-        headerName: 'پایان',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 100
-      }, {
-        field: 'worktime',
-        headerName: 'مدت کار',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 80
-      }, {
-        field: 'Barbary',
-        headerName: 'شرح',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-    ];
-
-    setTimeout(() => {
-      this.getList();
-    }, 200);
+    // }, 200);
   }
 
+  getGridSchema() {
+    this.repo.GetGridSchema('TFactor').subscribe((data: any) => {
+      if (data && data.GridSchemas && data.GridSchemas.length > 0) {
+        this.columnDefs = data.GridSchemas.filter(schema => schema.Visible === "True").map(schema => ({
+          field: schema.FieldName,
+          headerName: schema.Caption,
+          cellClass: 'text-center',
+          filter: 'agSetColumnFilter',
+          sortable: true,
+          resizable: true,
+          minWidth: parseInt(schema.Width) + 100,
+          valueFormatter: schema.Separator === '1' ? this.customNumberFormatter : undefined
+        }));
+
+        this.columnDefs.unshift({
+          field: 'عملیات',
+          pinned: 'left',
+          cellRenderer: CellActionFactorList,
+
+          width: 100,
+          sortable: false,
+          filter: false,
+          // resizable: false
+        });
+      }
+      this.EditForm_factor.patchValue({
+        BrokerRef: this.BrokerRef,
+        isShopFactor: "0",
+      });
+      this.loading = true
+
+      this.repo.GetFactors(this.EditForm_factor.value).subscribe((data: any) => {
+        this.records = data.Factors;
+        this.loading = false
+
+      });
+
+
+    });
+  }
+
+  customNumberFormatter(params) {
+    if (params.value === null || params.value === undefined) {
+      return ''; // اگر مقدار خالی است، چیزی نمایش نده.
+    }
+
+    // اطمینان حاصل کن که مقدار یک عدد است
+    let value = parseFloat(params.value);
+    if (isNaN(value)) {
+      return params.value; // اگر مقدار عددی نیست، همان مقدار اولیه را برگردان.
+    }
+
+    // فرمت اعداد با کاما برای جداسازی هر سه رقم و حذف صفرهای اضافی در اعشار
+    let formattedValue = value.toLocaleString('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 20 // حداکثر تعداد رقم‌های اعشار را بزرگ بگیر تا هنگام حذف، دقیق باشد.
+    });
+
+    // حذف صفرهای اضافی اعشاری اگر لازم باشد
+    if (formattedValue.indexOf('.') > -1) {
+      formattedValue = formattedValue.replace(/\.?0+$/, '');
+    }
+
+    return formattedValue;
+  }
 
 
 
   getList() {
 
-    this.EditForm_factor.patchValue({
-      BrokerRef: this.BrokerRef,
-      isShopFactor: "0",
-    });
-    this.loading = true
+    this.getGridSchema()
 
-    this.repo.GetFactor(this.EditForm_factor.value).subscribe((data: any) => {
-      this.records = data.Factors;
-      this.loading = false
+    /*
 
-    });
 
+*/
 
   }
 
