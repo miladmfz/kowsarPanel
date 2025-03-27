@@ -5,7 +5,6 @@ export const environment = {
   production: false,
 
 
-
   //  Build
   //api_Url: 'http://itmali.ir/webapi/',
 

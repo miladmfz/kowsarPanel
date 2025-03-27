@@ -24,6 +24,12 @@ import { ProfileViewComponent } from './components/profile/profile-view/profile-
 import { AutletterAttachComponent } from './components/autletter/autletter-attach/autletter-attach.component';
 import { CellActionCustomerList } from './components/customer/customer-list/cell-action-customer-list';
 import { CellActionAutletterRowList } from './components/autletter/autletter-item/cell-action-autletterrow-list';
+import { SupportFactorEditComponent } from './components/factor/support-factor-edit/support-factor-edit.component';
+import { SupportFactorListComponent } from './components/factor/support-factor-list/support-factor-list.component';
+import { CellActionSupportFactorList } from './components/factor/support-factor-list/cell-action-support-factor-list';
+import { CellActionSupportFactorCustomerEdit } from './components/factor/support-factor-edit/cell-action-support-factor-customer-edit';
+import { CellActionSupportFactorRowsEdit } from './components/factor/support-factor-edit/cell-action-support-factorrows-edit';
+import { CellActionSupportGoodEdit } from './components/factor/support-factor-edit/cell-action-support-good-edit';
 
 
 @NgModule({
@@ -67,7 +73,13 @@ import { CellActionAutletterRowList } from './components/autletter/autletter-ite
     ValidateionStateCellAutletterWorkRenderer,
 
 
+    SupportFactorEditComponent,
+    SupportFactorListComponent,
 
+    CellActionSupportFactorList,
+    CellActionSupportGoodEdit,
+    CellActionSupportFactorRowsEdit,
+    CellActionSupportFactorCustomerEdit,
 
   ]
 })

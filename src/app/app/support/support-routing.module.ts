@@ -12,6 +12,8 @@ import { CentralListComponent } from './components/central/central-list/central-
 import { CentralEditComponent } from './components/central/central-edit/central-edit.component';
 import { ProfileViewComponent } from './components/profile/profile-view/profile-view.component';
 import { ProfileEditComponent } from './components/profile/profile-edit/profile-edit.component';
+import { SupportFactorListComponent } from './components/factor/support-factor-list/support-factor-list.component';
+import { SupportFactorEditComponent } from './components/factor/support-factor-edit/support-factor-edit.component';
 
 
 const routes: Routes = [
@@ -47,7 +49,9 @@ const routes: Routes = [
       { path: 'profile', component: ProfileViewComponent, },
       { path: 'profile-edit', component: ProfileEditComponent, },
 
-
+      { path: 'support-factor-list', component: SupportFactorListComponent, },
+      { path: 'support-factor-edit', component: SupportFactorEditComponent, },
+      { path: 'support-factor-edit/:id', component: SupportFactorEditComponent, },
 
 
       { path: '', redirectTo: 'list', pathMatch: 'full' },

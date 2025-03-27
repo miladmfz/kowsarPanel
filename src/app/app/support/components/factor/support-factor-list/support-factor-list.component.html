@@ -1,0 +1,253 @@
+<div class="card-body">
+  <div class="tab-content">
+
+    <div class="tab-pane fade show active" role="tabpanel">
+
+      <div class="card">
+        <div class="card-body">
+
+
+          <form [formGroup]="EditForm_supportfactor" (ngSubmit)="submit('')" id="submitForm">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body row">
+
+
+                    <div class="form-group col-md-12">
+                      <label for="SearchTarget" class="col-form-label">جستجو </label>
+
+                      <input type="text" class="form-control" id="SearchTarget" formControlName="SearchTarget"
+                        maxlength="100" autocomplete="off" />
+                    </div>
+
+
+                    <div class="form-group col-md-5">
+                      <label for="datePicker" class="col-form-label">ابتدای تاریخ</label>
+                      <div>
+                        <ng-persian-datepicker [uiHideAfterSelectDate]="true">
+                          <input class="form-control" id="datePicker" type="text" formControlName="StartDateTarget" />
+                        </ng-persian-datepicker>
+                      </div>
+
+                    </div>
+
+
+                    <div class="form-group col-md-5">
+                      <label for="datePicker" class="col-form-label">ابتدای تاریخ</label>
+                      <div>
+                        <ng-persian-datepicker [uiHideAfterSelectDate]="true">
+                          <input class="form-control" id="datePicker" type="text" formControlName="EndDateTarget" />
+                        </ng-persian-datepicker>
+                      </div>
+
+                    </div>
+
+
+
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+
+
+
+
+
+
+
+
+
+
+
+          <!-- 
+
+          <form [formGroup]="EditForm_factor" id="submitForm">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body row">
+
+
+                    <div class="form-group col-md-3">
+                      <label for="Searchtarget" class="col-form-label">جستجو </label>
+                      <input type="text" class="form-control" id="Searchtarget" formControlName="Searchtarget"
+                        maxlength="100" autocomplete="off" />
+                    </div>
+
+
+
+
+
+                    <div class="form-group col-md-3">
+                      <label for="datePicker" class="col-form-label">از تاریخ </label>
+                      <div>
+                        <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
+                          [uiHideAfterSelectDate]="true">
+                          <input class="form-control" id="datePicker" type="text" formControlName="StartDateTarget" />
+                        </ng-persian-datepicker>
+                      </div>
+                    </div>
+
+
+
+
+
+                    <div class="form-group col-md-3">
+                      <label for="datePicker" class="col-form-label">تا تاریخ</label>
+                      <div>
+                        <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
+                          [uiHideAfterSelectDate]="true">
+                          <input class="form-control" id="datePicker" type="text" formControlName="EndDateTarget" />
+                        </ng-persian-datepicker>
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form> -->
+
+        </div>
+
+        <div class="row mb-2">
+          <div class="col-sm-12">
+
+
+
+            <!-- <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
+                [(ngModel)]="Searchtarget" (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" /> -->
+            <a type="button" class="btn btn-primary waves-effect waves-light m-1" (click)="getList()">
+              <span class="btn-label"><i class="fas fa-search"></i></span>جستجو
+            </a>
+            <!-- <a type="button" class="btn btn-success waves-effect waves-light m-1"
+                [routerLink]="['/factor/factor-edit']">
+                <span class="btn-label"><i class="fas fa-plus"></i></span>جدید
+              </a> -->
+            <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
+              <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
+            </a>
+            <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="removeAllFilters()">
+              <span class="btn-label"><i class="fas fa-eye-slash"></i></span>حذف
+              جستجو
+            </a>
+            <!-- <div class="btn-group">
+                <button type="button" class="btn btn-light waves-effect waves-light m-1 dropdown-toggle"
+                  id="exportdropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  دریافت خروجی <i class="mdi mdi-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="exportdropdown">
+                  <button class="dropdown-item" type="button" (click)="onExportExcel()">
+                    Excel <i class="fas fa-file-excel"></i>
+                  </button>
+                  <button class="dropdown-item" type="button" (click)="onExportCSV()">
+                    CSV <i class="fas fa-file-csv"></i>
+                  </button>
+
+
+                </div>
+              </div> -->
+          </div>
+
+
+        </div>
+
+
+        <!-- Show loading indicator when data is being fetched -->
+        <div *ngIf="loading" class="text-center">
+          <span class="loader"></span>
+
+        </div>
+
+        <!-- Show grid when data is available -->
+        <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
+          [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
+          [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+          [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
+          [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+          (selectionChanged)="onSelectionChanged($event)">
+        </ag-grid-angular>
+
+
+
+
+
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+  </div>
+
+</div>
+
+
+
+
+
+<div class="modal fade" id="supportfactorproperty" tabindex="-1" aria-labelledby="supportfactorpropertyLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="supportfactorpropertyLabel">خصوصیت اضافه</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="property_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="EditForm_supportfactor_property" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+                  <div class="form-group col-md-12">
+                    <label for="starttime" class="col-form-label">شروع</label>
+                    <input type="text" class="form-control" id="starttime" formControlName="starttime" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label for="Endtime" class="col-form-label">پایان</label>
+                    <input type="text" class="form-control" id="Endtime" formControlName="Endtime" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label for="worktime" class="col-form-label">مدت کار</label>
+                    <input type="text" class="form-control" id="worktime" formControlName="worktime" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label for="Barbary" class="col-form-label">شرح</label>
+                    <input type="text" class="form-control" id="Barbary" formControlName="Barbary" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="property_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="Set_factor_Property()">بروزرسانی</button>
+      </div>
+    </div>
+  </div>
+</div>
