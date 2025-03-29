@@ -33,6 +33,8 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
   ) { super(); }
 
 
+  priceInput = new Subject<void>();
+  discountInput = new Subject<void>();
 
   override ngOnInit(): void {
     super.ngOnInit();
@@ -55,6 +57,14 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
       this.getdate();
 
     }
+    this.priceInput.pipe(debounceTime(1000)).subscribe(() => {
+      this.cal_takhfif_from_price();
+    });
+
+    // تنظیم تأخیر برای ورودی تخفیف
+    this.discountInput.pipe(debounceTime(1000)).subscribe(() => {
+      this.cal_price_from_takhfif();
+    });
 
   }
 
@@ -94,6 +104,11 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
   private searchSubject_Good: Subject<string> = new Subject();
 
 
+
+
+
+
+
   EditForm_supportfactor_property = new FormGroup({
     starttime: new FormControl(''),
     Endtime: new FormControl(''),
@@ -125,19 +140,35 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
     BrokerRef: new FormControl('0'),
     ClassName: new FormControl('Factor'),
     StackRef: new FormControl('1'),
-    IsShopFactor: new FormControl('0'),
+    isShopFactor: new FormControl('0'),
   });
+
 
   EditForm_Factor_Row = new FormGroup({
     FactorRef: new FormControl(''),
     GoodRef: new FormControl(''),
+    GoodName: new FormControl(''),
     ClassName: new FormControl('Factor'),
     Amount: new FormControl(''),
     Price: new FormControl(''),
     MustHasAmount: new FormControl('0'),
     MergeFlag: new FormControl('1'),
+
+    maxsellprice: new FormControl('1111111'),
+    goodname: new FormControl('goodname'),
+    takhfif: new FormControl('0'),
+    pricetype: new FormControl('pricetype'),
+    totalprice: new FormControl('totalprice'),
+    DefaultRatioValue: new FormControl('1'),
+    DefaultUnitValue: new FormControl('1'),
   });
 
+
+  Good_maxsellprice: string = 'Good_maxsellprice';
+  Good_goodname: string = 'Good_goodname';
+  Good_takhfif: string = 'Good_takhfif';
+  Good_pricetype: string = 'Good_pricetype';
+  Good_totalprice: string = 'Good_totalprice';
 
 
   customTheme: Partial<IDatepickerTheme> = {
@@ -350,25 +381,98 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
   }
 
 
-  AddGoodToBasket(GoodCode) {
 
 
-    // TODO buybox
+  insert_FactorRows() {
 
-    // this.Loading_Modal_Response_show()
-    // this.EditForm_Factor_Row.patchValue({
-    //   FactorRef: this.FactorCode,
-    //   GoodRef: GoodCode,
-    // });
+    this.EditForm_Factor_Row.patchValue({
+      Amount: this.EditForm_Factor_Row.value.Amount + "",
+      Price: this.EditForm_Factor_Row.value.Price + "",
+      takhfif: this.EditForm_Factor_Row.value.takhfif + "",
+    });
 
-    // this.repo.WebFactorInsertRow(this.EditForm_Factor_Row.value).subscribe((data: any) => {
-    //   this.notificationService.succeded();
-    //   this.Loading_Modal_Response_close()
-    //   this.GetFactor()
-    // });
+
+    this.Loading_Modal_Response_show()
+
+    this.repo.WebFactorInsertRow(this.EditForm_Factor_Row.value).subscribe((data: any) => {
+
+
+      this.notificationService.succeded();
+      this.boxbuy_dialog_close()
+      this.Loading_Modal_Response_close()
+      this.GetFactor()
+    });
 
   }
 
+
+  cal_takhfif_from_price() {
+    let price = parseFloat(this.EditForm_Factor_Row.value.Price) || 0;
+    let maxsellprice = parseFloat(this.EditForm_Factor_Row.value.maxsellprice) || 0;
+
+    if (maxsellprice > 0) {
+      let discount = ((maxsellprice - price) / maxsellprice) * 100;
+      this.EditForm_Factor_Row.patchValue({
+        takhfif: discount.toFixed(2)
+      });
+    }
+
+    this.cal_totalprice();
+  }
+
+  cal_price_from_takhfif() {
+    let discount = parseFloat(this.EditForm_Factor_Row.value.takhfif) || 0;
+    let maxsellprice = parseFloat(this.EditForm_Factor_Row.value.maxsellprice) || 0;
+
+    if (maxsellprice > 0) {
+      let price = maxsellprice * (1 - discount / 100);
+      this.EditForm_Factor_Row.patchValue({
+        Price: price.toFixed(2)
+      });
+    }
+
+    this.cal_totalprice();
+  }
+
+  cal_totalprice() {
+    let Amount_temp = parseFloat(this.EditForm_Factor_Row.value.Amount);
+    let Price_temp = parseFloat(this.EditForm_Factor_Row.value.Price);
+    let DefaultRatioValue_temp = parseFloat(this.EditForm_Factor_Row.value.DefaultRatioValue);
+    let DefaultUnitValue_temp = parseFloat(this.EditForm_Factor_Row.value.DefaultUnitValue);
+
+    let totalPrice_temp = Amount_temp * Price_temp * DefaultRatioValue_temp * DefaultUnitValue_temp
+
+    this.EditForm_Factor_Row.patchValue({
+      totalprice: "" + totalPrice_temp,
+    });
+
+  }
+
+
+  AddGoodToBasket(good) {
+
+    this.EditForm_Factor_Row.patchValue({
+
+      FactorRef: this.FactorCode,
+      GoodRef: good.GoodCode,
+
+      GoodName: good.GoodName,
+      ClassName: 'Factor',
+      Amount: '0',
+      Price: '0',
+
+      maxsellprice: good.MaxSellPrice,
+      goodname: good.GoodName,
+      takhfif: '0',
+      totalprice: '0',
+      DefaultRatioValue: good.DefaultRatioValue,
+      DefaultUnitValue: good.DefaultUnitValue
+    });
+
+
+    //this.boxbuy_dialog_show();
+    this.insert_FactorRows()
+  }
 
 
 
@@ -399,7 +503,12 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
     this.EditForm_Factor_Header.patchValue({
       BrokerRef: sessionStorage.getItem("BrokerCode")
     });
-    this.repo.WebFactorInsert(this.EditForm_Factor_Header.value).subscribe((data: any) => {
+
+
+
+    //this.repo.WebFactorInsert(this.EditForm_Factor_Header.value).subscribe((data: any) => {
+
+    this.repo.WebSupportFactorInsert(this.EditForm_Factor_Header.value).subscribe((data: any) => {
       this.FactorCode = data.Factors[0].FactorCode
 
       this.notificationService.succeded();
@@ -688,6 +797,24 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
     this.renderer.removeAttribute(modal, 'role');
   }
 
+
+
+  boxbuy_dialog_show() {
+
+    const modal = this.renderer.selectRootElement('#boxbuymodal', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+
+  boxbuy_dialog_close() {
+    const modal = this.renderer.selectRootElement('#boxbuymodal', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
 
 
   Loading_Modal_Response_show() {

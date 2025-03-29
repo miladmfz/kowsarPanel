@@ -47,13 +47,8 @@ export class SupportFactorWebApiService {
   EditFactorProperty(command): Observable<any[]> {
     return this.client.post<any[]>(this.kowsarWebUrl + "EditFactorProperty", command, { headers: this.headers })
   }
-  WebFactorInsert(command): Observable<any[]> {
-    return this.client.post<any[]>(this.kowsarWebUrl + "WebSupportFactorInsert", command, { headers: this.headers })
-  }
 
-  WebFactorInsertRow(command): Observable<any[]> {
-    return this.client.post<any[]>(this.kowsarWebUrl + "WebSupportFactorInsertRow", command, { headers: this.headers })
-  }
+
 
 
 
@@ -118,7 +113,22 @@ export class SupportFactorWebApiService {
     return this.client.get<any[]>(this.kowsarWebUrl + "GetGridSchema", { headers: this.headers, params: params })
   }
 
+  WebSupportFactorInsert(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "WebSupportFactorInsert", command, { headers: this.headers })
+  }
 
+  WebSupportFactorInsertRow(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "WebSupportFactorInsertRow", command, { headers: this.headers })
+  }
+
+
+  WebFactorInsert(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "WebFactorInsert", command, { headers: this.headers })
+  }
+
+  WebFactorInsertRow(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "WebFactorInsertRow", command, { headers: this.headers })
+  }
 
   // GetProperty(Where: string): Observable<any[]> {
   //   const params = new HttpParams().append('Where', Where)

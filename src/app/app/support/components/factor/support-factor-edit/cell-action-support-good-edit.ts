@@ -45,8 +45,12 @@ export class CellActionSupportGoodEdit implements ICellRendererAngularComp {
     }
 
 
-    AddGoodToBasket() {
+    AddGoodToBasket1() {
         this.params.context.componentParent.AddGoodToBasket(this.params.data.GoodCode);
+    }
+
+    AddGoodToBasket() {
+        this.params.context.componentParent.AddGoodToBasket(this.params.data);
     }
 
 }

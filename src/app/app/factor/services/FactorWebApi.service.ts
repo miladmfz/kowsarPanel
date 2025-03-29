@@ -22,7 +22,7 @@ export class FactorWebApiService {
 
 
 
-  kowsarWebUrl = environment.api_Url + "Support/";
+  kowsarWebUrl = environment.api_Url + "KowsarWeb/";
 
 
   GetKowsarCustomer(SearchTarget: string): Observable<any[]> {

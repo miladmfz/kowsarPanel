@@ -435,3 +435,90 @@
     </div>
   </div>
 </div>
+
+
+
+
+<div class="modal fade" id="boxbuymodal" tabindex="-1" aria-labelledby="boxbuymodalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="boxbuymodalLabel">تعداد و قیمت کالا</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="boxbuy_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="EditForm_Factor_Row" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+
+                  <div class="form-group col-md-12">
+                    <label for="GoodName" class="col-form-label">نام کالا</label>
+                    <input type="text" class="form-control" id="GoodName" formControlName="GoodName" maxlength="100"
+                      autocomplete="off" readonly />
+                  </div>
+
+
+
+                  <div class="form-group col-md-12">
+                    <label for="maxsellprice" class="col-form-label">حداکثر قیمت </label>
+                    <input type="number" class="form-control" id="maxsellprice" formControlName="maxsellprice"
+                      maxlength="100" readonly />
+                  </div>
+
+
+
+
+                  <div class="form-group col-md-12">
+                    <label for="Amount" class="col-form-label">تعداد</label>
+                    <input type="number" class="form-control" id="Amount" formControlName="Amount" maxlength="100"
+                      autocomplete="off" (keyup)="cal_totalprice()" />
+                  </div>
+
+
+
+                  <div class="form-group col-md-12">
+                    <label for="takhfif" class="col-form-label">درصد تخفیف</label>
+                    <input type="number" class="form-control" id="takhfif" formControlName="takhfif" maxlength="100"
+                      autocomplete="off" (keyup)="discountInput.next()" />
+                  </div>
+
+
+
+
+                  <div class="form-group col-md-12">
+                    <label for="Price" class="col-form-label">فی</label>
+                    <input type="number" class="form-control" id="Price" formControlName="Price" maxlength="100"
+                      autocomplete="off" (keyup)="priceInput.next()" />
+                  </div>
+
+
+
+
+
+                  <div class="form-group col-md-12">
+                    <label for="totalprice" class="col-form-label">مبلغ کل</label>
+                    <input type="number" class="form-control" id="totalprice" formControlName="totalprice"
+                      maxlength="100" autocomplete="off" readonly />
+                  </div>
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="boxbuy_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="insert_FactorRows()">تایید</button>
+      </div>
+    </div>
+  </div>
+</div>
