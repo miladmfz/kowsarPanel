@@ -39,4 +39,14 @@ export class CustomerWebApiService {
     return this.client.post<any[]>(this.kowsarweb_baseUrl + "EditCustomerExplain", command, { headers: this.headers })
   }
 
+
+  GetCustomerFactor(CustomerCode: string): Observable<any[]> {
+    const params = new HttpParams().append('Where', CustomerCode)
+    return this.client.get<any[]>(this.kowsarweb_baseUrl + "GetCustomerFactor", { headers: this.headers, params: params })
+
+  }
+
+
+
+
 }

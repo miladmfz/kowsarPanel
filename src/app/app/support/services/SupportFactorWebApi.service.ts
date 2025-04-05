@@ -100,9 +100,9 @@ export class SupportFactorWebApiService {
   }
 
 
-  GetFactors(command): Observable<any[]> {
+  GetSupportFactors(command): Observable<any[]> {
 
-    return this.client.post<any[]>(this.kowsarWebUrl + "GetFactors", { headers: this.headers })
+    return this.client.post<any[]>(this.kowsarWebUrl + "GetSupportFactors", command, { headers: this.headers })
 
   }
 
@@ -129,6 +129,13 @@ export class SupportFactorWebApiService {
   WebFactorInsertRow(command): Observable<any[]> {
     return this.client.post<any[]>(this.kowsarWebUrl + "WebFactorInsertRow", command, { headers: this.headers })
   }
+
+
+  GetSupportPanel(): Observable<any[]> {
+    const params = new HttpParams().append('Where', 'aa')
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetSupportPanel", { headers: this.headers, params: params })
+  }
+
 
   // GetProperty(Where: string): Observable<any[]> {
   //   const params = new HttpParams().append('Where', Where)

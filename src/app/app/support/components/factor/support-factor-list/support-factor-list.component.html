@@ -5,7 +5,45 @@
 
       <div class="card">
         <div class="card-body">
+          <ng-container *ngIf="!loading_supportpanel">
+            <div class="card-body">
+              <table class="table table-striped table-bordered"
+                style="border: 3px solid #000000; border-collapse: collapse;">
+                <thead class="table-dark">
+                  <tr>
+                    <th class="text-center">نام پشتیبان</th>
+                    <th class="text-center">تعداد فاکتور بدون رکورد</th>
+                    <th class="text-center">تعداد فاکتور باز</th>
+                    <th class="text-center">تعداد کل فاکتورها</th>
+                    <th class="text-center">تعداد ردیف‌ها</th>
+                    <th class="text-center">مجموع کارکرد</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let row of reportData">
+                    <tr class="text-center">
+                      <td>{{ row.BrokerNameWithoutType }}</td>
 
+                      <!-- بدون رکورد و فاکتور باز -->
+                      <td
+                        [ngClass]="{'text-danger': row.WithoutRows > 0, 'fw-bold': row.WithoutRows > 0, 'fs-2': row.WithoutRows > 0}">
+                        {{ row.WithoutRows }}
+                      </td>
+                      <td
+                        [ngClass]="{'text-danger': row.OpenFactor > 0, 'fw-bold': row.OpenFactor > 0, 'fs-2': row.OpenFactor > 0}">
+                        {{ row.OpenFactor }}
+                      </td>
+
+                      <!-- بقیه ستون‌ها -->
+                      <td>{{ row.Factors }}</td>
+                      <td>{{ row.RowsCount }}</td>
+                      <td>{{ row.TotalWork }}</td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </ng-container>
 
           <form [formGroup]="EditForm_supportfactor" (ngSubmit)="submit('')" id="submitForm">
             <div class="row">

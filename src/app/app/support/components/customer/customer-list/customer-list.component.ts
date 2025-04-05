@@ -25,9 +25,11 @@ export class CustomerListComponent extends AgGridBaseComponent
   PhAddress3: string = '';
 
   records;
+  records_factor;
+
   title = 'لیست مشتریان کوثر  ';
   loading: boolean = true;
-
+  loading_factor: boolean = true;
 
   selected_des: string = ''; // مقدار پیش‌فرض برای نمونه
   selected_value: string = ''; // مقدار پیش‌فرض برای نمونه
@@ -92,31 +94,6 @@ export class CustomerListComponent extends AgGridBaseComponent
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   ngOnDestroy(): void {
     this.searchSubject.unsubscribe();
   }
@@ -146,7 +123,7 @@ export class CustomerListComponent extends AgGridBaseComponent
         cellRendererParams: {
           editUrl: '/support/letter-detail',
         },
-        width: 200,
+        width: 250,
       },
       {
         field: 'CustName_Small',
@@ -206,6 +183,53 @@ export class CustomerListComponent extends AgGridBaseComponent
       },
     ];
 
+    this.columnDefs1 = [
+      {
+        field: 'FactorDate',
+        headerName: 'تاریخ فاکتور',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+
+      {
+        field: 'BrokerNameWithoutType',
+        headerName: 'نام پشتیبان',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'Barbary',
+        headerName: 'توضیحات',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'starttime',
+        headerName: 'شروع',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 70
+      },
+      {
+        field: 'Endtime',
+        headerName: 'پایان',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 70
+      },
+      {
+        field: 'worktime',
+        headerName: 'زمان کار',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 70
+      },
+
+    ];
+
     this.searchSubject.pipe(
       debounceTime(1000)  // 1 second debounce time
     ).subscribe(searchText => {
@@ -249,6 +273,21 @@ export class CustomerListComponent extends AgGridBaseComponent
 
     })
   }
+
+  Factor_Customer_Property(CustomerCode) {
+
+
+
+    this.repo.GetCustomerFactor(CustomerCode).subscribe((data: any) => {
+      this.records_factor = data.Factors;
+      this.loading_factor = false
+      this.CustomerFactor_dialog_show()
+
+    });
+  }
+
+
+
 
 
 
@@ -389,6 +428,23 @@ export class CustomerListComponent extends AgGridBaseComponent
     this.renderer.removeAttribute(modal, 'aria-modal');
     this.renderer.removeAttribute(modal, 'role');
   }
+
+  CustomerFactor_dialog_show() {
+    const modal = this.renderer.selectRootElement('#customerfactor', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  CustomerFactor_dialog_close() {
+    const modal = this.renderer.selectRootElement('#customerfactor', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
 
 
 }

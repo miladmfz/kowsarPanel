@@ -29,6 +29,8 @@ export class SupportFactorListComponent extends AgGridBaseComponent
   Searchtarget: string = '';
   TextData: string = '';
   BrokerRef: string = '';
+  BrokerRef_temp: string = '';
+
   searchTerm: string = '';
   selectedOption: string = '0';
 
@@ -41,6 +43,15 @@ export class SupportFactorListComponent extends AgGridBaseComponent
   loading: boolean = true;
 
   records;
+
+
+  loading_supportpanel: boolean = true;
+
+
+  reportData: any[] = [];
+
+
+
 
   customTheme: Partial<IDatepickerTheme> = {
     selectedBackground: '#D68E3A',
@@ -158,11 +169,32 @@ export class SupportFactorListComponent extends AgGridBaseComponent
     // ];
 
     this.getList();
+    this.getpanel_data()
     // setTimeout(() => {
 
     // }, 200);
   }
 
+
+
+
+  getpanel_data() {
+    this.repo.GetSupportPanel().subscribe((data: any) => {
+      if (this.BrokerRef == '') {
+        this.reportData = data.Panels;
+      } else {
+        this.reportData = data.Panels.filter(panel => panel.BrokerCode === this.BrokerRef);
+
+        this.reportData.forEach(row => {
+          if (row.WithoutRows > 0 || row.OpenFactor > 0) {
+            this.loading_supportpanel = false
+          }
+        });
+      }
+
+    });
+
+  }
   getGridSchema() {
     this.repo.GetGridSchema('TFactor').subscribe((data: any) => {
       if (data && data.GridSchemas && data.GridSchemas.length > 0) {
@@ -173,7 +205,7 @@ export class SupportFactorListComponent extends AgGridBaseComponent
           filter: 'agSetColumnFilter',
           sortable: true,
           resizable: true,
-          minWidth: parseInt(schema.Width) + 100,
+          minWidth: parseInt(schema.Width),
           valueFormatter: schema.Separator === '1' ? this.customNumberFormatter : undefined
         }));
 
@@ -194,7 +226,9 @@ export class SupportFactorListComponent extends AgGridBaseComponent
       });
       this.loading = true
 
-      this.repo.GetFactors(this.EditForm_supportfactor.value).subscribe((data: any) => {
+      this.repo.GetSupportFactors(this.EditForm_supportfactor.value).subscribe((data: any) => {
+
+        console.log(data.Factors);
         this.records = data.Factors;
         this.loading = false
 

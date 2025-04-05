@@ -5,17 +5,23 @@ declare var $: any;
 @Component({
     selector: 'edit-delete-cell-renderer',
     template: ` 
+      <span   (click)="Factor_Customer_Property()" class="btn btn-sm btn-outline-primary" data-toggle="tooltip" title="لیست فاکتور">
+  <a >
+    <i class=" far fa-list-alt"></i>
+  </a>
+  </span>
+
 <span  >
-  <a  (click)="Edit_Customer_Explain()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="پشتیبانی">
+  <a  (click)="Edit_Customer_Explain()" class="btn btn-sm btn-outline-primary mx-1" data-toggle="tooltip" title="پشتیبانی">
     <i class="fas fa-edit"></i>
   </a>
   </span>
-  <span   (click)="Edit_Customer_Property()" class="btn btn-sm btn-outline-primary mx-1 " data-toggle="tooltip" title="اطلاعات مشتری">
+  <span   (click)="Edit_Customer_Property()" class="btn btn-sm btn-outline-primary  " data-toggle="tooltip" title="اطلاعات مشتری">
   <a >
     <i class=" fas fa-user-edit"></i>
   </a>
   </span>
-  <span   (click)="Show_Customer_Property()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="خصوصیت اضافه ">
+  <span   (click)="Show_Customer_Property()" class="btn btn-sm btn-outline-primary mx-1 " data-toggle="tooltip" title="خصوصیت اضافه ">
   <a >
     <i class=" far fa-file-alt"></i>
   </a>
@@ -64,6 +70,10 @@ export class CellActionCustomerList implements ICellRendererAngularComp {
 
     Edit_Customer_Property() {
         this.params.context.componentParent.Edit_Customer_Property(this.params.data.CustomerCode);
+    }
+
+    Factor_Customer_Property() {
+        this.params.context.componentParent.Factor_Customer_Property(this.params.data.CustomerCode);
     }
 
 }

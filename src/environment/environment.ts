@@ -6,14 +6,14 @@ export const environment = {
 
 
   //  Build
-  //api_Url: 'http://itmali.ir/webapi/',
+  // api_Url: 'http://itmali.ir/webapi/',
 
   // development
   api_Url: 'http://localhost:60006/api/',
 
 
   // //// Qoqnos_Coffee
-  // api_Url: 'http://94.139.164.68:60005/api/',
+  //api_Url: 'http://94.139.164.68:60005/api/',
 
 
 

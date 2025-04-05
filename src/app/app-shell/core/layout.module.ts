@@ -20,6 +20,7 @@ import { NotifierModule } from 'angular-notifier';
 import { FullCalendarModule } from '@fullcalendar/angular'; // import the main module
 import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { AgGridModule } from 'ag-grid-angular';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
   {
@@ -48,6 +49,7 @@ const routes: Routes = [
     FooterComponent,
     RightSliderComponent,
     ToolbarComponent,
+    DashboardComponent,
   ],
   providers: [
     { provide: LocationStrategy, useClass: PathLocationStrategy },

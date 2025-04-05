@@ -1,12 +1,64 @@
-<div class="card">
+<div class="card"
+  style="background: url('./assets/images/Dashboard.jpg') no-repeat center center; background-size: cover; height: 100vh;">
   <div class="card-body">
-    <div class="d-flex justify-content-between align-items-center">
+
+    <ng-container *ngIf="!loading_supportpanel">
+
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <div class="card" style="background-color: rgba(255, 255, 255, 1); padding: 20px;">
+                <div class="card-header">
+                  <h5 class="card-title">گزارش پشتیبانی پنل</h5>
+                </div>
+                <div class="card-body">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th class="text-center">نام پشتیبان</th>
+                        <th class="text-center">تعداد فاکتور بدون رکورد</th>
+                        <th class="text-center">تعداد فاکتور باز</th>
+                        <th class="text-center">تعداد کل فاکتورها</th>
+                        <th class="text-center">تعداد ردیف‌ها</th>
+                        <th class="text-center">مجموع کارکرد</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let row of reportData">
+                        <tr class="text-center">
+                          <td>{{ row.BrokerNameWithoutType }}</td>
+
+                          <!-- بدون رکورد و فاکتور باز -->
+                          <td
+                            [ngClass]="{'text-danger': row.WithoutRows > 0, 'fw-bold': row.WithoutRows > 0, 'fs-2': row.WithoutRows > 0}">
+                            {{ row.WithoutRows }}
+                          </td>
+                          <td
+                            [ngClass]="{'text-danger': row.OpenFactor > 0, 'fw-bold': row.OpenFactor > 0, 'fs-2': row.OpenFactor > 0}">
+                            {{ row.OpenFactor }}
+                          </td>
+
+                          <!-- بقیه ستون‌ها -->
+                          <td>{{ row.Factors }}</td>
+                          <td>{{ row.RowsCount }}</td>
+                          <td>{{ row.TotalWork }}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
 
 
-      <div class="w-auto p-3">
-        <img style="max-width: 100%; height: auto;" src="./assets/images/Dashboard.jpg" />
       </div>
+    </ng-container>
 
-    </div>
+
+
   </div>
 </div>
