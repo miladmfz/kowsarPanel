@@ -55,6 +55,15 @@ export class CentralWebApiService {
 
   }
 
+  AttendanceDashboard(): Observable<any[]> {
+    const params = new HttpParams()
+    return this.client.get<any[]>(this.kowsarweb_baseUrl + "AttendanceDashboard", { headers: this.headers, params: params })
+  }
+
+
+  ManualAttendance(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarweb_baseUrl + "ManualAttendance", command, { headers: this.headers })
+  }
 
 
 

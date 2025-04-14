@@ -46,6 +46,24 @@ export class CustomerWebApiService {
 
   }
 
+  GetWebFactorRowsSupport(FactorCode: string): Observable<any[]> {
+    const params = new HttpParams().append('FactorCode', FactorCode)
+    return this.client.get<any[]>(this.kowsarweb_baseUrl + "GetWebFactorRowsSupport", { headers: this.headers, params: params })
+  }
+
+
+
+  AttendanceDashboard(): Observable<any[]> {
+    const params = new HttpParams()
+    return this.client.get<any[]>(this.kowsarweb_baseUrl + "AttendanceDashboard", { headers: this.headers, params: params })
+  }
+
+
+  ManualAttendance(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarweb_baseUrl + "ManualAttendance", command, { headers: this.headers })
+  }
+
+
 
 
 

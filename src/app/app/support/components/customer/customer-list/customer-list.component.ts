@@ -7,6 +7,7 @@ import { forEachChild } from 'typescript';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { CellActionCustomerFactor } from './cell-action-customer-factor';
 @Component({
   selector: 'app-customer-list',
   templateUrl: './customer-list.component.html',
@@ -26,6 +27,7 @@ export class CustomerListComponent extends AgGridBaseComponent
 
   records;
   records_factor;
+  records_support_factorrows;
 
   title = 'لیست مشتریان کوثر  ';
   loading: boolean = true;
@@ -185,6 +187,15 @@ export class CustomerListComponent extends AgGridBaseComponent
 
     this.columnDefs1 = [
       {
+        field: 'عملیات',
+        pinned: 'left',
+        cellRenderer: CellActionCustomerFactor,
+        cellRendererParams: {
+          editUrl: '/support/letter-detail',
+        },
+        width: 100,
+      },
+      {
         field: 'FactorDate',
         headerName: 'تاریخ فاکتور',
         filter: 'agSetColumnFilter',
@@ -226,6 +237,19 @@ export class CustomerListComponent extends AgGridBaseComponent
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         minWidth: 70
+      },
+
+    ];
+
+    this.columnDefs2 = [
+
+      {
+        field: 'GoodName',
+        headerName: ' نام آیتم',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150,
+
       },
 
     ];
@@ -274,9 +298,8 @@ export class CustomerListComponent extends AgGridBaseComponent
     })
   }
 
+
   Factor_Customer_Property(CustomerCode) {
-
-
 
     this.repo.GetCustomerFactor(CustomerCode).subscribe((data: any) => {
       this.records_factor = data.Factors;
@@ -286,7 +309,14 @@ export class CustomerListComponent extends AgGridBaseComponent
     });
   }
 
+  GetFactorrows(FactorCode) {
+    this.repo.GetWebFactorRowsSupport(FactorCode).subscribe((data: any) => {
 
+      this.records_support_factorrows = data.Factors
+      this.CustomerFactorRow_dialog_show()
+
+    });
+  }
 
 
 
@@ -382,6 +412,8 @@ export class CustomerListComponent extends AgGridBaseComponent
   }
 
 
+
+
   explain_dialog_show() {
     const modal = this.renderer.selectRootElement('#customerexplain', true);
     this.renderer.addClass(modal, 'show');
@@ -443,6 +475,23 @@ export class CustomerListComponent extends AgGridBaseComponent
     this.renderer.removeAttribute(modal, 'aria-modal');
     this.renderer.removeAttribute(modal, 'role');
   }
+
+
+  CustomerFactorRow_dialog_show() {
+    const modal = this.renderer.selectRootElement('#customerfactorrow', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  CustomerFactorRow_dialog_close() {
+    const modal = this.renderer.selectRootElement('#customerfactorrow', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
 
 
 

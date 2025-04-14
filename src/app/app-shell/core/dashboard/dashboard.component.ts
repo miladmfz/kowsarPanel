@@ -15,11 +15,13 @@ export class DashboardComponent implements OnInit {
 
 
   loading_supportpanel: boolean = true;
+  loading_supportatt: boolean = true;
+
 
   BrokerRef: string = '';
 
   reportData: any[] = [];
-
+  Attendance_Data: any[] = [];
 
   ngOnInit(): void {
     if (sessionStorage.getItem("PhAddress3") == '100') {
@@ -46,6 +48,18 @@ export class DashboardComponent implements OnInit {
       }
 
     });
+
+    if (this.BrokerRef == '') {
+      this.repo.AttendanceDashboard().subscribe((data: any) => {
+        this.loading_supportatt = false
+
+        this.Attendance_Data = data.Attendances;
+        // } else {
+        //   this.reportData = data.Panels.filter(panel => panel.BrokerCode === this.BrokerRef);
+        // }
+      });
+
+    }
 
   }
 

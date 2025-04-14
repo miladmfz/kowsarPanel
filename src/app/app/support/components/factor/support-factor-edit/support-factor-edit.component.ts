@@ -324,41 +324,49 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
 
   Set_EndFactorTime() {
-    this.Loading_Modal_Response_show()
 
-    const currentTime = new Date();
-    const hours = currentTime.getHours().toString().padStart(2, '0');
-    const minutes = currentTime.getMinutes().toString().padStart(2, '0');
-    const timeString = `${hours}:${minutes}`;
 
-    this.EditForm_supportfactor_property.patchValue({
-      Endtime: timeString,
+    if (this.records_support_factorrows && this.records_support_factorrows.length > 0) {
 
-    });
+      this.Loading_Modal_Response_show()
 
-    const start1 = this.timeStringToDate(this.EditForm_supportfactor_property.value.starttime);
-    const end1 = this.timeStringToDate(this.EditForm_supportfactor_property.value.Endtime);
-    let duration = (end1.getTime() - start1.getTime()) / 1000 / 60; // duration in minutes
-    this.EditForm_supportfactor_property.patchValue({
-      worktime: duration + "",
+      const currentTime = new Date();
+      const hours = currentTime.getHours().toString().padStart(2, '0');
+      const minutes = currentTime.getMinutes().toString().padStart(2, '0');
+      const timeString = `${hours}:${minutes}`;
 
-    });
-
-    if (duration < 0) {
       this.EditForm_supportfactor_property.patchValue({
-        worktime: "0",
+        Endtime: timeString,
 
       });
+
+      const start1 = this.timeStringToDate(this.EditForm_supportfactor_property.value.starttime);
+      const end1 = this.timeStringToDate(this.EditForm_supportfactor_property.value.Endtime);
+      let duration = (end1.getTime() - start1.getTime()) / 1000 / 60; // duration in minutes
+      this.EditForm_supportfactor_property.patchValue({
+        worktime: duration + "",
+
+      });
+
+      if (duration < 0) {
+        this.EditForm_supportfactor_property.patchValue({
+          worktime: "0",
+
+        });
+      }
+
+
+      this.repo.Support_EndFactorTime(this.EditForm_supportfactor_property.value).subscribe((data: any) => {
+
+        this.notificationService.succeded();
+        this.Loading_Modal_Response_close()
+        this.GetFactor()
+      });
+
+
+    } else {
+      this.notificationService.error1("هیچ ردیفی برای این فاکتور زده نشده", "اخطار");
     }
-
-
-    this.repo.Support_EndFactorTime(this.EditForm_supportfactor_property.value).subscribe((data: any) => {
-
-      this.notificationService.succeded();
-      this.Loading_Modal_Response_close()
-      this.GetFactor()
-    });
-
 
 
   }
@@ -512,8 +520,10 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
       this.FactorCode = data.Factors[0].FactorCode
 
       this.notificationService.succeded();
-      this.Loading_Modal_Response_close()
-      this.GetFactor()
+
+      this.router.navigate(['/support/support-factor-edit', data.Factors[0].FactorCode]);
+      //this.Loading_Modal_Response_close()
+      //this.GetFactor()
 
     });
 
@@ -545,7 +555,9 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
   deleteFactor() {
     if (this.records_support_factorrows && this.records_support_factorrows.length > 0) {
 
-      this.notificationService.error('این فاکتور دارای اقلام می باشد');
+      this.notificationService.error('این فاکتور دارای اقلام می باشد', "خطا");
+
+
     } else {
       this.fireDeleteFactor().then((result) => {
         if (result.isConfirmed) {

@@ -15,11 +15,16 @@ export class SidebarComponent implements OnInit {
   CustName_Small = '';
   Explain = '';
   CentralRef = '';
+  BrokerRef = '';
   imageData: string = '';
   Imageitem: string = '';
 
   AlarmActive_Row: number = 0;
   AlarmActtive_Conversation: number = 0;
+  reportData: any[] = [];
+
+
+  status_att: string = '';
 
 
   apporder: string = '';
@@ -39,7 +44,11 @@ export class SidebarComponent implements OnInit {
 
     this.AlarmActive_Row = parseInt(sessionStorage.getItem("AlarmActive_Row"))
     this.AlarmActtive_Conversation = parseInt(sessionStorage.getItem("AlarmActtive_Conversation"))
-
+    if (sessionStorage.getItem("PhAddress3") == '100') {
+      this.BrokerRef = ''
+    } else {
+      this.BrokerRef = sessionStorage.getItem("BrokerCode")
+    }
     this.fetchImageData()
   }
 
@@ -101,8 +110,23 @@ export class SidebarComponent implements OnInit {
     });
 
 
+    this.repo.AttendanceDashboard().subscribe((data: any) => {
+      //this.reportData = data.Attendances;
+
+      if (this.BrokerRef != '') {
+        this.reportData = data.Attendances.filter(Attendance => Attendance.CentralRef === this.CentralRef);
+
+        this.status_att = this.reportData[0].Status;
+      }
+
+
+    });
+
 
   }
-
+  currentStatus: string = "1";  // پیش فرض وضعیت: 1 (حاضر)
+  setStatus(status: string): void {
+    this.currentStatus = status;
+  }
 
 }

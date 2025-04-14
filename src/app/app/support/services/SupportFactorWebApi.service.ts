@@ -136,6 +136,17 @@ export class SupportFactorWebApiService {
     return this.client.get<any[]>(this.kowsarWebUrl + "GetSupportPanel", { headers: this.headers, params: params })
   }
 
+  AttendanceDashboard(): Observable<any[]> {
+    const params = new HttpParams()
+    return this.client.get<any[]>(this.kowsarWebUrl + "AttendanceDashboard", { headers: this.headers, params: params })
+  }
+
+
+  ManualAttendance(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "ManualAttendance", command, { headers: this.headers })
+  }
+
+
 
   // GetProperty(Where: string): Observable<any[]> {
   //   const params = new HttpParams().append('Where', Where)
