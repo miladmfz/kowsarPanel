@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { CentralWebApiService } from 'src/app/app/support/services/CentralWebApi.service';
+import { SharedService } from '../../framework-services/shared.service';
 declare var $: any;
 
 @Component({
@@ -9,6 +12,9 @@ declare var $: any;
 export class SidebarComponent implements OnInit {
   constructor(
     private repo: CentralWebApiService,
+    private sharedService: SharedService,
+    private readonly router: Router,
+
   ) { }
   PhFullName = '';
   JobPersonRef = '';
@@ -18,6 +24,9 @@ export class SidebarComponent implements OnInit {
   BrokerRef = '';
   imageData: string = '';
   Imageitem: string = '';
+
+  currentStatus: string = "";  // پیش فرض وضعیت: 1 (حاضر)
+
 
   AlarmActive_Row: number = 0;
   AlarmActtive_Conversation: number = 0;
@@ -34,6 +43,10 @@ export class SidebarComponent implements OnInit {
 
   array_applications: any[] = [];
 
+  EditForm_Attendance = new FormGroup({
+    CentralRef: new FormControl(''),
+    Status: new FormControl(''),
+  });
 
   ngOnInit(): void {
     this.PhFullName = sessionStorage.getItem("PhFullName")
@@ -49,7 +62,37 @@ export class SidebarComponent implements OnInit {
     } else {
       this.BrokerRef = sessionStorage.getItem("BrokerCode")
     }
+
+    this.EditForm_Attendance.patchValue({
+      CentralRef: this.CentralRef,
+    });
+
+
     this.fetchImageData()
+    // this.sharedService.sharedData$.subscribe(data => {
+    //   if (data?.from === 'dashboard' && data?.action === 'status-change') {
+    //     this.currentStatus = data.value;
+    //   }
+    // });
+
+
+    this.sharedService.sidebarAction$.subscribe(action => {
+      if (action === 'refreshStatus') {
+        this.refreshSidebar();
+      }
+    });
+
+
+
+  }
+
+  refreshSidebar() {
+    console.log('🔄 Sidebar is refreshing...');
+    // اینجا می‌تونی متد real بازخوانی دیتا رو صدا بزنی
+    // مثل: this.loadUserStatus();
+
+    this.Get_AttendanceDashboard();
+    this.Get_Notification();
   }
 
   logout() {
@@ -72,16 +115,7 @@ export class SidebarComponent implements OnInit {
 
 
 
-    // this.repo.GetNotification(sessionStorage.getItem("PersonInfoRef")).subscribe((data: any) => {
 
-
-    //   sessionStorage.setItem("AlarmActive_Row", data.users[0].AlarmActive_Row)
-    //   sessionStorage.setItem("AlarmActtive_Conversation", data.users[0].AlarmActtive_Conversation)
-
-    //   this.AlarmActive_Row = parseInt(sessionStorage.getItem("AlarmActive_Row"))
-    //   this.AlarmActtive_Conversation = parseInt(sessionStorage.getItem("AlarmActtive_Conversation"))
-
-    // });
 
 
 
@@ -110,23 +144,53 @@ export class SidebarComponent implements OnInit {
     });
 
 
+    this.Get_Notification()
+    this.Get_AttendanceDashboard()
+
+  }
+  Get_Notification() {
+    this.repo.GetNotification(sessionStorage.getItem("PersonInfoRef")).subscribe((data: any) => {
+
+
+      sessionStorage.setItem("AlarmActive_Row", data.users[0].AlarmActive_Row)
+      sessionStorage.setItem("AlarmActtive_Conversation", data.users[0].AlarmActtive_Conversation)
+
+      this.AlarmActive_Row = parseInt(sessionStorage.getItem("AlarmActive_Row"))
+      this.AlarmActtive_Conversation = parseInt(sessionStorage.getItem("AlarmActtive_Conversation"))
+
+    });
+  }
+
+  Get_AttendanceDashboard() {
+
     this.repo.AttendanceDashboard().subscribe((data: any) => {
       //this.reportData = data.Attendances;
+      this.reportData = data.Attendances.filter(Attendance => Attendance.CentralRef === this.CentralRef);
+      console.log(this.reportData)
+
+      this.currentStatus = this.reportData[0].Status;
 
       if (this.BrokerRef != '') {
-        this.reportData = data.Attendances.filter(Attendance => Attendance.CentralRef === this.CentralRef);
 
-        this.status_att = this.reportData[0].Status;
       }
 
 
     });
-
-
   }
-  currentStatus: string = "1";  // پیش فرض وضعیت: 1 (حاضر)
+
   setStatus(status: string): void {
+
+    this.EditForm_Attendance.patchValue({
+      Status: status,
+    });
+
     this.currentStatus = status;
+    this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe((data: any) => {
+      this.Get_AttendanceDashboard()
+
+      location.reload();
+    });
+
   }
 
 }

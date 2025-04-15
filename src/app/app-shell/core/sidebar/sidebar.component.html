@@ -50,30 +50,39 @@
       </div>
 
       <!-- Sidebar Menu -->
-      <div class="m-3">
-        <!-- سایر منوها -->
 
-        <!-- Dropdown برای انتخاب وضعیت -->
-        <div class="dropdown">
-          <button class="btn btn-outline-primary dropdown-toggle" type="button" id="statusDropdown"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            وضعیت حضور
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="statusDropdown">
-            <li><a class="dropdown-item" (click)="setStatus('1')">حاضر</a></li>
-            <li><a class="dropdown-item" (click)="setStatus('2')">مشغول</a></li>
-            <li><a class="dropdown-item" (click)="setStatus('0')">غایب</a></li>
-          </ul>
+      <ng-container *ngIf="JobPersonRef.length>0">
+
+        <div class="m-1">
+
+          <!-- Dropdown برای انتخاب وضعیت - کوچیک‌تر -->
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="statusDropdown"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              انتخاب وضعیت
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="statusDropdown">
+              <li><a class="dropdown-item" (click)="setStatus('1')">حاضر</a></li>
+              <li><a class="dropdown-item" (click)="setStatus('2')">مشغول</a></li>
+              <li><a class="dropdown-item" (click)="setStatus('0')">غایب</a></li>
+              <li><a class="dropdown-item" (click)="setStatus('3')">مرخصی</a></li>
+            </ul>
+
+          </div>
+
+          <!-- نمایش وضعیت انتخاب‌شده - بزرگ‌تر و چشم‌گیر -->
+          <div class="mt-3">
+            <span *ngIf="currentStatus === '1'" class="badge bg-success fs-4 fw-bold px-3 py-2">حاضر</span>
+            <span *ngIf="currentStatus === '2'" class="badge bg-warning text-dark fs-4 fw-bold px-3 py-2">مشغول</span>
+            <span *ngIf="currentStatus === '0'" class="badge bg-danger fs-4 fw-bold px-3 py-2">غایب</span>
+            <span *ngIf="currentStatus === '3'" class="badge bg-info text-dark fs-4 fw-bold px-3 py-2">مرخصی</span>
+          </div>
+
+
         </div>
 
-        <!-- نمایش وضعیت انتخاب شده -->
-        <div class="mt-2">
-          <span *ngIf="currentStatus === '1'" class="badge bg-success">حاضر</span>
-          <span *ngIf="currentStatus === '2'" class="badge bg-warning">مشغول</span>
-          <span *ngIf="currentStatus === '0'" class="badge bg-danger">غایب</span>
-        </div>
-      </div>
 
+      </ng-container>
 
       <ng-container *ngIf="CustName_Small.length>0">
         <span>نام مجموعه</span>
@@ -107,7 +116,7 @@
           </a>
         </li>
 
-        <li>
+        <!-- <li>
 
           <a href="#factor" data-bs-toggle="collapse" aria-expanded="false" aria-controls="factor">
             <i class="fas fa-cash-register"></i>
@@ -129,7 +138,7 @@
 
             </ul>
           </div>
-        </li>
+        </li> -->
 
 
         <ng-container *ngIf="JobPersonRef.length>0">

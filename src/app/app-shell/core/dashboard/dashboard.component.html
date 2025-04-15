@@ -20,6 +20,7 @@
                         <tr>
                           <th class="text-center">نام</th>
                           <th class="text-center">نام خانوادگی</th>
+                          <th class="text-center">تاریخ</th>
                           <th class="text-center">وضعیت حضور</th>
                         </tr>
                       </thead>
@@ -28,20 +29,25 @@
                           <tr class="text-center">
                             <td>{{ item.PhFirstName || '-' }}</td>
                             <td>{{ item.PhLastName || '-' }}</td>
-                            <td>
-                              <span class="badge" [ngClass]="{
+                            <td>{{ formatToJalali(item.AttendanceDate) }}</td>
+                            <td class="text-center">
+                              <span class="badge fw-bold fs-5 px-3 py-2" [ngClass]="{
                                 'bg-success': item.Status === '1',
-                                'bg-warning': item.Status === '2',
-                                'bg-danger': item.Status === '0'
+                                'bg-warning text-dark': item.Status === '2',
+                                'bg-danger': item.Status === '0',
+                                'bg-info text-dark': item.Status === '3'
                               }">
                                 {{
                                 item.Status === '1' ? 'حاضر' :
                                 item.Status === '2' ? 'مشغول' :
                                 item.Status === '0' ? 'غایب' :
+                                item.Status === '3' ? 'مرخصی' :
                                 'نامشخص'
                                 }}
                               </span>
+
                             </td>
+
                           </tr>
                         </ng-container>
                         <tr *ngIf="reportData.length === 0">

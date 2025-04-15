@@ -11,7 +11,7 @@ export class AuthKowsarWebApiService {
 
   constructor(private client: HttpClient) { }
 
-  baseUrl = environment.api_Url + "Support/";
+  kowsarweb_baseUrl = environment.api_Url + "Support/";
 
   headers = new HttpHeaders()
 
@@ -27,10 +27,13 @@ export class AuthKowsarWebApiService {
 
 
   IsUser(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "IsUser", command, { headers: this.headers });
+    return this.client.post<any[]>(this.kowsarweb_baseUrl + "IsUser", command, { headers: this.headers });
   }
 
 
+  ManualAttendance(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarweb_baseUrl + "ManualAttendance", command, { headers: this.headers })
+  }
 
 
 

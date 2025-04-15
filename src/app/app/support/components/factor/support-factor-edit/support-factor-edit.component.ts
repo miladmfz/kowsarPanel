@@ -12,6 +12,7 @@ import { CellActionSupportFactorCustomerEdit } from './cell-action-support-facto
 import { Location } from '@angular/common';
 
 import Swal from 'sweetalert2';
+import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 
 @Component({
   selector: 'app-support-factor-edit',
@@ -28,10 +29,18 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
     private route: ActivatedRoute,
     private location: Location,
     private fb: FormBuilder,
+    private sharedService: SharedService,
     private readonly notificationService: NotificationService,
 
   ) { super(); }
 
+  changeStatus(status: string) {
+    this.sharedService.sendData({
+      from: 'dashboard',
+      action: 'status-change',
+      value: status
+    });
+  }
 
   priceInput = new Subject<void>();
   discountInput = new Subject<void>();
@@ -178,6 +187,10 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
   };
 
 
+  EditForm_Attendance = new FormGroup({
+    CentralRef: new FormControl(''),
+    Status: new FormControl(''),
+  });
 
   Config_Declare() {
 
@@ -314,9 +327,25 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
     });
 
     this.repo.Support_StartFactorTime(this.EditForm_supportfactor_property.value).subscribe((data: any) => {
-      this.notificationService.succeded();
-      this.Loading_Modal_Response_close()
-      this.GetFactor()
+
+
+      this.EditForm_Attendance.patchValue({
+        CentralRef: sessionStorage.getItem("CentralRef"),
+        Status: "2" //busy
+      });
+
+      this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe((data: any) => {
+        this.notificationService.succeded();
+        this.Loading_Modal_Response_close()
+        this.GetFactor()
+        //this.changeStatus("2")
+        this.sharedService.triggerSidebarAction('refreshStatus');
+      });
+
+
+
+
+
     });
 
 
@@ -358,9 +387,20 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
       this.repo.Support_EndFactorTime(this.EditForm_supportfactor_property.value).subscribe((data: any) => {
 
-        this.notificationService.succeded();
-        this.Loading_Modal_Response_close()
-        this.GetFactor()
+        this.EditForm_Attendance.patchValue({
+          CentralRef: sessionStorage.getItem("CentralRef"),
+          Status: "1" //hozor
+        });
+
+        this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe((data: any) => {
+          this.notificationService.succeded();
+          this.Loading_Modal_Response_close()
+          this.GetFactor()
+          //this.changeStatus("1")
+          this.sharedService.triggerSidebarAction('refreshStatus');
+        });
+
+
       });
 
 

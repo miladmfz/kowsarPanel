@@ -9,6 +9,15 @@ export class SharedService {
   data: any;
   _dataBS = new BehaviorSubject([]);
 
+
+  private _sharedData$ = new BehaviorSubject<any>(null);
+  sharedData$ = this._sharedData$.asObservable();
+
+
+  private sidebarActionSubject = new BehaviorSubject<string | null>(null);
+  sidebarAction$ = this.sidebarActionSubject.asObservable();
+
+
   constructor() {
     this._dataBS.next(this.data);
   }
@@ -21,5 +30,12 @@ export class SharedService {
   emptyData() {
     this.data = [];
     this._dataBS.next(this.data);
+  }
+  sendData(data: any) {
+    this._sharedData$.next(data);
+  }
+
+  triggerSidebarAction(action: string) {
+    this.sidebarActionSubject.next(action);
   }
 }

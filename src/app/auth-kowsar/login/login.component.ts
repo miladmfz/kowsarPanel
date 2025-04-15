@@ -51,10 +51,20 @@ export class LoginComponent implements OnInit {
 
   developLogin() {
 
+    // this.LoginForm.setValue({
+    //   UName: 'mfz',
+    //   UPass: '123456'
+    // });
+
+
     this.LoginForm.setValue({
-      UName: 'mfz',
-      UPass: '123456'
+      UName: 'sadeghzade',
+      UPass: '53568286'
     });
+
+
+
+
 
     const command = this.LoginForm.value;
 
@@ -84,13 +94,39 @@ export class LoginComponent implements OnInit {
 
 
 
-        this.router.navigate(['/dashboard']);
+        if (String(data.users[0].JobPersonRef).length > 0) {
+
+          this.setAttendance()
+        } else {
+          this.router.navigate(['/dashboard']);
+
+        }
+
       }
     });
   }
 
 
   showPassword: boolean = false;
+
+  EditForm_Attendance = new FormGroup({
+    CentralRef: new FormControl(''),
+    Status: new FormControl(''),
+  });
+
+  setAttendance() {
+
+    this.EditForm_Attendance.patchValue({
+      CentralRef: sessionStorage.getItem("CentralRef"),
+      Status: "1" //hozor
+    });
+
+    this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe((data: any) => {
+      this.router.navigate(['/dashboard']);
+    });
+
+  }
+
 
   toggleShowPassword() {
     this.showPassword = !this.showPassword;
