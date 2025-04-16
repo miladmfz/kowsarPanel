@@ -3,6 +3,7 @@ import { AutletterWebApiService } from '../../../services/AutletterWebApi.servic
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormControl, FormGroup } from '@angular/forms';
+import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 
 @Component({
   selector: 'app-autletter-attach',
@@ -16,6 +17,7 @@ export class AutletterAttachComponent implements OnInit {
     private http: HttpClient,
     private elementRef: ElementRef,
     private renderer: Renderer2,
+    private sharedService: SharedService,
 
   ) { }
   @Input() TextData: string = '';
@@ -36,6 +38,19 @@ export class AutletterAttachComponent implements OnInit {
   ngOnInit() {
     this.GetAttachFileList();
     //this.CentralRef = sessionStorage.getItem("CentralRef");
+    this.CallService()
+  }
+
+  CallService() {
+    this.sharedService.RefreshAllActions$.subscribe(action => {
+      if (action === 'refresh') {
+        this.refreshpage();
+      }
+    });
+  }
+
+  refreshpage() {
+    this.GetAttachFileList();
   }
 
 
@@ -88,7 +103,7 @@ export class AutletterAttachComponent implements OnInit {
     }
     this.repo.SetAttachFile(command).subscribe((data) => {
       this.EditForm.reset();
-      location.reload();
+      this.sharedService.triggerActionAll('refresh');
 
     });
 

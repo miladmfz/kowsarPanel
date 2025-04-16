@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BrokerWebApiService } from '../../../services/BrokerWebApi.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 
 @Component({
   selector: 'app-broker-setting',
@@ -8,7 +9,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class BrokerSettingComponent implements OnInit {
 
-  constructor(private repo: BrokerWebApiService,) { }
+  constructor(
+    private repo: BrokerWebApiService,
+    private sharedService: SharedService,
+  ) { }
   items: any = [];
   Printers: any = [];
 
@@ -41,6 +45,28 @@ export class BrokerSettingComponent implements OnInit {
 
   ngOnInit() {
 
+
+    this.Get_Base_data();
+
+    this.CallService()
+  }
+
+  CallService() {
+    this.sharedService.RefreshAllActions$.subscribe(action => {
+      if (action === 'refresh') {
+        this.refreshpage();
+      }
+    });
+  }
+
+  refreshpage() {
+    this.Get_Base_data();
+  }
+
+
+
+
+  Get_Base_data() {
     this.repo.Web_GetDbsetupObject("BrokerKowsar").subscribe(e => {
       this.items = e;
 
@@ -53,15 +79,10 @@ export class BrokerSettingComponent implements OnInit {
 
   }
 
-
-
   onInputChange() {
 
 
   }
-
-
-
   SelectDbSetup(index: any) {
     this.selected_des = this.items[index].Description;
     this.selected_value = this.items[index].DataValue;
@@ -71,7 +92,7 @@ export class BrokerSettingComponent implements OnInit {
 
   UpdateDbSetup() {
     this.repo.UpdateDbSetup(this.selected_value, this.selected_Key).subscribe(e => {
-      location.reload();
+      this.sharedService.triggerActionAll('refresh');
     });
 
   }
@@ -96,7 +117,7 @@ export class BrokerSettingComponent implements OnInit {
     const command = this.EditForm_printer.value
     if (this.EditForm_printer.value.PrinterName !== "") {
       this.repo.UpdatePrinter(command).subscribe(e => {
-        location.reload();
+        this.sharedService.triggerActionAll('refresh');
       });
     }
   }

@@ -4,6 +4,7 @@ import { SupportFactorWebApiService } from 'src/app/app/support/services/Support
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import * as moment from 'jalali-moment';
+import { SharedService } from '../../framework-services/shared.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html'
@@ -11,6 +12,7 @@ import * as moment from 'jalali-moment';
 export class DashboardComponent implements OnInit {
   constructor(
     private repo: SupportFactorWebApiService,
+    private sharedService: SharedService,
   ) { }
 
 
@@ -22,6 +24,7 @@ export class DashboardComponent implements OnInit {
 
   reportData: any[] = [];
   Attendance_Data: any[] = [];
+  attendanceInterval: any;
 
   ngOnInit(): void {
     if (sessionStorage.getItem("PhAddress3") == '100') {
@@ -33,8 +36,20 @@ export class DashboardComponent implements OnInit {
 
     this.getpanel_data()
     this.getAttendance_data()
+    this.attendanceInterval = setInterval(() => {
+      this.getAttendance_data();
+    }, 15000);
+    this.sharedService.RefreshAllActions$.subscribe(action => {
+      if (action === 'refresh') {
+        this.refreshpage();
+      }
+    });
   }
 
+  refreshpage() {
+    this.getAttendance_data();
+    this.getpanel_data()
+  }
 
 
   formatToJalali(date: string | null | undefined): string {
@@ -64,6 +79,12 @@ export class DashboardComponent implements OnInit {
 
 
 
+  }
+  ngOnDestroy() {
+    // پاک کردن interval برای جلوگیری از memory leak
+    if (this.attendanceInterval) {
+      clearInterval(this.attendanceInterval);
+    }
   }
   getAttendance_data() {
 

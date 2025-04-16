@@ -1,11 +1,12 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { FactorWebApiService } from 'src/app/app/factor/services/FactorWebApi.service';
 import { SupportFactorWebApiService } from '../../../services/SupportFactorWebApi.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { CellActionSupportFactorList } from './cell-action-support-factor-list';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-support-factor-list',
@@ -89,8 +90,13 @@ export class SupportFactorListComponent extends AgGridBaseComponent
   }
 
 
+
+
+
   override ngOnInit(): void {
     super.ngOnInit();
+
+
     if (sessionStorage.getItem("PhAddress3") == '100') {
       this.BrokerRef = ''
 
@@ -99,81 +105,21 @@ export class SupportFactorListComponent extends AgGridBaseComponent
 
     }
 
-    // this.columnDefs = [
-    //   {
-    //     field: 'عملیات',
-    //     pinned: 'left',
-    //     cellRenderer: CellActionFactorList,
-    //     cellRendererParams: {
-    //       editUrl: '/support/letter-detail',
-    //     },
-    //     width: 150,
-    //   },
-    //   {
-    //     field: 'FactorDate',
-    //     headerName: 'تاریخ فاکتور',
-    //     filter: 'agSetColumnFilter',
-    //     cellClass: 'text-center',
-    //     minWidth: 150,
-
-    //   },
-    //   {
-    //     field: 'CustomerName',
-    //     headerName: 'نام مشتری',
-    //     filter: 'agSetColumnFilter',
-    //     cellClass: 'text-center',
-    //     minWidth: 150
-    //   },
-
-
-    //   {
-    //     field: 'BrokerNameWithoutType',
-    //     headerName: 'نام پشتیبان',
-    //     filter: 'agSetColumnFilter',
-    //     cellClass: 'text-center',
-    //     minWidth: 150
-    //   },
-    //   // {
-    //   //   field: 'OwnerName',
-    //   //   headerName: 'ایجاد کننده',
-    //   //   filter: 'agSetColumnFilter',
-    //   //   cellClass: 'text-center',
-    //   //   minWidth: 150
-    //   // },
-
-    //   {
-    //     field: 'starttime',
-    //     headerName: 'شروع',
-    //     filter: 'agSetColumnFilter',
-    //     cellClass: 'text-center',
-    //     minWidth: 100
-    //   }, {
-    //     field: 'Endtime',
-    //     headerName: 'پایان',
-    //     filter: 'agSetColumnFilter',
-    //     cellClass: 'text-center',
-    //     minWidth: 100
-    //   }, {
-    //     field: 'worktime',
-    //     headerName: 'مدت کار',
-    //     filter: 'agSetColumnFilter',
-    //     cellClass: 'text-center',
-    //     minWidth: 80
-    //   }, {
-    //     field: 'Barbary',
-    //     headerName: 'شرح',
-    //     filter: 'agSetColumnFilter',
-    //     cellClass: 'text-center',
-    //     minWidth: 150
-    //   },
-    // ];
 
     this.getList();
     this.getpanel_data()
-    // setTimeout(() => {
 
-    // }, 200);
+
+
+
   }
+
+  navigateToEdit(id) {
+    this.router.navigate(['/support/support-factor-edit', id]);
+
+
+  }
+
 
 
 
@@ -330,9 +276,8 @@ export class SupportFactorListComponent extends AgGridBaseComponent
     this.renderer.removeAttribute(modal, 'aria-modal');
     this.renderer.removeAttribute(modal, 'role');
   }
-  navigateToEdit(id) {
-    this.router.navigate(['/support/support-factor-edit', id]);
-  }
+
+
 }
 
 

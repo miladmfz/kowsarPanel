@@ -32,7 +32,14 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, {
+      scrollPositionRestoration: 'enabled',
+      anchorScrolling: 'enabled',
+      // onSameUrlNavigation: 'ignore'  // (اختیاری، بستگی به نیازت)
+    }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule { }
+

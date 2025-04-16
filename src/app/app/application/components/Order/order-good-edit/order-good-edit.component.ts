@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { UntypedFormBuilder } from '@angular/forms';
 import { environment } from 'src/environment/environment';
 import { Location } from '@angular/common';
+import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 
 @Component({
   selector: 'app-order-good-edit',
@@ -16,7 +17,7 @@ export class OrderGoodEditComponent implements OnInit {
     private repo: OrderWebApiService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-
+    private sharedService: SharedService,
     private location: Location,
     private http: HttpClient,
     private formBuilder: UntypedFormBuilder
@@ -66,6 +67,19 @@ export class OrderGoodEditComponent implements OnInit {
       }
     });
 
+    this.CallService()
+  }
+
+  CallService() {
+    this.sharedService.RefreshAllActions$.subscribe(action => {
+      if (action === 'refresh') {
+        this.refreshpage();
+      }
+    });
+  }
+
+  refreshpage() {
+    this.LoadFromUrl(this.id);
   }
 
 
@@ -210,8 +224,7 @@ export class OrderGoodEditComponent implements OnInit {
   DeleteGoodGroupCode(GoodGroupCode: string) {
 
     this.repo.DeleteGoodGroupCode(GoodGroupCode).subscribe(e => {
-      location.reload();
-
+      this.sharedService.triggerActionAll('refresh');
     });
 
   }
@@ -240,7 +253,7 @@ export class OrderGoodEditComponent implements OnInit {
     };
 
     this.repo.SendImageToServer(data).subscribe((response) => {
-      location.reload();
+      this.sharedService.triggerActionAll('refresh');
     });
 
   }
@@ -272,8 +285,7 @@ export class OrderGoodEditComponent implements OnInit {
 
       }
       this.repo.ChangeGoodActive(this.SingleItems[0].GoodCode, this.ActiveFlag).subscribe(e => {
-        location.reload();
-
+        this.sharedService.triggerActionAll('refresh');
       });
 
 

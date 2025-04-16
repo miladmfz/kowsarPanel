@@ -69,27 +69,17 @@ export class SidebarComponent implements OnInit {
 
 
     this.fetchImageData()
-    // this.sharedService.sharedData$.subscribe(data => {
-    //   if (data?.from === 'dashboard' && data?.action === 'status-change') {
-    //     this.currentStatus = data.value;
-    //   }
-    // });
 
-
-    this.sharedService.sidebarAction$.subscribe(action => {
-      if (action === 'refreshStatus') {
-        this.refreshSidebar();
+    this.sharedService.RefreshAllActions$.subscribe(action => {
+      if (action === 'refresh') {
+        this.refreshpage();
       }
     });
 
 
-
   }
 
-  refreshSidebar() {
-    console.log('🔄 Sidebar is refreshing...');
-    // اینجا می‌تونی متد real بازخوانی دیتا رو صدا بزنی
-    // مثل: this.loadUserStatus();
+  refreshpage() {
 
     this.Get_AttendanceDashboard();
     this.Get_Notification();
@@ -187,8 +177,8 @@ export class SidebarComponent implements OnInit {
     this.currentStatus = status;
     this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe((data: any) => {
       this.Get_AttendanceDashboard()
+      this.sharedService.triggerActionAll('refresh');
 
-      location.reload();
     });
 
   }

@@ -20,6 +20,7 @@ import { CellActionGoodEditGroup } from './components/Good/good-edit/cell-action
 import { CellActionGoodEditStack } from './components/Good/good-edit/cell-action-good-edit-stack';
 import { CellActionGoodImageBtn } from './components/Good/good-edit/cell-action-good-edit-image-btn';
 import { CellActionGoodGroupBtn } from './components/Good/good-edit/cell-action-good-edit-group-btn';
+import { GoodOrderEditComponent } from './components/goods_order/good-order-edit/good-order-edit.component';
 
 
 
@@ -49,7 +50,8 @@ import { CellActionGoodGroupBtn } from './components/Good/good-edit/cell-action-
     CellActionGoodEditGroup,
     CellActionGoodEditStack,
     CellActionGoodImageBtn,
-    CellActionGoodGroupBtn
+    CellActionGoodGroupBtn,
+    GoodOrderEditComponent
   ],
 })
 export class KowsarModule { }

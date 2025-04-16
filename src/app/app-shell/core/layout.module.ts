@@ -10,7 +10,7 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { RightSliderComponent } from './right-slider/right-slider.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
-import { RouterModule, Routes } from '@angular/router';
+import { RouteReuseStrategy, RouterModule, Routes } from '@angular/router';
 import { Routing } from '../../app/routing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -53,6 +53,7 @@ const routes: Routes = [
   ],
   providers: [
     { provide: LocationStrategy, useClass: PathLocationStrategy },
+
     NotificationService,
     // SwalService,
   ],

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OcrWebApiService } from '../../../services/OcrWebApi.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 
 @Component({
   selector: 'app-ocr-setting',
@@ -8,7 +9,11 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class OcrSettingComponent implements OnInit {
 
-  constructor(private repo: OcrWebApiService,) { }
+  constructor(
+    private repo: OcrWebApiService,
+    private sharedService: SharedService,
+  ) { }
+
   items: any = [];
   Printers: any = [];
   BasketColumns: any = [];
@@ -31,6 +36,28 @@ export class OcrSettingComponent implements OnInit {
 
 
   ngOnInit() {
+
+    this.Get_Base_data();
+
+    this.CallService()
+  }
+
+  CallService() {
+    this.sharedService.RefreshAllActions$.subscribe(action => {
+      if (action === 'refresh') {
+        this.refreshpage();
+      }
+    });
+  }
+
+  refreshpage() {
+    this.Get_Base_data();
+  }
+
+
+
+
+  Get_Base_data() {
     this.repo.Web_GetDbsetupObject("Ocrkowsar").subscribe(e => {
       this.items = e;
 
@@ -40,6 +67,7 @@ export class OcrSettingComponent implements OnInit {
 
     });
     this.GetBasketColumnList();
+
   }
 
   CreateAppBasketColumn() {
@@ -60,7 +88,7 @@ export class OcrSettingComponent implements OnInit {
 
   UpdateDbSetup() {
     this.repo.UpdateDbSetup(this.selected_value, this.selected_Key).subscribe(e => {
-      location.reload();
+      this.sharedService.triggerActionAll('refresh');
     });
 
   }
@@ -85,7 +113,7 @@ export class OcrSettingComponent implements OnInit {
     const command = this.EditForm_printer.value
     if (this.EditForm_printer.value.PrinterName !== "") {
       this.repo.UpdatePrinter(command).subscribe(e => {
-        location.reload();
+        this.sharedService.triggerActionAll('refresh');
       });
     }
   }

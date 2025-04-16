@@ -17,6 +17,9 @@ export class SharedService {
   private sidebarActionSubject = new BehaviorSubject<string | null>(null);
   sidebarAction$ = this.sidebarActionSubject.asObservable();
 
+  private RefreshAll = new BehaviorSubject<string | null>(null);
+  RefreshAllActions$ = this.RefreshAll.asObservable();
+
 
   constructor() {
     this._dataBS.next(this.data);
@@ -35,7 +38,11 @@ export class SharedService {
     this._sharedData$.next(data);
   }
 
-  triggerSidebarAction(action: string) {
-    this.sidebarActionSubject.next(action);
+  // triggerSidebarAction(action: string) {
+  //   this.sidebarActionSubject.next(action);
+  // }
+
+  triggerActionAll(action: string) {
+    this.RefreshAll.next(action);
   }
 }

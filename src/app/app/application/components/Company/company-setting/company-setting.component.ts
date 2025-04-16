@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CompanyWebApiService } from '../../../services/CompanyWebApi.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 
 @Component({
   selector: 'app-company-setting',
@@ -8,7 +9,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class CompanySettingComponent implements OnInit {
 
-  constructor(private repo: CompanyWebApiService,) { }
+  constructor(
+    private repo: CompanyWebApiService,
+    private sharedService: SharedService,
+  ) { }
 
 
 
@@ -37,6 +41,25 @@ export class CompanySettingComponent implements OnInit {
 
 
   ngOnInit() {
+    this.Get_Base_data();
+
+    this.CallService()
+  }
+
+  CallService() {
+    this.sharedService.RefreshAllActions$.subscribe(action => {
+      if (action === 'refresh') {
+        this.refreshpage();
+      }
+    });
+  }
+
+  refreshpage() {
+    this.Get_Base_data();
+  }
+
+
+  Get_Base_data() {
     this.repo.Web_GetDbsetupObject("Company").subscribe(e => {
       this.items = e;
 
@@ -47,6 +70,9 @@ export class CompanySettingComponent implements OnInit {
     });
     this.GetBasketColumnList();
   }
+
+
+
 
   CreateAppBasketColumn() {
 
@@ -85,7 +111,7 @@ export class CompanySettingComponent implements OnInit {
     const command = this.EditForm_printer.value
     if (this.EditForm_printer.value.PrinterName !== "") {
       this.repo.UpdatePrinter(command).subscribe(e => {
-        location.reload();
+        this.sharedService.triggerActionAll('refresh');
       });
     }
   }
@@ -98,7 +124,7 @@ export class CompanySettingComponent implements OnInit {
 
   UpdateDbSetup() {
     this.repo.UpdateDbSetup(this.selected_value, this.selected_Key).subscribe(e => {
-      location.reload();
+      this.sharedService.triggerActionAll('refresh');
     });
 
   }

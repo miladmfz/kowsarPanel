@@ -338,8 +338,9 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
         this.notificationService.succeded();
         this.Loading_Modal_Response_close()
         this.GetFactor()
-        //this.changeStatus("2")
-        this.sharedService.triggerSidebarAction('refreshStatus');
+
+        this.sharedService.triggerActionAll('refresh');
+
       });
 
 
@@ -396,8 +397,9 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
           this.notificationService.succeded();
           this.Loading_Modal_Response_close()
           this.GetFactor()
-          //this.changeStatus("1")
-          this.sharedService.triggerSidebarAction('refreshStatus');
+
+          this.sharedService.triggerActionAll('refresh');
+
         });
 
 
@@ -666,8 +668,20 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
   deletefactorRecord() {
     this.repo.DeleteWebFactorSupport(this.FactorCode).subscribe((data: any) => {
-      this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
-      this.location.back();
+
+
+      this.EditForm_Attendance.patchValue({
+        CentralRef: sessionStorage.getItem("CentralRef"),
+        Status: "1" //hozor
+      });
+
+      this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe((data: any) => {
+        this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
+        this.location.back();
+
+        this.sharedService.triggerActionAll('refresh');
+      });
+
     });
   }
 

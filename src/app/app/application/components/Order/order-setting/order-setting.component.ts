@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderWebApiService } from '../../../services/OrderWebApi.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 
 @Component({
   selector: 'app-order-setting',
@@ -8,7 +9,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class OrderSettingComponent implements OnInit {
 
-  constructor(private repo: OrderWebApiService,) { }
+  constructor(
+    private repo: OrderWebApiService,
+    private sharedService: SharedService,
+  ) { }
   items: any = [];
   Printers: any = [];
   BasketColumns: any = [];
@@ -25,6 +29,27 @@ export class OrderSettingComponent implements OnInit {
 
   ngOnInit() {
 
+    this.Get_Base_data();
+
+    this.CallService()
+  }
+
+  CallService() {
+    this.sharedService.RefreshAllActions$.subscribe(action => {
+      if (action === 'refresh') {
+        this.refreshpage();
+      }
+    });
+  }
+
+  refreshpage() {
+    this.Get_Base_data();
+  }
+
+
+
+
+  Get_Base_data() {
     this.repo.Web_GetDbsetupObject("OrderKowsar").subscribe(e => {
       this.items = e;
 
@@ -35,9 +60,8 @@ export class OrderSettingComponent implements OnInit {
     });
     this.GetBasketColumnList();
 
-
-
   }
+
 
 
 
@@ -55,7 +79,8 @@ export class OrderSettingComponent implements OnInit {
 
   UpdateDbSetup() {
     this.repo.UpdateDbSetup(this.selected_value, this.selected_Key).subscribe(e => {
-      location.reload();
+
+      this.sharedService.triggerActionAll('refresh');
     });
 
   }
@@ -89,7 +114,7 @@ export class OrderSettingComponent implements OnInit {
     const command = this.EditForm_printer.value
     if (this.EditForm_printer.value.PrinterName !== "") {
       this.repo.UpdatePrinter(command).subscribe(e => {
-        location.reload();
+        this.sharedService.triggerActionAll('refresh');
       });
     }
   }

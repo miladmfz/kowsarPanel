@@ -82,5 +82,6 @@ import { CellActionSupportGoodEdit } from './components/factor/support-factor-ed
     CellActionSupportFactorCustomerEdit,
 
   ]
+
 })
 export class SupportModule { }

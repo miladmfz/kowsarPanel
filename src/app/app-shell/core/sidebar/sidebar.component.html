@@ -33,15 +33,14 @@
       </ng-container>
       <div class="dropdown">
         <a href="#" class="text-reset dropdown-toggle h5 mt-2 mb-1 d-block fw-medium" data-bs-toggle="dropdown">
-          {{PhFullName}}
-          <i class="fe-user me-1"></i></a>
+          {{ PhFullName }}
+          <i class="fe-user me-1"></i>
+        </a>
         <div class="dropdown-menu user-pro-dropdown">
-
-          <a routerLink="/support/profile" class="dropdown-item notify-item">
+          <a [routerLink]="['/support/profile']" class="dropdown-item notify-item">
             <i class="fe-user me-1"></i>
             <span>حساب کاربری</span>
           </a>
-
           <a (click)="logout()" class="dropdown-item notify-item">
             <i class="fe-log-out me-1"></i>
             <span>خروج</span>
@@ -53,29 +52,29 @@
 
       <ng-container *ngIf="JobPersonRef.length>0">
 
-        <div class="m-1">
+        <div class="m-3 border-top pt-3">
 
           <!-- Dropdown برای انتخاب وضعیت - کوچیک‌تر -->
-          <div class="dropdown">
-            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="statusDropdown"
-              data-bs-toggle="dropdown" aria-expanded="false">
+          <div class="dropdown mb-3">
+            <button class="btn btn-sm btn-outline-info dropdown-toggle w-100 text-center" type="button"
+              id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
               انتخاب وضعیت
             </button>
-            <ul class="dropdown-menu" aria-labelledby="statusDropdown">
-              <li><a class="dropdown-item" (click)="setStatus('1')">حاضر</a></li>
-              <li><a class="dropdown-item" (click)="setStatus('2')">مشغول</a></li>
-              <li><a class="dropdown-item" (click)="setStatus('0')">غایب</a></li>
-              <li><a class="dropdown-item" (click)="setStatus('3')">مرخصی</a></li>
+            <ul class="dropdown-menu w-100 text-center" aria-labelledby="statusDropdown">
+              <li><a class="dropdown-item" (click)="setStatus('1')">آزاد</a></li>
+              <li><a class="dropdown-item" (click)="setStatus('2')">در حال کار</a></li>
+              <li><a class="dropdown-item" (click)="setStatus('0')">عدم حضور</a></li>
+              <li><a class="dropdown-item" (click)="setStatus('3')">مرخصی موقت</a></li>
             </ul>
-
           </div>
 
           <!-- نمایش وضعیت انتخاب‌شده - بزرگ‌تر و چشم‌گیر -->
-          <div class="mt-3">
-            <span *ngIf="currentStatus === '1'" class="badge bg-success fs-4 fw-bold px-3 py-2">حاضر</span>
-            <span *ngIf="currentStatus === '2'" class="badge bg-warning text-dark fs-4 fw-bold px-3 py-2">مشغول</span>
-            <span *ngIf="currentStatus === '0'" class="badge bg-danger fs-4 fw-bold px-3 py-2">غایب</span>
-            <span *ngIf="currentStatus === '3'" class="badge bg-info text-dark fs-4 fw-bold px-3 py-2">مرخصی</span>
+          <div class="text-center">
+            <span *ngIf="currentStatus === '1'" class="badge bg-success fs-5 fw-bold px-3 py-2">آزاد</span>
+            <span *ngIf="currentStatus === '2'" class="badge bg-warning text-dark fs-5 fw-bold px-3 py-2">در حال
+              کار</span>
+            <span *ngIf="currentStatus === '0'" class="badge bg-danger fs-5 fw-bold px-3 py-2">عدم حضور</span>
+            <span *ngIf="currentStatus === '3'" class="badge bg-info text-dark fs-5 fw-bold px-3 py-2">مرخصی موقت</span>
           </div>
 
 
@@ -84,23 +83,31 @@
 
       </ng-container>
 
-      <ng-container *ngIf="CustName_Small.length>0">
-        <span>نام مجموعه</span>
-        <h5 class="text-danger">{{CustName_Small}}</h5>
-        <span>پشتیبانی</span>
-        <h5 class="text-danger">{{Explain}}</h5>
+      <ng-container *ngIf="CustName_Small.length > 0">
+        <div class="m-3 border-top pt-3">
+          <p class="mb-1 text-muted small">نام مجموعه</p>
+          <h5 class="text-danger">{{ CustName_Small }}</h5>
+
+          <p class="mb-1 text-muted small">پشتیبانی</p>
+          <h5 class="text-danger">{{ Explain }}</h5>
+        </div>
       </ng-container>
 
-
-      <ng-container *ngIf="AlarmActive_Row>0">
-        <h5 class="text-danger">ارجاع جدید دارید</h5>
+      <ng-container *ngIf="AlarmActive_Row > 0">
+        <div class="m-3">
+          <a class="text-danger d-block fw-bold" [routerLink]="['/support/letter-mywork']">
+            ارجاع جدید دارید
+          </a>
+        </div>
       </ng-container>
 
-
-      <ng-container *ngIf="AlarmActtive_Conversation>0">
-        <h5 class="text-danger">پیام جدید دارید</h5>
+      <ng-container *ngIf="AlarmActtive_Conversation > 0">
+        <div class="m-3">
+          <a class="text-danger d-block fw-bold" [routerLink]="['/support/letter-mywork']">
+            پیام جدید دارید
+          </a>
+        </div>
       </ng-container>
-
     </div>
 
 
@@ -109,7 +116,7 @@
         <li class="menu-title">منوی برنامه</li>
 
         <li>
-          <a routerLink="/dashboard" routerLinkActive="active" data-bs-toggle="collapse" aria-expanded="false"
+          <a [routerLink]="['/dashboard']" routerLinkActive="active" data-bs-toggle="collapse" aria-expanded="false"
             aria-controls="sidebarDashboards" class="waves-effect">
             <i class="ri-dashboard-line"></i>
             <span> داشبورد </span>
@@ -128,11 +135,11 @@
             <ul class="nav-second-level">
 
               <li>
-                <a routerLink="/factor/factor-edit">فاکتور فروش</a>
+                <a [routerLink]="['/factor/factor-edit">فاکتور فروش</a>
               </li>
 
               <li>
-                <a routerLink="/factor/factor-list">لیست فاکتور فروش </a>
+                <a [routerLink]="['/factor/factor-list">لیست فاکتور فروش </a>
               </li>
 
 
@@ -152,10 +159,10 @@
               <ul class="nav-second-level">
 
                 <li>
-                  <a routerLink="/kowsar/good-list"> مدیریت کالا </a>
+                  <a [routerLink]="['/kowsar/good-list']" routerLinkActive="active"> مدیریت کالا </a>
                 </li>
                 <li>
-                  <a routerLink="/kowsar/goodsgrp-list"> گروه کالایی </a>
+                  <a [routerLink]="['/kowsar/goodsgrp-list']" routerLinkActive="active"> گروه کالایی </a>
                 </li>
 
               </ul>
@@ -179,7 +186,7 @@
 
                   <ng-container *ngIf="appbroker.length>0">
                     <li>
-                      <a routerLink="/application/broker-detail"> بازاریابی </a>
+                      <a [routerLink]="['/application/broker-detail']" routerLinkActive="active"> بازاریابی </a>
                     </li>
 
                   </ng-container>
@@ -187,7 +194,7 @@
                   <ng-container *ngIf="appocr.length>0">
 
                     <li>
-                      <a routerLink="application/ocr-detail"> بایگانی </a>
+                      <a [routerLink]="['application/ocr-detail']" routerLinkActive="active"> بایگانی </a>
                     </li>
 
                   </ng-container>
@@ -197,14 +204,14 @@
                   <ng-container *ngIf="apporder.length>0">
 
                     <li>
-                      <a routerLink="application/order-detail"> سفارشگیر </a>
+                      <a [routerLink]="['application/order-detail']" routerLinkActive="active"> سفارشگیر </a>
                     </li>
                   </ng-container>
 
 
 
                   <!-- <li>
-                    <a routerLink="application/company-detail"> مشتریان </a>
+                    <a [routerLink]="['application/company-detail']" routerLinkActive="active"> مشتریان </a>
                   </li> -->
 
                 </ul>
@@ -235,30 +242,32 @@
             <ul class="nav-second-level">
               <ng-container *ngIf="JobPersonRef.length>0">
                 <li>
-                  <a routerLink="/support/support-factor-edit">فاکتور پشتیبانی</a>
+                  <!-- <a [routerLink]="['/support/support-factor-edit">فاکتور پشتیبانی</a> -->
+                  <a [routerLink]="['/support/support-factor-edit']" routerLinkActive="active">فاکتور پشتیبانی</a>
+
                 </li>
 
                 <li>
-                  <a routerLink="/support/support-factor-list">لیست فاکتور پشتیبانی </a>
+                  <a [routerLink]="['/support/support-factor-list']" routerLinkActive="active">لیست فاکتور پشتیبانی </a>
                 </li>
                 <li>
-                  <a routerLink="/support/customer-list">لیست مشتریان</a>
+                  <a [routerLink]="['/support/customer-list']" routerLinkActive="active">لیست مشتریان</a>
                 </li>
                 <li>
-                  <a routerLink="/support/central-list">لیست اجزای پایه</a>
+                  <a [routerLink]="['/support/central-list']" routerLinkActive="active">لیست اجزای پایه</a>
                 </li>
               </ng-container>
 
               <li>
-                <a routerLink="/support/letter-insert"> ایجاد تیکت جدید </a>
+                <a [routerLink]="['/support/letter-insert']" routerLinkActive="active"> ایجاد تیکت جدید </a>
               </li>
               <li>
-                <a routerLink="/support/letter-list"> لیست تمامی تیکت ها </a>
+                <a [routerLink]="['/support/letter-list']" routerLinkActive="active"> لیست تمامی تیکت ها </a>
               </li>
 
               <ng-container *ngIf="JobPersonRef.length>0">
                 <li>
-                  <a routerLink="/support/letter-mywork"> وضعیت تیکت های من </a>
+                  <a [routerLink]="['/support/letter-mywork']" routerLinkActive="active"> وضعیت تیکت های من </a>
                 </li>
               </ng-container>
 
@@ -278,13 +287,13 @@
               <ul class="nav-second-level">
 
                 <li>
-                  <a routerLink="/manager/list"> اپلیکیشن‌های کوثر </a>
+                  <a [routerLink]="['/manager/list']" routerLinkActive="active"> اپلیکیشن‌های کوثر </a>
                 </li>
                 <li>
-                  <a routerLink="/manager/active"> اپلیکیشن‌های فعال </a>
+                  <a [routerLink]="['/manager/active']" routerLinkActive="active"> اپلیکیشن‌های فعال </a>
                 </li>
                 <li>
-                  <a routerLink="/manager/log"> لاگ سرور </a>
+                  <a [routerLink]="['/manager/log']" routerLinkActive="active"> لاگ سرور </a>
                 </li>
 
               </ul>
@@ -303,10 +312,10 @@
             <ul class="nav-second-level">
 
               <li>
-                <a routerLink="/document/download-list">دانلود ها</a>
+                <a [routerLink]="['/document/download-list']" routerLinkActive="active">دانلود ها</a>
               </li>
               <li>
-                <a routerLink="/document/education-list">اموزش ها</a>
+                <a [routerLink]="['/document/education-list']" routerLinkActive="active">اموزش ها</a>
               </li>
             </ul>
           </div>
@@ -367,7 +376,7 @@
           <i class="fe-user me-1"></i></a>
         <div class="dropdown-menu user-pro-dropdown">
         
-          <a routerLink="/support/profile" class="dropdown-item notify-item">
+          <a [routerLink]="['/support/profile']" routerLinkActive="active" class="dropdown-item notify-item">
             <i class="fe-user me-1"></i>
             <span>حساب کاربری</span>
           </a>
@@ -405,7 +414,7 @@
         <li class="menu-title">منوی برنامه</li>
 
         <li>
-          <a routerLink="/dashboard" routerLinkActive="active" data-bs-toggle="collapse" aria-expanded="false"
+          <a [routerLink]="['/dashboard']" routerLinkActive="active" data-bs-toggle="collapse" aria-expanded="false"
             aria-controls="sidebarDashboards" class="waves-effect">
             <i class="ri-dashboard-line"></i>
             <span> داشبورد </span>
@@ -429,7 +438,7 @@
 
                   <ng-container *ngIf="appbroker.length>0">
                     <li>
-                      <a routerLink="/application/broker-detail"> بازاریابی </a>
+                      <a [routerLink]="['/application/broker-detail']" routerLinkActive="active"> بازاریابی </a>
                     </li>
 
                   </ng-container>
@@ -437,7 +446,7 @@
                   <ng-container *ngIf="appocr.length>0">
 
                     <li>
-                      <a routerLink="application/ocr-detail"> بایگانی </a>
+                      <a [routerLink]="['application/ocr-detail']" routerLinkActive="active"> بایگانی </a>
                     </li>
 
                   </ng-container>
@@ -447,7 +456,7 @@
                   <ng-container *ngIf="apporder.length>0">
 
                     <li>
-                      <a routerLink="application/order-detail"> سفارشگیر </a>
+                      <a [routerLink]="['application/order-detail']" routerLinkActive="active"> سفارشگیر </a>
                     </li>
                   </ng-container>
 
@@ -478,7 +487,7 @@
               <ul class="nav-second-level">
 
                 <li>
-                  <a routerLink="/manager/log"> لاگ سرور </a>
+                  <a [routerLink]="['/manager/log']" routerLinkActive="active"> لاگ سرور </a>
                 </li>
 
               </ul>
