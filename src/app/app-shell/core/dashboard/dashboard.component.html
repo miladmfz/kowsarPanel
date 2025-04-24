@@ -18,17 +18,17 @@
                     <table class="table table-striped">
                       <thead>
                         <tr>
-                          <th class="text-center">نام</th>
-                          <th class="text-center">نام خانوادگی</th>
+                          <th class="text-center">گارشناس </th>
                           <th class="text-center">تاریخ</th>
                           <th class="text-center">وضعیت حضور</th>
+                          <th class="text-center">عملیات</th>
+
                         </tr>
                       </thead>
                       <tbody>
                         <ng-container *ngFor="let item of Attendance_Data">
                           <tr class="text-center">
-                            <td>{{ item.PhFirstName || '-' }}</td>
-                            <td>{{ item.PhLastName || '-' }}</td>
+                            <td>{{ item.PhFirstName +' '+ item.PhLastName|| '-' }}</td>
                             <td>{{ formatToJalali(item.AttendanceDate) }}</td>
                             <td class="text-center">
                               <span class="badge fw-bold fs-5 px-3 py-2" [ngClass]="{
@@ -46,6 +46,11 @@
                                 }}
                               </span>
 
+                            </td>
+                            <td>
+                              <button class="btn btn-sm btn-primary" (click)="SetLetter_config(item)">
+                                تیکت
+                              </button>
                             </td>
 
                           </tr>
@@ -127,5 +132,45 @@
     </div>
     <!-- پایان محتوای اسکرول -->
 
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="letterexplain" tabindex="-1" aria-labelledby="letterexplainLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="letterexplainLabel">{{letterexplain_modal_title}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="letterexplain_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="EditForm_LetterToEmployer" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+
+                  <div class="form-group col-md-12">
+                    <label for="DescriptionText" class="col-form-label">شرح</label>
+                    <input type="text" class="form-control" id="DescriptionText" formControlName="DescriptionText"
+                      maxlength="100" autocomplete="off" />
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="letterexplain_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="SendLetterToEmployer()">ارسال تیکت</button>
+      </div>
+    </div>
   </div>
 </div>

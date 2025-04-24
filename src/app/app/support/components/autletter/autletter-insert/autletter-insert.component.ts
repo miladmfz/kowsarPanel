@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 import { DbSetup_lookup } from '../../../lookup-type';
+import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 
 @Component({
   selector: 'app-autletter-insert',
@@ -12,7 +13,7 @@ import { DbSetup_lookup } from '../../../lookup-type';
 })
 export class AutletterInsertComponent implements OnInit {
 
-  constructor(private repo: AutletterWebApiService, private router: Router) { }
+  constructor(private repo: AutletterWebApiService, private router: Router, private readonly notificationService: NotificationService,) { }
 
   EditForm = new FormGroup({
     dateValue: new FormControl(''),
@@ -76,11 +77,6 @@ export class AutletterInsertComponent implements OnInit {
   submit(action) {
     this.CentralRef = sessionStorage.getItem("CentralRef");
     const command = this.EditForm.value;
-    if (action == 'delete') {
-
-      // TODO List
-
-    }
 
     this.repo.LetterInsert(
       this.ToDayDate,
@@ -93,7 +89,16 @@ export class AutletterInsertComponent implements OnInit {
       .subscribe(e => {
         const intValue = parseInt(e[0].LetterCode, 10);
         if (!isNaN(intValue) && intValue > 0) {
-          this.router.navigate(['/support/letter-list']);
+          this.notificationService.succeded();
+          if (action == '') {
+            this.router.navigate(['/support/letter-list']);
+          } else if (action == 'detail') {
+            this.router.navigate(['/support/letter-detail', e[0].LetterCode]);
+
+          } else {
+            // TODO List
+          }
+
         } else {
           //Todo notification erroor
         }

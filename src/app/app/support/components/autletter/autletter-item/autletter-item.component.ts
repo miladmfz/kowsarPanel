@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { DbSetup_lookup } from '../../../lookup-type';
 import { CellActionAutletterRowList } from './cell-action-autletterrow-list';
+import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 @Component({
   selector: 'app-autletter-item',
   templateUrl: './autletter-item.component.html',
@@ -17,15 +18,11 @@ export class AutletterItemComponent
   constructor(
     private router: Router,
     private repo: AutletterWebApiService,
-
+    private readonly notificationService: NotificationService,
     private renderer: Renderer2
   ) {
     super();
   }
-
-
-
-
 
 
 
@@ -112,28 +109,28 @@ export class AutletterItemComponent
         headerName: 'کاربر',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
-        minWidth: 150
+        minWidth: 100
       },
       {
         field: 'RowLetterDate',
         headerName: 'تاریخ',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
-        minWidth: 150
+        minWidth: 100
       },
       {
         field: 'LetterRowState',
-        headerName: 'LetterRowState	',
+        headerName: 'وضعیت ارجاع',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
-        minWidth: 150
+        minWidth: 100
       },
       {
         field: 'LetterRowDescription',
         headerName: 'شرح	',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
-        minWidth: 150
+        minWidth: 250
       },
 
     ];
@@ -189,10 +186,10 @@ export class AutletterItemComponent
   submit(action) {
 
     const command = this.EditForm.value;
+
     if (action == 'delete') {
 
     }
-
 
 
     this.repo.AutLetterRowInsert(
@@ -206,6 +203,7 @@ export class AutletterItemComponent
     ).subscribe(e => {
       const intValue = parseInt(e[0].LetterRef, 10);
       if (!isNaN(intValue) && intValue > 0) {
+        this.notificationService.succeded();
         this.router.navigate(['/support/letter-list']);
       } else {
         //Todo notification erroor
@@ -235,8 +233,10 @@ export class AutletterItemComponent
 
   Set_Autletterrow_Property() {
     this.repo.Update_AutletterRow(this.EditForm_explain.value).subscribe((data: any) => {
+      this.notificationService.succeded();
       this.explain_dialog_close()
       this.Get_LetterRowList()
+
     });
   }
 

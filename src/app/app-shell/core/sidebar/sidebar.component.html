@@ -9,7 +9,7 @@
       </span>
       <span class="logo-lg">
         <img src="./assets/images/logo-dark.png" alt="" height="20" />
-        <!-- <span class="logo-lg-text-light">M</span> -->
+        <!-- <span class="logo-lg-text-light"> </span> -->
       </span>
     </a>
 
@@ -21,6 +21,7 @@
         <img src="./assets/images/logo-light.png" alt="" height="20" />
       </span>
     </a>
+
   </div>
 
   <div class="h-100" data-simplebar>
@@ -76,8 +77,6 @@
             <span *ngIf="currentStatus === '0'" class="badge bg-danger fs-5 fw-bold px-3 py-2">عدم حضور</span>
             <span *ngIf="currentStatus === '3'" class="badge bg-info text-dark fs-5 fw-bold px-3 py-2">مرخصی موقت</span>
           </div>
-
-
         </div>
 
 
@@ -124,25 +123,19 @@
         </li>
 
         <!-- <li>
-
           <a href="#factor" data-bs-toggle="collapse" aria-expanded="false" aria-controls="factor">
             <i class="fas fa-cash-register"></i>
             <span>فروش</span>
             <span class="menu-arrow"></span>
           </a>
-
           <div class="collapse" id="factor">
             <ul class="nav-second-level">
-
               <li>
                 <a [routerLink]="['/factor/factor-edit">فاکتور فروش</a>
               </li>
-
               <li>
                 <a [routerLink]="['/factor/factor-list">لیست فاکتور فروش </a>
               </li>
-
-
             </ul>
           </div>
         </li> -->
@@ -182,8 +175,6 @@
                 <ul class="nav-second-level">
 
 
-
-
                   <ng-container *ngIf="appbroker.length>0">
                     <li>
                       <a [routerLink]="['/application/broker-detail']" routerLinkActive="active"> بازاریابی </a>
@@ -208,8 +199,6 @@
                     </li>
                   </ng-container>
 
-
-
                   <!-- <li>
                     <a [routerLink]="['application/company-detail']" routerLinkActive="active"> مشتریان </a>
                   </li> -->
@@ -219,16 +208,6 @@
             </li>
           </ng-container>
         </ng-container>
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -334,12 +313,6 @@
 <!-- Left Sidebar End -->
 
 
-
-
-
-
-
-
 <!-- <div class="left-side-menu">
   <div class="logo-box">
     <a href="index.html" class="logo logo-dark text-center">
@@ -434,8 +407,6 @@
                 <ul class="nav-second-level">
 
 
-
-
                   <ng-container *ngIf="appbroker.length>0">
                     <li>
                       <a [routerLink]="['/application/broker-detail']" routerLinkActive="active"> بازاریابی </a>
@@ -451,8 +422,6 @@
 
                   </ng-container>
 
-
-
                   <ng-container *ngIf="apporder.length>0">
 
                     <li>
@@ -467,12 +436,6 @@
             </li>
           </ng-container>
         </ng-container>
-
-
-
-
-
-
 
 
 

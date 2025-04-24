@@ -128,6 +128,13 @@ export class CustomerListComponent extends AgGridBaseComponent
         width: 250,
       },
       {
+        field: 'CustomerCode',
+        headerName: 'کد مشتری',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
         field: 'CustName_Small',
         headerName: 'نام مشتری  ',
         filter: 'agSetColumnFilter',

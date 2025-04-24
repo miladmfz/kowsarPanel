@@ -5,7 +5,7 @@ import { GoToDocumentCellBtnRenderer } from '../ag-grid/go-to-document-cell-btn-
 import { IsCanceledCellRenderer } from '../ag-grid/is-canceled-label-cell';
 import { TaxStateCellRenderer } from '../ag-grid/tax-state-label-cell';
 import { ValidateionStateCellRenderer } from '../ag-grid/validation-state-label-cell';
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Inject, Output } from '@angular/core';
 import { AppSharedDataComponent } from '../app-shared-data/app-shared-data.component';
 import { ImageCellRenderer } from '../ag-grid/image-cell-renderer';
 import { AG_GRID_LOCALE_FA } from './locale.fa';
@@ -20,23 +20,42 @@ declare var Swal: any;
 })
 export class AgGridBaseComponent extends AppSharedDataComponent {
   public childName: string;
-  public gridApi;
-  public gridColumnApi;
   public;
   modules: Module[] = AllModules;
   public defaultColDef;
   public defaultColDef1;
   CellClickedEven
+  resizeTimeout: any;
+
 
   public columnDefs: any[];
+  public gridApi;
+  public gridColumnApi;
+
   public columnDefs1: any[];
+  public gridApi1;
+  public gridColumnApi1;
 
   public columnDefs2: any[];
+  public gridApi2;
+  public gridColumnApi2;
 
   public columnDefs3: any[];
+  public gridApi3;
+  public gridColumnApi3;
+
   public columnDefs4: any[];
+  public gridApi4;
+  public gridColumnApi4;
+
   public columnDefs5: any[];
+  public gridApi5;
+  public gridColumnApi5;
+
   public columnDefs6: any[];
+  public gridApi6;
+  public gridColumnApi6;
+
 
   public selectedRows: any[];
 
@@ -67,6 +86,7 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
       rowSelection: "multiple",
       onCellClicked: () =>
         console.log('Cell was clicked'),
+
     };
 
 
@@ -113,6 +133,42 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
   };
 
 
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    clearTimeout(this.resizeTimeout);
+    this.resizeTimeout = setTimeout(() => {
+      if (this.gridApi) {
+        this.gridApi.doLayout();
+        this.gridApi.sizeColumnsToFit(); // فقط اگه بخوای ستون‌ها هم مقیاس‌پذیر باشن
+      }
+      if (this.gridApi1) {
+        this.gridApi1.doLayout();
+        this.gridApi1.sizeColumnsToFit(); // فقط اگه بخوای ستون‌ها هم مقیاس‌پذیر باشن
+      }
+      if (this.gridApi2) {
+        this.gridApi2.doLayout();
+        this.gridApi2.sizeColumnsToFit(); // فقط اگه بخوای ستون‌ها هم مقیاس‌پذیر باشن
+      }
+      if (this.gridApi3) {
+        this.gridApi3.doLayout();
+        this.gridApi3.sizeColumnsToFit(); // فقط اگه بخوای ستون‌ها هم مقیاس‌پذیر باشن
+      }
+      if (this.gridApi4) {
+        this.gridApi4.doLayout();
+        this.gridApi4.sizeColumnsToFit(); // فقط اگه بخوای ستون‌ها هم مقیاس‌پذیر باشن
+      }
+      if (this.gridApi5) {
+        this.gridApi5.doLayout();
+        this.gridApi5.sizeColumnsToFit(); // فقط اگه بخوای ستون‌ها هم مقیاس‌پذیر باشن
+      }
+      if (this.gridApi6) {
+        this.gridApi6.doLayout();
+        this.gridApi6.sizeColumnsToFit(); // فقط اگه بخوای ستون‌ها هم مقیاس‌پذیر باشن
+      }
+
+    }, 200);
+  }
+
 
   fireDeleteSwal() {
     return Swal.fire({
@@ -125,6 +181,7 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
       confirmButtonClass: 'btn btn-success mx-2',
       cancelButtonClass: 'btn btn-danger',
       buttonsStyling: !1,
+
     });
   }
 
@@ -162,25 +219,30 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
   onGridReady(params) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
-
     this.gridApi.hideOverlay();
+
   }
-  // onCellClicked(event) {
-  //   const clickedCellId = event.column.getId() + '_' + event.rowIndex;
-  //   if (clickedCellId === this.lastClickedCellId) {
-  //     this.clickCount++;
-  //   } else {
-  //     this.clickCount = 1;
-  //     this.lastClickedCellId = clickedCellId;
-  //   }
 
-  //   if (this.clickCount === this.resizeThreshold) {
-  //     // Perform action when double click threshold is reached
-  //     this.resizeColumn(event.column);
-  //     this.clickCount = 0;
-  //   }
-  // }
+  onGridReady2(params) {
+    this.gridApi2 = params.api;
+    this.gridColumnApi2 = params.columnApi;
+    this.gridApi2.hideOverlay();
 
+  }
+
+  onGridReady3(params) {
+    this.gridApi3 = params.api;
+    this.gridColumnApi3 = params.columnApi;
+    this.gridApi3.hideOverlay();
+
+  }
+
+  onGridReady4(params) {
+    this.gridApi4 = params.api;
+    this.gridColumnApi4 = params.columnApi;
+    this.gridApi4.hideOverlay();
+
+  }
 
 
   resizeColumn(column: any) {
@@ -188,15 +250,28 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
       const columnId = column.getColId();
       this.gridColumnApi.autoSizeColumn(columnId);
     }
+    if (this.gridColumnApi2) {
+      const columnId = column.getColId();
+      this.gridColumnApi2.autoSizeColumn(columnId);
+    }
+    if (this.gridColumnApi3) {
+      const columnId = column.getColId();
+      this.gridColumnApi3.autoSizeColumn(columnId);
+    }
+    if (this.gridColumnApi4) {
+      const columnId = column.getColId();
+      this.gridColumnApi4.autoSizeColumn(columnId);
+    }
   }
+
+
+
+
 
   onSelectionChanged(event) {
     this.selectedRows = event.api.getSelectedRows();
 
   }
-
-
-
 
 
 
@@ -216,11 +291,15 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
       this.lastClickedCellId = clickedCellId;
     }
 
+    console.log(this.clickCount)
     if (this.clickCount === this.resizeThreshold) {
+      console.log("true resizze")
       this.resizeColumn(event.column);
       this.clickCount = 0;
     }
   }
+
+
 
   onRowDoubleClicked(event) {
     if (event.node && event.node.group) {

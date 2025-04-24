@@ -5,11 +5,20 @@ declare var $: any;
 @Component({
     selector: 'edit-delete-cell-renderer',
     template: ` 
-<span  >
+
+    <ng-container *ngIf="CentralRef==RowExecutorCentralRef">
+
+    
+    <span  >
   <a  (click)="Get_Autletterrow_Property()" class="btn btn-sm btn-outline-primary mx-1 " data-toggle="tooltip" title="پشتیبانی">
     <i class="fas fa-edit"></i>
   </a>
   </span>
+
+  
+    </ng-container>
+    
+
 
   `,
 
@@ -21,13 +30,16 @@ export class CellActionAutletterRowList implements ICellRendererAngularComp {
     canDelete: true;
     canView: true;
     id: 0;
+    CentralRef: any;
 
+    RowExecutorCentralRef: any;
     refresh(params: any): boolean {
         return true;
     }
 
     agInit(params: any): void {
         this.params = params;
+        this.CentralRef = sessionStorage.getItem("CentralRef")
         if (params.canEdit) {
             this.canEdit = params.canEdit;
         }
@@ -41,6 +53,9 @@ export class CellActionAutletterRowList implements ICellRendererAngularComp {
 
         if (params.data.LetterRowCode) {
             this.id = params.data.LetterRowCode;
+        }
+        if (params.data.RowExecutorCentralRef) {
+            this.RowExecutorCentralRef = params.data.RowExecutorCentralRef;
         }
     }
 

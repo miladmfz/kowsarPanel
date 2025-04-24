@@ -68,7 +68,7 @@
     </div>
   </div>
 </form>
-<div class="form-group col-md-3">
+<!-- <div class="form-group col-md-3">
   <label for="datePicker" class="col-form-label">تاریخ</label>
   <div>
     <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false" [uiHideAfterSelectDate]="true">
@@ -76,15 +76,26 @@
     </ng-persian-datepicker>
   </div>
 
-</div>
+</div> -->
 <div class="card">
   <div class="card-body">
     <div class="col-sm-6">
-      <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
+      <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light m-2"
         (click)="submit('')">
         <span class="btn-label"><i class="fas fa-check-double"></i></span>ارسال تیکت </a>
 
+      <ng-container *ngIf="JobPersonRef.length>0">
+        <a href="javascript:void(0)" type="button" class="btn btn-primary waves-effect waves-light m-2"
+          (click)="submit('detail')">
+          <span class="btn-label"><i class="fas fa-check-double"></i></span>ثبت و ارجاع تیکت </a>
+      </ng-container>
+
+
+
+
     </div>
+
+
   </div>
 </div>
 

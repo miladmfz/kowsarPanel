@@ -147,6 +147,29 @@ export class SupportFactorWebApiService {
   }
 
 
+  AutLetterRowInsert(
+    LetterRef: string,
+    LetterDate: string,
+    Description: string,
+    LetterState: string,
+    LetterPriority: string,
+    CreatorCentral: string,
+    ExecuterCentral: string
+  ): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "AutLetterRowInsert", { LetterRef, LetterDate, Description, LetterState, LetterPriority, CreatorCentral, ExecuterCentral }, { headers: this.headers })
+  }
+
+
+  LetterInsert(
+    LetterDate: string,
+    title: string,
+    Description: string,
+    LetterState: string,
+    LetterPriority: string,
+    CentralRef: string
+  ): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "LetterInsert", { LetterDate, title, Description, LetterState, LetterPriority, CentralRef }, { headers: this.headers })
+  }
 
   // GetProperty(Where: string): Observable<any[]> {
   //   const params = new HttpParams().append('Where', Where)

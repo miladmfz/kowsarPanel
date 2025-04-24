@@ -113,11 +113,6 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
   private searchSubject_Good: Subject<string> = new Subject();
 
 
-
-
-
-
-
   EditForm_supportfactor_property = new FormGroup({
     starttime: new FormControl(''),
     Endtime: new FormControl(''),
