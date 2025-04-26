@@ -142,6 +142,13 @@ export class SupportFactorWebApiService {
   }
 
 
+
+  AttendanceHistory(CentralRef: string): Observable<any[]> {
+    const params = new HttpParams().append('CentralRef', CentralRef)
+    return this.client.get<any[]>(this.kowsarWebUrl + "AttendanceHistory", { headers: this.headers, params: params })
+  }
+
+
   ManualAttendance(command): Observable<any[]> {
     return this.client.post<any[]>(this.kowsarWebUrl + "ManualAttendance", command, { headers: this.headers })
   }

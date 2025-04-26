@@ -1,0 +1,105 @@
+<ng-container *ngIf="!loading_attendance">
+
+
+
+
+
+
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="card" style="background-color: rgba(255, 255, 255, 1); padding: 20px;">
+            <div class="card-header">
+              <h5 class="card-title">گزارش وضعیت حضور</h5>
+            </div>
+            <div class="card-body">
+
+              <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: auto" [rowData]="records"
+                [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+                (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+                [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
+                [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+                (selectionChanged)="onSelectionChanged($event)">
+              </ag-grid-angular>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</ng-container>
+
+
+
+
+
+<div class="modal fade" id="letterexplain" tabindex="-1" aria-labelledby="letterexplainLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="letterexplainLabel">{{letterexplain_modal_title}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="letterexplain_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="EditForm_LetterToEmployer" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+
+                  <div class="form-group col-md-12">
+                    <label for="DescriptionText" class="col-form-label">شرح</label>
+                    <input type="text" class="form-control" id="DescriptionText" formControlName="DescriptionText"
+                      maxlength="100" autocomplete="off" />
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="letterexplain_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="SendLetterToEmployer()">ارسال تیکت</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="attendancehistory" tabindex="-1" aria-labelledby="attendancehistoryLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="attendancehistoryLabel">گزارش وضعیت حضور</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="attendancehistory_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: auto" [rowData]="records_history"
+          [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+          (gridReady)="onGridReady2($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+          [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
+          [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+          (selectionChanged)="onSelectionChanged($event)">
+        </ag-grid-angular>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="attendancehistory_dialog_close()">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>

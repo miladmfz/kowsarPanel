@@ -75,6 +75,7 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
 
     this.defaultColDef = {
       lockVisible: true,
+      headerClass: "text-center",
       flex: 1,
       resizable: true,
       filter: true,

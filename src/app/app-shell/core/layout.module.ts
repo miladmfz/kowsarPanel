@@ -21,6 +21,14 @@ import { FullCalendarModule } from '@fullcalendar/angular'; // import the main m
 import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { AgGridModule } from 'ag-grid-angular';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { AttendancePanelComponent } from './dashboard/component/attendance-panel/attendance-panel.component';
+import { SupportPanelComponent } from './dashboard/component/support-panel/support-panel.component';
+import { CellActionAttendancePanel } from './dashboard/component/attendance-panel/cell-action-attendance-panel';
+import { CellDateAttendancePanel } from './dashboard/component/attendance-panel/cell-date-label-attendance-panel';
+import { CellNameAttendancePanel } from './dashboard/component/attendance-panel/cell-name-label-attendance-panel';
+import { CellStatusAttendancePanel } from './dashboard/component/attendance-panel/cell-status-label-attendance-panel';
+import { CellWithoutRowsSupportPanel } from './dashboard/component/support-panel/cell-withoutrows-label-support-panel';
+import { CellOpenFactorSupportPanel } from './dashboard/component/support-panel/cell-openfactor-label-support-panel copy';
 
 const routes: Routes = [
   {
@@ -50,6 +58,16 @@ const routes: Routes = [
     RightSliderComponent,
     ToolbarComponent,
     DashboardComponent,
+    AttendancePanelComponent,
+    SupportPanelComponent,
+
+    CellActionAttendancePanel,
+    CellDateAttendancePanel,
+    CellNameAttendancePanel,
+    CellStatusAttendancePanel,
+    CellWithoutRowsSupportPanel,
+    CellOpenFactorSupportPanel
+
   ],
   providers: [
     { provide: LocationStrategy, useClass: PathLocationStrategy },

@@ -40,3 +40,7 @@ app-custom-button {
 .page-title-box {
   margin: 0 -27px 20px;
 }
+
+.ag-theme-alpine .ag-header-cell-label {
+  justify-content: center !important;
+}

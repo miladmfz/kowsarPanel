@@ -5,10 +5,13 @@ import { initialTheme } from '../../../assets/js/app.min.js';
   selector: 'app-layout',
   templateUrl: './layout.component.html',
 })
+
 export class LayoutComponent implements OnInit, AfterViewInit {
-  constructor() {}
+  constructor() { }
   ngAfterViewInit(): void {
+
     initialTheme();
   }
-  ngOnInit() {}
+  ngOnInit() { }
+
 }

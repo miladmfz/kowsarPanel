@@ -94,6 +94,7 @@ export class AutletterListComponent
         headerName: 'متن تیکت',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
+        headerClass: 'text-center',
         minWidth: 200
       },
       {
