@@ -21,10 +21,6 @@
 
 
 
-
-
-
-
         <!-- begin::Header -->
         <div class="card">
 
@@ -41,67 +37,20 @@
           <!-- begin::Body -->
           <div class="card-body py-3">
 
-            <!-- begin::Table container -->
-            <div class="table-responsive">
 
-              <table class="table table-bordered align-middle gs-0 gy-4">
-                <thead>
-                  <tr class="fw-bolder ">
-                    <th class="min-w-125px"></th>
-                    <th class="min-w-125px">نام بازاریاب</th>
-                    <th class="min-w-125px">نوع ارتباط </th>
-                    <th class="min-w-125px">توضیحات </th>
-                    <th class="min-w-125px">کد بازاریابی </th>
-                    <th class="min-w-125px">کد مرکزی</th>
-                    <th class="min-w-50px">فعالیت </th>
-                  </tr>
-                </thead>
-                <tbody *ngFor="let item of items; let i = index">
+            <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
+              [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+              (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+              [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
+              [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+              (selectionChanged)="onSelectionChanged($event)">
+            </ag-grid-angular>
 
-                  <tr>
-                    <td>{{ i+1 }}</td>
 
-                    <td>{{ item.BrokerNameWithoutType }}</td>
-                    <td>{{ item.RelationType }}</td>
-                    <td>{{ item.Explain }}</td>
 
-                    <td>{{ item.BrokerCode }}</td>
-                    <td>{{ item.CentralRef }}</td>
-
-                    <td>
-
-                      <a class="rounded-pill btn btn-outline-info"
-                        [routerLink]="['/application/broker-report', item.BrokerCode]">
-                        نمایش
-                      </a>
-
-                    </td>
-                  </tr>
-
-                </tbody>
-              </table>
-            </div>
-
-            <!-- end::Table container -->
           </div>
           <!-- begin::Body -->
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
       </div>

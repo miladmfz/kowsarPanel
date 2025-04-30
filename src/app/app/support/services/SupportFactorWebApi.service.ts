@@ -130,11 +130,11 @@ export class SupportFactorWebApiService {
     return this.client.post<any[]>(this.kowsarWebUrl + "WebFactorInsertRow", command, { headers: this.headers })
   }
 
-
-  GetSupportPanel(): Observable<any[]> {
-    const params = new HttpParams().append('Where', 'aa')
-    return this.client.get<any[]>(this.kowsarWebUrl + "GetSupportPanel", { headers: this.headers, params: params })
+  GetSupportData(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "GetSupportData", command, { headers: this.headers })
   }
+
+
 
   AttendanceDashboard(): Observable<any[]> {
     const params = new HttpParams()

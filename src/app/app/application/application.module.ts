@@ -41,6 +41,8 @@ import { MintOnPieChartComponent } from 'src/app/app-shell/framework-components/
 import { MintOnLineChartComponent } from 'src/app/app-shell/framework-components/minton-line-chart/minton-line-chart.component';
 import { OcrReportListComponent } from './components/Ocr/ocr-report-list/ocr-report-list.component';
 import { OcrReportChartComponent } from './components/Ocr/ocr-report-chart/ocr-report-chart.component';
+import { CellActionBrokerList } from './components/Broker/broker-list/cell-action-broker-list';
+import { BrokerMapComponent } from './components/Broker/broker-map/broker-map.component';
 
 @NgModule({
   imports: [
@@ -88,7 +90,8 @@ import { OcrReportChartComponent } from './components/Ocr/ocr-report-chart/ocr-r
     OrderGoodEditComponent,
     OrderCellActionGoodList,
 
-
+    CellActionBrokerList,
+    BrokerMapComponent
 
 
   ]

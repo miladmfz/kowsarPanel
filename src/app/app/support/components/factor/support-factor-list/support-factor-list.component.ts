@@ -35,7 +35,11 @@ export class SupportFactorListComponent extends AgGridBaseComponent
   searchTerm: string = '';
   selectedOption: string = '0';
 
-
+  EditForm_SupportData = new FormGroup({
+    DateTarget: new FormControl(''),
+    BrokerCode: new FormControl(''),
+    Flag: new FormControl('1'),
+  });
 
   items: any[] = [];
 
@@ -125,11 +129,17 @@ export class SupportFactorListComponent extends AgGridBaseComponent
 
 
   getpanel_data() {
-    this.repo.GetSupportPanel().subscribe((data: any) => {
+    this.EditForm_SupportData.patchValue({
+      DateTarget: "",
+      BrokerCode: "1",
+      Flag: "1"
+    });
+
+    this.repo.GetSupportData(this.EditForm_SupportData.value).subscribe((data: any) => {
       if (this.BrokerRef == '') {
-        this.reportData = data.Panels;
+        this.reportData = data.SupportDatas;
       } else {
-        this.reportData = data.Panels.filter(panel => panel.BrokerCode === this.BrokerRef);
+        this.reportData = data.SupportDatas.filter(panel => panel.BrokerCode === this.BrokerRef);
 
         this.reportData.forEach(row => {
           if (row.WithoutRows > 0 || row.OpenFactor > 0) {

@@ -26,6 +26,7 @@ export class SidebarComponent implements OnInit {
   Imageitem: string = '';
 
   currentStatus: string = "";  // پیش فرض وضعیت: 1 (حاضر)
+  attendanceInterval: any;
 
 
   AlarmActive_Row: number = 0;
@@ -137,7 +138,18 @@ export class SidebarComponent implements OnInit {
     this.Get_Notification()
     this.Get_AttendanceDashboard()
 
+
+    this.attendanceInterval = setInterval(() => {
+      this.Get_Notification();
+    }, 15000);
+
+
+
   }
+
+
+
+
   Get_Notification() {
     this.repo.GetNotification(sessionStorage.getItem("PersonInfoRef")).subscribe((data: any) => {
 

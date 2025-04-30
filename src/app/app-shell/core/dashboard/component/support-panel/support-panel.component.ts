@@ -5,6 +5,7 @@ import { SharedService } from 'src/app/app-shell/framework-services/shared.servi
 import { SupportFactorWebApiService } from 'src/app/app/support/services/SupportFactorWebApi.service';
 import { CellWithoutRowsSupportPanel } from './cell-withoutrows-label-support-panel';
 import { CellOpenFactorSupportPanel } from './cell-openfactor-label-support-panel copy';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-support-panel',
@@ -25,7 +26,11 @@ export class SupportPanelComponent
   Attendance_Data: any[] = [];
   attendanceInterval: any;
 
-
+  EditForm_SupportData = new FormGroup({
+    DateTarget: new FormControl(''),
+    BrokerCode: new FormControl('1'),
+    Flag: new FormControl('1'),
+  });
 
   constructor(
     private repo: SupportFactorWebApiService,
@@ -114,14 +119,15 @@ export class SupportPanelComponent
 
   getpanel_data() {
 
-    this.repo.GetSupportPanel().subscribe((data: any) => {
+
+    this.repo.GetSupportData(this.EditForm_SupportData.value).subscribe((data: any) => {
       this.loading_supportpanel = false
       if (this.BrokerRef == '') {
-        // this.reportData = data.Panels;
-        this.records = data.Panels;
+        // this.reportData = data.SupportDatas;
+        this.records = data.SupportDatas;
       } else {
-        // this.reportData = data.Panels.filter(panel => panel.BrokerCode === this.BrokerRef);
-        this.records = data.Panels.filter(panel => panel.BrokerCode === this.BrokerRef);
+        // this.reportData = data.SupportDatas.filter(panel => panel.BrokerCode === this.BrokerRef);
+        this.records = data.SupportDatas.filter(Single_SupportData => Single_SupportData.BrokerCode === this.BrokerRef);
       }
 
     });

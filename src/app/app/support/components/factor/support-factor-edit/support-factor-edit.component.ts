@@ -111,7 +111,11 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
   private searchSubject_customer: Subject<string> = new Subject();
   private searchSubject_Good: Subject<string> = new Subject();
-
+  EditForm_SupportData = new FormGroup({
+    DateTarget: new FormControl(''),
+    BrokerCode: new FormControl('1'),
+    Flag: new FormControl('1'),
+  });
 
   EditForm_supportfactor_property = new FormGroup({
     starttime: new FormControl(''),
@@ -351,6 +355,10 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
   Set_EndFactorTime() {
 
 
+
+
+
+
     if (this.records_support_factorrows && this.records_support_factorrows.length > 0) {
 
       this.Loading_Modal_Response_show()
@@ -383,23 +391,46 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
       this.repo.Support_EndFactorTime(this.EditForm_supportfactor_property.value).subscribe((data: any) => {
 
-        this.EditForm_Attendance.patchValue({
-          CentralRef: sessionStorage.getItem("CentralRef"),
-          Status: "1" //hozor
+        this.EditForm_SupportData.patchValue({
+          DateTarget: "",
+          BrokerCode: sessionStorage.getItem("BrokerCode"),
+          Flag: "2"
         });
 
-        this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe((data: any) => {
-          this.notificationService.succeded();
-          this.Loading_Modal_Response_close()
-          this.GetFactor()
+        this.repo.GetSupportData(this.EditForm_SupportData.value).subscribe((data: any) => {
 
-          this.sharedService.triggerActionAll('refresh');
+          if (data.SupportDatas[0].EmptyEndTimeCount > 0) {
+
+            this.notificationService.succeded();
+            this.Loading_Modal_Response_close()
+            this.notificationService.warning(data.SupportDatas[0].EmptyEndTimeCount + " فاکتور باز وجود دارد");
+
+            this.GetFactor()
+
+            this.sharedService.triggerActionAll('refresh');
+
+
+
+          } else {
+            this.EditForm_Attendance.patchValue({
+              CentralRef: sessionStorage.getItem("CentralRef"),
+              Status: "1" //hozor
+            });
+
+            this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe((data: any) => {
+              this.notificationService.succeded();
+              this.Loading_Modal_Response_close()
+              this.GetFactor()
+
+              this.sharedService.triggerActionAll('refresh');
+
+            });
+
+          }
 
         });
-
 
       });
-
 
     } else {
       this.notificationService.error1("هیچ ردیفی برای این فاکتور زده نشده", "اخطار");
