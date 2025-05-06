@@ -54,6 +54,7 @@ import { BrokerMapComponent } from './components/Broker/broker-map/broker-map.co
     AgGridModule,
     ApplicationRoutingModule,
     NgPersianDatepickerModule,
+
   ],
   declarations: [
     ApplicationComponent,

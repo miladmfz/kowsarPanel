@@ -48,7 +48,7 @@ export class SupportPanelComponent
     this.columnDefs = [
       {
         field: 'BrokerNameWithoutType',
-        headerName: 'گارشناس',
+        headerName: 'کارشناس',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         minWidth: 100

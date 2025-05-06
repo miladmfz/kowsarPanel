@@ -1,0 +1,26 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+app-root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#map {
+    width: 100%;
+    height: 500px;
+    /* مقدار ثابت برای تست */
+}
+
+/* CSS for marker border color */
+.high-duration {
+    border: 3px solid red !important;
+}
+
+.normal-duration {
+    border: 3px solid #3388ff !important;
+}

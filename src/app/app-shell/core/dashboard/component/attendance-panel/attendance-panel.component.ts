@@ -56,7 +56,7 @@ export class AttendancePanelComponent
     this.columnDefs = [
 
       {
-        field: 'گارشناس',
+        field: 'کارشناس',
         filter: 'agSetColumnFilter',
         cellRenderer: CellNameAttendancePanel,
         cellClass: 'text-center',
@@ -78,6 +78,13 @@ export class AttendancePanelComponent
       {
         field: 'تاریخ',
         cellRenderer: CellDateAttendancePanel,
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 100
+      },
+      {
+        field: 'CustNames',
+        headerName: 'مشتری',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         minWidth: 100

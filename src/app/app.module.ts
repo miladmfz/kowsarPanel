@@ -14,8 +14,6 @@ import { AuthConfigModule } from './auth/auth-config.module';
 import { AppRoutingModule } from './app-routing.module';
 import { NotifierModule } from 'angular-notifier';
 
-
-
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -28,7 +26,6 @@ import { NotifierModule } from 'angular-notifier';
     FormsModule,
     ReactiveFormsModule,
     NotifierModule,
-
   ],
   exports: [],
   providers: [
