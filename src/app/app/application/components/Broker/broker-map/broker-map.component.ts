@@ -1,188 +1,198 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, Renderer2 } from '@angular/core';
+import { Router } from '@angular/router';
 import * as L from 'leaflet';
+import { BrokerWebApiService } from '../../../services/BrokerWebApi.service';
+import { FormControl } from '@angular/forms';
+import { IDatepickerTheme } from 'ng-persian-datepicker';
+
 @Component({
   selector: 'app-broker-map',
   templateUrl: './broker-map.component.html',
   styleUrls: ['./broker-map.component.css']
-
 })
 export class BrokerMapComponent implements AfterViewInit {
-
   map: L.Map | undefined;
+  hasData: boolean = false;
+  noDataMessage: string = ''; // پیام خطا برای عدم وجود داده
 
   @Input() BrokerCodeData: string = '';
 
+  customTheme: Partial<IDatepickerTheme> = {
+    selectedBackground: '#D68E3A',
+    selectedText: '#FFFFFF',
+  };
 
+  startDate_form = new FormControl();
+  endDate_form = new FormControl();
+  apiData: any[] = []; // مقدار پیش‌فرض داده‌ها
 
-  apiData = [
-    { "GpsLocationCode": 346995, "Longitude": 51.376441, "Latitude": 35.705478, "BrokerRef": 1, "GpsDate": "1404/03/09 11:00:12", "NextGpsDate": "1404/03/09 11:00:12", "DurationInSeconds": 0 },
-    { "GpsLocationCode": 346997, "Longitude": 51.375468, "Latitude": 35.705473, "BrokerRef": 1, "GpsDate": "1404/03/09 11:00:42", "NextGpsDate": "1404/03/09 11:00:42", "DurationInSeconds": 0 },
-    { "GpsLocationCode": 346998, "Longitude": 51.374408, "Latitude": 35.705426, "BrokerRef": 1, "GpsDate": "1404/03/09 11:00:57", "NextGpsDate": "1404/03/09 11:00:57", "DurationInSeconds": 1000 },
-    { "GpsLocationCode": 346999, "Longitude": 51.373531, "Latitude": 35.705436, "BrokerRef": 1, "GpsDate": "1404/03/09 11:01:12", "NextGpsDate": "1404/03/09 11:01:12", "DurationInSeconds": 0 },
-    { "GpsLocationCode": 347000, "Longitude": 51.372464, "Latitude": 35.705400, "BrokerRef": 1, "GpsDate": "1404/03/09 11:01:27", "NextGpsDate": "1404/03/09 11:01:27", "DurationInSeconds": 1000 },
-    { "GpsLocationCode": 347016, "Longitude": 51.371353, "Latitude": 35.705412, "BrokerRef": 1, "GpsDate": "1404/03/09 11:00:27", "NextGpsDate": "1404/03/09 11:00:27", "DurationInSeconds": 0 }
-  ];
-
+  constructor(
+    private readonly router: Router,
+    private repo: BrokerWebApiService,
+    private renderer: Renderer2
+  ) { }
 
   ngAfterViewInit(): void {
+    // اطمینان از اینکه نقشه بارگذاری شده و به درستی مقداردهی شده است
     this.initializeMap();
+
+    // فراخوانی getTrackerData زمانی که نقشه آماده است
     this.map!.whenReady(() => {
-      this.addMarkers();
+      if (this.apiData && this.apiData.length > 0) {
+        this.addMarkers();
+        this.drawPolyline();
+      } else {
+        console.log('No data available to display on map');
+      }
     });
   }
-
-
 
   initializeMap(): void {
     this.map = L.map('map', {
       center: [35.7053458, 51.3686215],
-      zoom: 13,
+      zoom: 15,
       zoomControl: true,
-      scrollWheelZoom: false
+      scrollWheelZoom: true
     });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors',
       maxZoom: 17,
-      minZoom: 11,
-      noWrap: true
+      minZoom: 13,
+      noWrap: false
     }).addTo(this.map);
 
     setTimeout(() => {
       this.map?.invalidateSize();
     }, 0);
 
+    // اطمینان از مقداردهی نقشه قبل از تعاملات
     this.map.getContainer().addEventListener('wheel', (e: WheelEvent) => {
       if (!e.ctrlKey) {
         e.preventDefault();
       }
     }, { passive: false });
-
-    console.log(document.getElementById('map').clientWidth)
-    console.log(document.getElementById('map').clientHeight)
-
-
-
   }
 
+  getTrackerData(): void {
+    const brokerCode = this.BrokerCodeData;
+    const startDate = '1404/03/09 00:00:00';
+    const endDate = '1404/03/10 00:00:00';
+
+    this.repo.GetGpstracker(brokerCode, this.startDate_form.value, this.endDate_form.value).subscribe((data: any) => {
+      this.apiData = data.Gpstrackers;
+
+      this.clearMap(); // پاک کردن لایه‌های قبلی
+
+      if (this.apiData && this.apiData.length > 0) {
+        this.hasData = this.apiData.length > 0; // اینجا مقدار hasData را بروزرسانی می‌کنید
+        const first = this.apiData[0];
+        if (first && first.Latitude && first.Longitude && this.map) {
+          this.map.setView([first.Latitude, first.Longitude], 15);
+        }
+
+        this.addMarkers();
+        this.drawPolyline();
+        this.noDataMessage = ''; // پاک کردن پیام خطا
+      } else {
+        this.hasData = false;
+        this.noDataMessage = 'موردی یافت نشد'; // تنظیم پیام خطا
+      }
+    });
+  }
+
+  clearMap(): void {
+    this.map?.eachLayer((layer: any) => {
+      if (layer instanceof L.Marker || layer instanceof L.Polyline) {
+        this.map?.removeLayer(layer);
+      }
+    });
+  }
 
   addMarkers(): void {
-
-
+    if (!this.map) {
+      console.error('Map is not initialized');
+      return; // اگر نقشه مقداردهی نشده است، تابع را متوقف کنید
+    }
 
     this.apiData.forEach((location, index) => {
-      const { Longitude, Latitude, GpsLocationCode, BrokerRef, GpsDate, NextGpsDate, DurationInSeconds } = location;
+      const icon = this.getMarkerIcon(index, location.DurationInSeconds);
+      const tooltip = this.generateTooltipContent(location);
 
-      // Customize marker size and border color based on DurationInSeconds
-
-
-      let iconUrlToUse;
-
-      if (index === 0) {
-        iconUrlToUse = 'assets/images/start.png';  // first point
-      } else if (index === this.apiData.length - 1) {
-        iconUrlToUse = 'assets/images/end.png';  // last point
-      } else if (DurationInSeconds > 100) {
-        iconUrlToUse = 'assets/images/person.png';
-      } else {
-        iconUrlToUse = 'assets/images/location.png';
-      }
-
-      let iconSize;
-      let iconAnchor;
-
-      if (index === 0 || index === this.apiData.length - 1) {
-        iconSize = [50, 50];
-        iconAnchor = [25, 50];
-      } else if (DurationInSeconds > 900) {
-        iconSize = [50, 50];
-        iconAnchor = [25, 50];
-      } else {
-        iconSize = [24, 24];
-        iconAnchor = [12, 24];
-      }
-
-
-
-      const customIcon = L.icon({
-        iconUrl: iconUrlToUse,
-        iconSize: iconSize,
-        iconAnchor: iconAnchor,
-        popupAnchor: [0, -40],
-        tooltipAnchor: [0, -40],
-        shadowSize: [41, 41]
-      });
-
-
-      const tooltipContent = `
-        <div style="
-          font-size: 12px;
-          line-height: 1.6;
-          background: white;
-          border: 1px solid #ccc;
-          border-radius: 8px;
-          padding: 12px;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-          color: #333;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 8px;
-          max-width: 250px;
-        ">
-          <div><b style="color: #4A90E2;">GpsLocationCode:</b></div>
-          <div style="text-align: right;">${GpsLocationCode}</div>
-  
-          <div><b style="color: #50E3C2;">BrokerRef:</b></div>
-          <div style="text-align: right;">${BrokerRef}</div>
-  
-          <div><b style="color: #F5A623;">GpsDate:</b></div>
-          <div style="text-align: right;">${GpsDate}</div>
-  
-          <div><b style="color: #F8E71C;">NextGpsDate:</b></div>
-          <div style="text-align: right;">${NextGpsDate}</div>
-  
-          <div><b style="color: #D0021B;">Duration:</b></div>
-          <div style="text-align: right;">${DurationInSeconds} s</div>
-        </div>
-      `;
-
-      const popupContent = `
-        <div style="
-          font-size: 14px;
-          font-weight: bold;
-          padding: 6px;
-          color: #333;
-          display: flex;
-          flex-direction: column;
-        ">
-          <div><b>GpsLocationCode:</b> ${GpsLocationCode}</div>
-          <div><b>BrokerRef:</b> ${BrokerRef}</div>
-        </div>
-      `;
-
-      // Create and add the marker with custom icon
-      L.marker([Latitude, Longitude], { icon: customIcon })
-        .addTo(this.map!)
-        .bindPopup(popupContent)
-        .bindTooltip(tooltipContent, {
+      const marker = L.marker([location.Latitude, location.Longitude], { icon });
+      marker.addTo(this.map)  // اضافه کردن مارکر به نقشه
+        .bindTooltip(tooltip, {
           direction: 'top',
           sticky: true,
           opacity: 0.95
         });
     });
+  }
 
 
-    // بعد از حلقه forEach
-    const latlngs: [number, number][] = this.apiData.map(location => [location.Latitude, location.Longitude]);
-
+  drawPolyline(): void {
+    const latlngs = this.apiData.map(loc => [loc.Latitude, loc.Longitude]) as [number, number][];
     L.polyline(latlngs, {
       color: 'blue',
       weight: 4,
       opacity: 0.7,
-      dashArray: '5, 10'  // اختیاری، برای خط‌چین
-    }).addTo(this.map);
-
-
+      dashArray: '5,10'
+    }).addTo(this.map!);
   }
 
+  getMarkerIcon(index: number, duration: number): L.Icon {
+    let iconUrl = 'assets/images/location.png';
+    if (index === 0) iconUrl = 'assets/images/start.png';
+    else if (index === this.apiData.length - 1) iconUrl = 'assets/images/end.png';
+    else if (duration > 100) iconUrl = 'assets/images/person.png';
+
+    const isLarge = index === 0 || index === this.apiData.length - 1 || duration > 900;
+    const iconSize = isLarge ? [50, 50] as [number, number] : [24, 24] as [number, number];
+    const iconAnchor = isLarge ? [25, 50] as [number, number] : [12, 24] as [number, number];
+
+    return L.icon({
+      iconUrl,
+      iconSize,
+      iconAnchor,
+      popupAnchor: [0, -40],
+      tooltipAnchor: [0, -40],
+      shadowSize: [41, 41]
+    });
+  }
+
+  generateTooltipContent(location: any): string {
+    return `
+      <div style="
+        font-size: 12px;
+        line-height: 1.6;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        color: #333;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        max-width: 250px;
+      ">
+        <div><b style="color: #4A90E2;">کد موقعیت GPS:</b></div>
+        <div style="text-align: right;">${location.GpsLocationCode}</div>
+
+        <div><b style="color: #50E3C2;">کد بروکر:</b></div>
+        <div style="text-align: right;">${location.BrokerRef}</div>
+
+        <div><b style="color: #F5A623;">تاریخ GPS:</b></div>
+        <div style="text-align: right;">${location.GpsDate}</div>
+
+        <div><b style="color: #F8E71C;">تاریخ GPS بعدی:</b></div>
+        <div style="text-align: right;">${location.NextGpsDate}</div>
+
+        <div><b style="color: #D0021B;">مدت زمان:</b></div>
+        <div style="text-align: right;">
+          ${Math.floor(location.DurationInSeconds / 60)} دقیقه و ${location.DurationInSeconds % 60} ثانیه
+        </div>
+      </div>
+    `;
+  }
 }

@@ -26,6 +26,16 @@ export class BrokerWebApiService {
 
     //------------------------------------------------
 
+
+    GetGpstracker(BrokerCode: string, StartDate: string, EndDate: string): Observable<any[]> {
+        const params = new HttpParams().append('BrokerCode', BrokerCode).append('StartDate', StartDate).append('EndDate', EndDate)
+        return this.client.get<any[]>(this.baseUrl + "GetGpstracker", { headers: this.headers, params: params })
+    }
+
+
+
+
+
     UploadImage(ObjectCode: string, image: string): Observable<any[]> {
         return this.client.post<any[]>(this.baseUrl + "UploadImage", { ObjectCode, image }, { headers: this.headers });
     }

@@ -1,4 +1,38 @@
-<div class="p-4">
-  <h2 class="text-xl font-semibold mb-2">نقشه بازاریاب: {{ BrokerCodeData }}</h2>
-  <div id="map" class="w-full h-[80vh] rounded-xl shadow"></div>
+<div class="container mt-4">
+  <!-- فرم فیلتر -->
+  <form class="row g-3 mb-4" (ngSubmit)="getTrackerData()" #trackerForm="ngForm">
+    <div class="col-md-6 col-lg-4" dir="ltr">
+      <label for="startDate" class="form-label">تاریخ شروع</label>
+      <ng-persian-datepicker [dateFormat]="'YYYY/MM/DD HH:mm:ss'" [timeEnable]="true" [uiTheme]="customTheme"
+        [uiHideOnOutsideClick]="false" [uiHideAfterSelectDate]="true">
+        <input class="form-control" id="startDate" type="text" [formControl]="startDate_form" />
+      </ng-persian-datepicker>
+    </div>
+
+    <div class="col-md-6 col-lg-4" dir="ltr">
+      <label for="endDate" class="form-label">تاریخ پایان</label>
+      <ng-persian-datepicker [dateFormat]="'YYYY/MM/DD HH:mm:ss'" [timeEnable]="true" [uiTheme]="customTheme"
+        [uiHideOnOutsideClick]="false" [uiHideAfterSelectDate]="true">
+        <input class="form-control" id="endDate" type="text" [formControl]="endDate_form" />
+      </ng-persian-datepicker>
+    </div>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary w-100">دریافت اطلاعات</button>
+    </div>
+  </form>
+
+  <!-- نمایش پیام خطا -->
+  <div *ngIf="noDataMessage" class="alert alert-warning">
+    {{ noDataMessage }}
+  </div>
+
+  <!-- نقشه -->
+  <div class="container mt-4">
+    <div class="card shadow-sm">
+      <div id="map" style="width: 100%; height: 80vh; border-radius: 10px;"></div>
+
+    </div>
+  </div>
+
 </div>

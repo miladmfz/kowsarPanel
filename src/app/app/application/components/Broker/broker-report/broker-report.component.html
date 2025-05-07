@@ -142,9 +142,9 @@
           <ul class="nav nav-pills navtab-bg nav-justified">
 
             <li class="nav-item">
-              <a href="#map" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+              <a href="#mapbroker" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
                 <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
-                <span class="d-none d-sm-inline-block">map</span>
+                <span class="d-none d-sm-inline-block">رهگیری بازاریاب</span>
               </a>
             </li>
 
@@ -189,10 +189,12 @@
 
           <div class="tab-content">
 
-            <div class="tab-pane active" id="map">
-              <h3 class="card-title align-items-start flex-column">
+            <div class="tab-pane active" id="mapbroker">
+              <h3 class="card-title ">
                 <span class="card-label ">نقشه بازاریاب :</span>
               </h3>
+
+
 
               <app-broker-map [BrokerCodeData]="id"> </app-broker-map>
 
