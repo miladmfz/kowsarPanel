@@ -1,52 +1,77 @@
 <div class="card">
   <div class="card-body">
+    <h4 class="card-title">{{ title }}</h4>
 
+    <ng-container *ngIf="records.length==0">
+      <h4 class="card-title text-danger">هنوز ارجاعی داده نشده است</h4>
+
+    </ng-container>
+    <ng-container *ngIf="records.length>0">
+      <ag-grid-angular #agGrid id="myGrid" style="height: 300px; width: auto" class="ag-theme-alpine"
+        [rowData]="records" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
+        [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)"
+        (cellClicked)="onCellClicked($event)" [pagination]="true" [frameworkComponents]="frameworkComponents"
+        [context]="context">
+      </ag-grid-angular>
+    </ng-container>
+
+
+
+  </div>
+</div>
+<div class="card">
+  <div class="card-body">
 
     <form [formGroup]="EditForm" (ngSubmit)="submit('')" id="submitForm">
       <div class="row">
         <div class="col-12">
-          <div class="card">
-            <div class="card-body row">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <div class="row g-3 align-items-center">
 
-              <div class="form-group col-md-2">
-                <label for="dateValue" class="col-form-label">تاریخ</label>
-                <h5>{{ToDayDate}}</h5>
+                <!-- تاریخ -->
+                <div class="col-md-2">
+                  <label for="dateValue" class="form-label">تاریخ</label>
+                  <h5 class="mt-2">{{ ToDayDate }}</h5>
+                </div>
+
+                <!-- انتخاب کاربر -->
+                <div class="col-md-4">
+                  <label for="selectedUserId" class="form-label">کاربر</label>
+                  <select formControlName="selectedUserId" id="selectedUserId" class="form-control custom-select">
+                    <option value="0">لطفاً انتخاب کنید</option>
+                    <option *ngFor="let user of users" [value]="user.CentralCode">
+                      {{ user.CentralName }}
+                    </option>
+                  </select>
+                </div>
+
+                <!-- اولویت -->
+                <div class="col-md-3">
+                  <label for="LetterPriority" class="form-label">اولویت</label>
+                  <select formControlName="LetterPriority" id="LetterPriority" class="form-control custom-select">
+                    <option value="">لطفاً انتخاب کنید</option>
+                    <option *ngFor="let item of LetterPriority_lookup" [value]="item.aType">
+                      {{ item.aType }}
+                    </option>
+                  </select>
+                </div>
+
+                <!-- شرح -->
+                <div class="col-md-12">
+                  <label for="descriptionFormControl" class="form-label">شرح</label>
+                  <textarea formControlName="descriptionFormControl" id="descriptionFormControl" class="form-control"
+                    rows="4" autocomplete="off"></textarea>
+                </div>
+
+                <!-- دکمه ارسال -->
+                <div class="col-md-12 text-end mt-3">
+                  <button type="submit" class="btn btn-success">
+                    <span class="btn-label"><i class="fas fa-check-double"></i></span> ارسال
+                  </button>
+                </div>
 
               </div>
-              <div class="form-group col-md-4">
-                <label for="selectedUserId" class="col-form-label">کاربر </label>
-                <select formControlName="selectedUserId" id="selectedUserId" class="form-control custom-select"
-                  data-toggle="select2">
-                  <option *ngFor=" let user of users" [value]="user.CentralCode">{{ user.CentralName }}</option>
-                </select>
-              </div>
-
-
-              <div class="form-group col-md-3">
-                <label for="LetterPriority" class="col-form-label">الویت </label>
-                <select formControlName="LetterPriority" id="LetterPriority" class="form-control custom-select">
-                  <option *ngFor=" let item of LetterPriority_lookup" [value]="item.aType">{{ item.aType }}
-                  </option>
-                </select>
-              </div>
-
-              <div class="form-group col-md-12">
-                <label for="descriptionFormControl" class="col-form-label">شرح </label>
-
-
-                <textarea type="text" class="form-control" id="descriptionFormControl"
-                  formControlName="descriptionFormControl" autocomplete="off">
-
-                  </textarea>
-
-              </div>
-              <div class="col-sm-6 m-3">
-                <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
-                  (click)="submit('')">
-                  <span class="btn-label"><i class="fas fa-check-double"></i></span>ارسال </a>
-
-              </div>
-
             </div>
           </div>
         </div>
@@ -59,27 +84,7 @@
 </div>
 
 
-<div class="card">
-  <div class="card-body">
-    <h4 class="card-title">{{ title }}</h4>
 
-    <ng-container *ngIf="records.length==0">
-      <h4 class="card-title text-danger">هنوز ارجاعی داده نشده است</h4>
-
-    </ng-container>
-    <ng-container *ngIf="records.length>0">
-      <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" class="ag-theme-alpine"
-        [rowData]="records" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
-        [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)"
-        (cellClicked)="onCellClicked($event)" [pagination]="true" [frameworkComponents]="frameworkComponents"
-        [context]="context">
-      </ag-grid-angular>
-    </ng-container>
-
-
-
-  </div>
-</div>
 
 
 
@@ -88,7 +93,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content" style="background-color: #d1dce7;">
       <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="autletterrowmodalLabel">Explain</h5>
+        <h5 class="modal-title" id="autletterrowmodalLabel">شرع وضعیت و کار</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
           (click)="explain_dialog_close()"></button>
       </div>
@@ -99,9 +104,23 @@
               <div class="card">
                 <div class="card-body row">
 
+                  <div class="col-md-12">
+                    <label for="AutLetterRow_PropDescription1" class="form-label">خلاصه عملکرد</label>
+                    <textarea formControlName="AutLetterRow_PropDescription1" id="AutLetterRow_PropDescription1"
+                      class="form-control" rows="4" autocomplete="off"></textarea>
+                  </div>
+
+                  <div class="col-md-12">
+                    <label for="LetterRowDescription" class="form-label">شرح</label>
+                    <input formControlName="LetterRowDescription" id="LetterRowDescription" class="form-control"
+                      rows="4" autocomplete="off" readonly>
+                  </div>
+
                   <div class="form-group col-md-12">
-                    <label for="LetterState" class="col-form-label">وضعیت </label>
-                    <select formControlName="LetterState" id="LetterState" class="form-control custom-select">
+                    <label for="LetterRowState" class="col-form-label">وضعیت </label>
+                    <select formControlName="LetterRowState" id="LetterRowState" class="form-control custom-select">
+                      <option value="">لطفاً انتخاب کنید</option>
+
                       <option *ngFor=" let item of LetterState_lookup" [value]="item.aType">{{ item.aType }}
                       </option>
                     </select>

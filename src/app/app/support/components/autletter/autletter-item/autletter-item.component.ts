@@ -51,7 +51,7 @@ export class AutletterItemComponent
     dateValue: new FormControl(''),
     descriptionFormControl: new FormControl(''),
     LetterState: new FormControl(''),
-    LetterPriority: new FormControl('عادی'),
+    LetterPriority: new FormControl(''),
     selectedUserId: new FormControl(0),
   });
 
@@ -64,8 +64,9 @@ export class AutletterItemComponent
 
   EditForm_explain = new FormGroup({
     ObjectRef: new FormControl('0'),
-    LetterState: new FormControl(''),
-
+    LetterRowDescription: new FormControl(''),
+    LetterRowState: new FormControl(''),
+    AutLetterRow_PropDescription1: new FormControl(''),
   });
 
   customTheme: Partial<IDatepickerTheme> = {
@@ -123,11 +124,21 @@ export class AutletterItemComponent
         headerName: 'وضعیت ارجاع',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
-        minWidth: 100
+        minWidth: 50
       },
+
+
+      {
+        field: 'AutLetterRow_PropDescription1',
+        headerName: 'خلاصه عملکرد	',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 250
+      },
+
       {
         field: 'LetterRowDescription',
-        headerName: 'شرح	',
+        headerName: 'شرح ارجاع',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         minWidth: 250
@@ -218,11 +229,13 @@ export class AutletterItemComponent
 
 
 
-  Get_Autletterrow_Property(LetterRowCode, LetterState) {
+  Get_Autletterrow_Property(LetterRowCode, LetterRowState, LetterRowDescription, AutLetterRow_PropDescription1) {
 
     this.EditForm_explain.patchValue({
       ObjectRef: LetterRowCode,
-      LetterState: LetterState,
+      LetterRowDescription: LetterRowDescription,
+      LetterRowState: LetterRowState,
+      AutLetterRow_PropDescription1: AutLetterRow_PropDescription1
     });
 
     this.explain_dialog_show()
@@ -234,9 +247,8 @@ export class AutletterItemComponent
   Set_Autletterrow_Property() {
     this.repo.Update_AutletterRow(this.EditForm_explain.value).subscribe((data: any) => {
       this.notificationService.succeded();
-      this.explain_dialog_close()
       this.Get_LetterRowList()
-
+      this.explain_dialog_close()
     });
   }
 

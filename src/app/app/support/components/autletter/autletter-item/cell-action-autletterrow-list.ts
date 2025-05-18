@@ -31,6 +31,7 @@ export class CellActionAutletterRowList implements ICellRendererAngularComp {
     canView: true;
     id: 0;
     CentralRef: any;
+    LetterRowState: any;
 
     RowExecutorCentralRef: any;
     refresh(params: any): boolean {
@@ -57,11 +58,21 @@ export class CellActionAutletterRowList implements ICellRendererAngularComp {
         if (params.data.RowExecutorCentralRef) {
             this.RowExecutorCentralRef = params.data.RowExecutorCentralRef;
         }
+        if (params.data.LetterRowState) {
+            this.LetterRowState = params.data.LetterRowState;
+        } else {
+            this.LetterRowState = ""
+        }
+
     }
 
 
     Get_Autletterrow_Property() {
-        this.params.context.componentParent.Get_Autletterrow_Property(this.params.data.LetterRowCode, this.params.data.LetterState, this.params.data.LetterPriority);
+
+
+
+        this.params.context.componentParent.Get_Autletterrow_Property(this.params.data.LetterRowCode,
+            this.LetterRowState, this.params.data.LetterRowDescription, this.params.data.AutLetterRow_PropDescription1);
     }
 
 }

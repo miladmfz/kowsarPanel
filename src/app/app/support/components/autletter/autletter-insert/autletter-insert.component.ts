@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 import { Router } from '@angular/router';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
@@ -15,13 +15,6 @@ export class AutletterInsertComponent implements OnInit {
 
   constructor(private repo: AutletterWebApiService, private router: Router, private readonly notificationService: NotificationService,) { }
 
-  EditForm = new FormGroup({
-    dateValue: new FormControl(''),
-    titleFormControl: new FormControl(''),
-    descriptionFormControl: new FormControl(''),
-    LetterState: new FormControl('درحال انجام'),
-    LetterPriority: new FormControl('عادی'),
-  });
   customTheme: Partial<IDatepickerTheme> = {
     selectedBackground: '#D68E3A',
     selectedText: '#FFFFFF',
@@ -49,6 +42,12 @@ export class AutletterInsertComponent implements OnInit {
   CentralRef: string = '';
   ngOnInit() {
     this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
+    if (!(this.JobPersonRef.length > 0)) {
+      this.EditForm.patchValue({
+        InOutFlag: "0",
+      });
+    }
+
 
     this.repo.GetTodeyFromServer().subscribe((data: any) => {
 
@@ -70,21 +69,46 @@ export class AutletterInsertComponent implements OnInit {
   }
 
 
+  InOut_Lookup: Base_Lookup[] = [
+    { id: "0", name: "وارده" },
+    { id: "1", name: "صادره" },
+    { id: "2", name: "داخلی" },
+  ]
 
 
+  EditForm = new FormGroup({
+    ToDayDate: new FormControl(''),
+    dateValue: new FormControl(''),
+    title: new FormControl('', Validators.required),
+    description: new FormControl('', Validators.required),
+    LetterState: new FormControl(''),
+    InOutFlag: new FormControl('2'),
+    LetterPriority: new FormControl(''),
+    CentralRef: new FormControl(''),
+  });
 
 
   submit(action) {
     this.CentralRef = sessionStorage.getItem("CentralRef");
-    const command = this.EditForm.value;
+
+    this.EditForm.markAllAsTouched();
+    if (!this.EditForm.valid) return;
+
+    this.EditForm.patchValue({
+      ToDayDate: this.ToDayDate,
+      CentralRef: this.CentralRef
+    });
+
+
+    if (this.EditForm.value.LetterPriority == "") {
+      this.EditForm.patchValue({
+        LetterPriority: "عادی",
+      });
+
+    }
 
     this.repo.LetterInsert(
-      this.ToDayDate,
-      this.EditForm.value.titleFormControl,
-      this.EditForm.value.descriptionFormControl,
-      this.EditForm.value.LetterState,
-      this.EditForm.value.LetterPriority,
-      this.CentralRef
+      this.EditForm.value
     )
       .subscribe(e => {
         const intValue = parseInt(e[0].LetterCode, 10);

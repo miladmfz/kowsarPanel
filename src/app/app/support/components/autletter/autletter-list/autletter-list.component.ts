@@ -52,6 +52,7 @@ export class AutletterListComponent
     CentralRef: new FormControl(''),
     CreationDate: new FormControl(''),
     OwnCentralRef: new FormControl(''),
+    PersonInfoCode: new FormControl(''),
   });
 
 
@@ -83,18 +84,48 @@ export class AutletterListComponent
 
       },
       {
-        field: 'LetterTitle',
-        headerName: 'عنوان تیکت',
+        field: 'RowExecutorName',
+        headerName: 'کاربر فعلی	',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
-        minWidth: 200
+        minWidth: 150
       },
+      {
+        field: 'RowLetterDate',
+        headerName: 'تاریخ ارجاع',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'RowLetterState',
+        headerName: ' وضعیت ارجاع',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'AutLetterRow_PropDescription1',
+        headerName: 'خلاصه عملکرد	',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 250
+      },
+
+
       {
         field: 'LetterDescription',
         headerName: 'متن تیکت',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         headerClass: 'text-center',
+        minWidth: 200
+      },
+      {
+        field: 'LetterTitle',
+        headerName: 'عنوان تیکت',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
         minWidth: 200
       },
       {
@@ -123,20 +154,7 @@ export class AutletterListComponent
 
       },
 
-      {
-        field: 'RowExecutorName',
-        headerName: 'کاربر فعلی	',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'RowLetterDate',
-        headerName: 'تاریخ ارجاع',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
+
 
     ];
   }
@@ -193,6 +211,9 @@ export class AutletterListComponent
       this.loading = false
 
     });
+
+
+
 
   }
 

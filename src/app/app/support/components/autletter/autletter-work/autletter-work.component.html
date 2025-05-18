@@ -4,44 +4,69 @@
     <div class="row mb-2">
       <div class="col-sm-12">
 
-        <!-- <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
-          [(ngModel)]="Searchtarget" (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" /> -->
-        <a type="button" class="btn btn-success waves-effect waves-light m-1" [routerLink]="['/support/letter-insert']">
-          <span class="btn-label"><i class="fas fa-plus"></i></span>جدید
-        </a>
-        <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
-          <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
-        </a>
-        <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="removeAllFilters()">
-          <span class="btn-label"><i class="fas fa-eye-slash"></i></span>حذف
-          جستجو
-        </a>
-        <div class="btn-group">
-          <!-- *hasPermission="['Public']" -->
-          <button type="button" class="btn btn-light waves-effect waves-light m-1 dropdown-toggle" id="exportdropdown"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            دریافت خروجی <i class="mdi mdi-chevron-down"></i>
-          </button>
-          <div class="dropdown-menu" aria-labelledby="exportdropdown">
-            <button class="dropdown-item" type="button" (click)="onExportExcel()">
-              Excel <i class="fas fa-file-excel"></i>
-            </button>
-            <button class="dropdown-item" type="button" (click)="onExportCSV()">
-              CSV <i class="fas fa-file-csv"></i>
-            </button>
 
+        <div class="row align-items-end">
+          <!-- Search Input -->
+          <div class="form-group col-md-3">
+            <label for="searchTerm" class="col-form-label">جستجو</label>
+            <input class="form-control" id="searchTerm" type="text" [(ngModel)]="searchTerm"
+              (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" />
+          </div>
 
+          <!-- Date Picker -->
+          <div class="form-group col-md-3">
+            <label for="datePicker" class="col-form-label">تاریخ</label>
+            <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
+              [uiHideAfterSelectDate]="true">
+              <input class="form-control" id="datePicker" type="text" [formControl]="dateValue" />
+            </ng-persian-datepicker>
+          </div>
+
+          <!-- Search Button -->
+          <div class="form-group col-md-3">
+            <button type="button" class="btn btn-primary w-100" (click)="LoadList()">
+              <i class="fas fa-search me-1"></i> جستجو
+            </button>
+          </div>
+
+          <!-- Refresh Button -->
+          <div class="form-group col-md-3">
+            <button type="button" class="btn btn-light w-100" (click)="getList()">
+              <i class="fas fa-recycle me-1"></i> بازخوانی
+            </button>
           </div>
         </div>
+
+
+        <!-- <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
+          [(ngModel)]="Searchtarget" (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" /> -->
+
+
       </div>
+
+
 
 
     </div>
 
-    <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" class="ag-theme-alpine" [rowData]="records"
-      [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
-      [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-      [frameworkComponents]="frameworkComponents" [context]="context">
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+
+
+    <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
+      [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+      (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+      [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
+      [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+      (selectionChanged)="onSelectionChanged($event)">
     </ag-grid-angular>
+
+
+
+
   </div>
 </div>

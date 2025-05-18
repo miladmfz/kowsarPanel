@@ -22,18 +22,36 @@
           <div></div>
 
           <div class="form-group col-md-4">
-            <label for="titleFormControl" class="col-form-label">عنوان تیکت </label>
+            <label for="title" class="col-form-label">عنوان تیکت </label>
             <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+            <span class="text-danger">*</span>
 
-            <select formControlName="titleFormControl" id="titleFormControl" class="form-control custom-select">
+            <select formControlName="title" id="title" class="form-control custom-select" [ngClass]="{
+                      'is-invalid':
+                      EditForm.controls['title'].invalid &&
+                      EditForm.controls['title'].touched,
+                      'is-valid':
+                      EditForm.controls['title'].valid &&
+                      EditForm.controls['title'].touched
+                    }">
+              <option value="">لطفاً انتخاب کنید</option>
+
               <option [value]="item.id" *ngFor="let item of Title_Lookup">{{item.name}}</option>
             </select>
+            <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm.controls['title']
+                                            }">
+            </ng-container>
 
           </div>
           <ng-container *ngIf="JobPersonRef.length>0">
             <div class="form-group col-md-4">
               <label for="LetterPriority" class="col-form-label">الویت </label>
               <select formControlName="LetterPriority" id="LetterPriority" class="form-control custom-select">
+                <option value="">لطفاً انتخاب کنید</option>
+
                 <option [value]="item.aType" *ngFor="let item of LetterPriority_lookup">{{item.aType}}</option>
               </select>
             </div>
@@ -41,9 +59,11 @@
 
 
             <div class="form-group col-md-4">
-              <label for="LetterState" class="col-form-label">وضعیت </label>
-              <select formControlName="LetterState" id="LetterState" class="form-control custom-select">
-                <option [value]="item.aType" *ngFor="let item of LetterState_lookup">{{item.aType}}</option>
+              <label for="InOutFlag" class="col-form-label">نوع نامه </label>
+              <select formControlName="InOutFlag" id="InOutFlag" class="form-control custom-select">
+                <option value="">لطفاً انتخاب کنید</option>
+
+                <option [value]="item.id" *ngFor="let item of InOut_Lookup">{{item.name}}</option>
               </select>
             </div>
 
@@ -54,12 +74,29 @@
 
 
           <div class="form-group col-md-12">
-            <label for="descriptionFormControl" class="col-form-label">شرح تیکت </label>
+            <label for="description" class="col-form-label">شرح تیکت </label>
+            <span class="text-danger">*</span>
 
-            <textarea type="text" class="form-control" id="descriptionFormControl"
-              formControlName="descriptionFormControl" autocomplete="off">
-
+            <textarea type="text" class="form-control" id="description" formControlName="description" autocomplete="off"
+              [ngClass]="{
+                      'is-invalid':
+                      EditForm.controls['description'].invalid &&
+                      EditForm.controls['description'].touched,
+                      'is-valid':
+                      EditForm.controls['description'].valid &&
+                      EditForm.controls['description'].touched
+                    }">
               </textarea>
+            <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm.controls['description']
+                                            }">
+            </ng-container>
+
+
+
+
           </div>
 
 

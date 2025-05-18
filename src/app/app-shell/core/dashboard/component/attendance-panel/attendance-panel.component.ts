@@ -204,7 +204,7 @@ export class AttendancePanelComponent
       this.ToDayDate,
       "ارتباط با همکاران",
       this.EditForm_LetterToEmployer.value.DescriptionText,
-      "درحال انجام",
+      "",
       "عادی",
       sessionStorage.getItem("CentralRef")
     )

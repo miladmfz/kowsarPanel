@@ -34,6 +34,17 @@ export class AutletterWebApiService {
 
   }
 
+  GetAutLetterListByPerson(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "GetAutLetterListByPerson", command, { headers: this.headers })
+
+  }
+
+
+
+
+
+
   GetLetterFromPersoninfo(
     PersonInfoCode: string
   ): Observable<any[]> {
@@ -42,16 +53,14 @@ export class AutletterWebApiService {
   }
 
 
-  LetterInsert(
-    LetterDate: string,
-    title: string,
-    Description: string,
-    LetterState: string,
-    LetterPriority: string,
-    CentralRef: string
-  ): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "LetterInsert", { LetterDate, title, Description, LetterState, LetterPriority, CentralRef }, { headers: this.headers })
+
+  LetterInsert(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "LetterInsert", command, { headers: this.headers })
+
   }
+
+
 
   GetLetterRowList(
     LetterRef: string
