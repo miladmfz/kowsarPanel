@@ -27,78 +27,44 @@
     <div class="tab-content border border-primary">
       <div class="tab-pane fade show active" role="tabpanel">
 
-        <ng-container *ngIf="this.id.length==0">
+        <div class="table-responsive">
+          <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: 100%" class="ag-theme-alpine"
+            [rowData]="records_Customer" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
+            [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
+            [pagination]="true" [context]="context" [defaultColDef]="defaultColDef"
+            [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+            (selectionChanged)="onSelectionChanged($event)">
+          </ag-grid-angular>
+        </div>
 
-          <div class="table-responsive">
-
-            <table class="table table-bordered align-middle">
-              <thead>
-                <tr class="fw-bolder ">
-
-                  <th class="min-w-125px">نام </th>
-                  <th class="min-w-100px"> مبلغ </th>
-                  <th class="min-w-100"> عملیات </th>
-
-
-                </tr>
-              </thead>
-              <tbody *ngFor="let item of items; let i = index">
-
-                <tr>
-                  <td>{{ item.CustomerName }}</td>
-                  <td>{{ item.CustomerBedehkarMandeh }}</td>
-
-                  <td>
-                    <a class="rounded-pill btn btn-outline-info"
-                      [routerLink]="['/application/order-customer', item.CustomerCode]">
-                      نمایش
-                    </a>
-                  </td>
-                </tr>
-
-              </tbody>
-            </table>
-          </div>
-
-        </ng-container>
-
-        <ng-container *ngIf="this.id.length>0">
-
-          <h3>
-            {{items[0].CustomerName}}
-          </h3>
-          <div class="table-responsive">
-
-            <table class="table table-bordered align-middle gs-0 gy-4">
-              <thead>
-                <tr class="fw-bolder ">
-                  <th class="min-w-30px"> </th>
-
-                  <th class="min-w-125px">نام آیتم </th>
-                  <th class="min-w-100px"> قیمت </th>
-                  <th class="min-w-100"> تاریخ فاکتور </th>
+      </div>
+    </div>
+  </div>
+</div>
 
 
-                </tr>
-              </thead>
-              <tbody *ngFor="let item of items; let i = index">
-
-                <tr>
-                  <td>{{ i+1 }}</td>
-                  <td>{{ item.GoodName }}</td>
-                  <td>{{ item.Price }}</td>
-                  <td>{{ item.FactorDate }}</td>
-
-
-                </tr>
-
-              </tbody>
-            </table>
-          </div>
-
-        </ng-container>
-
-
+<div class="modal fade" id="ordercustomer" tabindex="-1" aria-labelledby="ordercustomerLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="ordercustomerLabel">جزئیات سفارش </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="ordercustomer_Modal_Response_close()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: 100%" class="ag-theme-alpine"
+            [rowData]="records_Customer_detail" [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText"
+            [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
+            [pagination]="true" [context]="context" [defaultColDef]="defaultColDef"
+            [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+            (selectionChanged)="onSelectionChanged($event)">
+          </ag-grid-angular>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="ordercustomer_Modal_Response_close()">بستن</button>
       </div>
     </div>
   </div>

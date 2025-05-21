@@ -79,7 +79,9 @@ export class BrokerMapComponent implements AfterViewInit {
     const startDate = '1404/03/09 00:00:00';
     const endDate = '1404/03/10 00:00:00';
 
-    this.repo.GetGpstracker(brokerCode, this.startDate_form.value, this.endDate_form.value).subscribe((data: any) => {
+    this.repo.GetGpstracker(brokerCode, startDate, endDate).subscribe((data: any) => {
+          //this.repo.GetGpstracker(brokerCode, this.startDate_form.value, this.endDate_form.value).subscribe((data: any) => {
+
       this.apiData = data.Gpstrackers;
 
       this.clearMap(); // پاک کردن لایه‌های قبلی

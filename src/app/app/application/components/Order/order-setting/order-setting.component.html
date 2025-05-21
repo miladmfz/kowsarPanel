@@ -46,116 +46,42 @@
 
 
 
-        <div>
-          <h3 class="card-title align-items-start flex-column">
-            <span class="card-label ">تنظیمات پایه نرم افزار:</span>
-          </h3>
+
+
+        <div class="mt-5">
+          <h4 class="fw-bold mb-3">تنظیمات پایه نرم‌افزار:</h4>
+
           <div class="table-responsive">
-
-            <table class="table table-bordered align-middle gs-0 gy-4">
-              <thead>
-                <tr class="fw-bolder ">
-                  <th class="min-w-125px"></th>
-                  <th class="min-w-125px">ردیف</th>
-                  <th class="min-w-125px">عنوان</th>
-                  <th class="min-w-50px">مقدار</th>
-                  <th class="min-w-125px">شرح</th>
-                  <th class="min-w-125px">گروه </th>
-                  <th class="min-w-50px">فعالیت</th>
-                </tr>
-              </thead>
-              <tbody *ngFor="let item of items; let i = index">
-                <tr>
-                  <td>{{ i+1 }}</td>
-                  <td>{{ item.KeyId }}</td>
-                  <td>{{ item.KeyValue }}</td>
-                  <td>{{ item.DataValue }}</td>
-                  <td>{{ item.Description }}</td>
-                  <td>{{ item.SubSystem }}</td>
-
-                  <td>
-                    <button class="rounded-pill btn btn-outline-info" type="button" data-bs-toggle="modal"
-                      data-bs-target="#verticallyCenteredModal" (click)="SelectDbSetup(i)">
-                      تغییر
-                    </button>
-                  </td>
-
-                </tr>
-              </tbody>
-            </table>
+            <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: 100%" class="ag-theme-alpine"
+              [rowData]="items" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
+              [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
+              [pagination]="true" [context]="context" [defaultColDef]="defaultColDef"
+              [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+              (selectionChanged)="onSelectionChanged($event)">
+            </ag-grid-angular>
           </div>
         </div>
 
-        <div>
-
-
-          <div class="row justify-content-between my-3">
-            <div class="col-md-6">
-              <h3 class="card-title align-items-start flex-column">
-                <span class="card-label">لیست پرینتر های تعریف شده:</span>
-              </h3>
-            </div>
-            <div class="col-md-6">
-              <button class="rounded-pill btn btn-outline-success" type="button" data-bs-toggle="modal"
-                data-bs-target="#printerModal" (click)="CreateprinterRecord()">ایجاد پرینتر جدید</button>
-            </div>
+        <!-- بخش پرینترها -->
+        <div class="mt-5">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold">لیست پرینترهای تعریف شده:</h4>
+            <button class="btn btn-outline-success rounded-pill" type="button" data-bs-toggle="modal"
+              data-bs-target="#printerModal" (click)="CreateprinterRecord()">
+              ایجاد پرینتر جدید
+            </button>
           </div>
 
-
-          <!-- End::header Table  -->
-          <!-- begin::Table container -->
-          <div class="table-responsive ">
-
-            <table class="table table-bordered align-middle gs-0 gy-4">
-              <thead>
-                <tr class="fw-bolder ">
-                  <th class="min-w-10px"></th>
-                  <th class="min-w-125px">نام سیستمی پرینتر</th>
-                  <th class="min-w-125px">شرح</th>
-                  <th class="min-w-50px">گروه نمایشی</th>
-                  <th class="min-w-125px">شرط نمایش</th>
-                  <th class="min-w-50px">تعداد پرینت</th>
-                  <th class="min-w-50px">فعال /غیرفعال</th>
-                  <th class="min-w-50px">فعالیت</th>
-
-                </tr>
-              </thead>
-              <tbody *ngFor="let item of Printers; let i = index">
-                <tr>
-                  <td>{{i}}</td>
-                  <td>{{ item.PrinterName }}</td>
-                  <td>{{ item.PrinterExplain }}</td>
-                  <td>{{ item.GoodGroups }}</td>
-                  <td>{{ item.WhereClause }}</td>
-                  <td>{{ item.PrintCount }}</td>
-                  <td>
-                    <span *ngIf="item.PrinterActive == 'True'">
-                      <span class="bg-soft-success text-success" style="padding: 3px">فعال</span>
-                    </span>
-                    <span *ngIf="item.PrinterActive == 'False'">
-                      <span class="bg-soft-danger text-danger" style="padding: 3px">غیرفعال</span>
-                    </span>
-                  </td>
-                  <!-- <td>
-                    <button [cModalToggle]="printerModal.id" (click)="SelectPrinter(i)" cButton>
-                      تغییر</button>
-                  </td> -->
-                  <td>
-                    <button class="rounded-pill btn btn-outline-info" type="button" data-bs-toggle="modal"
-                      data-bs-target="#printerModal" (click)="SelectPrinter(i)">
-                      تغییر
-                    </button>
-                  </td>
-
-                </tr>
-              </tbody>
-            </table>
+          <div class="table-responsive">
+            <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: 100%" class="ag-theme-alpine"
+              [rowData]="Printers" [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText"
+              [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
+              [pagination]="true" [context]="context" [defaultColDef]="defaultColDef"
+              [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+              (selectionChanged)="onSelectionChanged($event)">
+            </ag-grid-angular>
           </div>
-          <!-- end::Table container -->
         </div>
-        <!-- end::printer -->
-
-
 
 
 
@@ -169,13 +95,13 @@
 
 
 
-<div class="modal fade" id="verticallyCenteredModal" tabindex="-1" aria-labelledby="verticallyCenteredModalLabel"
-  aria-hidden="true">
+<div class="modal fade" id="orderdbsetup" tabindex="-1" aria-labelledby="orderdbsetupLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="verticallyCenteredModalLabel">تنظیمات پایه</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="orderdbsetupLabel">تنظیمات پایه</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="orderdbsetup_Modal_Response_close()"></button>
       </div>
       <div class="modal-body">
         <div class="mb-3 row">
@@ -193,8 +119,9 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
-        <button type="button" class="btn btn-primary" (click)="UpdateDbSetup()">به‌روزرسانی</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="orderdbsetup_Modal_Response_close()">بستن</button> <button type="button" class="btn btn-primary"
+          (click)="UpdateDbSetup()">به‌روزرسانی</button>
       </div>
     </div>
   </div>
@@ -204,65 +131,73 @@
 
 <div class="modal fade" #printerModal id="printerModal" tabindex="-1" aria-labelledby="printerModalLabel"
   aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
         <h5 class="modal-title" id="printerModalLabel">جزییات پرینتر</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="printerModal_Modal_Response_close()"></button>
       </div>
       <div class="modal-body">
         <form [formGroup]="EditForm_printer" (submit)="Updateprinter()">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+                  <div class="form-group col-md-6">
+                    <label for="PrinterName" class="col-form-label">نام پا ادرس چاپگر</label>
+                    <input type="text" class="form-control" id="PrinterName" formControlName="PrinterName"
+                      maxlength="400" autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <label for="PrinterExplain" class="col-form-label">توضیحات چاپگر</label>
+                    <input type="text" class="form-control" id="PrinterExplain" formControlName="PrinterExplain"
+                      maxlength="400" autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <label for="GoodGroups" class="col-form-label">کد گروه برای چاپگر</label>
+                    <input type="text" class="form-control" id="GoodGroups" formControlName="GoodGroups" maxlength="400"
+                      autocomplete="off" />
+                  </div>
 
 
-          <div class="form-group col-md-12">
-            <label for="PrinterName" class="col-form-label">نام پا ادرس چاپگر</label>
-            <input type="text" class="form-control" id="PrinterName" formControlName="PrinterName" maxlength="400"
-              autocomplete="off" />
+                  <div class="form-group col-md-6">
+                    <label for="WhereClause" class="col-form-label">شرط چاپگر</label>
+                    <input type="text" class="form-control" id="WhereClause" formControlName="WhereClause"
+                      maxlength="400" autocomplete="off" />
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="PrintCount" class="col-form-label">تعداد چاپ </label>
+                    <input type="text" class="form-control" id="PrintCount" formControlName="PrintCount" maxlength="400"
+                      autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <label for="PrinterActive" class="col-form-label">فعال بودن چاپگر</label>
+                    <input type="text" class="form-control" id="PrinterActive" formControlName="PrinterActive"
+                      maxlength="400" autocomplete="off" />
+                  </div>
+                  <div class="form-group col-md-12">
+                    <label for="FilePath" class="col-form-label">ادرس فایل چاپگر</label>
+                    <input type="text" class="form-control" id="FilePath" formControlName="FilePath" maxlength="400"
+                      autocomplete="off" />
+                  </div>
+
+                </div>
+              </div>
+            </div>
           </div>
-
-          <div class="form-group col-md-12">
-            <label for="PrinterExplain" class="col-form-label">توضیحات چاپگر</label>
-            <input type="text" class="form-control" id="PrinterExplain" formControlName="PrinterExplain" maxlength="400"
-              autocomplete="off" />
-          </div>
-
-          <div class="form-group col-md-12">
-            <label for="GoodGroups" class="col-form-label">کد گروه برای چاپگر</label>
-            <input type="text" class="form-control" id="GoodGroups" formControlName="GoodGroups" maxlength="400"
-              autocomplete="off" />
-          </div>
-
-
-          <div class="form-group col-md-12">
-            <label for="WhereClause" class="col-form-label">شرط چاپگر</label>
-            <input type="text" class="form-control" id="WhereClause" formControlName="WhereClause" maxlength="400"
-              autocomplete="off" />
-          </div>
-          <div class="form-group col-md-12">
-            <label for="PrintCount" class="col-form-label">تعداد چاپ </label>
-            <input type="text" class="form-control" id="PrintCount" formControlName="PrintCount" maxlength="400"
-              autocomplete="off" />
-          </div>
-
-          <div class="form-group col-md-12">
-            <label for="PrinterActive" class="col-form-label">فعال بودن چاپگر</label>
-            <input type="text" class="form-control" id="PrinterActive" formControlName="PrinterActive" maxlength="400"
-              autocomplete="off" />
-          </div>
-          <div class="form-group col-md-12">
-            <label for="FilePath" class="col-form-label">ادرس فایل چاپگر</label>
-            <input type="text" class="form-control" id="FilePath" formControlName="FilePath" maxlength="400"
-              autocomplete="off" />
-          </div>
-
-
 
         </form>
       </div>
       <div class="modal-footer">
 
         <button type="button" class="btn btn-primary" (click)="Updateprinter()">ثبت اطلاعات</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="printerModal_Modal_Response_close()">بستن</button>
       </div>
     </div>
   </div>

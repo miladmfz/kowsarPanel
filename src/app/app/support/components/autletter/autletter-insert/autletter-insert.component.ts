@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 import { Router } from '@angular/router';
@@ -13,7 +13,13 @@ import { NotificationService } from 'src/app/app-shell/framework-services/notifi
 })
 export class AutletterInsertComponent implements OnInit {
 
-  constructor(private repo: AutletterWebApiService, private router: Router, private readonly notificationService: NotificationService,) { }
+  constructor(
+    private repo: AutletterWebApiService,
+    private router: Router,
+    private readonly notificationService: NotificationService,
+    private renderer: Renderer2,
+
+  ) { }
 
   customTheme: Partial<IDatepickerTheme> = {
     selectedBackground: '#D68E3A',
@@ -89,6 +95,7 @@ export class AutletterInsertComponent implements OnInit {
 
 
   submit(action) {
+
     this.CentralRef = sessionStorage.getItem("CentralRef");
 
     this.EditForm.markAllAsTouched();
@@ -107,27 +114,26 @@ export class AutletterInsertComponent implements OnInit {
 
     }
 
-    this.repo.LetterInsert(
-      this.EditForm.value
-    )
-      .subscribe(e => {
-        const intValue = parseInt(e[0].LetterCode, 10);
-        if (!isNaN(intValue) && intValue > 0) {
-          this.notificationService.succeded();
-          if (action == '') {
-            this.router.navigate(['/support/letter-list']);
-          } else if (action == 'detail') {
-            this.router.navigate(['/support/letter-detail', e[0].LetterCode]);
-
-          } else {
-            // TODO List
-          }
+    this.Loading_Modal_Response_show()
+    this.repo.LetterInsert(this.EditForm.value).subscribe(e => {
+      this.Loading_Modal_Response_close()
+      const intValue = parseInt(e[0].LetterCode, 10);
+      if (!isNaN(intValue) && intValue > 0) {
+        this.notificationService.succeded();
+        if (action == '') {
+          this.router.navigate(['/support/letter-list']);
+        } else if (action == 'detail') {
+          this.router.navigate(['/support/letter-detail', e[0].LetterCode]);
 
         } else {
-          //Todo notification erroor
+          // TODO List
         }
 
-      });
+      } else {
+        //Todo notification erroor
+      }
+
+    });
 
 
 
@@ -136,7 +142,20 @@ export class AutletterInsertComponent implements OnInit {
 
 
 
-
+  Loading_Modal_Response_show() {
+    const modal = this.renderer.selectRootElement('#loadingresponse', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  Loading_Modal_Response_close() {
+    const modal = this.renderer.selectRootElement('#loadingresponse', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
 
 
 

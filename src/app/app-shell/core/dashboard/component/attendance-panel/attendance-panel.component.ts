@@ -206,7 +206,8 @@ export class AttendancePanelComponent
       this.EditForm_LetterToEmployer.value.DescriptionText,
       "",
       "عادی",
-      sessionStorage.getItem("CentralRef")
+      sessionStorage.getItem("CentralRef"),
+      "2"
     )
       .subscribe(e => {
         const intValue = parseInt(e[0].LetterCode, 10);

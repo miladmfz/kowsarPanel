@@ -89,3 +89,127 @@
     </ag-grid-angular>
   </div>
 </div>
+
+
+
+<div class="modal fade" id="autletterdetail" tabindex="-1" aria-labelledby="autletterdetailLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="autletterdetailLabel">شرع وضعیت و کار</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="detail_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="EditForm_autletter_detail" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+
+                  <div class="col-md-6">
+                    <label for="LetterCode" class="form-label">LetterCode</label>
+                    <input formControlName="LetterCode" id="LetterCode" class="form-control" rows="4" autocomplete="off"
+                      readonly>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="LetterDate" class="form-label">LetterDate</label>
+                    <input formControlName="LetterDate" id="LetterDate" class="form-control" rows="4" autocomplete="off"
+                      readonly>
+                  </div>
+
+
+                  <div class="col-md-6">
+                    <label for="LetterPriority" class="form-label">LetterPriority</label>
+                    <input formControlName="LetterPriority" id="LetterPriority" class="form-control" rows="4"
+                      autocomplete="off" readonly>
+                  </div>
+
+
+                  <div class="col-md-6">
+                    <label for="LetterReceiveType" class="form-label">LetterReceiveType</label>
+                    <input formControlName="LetterReceiveType" id="LetterReceiveType" class="form-control" rows="4"
+                      autocomplete="off" readonly>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="LetterState" class="form-label">LetterState</label>
+                    <input formControlName="LetterState" id="LetterState" class="form-control" rows="4"
+                      autocomplete="off" readonly>
+                  </div>
+
+
+                  <div class="col-md-6">
+                    <label for="LetterTitle" class="form-label">LetterTitle</label>
+                    <input formControlName="LetterTitle" id="LetterTitle" class="form-control" rows="4"
+                      autocomplete="off" readonly>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="CreatorName" class="form-label">CreatorName</label>
+                    <input formControlName="CreatorName" id="CreatorName" class="form-control" rows="4"
+                      autocomplete="off" readonly>
+                  </div>
+
+
+                  <div class="col-md-6">
+                    <label for="ExecutorName" class="form-label">ExecutorName</label>
+                    <input formControlName="ExecutorName" id="ExecutorName" class="form-control" rows="4"
+                      autocomplete="off" readonly>
+                  </div>
+
+
+                  <div class="col-md-6">
+                    <label for="OwnerName" class="form-label">OwnerName</label>
+                    <input formControlName="OwnerName" id="OwnerName" class="form-control" rows="4" autocomplete="off"
+                      readonly>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="RowExecutorName" class="form-label">RowExecutorName</label>
+                    <input formControlName="RowExecutorName" id="RowExecutorName" class="form-control" rows="4"
+                      autocomplete="off" readonly>
+                  </div>
+
+
+                  <div class="col-md-6">
+                    <label for="RowLetterDate" class="form-label">RowLetterDate</label>
+                    <input formControlName="RowLetterDate" id="RowLetterDate" class="form-control" rows="4"
+                      autocomplete="off" readonly>
+                  </div>
+
+
+                  <div class="col-md-6">
+                    <label for="RowLetterState" class="form-label">RowLetterState</label>
+                    <input formControlName="RowLetterState" id="RowLetterState" class="form-control" rows="4"
+                      autocomplete="off" readonly>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="AutLetterRow_PropDescription1" class="form-label">AutLetterRow_PropDescription1</label>
+                    <input formControlName="AutLetterRow_PropDescription1" id="AutLetterRow_PropDescription1"
+                      class="form-control" rows="4" autocomplete="off" readonly>
+                  </div>
+
+
+                  <div class="col-md-6">
+                    <label for="RowsCount" class="form-label">RowsCount</label>
+                    <input formControlName="RowsCount" id="RowsCount" class="form-control" rows="4" autocomplete="off"
+                      readonly>
+                  </div>
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="detail_dialog_close()">بستن</button>
+
+      </div>
+    </div>
+  </div>
+</div>

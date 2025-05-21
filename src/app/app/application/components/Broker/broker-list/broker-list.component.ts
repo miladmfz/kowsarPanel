@@ -36,7 +36,7 @@ export class BrokerListComponent extends AgGridBaseComponent
         cellRendererParams: {
           editUrl: '/support/letter-detail',
         },
-        width: 250,
+        width: 80,
       },
       {
         field: 'BrokerNameWithoutType',

@@ -1,12 +1,14 @@
 import { Component, Input, OnInit, Renderer2 } from '@angular/core';
 import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { DbSetup_lookup } from '../../../lookup-type';
 import { CellActionAutletterRowList } from './cell-action-autletterrow-list';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-autletter-item',
   templateUrl: './autletter-item.component.html',
@@ -49,10 +51,10 @@ export class AutletterItemComponent
 
   EditForm = new FormGroup({
     dateValue: new FormControl(''),
-    descriptionFormControl: new FormControl(''),
+    descriptionFormControl: new FormControl('', Validators.required),
     LetterState: new FormControl(''),
-    LetterPriority: new FormControl(''),
-    selectedUserId: new FormControl(0),
+    LetterPriority: new FormControl('', Validators.required),
+    selectedUserId: new FormControl('', Validators.required),
   });
 
 
@@ -86,15 +88,6 @@ export class AutletterItemComponent
 
 
 
-
-
-
-
-
-
-
-
-
     this.columnDefs = [
       {
         field: 'عملیات',
@@ -103,7 +96,7 @@ export class AutletterItemComponent
         cellRendererParams: {
           editUrl: '/support/letter-detail',
         },
-        width: 100,
+        width: 150,
       },
       {
         field: 'RowExecutorName',
@@ -183,9 +176,56 @@ export class AutletterItemComponent
 
 
 
-  Get_LetterRowList() {
+  delete(LetterRowCode, AutLetterRow_PropDescription1) {
 
+
+    if (AutLetterRow_PropDescription1.length > 0) {
+      this.notificationService.error1("برای این ارجاع عملکرد ثبت شده است");
+
+    } else {
+
+      this.fireDeleteFactor().then((result) => {
+        if (result.isConfirmed) {
+          this.Loading_Modal_Response_show()
+          this.repo.DeleteAutLetterRows(LetterRowCode).subscribe((data: any) => {
+            this.Loading_Modal_Response_close()
+            this.notificationService.succeded();
+            this.Get_LetterRowList()
+
+          });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          this.notificationService.warning('اطلاعات تغییری نکرد');
+
+        }
+      });
+
+    }
+  }
+
+  fireDeleteFactor() {
+    return Swal.fire({
+      title: 'آیا از حذف این ردیف اطمینان دارید؟',
+      text: 'درصورت حذف دیگر قادر به بازیابی ردیف فوق نخواهید بود.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'بله، اطمینان دارم.',
+
+      cancelButtonText: 'بستن پنجره',
+      customClass: {
+        confirmButton: 'btn btn-success mx-2',
+
+        cancelButton: 'btn btn-danger',
+      },
+      buttonsStyling: false,
+    });
+  }
+
+
+
+  Get_LetterRowList() {
+    this.Loading_Modal_Response_show()
     this.repo.GetLetterRowList(this.TextData).subscribe((data) => {
+      this.Loading_Modal_Response_close()
       this.records = data;
     });
 
@@ -196,13 +236,14 @@ export class AutletterItemComponent
 
   submit(action) {
 
-    const command = this.EditForm.value;
+    this.EditForm.markAllAsTouched();
+    if (!this.EditForm.valid) return;
 
     if (action == 'delete') {
 
     }
 
-
+    this.Loading_Modal_Response_show()
     this.repo.AutLetterRowInsert(
       this.TextData,
       this.ToDayDate,
@@ -212,6 +253,8 @@ export class AutletterItemComponent
       this.CentralRef,
       this.EditForm.value.selectedUserId.toString()
     ).subscribe(e => {
+
+      this.Loading_Modal_Response_close()
       const intValue = parseInt(e[0].LetterRef, 10);
       if (!isNaN(intValue) && intValue > 0) {
         this.notificationService.succeded();
@@ -245,7 +288,9 @@ export class AutletterItemComponent
 
 
   Set_Autletterrow_Property() {
+    this.Loading_Modal_Response_show()
     this.repo.Update_AutletterRow(this.EditForm_explain.value).subscribe((data: any) => {
+      this.Loading_Modal_Response_close()
       this.notificationService.succeded();
       this.Get_LetterRowList()
       this.explain_dialog_close()
@@ -268,5 +313,18 @@ export class AutletterItemComponent
     this.renderer.removeAttribute(modal, 'role');
   }
 
-
+  Loading_Modal_Response_show() {
+    const modal = this.renderer.selectRootElement('#loadingresponse', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  Loading_Modal_Response_close() {
+    const modal = this.renderer.selectRootElement('#loadingresponse', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
 }

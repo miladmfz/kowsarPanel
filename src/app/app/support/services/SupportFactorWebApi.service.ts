@@ -173,9 +173,11 @@ export class SupportFactorWebApiService {
     Description: string,
     LetterState: string,
     LetterPriority: string,
-    CentralRef: string
+    CentralRef: string,
+    InOutFlag: string,
+
   ): Observable<any[]> {
-    return this.client.post<any[]>(this.kowsarWebUrl + "LetterInsert", { LetterDate, title, Description, LetterState, LetterPriority, CentralRef }, { headers: this.headers })
+    return this.client.post<any[]>(this.kowsarWebUrl + "LetterInsert", { LetterDate, title, Description, LetterState, LetterPriority, CentralRef, InOutFlag }, { headers: this.headers })
   }
 
   // GetProperty(Where: string): Observable<any[]> {

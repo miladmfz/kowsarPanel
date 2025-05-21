@@ -171,5 +171,20 @@ export class AutletterWebApiService {
   }
 
 
+  DeleteAutLetter(LetterCode: string): Observable<any[]> {
+    const params = new HttpParams().append('LetterCode', LetterCode)
+    return this.client.get<any[]>(this.baseUrl + "DeleteAutLetter", { headers: this.headers, params: params })
+  }
+
+
+  DeleteAutLetterRows(LetterRowCode: string): Observable<any[]> {
+    const params = new HttpParams().append('LetterRowCode', LetterRowCode)
+    return this.client.get<any[]>(this.baseUrl + "DeleteAutLetterRows", { headers: this.headers, params: params })
+  }
+
+
+
+
+
 
 }

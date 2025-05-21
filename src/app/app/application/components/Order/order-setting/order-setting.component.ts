@@ -1,18 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { OrderWebApiService } from '../../../services/OrderWebApi.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
+import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
+import { ActivatedRoute } from '@angular/router';
+import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
+import { CellActionOrderDbsetup } from './cell-action-order-dbsetup';
+import { CellActionOrderPrinter } from './cell-action-order-printer';
 
 @Component({
   selector: 'app-order-setting',
   templateUrl: './order-setting.component.html',
 })
-export class OrderSettingComponent implements OnInit {
+export class OrderSettingComponent extends AgGridBaseComponent
+  implements OnInit {
 
   constructor(
     private repo: OrderWebApiService,
+    private renderer: Renderer2,
+    private route: ActivatedRoute,
+    private fb: FormBuilder,
     private sharedService: SharedService,
-  ) { }
+    private readonly notificationService: NotificationService,
+
+  ) { super(); }
+
   items: any = [];
   Printers: any = [];
   BasketColumns: any = [];
@@ -27,11 +39,116 @@ export class OrderSettingComponent implements OnInit {
 
 
 
-  ngOnInit() {
-
+  override ngOnInit(): void {
+    super.ngOnInit();
+    this.Config_Declare()
     this.Get_Base_data();
 
     this.CallService()
+  }
+
+
+
+  Config_Declare() {
+
+    this.columnDefs = [
+      {
+        field: 'عملیات',
+        pinned: 'left',
+        cellRenderer: CellActionOrderDbsetup,
+
+        width: 100,
+      },
+      {
+        field: 'KeyId',
+        headerName: 'KeyId',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'KeyValue',
+        headerName: 'KeyValue',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'DataValue',
+        headerName: 'DataValue',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'Description',
+        headerName: 'Description',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'SubSystem',
+        headerName: 'SubSystem',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+    ];
+
+
+    this.columnDefs1 = [
+      {
+        field: 'عملیات',
+        pinned: 'left',
+        cellRenderer: CellActionOrderPrinter,
+
+        width: 100,
+      },
+      {
+        field: 'PrinterName',
+        headerName: 'نام پرینتر',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150,
+
+      },
+      {
+        field: 'PrinterExplain',
+        headerName: 'توضیحات',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150,
+
+      },
+      {
+        field: 'GoodGroups',
+        headerName: 'گروه کالا',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150,
+
+      },
+      {
+        field: 'WhereClause',
+        headerName: 'شروط',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150,
+
+      },
+      {
+        field: 'PrintCount',
+        headerName: 'نعداد پرینت',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150,
+
+      },
+    ];
+
+
+
   }
 
   CallService() {
@@ -69,17 +186,17 @@ export class OrderSettingComponent implements OnInit {
   selected_value: string = "";
   selected_Key: string = "";
 
-  SelectDbSetup(index: any) {
-    this.selected_des = this.items[index].Description;
-    this.selected_value = this.items[index].DataValue;
-    this.selected_Key = this.items[index].KeyId;
-
+  SelectDbSetup(index) {
+    this.selected_des = index.Description;
+    this.selected_value = index.DataValue;
+    this.selected_Key = index.KeyId;
+    this.orderdbsetup_Modal_Response_show()
   }
 
 
   UpdateDbSetup() {
     this.repo.UpdateDbSetup(this.selected_value, this.selected_Key).subscribe(e => {
-
+      this.orderdbsetup_Modal_Response_close()
       this.sharedService.triggerActionAll('refresh');
     });
 
@@ -96,17 +213,18 @@ export class OrderSettingComponent implements OnInit {
     FilePath: new FormControl(''),
   });
 
-  SelectPrinter(index: any) {
+  SelectPrinter(index) {
     this.EditForm_printer.patchValue({
-      AppPrinterCode: this.Printers[index].AppPrinterCode,
-      PrinterName: this.Printers[index].PrinterName,
-      PrinterExplain: this.Printers[index].PrinterExplain,
-      GoodGroups: this.Printers[index].GoodGroups,
-      WhereClause: this.Printers[index].WhereClause,
-      PrintCount: this.Printers[index].PrintCount,
-      PrinterActive: this.Printers[index].PrinterActive,
-      FilePath: this.Printers[index].FilePath,
+      AppPrinterCode: index.AppPrinterCode,
+      PrinterName: index.PrinterName,
+      PrinterExplain: index.PrinterExplain,
+      GoodGroups: index.GoodGroups,
+      WhereClause: index.WhereClause,
+      PrintCount: index.PrintCount,
+      PrinterActive: index.PrinterActive,
+      FilePath: index.FilePath,
     });
+    this.printerModal_Modal_Response_show()
   }
 
   Updateprinter() {
@@ -115,6 +233,7 @@ export class OrderSettingComponent implements OnInit {
     if (this.EditForm_printer.value.PrinterName !== "") {
       this.repo.UpdatePrinter(command).subscribe(e => {
         this.sharedService.triggerActionAll('refresh');
+        this.printerModal_Modal_Response_close()
       });
     }
   }
@@ -146,6 +265,39 @@ export class OrderSettingComponent implements OnInit {
   }
 
 
+
+
+  printerModal_Modal_Response_show() {
+    const modal = this.renderer.selectRootElement('#printerModal', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  printerModal_Modal_Response_close() {
+    const modal = this.renderer.selectRootElement('#printerModal', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
+
+  orderdbsetup_Modal_Response_show() {
+    const modal = this.renderer.selectRootElement('#orderdbsetup', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  orderdbsetup_Modal_Response_close() {
+    const modal = this.renderer.selectRootElement('#orderdbsetup', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
 
 
 }
