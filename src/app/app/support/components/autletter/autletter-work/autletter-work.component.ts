@@ -6,6 +6,7 @@ import { CellActionAutletterWork } from './cell-action-autletter-work';
 import { ValidateionStateCellAutletterWorkRenderer } from './validation-state-label-cell-autletter-work';
 import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
+import * as moment from 'jalali-moment';
 
 @Component({
   selector: 'app-autletter-work',
@@ -74,13 +75,21 @@ export class AutletterWorkComponent
         minWidth: 80
 
       },
+
+
       {
-        field: 'RowLetterDate',
+        field: 'RowCreationDate',
         headerName: 'تاریخ ارجاع',
         filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
+        minWidth: 200,
+        cellClass: 'text-end', // Bootstrap کلاس برای راست‌چین کردن
+        valueFormatter: (params) => {
+          if (!params.value) return '';
+          return moment(params.value).format(' HH:mm -- jYYYY/jMM/jDD ');
+        }
+      }
+      ,
+
       {
         field: 'LetterDescription',
         headerName: 'متن تیکت',
@@ -102,12 +111,17 @@ export class AutletterWorkComponent
         cellClass: 'text-center',
         minWidth: 250
       },
+
       {
-        field: 'LetterDate',
-        headerName: 'تاریخ تیکت	',
+        field: 'CreationDate',
+        headerName: 'تاریخ تیکت',
         filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
+        minWidth: 200,
+        cellClass: 'text-end', // Bootstrap کلاس برای راست‌چین کردن
+        valueFormatter: (params) => {
+          if (!params.value) return '';
+          return moment(params.value).format(' HH:mm -- jYYYY/jMM/jDD ');
+        }
       },
       {
         field: 'RowExecutorName',

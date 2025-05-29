@@ -6,10 +6,10 @@ export const environment = {
 
 
   //  Build
-  //api_Url: 'http://itmali.ir/webapi/',
+  api_Url: 'http://itmali.ir/webapi/',
 
   // development
-  api_Url: 'http://localhost:60006/api/',
+  //api_Url: 'http://localhost:60006/api/',
 
 
   // //// Qoqnos_Coffee
@@ -29,3 +29,6 @@ let api_Url = 'http://localhost:60006/api/';
 export function getServiceUrl() {
   return `${api_Url}`;
 }
+
+
+
