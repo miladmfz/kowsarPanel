@@ -34,6 +34,10 @@ export class BrokerWebApiService {
 
 
 
+    GetBrokerCustomer(BrokerCode: string, FactorDate: string): Observable<any[]> {
+        const params = new HttpParams().append('BrokerCode', BrokerCode).append('FactorDate', FactorDate)
+        return this.client.get<any[]>(this.baseUrl + "GetBrokerCustomer", { headers: this.headers, params: params })
+    }
 
 
     UploadImage(ObjectCode: string, image: string): Observable<any[]> {
@@ -53,6 +57,17 @@ export class BrokerWebApiService {
         return this.client.get<any[]>(this.baseUrl + "GetBrokerDetail", { headers: this.headers, params: params })
     }
 
+    GetAppBrokerReport(command): Observable<any[]> {
+
+        // flag report
+        //   
+        //  1- GetCDPreFactorDate
+        //  2- GetCDCustName
+        //  3- GetPrefactorBroker
+        //  4-
+        return this.client.post<any[]>(this.baseUrl + "GetAppBrokerReport", command, { headers: this.headers })
+
+    }
 
     GetPrefactorBroker(BrokerCode: string, Days: string): Observable<any[]> {
         const params = new HttpParams().append('BrokerCode', BrokerCode).append('Days', Days)

@@ -3,10 +3,12 @@ import { Router } from '@angular/router';
 import 'leaflet-polylinedecorator'
 import * as L from 'leaflet';
 import { BrokerWebApiService } from '../../../services/BrokerWebApi.service';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import 'leaflet.markercluster';
 import { toGregorian } from 'jalaali-js';
+import * as moment from 'jalali-moment';
+
 @Component({
   selector: 'app-broker-map',
   templateUrl: './broker-map.component.html',
@@ -29,6 +31,34 @@ export class BrokerMapComponent implements AfterViewInit {
   apiData: any[] = []; // مقدار پیش‌فرض داده‌ها
   stopDurations: any[] = []; // مقدار پیش‌فرض داده‌ها
 
+  filterForm!: FormGroup;
+  ngOnInit(): void {
+    /* ساخت فرم با مقادیر پیش‌فرض */
+    this.filterForm = this.fb.group({
+      day: ['', Validators.required],          // تاریخ
+      starttime: ['07:00', Validators.required], // ساعت شروع
+      endtime: ['23:00', Validators.required]    // ساعت پایان
+    });
+
+    /* هر بار تاریخ تغییر کند ساعت‌ها ریست شوند */
+    this.filterForm.get('day')!.valueChanges.subscribe(() => {
+      this.filterForm.patchValue(
+        { starttime: '07:00', endtime: '23:00' },
+        { emitEvent: false }
+      );
+    });
+  }
+  changeDate(direction: number): void {
+    const current = this.filterForm.get('day')?.value;
+    const mDate = moment(current, 'jYYYY/jMM/jDD');
+
+    if (!mDate.isValid()) return;
+
+    const newDate = mDate.add(direction, 'day').format('jYYYY/jMM/jDD');
+    this.filterForm.get('day')?.setValue(newDate);
+  }
+
+
   /** آیکون نقطهٔ قرمز برای مشتریان ثابت */
   /** آیکون قرمز مشتری – قبلاً تعریف شده بود */
   private readonly customerRedIcon = L.icon({
@@ -38,7 +68,6 @@ export class BrokerMapComponent implements AfterViewInit {
     popupAnchor: [0, -28]
   });
 
-  /** آیکون سبز زمانی که بازاریاب در ۵۰ متری مشتری قرار گرفته باشد */
   private readonly customerGreenIcon = L.icon({
     iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/green-dot.png',
     iconSize: [28, 28],
@@ -46,32 +75,36 @@ export class BrokerMapComponent implements AfterViewInit {
     popupAnchor: [0, -28]
   });
 
+  private readonly customerYellowIcon = L.icon({
+    iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png',
+    iconSize: [28, 28],
+    iconAnchor: [14, 28],
+    popupAnchor: [0, -28]
+  });
+
+  private readonly customerBlueIcon = L.icon({
+    iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png',
+    iconSize: [28, 28],
+    iconAnchor: [14, 28],
+    popupAnchor: [0, -28]
+  });
+
+
+
   /** برای دسترسی بعدی به هر مارکر مشتری */
   private customerMarkers = new Map<number, L.Marker>();  // key = CustomerCode
 
 
-  Customerlocation: any[] = [
-    {
-      CustomerCode: 10,
-      CustName_Small: "عنوان 3  مشتري 3",
-      EconomyCode1: "35.704827, 51.371032"
-    },
-    {
-      CustomerCode: 8,
-      CustName_Small: "عنوان 1  مشتري 1",
-      EconomyCode1: "35.697679, 51.366789"
-    },
-    {
-      CustomerCode: 9,
-      CustName_Small: "عنوان 2  مشتري 2",
-      EconomyCode1: "35.698920, 51.372009"
-    }
-  ];
+  Customerlocation: any[] = []
+
+
 
   constructor(
     private readonly router: Router,
     private repo: BrokerWebApiService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private fb: FormBuilder           // ← افزوده شد
+
   ) { }
 
   ngAfterViewInit(): void {
@@ -121,120 +154,156 @@ export class BrokerMapComponent implements AfterViewInit {
   }
 
 
-  getTrackerData1(): void {
-    const brokerCode = this.BrokerCodeData;
-    const startDate = '1404/03/10 12:00:00';
-    const endDate = '1404/03/10 13:00:00';
-
-    this.repo.GetGpstracker(brokerCode, startDate, endDate).subscribe((data: any) => {
-      //this.repo.GetGpstracker(brokerCode, this.startDate_form.value, this.endDate_form.value).subscribe((data: any) => {
-
-      this.apiData = data.Gpstrackers;
-
-      this.clearMap(); // پاک کردن لایه‌های قبلی
-
-      if (this.apiData && this.apiData.length > 0) {
-        this.hasData = this.apiData.length > 0; // اینجا مقدار hasData را بروزرسانی می‌کنید
-        const first = this.apiData[0];
-        if (first && first.Latitude && first.Longitude && this.map) {
-          this.map.setView([first.Latitude, first.Longitude], 15);
-        }
-
-        this.addMarkers();
-        this.drawPolyline();
-        this.noDataMessage = ''; // پاک کردن پیام خطا
-      } else {
-        this.hasData = false;
-        this.noDataMessage = 'موردی یافت نشد'; // تنظیم پیام خطا
-      }
-    });
-  }
 
 
-  /** مارکر مشتری را سبز می‌کند اگر یکی از نقاط مسیر در ≤۵۰ متر او باشد */
-  updateCustomerProximity(): void {
-    if (!this.map || !this.apiData?.length) return;
-
-    // همهٔ نقاط مسیرِ بازاریاب را به L.LatLng تبدیل می‌کنیم
-    const routePoints = this.apiData
-      .map(p => L.latLng(parseFloat(p.Latitude), parseFloat(p.Longitude)))
-      .filter(ll => !isNaN(ll.lat) && !isNaN(ll.lng));
-
-    this.customerMarkers.forEach(marker => {
-      const customerLatLng = marker.getLatLng();
-      const isNear = routePoints.some(rp => customerLatLng.distanceTo(rp) <= 50);
-
-      marker.setIcon(isNear ? this.customerGreenIcon : this.customerRedIcon);
-    });
-  }
-
-
+  /* ----------  افزودن مارکرهای مشتری  ---------------- */
   addCustomerMarkers(): void {
     if (!this.map || !this.Customerlocation?.length) return;
 
     const customerLayer = L.layerGroup();
 
     this.Customerlocation.forEach(cust => {
-      const [latStr, lngStr] = cust.EconomyCode1.split(',').map(s => s.trim());
+      const [latStr, lngStr] = (cust.EconomyCode1 || '').split(',').map(s => s.trim());
       const lat = parseFloat(latStr);
       const lng = parseFloat(lngStr);
-      if (isNaN(lat) || isNaN(lng)) return;
+      if (isNaN(lat) || isNaN(lng)) return;          // مختصات معتبر نیست
 
-      const popup = `
+      const popupHtml = `
       <b>${cust.CustName_Small}</b><br>
-      کد مشتری: ${cust.CustomerCode}
+      کد مشتری: ${cust.CustomerCode}<br>
+      وضعیت: ${cust.Explain || '-'}<br>
+      مبلغ کل: ${cust.SumnPrice.toLocaleString()}<br>
+      تعداد: ${cust.SumAmount}
     `;
 
       const marker = L.marker([lat, lng], { icon: this.customerRedIcon })
         .addTo(customerLayer)
-        .bindPopup(popup)
+        .bindPopup(popupHtml)
         .bindTooltip(cust.CustName_Small, { direction: 'top', sticky: true });
 
-      this.customerMarkers.set(cust.CustomerCode, marker);   //  ← ← (1) ذخیرهٔ مارکر
+      /* در Map ذخیره می‌کنیم تا بعداً به آن دسترسی داشته باشیم */
+      this.customerMarkers.set(cust.CustomerCode, marker);
     });
 
     customerLayer.addTo(this.map);
   }
+  updateCustomerProximity(): void {
+    if (!this.map || !this.apiData?.length) return;
 
-  /** نقاط ثابت مشتریان را (با آیکون قرمز) به نقشه اضافه می‌کند */
-  addCustomerMarkers1(): void {
-    if (!this.map || !this.Customerlocation?.length) return;
+    const routePoints = this.apiData
+      .map(p => L.latLng(parseFloat(p.Latitude), parseFloat(p.Longitude)))
+      .filter(ll => !isNaN(ll.lat) && !isNaN(ll.lng));
 
-    // می‌توانی اگر خوشه‌بندی خواستی، جای ← L.layerGroup از L.markerClusterGroup استفاده کنی
-    const customerLayer = L.layerGroup();
+    // شمارش وضعیت‌ها
+    let total = 0;
+    let nearGreen = 0;
+    let nearYellow = 0;
+    let farBlue = 0;
+    let veryFarRed = 0;
 
-    this.Customerlocation.forEach(cust => {
-      const [latStr, lngStr] = cust.EconomyCode1.split(',').map(s => s.trim());
-      const lat = parseFloat(latStr);
-      const lng = parseFloat(lngStr);
+    this.customerMarkers.forEach((marker, customerCode) => {
+      const cust = this.Customerlocation.find(c => c.CustomerCode === customerCode);
+      if (!cust) return;
 
-      if (isNaN(lat) || isNaN(lng)) return; // مختصات نامعتبر
+      /* محاسبهٔ کمترین فاصله (متر) مشتری تا مسیر */
+      const customerLatLng = marker.getLatLng();
+      const minDistance = Math.min(...routePoints.map(rp => customerLatLng.distanceTo(rp)));
 
-      const popup = `
-      <b>${cust.CustName_Small}</b><br>
-      کد مشتری: ${cust.CustomerCode}
-    `;
+      /* انتخاب آیکون براساس منطق درخواستی */
+      let icon = this.customerRedIcon;
+      const sumAmount = +cust.SumAmount;
+      const hasExplain = !!(cust.Explain && cust.Explain.trim());
 
-      L.marker([lat, lng], { icon: this.customerRedIcon })
-        .addTo(customerLayer)
-        .bindPopup(popup)
-        .bindTooltip(cust.CustName_Small, { direction: 'top', sticky: true });
+      total++;
+
+      if (minDistance <= 50 && sumAmount > 0) {
+        icon = this.customerGreenIcon;
+        nearGreen++;
+      } else if (minDistance <= 50 && sumAmount === 0) {
+        icon = this.customerYellowIcon;
+        nearYellow++;
+      } else if ((minDistance > 50 && minDistance < 300) && (hasExplain || sumAmount > 0)) {
+        icon = this.customerBlueIcon;
+        farBlue++;
+      } else if (minDistance >= 300) {
+        icon = this.customerRedIcon;
+        veryFarRed++;
+      }
+
+      marker.setIcon(icon);
     });
 
-    // لایهٔ نقاط مشتری را به نقشه اضافه کن
-    customerLayer.addTo(this.map);
+    // بروزرسانی باکس آماری
+    this.updateCustomerSummary({
+      total,
+      nearGreen,
+      nearYellow,
+      farBlue,
+      veryFarRed
+    });
   }
+
+
+  // نمونه تعریف متغیر داخل کامپوننت
+  customerStats: {
+    total: number;
+    nearGreen: number;
+    nearYellow: number;
+    farBlue: number;
+    veryFarRed: number;
+  } | null = null;
+
+  // وقتی داده‌ها رو دریافت کردی این متد رو صدا بزن
+  updateCustomerSummary(stats: {
+    total: number;
+    nearGreen: number;
+    nearYellow: number;
+    farBlue: number;
+    veryFarRed: number;
+  }): void {
+    this.customerStats = stats;
+  }
+
+
+
+
+
+
 
   getTrackerData(): void {
+
+    const { day, starttime, endtime } = this.filterForm.value;
+
+    const startDate = `${day} ${starttime}:00`;
+    const endDate = `${day} ${endtime}:00`;
     const brokerCode = this.BrokerCodeData;
-    const startDate = '1404/03/10 12:00:00';
-    const endDate = '1404/03/10 13:00:00';
+
+
+    if (this.filterForm.invalid) return;
+
+
+    // const startDate = '1404/03/10 12:00:00';
+    // const endDate = '1404/03/10 13:00:00';
+
+
+    this.repo.GetBrokerCustomer(brokerCode, day).subscribe((data: any) => {
+
+      this.Customerlocation = data.BrokerCustomers
+      this.addCustomerMarkers();  // ← اضافه شد
+      this.updateCustomerProximity();
+    });
+
+
+
+
+
 
     this.repo.GetGpstracker(brokerCode, startDate, endDate).subscribe((data: any) => {
       this.apiData = data.Gpstrackers;
 
-      this.clearMap();        // پاک کردن لایه‌های قبلی
-      // ← نشانه‌گذاری نقاط نزدیک
+
+
+      this.clearMap();
 
       if (this.apiData && this.apiData.length > 0) {
         this.hasData = true;
@@ -243,12 +312,10 @@ export class BrokerMapComponent implements AfterViewInit {
         if (first && first.Latitude && first.Longitude && this.map) {
           this.map.setView([first.Latitude, first.Longitude], 15);
         }
-        this.addCustomerMarkers();  // ← اضافه شد
-        this.updateCustomerProximity();
+
         this.addMarkers();
         this.drawPolyline();
 
-        // ✅ نمایش توقف‌ها
         const stops = this.calculateStopDurations();
         this.addStopMarkers(stops);
 
@@ -258,7 +325,14 @@ export class BrokerMapComponent implements AfterViewInit {
         this.noDataMessage = 'موردی یافت نشد';
       }
     });
+
+
+
   }
+
+
+
+
 
   clearMap(): void {
     this.map?.eachLayer((layer: any) => {
@@ -534,4 +608,6 @@ export class BrokerMapComponent implements AfterViewInit {
   }
 
 }
+
+
 

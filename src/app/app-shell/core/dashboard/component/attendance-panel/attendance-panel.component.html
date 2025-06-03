@@ -10,12 +10,10 @@
       <div class="row">
         <div class="col-12">
           <div class="card" style="background-color: rgba(255, 255, 255, 1); padding: 20px;">
-            <div class="card-header">
-              <h5 class="card-title">گزارش وضعیت حضور</h5>
-            </div>
+
             <div class="card-body">
 
-              <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: auto" [rowData]="records"
+              <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
                 [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
                 (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
                 [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"

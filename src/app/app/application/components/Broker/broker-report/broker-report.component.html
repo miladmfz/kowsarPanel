@@ -1,12 +1,3 @@
-<div class="row">
-  <div class="col-12">
-    <div class="page-title-box">
-      <h4 class="page-title">مدیریت </h4>
-    </div>
-  </div>
-</div>
-
-
 <div class="card">
   <div class="card-header">
     <ul class="nav nav-pills nav-fill">
@@ -34,79 +25,30 @@
 
 
 
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-body border border-secondary">
-              <div class="d-flex align-items-start">
-
-                <div class="me-3">
-                  <label for="fileInput" class="position-relative">
-
-                    <ng-container *ngIf="Imageitem.length>100">
-                      <img [src]="Imageitem" alt="No Photo" class="rounded-circle" (click)="fileInput.click()">
-                    </ng-container>
-                    <ng-container *ngIf="Imageitem.length<100">
-                      <img src="./assets/images/nophoto.png" alt="No Photo" class="rounded-circle"
-                        (click)="fileInput.click()">
-                    </ng-container>
-
-
-
-                    <span
-                      class="upload-text position-absolute top-50 start-50 translate-middle text-white fw-bold opacity-50 transition-opacity"
-                      [ngClass]="{'opacity-100': showUploadText}">آپلود</span>
-                  </label>
-                  <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput style="display: none;">
-                </div>
-
-
-
-                <div class="flex-1">
-                  <h5 class="my-1"><a class="text-dark">{{ items[0].BrokerNameWithoutType }}</a></h5>
-                  <p class="text-muted mb-0"><i class="mdi mdi-account me-1"></i>{{ items[0].RelationType }}
-                  </p>
-                </div>
-
+        <div class="card border shadow-sm">
+          <div class="card-body d-flex flex-column flex-md-row align-items-center">
+            <div class="me-md-4 mb-3 mb-md-0 text-center">
+              <img [src]="Imageitem.length > 100 ? Imageitem : './assets/images/nophoto.png'"
+                class="rounded-circle border border-secondary object-fit-cover" style="width: 100px; height: 100px;"
+                alt="Profile" />
+              <div class="mt-2">
+                <label for="fileInput" class="btn btn-sm btn-outline-secondary">آپلود عکس</label>
+                <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput hidden />
               </div>
+            </div>
+            <div class="flex-grow-1">
+              <h5 class="fw-semibold">{{ BrokerDetails[0]?.BrokerNameWithoutType }}</h5>
+              <p class="text-muted"><i class="mdi mdi-account"></i> {{ BrokerDetails[0]?.RelationType }}</p>
               <hr>
-              <div class="text-muted">
-                <div class="row">
-
-                  <div class="col-sm-2 col-6">
-                    <div>
-                      <p class="mb-0">کد بازاریاب</p>
-                      <h5 class="mb-sm-0">{{items[0].CustomerCount}}</h5>
-                    </div>
-                  </div>
-                  <div class="col-sm-2 col-6">
-                    <div>
-                      <p class="mb-0">اجزای پایه</p>
-                      <h5 class="mb-sm-0">{{items[0].CentralRef}}</h5>
-                    </div>
-                  </div>
-
-                  <div class="col-sm-2 col-6">
-                    <div>
-                      <p class="mb-0">تعداد فاکتور</p>
-                      <h5 class="mb-sm-0">{{items[0].FactorCount}}</h5>
-                    </div>
-                  </div>
-
-                  <div class="col-sm-2 col-6">
-                    <div>
-                      <p class="mb-0">انبار</p>
-                      <h5 class="mb-sm-0">{{ items[0].Stack }}</h5>
-                    </div>
-                  </div>
-                  <div class="col-sm-2 col-6">
-                    <div>
-                      <p class="mb-0">تعداد مشتری</p>
-                      <h5 class="mb-sm-0">{{items[0].BrokerCode}}</h5>
-                    </div>
-                  </div>
-
-
+              <div class="row">
+                <div class="col-sm-6 mb-3"><strong>کد بازاریاب:</strong> {{ BrokerDetails[0]?.BrokerCode }}</div>
+                <div class="col-sm-6 mb-3"><strong>اجزای پایه:</strong> {{ BrokerDetails[0]?.CentralRef }}</div>
+                <div class="col-sm-6 mb-3"><strong>تعداد مشتری:</strong> {{ BrokerDetails[0]?.CustomerCount }}</div>
+                <div class="col-sm-6 mb-3"><strong>تعداد فاکتور امروز:</strong> {{ BrokerDetails[0]?.FactorCount }}
                 </div>
+                <div class="col-sm-6 mb-3"><strong>تعداد اقلام فاکتور:</strong> {{ BrokerDetails[0]?.AmountCount }}
+                </div>
+                <div class="col-sm-6"><strong>انبار:</strong> {{ BrokerDetails[0]?.Stack }}</div>
               </div>
             </div>
           </div>
@@ -115,31 +57,24 @@
 
 
 
-
-
-
-        <!-- 
-        <form [formGroup]="formRadio1">
-          <c-button-group aria-label="Basic radio toggle button group" role="group">
-            <input class="btn-check" formControlName="radio1" type="radio" value="Radio3" />
-            <label (click)="setRadioValue('Radio3')" cButton cFormCheckLabel variant="outline">لیست چارت</label>
-            <input class="btn-check" formControlName="radio1" type="radio" value="Radio1" />
-            <label (click)="setRadioValue('Radio1')" cButton cFormCheckLabel variant="outline">مشتری - قیمت </label>
-
-            <input class="btn-check" formControlName="radio1" type="radio" value="Radio2" />
-            <label (click)="setRadioValue('Radio2')" cButton cFormCheckLabel variant="outline">مشتری - تعداد </label>
-
-            <input class="btn-check" formControlName="radio1" type="radio" value="Radio4" />
-            <label (click)="setRadioValue('Radio4')" cButton cFormCheckLabel variant="outline">چارت مشتری</label>
-
-
-
-          </c-button-group>
-        </form> -->
-
         <div class="card-body">
 
           <ul class="nav nav-pills navtab-bg nav-justified">
+
+
+
+            <li class="nav-item">
+              <a href="#fromcustomer" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
+                <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+                <span class="d-none d-sm-inline-block">تفکیک مشتری</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#fromday" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+                <span class="d-none d-sm-inline-block">تفکیک روز </span>
+              </a>
+            </li>
 
             <li class="nav-item">
               <a href="#mapbroker" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
@@ -147,38 +82,6 @@
                 <span class="d-none d-sm-inline-block">رهگیری بازاریاب</span>
               </a>
             </li>
-
-
-            <!-- 
-            <li class="nav-item">
-              <a href="#Radio1" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
-                <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
-                <span class="d-none d-sm-inline-block">چارت مشتری</span>
-              </a>
-            </li>
-            <li class="nav-item">
-
-              <a href="#Radio3" data-bs-toggle="tab" aria-expanded="false" class="nav-link ">
-                <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
-                <span class="d-none d-sm-inline-block">فاکتور</span>
-              </a>
-            </li>
-
-
-
-            <li class="nav-item">
-              <a href="#Radio2" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
-                <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
-                <span class="d-none d-sm-inline-block">مشتری - تعداد</span>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a href="#Radio4" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
-                <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
-                <span class="d-none d-sm-inline-block">مشتری - قیمت</span>
-              </a>
-            </li> -->
 
 
 
@@ -189,74 +92,50 @@
 
           <div class="tab-content">
 
-            <div class="tab-pane active" id="mapbroker">
+
+
+
+
+            <div class="tab-pane active " id="fromcustomer">
+              <h3 class="card-title align-items-start flex-column">
+                <span class="card-label ">بیشترین سفارش به تفکیک مشتری</span>
+              </h3>
+              <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="Broker_Prefactors"
+                [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+                (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+                [context]="context" class="ag-theme-alpine" [defaultColDef]="defaultColDef"
+                [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true"
+                [rowSelection]="'multiple'" (selectionChanged)="onSelectionChanged($event)">
+              </ag-grid-angular>
+            </div>
+
+
+
+
+            <div class="tab-pane" id="fromday">
+              <h3 class="card-title align-items-start flex-column">
+                <span class="card-label ">بیشترین سفارش به تفکیک روز</span>
+              </h3>
+              <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="DPreFactorDates"
+                [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+                (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+                [context]="context" class="ag-theme-alpine" [defaultColDef]="defaultColDef"
+                [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true"
+                [rowSelection]="'multiple'" (selectionChanged)="onSelectionChanged($event)">
+              </ag-grid-angular>
+            </div>
+
+
+
+            <div class="tab-pane " id="mapbroker">
               <h3 class="card-title ">
                 <span class="card-label ">نقشه بازاریاب :</span>
               </h3>
 
-
-
-              <app-broker-map [BrokerCodeData]="id"> </app-broker-map>
+              <app-broker-map [BrokerCodeData]="BrokerCode"> </app-broker-map>
 
             </div>
 
-
-            <div class="tab-pane " id="Radio1">
-
-              <div class="card-body py-3">
-                <div class="table-responsive">
-
-                  <table class="table table-bordered align-middle gs-0 gy-4">
-                    <thead>
-                      <tr class="fw-bolder ">
-                        <th class="min-w-125px"></th>
-                        <th class="min-w-125px">نام نشتری</th>
-                        <th class="min-w-125px">تعداد عنوان </th>
-                        <th class="min-w-125px">تعداد سفارش </th>
-                        <th class="min-w-125px">جمع کل </th>
-                      </tr>
-                    </thead>
-                    <tbody *ngFor="let item of Broker_Prefactors; let i = index">
-                      <tr>
-                        <td>{{ i+1 }}</td>
-                        <td>{{ item.CustName }}</td>
-                        <td>{{ item.RowsCount }}</td>
-                        <td>{{ item.SumAmount }}</td>
-                        <td>{{ item.SumPrice }}</td>
-                      </tr>
-                    </tbody>
-
-                  </table>
-                </div>
-
-              </div>
-
-
-
-
-            </div>
-
-
-            <div class="tab-pane" id="Radio2">
-              <h3 class="card-title align-items-start flex-column">
-                <span class="card-label ">لیست مشتری - تعداد :</span>
-              </h3>
-
-            </div>
-
-            <div class="tab-pane " id="Radio3">
-
-              <h3 class="card-title align-items-start flex-column">
-                <span class="card-label ">لیست فاکتور های ارسالی:</span>
-              </h3>
-            </div>
-
-            <div class="tab-pane " id="Radio4">
-              <h3 class="card-title align-items-start flex-column">
-                <span class="card-label ">لیست مشتری - قیمت :</span>
-              </h3>
-
-            </div>
 
 
           </div>
