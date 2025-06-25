@@ -14,6 +14,8 @@ import { ProfileViewComponent } from './components/profile/profile-view/profile-
 import { ProfileEditComponent } from './components/profile/profile-edit/profile-edit.component';
 import { SupportFactorListComponent } from './components/factor/support-factor-list/support-factor-list.component';
 import { SupportFactorEditComponent } from './components/factor/support-factor-edit/support-factor-edit.component';
+import { SupgoodListComponent } from './components/supgood/supgood-list/supgood-list.component';
+import { SupgoodEditComponent } from './components/supgood/supgood-edit/supgood-edit.component';
 
 
 const routes: Routes = [
@@ -43,6 +45,12 @@ const routes: Routes = [
 
       { path: 'letter-insert', component: AutletterInsertComponent, },
       { path: 'letter-mywork', component: AutletterWorkComponent, },
+
+
+      { path: 'supgood-list', component: SupgoodListComponent, },
+
+      { path: 'supgood-edit', component: SupgoodEditComponent, },
+      { path: 'supgood-edit/:id', component: SupgoodEditComponent, },
 
 
 

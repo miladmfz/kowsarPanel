@@ -30,6 +30,9 @@ import { CellActionSupportFactorList } from './components/factor/support-factor-
 import { CellActionSupportFactorCustomerEdit } from './components/factor/support-factor-edit/cell-action-support-factor-customer-edit';
 import { CellActionSupportFactorRowsEdit } from './components/factor/support-factor-edit/cell-action-support-factorrows-edit';
 import { CellActionSupportGoodEdit } from './components/factor/support-factor-edit/cell-action-support-good-edit';
+import { SupgoodListComponent } from './components/supgood/supgood-list/supgood-list.component';
+import { SupgoodEditComponent } from './components/supgood/supgood-edit/supgood-edit.component';
+import { CellActionSupGoodList } from './components/supgood/supgood-list/cell-action-supgood-ist';
 
 
 @NgModule({
@@ -75,6 +78,13 @@ import { CellActionSupportGoodEdit } from './components/factor/support-factor-ed
 
     SupportFactorEditComponent,
     SupportFactorListComponent,
+
+    SupgoodListComponent,
+    SupgoodEditComponent,
+
+
+    CellActionSupGoodList,
+
 
     CellActionSupportFactorList,
     CellActionSupportGoodEdit,

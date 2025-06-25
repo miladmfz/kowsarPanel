@@ -227,6 +227,11 @@
                 <li>
                   <a [routerLink]="['/support/support-factor-list']" routerLinkActive="active">لیست فاکتور پشتیبانی </a>
                 </li>
+                <ng-container *ngIf="PhAddress3=='100'">
+                  <li>
+                    <a [routerLink]="['/support/supgood-list']" routerLinkActive="active">لیست کالاها</a>
+                  </li>
+                </ng-container>
                 <li>
                   <a [routerLink]="['/support/customer-list']" routerLinkActive="active">لیست مشتریان</a>
                 </li>

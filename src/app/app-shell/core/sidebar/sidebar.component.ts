@@ -22,6 +22,7 @@ export class SidebarComponent implements OnInit {
   Explain = '';
   CentralRef = '';
   BrokerRef = '';
+  PhAddress3 = '';
   imageData: string = '';
   Imageitem: string = '';
 
@@ -58,6 +59,7 @@ export class SidebarComponent implements OnInit {
 
     this.AlarmActive_Row = parseInt(sessionStorage.getItem("AlarmActive_Row"))
     this.AlarmActtive_Conversation = parseInt(sessionStorage.getItem("AlarmActtive_Conversation"))
+    this.PhAddress3 = sessionStorage.getItem("PhAddress3")
     if (sessionStorage.getItem("PhAddress3") == '100') {
       this.BrokerRef = ''
     } else {

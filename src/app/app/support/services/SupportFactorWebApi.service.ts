@@ -180,6 +180,33 @@ export class SupportFactorWebApiService {
     return this.client.post<any[]>(this.kowsarWebUrl + "LetterInsert", { LetterDate, title, Description, LetterState, LetterPriority, CentralRef, InOutFlag }, { headers: this.headers })
   }
 
+
+
+
+  GetGood_base(GoodCode: string): Observable<any[]> {
+    const params = new HttpParams().append('GoodCode', GoodCode)
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetGoodBase", { headers: this.headers, params: params })
+  }
+
+
+
+  GetLastGoodData(): Observable<any[]> {
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetLastGoodData", { headers: this.headers })
+  }
+
+
+  GoodCrudService(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.kowsarWebUrl + "GoodCrudService", command, { headers: this.headers })
+
+  }
+
+  GetSimilarGood(Where: string): Observable<any[]> {
+    const params = new HttpParams().append('Where', Where)
+    return this.client.get<any[]>(this.kowsarWebUrl + "GetSimilarGood", { headers: this.headers, params: params })
+
+  }
+
   // GetProperty(Where: string): Observable<any[]> {
   //   const params = new HttpParams().append('Where', Where)
   //   return this.client.get<any[]>(this.kowsarWebUrl + "GetProperty", { headers: this.headers, params: params })

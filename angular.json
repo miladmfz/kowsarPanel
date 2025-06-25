@@ -23,7 +23,8 @@
             "assets": [
               "src/favicon.ico",
               "src/.htaccess",
-              "src/assets"{
+              "src/assets",
+              {
                 "glob": "**/*",
                 "input": "node_modules/leaflet/dist/images",
                 "output": "/assets/"
