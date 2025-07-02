@@ -29,6 +29,11 @@ export class AttendancePanelComponent
     ExecuterCentral: new FormControl(''),
   });
 
+  EditForm_Sms_LetterToEmployer = new FormGroup({
+    CONTACTS: new FormControl(''),
+    NumberPhone: new FormControl(''),
+  });
+
   EditForm_GetHistory = new FormGroup({
     CentralRef: new FormControl(''),
   });
@@ -192,6 +197,12 @@ export class AttendancePanelComponent
       // }
     });
 
+
+
+
+
+
+
     if (this.BrokerRef == '') {
 
     }
@@ -222,9 +233,21 @@ export class AttendancePanelComponent
             this.EditForm_LetterToEmployer.value.ExecuterCentral,
           ).subscribe(e => {
             const intValue = parseInt(e[0].LetterRef, 10);
+            this.repo.SendSmsAutLetter(this.EditForm_Sms_LetterToEmployer.value).subscribe((data: any) => {
+              this.loading_attendance = false
+              this.notificationService.succeded();
+
+              this.letterexplain_dialog_close()
+
+            });
+
             if (!isNaN(intValue) && intValue > 0) {
               this.notificationService.succeded();
+
               this.letterexplain_dialog_close()
+
+
+
             } else {
               //Todo notification erroor
             }
@@ -243,7 +266,15 @@ export class AttendancePanelComponent
       DescriptionText: "",
       ExecuterCentral: item.CentralRef
     });
-    this.letterexplain_modal_title = " تیکت ارتباط با " + item.PhFirstName + ' ' + item.PhLastName
+
+
+    this.EditForm_Sms_LetterToEmployer.patchValue({
+      CONTACTS: item.FullName,
+      NumberPhone: item.PhMobile1
+
+    });
+
+    this.letterexplain_modal_title = " تیکت ارتباط با " + item.FullName
     this.letterexplain_dialog_show()
   }
 

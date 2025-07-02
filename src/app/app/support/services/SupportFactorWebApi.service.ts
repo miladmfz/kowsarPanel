@@ -153,6 +153,11 @@ export class SupportFactorWebApiService {
     return this.client.post<any[]>(this.kowsarWebUrl + "ManualAttendance", command, { headers: this.headers })
   }
 
+  SendSmsAutLetter(command): Observable<any[]> {
+    return this.client.post<any[]>(this.kowsarWebUrl + "SendSmsAutLetter", command, { headers: this.headers })
+  }
+
+
 
   AutLetterRowInsert(
     LetterRef: string,

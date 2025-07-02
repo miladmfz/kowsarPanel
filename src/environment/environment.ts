@@ -6,8 +6,8 @@ export const environment = {
 
 
   //  Build
-  api_Url: 'http://itmali.ir/webapi/',
-  //api_Url: 'http://5.160.152.173:60005/api/',
+  //api_Url: 'http://itmali.ir/webapi/',
+  api_Url: 'http://5.160.152.173:60005/api/',
 
   // development
   //api_Url: 'http://localhost:60006/api/',
