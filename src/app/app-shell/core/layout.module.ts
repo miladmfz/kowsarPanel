@@ -29,6 +29,7 @@ import { CellNameAttendancePanel } from './dashboard/component/attendance-panel/
 import { CellStatusAttendancePanel } from './dashboard/component/attendance-panel/cell-status-label-attendance-panel';
 import { CellWithoutRowsSupportPanel } from './dashboard/component/support-panel/cell-withoutrows-label-support-panel';
 import { CellOpenFactorSupportPanel } from './dashboard/component/support-panel/cell-openfactor-label-support-panel copy';
+import { CellActionAttendanceStatePanel } from './dashboard/component/support-panel/cell-action-attendance-panel';
 
 const routes: Routes = [
   {
@@ -48,6 +49,7 @@ const routes: Routes = [
     NotifierModule,
     FullCalendarModule,
     AgGridModule,
+    NgPersianDatepickerModule
 
   ],
   declarations: [
@@ -66,7 +68,8 @@ const routes: Routes = [
     CellNameAttendancePanel,
     CellStatusAttendancePanel,
     CellWithoutRowsSupportPanel,
-    CellOpenFactorSupportPanel
+    CellOpenFactorSupportPanel,
+    CellActionAttendanceStatePanel
 
   ],
   providers: [

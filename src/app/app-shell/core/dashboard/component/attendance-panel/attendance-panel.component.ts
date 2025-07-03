@@ -197,12 +197,6 @@ export class AttendancePanelComponent
       // }
     });
 
-
-
-
-
-
-
     if (this.BrokerRef == '') {
 
     }
