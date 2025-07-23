@@ -122,7 +122,7 @@ export class DownloadEditComponent implements OnInit {
     }
 
 
-    this.repo.SetAttachFile(command).subscribe((data) => {
+    this.repo.AttachFile_Insert(command).subscribe((data) => {
       this.router.navigate(['/document/download-list']);
     });
 

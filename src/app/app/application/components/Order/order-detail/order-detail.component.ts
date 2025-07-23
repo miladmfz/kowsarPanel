@@ -38,7 +38,7 @@ export class OrderDetailComponent implements OnInit {
       this.ToDayDate = e[0].TodeyFromServer
       this.Getemptymiz()
       this.GetAmountItem()
-      this.minMaxGood()
+      this.GetOrderPanel()
     });
 
 
@@ -106,15 +106,15 @@ export class OrderDetailComponent implements OnInit {
   }
 
 
-  minMaxGood() {
+  GetOrderPanel() {
 
-    this.repo.minMaxGood(this.ToDayDate, this.ToDayDate, "1").subscribe(e => {
+    this.repo.GetOrderPanel(this.ToDayDate, this.ToDayDate, "1").subscribe(e => {
       this.ItemsMax = e;
 
     });
 
 
-    this.repo.minMaxGood(this.ToDayDate, this.ToDayDate, "2").subscribe(e => {
+    this.repo.GetOrderPanel(this.ToDayDate, this.ToDayDate, "2").subscribe(e => {
       this.ItemsMin = e;
 
     });

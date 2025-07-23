@@ -26,7 +26,7 @@ declare var $: any;
   </span>
  </ng-container> -->
 
- <ng-container *ngIf="CentralRef === CreatorCentralRef || PhAddress3 === '100'">
+ <ng-container *ngIf="PhAddress3 === '100'">
   <button (click)="btnDeleteClicked(2)" class="btn btn-sm btn-outline-danger">
     <i class="fas fa-trash"></i>
   </button>

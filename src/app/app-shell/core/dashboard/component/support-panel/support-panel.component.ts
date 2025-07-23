@@ -271,7 +271,7 @@ export class SupportPanelComponent
   getpanel_data() {
 
 
-    // this.repo.GetSupportData(this.EditForm_SupportData.value).subscribe((data: any) => {
+    // this.repo.GetSupportPanel(this.EditForm_SupportData.value).subscribe((data: any) => {
     //   this.loading_supportpanel = false
 
 

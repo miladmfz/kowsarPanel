@@ -135,7 +135,7 @@ export class SupportFactorListComponent extends AgGridBaseComponent
       Flag: "1"
     });
 
-    this.repo.GetSupportData(this.EditForm_SupportData.value).subscribe((data: any) => {
+    this.repo.GetSupportPanel(this.EditForm_SupportData.value).subscribe((data: any) => {
       if (this.BrokerRef == '') {
         this.reportData = data.SupportDatas;
       } else {

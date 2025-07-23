@@ -101,7 +101,7 @@ export class AutletterAttachComponent implements OnInit {
     if (action == 'delete') {
 
     }
-    this.repo.SetAttachFile(command).subscribe((data) => {
+    this.repo.AttachFile_Insert(command).subscribe((data) => {
       this.EditForm.reset();
       this.sharedService.triggerActionAll('refresh');
 

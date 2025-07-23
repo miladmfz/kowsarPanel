@@ -149,8 +149,8 @@ export class AutletterWebApiService {
   }
 
 
-  SetAttachFile(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "SetAttachFile", command, { headers: this.headers })
+  AttachFile_Insert(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "AttachFile_Insert", command, { headers: this.headers })
   }
 
 

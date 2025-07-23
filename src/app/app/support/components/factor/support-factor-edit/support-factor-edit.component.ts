@@ -397,7 +397,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
           Flag: "2"
         });
 
-        this.repo.GetSupportData(this.EditForm_SupportData.value).subscribe((data: any) => {
+        this.repo.GetSupportPanel(this.EditForm_SupportData.value).subscribe((data: any) => {
 
           if (data.SupportDatas[0].EmptyEndTimeCount > 0) {
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-autletter-detail',
@@ -9,7 +10,11 @@ import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWe
 })
 export class AutletterDetailComponent implements OnInit {
 
-  constructor(private repo: AutletterWebApiService, private route: ActivatedRoute,) { }
+  constructor(
+    private repo: AutletterWebApiService,
+    private route: ActivatedRoute,
+    private location: Location,
+  ) { }
 
   id!: string;
   JobPersonRef: string = '';
@@ -61,6 +66,9 @@ export class AutletterDetailComponent implements OnInit {
   }
 
 
+  onBtnCancelClick() {
+    this.location.back()
+  }
 
 
 

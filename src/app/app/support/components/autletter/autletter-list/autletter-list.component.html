@@ -24,15 +24,26 @@
 
           <!-- Date Picker -->
           <div class="form-group col-md-3">
-            <label for="datePicker" class="col-form-label">تاریخ</label>
+            <label for="StartTime" class="col-form-label">از تاریخ</label>
             <div>
               <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
                 [uiHideAfterSelectDate]="true">
-                <input class="form-control" id="datePicker" type="text" [formControl]="dateValue" />
+                <input class="form-control" id="StartTime" type="text" [formControl]="StartTime" />
               </ng-persian-datepicker>
             </div>
 
           </div>
+          <div class="form-group col-md-3">
+            <label for="EndTime" class="col-form-label">تا تاریخ</label>
+            <div>
+              <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
+                [uiHideAfterSelectDate]="true">
+                <input class="form-control" id="EndTime" type="text" [formControl]="EndTime" />
+              </ng-persian-datepicker>
+            </div>
+
+          </div>
+
 
 
         </div>
@@ -53,7 +64,7 @@
           <span class="btn-label"><i class="fas fa-eye-slash"></i></span>حذف
           جستجو
         </a>
-        <div class="btn-group">
+        <!-- <div class="btn-group">
           <button type="button" class="btn btn-light waves-effect waves-light m-1 dropdown-toggle" id="exportdropdown"
             data-bs-toggle="dropdown" aria-expanded="false">
             دریافت خروجی <i class="mdi mdi-chevron-down"></i>
@@ -68,7 +79,7 @@
 
 
           </div>
-        </div>
+        </div> -->
       </div>
 
 

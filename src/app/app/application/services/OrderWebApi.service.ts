@@ -42,9 +42,9 @@ export class OrderWebApiService {
 
 
 
-    minMaxGood(StartDate: string, EndDate: string, State: string): Observable<any[]> {
+    GetOrderPanel(StartDate: string, EndDate: string, State: string): Observable<any[]> {
         const params = new HttpParams().append('StartDate', StartDate).append('EndDate', EndDate).append('State', State)
-        return this.client.get<any[]>(this.baseUrl + "minMaxGood", { headers: this.headers, params: params })
+        return this.client.get<any[]>(this.baseUrl + "GetOrderPanel", { headers: this.headers, params: params })
     }
 
     GetCustomerMandeh(): Observable<any[]> {

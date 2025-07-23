@@ -203,7 +203,9 @@ export class OcrReportListComponent extends AgGridBaseComponent
 
 
 
-    this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "3").subscribe((data) => {
+    //this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "3").subscribe((data) => {
+    this.repo.GetOcrPanel("1402/07/08", "1402/07/11", "3").subscribe((data) => {
+
       this.loading6 = false
       if (data.length > 0) {
 

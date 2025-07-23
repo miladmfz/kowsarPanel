@@ -33,6 +33,10 @@ export class AutletterListComponent
   records;
   title = 'لیست تیکت های ارسالی ';
   dateValue = new FormControl();
+  StartTime = new FormControl();
+
+  EndTime = new FormControl();
+
   CentralRef: string = '';
   JobPersonRef: string = '';
 
@@ -59,6 +63,9 @@ export class AutletterListComponent
     CreationDate: new FormControl(''),
     OwnCentralRef: new FormControl(''),
     PersonInfoCode: new FormControl(''),
+    StartTime: new FormControl(''),
+    EndTime: new FormControl(''),
+
   });
 
 
@@ -332,7 +339,9 @@ export class AutletterListComponent
       SearchTarget: this.searchTerm,
       CentralRef: sessionStorage.getItem("CentralRef"),
       CreationDate: this.dateValue.value,
-      OwnCentralRef: sessionStorage.getItem("CentralRef")
+      OwnCentralRef: sessionStorage.getItem("CentralRef"),
+      StartTime: this.StartTime.value,
+      EndTime: this.EndTime.value,
 
     });
 

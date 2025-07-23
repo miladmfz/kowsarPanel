@@ -94,18 +94,18 @@ export class OrderReportComponent extends AgGridBaseComponent
 
   getList() {
 
-    // this.repo.minMaxGood(this.StartDate.value, this.EndDate.value, "4").subscribe(e => {
+    // this.repo.GetOrderPanel(this.StartDate.value, this.EndDate.value, "4").subscribe(e => {
     //   this.records = e;
 
     // });
 
 
-    this.repo.minMaxGood(this.EditForm_Complete.value.StartDate, this.EditForm_Complete.value.EndDate, this.EditForm_Complete.value.Filter).subscribe(e => {
+    this.repo.GetOrderPanel(this.EditForm_Complete.value.StartDate, this.EditForm_Complete.value.EndDate, this.EditForm_Complete.value.Filter).subscribe(e => {
       this.records = e;
 
     });
 
-    // this.repo.GetOrderGoodList("30", this.Searchtarget, "0").subscribe((data) => {
+    // this.repo.GetOrderPanel("30", this.Searchtarget, "0").subscribe((data) => {
     //   this.records = data;
 
     // });

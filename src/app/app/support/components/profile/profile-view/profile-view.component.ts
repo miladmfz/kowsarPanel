@@ -3,6 +3,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ProfileWebApiService } from '../../../services/ProfileWebApi.service';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
+import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 
 @Component({
   selector: 'app-profile-view',
@@ -15,6 +16,8 @@ export class ProfileViewComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private sharedService: SharedService,
+    private readonly notificationService: NotificationService,
+
   ) { }
 
   CentralRefCustomer: string = '';
@@ -135,6 +138,8 @@ export class ProfileViewComponent implements OnInit {
   submit(action) {
     const command = this.ProfileForm_Edit.value;
     this.repo.UpdatePersonInfo(command).subscribe((data: any) => {
+      this.notificationService.succeded();
+
       this.sharedService.triggerActionAll('refresh');
     });
   }
