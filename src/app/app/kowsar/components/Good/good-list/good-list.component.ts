@@ -40,13 +40,14 @@ export class GoodListComponent extends AgGridBaseComponent
   override ngOnInit(): void {
     super.ngOnInit();
 
-
-    this.getList();
+    this.getGridSchema()
   }
 
   getList() {
 
-    this.getGridSchema()
+    this.repo.GetGoods(this.Searchtarget).subscribe((data: any) => {
+      this.records = data.Goods;
+    });
 
   }
 
@@ -77,10 +78,8 @@ export class GoodListComponent extends AgGridBaseComponent
           // resizable: false
         });
       }
+      this.getList()
 
-      this.repo.GetGoods().subscribe((data: any) => {
-        this.records = data.Goods;
-      });
     });
   }
 

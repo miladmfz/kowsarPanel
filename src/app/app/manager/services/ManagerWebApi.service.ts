@@ -25,21 +25,21 @@ export class ManagerWebApiService {
 
   ////////////////////////////////////////////////////////////////////
 
-  GetAppBrokerCustomer(): Observable<any[]> {
-    return this.client.get<any[]>(this.baseUrl + "GetAppBrokerCustomer", { headers: this.headers });
+  GetAppActivation(): Observable<any[]> {
+    return this.client.get<any[]>(this.baseUrl + "GetAppActivation", { headers: this.headers });
   }
 
 
-  GetAppBrokerCustomerByCode(ActivationCode: string): Observable<any[]> {
+  GetAppActivationByCode(ActivationCode: string): Observable<any[]> {
     const params = new HttpParams().append('ActivationCode', ActivationCode)
-    return this.client.get<any[]>(this.baseUrl + "GetAppBrokerCustomerByCode", { headers: this.headers, params: params })
+    return this.client.get<any[]>(this.baseUrl + "GetAppActivationByCode", { headers: this.headers, params: params })
   }
 
 
 
-  CrudAppBrokerCustomer(command): Observable<any[]> {
+  CrudAppActivation(command): Observable<any[]> {
 
-    return this.client.post<any[]>(this.baseUrl + "CrudAppBrokerCustomer", command, { headers: this.headers })
+    return this.client.post<any[]>(this.baseUrl + "CrudAppActivation", command, { headers: this.headers })
   }
 
   CheckPort(

@@ -74,7 +74,7 @@ export class ApplicationFormComponent implements OnInit {
   getDetails() {
 
 
-    this.repo.GetAppBrokerCustomerByCode(this.ActivationCode).subscribe((data: any) => {
+    this.repo.GetAppActivationByCode(this.ActivationCode).subscribe((data: any) => {
 
       this.EditForm.patchValue({
         ActivationCode: data[0].ActivationCode,
@@ -108,7 +108,7 @@ export class ApplicationFormComponent implements OnInit {
   submit(action) {
 
 
-    this.repo.CrudAppBrokerCustomer(this.EditForm.value).subscribe((data: any) => {
+    this.repo.CrudAppActivation(this.EditForm.value).subscribe((data: any) => {
 
       if (data[0].ActivationCode.length > 0) {
         this.ActivationCode = data[0].ActivationCode;

@@ -193,9 +193,9 @@ export class KowsarWebApiService {
 
 
 
-  GetGoods(): Observable<any[]> {
+  GetGoods(Searchtarget: string): Observable<any[]> {
 
-    return this.client.post<any[]>(this.kowsarWebUrl + "GetGoods", { headers: this.headers })
+    return this.client.post<any[]>(this.kowsarWebUrl + "GetGoods", { Searchtarget }, { headers: this.headers })
 
   }
 

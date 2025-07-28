@@ -90,7 +90,7 @@ export class ApplicationListComponent
   }
   getList() {
 
-    this.repo.GetAppBrokerCustomer().subscribe((data) => {
+    this.repo.GetAppActivation().subscribe((data) => {
       this.records = data;
     });
   }
