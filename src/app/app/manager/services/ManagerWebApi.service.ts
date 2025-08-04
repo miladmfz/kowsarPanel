@@ -35,6 +35,13 @@ export class ManagerWebApiService {
     return this.client.get<any[]>(this.baseUrl + "GetAppActivationByCode", { headers: this.headers, params: params })
   }
 
+  GetAppLogReport(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "GetAppLogReport", command, { headers: this.headers })
+
+  }
+
+
 
 
   CrudAppActivation(command): Observable<any[]> {

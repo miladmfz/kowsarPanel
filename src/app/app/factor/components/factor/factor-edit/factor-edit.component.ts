@@ -353,6 +353,13 @@ export class FactorEditComponent extends AgGridBaseComponent
 
   }
 
+  handleEnterKey(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      this.Set_ExplianFactorTime();
+    }
+  }
+
 
   Set_ExplianFactorTime() {
 

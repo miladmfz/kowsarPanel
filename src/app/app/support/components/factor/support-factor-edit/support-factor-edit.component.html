@@ -29,11 +29,6 @@
 
                         <ng-container *ngIf="FactorCode.length==0">
                           <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
-
-
-
-
-
                           <input type="text" class="form-control" id="CustomerCode" (click)="GetCustomer()"
                             placeholder="نمایش مشتریان" formControlName="CustomerCode" maxlength="100"
                             autocomplete="off" readonly [ngClass]="{
@@ -82,19 +77,12 @@
                         </div>
                       </ng-container>
 
-
-
-
-
                       <ng-container *ngIf="FactorCode.length>0">
                         <form [formGroup]="EditForm_supportfactor_property" id="submitForm">
                           <div class="row">
                             <div class="col-12">
                               <div class="card">
                                 <div class="card-body row">
-
-
-
 
                                   <ng-container *ngIf="Start_FactorTime.length>1">
                                     <div class="form-group col-md-3">
@@ -385,7 +373,7 @@
 
 
 
-<div class="modal fade" id="factorproperty" tabindex="-1" aria-labelledby="factorpropertyLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="factorproperty" tabindex="-1" aria-labelledby="factorpropertyLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content" style="background-color: #d1dce7;">
       <div class="modal-header" style="background-color: #949494;">
@@ -413,6 +401,41 @@
           </div>
         </form>
 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="factor_property_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="Set_ExplianFactorTime()">بروزرسانی</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+<div class="modal fade" id="factorproperty" tabindex="-1" aria-labelledby="factorpropertyLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="factorpropertyLabel">شرح گزارش کاری پشتیبانی </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="factor_property_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="EditForm_supportfactor_property" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+                  <div class="form-group col-md-12">
+                    <label for="Barbary" class="col-form-label">شرح</label>
+                    <textarea type="text" class="form-control" id="Barbary" formControlName="Barbary" maxlength="400"
+                      autocomplete="off" (keydown)="handleEnterKey($event)"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"

@@ -4,13 +4,281 @@
     <div class="row mb-2">
       <div class="col-sm-12">
 
+
+
+
+
+        <form [formGroup]="EditForm_AppLog" (ngSubmit)="getList()" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+
+                  <div class="form-group col-md-3">
+                    <label for="ServerName" class="col-form-label"> جستجو </label>
+                    <input type="text" class="form-control" id="ServerName" formControlName="ServerName"
+                      maxlength="100" />
+                  </div>
+
+
+
+                  <div class="form-group col-md-5">
+                    <label for="Flag" class="col-form-label">نوع گزارش </label>
+                    <label for="Flag" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                    <span class="text-danger">*</span>
+                    <select formControlName="Flag" id="Flag" class="form-control custom-select" [ngClass]="{
+                      'is-invalid':
+                      EditForm_AppLog.controls['Flag'].invalid &&
+                      EditForm_AppLog.controls['Flag'].touched,
+                      'is-valid':
+                      EditForm_AppLog.controls['Flag'].valid &&
+                      EditForm_AppLog.controls['Flag'].touched
+                    }">
+                      <option value="">لطفاً انتخاب کنید</option>
+
+                      <option [value]="item.id" *ngFor="let item of Title_Lookup">{{item.name}}</option>
+                    </select>
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_AppLog.controls['Flag']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+
+                  <!-- Date Picker -->
+                  <div class="form-group col-md-2">
+                    <label for="FromDate" class="col-form-label">از تاریخ</label>
+                    <div>
+                      <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
+                        [uiHideAfterSelectDate]="true">
+                        <input class="form-control" id="FromDate" type="text" formControlName="FromDate" />
+                      </ng-persian-datepicker>
+                    </div>
+
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label for="ToDate" class="col-form-label">تا تاریخ</label>
+                    <div>
+                      <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
+                        [uiHideAfterSelectDate]="true">
+                        <input class="form-control" id="ToDate" type="text" formControlName="ToDate" />
+                      </ng-persian-datepicker>
+                    </div>
+
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div class="card">
+          <div class="card-body">
+            <div class="col-sm-6">
+              <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light m-2"
+                (click)="getList()">
+                <span class="btn-label"><i class="fas fa-check-double"></i></span>جستجو </a>
+
+
+
+            </div>
+
+
+          </div>
+        </div>
+
+
+
+      </div>
+
+
+    </div>
+
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
       </div>
     </div>
 
-    <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" class="ag-theme-alpine" [rowData]="records"
-      [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
-      [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-      [frameworkComponents]="frameworkComponents" [context]="context">
-    </ag-grid-angular>
+
+
+
+    <div *ngIf="!loading" class="text-center">
+
+      <div *ngIf="selectedFlag == '1'">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>مشتری</th>
+              <th>تعداد دستگاه</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of appLogResult">
+              <td>{{ row.ServerName }}</td>
+              <td>{{ row.UniqueDeviceCount }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="selectedFlag == '2'">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>مشتری</th>
+              <th>تعداد لاگ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of appLogResult">
+              <td>{{ row.ServerName }}</td>
+              <td>{{ row.TotalLogCount }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="selectedFlag == '3'">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>مشتری</th>
+              <th>Device ID</th>
+              <th>تاریخ آخر اتصال</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of appLogResult">
+              <td>{{ row.ServerName }}</td>
+              <td>{{ row.DeviceId }}</td>
+              <td>{{ row.LastSeenDate }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="selectedFlag == '4'">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>مشتری</th>
+              <th>تاریخ</th>
+              <th>تعداد لاگ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of appLogResult">
+              <td>{{ row.ServerName }}</td>
+              <td>{{ row.StrDate }}</td>
+              <td>{{ row.LogCount }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="selectedFlag == '5'">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>مشتری</th>
+              <th>Device ID</th>
+              <th>تاریخ</th>
+              <th>توضیح</th>
+              <th>Agent</th>
+              <th>SDK</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of appLogResult">
+              <td>{{ row.ServerName }}</td>
+              <td>{{ row.DeviceId }}</td>
+              <td>{{ row.StrDate }}</td>
+              <td>{{ row.Explain }}</td>
+              <td>{{ row.DeviceAgant }}</td>
+              <td>{{ row.SdkVersion }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="selectedFlag == '6'">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>مشتری</th>
+              <th>BrokerRefها</th>
+              <th>تعداد</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of appLogResult">
+              <td>{{ row.ServerName }}</td>
+              <td>{{ row.BrokerRefsList }}</td>
+              <td>{{ row.CountOfBrokerRefs }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="selectedFlag == '7'">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Device ID</th>
+              <th>مشتری</th>
+              <th>تعداد Explain متفاوت</th>
+              <th>لیست Explain</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of appLogResult">
+              <td>{{ row.DeviceId }}</td>
+              <td>{{ row.ServerName }}</td>
+              <td>{{ row.DistinctExplainCount }}</td>
+              <td>{{ row.ExplainList }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="selectedFlag == '8'">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>مشتری</th>
+              <th>Explain</th>
+              <th>تعداد تکرار</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of appLogResult">
+              <td>{{ row.ServerName }}</td>
+              <td>{{ row.Explain }}</td>
+              <td>{{ row.CountByExplain }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </div>
+
+
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
+    <div class="fv-plugins-message-container invalid-feedback">
+      <span role="alert">
+        {{ message }}
+      </span>
+    </div>
+  </ng-container>
+</ng-template>

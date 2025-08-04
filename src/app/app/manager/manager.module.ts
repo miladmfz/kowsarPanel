@@ -15,6 +15,7 @@ import { CellActionApplicationList } from './components/application-list/cell_ac
 import { ValidateionStateCellManageApplicationRenderer } from './components/application-list/validation-state-label-cell-manage-application';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import { NotifierModule } from 'angular-notifier';
+import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
 
 
 @NgModule({
@@ -24,7 +25,9 @@ import { NotifierModule } from 'angular-notifier';
     ReactiveFormsModule,
     FormsModule,
     AgGridModule,
-    NotifierModule
+    NotifierModule,
+    NgPersianDatepickerModule,
+
   ],
   declarations: [
     ApplicationFormComponent,

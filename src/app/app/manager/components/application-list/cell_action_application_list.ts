@@ -40,14 +40,14 @@ export class CellActionApplicationList implements ICellRendererAngularComp {
       this.canView = params.canView;
     }
 
-    if (params.data.AppActivationCode) {
-      this.id = params.data.AppActivationCode;
+    if (params.data.ActivationCode) {
+      this.id = params.data.ActivationCode;
     }
   }
 
   btnDeleteClicked(arg) {
 
-    this.params.context.componentParent.delete(this.params.data.AppActivationCode);
+    this.params.context.componentParent.delete(this.params.data.ActivationCode);
   }
 
   CheckPort() {

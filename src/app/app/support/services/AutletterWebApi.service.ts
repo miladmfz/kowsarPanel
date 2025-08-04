@@ -34,6 +34,12 @@ export class AutletterWebApiService {
 
   }
 
+
+
+
+
+
+
   GetAutLetterListByPerson(command): Observable<any[]> {
 
     return this.client.post<any[]>(this.baseUrl + "GetAutLetterListByPerson", command, { headers: this.headers })
