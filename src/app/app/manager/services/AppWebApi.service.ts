@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environment/environment';
 import { AppConfigService } from 'src/app/app-config.service';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class ManagerWebApiService {
-
-
+export class AppWebApiService {
 
   baseUrl: string;
   headers: HttpHeaders;
+
+
 
   constructor(private client: HttpClient, private config: AppConfigService) {
     this.baseUrl = this.config.apiUrl + 'SupportApp/';
@@ -22,6 +23,24 @@ export class ManagerWebApiService {
       .set('Access-Control-Allow-Origin', '*')
       .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') ?? '');
   }
+
+
+
+  // baseUrl = environment.api_Url + "SupportApp/";
+
+
+  // headers = new HttpHeaders()
+
+  //   .set('Content-Type', 'application/json')
+  //   .set('Access-Control-Allow-Origin', '*')
+  //   .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') + "")
+
+
+
+
+
+
+
 
 
 

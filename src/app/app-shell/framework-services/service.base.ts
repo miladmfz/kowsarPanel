@@ -1,4 +1,3 @@
-import { getServiceUrl } from 'src/environment/environment';
 import { HttpService } from './http.service';
 
 export class ServiceBase {
@@ -8,7 +7,7 @@ export class ServiceBase {
     private readonly controllerName: string,
     readonly httpService: HttpService
   ) {
-    this.baseUrl = `${getServiceUrl()}${this.controllerName}`;
+    this.baseUrl = `${this.controllerName}`;
   }
 
   create<T>(body: any) {

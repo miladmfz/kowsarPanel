@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import { CellActionAutletterList } from './cell-action-autletter-list';
 import { ValidateionStateCellAutletterRenderer } from './validation-state-label-cell-autletter';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-autletter-list',
@@ -229,7 +228,7 @@ export class AutletterListComponent
             this.notificationService.succeded();
             this.getList()
           });
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
+        } else {
           this.notificationService.warning('اطلاعات تغییری نکرد');
 
         }
@@ -241,7 +240,11 @@ export class AutletterListComponent
   }
 
 
-  fireDeleteFactor() {
+
+  async fireDeleteFactor() {
+    const Swal = (await import('sweetalert2')).default;
+
+
     return Swal.fire({
       title: 'آیا از حذف این ردیف اطمینان دارید؟',
       text: 'درصورت حذف دیگر قادر به بازیابی ردیف فوق نخواهید بود.',

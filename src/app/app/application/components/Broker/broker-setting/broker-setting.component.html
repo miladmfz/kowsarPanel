@@ -62,7 +62,7 @@
           <h4 class="fw-bold mb-3">تنظیمات پایه نرم‌افزار:</h4>
 
           <div class="table-responsive">
-            <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: 100%" class="ag-theme-alpine"
+            <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: 100%" class="ag-theme-alpine-dark"
               [rowData]="items" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
               [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
               [pagination]="true" [context]="context" [defaultColDef]="defaultColDef"
@@ -83,7 +83,7 @@
           </div>
 
           <div class="table-responsive">
-            <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: 100%" class="ag-theme-alpine"
+            <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: 100%" class="ag-theme-alpine-dark"
               [rowData]="Printers" [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText"
               [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
               [pagination]="true" [context]="context" [defaultColDef]="defaultColDef"

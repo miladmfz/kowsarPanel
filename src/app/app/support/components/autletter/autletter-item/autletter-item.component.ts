@@ -7,7 +7,6 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { DbSetup_lookup } from '../../../lookup-type';
 import { CellActionAutletterRowList } from './cell-action-autletterrow-list';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-autletter-item',
@@ -193,7 +192,7 @@ export class AutletterItemComponent
             this.Get_LetterRowList()
 
           });
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
+        } else {
           this.notificationService.warning('اطلاعات تغییری نکرد');
 
         }
@@ -202,7 +201,12 @@ export class AutletterItemComponent
     }
   }
 
-  fireDeleteFactor() {
+
+
+
+  async fireDeleteFactor() {
+    const Swal = (await import('sweetalert2')).default;
+
     return Swal.fire({
       title: 'آیا از حذف این ردیف اطمینان دارید؟',
       text: 'درصورت حذف دیگر قادر به بازیابی ردیف فوق نخواهید بود.',

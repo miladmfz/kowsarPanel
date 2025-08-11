@@ -270,7 +270,8 @@ export class BrokerMapComponent implements AfterViewInit {
 
 
 
-  getTrackerData(): void {
+  async getTrackerData(): Promise<void> {
+    if (this.filterForm.invalid) return;
 
     const { day, starttime, endtime } = this.filterForm.value;
 
@@ -279,54 +280,56 @@ export class BrokerMapComponent implements AfterViewInit {
     const brokerCode = this.BrokerCodeData;
 
 
-    if (this.filterForm.invalid) return;
 
 
     // const startDate = '1404/03/10 12:00:00';
     // const endDate = '1404/03/10 13:00:00';
+    try {
 
+      await this.repo.GetBrokerCustomer(brokerCode, day).subscribe((data: any) => {
 
-    this.repo.GetBrokerCustomer(brokerCode, day).subscribe((data: any) => {
-
-      this.Customerlocation = data.BrokerCustomers
-      this.addCustomerMarkers();  // ← اضافه شد
-      this.updateCustomerProximity();
-    });
-
-
-
+        this.Customerlocation = data.BrokerCustomers
+        this.addCustomerMarkers();  // ← اضافه شد
+        this.updateCustomerProximity();
+      });
 
 
 
-    this.repo.GetGpstracker(brokerCode, startDate, endDate).subscribe((data: any) => {
-      this.apiData = data.Gpstrackers;
 
 
 
-      this.clearMap();
+      await this.repo.GetGpstracker(brokerCode, startDate, endDate).subscribe((data: any) => {
+        this.apiData = data.Gpstrackers;
 
-      if (this.apiData && this.apiData.length > 0) {
-        this.hasData = true;
 
-        const first = this.apiData[0];
-        if (first && first.Latitude && first.Longitude && this.map) {
-          this.map.setView([first.Latitude, first.Longitude], 15);
+
+        this.clearMap();
+
+        if (this.apiData && this.apiData.length > 0) {
+          this.hasData = true;
+
+          const first = this.apiData[0];
+          if (first && first.Latitude && first.Longitude && this.map) {
+            this.map.setView([first.Latitude, first.Longitude], 15);
+          }
+
+          this.addMarkers();
+          this.drawPolyline();
+
+          const stops = this.calculateStopDurations();
+          this.addStopMarkers(stops);
+
+          this.noDataMessage = '';
+        } else {
+          this.hasData = false;
+          this.noDataMessage = 'موردی یافت نشد';
         }
+      });
 
-        this.addMarkers();
-        this.drawPolyline();
-
-        const stops = this.calculateStopDurations();
-        this.addStopMarkers(stops);
-
-        this.noDataMessage = '';
-      } else {
-        this.hasData = false;
-        this.noDataMessage = 'موردی یافت نشد';
-      }
-    });
-
-
+    } catch (error) {
+      console.error('Error loading tracker data', error);
+      this.noDataMessage = 'خطا در بارگذاری داده‌ها';
+    }
 
   }
 

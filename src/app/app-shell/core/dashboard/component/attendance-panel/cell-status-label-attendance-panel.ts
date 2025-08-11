@@ -17,7 +17,9 @@ declare var $: any;
       <span *ngIf="Status == '3'">
         <span class="btn-soft-info text-info" style="padding: 3px">مرخصی موقت</span>
     </span>
-    
+          <span *ngIf="Status == '4'">
+        <span class="btn-soft-info text-secondary" style="padding: 3px">مرخصی اداری</span>
+    </span>
     `,
 })
 export class CellStatusAttendancePanel implements ICellRendererAngularComp {

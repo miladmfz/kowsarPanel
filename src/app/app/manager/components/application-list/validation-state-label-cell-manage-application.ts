@@ -6,19 +6,19 @@ declare var $: any;
     selector: 'validation-state-cell-renderer',
     template: `
     <span *ngIf="state == '0'">
-        <span class=" text-primary" style="padding: 3px">company</span>
+        <span class=" text-primary" style="padding: 3px">مشتریان عمده</span>
     </span>
     <span *ngIf="state == '1'">
-        <span class="text-primary" style="padding: 3px">broker</span>
+        <span class="text-primary" style="padding: 3px">بازاریاب</span>
     </span>
     <span *ngIf="state == '2'">
-        <span class="text-primary" style="padding: 3px">Ocr</span>
+        <span class="text-primary" style="padding: 3px">پردازش و توزیع</span>
     </span>
     <span *ngIf="state == '3'">
-        <span class="text-primary" style="padding: 3px">Order</span>
+        <span class="text-primary" style="padding: 3px">سفارش گیر</span>
     </span>
     <span *ngIf="state == '4'">
-        <span class="text-primary" style="padding: 3px">Search</span>
+        <span class="text-primary" style="padding: 3px">کالایاب</span>
     </span>
     `,
 })

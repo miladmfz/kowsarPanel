@@ -4,7 +4,6 @@ import { Location } from '@angular/common';
 
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environment/environment';
 
 import { KowsarWebApiService } from '../../../services/KowsarWebApi.service';
 

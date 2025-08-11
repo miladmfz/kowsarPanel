@@ -94,9 +94,9 @@
     <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
       [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
       (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-      [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine" [columnDefs]="columnDefs"
-      [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
-      (selectionChanged)="onSelectionChanged($event)">
+      [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine-dark"
+      [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true"
+      [rowSelection]="'multiple'" (selectionChanged)="onSelectionChanged($event)">
     </ag-grid-angular>
   </div>
 </div>

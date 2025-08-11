@@ -51,9 +51,9 @@
           <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
             [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
             [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
-            [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
-            [columnDefs]="columnDefs" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
-            (selectionChanged)="onSelectionChanged($event)">
+            [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context"
+            class="ag-theme-alpine-dark" [columnDefs]="columnDefs" [suppressRowClickSelection]="true"
+            [rowSelection]="'multiple'" (selectionChanged)="onSelectionChanged($event)">
           </ag-grid-angular>
         </div>
       </div>

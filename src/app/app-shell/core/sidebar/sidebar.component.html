@@ -66,6 +66,8 @@
               <li><a class="dropdown-item" (click)="setStatus('2')">در حال کار</a></li>
               <li><a class="dropdown-item" (click)="setStatus('0')">عدم حضور</a></li>
               <li><a class="dropdown-item" (click)="setStatus('3')">مرخصی موقت</a></li>
+              <li><a class="dropdown-item" (click)="setStatus('4')">مرخصی اداری</a></li>
+
             </ul>
           </div>
 
@@ -76,6 +78,9 @@
               کار</span>
             <span *ngIf="currentStatus === '0'" class="badge bg-danger fs-5 fw-bold px-3 py-2">عدم حضور</span>
             <span *ngIf="currentStatus === '3'" class="badge bg-info text-dark fs-5 fw-bold px-3 py-2">مرخصی موقت</span>
+            <span *ngIf="currentStatus === '3'" class="badge bg-secondary text-dark fs-5 fw-bold px-3 py-2">مرخصی
+              اداری</span>
+
           </div>
         </div>
 
@@ -271,6 +276,15 @@
                 <li>
                   <a [routerLink]="['/manager/list']" routerLinkActive="active"> ماژول های جانبی </a>
                 </li>
+
+
+                <li>
+                  <a [routerLink]="['/manager/website-list']" routerLinkActive="active"> وب سایت ها </a>
+                </li>
+
+
+
+
                 <li>
                   <a [routerLink]="['/manager/active']" routerLinkActive="active"> گزارش ماژول های جانبی</a>
                 </li>

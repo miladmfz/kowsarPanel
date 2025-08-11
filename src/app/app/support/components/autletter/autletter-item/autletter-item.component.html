@@ -7,7 +7,7 @@
 
     </ng-container>
     <ng-container *ngIf="records.length>0">
-      <ag-grid-angular #agGrid id="myGrid" style="height: 300px; width: auto" class="ag-theme-alpine"
+      <ag-grid-angular #agGrid id="myGrid" style="height: 300px; width: auto" class="ag-theme-alpine-dark"
         [rowData]="records" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
         [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)"
         (cellClicked)="onCellClicked($event)" [pagination]="true" [frameworkComponents]="frameworkComponents"

@@ -28,7 +28,7 @@
       <div class="tab-pane fade show active" role="tabpanel">
 
         <div class="table-responsive">
-          <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: 100%" class="ag-theme-alpine"
+          <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: 100%" class="ag-theme-alpine-dark"
             [rowData]="records_Customer" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
             [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
             [pagination]="true" [context]="context" [defaultColDef]="defaultColDef"
@@ -53,7 +53,7 @@
       </div>
       <div class="modal-body">
         <div class="table-responsive">
-          <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: 100%" class="ag-theme-alpine"
+          <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: 100%" class="ag-theme-alpine-dark"
             [rowData]="records_Customer_detail" [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText"
             [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
             [pagination]="true" [context]="context" [defaultColDef]="defaultColDef"

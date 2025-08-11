@@ -52,7 +52,7 @@
           <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
             [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
             (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-            [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
+            [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine-dark"
             [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
             (selectionChanged)="onSelectionChanged($event)">
           </ag-grid-angular>
@@ -332,8 +332,8 @@
         <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records_factor"
           [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
           [enableRtl]="true" (gridReady)="onGridReady2($event)" (cellClicked)="onCellClicked($event)"
-          [pagination]="true" [context]="context" class="ag-theme-alpine" [frameworkComponents]="frameworkComponents"
-          [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+          [pagination]="true" [context]="context" class="ag-theme-alpine-dark"
+          [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
           (selectionChanged)="onSelectionChanged($event)">
         </ag-grid-angular>
 
@@ -371,8 +371,8 @@
         <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records_support_factorrows"
           [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
           [enableRtl]="true" (gridReady)="onGridReady3($event)" (cellClicked)="onCellClicked($event)"
-          [pagination]="true" [context]="context" class="ag-theme-alpine" [frameworkComponents]="frameworkComponents"
-          [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+          [pagination]="true" [context]="context" class="ag-theme-alpine-dark"
+          [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
           (selectionChanged)="onSelectionChanged($event)">
         </ag-grid-angular>
 

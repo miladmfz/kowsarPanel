@@ -4,6 +4,8 @@ import { ApplicationFormComponent } from './components/application-form/applicat
 import { ApplicationListComponent } from './components/application-list/application-list.component';
 import { ApplicationActiveComponent } from './components/application-active/application-active.component';
 import { ApplicationLogComponent } from './components/application-log/application-log.component';
+import { WebsiteListComponent } from './components/website/website-list/website-list.component';
+import { WebsiteEditComponent } from './components/website/website-edit/website-edit.component';
 
 
 const routes: Routes = [
@@ -31,6 +33,13 @@ const routes: Routes = [
         path: 'log',
         component: ApplicationLogComponent,
       },
+
+
+      { path: 'website-list', component: WebsiteListComponent, },
+      { path: 'website-list/:id', component: WebsiteListComponent, },
+
+      { path: 'website-edit', component: WebsiteEditComponent, },
+      { path: 'website-edit/:id', component: WebsiteEditComponent, },
 
 
 

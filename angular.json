@@ -11,8 +11,11 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "customWebpackConfig": {
+              "path": "./webpack.config.js"
+            },
             "outputPath": "dist/KowsarPanel",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -41,10 +44,15 @@
               "node_modules/leaflet/dist/leaflet.js"
             ],
             "allowedCommonJsDependencies": [
+              "sweetalert2",
               "mousetrap",
               "jalali-ts",
               "jalali-moment",
-              "xml-js"
+              "xml-js",
+              "jalaali-js",
+              "leaflet",
+              "leaflet-polylinedecorator",
+              "leaflet.markercluster"
             ]
           },
           "configurations": {
@@ -52,8 +60,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -82,7 +90,10 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
+          "options": {
+            "browserTarget": "news:build"
+          },
           "configurations": {
             "production": {
               "browserTarget": "news:build:production"

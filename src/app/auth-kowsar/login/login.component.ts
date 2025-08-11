@@ -2,7 +2,6 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthKowsarWebApiService } from '../services/AuthKowsarWebApi.service';
 import { Router } from '@angular/router';
-import { environment } from 'src/environment/environment';
 
 @Component({
   selector: 'app-login',
@@ -37,9 +36,9 @@ export class LoginComponent implements OnInit {
       UName: ['', Validators.required],
       UPass: ['', Validators.required],
     });
-    if (environment.api_Url == 'http://localhost:60006/api/') {
-      this.developLogin()
-    }
+    // if (environment.api_Url == 'http://localhost:60006/api/') {
+    //   this.developLogin()
+    // }
 
     if (sessionStorage.getItem("ActiveDate") != null) {
       this.router.navigate(['/auth/login']);

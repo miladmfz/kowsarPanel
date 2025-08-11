@@ -1,0 +1,513 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">{{ title }}</h4>
+    <div class="row mb-2">
+      <div class="col-sm-12">
+
+
+
+
+
+        <form [formGroup]="EditForm_WebSite" (ngSubmit)="submit('')" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+
+
+
+                  <div class="form-group col-md-6">
+                    <label for="CompanyName" class="col-form-label">نام مشتری</label>
+                    <span class="text-danger">*</span>
+
+                    <input type="text" class="form-control" id="CompanyName" formControlName="CompanyName"
+                      autocomplete="off" [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['CompanyName'].invalid &&
+                      EditForm_WebSite.controls['CompanyName'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['CompanyName'].valid &&
+                      EditForm_WebSite.controls['CompanyName'].touched
+                    }">
+
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['CompanyName']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+                  <div class="form-group col-md-6">
+                    <label for="WebEmploy" class="col-form-label">مسئول</label>
+                    <span class="text-danger">*</span>
+
+                    <input type="text" class="form-control" id="WebEmploy" formControlName="WebEmploy"
+                      autocomplete="off" [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['WebEmploy'].invalid &&
+                      EditForm_WebSite.controls['WebEmploy'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['WebEmploy'].valid &&
+                      EditForm_WebSite.controls['WebEmploy'].touched
+                    }">
+
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['WebEmploy']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+                  <div class="form-group col-md-6">
+                    <label for="Phone" class="col-form-label">شماره تماس</label>
+                    <span class="text-danger">*</span>
+
+                    <input type="text" class="form-control" id="Phone" formControlName="Phone" autocomplete="off"
+                      [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['Phone'].invalid &&
+                      EditForm_WebSite.controls['Phone'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['Phone'].valid &&
+                      EditForm_WebSite.controls['Phone'].touched
+                    }">
+
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['Phone']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+                  <div class="form-group col-md-6">
+                    <label for="PaymentGateway" class="col-form-label">درگاه بانک</label>
+
+                    <input type="text" class="form-control" id="PaymentGateway" formControlName="PaymentGateway"
+                      autocomplete="off" [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['PaymentGateway'].invalid &&
+                      EditForm_WebSite.controls['PaymentGateway'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['PaymentGateway'].valid &&
+                      EditForm_WebSite.controls['PaymentGateway'].touched
+                    }">
+
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['PaymentGateway']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+                  <div class="form-group col-md-3">
+                    <label for="Domain1" class="col-form-label">دامین اصلی دارای اینماد</label>
+                    <span class="text-danger">*</span>
+
+                    <input type="text" class="form-control" id="Domain1" formControlName="Domain1" autocomplete="off"
+                      [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['Domain1'].invalid &&
+                      EditForm_WebSite.controls['Domain1'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['Domain1'].valid &&
+                      EditForm_WebSite.controls['Domain1'].touched
+                    }">
+
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['Domain1']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+
+
+                  <div class="form-group col-md-3">
+                    <label for="WebState" class="col-form-label">وضعیت سایت</label>
+                    <span class="text-danger">*</span>
+                    <select formControlName="WebState" id="WebState" class="form-control custom-select" [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['WebState'].invalid &&
+                      EditForm_WebSite.controls['WebState'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['WebState'].valid &&
+                      EditForm_WebSite.controls['WebState'].touched
+                    }">
+                      <option value="">لطفاً انتخاب کنید</option>
+
+                      <option [value]="item.id" *ngFor="let item of TrueFalse_Lookup">{{item.name}}</option>
+                    </select>
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['WebState']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+
+
+
+                  <div class="form-group col-md-3">
+                    <label for="KCServerVersion" class="col-form-label">نسخه kcServer</label>
+                    <span class="text-danger">*</span>
+                    <select formControlName="KCServerVersion" id="KCServerVersion" class="form-control custom-select"
+                      [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['KCServerVersion'].invalid &&
+                      EditForm_WebSite.controls['KCServerVersion'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['KCServerVersion'].valid &&
+                      EditForm_WebSite.controls['KCServerVersion'].touched
+                    }">
+                      <option value="">لطفاً انتخاب کنید</option>
+
+                      <option [value]="item.id" *ngFor="let item of KCServer_Lookup">{{item.name}}</option>
+                    </select>
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['KCServerVersion']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+
+
+                  <div class="form-group col-md-3">
+                    <label for="SiteType" class="col-form-label">نوع سایت</label>
+                    <span class="text-danger">*</span>
+                    <select formControlName="SiteType" id="SiteType" class="form-control custom-select" [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['SiteType'].invalid &&
+                      EditForm_WebSite.controls['SiteType'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['SiteType'].valid &&
+                      EditForm_WebSite.controls['SiteType'].touched
+                    }">
+                      <option value="">لطفاً انتخاب کنید</option>
+
+                      <option [value]="item.id" *ngFor="let item of SiteType_Lookup">{{item.name}}</option>
+                    </select>
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['SiteType']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+
+
+
+                  <div class="form-group col-md-3">
+                    <label for="Domain2" class="col-form-label">دامین 2</label>
+
+                    <input type="text" class="form-control" id="Domain2" formControlName="Domain2" autocomplete="off"
+                      [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['Domain2'].invalid &&
+                      EditForm_WebSite.controls['Domain2'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['Domain2'].valid &&
+                      EditForm_WebSite.controls['Domain2'].touched
+                    }">
+
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['Domain2']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+                  <div class="form-group col-md-3">
+                    <label for="Domain3" class="col-form-label">دامین 3</label>
+
+                    <input type="text" class="form-control" id="Domain3" formControlName="Domain3" autocomplete="off"
+                      [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['Domain3'].invalid &&
+                      EditForm_WebSite.controls['Domain3'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['Domain3'].valid &&
+                      EditForm_WebSite.controls['Domain3'].touched
+                    }">
+
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['Domain3']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+                  <div class="form-group col-md-3">
+                    <label for="Domain4" class="col-form-label">دامین 4</label>
+
+                    <input type="text" class="form-control" id="Domain4" formControlName="Domain4" autocomplete="off"
+                      [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['Domain4'].invalid &&
+                      EditForm_WebSite.controls['Domain4'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['Domain4'].valid &&
+                      EditForm_WebSite.controls['Domain4'].touched
+                    }">
+
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['Domain4']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+
+
+
+
+
+                  <div class="form-group col-md-3">
+                    <label for="TorobApi" class="col-form-label">Api ترب</label>
+
+                    <select formControlName="TorobApi" id="TorobApi" class="form-control custom-select" [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['TorobApi'].invalid &&
+                      EditForm_WebSite.controls['TorobApi'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['TorobApi'].valid &&
+                      EditForm_WebSite.controls['TorobApi'].touched
+                    }">
+                      <option value="">لطفاً انتخاب کنید</option>
+
+                      <option [value]="item.id" *ngFor="let item of TrueFalse_Lookup">{{item.name}}</option>
+                    </select>
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['TorobApi']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+
+
+
+
+
+
+                  <div class="form-group col-md-3">
+                    <label for="EmallsApi" class="col-form-label">Api ایمالز</label>
+
+                    <select formControlName="EmallsApi" id="EmallsApi" class="form-control custom-select" [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['EmallsApi'].invalid &&
+                      EditForm_WebSite.controls['EmallsApi'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['EmallsApi'].valid &&
+                      EditForm_WebSite.controls['EmallsApi'].touched
+                    }">
+                      <option value="">لطفاً انتخاب کنید</option>
+
+                      <option [value]="item.id" *ngFor="let item of TrueFalse_Lookup">{{item.name}}</option>
+                    </select>
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['EmallsApi']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+
+                  <div class="form-group col-md-3">
+                    <label for="BasalamApi" class="col-form-label">Api با سلام</label>
+
+                    <select formControlName="BasalamApi" id="BasalamApi" class="form-control custom-select" [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['BasalamApi'].invalid &&
+                      EditForm_WebSite.controls['BasalamApi'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['BasalamApi'].valid &&
+                      EditForm_WebSite.controls['BasalamApi'].touched
+                    }">
+                      <option value="">لطفاً انتخاب کنید</option>
+
+                      <option [value]="item.id" *ngFor="let item of TrueFalse_Lookup">{{item.name}}</option>
+                    </select>
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['BasalamApi']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+
+
+                  <div class="form-group col-md-3">
+                    <label for="SnapApi" class="col-form-label">Api اسنپ</label>
+
+                    <select formControlName="SnapApi" id="SnapApi" class="form-control custom-select" [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['SnapApi'].invalid &&
+                      EditForm_WebSite.controls['SnapApi'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['SnapApi'].valid &&
+                      EditForm_WebSite.controls['SnapApi'].touched
+                    }">
+                      <option value="">لطفاً انتخاب کنید</option>
+
+                      <option [value]="item.id" *ngFor="let item of TrueFalse_Lookup">{{item.name}}</option>
+                    </select>
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['SnapApi']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+
+                  <div class="form-group col-md-3">
+                    <label for="MobileTheme" class="col-form-label">تم موبایلی</label>
+
+                    <select formControlName="MobileTheme" id="MobileTheme" class="form-control custom-select" [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['MobileTheme'].invalid &&
+                      EditForm_WebSite.controls['MobileTheme'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['MobileTheme'].valid &&
+                      EditForm_WebSite.controls['MobileTheme'].touched
+                    }">
+                      <option value="">لطفاً انتخاب کنید</option>
+
+                      <option [value]="item.id" *ngFor="let item of TrueFalse_Lookup">{{item.name}}</option>
+                    </select>
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['MobileTheme']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+
+
+
+                  <div class="form-group col-md-12">
+                    <label for="Features" class="col-form-label">امکانات سایت</label>
+                    <span class="text-danger">*</span>
+
+                    <textarea type="text" class="form-control" id="Features" formControlName="Features"
+                      autocomplete="off" [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['Features'].invalid &&
+                      EditForm_WebSite.controls['Features'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['Features'].valid &&
+                      EditForm_WebSite.controls['Features'].touched
+                    }"></textarea>
+
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['Features']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+
+
+                  <div class="form-group col-md-12">
+                    <label for="Explain" class="col-form-label">توضیحات api </label>
+                    <span class="text-danger">*</span>
+
+                    <textarea type="text" class="form-control" id="Explain" formControlName="Explain" autocomplete="off"
+                      [ngClass]="{
+                      'is-invalid':
+                      EditForm_WebSite.controls['Explain'].invalid &&
+                      EditForm_WebSite.controls['Explain'].touched,
+                      'is-valid':
+                      EditForm_WebSite.controls['Explain'].valid &&
+                      EditForm_WebSite.controls['Explain'].touched
+                    }"></textarea>
+
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_WebSite.controls['Explain']
+                                            }">
+                    </ng-container>
+                  </div>
+
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div class="card">
+          <div class="card-body">
+            <div class="col-sm-6">
+              <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light m-2"
+                (click)="submit('')">
+                <span class="btn-label"><i class="fas fa-check-double"></i></span>ثبت </a>
+
+
+
+            </div>
+
+
+          </div>
+        </div>
+
+
+
+      </div>
+
+
+    </div>
+
+
+  </div>
+</div>
+
+
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
+    <div class="fv-plugins-message-container invalid-feedback">
+      <span role="alert">
+        {{ message }}
+      </span>
+    </div>
+  </ng-container>
+</ng-template>

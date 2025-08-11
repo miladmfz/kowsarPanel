@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-12">
-        <div class="card shadow-sm" style="background-color: #fff; padding: 20px; border-radius: 10px;">
+        <div class="card shadow-sm" style="padding: 20px; border-radius: 10px;">
 
           <!-- Header -->
           <div class="card-header d-flex justify-content-between align-items-center">
@@ -23,7 +23,7 @@
 
           <!-- Body / Grid -->
           <div class="card-body">
-            <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: 100%;" class="ag-theme-alpine"
+            <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: 100%;" class="ag-theme-alpine-dark"
               [rowData]="records" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [modules]="modules"
               [localeText]="localeText" [enableRtl]="true" [pagination]="true"
               [frameworkComponents]="frameworkComponents" [context]="context" [suppressRowClickSelection]="true"
@@ -55,7 +55,7 @@
         <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: auto" [rowData]="records_history"
           [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
           (gridReady)="onGridReady2($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-          [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine"
+          [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine-dark"
           [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
           (selectionChanged)="onSelectionChanged($event)">
         </ag-grid-angular>
