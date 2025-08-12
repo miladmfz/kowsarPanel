@@ -5,6 +5,8 @@ import { KowsarWebApiService } from '../../../services/KowsarWebApi.service';
 import { FormControl } from '@angular/forms';
 import { CellActionGoodList } from '../../Good/good-list/cell-action-good-ist';
 import { GridOptions } from 'ag-grid-community';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-goodsgrp-list',
@@ -16,8 +18,21 @@ export class GoodsgrpListComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: KowsarWebApiService,
+    private themeService: ThemeService
   ) {
     super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
   }
 
 
@@ -49,7 +64,9 @@ export class GoodsgrpListComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
 
     this.columnDefs6 = [
       {

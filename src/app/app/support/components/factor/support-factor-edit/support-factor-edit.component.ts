@@ -4,7 +4,7 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { SupportFactorWebApiService } from '../../../services/SupportFactorWebApi.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
-import { debounceTime, Subject } from 'rxjs';
+import { debounceTime, Subject, Subscription } from 'rxjs';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { CellActionSupportGoodEdit } from './cell-action-support-good-edit';
 import { CellActionSupportFactorRowsEdit } from './cell-action-support-factorrows-edit';
@@ -13,6 +13,7 @@ import { Location } from '@angular/common';
 
 import Swal from 'sweetalert2';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 
 @Component({
   selector: 'app-support-factor-edit',
@@ -32,7 +33,17 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
     private sharedService: SharedService,
     private readonly notificationService: NotificationService,
 
-  ) { super(); }
+    private themeService: ThemeService
+  ) {
+    super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
 
   changeStatus(status: string) {
     this.sharedService.sendData({
@@ -47,7 +58,9 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.route.paramMap.subscribe((params: ParamMap) => {
       var idtemp = params.get('id');
       if (idtemp != null) {
@@ -561,6 +574,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
   ngOnDestroy(): void {
     this.searchSubject_customer.unsubscribe();
     this.searchSubject_Good.unsubscribe();
+    this.themeSub.unsubscribe();
   }
 
   onInputChange_Customer() {

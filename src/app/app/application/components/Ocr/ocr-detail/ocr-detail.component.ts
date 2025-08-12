@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { UntypedFormBuilder } from '@angular/forms';
 import { OcrWebApiService } from '../../../services/OcrWebApi.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 declare var ApexCharts: any;
 
 @Component({
@@ -14,8 +16,24 @@ export class OcrDetailComponent extends AgGridBaseComponent
   constructor(
     private repo: OcrWebApiService,
     private route: ActivatedRoute,
-    private formBuilder: UntypedFormBuilder
-  ) { super(); }
+    private formBuilder: UntypedFormBuilder,
+    private themeService: ThemeService
+  ) {
+    super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
+  }
+
 
   records;
 
@@ -44,7 +62,9 @@ export class OcrDetailComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
 
 
     this.columnDefs1 = [

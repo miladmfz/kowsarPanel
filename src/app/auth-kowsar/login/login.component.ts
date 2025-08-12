@@ -25,11 +25,11 @@ export class LoginComponent implements OnInit {
   //   UName: new FormControl('', Validators.required),
   //   UPass: new FormControl('', Validators.required),
   // });
-  @ViewChild('username') usernameField: ElementRef;
+  // @ViewChild('username') usernameField: ElementRef;
 
-  ngAfterViewInit() {
-    this.usernameField.nativeElement.focus();
-  }
+  // ngAfterViewInit() {
+  //   this.usernameField.nativeElement.focus();
+  // }
   ngOnInit() {
     this.isLoading = false
     this.LoginForm = this.fb.group({

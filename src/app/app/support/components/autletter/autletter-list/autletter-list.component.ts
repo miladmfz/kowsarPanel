@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { CellActionAutletterList } from './cell-action-autletter-list';
 import { ValidateionStateCellAutletterRenderer } from './validation-state-label-cell-autletter';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-autletter-list',
@@ -20,13 +22,20 @@ export class AutletterListComponent
     private router: Router,
     private repo: AutletterWebApiService,
     private readonly notificationService: NotificationService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
 
 
+    private themeService: ThemeService
   ) {
     super();
   }
 
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
 
 
   records;
@@ -197,13 +206,19 @@ export class AutletterListComponent
     ];
   }
 
+  ngOnDestroy() {
 
+    this.themeSub.unsubscribe();
+
+  }
 
 
   override ngOnInit(): void {
     super.ngOnInit();
     this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.column_declare()
     this.repo.GetTodeyFromServer().subscribe((data: any) => {
 

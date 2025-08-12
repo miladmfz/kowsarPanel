@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import * as moment from 'jalali-moment';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
@@ -9,6 +9,9 @@ import { CellActionAttendancePanel } from './cell-action-attendance-panel';
 import { CellDateAttendancePanel } from './cell-date-label-attendance-panel';
 import { CellStatusAttendancePanel } from './cell-status-label-attendance-panel';
 import { CellNameAttendancePanel } from './cell-name-label-attendance-panel';
+import { Subscription } from 'rxjs';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { AgGridAngular } from 'ag-grid-angular';
 
 @Component({
   selector: 'app-attendance-panel',
@@ -17,6 +20,10 @@ import { CellNameAttendancePanel } from './cell-name-label-attendance-panel';
 export class AttendancePanelComponent
   extends AgGridBaseComponent
   implements OnInit {
+
+
+
+
 
 
   loading_attendance: boolean = true;
@@ -50,13 +57,32 @@ export class AttendancePanelComponent
     private sharedService: SharedService,
     private readonly notificationService: NotificationService,
     private renderer: Renderer2,
+    private themeService: ThemeService
   ) {
     super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+    // پاک کردن interval برای جلوگیری از memory leak
+    if (this.attendanceInterval) {
+      clearInterval(this.attendanceInterval);
+    }
+    this.themeSub.unsubscribe();
+
   }
 
 
   override ngOnInit(): void {
     super.ngOnInit();
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
 
     this.columnDefs = [
 
@@ -180,12 +206,7 @@ export class AttendancePanelComponent
   }
 
 
-  ngOnDestroy() {
-    // پاک کردن interval برای جلوگیری از memory leak
-    if (this.attendanceInterval) {
-      clearInterval(this.attendanceInterval);
-    }
-  }
+
   getAttendance_data() {
 
     this.repo.AttendanceDashboard().subscribe((data: any) => {

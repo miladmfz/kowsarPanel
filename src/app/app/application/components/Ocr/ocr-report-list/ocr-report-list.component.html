@@ -145,8 +145,9 @@
 
               <ng-container *ngIf="!loading">
 
-                <ag-grid-angular #agGrid id="myGrid" style="height: 700px; width: auto" class="ag-theme-alpine-dark"
-                  [rowData]="records" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
+                <ag-grid-angular #agGrid id="myGrid" style="height: 700px; width: auto"
+                  [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [rowData]="records"
+                  [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
                   [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)"
                   (cellClicked)="onCellClicked($event)" [pagination]="true" [frameworkComponents]="frameworkComponents"
                   [context]="context">

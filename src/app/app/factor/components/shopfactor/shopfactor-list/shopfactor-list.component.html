@@ -52,8 +52,9 @@
             [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
             [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
             [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context"
-            class="ag-theme-alpine-dark" [columnDefs]="columnDefs" [suppressRowClickSelection]="true"
-            [rowSelection]="'multiple'" (selectionChanged)="onSelectionChanged($event)">
+            [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [columnDefs]="columnDefs"
+            [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+            (selectionChanged)="onSelectionChanged($event)">
           </ag-grid-angular>
         </div>
       </div>

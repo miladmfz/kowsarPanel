@@ -7,10 +7,11 @@ import { CellActionFactorRowsEdit } from './cell-action-factorrows-edit';
 import { CellActionGoodEdit } from './cell-action-good-edit';
 import { CellActionFactorCustomerEdit } from './cell-action-factor-customer-edit';
 import { Location } from '@angular/common';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 
 @Component({
   selector: 'app-factor-edit',
@@ -27,10 +28,25 @@ export class FactorEditComponent extends AgGridBaseComponent
     private location: Location,
     private fb: FormBuilder,
     private readonly notificationService: NotificationService,
-  ) { super(); }
+    private themeService: ThemeService
+  ) {
+    super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+
+
 
   override ngOnInit(): void {
     super.ngOnInit();
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
 
     this.route.paramMap.subscribe((params: ParamMap) => {
       var idtemp = params.get('id');
@@ -317,6 +333,7 @@ export class FactorEditComponent extends AgGridBaseComponent
   ngOnDestroy(): void {
     this.searchSubject_customer.unsubscribe();
     this.searchSubject_Good.unsubscribe();
+    this.themeSub.unsubscribe();
   }
 
   onInputChange_Customer() {

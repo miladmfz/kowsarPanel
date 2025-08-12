@@ -5,9 +5,10 @@ import { CustomerWebApiService } from 'src/app/app/support/services/CustomerWebA
 import { CellActionCustomerList } from './cell-action-customer-list';
 import { forEachChild } from 'typescript';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { CellActionCustomerFactor } from './cell-action-customer-factor';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 @Component({
   selector: 'app-customer-list',
   templateUrl: './customer-list.component.html',
@@ -18,9 +19,17 @@ export class CustomerListComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: CustomerWebApiService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private themeService: ThemeService
   ) {
     super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
   }
 
   PhAddress3: string = '';
@@ -98,6 +107,7 @@ export class CustomerListComponent extends AgGridBaseComponent
 
   ngOnDestroy(): void {
     this.searchSubject.unsubscribe();
+    this.themeSub.unsubscribe();
   }
 
 
@@ -117,6 +127,9 @@ export class CustomerListComponent extends AgGridBaseComponent
   override ngOnInit(): void {
     super.ngOnInit();
     this.PhAddress3 = sessionStorage.getItem("PhAddress3")
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.columnDefs = [
       {
         field: 'عملیات',

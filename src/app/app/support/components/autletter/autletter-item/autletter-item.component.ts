@@ -7,6 +7,8 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { DbSetup_lookup } from '../../../lookup-type';
 import { CellActionAutletterRowList } from './cell-action-autletterrow-list';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-autletter-item',
@@ -20,11 +22,23 @@ export class AutletterItemComponent
     private router: Router,
     private repo: AutletterWebApiService,
     private readonly notificationService: NotificationService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private themeService: ThemeService
   ) {
     super();
   }
 
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
+  }
 
 
   records: any[] = [];
@@ -85,7 +99,9 @@ export class AutletterItemComponent
     this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
     this.CentralRef = sessionStorage.getItem("CentralRef");
 
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
 
     this.columnDefs = [
       {

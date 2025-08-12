@@ -4,8 +4,9 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { CentralWebApiService } from '../../../services/CentralWebApi.service';
 import { FormControl } from '@angular/forms';
 import { CellActionCentralList } from './cell-action-central-list';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 @Component({
   selector: 'app-central-list',
   templateUrl: './central-list.component.html',
@@ -16,11 +17,17 @@ export class CentralListComponent extends AgGridBaseComponent
   constructor(
     private router: Router,
     private repo: CentralWebApiService,
+    private themeService: ThemeService
   ) {
     super();
   }
 
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
 
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
 
   records;
   title = 'لیست اجزای پایه ';
@@ -40,6 +47,7 @@ export class CentralListComponent extends AgGridBaseComponent
 
   ngOnDestroy(): void {
     this.searchSubject.unsubscribe();
+    this.themeSub.unsubscribe();
   }
 
   onInputChange() {
@@ -54,6 +62,9 @@ export class CentralListComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.columnDefs = [
       {
         field: 'عملیات',

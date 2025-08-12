@@ -32,11 +32,12 @@
           <h4 class="fw-bold mb-3">تنظیمات پایه نرم‌افزار:</h4>
 
           <div class="table-responsive">
-            <ag-grid-angular #agGrid id="myGrid" style="height: 300px; width: 100%" class="ag-theme-alpine-dark"
-              [rowData]="items" [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
-              [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
-              [pagination]="true" [context]="context" [defaultColDef]="defaultColDef"
-              [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+            <ag-grid-angular #agGrid id="myGrid" style="height: 300px; width: 100%"
+              [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [rowData]="items"
+              [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+              (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+              [context]="context" [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
+              [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
               (selectionChanged)="onSelectionChanged($event)">
             </ag-grid-angular>
           </div>
@@ -53,11 +54,12 @@
           </div>
 
           <div class="table-responsive">
-            <ag-grid-angular #agGrid id="myGrid" style="height: 300px; width: 100%" class="ag-theme-alpine-dark"
-              [rowData]="Printers" [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText"
-              [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
-              [pagination]="true" [context]="context" [defaultColDef]="defaultColDef"
-              [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+            <ag-grid-angular #agGrid id="myGrid" style="height: 300px; width: 100%"
+              [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [rowData]="Printers"
+              [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+              (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+              [context]="context" [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
+              [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
               (selectionChanged)="onSelectionChanged($event)">
             </ag-grid-angular>
           </div>

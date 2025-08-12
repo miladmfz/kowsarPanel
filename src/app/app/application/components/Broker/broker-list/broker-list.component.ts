@@ -3,6 +3,8 @@ import { BrokerWebApiService } from '../../../services/BrokerWebApi.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { Router } from '@angular/router';
 import { CellActionBrokerList } from './cell-action-broker-list';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-broker-list',
@@ -14,10 +16,24 @@ export class BrokerListComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: BrokerWebApiService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private themeService: ThemeService
   ) {
     super();
   }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
+  }
+
 
   PhAddress3: string = '';
 
@@ -27,7 +43,9 @@ export class BrokerListComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.columnDefs = [
       {
         field: 'عملیات',

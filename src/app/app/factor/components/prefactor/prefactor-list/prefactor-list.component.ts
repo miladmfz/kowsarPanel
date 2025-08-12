@@ -4,6 +4,8 @@ import { FactorWebApiService } from '../../../services/FactorWebApi.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { FormControl } from '@angular/forms';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-prefactor-list',
@@ -15,9 +17,23 @@ export class PrefactorListComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private basewebapi: FactorWebApiService,
+    private themeService: ThemeService
   ) {
     super();
   }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
+  }
+
 
 
   start_dateValue = new FormControl();
@@ -57,6 +73,9 @@ export class PrefactorListComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
 
     this.columnDefs = [
 

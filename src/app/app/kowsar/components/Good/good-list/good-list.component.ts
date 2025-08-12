@@ -5,6 +5,8 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { FormControl } from '@angular/forms';
 import { CellActionGoodList } from './cell-action-good-ist';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-good-list',
@@ -18,10 +20,22 @@ export class GoodListComponent extends AgGridBaseComponent
     private repo: KowsarWebApiService,
     private readonly notificationService: NotificationService,
 
+    private themeService: ThemeService
   ) {
     super();
   }
 
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
+  }
 
   records;
   title = 'لیست کالاها ';
@@ -39,7 +53,9 @@ export class GoodListComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.getGridSchema()
   }
 

@@ -6,7 +6,8 @@ import { WebSiteWebApiService } from '../../../services/WebSiteWebApi.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CellActionWebSiteList } from './cell_action_website_list';
 import { debounceTime } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 
 @Component({
   selector: 'app-website-list',
@@ -21,8 +22,22 @@ export class WebsiteListComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: WebSiteWebApiService,
+    private themeService: ThemeService
   ) {
     super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+    this.searchSubject.unsubscribe();
+
   }
 
   EditForm = new FormGroup({
@@ -33,9 +48,6 @@ export class WebsiteListComponent extends AgGridBaseComponent
 
   private searchSubject: Subject<string> = new Subject();
 
-  ngOnDestroy(): void {
-    this.searchSubject.unsubscribe();
-  }
 
   onInputChange() {
     if (this.Searchtarget == " ") {
@@ -56,7 +68,9 @@ export class WebsiteListComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.columnDefs = [
       {
         field: 'عملیات',

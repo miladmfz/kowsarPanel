@@ -7,6 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import { CellActionOcrPrinter } from './cell-action-ocr-printer';
 import { CellActionOcrDbsetup } from './cell-action-ocr-dbsetup';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-ocr-setting',
@@ -26,7 +28,22 @@ export class OcrSettingComponent extends AgGridBaseComponent
     private sharedService: SharedService,
     private readonly notificationService: NotificationService,
 
-  ) { super(); }
+    private themeService: ThemeService
+  ) {
+    super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
+  }
 
 
 
@@ -54,6 +71,10 @@ export class OcrSettingComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
+
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.Config_Declare()
     this.Get_Base_data();
 

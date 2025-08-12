@@ -2,37 +2,97 @@
 <div class="navbar-custom">
   <div class="container-fluid">
     <ul class="list-unstyled topnav-menu float-end mb-0">
-      <!-- <li class="dropdown notification-list topbar-dropdown">
+      <li class="dropdown notification-list topbar-dropdown">
         <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light" data-bs-toggle="dropdown" href="#"
           role="button" aria-haspopup="false" aria-expanded="false">
-          <img src="../assets/images/KowsarSupport.png" alt="user-image" class="rounded-circle" />
+          <!-- <img src="../assets/images/KowsarSupport.png" alt="user-image" class="rounded-circle" /> -->
           <span class="pro-user-name ms-1">
-            {{ userData ? userData.name : "" }}
+
             <i class="mdi mdi-chevron-down"></i>
           </span>
         </a>
         <div class="dropdown-menu dropdown-menu-end profile-dropdown">
-      <div class="dropdown-header noti-title">
-        <h6 class="text-overflow m-0">خوش آمدید !</h6>
-      </div>
+          <div class="dropdown-header noti-title">
+            <h6 class="text-overflow m-0">خوش آمدید !</h6>
+          </div>
 
-      <div class="dropdown-divider"></div>
+          <div class="dropdown-divider"></div>
+          <div class="theme-switch-wrapper">
+            <label class="theme-switch" for="theme-toggle">
+              <input type="checkbox" id="theme-toggle" (change)="toggleTheme($event)" [checked]="isDarkMode" />
+              <span class="slider round"></span>
+            </label>
+            <span class="theme-label">{{ isDarkMode ? 'حالت شب' : 'حالت روز' }}</span>
+          </div>
 
-      <a (click)="logout()" class="dropdown-item notify-item">
-        <i class="ri-logout-box-line"></i>
-        <span>خروج</span>
-      </a>
-  </div>
-  </li> -->
+          <style>
+            .theme-switch-wrapper {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+            }
 
-      <!-- <li class="dropdown notification-list">
-        <a
-          href="javascript:void(0);"
-          class="nav-link right-bar-toggle waves-effect waves-light"
-        >
+            .theme-switch {
+              position: relative;
+              display: inline-block;
+              width: 50px;
+              height: 26px;
+            }
+
+            .theme-switch input {
+              display: none;
+            }
+
+            .slider {
+              position: absolute;
+              cursor: pointer;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-color: #ccc;
+              transition: 0.4s;
+              border-radius: 26px;
+            }
+
+            .slider:before {
+              position: absolute;
+              content: "";
+              height: 20px;
+              width: 20px;
+              left: 3px;
+              bottom: 3px;
+              background-color: white;
+              transition: 0.4s;
+              border-radius: 50%;
+            }
+
+            input:checked+.slider {
+              background-color: #4d94ff;
+            }
+
+            input:checked+.slider:before {
+              transform: translateX(24px);
+            }
+
+            .theme-label {
+              font-size: 14px;
+              font-weight: 500;
+            }
+          </style>
+
+          <!-- <a (click)="logout()" class="dropdown-item notify-item">
+            <i class="ri-logout-box-line"></i>
+            <span>خروج</span>
+          </a> -->
+        </div>
+      </li>
+
+      <li class="dropdown notification-list">
+        <a href="javascript:void(0);" class="nav-link right-bar-toggle waves-effect waves-light">
           <i class="fe-settings noti-icon"></i>
         </a>
-      </li> -->
+      </li>
     </ul>
 
     <!-- LOGO -->

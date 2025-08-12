@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-ocr-report-list',
@@ -16,8 +18,21 @@ export class OcrReportListComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: OcrWebApiService,
+    private themeService: ThemeService
   ) {
     super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
   }
 
 
@@ -270,7 +285,9 @@ export class OcrReportListComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
 
 
     this.columnDefs = [

@@ -13,6 +13,8 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    //document.body.classList.remove('loading');
+
     if (sessionStorage.getItem("ActiveDate") == null) {
       this.router.navigate(['/auth/login']);
     }

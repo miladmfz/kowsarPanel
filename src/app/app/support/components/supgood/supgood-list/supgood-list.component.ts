@@ -6,6 +6,8 @@ import { NotificationService } from 'src/app/app-shell/framework-services/notifi
 import { KowsarWebApiService } from 'src/app/app/kowsar/services/KowsarWebApi.service';
 import { CellActionSupGoodList } from './cell-action-supgood-ist';
 import { SupportFactorWebApiService } from '../../../services/SupportFactorWebApi.service';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-supgood-list',
@@ -18,11 +20,17 @@ export class SupgoodListComponent extends AgGridBaseComponent
     private readonly router: Router,
     private repo: SupportFactorWebApiService,
     private readonly notificationService: NotificationService,
-
+    private themeService: ThemeService
   ) {
     super();
   }
 
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
 
   records;
   title = 'لیست کالاها ';
@@ -37,10 +45,16 @@ export class SupgoodListComponent extends AgGridBaseComponent
     this.GetGood()
   }
 
+  ngOnDestroy() {
 
+    this.themeSub.unsubscribe();
+
+  }
   override ngOnInit(): void {
     super.ngOnInit();
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.getGridSchema()
     this.GetGood();
   }

@@ -7,6 +7,8 @@ import { ActivatedRoute } from '@angular/router';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import { CellActionOrderDbsetup } from './cell-action-order-dbsetup';
 import { CellActionOrderPrinter } from './cell-action-order-printer';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-order-setting',
@@ -23,7 +25,22 @@ export class OrderSettingComponent extends AgGridBaseComponent
     private sharedService: SharedService,
     private readonly notificationService: NotificationService,
 
-  ) { super(); }
+    private themeService: ThemeService
+  ) {
+    super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
+  }
 
   items: any = [];
   Printers: any = [];
@@ -41,6 +58,12 @@ export class OrderSettingComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
+
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
+
+
     this.Config_Declare()
     this.Get_Base_data();
 

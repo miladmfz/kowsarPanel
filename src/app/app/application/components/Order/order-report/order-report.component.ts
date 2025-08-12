@@ -5,6 +5,8 @@ import { OrderWebApiService } from '../../../services/OrderWebApi.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-order-report',
@@ -16,8 +18,21 @@ export class OrderReportComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: OrderWebApiService,
+    private themeService: ThemeService
   ) {
     super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
   }
 
   Filter_Lookup: Base_Lookup[] = [
@@ -50,6 +65,9 @@ export class OrderReportComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
 
     this.columnDefs = [
 

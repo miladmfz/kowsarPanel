@@ -7,6 +7,8 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import { Location } from '@angular/common';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -21,7 +23,23 @@ export class BrokerReportComponent extends AgGridBaseComponent
   constructor(
     private repo: BrokerWebApiService,
     private route: ActivatedRoute,
-  ) { super(); }
+    private themeService: ThemeService
+  ) {
+    super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
+  }
+
 
 
   BrokerCode!: string;
@@ -73,7 +91,9 @@ export class BrokerReportComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.route.paramMap.subscribe((params: ParamMap) => {
       var idtemp = params.get('id');
       if (idtemp != null) {

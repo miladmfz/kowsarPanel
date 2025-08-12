@@ -4,6 +4,8 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { DownloadWebApiService } from '../../services/DownloadWebApi.service';
 import { FormControl } from '@angular/forms';
 import { CellActionDownload } from './cell-action-download';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-download-list',
@@ -15,10 +17,22 @@ export class DownloadListComponent extends AgGridBaseComponent
   constructor(
     private router: Router,
     private repo: DownloadWebApiService,
+    private themeService: ThemeService
   ) {
     super();
   }
 
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
+  }
 
 
   records;
@@ -40,6 +54,9 @@ export class DownloadListComponent extends AgGridBaseComponent
 
 
     this.JobPersonRef = sessionStorage.getItem("JobPersonRef")
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
 
 
 

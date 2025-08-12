@@ -9,10 +9,11 @@ import * as convert from 'xml-js';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { GridOptions } from 'ag-grid-community';
 import { CellActionGoodEditImage } from './cell-action-good-edit-image';
-import { Observable, tap } from 'rxjs';
+import { Observable, Subscription, tap } from 'rxjs';
 import { CellActionGoodImageBtn } from './cell-action-good-edit-image-btn';
 import { CellActionGoodGroupBtn } from './cell-action-good-edit-group-btn';
 import Swal from 'sweetalert2';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 
 @Component({
   selector: 'app-good-edit',
@@ -27,12 +28,28 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     private renderer: Renderer2,
     private location: Location,
     private router: Router,
+    private themeService: ThemeService
   ) {
     super();
   }
 
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
+  }
+
   override ngOnInit(): void {
     super.ngOnInit();
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.GetObjectTypeFromDbSetup()
     this.route.paramMap.subscribe((params: ParamMap) => {
       var id = params.get('id');

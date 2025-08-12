@@ -9,6 +9,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { CellActionAttendanceStatePanel } from './cell-action-attendance-panel';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import * as moment from 'jalali-moment';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-support-panel',
   templateUrl: './support-panel.component.html',
@@ -58,14 +60,30 @@ export class SupportPanelComponent
     private readonly notificationService: NotificationService,
     private renderer: Renderer2,
 
+    private themeService: ThemeService
   ) {
     super();
   }
 
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
+  }
+
+
   override ngOnInit(): void {
     super.ngOnInit();
 
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.columnDefs1 = [
 
 

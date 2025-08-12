@@ -7,6 +7,8 @@ import { ValidateionStateCellAutletterWorkRenderer } from './validation-state-la
 import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import * as moment from 'jalali-moment';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-autletter-work',
@@ -19,8 +21,16 @@ export class AutletterWorkComponent
   constructor(
     private router: Router,
     private repo: AutletterWebApiService,
+    private themeService: ThemeService
   ) {
     super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
   }
 
   customTheme: Partial<IDatepickerTheme> = {
@@ -53,11 +63,17 @@ export class AutletterWorkComponent
     }
     this.getList()
   }
+  ngOnDestroy() {
 
+    this.themeSub.unsubscribe();
+
+  }
 
   override ngOnInit(): void {
     super.ngOnInit();
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.columnDefs = [
       {
         field: 'عملیات',

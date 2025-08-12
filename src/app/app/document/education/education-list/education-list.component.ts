@@ -4,6 +4,8 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { EducationWebApiService } from '../../services/EducationWebApi.service';
 import { FormControl } from '@angular/forms';
 import { CellActionEducation } from './cell-action-education-work';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-education-list',
@@ -15,8 +17,21 @@ export class EducationListComponent extends AgGridBaseComponent
   constructor(
     private router: Router,
     private repo: EducationWebApiService,
+    private themeService: ThemeService
   ) {
     super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
   }
 
 
@@ -39,6 +54,9 @@ export class EducationListComponent extends AgGridBaseComponent
   override ngOnInit(): void {
     super.ngOnInit();
     this.JobPersonRef = sessionStorage.getItem("JobPersonRef")
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
 
     this.columnDefs = [
       {

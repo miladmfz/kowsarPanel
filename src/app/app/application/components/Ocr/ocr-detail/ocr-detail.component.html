@@ -96,11 +96,11 @@
               </div>
             </ng-container>
             <ng-container *ngIf="!loading4">
-              <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" class="ag-theme-alpine-dark"
-                [rowData]="record_factor_headers" [columnDefs]="columnDefs1" [modules]="modules"
-                [localeText]="localeText" [defaultColDef]="defaultColDef" [enableRtl]="true"
-                (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-                [frameworkComponents]="frameworkComponents" [context]="context">
+              <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto"
+                [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [rowData]="record_factor_headers"
+                [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
+                [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
+                [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context">
               </ag-grid-angular>
             </ng-container>
             <ng-container *ngIf="loading5">
@@ -110,11 +110,11 @@
             </ng-container>
 
             <ng-container *ngIf="!loading5">
-              <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" class="ag-theme-alpine-dark"
-                [rowData]="record_factor_rows" [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText"
-                [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)"
-                (cellClicked)="onCellClicked($event)" [pagination]="true" [frameworkComponents]="frameworkComponents"
-                [context]="context">
+              <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto"
+                [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [rowData]="record_factor_rows"
+                [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
+                [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
+                [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context">
               </ag-grid-angular>
             </ng-container>
 
@@ -129,11 +129,11 @@
 
             <ng-container *ngIf="!loading6">
 
-              <ag-grid-angular #agGrid id="myGrid" style="height: 800px; width: auto" class="ag-theme-alpine-dark"
-                [rowData]="records_ocr_factors" [columnDefs]="columnDefs3" [modules]="modules" [localeText]="localeText"
-                [defaultColDef]="defaultColDef" [enableRtl]="true" (gridReady)="onGridReady($event)"
-                (cellClicked)="onCellClicked($event)" [pagination]="true" [frameworkComponents]="frameworkComponents"
-                [context]="context">
+              <ag-grid-angular #agGrid id="myGrid" style="height: 800px; width: auto"
+                [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [rowData]="records_ocr_factors"
+                [columnDefs]="columnDefs3" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
+                [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
+                [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context">
               </ag-grid-angular>
 
             </ng-container>

@@ -6,6 +6,8 @@ import { CellActionApplicationList } from './cell_action_application_list';
 import { ValidateionStateCellManageApplicationRenderer } from './validation-state-label-cell-manage-application';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-application-list',
@@ -22,15 +24,30 @@ export class ApplicationListComponent
     private readonly router: Router,
     private repo: ManagerWebApiService,
     private http: HttpClient,
+    private themeService: ThemeService
   ) {
     super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
   }
 
 
 
   override ngOnInit(): void {
     super.ngOnInit();
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.columnDefs = [
       {
         field: 'عملیات',

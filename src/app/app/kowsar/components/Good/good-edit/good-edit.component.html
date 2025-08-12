@@ -1478,8 +1478,9 @@
           <ag-grid-angular #agGrid id="myGrid" style="height: 250px; width: auto" [rowData]="Stack_list"
             [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
             (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-            [context]="context" class="ag-theme-alpine-dark" [defaultColDef]="defaultColDef"
-            [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+            [context]="context" [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
+            [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
+            [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
             (selectionChanged)="onSelectionChanged($event)">
           </ag-grid-angular>
 
@@ -1497,8 +1498,9 @@
           <ag-grid-angular #agGrid id="myGrid" style="height: 250px; width: auto" [rowData]="Group_list"
             [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
             (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-            [context]="context" class="ag-theme-alpine-dark" [defaultColDef]="defaultColDef"
-            [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+            [context]="context" [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
+            [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
+            [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
             (selectionChanged)="onSelectionChanged($event)">
           </ag-grid-angular>
         </div>
@@ -1523,8 +1525,9 @@
           <ag-grid-angular #agGrid id="myGrid" style="height: 250px; width: auto" [rowData]="Image_list"
             [columnDefs]="columnDefs3" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
             (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-            [context]="context" class="ag-theme-alpine-dark" [defaultColDef]="defaultColDef"
-            [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+            [context]="context" [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
+            [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
+            [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
             (selectionChanged)="onSelectionChanged($event)">
           </ag-grid-angular>
 
@@ -1572,13 +1575,14 @@
             <!-- <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="base_Stack_list"
               [columnDefs]="columnDefs4" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
               (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-              [context]="context" class="ag-theme-alpine-dark" [defaultColDef]="defaultColDef"
+              [context]="context" [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [defaultColDef]="defaultColDef"
               [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
               (selectionChanged)="onSelectionChanged($event)">
             </ag-grid-angular> -->
             <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: auto" [rowData]="base_Stack_list"
               [columnDefs]="columnDefs6" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
-              [pagination]="true" [context]="context" class="ag-theme-alpine-dark" [defaultColDef]="defaultColDef"
+              [pagination]="true" [context]="context"
+              [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [defaultColDef]="defaultColDef"
               [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
               (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged($event)"
               (cellClicked)="onCellClicked($event)" (rowDoubleClicked)="onRowDoubleClicked($event)" [treeData]="true"
@@ -1616,7 +1620,8 @@
 
             <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: auto" [rowData]="base_Group_list"
               [columnDefs]="columnDefs6" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
-              [pagination]="true" [context]="context" class="ag-theme-alpine-dark" [defaultColDef]="defaultColDef"
+              [pagination]="true" [context]="context"
+              [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [defaultColDef]="defaultColDef"
               [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
               (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged($event)"
               (cellClicked)="onCellClicked($event)" (rowDoubleClicked)="onRowDoubleClicked($event)" [treeData]="true"

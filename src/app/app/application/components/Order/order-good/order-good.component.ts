@@ -5,6 +5,8 @@ import { OrderWebApiService } from '../../../services/OrderWebApi.service';
 import { FormControl } from '@angular/forms';
 import { OrderCellActionGoodList } from './order-cell-action-good-ist';
 import { CellActionAutletterWork } from 'src/app/app/support/components/autletter/autletter-work/cell-action-autletter-work';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-order-good',
@@ -16,8 +18,21 @@ export class OrderGoodComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: OrderWebApiService,
+    private themeService: ThemeService
   ) {
     super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
   }
 
 
@@ -39,6 +54,9 @@ export class OrderGoodComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
 
     this.columnDefs = [
 

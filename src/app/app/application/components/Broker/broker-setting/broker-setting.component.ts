@@ -7,6 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import { CellActionBrokerPrinter } from './cell-action-broker-printer';
 import { CellActionBrokerDbsetup } from './cell-action-broker-dbsetup';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-broker-setting',
@@ -24,8 +26,23 @@ export class BrokerSettingComponent extends AgGridBaseComponent
     private repo: BrokerWebApiService,
     private sharedService: SharedService,
     private readonly notificationService: NotificationService,
+    private themeService: ThemeService
 
-  ) { super(); }
+  ) {
+    super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
+  }
 
 
 
@@ -63,6 +80,9 @@ export class BrokerSettingComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.Config_Declare()
     this.Get_Base_data();
 

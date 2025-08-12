@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ManagerWebApiService } from '../../services/ManagerWebApi.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { Router } from '@angular/router';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-application-log',
@@ -15,13 +17,28 @@ export class ApplicationLogComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: ManagerWebApiService,
+    private themeService: ThemeService
   ) {
     super();
   }
 
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
+  }
+
   override ngOnInit(): void {
     super.ngOnInit();
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.columnDefs = [
 
       {

@@ -1,38 +1,26 @@
 <ng-container *ngIf="!loading_attendance">
 
+  <div class="card" style="padding: 20px;">
+    <!-- Header -->
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="card-title mb-0"> وضعیت حضور </h5>
+
+
+    </div>
+    <div class="card-body">
+
+      <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
+        [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+        (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+        [frameworkComponents]="frameworkComponents" [context]="context"
+        [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [defaultColDef]="defaultColDef"
+        [suppressRowClickSelection]="true" [rowSelection]="'multiple'" (selectionChanged)="onSelectionChanged($event)">
+      </ag-grid-angular>
 
 
 
-
-
-  <div class="d-flex justify-content-between align-items-center">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div class="card" style="padding: 20px;">
-            <!-- Header -->
-            <div class="card-header d-flex justify-content-between align-items-center">
-              <h5 class="card-title mb-0"> وضعیت حضور </h5>
-
-
-            </div>
-            <div class="card-body">
-
-              <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
-                [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
-                (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-                [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine-dark"
-                [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
-                (selectionChanged)="onSelectionChanged($event)">
-              </ag-grid-angular>
-
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
-
 
 
 </ng-container>
@@ -95,8 +83,9 @@
         <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: auto" [rowData]="records_history"
           [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
           (gridReady)="onGridReady2($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-          [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine-dark"
-          [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+          [frameworkComponents]="frameworkComponents" [context]="context"
+          [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [defaultColDef]="defaultColDef"
+          [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
           (selectionChanged)="onSelectionChanged($event)">
         </ag-grid-angular>
       </div>

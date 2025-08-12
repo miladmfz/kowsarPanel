@@ -23,12 +23,12 @@
 
           <!-- Body / Grid -->
           <div class="card-body">
-            <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: 100%;" class="ag-theme-alpine-dark"
-              [rowData]="records" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [modules]="modules"
-              [localeText]="localeText" [enableRtl]="true" [pagination]="true"
-              [frameworkComponents]="frameworkComponents" [context]="context" [suppressRowClickSelection]="true"
-              [rowSelection]="'multiple'" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
-              (selectionChanged)="onSelectionChanged($event)">
+            <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: 100%;"
+              [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [rowData]="records"
+              [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [modules]="modules" [localeText]="localeText"
+              [enableRtl]="true" [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context"
+              [suppressRowClickSelection]="true" [rowSelection]="'multiple'" (gridReady)="onGridReady($event)"
+              (cellClicked)="onCellClicked($event)" (selectionChanged)="onSelectionChanged($event)">
             </ag-grid-angular>
           </div>
 
@@ -55,8 +55,9 @@
         <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: auto" [rowData]="records_history"
           [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
           (gridReady)="onGridReady2($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-          [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine-dark"
-          [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+          [frameworkComponents]="frameworkComponents" [context]="context"
+          [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [defaultColDef]="defaultColDef"
+          [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
           (selectionChanged)="onSelectionChanged($event)">
         </ag-grid-angular>
       </div>

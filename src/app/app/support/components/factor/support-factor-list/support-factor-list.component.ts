@@ -7,6 +7,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { CellActionSupportFactorList } from './cell-action-support-factor-list';
 import { Subscription } from 'rxjs';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 
 @Component({
   selector: 'app-support-factor-list',
@@ -20,8 +21,16 @@ export class SupportFactorListComponent extends AgGridBaseComponent
     private repo: SupportFactorWebApiService,
     private renderer: Renderer2
 
+    , private themeService: ThemeService
   ) {
     super();
+  }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
   }
 
   title = 'فاکتور پشتیبانی';
@@ -93,14 +102,20 @@ export class SupportFactorListComponent extends AgGridBaseComponent
 
   }
 
+  ngOnDestroy() {
 
+    this.themeSub.unsubscribe();
+
+  }
 
 
 
   override ngOnInit(): void {
     super.ngOnInit();
 
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     if (sessionStorage.getItem("PhAddress3") == '100') {
       this.BrokerRef = ''
 
