@@ -40,7 +40,11 @@ export class AutletterWebApiService {
 
 
 
+  GetImageFromServer(ObjectRef: string): Observable<any[]> {
+    const params = new HttpParams().append('pixelScale', '1000').append('ClassName', 'Aut').append('ObjectRef', ObjectRef)
+    return this.client.get<any[]>(this.baseUrl + "GetWebImagess", { headers: this.headers, params: params })
 
+  }
 
 
 
@@ -146,18 +150,28 @@ export class AutletterWebApiService {
     return this.client.get<any[]>(this.baseUrl + "GetObjectTypeFromDbSetup", { headers: this.headers, params: params })
   }
 
-  SendImageToServer(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "Conversation_UploadImage", command, { headers: this.headers })
+  Conversation_UploadFile(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "Conversation_UploadFile", command, { headers: this.headers })
   }
 
 
 
-  GetImageFromServer(ObjectRef: string): Observable<any[]> {
+  GetImageFileFromAttach(ObjectRef: string): Observable<any[]> {
     const params = new HttpParams().append('pixelScale', '1000').append('ClassName', 'Aut').append('ObjectRef', ObjectRef)
-    return this.client.get<any[]>(this.baseUrl + "GetWebImagess", { headers: this.headers, params: params })
+    return this.client.get<any[]>(this.baseUrl + "GetImageFileFromAttach", { headers: this.headers, params: params })
 
   }
 
+  GetVoiceFileFromAttach(ObjectRef: string): Observable<any[]> {
+    const params = new HttpParams().append('pixelScale', '1000').append('ClassName', 'Aut').append('ObjectRef', ObjectRef)
+    return this.client.get<any[]>(this.baseUrl + "GetVoiceFileFromAttach", { headers: this.headers, params: params })
+
+  }
+
+
+  GetConversationFileFromAttach(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetConversationFileFromAttach", command, { headers: this.headers })
+  }
 
   AttachFile_Insert(command): Observable<any[]> {
     return this.client.post<any[]>(this.baseUrl + "AttachFile_Insert", command, { headers: this.headers })

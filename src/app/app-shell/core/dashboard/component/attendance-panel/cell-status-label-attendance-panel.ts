@@ -19,6 +19,8 @@ declare var $: any;
     </span>
           <span *ngIf="Status == '4'">
         <span class="btn-soft-info text-secondary" style="padding: 3px">مرخصی اداری</span>
+    </span> <span *ngIf="Status == '5'">
+        <span class="btn-soft-info text-secondary" style="padding: 3px">قطع برق و اینترنت</span>
     </span>
     `,
 })

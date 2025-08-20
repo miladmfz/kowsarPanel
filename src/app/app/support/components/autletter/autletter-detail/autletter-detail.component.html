@@ -119,7 +119,7 @@
         <ng-container *ngIf="JobPersonRef.length>0">
 
             <div class="tab-pane " id="chat">
-                <app-autletter-chat [TextData]="id"></app-autletter-chat>
+                <app-autletter-chat [LetterRef]="id"></app-autletter-chat>
             </div>
             <div class="tab-pane active" id="detail">
                 <app-autletter-item [TextData]="id"></app-autletter-item>
@@ -132,7 +132,7 @@
         <ng-container *ngIf="JobPersonRef.length==0">
 
             <div class="tab-pane active" id="chat">
-                <app-autletter-chat [TextData]="id"></app-autletter-chat>
+                <app-autletter-chat [LetterRef]="id"></app-autletter-chat>
             </div>
             <div class="tab-pane" id="detail">
                 <app-autletter-item [TextData]="id"></app-autletter-item>

@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthKowsarWebApiService } from '../services/AuthKowsarWebApi.service';
 import { Router } from '@angular/router';
+import { AppConfigService } from 'src/app/app-config.service';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private repo: AuthKowsarWebApiService, private readonly router: Router, private fb: FormBuilder
+  constructor(private repo: AuthKowsarWebApiService, private readonly router: Router, private fb: FormBuilder, private config: AppConfigService
   ) {
     this.LoginForm = this.fb.group({
       UName: ['', Validators.required],
@@ -20,7 +21,7 @@ export class LoginComponent implements OnInit {
 
   isLoading: boolean = false;
   LoginForm: FormGroup;
-
+  baseUrl: string;
   // LoginForm = new FormGroup({
   //   UName: new FormControl('', Validators.required),
   //   UPass: new FormControl('', Validators.required),
@@ -36,9 +37,13 @@ export class LoginComponent implements OnInit {
       UName: ['', Validators.required],
       UPass: ['', Validators.required],
     });
-    // if (environment.api_Url == 'http://localhost:60006/api/') {
-    //   this.developLogin()
-    // }
+
+
+    this.baseUrl = this.config.apiUrl
+
+    if (this.baseUrl == 'http://localhost:60006/api/') {
+      this.developLogin()
+    }
 
     if (sessionStorage.getItem("ActiveDate") != null) {
       this.router.navigate(['/auth/login']);

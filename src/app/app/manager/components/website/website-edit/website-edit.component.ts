@@ -64,6 +64,7 @@ export class WebsiteEditComponent implements OnInit {
 
 
   KCServer_Lookup: Base_Lookup[] = [
+    { id: "KCServer_3.04.05.23", name: "KCServer_3.04.05.23" },
     { id: "KCServer_3.01.08.15", name: "KCServer_3.01.08.15" },
     { id: "KCServer_3.04.04.20", name: "KCServer_3.04.04.20" },
     { id: "KCServer_قدیمی", name: "KCServer_قدیمی" },

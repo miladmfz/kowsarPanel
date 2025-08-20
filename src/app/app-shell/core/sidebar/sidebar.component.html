@@ -63,10 +63,11 @@
             </button>
             <ul class="dropdown-menu w-100 text-center" aria-labelledby="statusDropdown">
               <li><a class="dropdown-item" (click)="setStatus('1')">آزاد</a></li>
-              <li><a class="dropdown-item" (click)="setStatus('2')">در حال کار</a></li>
+              <!-- <li><a class="dropdown-item" (click)="setStatus('2')">در حال کار</a></li> -->
               <li><a class="dropdown-item" (click)="setStatus('0')">عدم حضور</a></li>
               <li><a class="dropdown-item" (click)="setStatus('3')">مرخصی موقت</a></li>
               <li><a class="dropdown-item" (click)="setStatus('4')">مرخصی اداری</a></li>
+              <li><a class="dropdown-item" (click)="setStatus('5')">قطع برق و اینترنت</a></li>
 
             </ul>
           </div>
@@ -78,8 +79,11 @@
               کار</span>
             <span *ngIf="currentStatus === '0'" class="badge bg-danger fs-5 fw-bold px-3 py-2">عدم حضور</span>
             <span *ngIf="currentStatus === '3'" class="badge bg-info text-dark fs-5 fw-bold px-3 py-2">مرخصی موقت</span>
-            <span *ngIf="currentStatus === '3'" class="badge bg-secondary text-dark fs-5 fw-bold px-3 py-2">مرخصی
+            <span *ngIf="currentStatus === '4'" class="badge bg-secondary text-dark fs-5 fw-bold px-3 py-2">مرخصی
               اداری</span>
+            <span *ngIf="currentStatus === '5'" class="badge bg-secondary text-dark fs-5 fw-bold px-3 py-2">قطع برق و
+              اینترنت
+            </span>
 
           </div>
         </div>
