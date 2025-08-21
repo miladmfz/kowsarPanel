@@ -97,9 +97,10 @@ export class SupgoodListComponent extends AgGridBaseComponent
 
 
   GetGood() {
-    this.repo.GetGoodListSupport(this.Searchtarget).subscribe((data: any) => {
-      this.records = data.Goods;
-    });
+    this.repo.GetGoodListSupport(this.Searchtarget)
+      .subscribe((data: any) => {
+        this.records = data.Goods;
+      });
   }
 
 

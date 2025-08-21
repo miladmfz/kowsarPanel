@@ -107,9 +107,10 @@ export class ApplicationListComponent
   }
   getList() {
 
-    this.repo.GetAppActivation().subscribe((data) => {
-      this.records = data;
-    });
+    this.repo.GetAppActivation()
+      .subscribe((data) => {
+        this.records = data;
+      });
   }
 
   navigateToEdit(id) {
@@ -124,22 +125,23 @@ export class ApplicationListComponent
     const port = data.ServerURL.match(/:(\d+)\//)[1];
 
 
-    this.repo.CheckPort(ip, port).subscribe((e: any) => {
-      this.loading = false
+    this.repo.CheckPort(ip, port).subscribe
+      ((e: any) => {
+        this.loading = false
 
 
-      if (e.status == "open") {
+        if (e.status == "open") {
 
-        //this.notificationService.succeded();
-        Swal.fire({
-          title: data.PersianCompanyName + ' پورت فعال می باشد. ',
-          icon: 'success',
-        });
-      } else {
-        //this.notificationService.error('Port is closed');
-        Swal.fire(data.PersianCompanyName + ' اتصال پورت برقرار نیست ', 'error');
-      }
-    });
+          //this.notificationService.succeded();
+          Swal.fire({
+            title: data.PersianCompanyName + ' پورت فعال می باشد. ',
+            icon: 'success',
+          });
+        } else {
+          //this.notificationService.error('Port is closed');
+          Swal.fire(data.PersianCompanyName + ' اتصال پورت برقرار نیست ', 'error');
+        }
+      });
 
   }
 

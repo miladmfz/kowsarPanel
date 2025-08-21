@@ -79,18 +79,23 @@ export class GoodOrderListComponent
   getList() {
 
 
-    // this.repo.GetOrderGoodList("30", this.Searchtarget, "0").subscribe((data) => {
-    //   this.records = data;
+    // this.repo.GetOrderGoodList("30", this.Searchtarget, "0".pipe(
+    catchError(error => {
+      this.notificationService.error('مشکل در برقراری ارتباط', "خطا");
+      return of(null); // یا هر مقدار جایگزین
+    })
+      .subscribe((data) => {
+        //   this.records = data;
 
-    // });
+        // });
 
 
-  }
+      }
 
   navigateToEdit(id) {
-    this.router.navigate(['/kowsar/good-order-edit', id]);
+        this.router.navigate(['/kowsar/good-order-edit', id]);
+      }
   }
-}
 
 
 
@@ -172,7 +177,8 @@ implements OnInit {
       this.GroupCode_str = this.id
       this.LoadList();
     } else {
-      this.repo.kowsar_info("AppOrder_DefaultGroupCode").subscribe(e => {
+      this.repo.kowsar_info("AppOrder_DefaultGroupCode")
+    )(e => {
 
         this.GroupCode_str = e[0].DataValue
         this.LoadList();
@@ -191,7 +197,8 @@ implements OnInit {
 
   LoadList() {
 
-    this.repo.GetOrderGoodList("30", this.Searchtarget, this.GroupCode_str).subscribe(e => {
+    this.repo.GetOrderGoodList("30", this.Searchtarget, this.GroupCode_str)
+    )(e => {
       this.items = e;
        this.items);
 

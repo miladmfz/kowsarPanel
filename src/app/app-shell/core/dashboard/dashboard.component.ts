@@ -32,15 +32,16 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.repo.GetTodeyFromServer().subscribe((data: any) => {
+    this.repo.GetTodeyFromServer()
+      .subscribe((data: any) => {
 
-      this.ToDayDate = data[0].TodeyFromServer
-      if (this.ToDayDate != sessionStorage.getItem("ActiveDate")) {
-        sessionStorage.removeItem("ActiveDate")
-        location.reload();
-      }
+        this.ToDayDate = data[0].TodeyFromServer
+        if (this.ToDayDate != sessionStorage.getItem("ActiveDate")) {
+          sessionStorage.removeItem("ActiveDate")
+          location.reload();
+        }
 
-    });
+      });
 
     if (sessionStorage.getItem("PhAddress3") == '100') {
       this.BrokerRef = ''

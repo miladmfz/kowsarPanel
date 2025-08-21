@@ -25,7 +25,7 @@ export class NotificationService {
         );
     }
 
-    error(message: string, title = "خطا") {
+    error1(message: string, title = "خطا") {
         const message1 = MessagesDictionary[message] || "خطای ناشناخته رخ داده است.";
 
         $.NotificationApp.send(
@@ -36,7 +36,7 @@ export class NotificationService {
             "error"
         );
     }
-    error1(message: string, title = "خطا") {
+    error(message: string, title = "خطا") {
 
         $.NotificationApp.send(
             title,

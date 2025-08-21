@@ -181,11 +181,12 @@ export class OcrDetailComponent extends AgGridBaseComponent
       },
 
     ];
-    this.repo.GetTodeyFromServer("-1").subscribe(e => {
+    this.repo.GetTodeyFromServer("-1")
+      .subscribe(e => {
 
-      this.ToDayDate = e[0].TodeyFromServer
-      this.getList();
-    });
+        this.ToDayDate = e[0].TodeyFromServer
+        this.getList();
+      });
 
 
 
@@ -195,46 +196,52 @@ export class OcrDetailComponent extends AgGridBaseComponent
 
 
 
-    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6").subscribe((data) => {
+    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
+      .subscribe((data) => {
 
-      this.loading1 = false
-      //this.records_ocr_factors = data;
+        this.loading1 = false
+        //this.records_ocr_factors = data;
 
-    });
+      });
 
-    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6").subscribe((data) => {
+    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
+      .subscribe((data) => {
 
-      this.loading2 = false
-      //this.record_factor_headers = data;
+        this.loading2 = false
+        //this.record_factor_headers = data;
 
-    });
-    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6").subscribe((data) => {
+      });
+    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
+      .subscribe((data) => {
 
-      this.loading3 = false
-      //this.record_factor_rows = data;
+        this.loading3 = false
+        //this.record_factor_rows = data;
 
-    });
+      });
 
-    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6").subscribe((data) => {
+    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
+      .subscribe((data) => {
 
-      this.loading4 = false
-      this.radial_value_1 = 30;
-      this.radial_value_11 = 3000;
+        this.loading4 = false
+        this.radial_value_1 = 30;
+        this.radial_value_11 = 3000;
 
-    });
+      });
 
-    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6").subscribe((data) => {
+    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
+      .subscribe((data) => {
 
-      this.loading5 = false
-      this.radial_value_2 = 60;
-      this.radial_value_22 = 6000;
-    });
-    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6").subscribe((data) => {
+        this.loading5 = false
+        this.radial_value_2 = 60;
+        this.radial_value_22 = 6000;
+      });
+    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
+      .subscribe((data) => {
 
-      this.loading6 = false
-      this.radial_value_3 = 90;
-      this.radial_value_33 = 9000;
-    });
+        this.loading6 = false
+        this.radial_value_3 = 90;
+        this.radial_value_33 = 9000;
+      });
 
   }
 

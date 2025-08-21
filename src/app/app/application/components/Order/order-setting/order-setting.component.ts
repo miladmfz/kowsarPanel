@@ -8,7 +8,7 @@ import { NotificationService } from 'src/app/app-shell/framework-services/notifi
 import { CellActionOrderDbsetup } from './cell-action-order-dbsetup';
 import { CellActionOrderPrinter } from './cell-action-order-printer';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
-import { Subscription } from 'rxjs';
+import { catchError, of, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-order-setting',
@@ -190,14 +190,16 @@ export class OrderSettingComponent extends AgGridBaseComponent
 
 
   Get_Base_data() {
-    this.repo.Web_GetDbsetupObject("OrderKowsar").subscribe(e => {
-      this.items = e;
+    this.repo.Web_GetDbsetupObject("OrderKowsar")
+      .subscribe(e => {
+        this.items = e;
 
-    });
-    this.repo.GetAppPrinter(this.Apptype).subscribe(e => {
-      this.Printers = e;
+      });
+    this.repo.GetAppPrinter(this.Apptype)
+      .subscribe(e => {
+        this.Printers = e;
 
-    });
+      });
     this.GetBasketColumnList();
 
   }
@@ -218,10 +220,11 @@ export class OrderSettingComponent extends AgGridBaseComponent
 
 
   UpdateDbSetup() {
-    this.repo.UpdateDbSetup(this.selected_value, this.selected_Key).subscribe(e => {
-      this.orderdbsetup_Modal_Response_close()
-      this.sharedService.triggerActionAll('refresh');
-    });
+    this.repo.UpdateDbSetup(this.selected_value, this.selected_Key)
+      .subscribe(e => {
+        this.orderdbsetup_Modal_Response_close()
+        this.sharedService.triggerActionAll('refresh');
+      });
 
   }
 
@@ -254,10 +257,14 @@ export class OrderSettingComponent extends AgGridBaseComponent
 
     const command = this.EditForm_printer.value
     if (this.EditForm_printer.value.PrinterName !== "") {
-      this.repo.UpdatePrinter(command).subscribe(e => {
-        this.sharedService.triggerActionAll('refresh');
-        this.printerModal_Modal_Response_close()
-      });
+      this.repo.UpdatePrinter(command).pipe(
+        catchError(error => {
+          this.notificationService.error('مشکل در برقراری ارتباط', "خطا");
+          return of(null); // یا هر مقدار جایگزین
+        })).subscribe(e => {
+          this.sharedService.triggerActionAll('refresh');
+          this.printerModal_Modal_Response_close()
+        });
     }
   }
 
@@ -269,9 +276,10 @@ export class OrderSettingComponent extends AgGridBaseComponent
 
   CreateAppBasketColumn() {
 
-    this.repo.CreateBasketColumn(this.Apptype).subscribe(e => {
-      this.AppBasketColumn_Status = "AppBasketColumn created";
-    });
+    this.repo.CreateBasketColumn(this.Apptype)
+      .subscribe(e => {
+        this.AppBasketColumn_Status = "AppBasketColumn created";
+      });
 
   }
 
@@ -279,11 +287,12 @@ export class OrderSettingComponent extends AgGridBaseComponent
 
   GetBasketColumnList() {
 
-    this.repo.GetBasketColumnList(this.Apptype).subscribe(e => {
-      this.BasketColumns = e;
+    this.repo.GetBasketColumnList(this.Apptype)
+      .subscribe(e => {
+        this.BasketColumns = e;
 
 
-    });
+      });
 
   }
 

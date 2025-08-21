@@ -28,28 +28,42 @@
 
               <!-- Voice -->
               <!-- File preview button -->
-              <ng-container [ngSwitch]="chat.ConversationText">
+              <ng-container [ngSwitch]="chat.FileType?.toLowerCase()">
 
                 <!-- Voice -->
-                <button *ngSwitchCase="'Voice'"
+                <button *ngSwitchCase="'audio/mpeg'"
                   class="btn btn-outline-info rounded-pill d-flex align-items-center gap-2"
                   (click)="GetFileFromAttach(index)">
                   <i class="bi bi-mic"></i>
-
                   <span>نمایش صدا</span>
                 </button>
 
                 <!-- Image -->
-                <button *ngSwitchCase="'Image'"
+                <button *ngSwitchCase="'image/jpeg'"
                   class="btn btn-outline-primary rounded-pill d-flex align-items-center gap-2"
                   (click)="GetFileFromAttach(index)">
                   <i class="bi bi-image"></i>
                   <span>نمایش تصویر</span>
                 </button>
 
+                <!-- Video -->
+                <button *ngSwitchCase="'video/mp4'"
+                  class="btn btn-outline-warning rounded-pill d-flex align-items-center gap-2"
+                  (click)="GetFileFromAttach(index)">
+                  <i class="bi bi-camera-video"></i>
+                  <span>نمایش ویدئو</span>
+                </button>
+
+                <!-- PDF -->
+                <button *ngSwitchCase="'application/pdf'"
+                  class="btn btn-outline-danger rounded-pill d-flex align-items-center gap-2"
+                  (click)="GetFileFromAttach(index)">
+                  <i class="bi bi-file-earmark-pdf"></i>
+                  <span>نمایش PDF</span>
+                </button>
+
                 <!-- Other File -->
-                <button *ngSwitchCase="'File'"
-                  class="btn btn-outline-secondary rounded-pill d-flex align-items-center gap-2"
+                <button *ngSwitchDefault class="btn btn-outline-secondary rounded-pill d-flex align-items-center gap-2"
                   (click)="GetFileFromAttach(index)">
                   <i class="bi bi-paperclip"></i>
                   <span>نمایش فایل</span>
@@ -58,10 +72,7 @@
               </ng-container>
 
               <!-- Text -->
-              <ng-container
-                *ngIf="chat.ConversationText !== 'Voice' && chat.ConversationText !== 'File' && chat.ConversationText !== 'Image'">
-                <p>{{ chat.ConversationText }}</p>
-              </ng-container>
+              <p>{{ chat.ConversationText }}</p>
             </div>
           </div>
 
@@ -81,8 +92,10 @@
       <form novalidate name="chat-form" id="chat-form">
         <div class="row">
           <!-- Text Input -->
+
           <div class="col mb-2 mb-sm-0">
-            <input [(ngModel)]="newMessage" name="newMessage" class="border-2 form-control" placeholder="متن پیام..." />
+            <input [(ngModel)]="newMessage" name="newMessage" class="border-2 form-control" placeholder="متن پیام..."
+              (keyup.enter)="sendMessage()" />
           </div>
 
           <!-- Buttons -->
@@ -95,7 +108,7 @@
               <input type="file" #fileInput style="display:none;" (change)="onFileSelected($event)" />
 
               <!-- Voice Recording -->
-              <button type="button" class="btn" [ngClass]="isRecording ? 'btn-warning pulse-btn' : 'btn-danger'"
+              <!-- <button type="button" class="btn" [ngClass]="isRecording ? 'btn-warning pulse-btn' : 'btn-danger'"
                 [disabled]="isProcessing" (mousedown)="startRecording()" (mouseup)="stopRecording()"
                 (mouseleave)="stopRecording()" (touchstart)="startRecording()" (touchend)="stopRecording()">
 
@@ -103,7 +116,7 @@
                 <ng-container *ngIf="!isRecording && isProcessing">⏳ در حال پردازش...</ng-container>
                 <ng-container *ngIf="!isRecording && !isProcessing && recordReady">✅ ویس آماده شد</ng-container>
                 <ng-container *ngIf="!isRecording && !isProcessing && !recordReady">🎤</ng-container>
-              </button>
+              </button> -->
 
               <!-- Send Message -->
               <button type="button" class="btn btn-success chat-send w-100" (click)="sendMessage()">
@@ -227,7 +240,7 @@
         <button type="button" class="btn-close" (click)="closeModal('#fileModal')"></button>
       </div>
       <div class="modal-body text-center">
-        <a [href]="data_resive_FileUrl" [download]="'file'">دانلود فایل</a>
+        <a [href]="data_resive_FileUrl" [download]="data_resive_FileName">دانلود فایل</a>
       </div>
     </div>
   </div>

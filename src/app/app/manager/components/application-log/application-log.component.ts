@@ -79,10 +79,11 @@ export class ApplicationLogComponent extends AgGridBaseComponent
   }
   getList() {
 
-    this.repo.GetWebLog().subscribe((data) => {
-      this.records = data;
+    this.repo.GetWebLog()
+      .subscribe((data) => {
+        this.records = data;
 
-    });
+      });
 
   }
 

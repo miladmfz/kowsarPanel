@@ -96,10 +96,11 @@ export class BrokerListComponent extends AgGridBaseComponent
 
 
 
-    this.repo.GetBrokers().subscribe(e => {
-      this.records = e;
+    this.repo.GetBrokers()
+      .subscribe(e => {
+        this.records = e;
 
-    });
+      });
   }
 
 

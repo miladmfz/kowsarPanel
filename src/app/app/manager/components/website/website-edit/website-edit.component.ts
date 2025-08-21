@@ -4,6 +4,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-website-edit',
@@ -97,33 +98,34 @@ export class WebsiteEditComponent implements OnInit {
   getDetails() {
 
 
-    this.repo.GetWebSiteActivationById(this.WebSiteActivationCode).subscribe((data: any) => {
+    this.repo.GetWebSiteActivationById(this.WebSiteActivationCode)
+      .subscribe((data: any) => {
 
-      this.EditForm_WebSite.patchValue({
-        WebSiteActivationCode: data[0].WebSiteActivationCode,
-        CustomerRef: data[0].CustomerRef,
-        CompanyName: data[0].CompanyName,
-        WebEmploy: data[0].WebEmploy,
-        Phone: data[0].Phone,
-        Explain: data[0].Explain,
-        Features: data[0].Features,
+        this.EditForm_WebSite.patchValue({
+          WebSiteActivationCode: data[0].WebSiteActivationCode,
+          CustomerRef: data[0].CustomerRef,
+          CompanyName: data[0].CompanyName,
+          WebEmploy: data[0].WebEmploy,
+          Phone: data[0].Phone,
+          Explain: data[0].Explain,
+          Features: data[0].Features,
 
-        WebState: data[0].WebState,
-        Domain1: data[0].Domain1,
-        Domain2: data[0].Domain2,
-        Domain3: data[0].Domain3,
-        Domain4: data[0].Domain4,
-        KCServerVersion: data[0].KCServerVersion,
-        SiteType: data[0].SiteType,
-        PaymentGateway: data[0].PaymentGateway,
-        TorobApi: data[0].TorobApi,
-        EmallsApi: data[0].EmallsApi,
-        BasalamApi: data[0].BasalamApi,
-        SnapApi: data[0].SnapApi,
-        MobileTheme: data[0].MobileTheme,
-        SearchTarget: data[0].SearchTarget,
+          WebState: data[0].WebState,
+          Domain1: data[0].Domain1,
+          Domain2: data[0].Domain2,
+          Domain3: data[0].Domain3,
+          Domain4: data[0].Domain4,
+          KCServerVersion: data[0].KCServerVersion,
+          SiteType: data[0].SiteType,
+          PaymentGateway: data[0].PaymentGateway,
+          TorobApi: data[0].TorobApi,
+          EmallsApi: data[0].EmallsApi,
+          BasalamApi: data[0].BasalamApi,
+          SnapApi: data[0].SnapApi,
+          MobileTheme: data[0].MobileTheme,
+          SearchTarget: data[0].SearchTarget,
+        });
       });
-    });
 
 
   }
@@ -146,7 +148,12 @@ export class WebsiteEditComponent implements OnInit {
 
     if (parseInt(this.WebSiteActivationCode, 0) > 0) {
 
-      this.repo.WebSiteUpdate(this.EditForm_WebSite.value).subscribe((data) => {
+      this.repo.WebSiteUpdate(this.EditForm_WebSite.value).pipe(
+        catchError(error => {
+          this.notificationService.error('مشکل در برقراری ارتباط', "خطا");
+          return of(null); // یا هر مقدار جایگزین
+        })
+      ).subscribe((data) => {
 
         if (data[0].WebSiteActivationCode.length > 0) {
 
@@ -161,7 +168,12 @@ export class WebsiteEditComponent implements OnInit {
     } else {
 
 
-      this.repo.WebSiteInsert(this.EditForm_WebSite.value).subscribe((data) => {
+      this.repo.WebSiteInsert(this.EditForm_WebSite.value).pipe(
+        catchError(error => {
+          this.notificationService.error('مشکل در برقراری ارتباط', "خطا");
+          return of(null); // یا هر مقدار جایگزین
+        })
+      ).subscribe((data) => {
 
         if (parseInt(data[0].WebSiteActivationCode, 0) > 0) {
           this.getDetails();

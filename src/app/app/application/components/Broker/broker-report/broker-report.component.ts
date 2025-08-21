@@ -264,29 +264,6 @@ export class BrokerReportComponent extends AgGridBaseComponent
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {

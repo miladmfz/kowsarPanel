@@ -9,7 +9,7 @@ import { CellActionAttendancePanel } from './cell-action-attendance-panel';
 import { CellDateAttendancePanel } from './cell-date-label-attendance-panel';
 import { CellStatusAttendancePanel } from './cell-status-label-attendance-panel';
 import { CellNameAttendancePanel } from './cell-name-label-attendance-panel';
-import { Subscription } from 'rxjs';
+import { catchError, of, Subscription } from 'rxjs';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 import { AgGridAngular } from 'ag-grid-angular';
 
@@ -156,7 +156,12 @@ export class AttendancePanelComponent
 
 
 
-    this.repo.GetTodeyFromServer().subscribe((data: any) => {
+    this.repo.GetTodeyFromServer().pipe(
+      catchError(error => {
+        this.notificationService.error('مشکل در برقراری ارتباط', "خطا");
+        return of(null); // یا هر مقدار جایگزین
+      })
+    ).subscribe((data: any) => {
 
       this.ToDayDate = data[0].TodeyFromServer
       if (this.ToDayDate != sessionStorage.getItem("ActiveDate")) {
@@ -209,7 +214,13 @@ export class AttendancePanelComponent
 
   getAttendance_data() {
 
-    this.repo.AttendanceDashboard().subscribe((data: any) => {
+    this.repo.AttendanceDashboard().pipe(
+      catchError(error => {
+        console.log("sssssssssssssssss", error)
+        this.notificationService.error('مشکل در برقراری ارتباط', "خطا");
+        return of(null); // یا هر مقدار جایگزین
+      })
+    ).subscribe((data: any) => {
       this.loading_attendance = false
 
       this.records = data.Attendances;

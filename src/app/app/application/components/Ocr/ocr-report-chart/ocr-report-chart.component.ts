@@ -80,117 +80,122 @@ export class OcrReportChartComponent implements OnInit {
     this.loading6 = true
     this.loading7 = true
 
-    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "1").subscribe((data) => {
-      this.loading1 = false
-      if (data.length > 0) {
+    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "1")
+      .subscribe((data) => {
+        this.loading1 = false
+        if (data.length > 0) {
 
-        this.data_state1 = data
-        this.columnChartData_state1 = [
-          {
-            name: 'خواننده',
-            data: data.map(item => parseInt(item.ReadCount, 10))
-          },
-          {
-            name: 'کنترل کننده',
-            data: data.map(item => parseInt(item.ControlCount, 10))
-          },
-          {
-            name: 'بسته بند',
-            data: data.map(item => parseInt(item.PackCount, 10))
-          }
-        ];
+          this.data_state1 = data
+          this.columnChartData_state1 = [
+            {
+              name: 'خواننده',
+              data: data.map(item => parseInt(item.ReadCount, 10))
+            },
+            {
+              name: 'کنترل کننده',
+              data: data.map(item => parseInt(item.ControlCount, 10))
+            },
+            {
+              name: 'بسته بند',
+              data: data.map(item => parseInt(item.PackCount, 10))
+            }
+          ];
 
-        this.columnChartCategories_state1 = data.map(item => item.name);
-      } else {
-        this.data_state1 = []
-      }
+          this.columnChartCategories_state1 = data.map(item => item.name);
+        } else {
+          this.data_state1 = []
+        }
 
-    });
-
-
-    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "2").subscribe((data) => {
-      this.loading2 = false
-      if (data.length > 0) {
-
-        this.data_state2 = data
-
-        this.series_state2 = data.map(item => parseInt(item.FactorCount, 10));
-        console.log("this.series_state2")
-
-        console.log(this.series_state2)
-        this.labels_state2 = data.map(item => item.AppFactorState || 'نامشخص');
-
-      } else {
-        this.data_state2 = []
-      }
-    });
+      });
 
 
-    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "3").subscribe((data) => {
-      this.loading3 = false
-      if (data.length > 0) {
+    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "2")
+      .subscribe((data) => {
+        this.loading2 = false
+        if (data.length > 0) {
 
-        this.data_state3 = data
+          this.data_state2 = data
 
-        const factorKeys = Object.keys(data[0]).filter(key => key !== 'FactorDate' && key !== 'RowsCount');
+          this.series_state2 = data.map(item => parseInt(item.FactorCount, 10));
+          console.log("this.series_state2")
 
-        this.series_state3 = factorKeys.map(key => (parseInt(data[0][key], 10)));
-        console.log("this.series_state3")
+          console.log(this.series_state2)
+          this.labels_state2 = data.map(item => item.AppFactorState || 'نامشخص');
 
-        console.log(this.series_state3)
-        this.labels_state3 = factorKeys;
-
-
-
-      } else {
-        this.data_state3 = []
-      }
-    });
+        } else {
+          this.data_state2 = []
+        }
+      });
 
 
-    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "4").subscribe((data) => {
-      this.loading4 = false
-      if (data.length > 0) {
+    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "3")
+      .subscribe((data) => {
+        this.loading3 = false
+        if (data.length > 0) {
 
-        this.data_state4 = data
+          this.data_state3 = data
 
+          const factorKeys = Object.keys(data[0]).filter(key => key !== 'FactorDate' && key !== 'RowsCount');
 
-        const factorKeys = Object.keys(data[0]).filter(key => key !== 'FactorDate' && key !== 'SumAmount');
-        this.series_state4 = factorKeys.map(key => (parseInt(data[0][key], 10)));
-        this.labels_state4 = factorKeys;
+          this.series_state3 = factorKeys.map(key => (parseInt(data[0][key], 10)));
+          console.log("this.series_state3")
 
-
-      } else {
-        this.data_state4 = []
-      }
-    });
-
-
-    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "5").subscribe((data) => {
-      this.loading5 = false
-      if (data.length > 0) {
-
-        this.data_state5 = data
+          console.log(this.series_state3)
+          this.labels_state3 = factorKeys;
 
 
 
-        this.columnChartData_state5 = [
-          {
-            name: 'کسری',
-            data: data.map(item => parseInt(item.ShortageAmount, 10))
-          },
-
-        ];
-
-        this.columnChartCategories_state5 = data.map(item => item.GoodExplain4);
+        } else {
+          this.data_state3 = []
+        }
+      });
 
 
+    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "4")
+      .subscribe((data) => {
+        this.loading4 = false
+        if (data.length > 0) {
+
+          this.data_state4 = data
 
 
-      } else {
-        this.data_state5 = []
-      }
-    });
+          const factorKeys = Object.keys(data[0]).filter(key => key !== 'FactorDate' && key !== 'SumAmount');
+          this.series_state4 = factorKeys.map(key => (parseInt(data[0][key], 10)));
+          this.labels_state4 = factorKeys;
+
+
+        } else {
+          this.data_state4 = []
+        }
+      });
+
+
+    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "5")
+      .subscribe((data) => {
+        this.loading5 = false
+        if (data.length > 0) {
+
+          this.data_state5 = data
+
+
+
+          this.columnChartData_state5 = [
+            {
+              name: 'کسری',
+              data: data.map(item => parseInt(item.ShortageAmount, 10))
+            },
+
+          ];
+
+          this.columnChartCategories_state5 = data.map(item => item.GoodExplain4);
+
+
+
+
+        } else {
+          this.data_state5 = []
+        }
+      });
 
 
 
@@ -199,12 +204,13 @@ export class OcrReportChartComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.repo.GetTodeyFromServer("0").subscribe(e => {
+    this.repo.GetTodeyFromServer("0")
+      .subscribe(e => {
 
-      //this.ToDayDate = e[0].TodeyFromServer
-      this.ToDayDate = '1402/07/01'
-      this.LoadList();
-    });
+        //this.ToDayDate = e[0].TodeyFromServer
+        this.ToDayDate = '1402/07/01'
+        this.LoadList();
+      });
 
   }
 

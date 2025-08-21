@@ -108,14 +108,15 @@ export class GoodsgrpListComponent extends AgGridBaseComponent
   LoadData_GetGoodsGrp() {
 
     // Initial data fetch
-    this.repo.GetGoodsGrp().subscribe((data: any) => {
-      this.base_Group_list = data.GoodsGrps
+    this.repo.GetGoodsGrp()
+      .subscribe((data: any) => {
+        this.base_Group_list = data.GoodsGrps
 
-      const treeStructure = this.buildTree_group(data.GoodsGrps);
+        const treeStructure = this.buildTree_group(data.GoodsGrps);
 
 
 
-    });
+      });
 
   }
   buildTree_group(groups: Group[]): Group[] {
@@ -264,7 +265,8 @@ ngOnInit() {
 
 
 
-  this.repo.kowsar_info("AppOrder_DefaultGroupCode").subscribe(e => {
+  this.repo.kowsar_info("AppOrder_DefaultGroupCode")
+    )(e => {
     this.GroupCode_str = e[0].DataValue
 
     this.LoadList();
@@ -283,7 +285,8 @@ onInputChange() {
 
 LoadList() {
 
-  this.repo.GetOrdergroupList(this.GroupCode_str).subscribe(e => {
+  this.repo.GetOrdergroupList(this.GroupCode_str)
+    )(e => {
     this.items = e;
      this.items);
 

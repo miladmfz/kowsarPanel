@@ -136,10 +136,11 @@ export class OcrListComponent extends AgGridBaseComponent
   }
   getList() {
 
-    this.repo.OcrFactorList(this.EditForm_ocr.value.Searchtarget, this.EditForm_ocr.value.SourceFlag + "").subscribe((data) => {
-      this.records = data;
+    this.repo.OcrFactorList(this.EditForm_ocr.value.Searchtarget, this.EditForm_ocr.value.SourceFlag + "")
+      .subscribe((data) => {
+        this.records = data;
 
-    });
+      });
 
   }
 

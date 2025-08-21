@@ -71,18 +71,20 @@ export class OrderCustomerComponent extends AgGridBaseComponent
 
   GetCustomer() {
 
-    this.repo.GetCustomerMandeh().subscribe(e => {
-      this.records_Customer = e;
-    });
+    this.repo.GetCustomerMandeh()
+      .subscribe(e => {
+        this.records_Customer = e;
+      });
 
   }
 
   GetDetailCustomer(data) {
 
-    this.repo.GetCustomerlastGood(data.CustomerCode).subscribe(e => {
-      this.records_Customer_detail = e;
-      this.ordercustomer_Modal_Response_show()
-    });
+    this.repo.GetCustomerlastGood(data.CustomerCode)
+      .subscribe(e => {
+        this.records_Customer_detail = e;
+        this.ordercustomer_Modal_Response_show()
+      });
 
   }
 

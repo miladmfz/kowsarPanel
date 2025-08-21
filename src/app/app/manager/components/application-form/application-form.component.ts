@@ -74,25 +74,26 @@ export class ApplicationFormComponent implements OnInit {
   getDetails() {
 
 
-    this.repo.GetAppActivationByCode(this.ActivationCode).subscribe((data: any) => {
+    this.repo.GetAppActivationByCode(this.ActivationCode)
+      .subscribe((data: any) => {
 
-      this.EditForm.patchValue({
-        ActivationCode: data[0].ActivationCode,
-        EnglishCompanyName: data[0].EnglishCompanyName,
-        PersianCompanyName: data[0].PersianCompanyName,
-        ServerURL: data[0].ServerURL,
-        SQLiteURL: data[0].SQLiteURL,
-        UsedDevice: data[0].UsedDevice,
-        MaxDevice: data[0].MaxDevice,
-        SecendServerURL: data[0].SecendServerURL,
-        DbName: data[0].DbName,
-        DbImageName: data[0].DbImageName,
-        AppType: data[0].AppType,
-        ServerIp: data[0].ServerIp,
-        ServerPort: data[0].ServerPort,
-        ServerPathApi: data[0].ServerPathApi,
+        this.EditForm.patchValue({
+          ActivationCode: data[0].ActivationCode,
+          EnglishCompanyName: data[0].EnglishCompanyName,
+          PersianCompanyName: data[0].PersianCompanyName,
+          ServerURL: data[0].ServerURL,
+          SQLiteURL: data[0].SQLiteURL,
+          UsedDevice: data[0].UsedDevice,
+          MaxDevice: data[0].MaxDevice,
+          SecendServerURL: data[0].SecendServerURL,
+          DbName: data[0].DbName,
+          DbImageName: data[0].DbImageName,
+          AppType: data[0].AppType,
+          ServerIp: data[0].ServerIp,
+          ServerPort: data[0].ServerPort,
+          ServerPathApi: data[0].ServerPathApi,
+        });
       });
-    });
 
 
   }
@@ -108,16 +109,17 @@ export class ApplicationFormComponent implements OnInit {
   submit(action) {
 
 
-    this.repo.CrudAppActivation(this.EditForm.value).subscribe((data: any) => {
+    this.repo.CrudAppActivation(this.EditForm.value)
+      .subscribe((data: any) => {
 
-      if (data[0].ActivationCode.length > 0) {
-        this.ActivationCode = data[0].ActivationCode;
-        this.getDetails();
+        if (data[0].ActivationCode.length > 0) {
+          this.ActivationCode = data[0].ActivationCode;
+          this.getDetails();
 
-        this.notificationService.succeded()
-      }
+          this.notificationService.succeded()
+        }
 
-    });
+      });
   }
 
 

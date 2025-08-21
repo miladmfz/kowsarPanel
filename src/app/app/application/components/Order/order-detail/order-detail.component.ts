@@ -33,13 +33,14 @@ export class OrderDetailComponent implements OnInit {
 
   ngOnInit() {
 
-    this.repo.GetTodeyFromServer("-1").subscribe(e => {
+    this.repo.GetTodeyFromServer("-1")
+      .subscribe(e => {
 
-      this.ToDayDate = e[0].TodeyFromServer
-      this.Getemptymiz()
-      this.GetAmountItem()
-      this.GetOrderPanel()
-    });
+        this.ToDayDate = e[0].TodeyFromServer
+        this.Getemptymiz()
+        this.GetAmountItem()
+        this.GetOrderPanel()
+      });
 
 
   }
@@ -48,28 +49,32 @@ export class OrderDetailComponent implements OnInit {
 
   Getemptymiz() {
 
-    this.repo.OrderMizList("3", "روف").subscribe(e => {
-      this.items1 = e;
+    this.repo.OrderMizList("3", "روف")
+      .subscribe(e => {
+        this.items1 = e;
 
-    });
-
-
-    this.repo.OrderMizList("3", "حیاط").subscribe(e => {
-      this.items2 = e;
-
-    });
+      });
 
 
-    this.repo.OrderMizList("3", "همایش").subscribe(e => {
-      this.items3 = e;
+    this.repo.OrderMizList("3", "حیاط")
+      .subscribe(e => {
+        this.items2 = e;
 
-    });
+      });
 
 
-    this.repo.OrderMizList("3", "تراس").subscribe(e => {
-      this.items4 = e;
+    this.repo.OrderMizList("3", "همایش")
+      .subscribe(e => {
+        this.items3 = e;
 
-    });
+      });
+
+
+    this.repo.OrderMizList("3", "تراس")
+      .subscribe(e => {
+        this.items4 = e;
+
+      });
 
 
   }
@@ -79,28 +84,32 @@ export class OrderDetailComponent implements OnInit {
 
   GetAmountItem() {
 
-    this.repo.GetAmountItem(this.ToDayDate, "1").subscribe(e => {
-      this.itemsAmount1 = e;
+    this.repo.GetAmountItem(this.ToDayDate, "1")
+      .subscribe(e => {
+        this.itemsAmount1 = e;
 
-    });
-
-
-    this.repo.GetAmountItem(this.ToDayDate, "2").subscribe(e => {
-      this.itemsAmount2 = e;
-
-    });
+      });
 
 
-    this.repo.GetAmountItem(this.ToDayDate, "3").subscribe(e => {
-      this.itemsAmount3 = e;
+    this.repo.GetAmountItem(this.ToDayDate, "2")
+      .subscribe(e => {
+        this.itemsAmount2 = e;
 
-    });
+      });
 
 
-    this.repo.GetAmountItem(this.ToDayDate, "4").subscribe(e => {
-      this.itemsAmount4 = e;
+    this.repo.GetAmountItem(this.ToDayDate, "3")
+      .subscribe(e => {
+        this.itemsAmount3 = e;
 
-    });
+      });
+
+
+    this.repo.GetAmountItem(this.ToDayDate, "4")
+      .subscribe(e => {
+        this.itemsAmount4 = e;
+
+      });
 
 
   }
@@ -108,16 +117,18 @@ export class OrderDetailComponent implements OnInit {
 
   GetOrderPanel() {
 
-    this.repo.GetOrderPanel(this.ToDayDate, this.ToDayDate, "1").subscribe(e => {
-      this.ItemsMax = e;
+    this.repo.GetOrderPanel(this.ToDayDate, this.ToDayDate, "1")
+      .subscribe(e => {
+        this.ItemsMax = e;
 
-    });
+      });
 
 
-    this.repo.GetOrderPanel(this.ToDayDate, this.ToDayDate, "2").subscribe(e => {
-      this.ItemsMin = e;
+    this.repo.GetOrderPanel(this.ToDayDate, this.ToDayDate, "2")
+      .subscribe(e => {
+        this.ItemsMin = e;
 
-    });
+      });
 
 
 

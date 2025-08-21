@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { AuthKowsarWebApiService } from '../services/AuthKowsarWebApi.service';
 import { Router } from '@angular/router';
 import { AppConfigService } from 'src/app/app-config.service';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,11 @@ import { AppConfigService } from 'src/app/app-config.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private repo: AuthKowsarWebApiService, private readonly router: Router, private fb: FormBuilder, private config: AppConfigService
+  constructor(
+    private repo: AuthKowsarWebApiService,
+    private readonly router: Router,
+    private fb: FormBuilder,
+    private config: AppConfigService,
   ) {
     this.LoginForm = this.fb.group({
       UName: ['', Validators.required],
@@ -73,41 +78,42 @@ export class LoginComponent implements OnInit {
     const command = this.LoginForm.value;
 
 
-    this.repo.IsUser(command).subscribe((data: any) => {
-      this.isLoading = false
-      if (data.users[0].ErrCode != "0") {
-        alert(data.users[0].ErrDesc);
-        this.LoginForm.reset();
-      } else {
-        sessionStorage.setItem("Active", data.users[0].Active)
-        sessionStorage.setItem("ActiveDate", data.users[0].ActiveDate)
-        sessionStorage.setItem("CentralRef", data.users[0].CentralRef)
-        sessionStorage.setItem("JobPersonRef", data.users[0].JobPersonRef)
-        sessionStorage.setItem("PersonInfoRef", data.users[0].PersonInfoRef)
-        sessionStorage.setItem("PhFullName", data.users[0].PhFullName)
-        sessionStorage.setItem("UserName", data.users[0].UserName)
-        sessionStorage.setItem("CustName_Small", data.users[0].CustName_Small)
-        sessionStorage.setItem("Explain", data.users[0].Explain)
-
-        sessionStorage.setItem("PhAddress3", data.users[0].PhAddress3)
-        sessionStorage.setItem("BrokerCode", data.users[0].BrokerCode)
-        sessionStorage.setItem("BrokerName", data.users[0].BrokerName)
-
-        sessionStorage.setItem("AlarmActive_Row", data.users[0].AlarmActive_Row)
-        sessionStorage.setItem("AlarmActtive_Conversation", data.users[0].AlarmActtive_Conversation)
-
-
-
-        if (String(data.users[0].JobPersonRef).length > 0) {
-
-          this.setAttendance()
+    this.repo.IsUser(command)
+      .subscribe((data: any) => {
+        this.isLoading = false
+        if (data.users[0].ErrCode != "0") {
+          alert(data.users[0].ErrDesc);
+          this.LoginForm.reset();
         } else {
-          this.router.navigate(['/dashboard']);
+          sessionStorage.setItem("Active", data.users[0].Active)
+          sessionStorage.setItem("ActiveDate", data.users[0].ActiveDate)
+          sessionStorage.setItem("CentralRef", data.users[0].CentralRef)
+          sessionStorage.setItem("JobPersonRef", data.users[0].JobPersonRef)
+          sessionStorage.setItem("PersonInfoRef", data.users[0].PersonInfoRef)
+          sessionStorage.setItem("PhFullName", data.users[0].PhFullName)
+          sessionStorage.setItem("UserName", data.users[0].UserName)
+          sessionStorage.setItem("CustName_Small", data.users[0].CustName_Small)
+          sessionStorage.setItem("Explain", data.users[0].Explain)
+
+          sessionStorage.setItem("PhAddress3", data.users[0].PhAddress3)
+          sessionStorage.setItem("BrokerCode", data.users[0].BrokerCode)
+          sessionStorage.setItem("BrokerName", data.users[0].BrokerName)
+
+          sessionStorage.setItem("AlarmActive_Row", data.users[0].AlarmActive_Row)
+          sessionStorage.setItem("AlarmActtive_Conversation", data.users[0].AlarmActtive_Conversation)
+
+
+
+          if (String(data.users[0].JobPersonRef).length > 0) {
+
+            this.setAttendance()
+          } else {
+            this.router.navigate(['/dashboard']);
+
+          }
 
         }
-
-      }
-    });
+      });
   }
 
 
@@ -125,9 +131,10 @@ export class LoginComponent implements OnInit {
       Status: "1" //hozor
     });
 
-    this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe((data: any) => {
-      this.router.navigate(['/dashboard']);
-    });
+    this.repo.ManualAttendance(this.EditForm_Attendance.value)
+      .subscribe((data: any) => {
+        this.router.navigate(['/dashboard']);
+      });
 
   }
 

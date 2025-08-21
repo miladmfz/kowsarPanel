@@ -22,9 +22,10 @@ export class GoodTestComponent implements OnInit {
   }
 
   fetchBarcodes(): void {
-    this.repo.GetBarcodeList("100").subscribe((data: any) => {
-      this.barcodeList = data.Barcodes;  // Store the list of barcode objects
-    });
+    this.repo.GetBarcodeList("100")
+      .subscribe((data: any) => {
+        this.barcodeList = data.Barcodes;  // Store the list of barcode objects
+      });
   }
 
   addBarcode(): void {

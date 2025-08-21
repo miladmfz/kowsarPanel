@@ -25,9 +25,10 @@ export class BrokerColumnComponent implements OnInit {
   }
 
   GetBasketColumnList() {
-    this.repo.GetBasketColumnList(this.Apptype).subscribe(e => {
-      this.BasketColumns = e;
-    });
+    this.repo.GetBasketColumnList(this.Apptype)
+      .subscribe(e => {
+        this.BasketColumns = e;
+      });
   }
 
 }

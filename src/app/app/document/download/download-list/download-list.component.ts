@@ -134,11 +134,12 @@ export class DownloadListComponent extends AgGridBaseComponent
   }
   getList() {
 
-    this.repo.KowsarAttachFile(this.Searchtarget).subscribe((data) => {
+    this.repo.KowsarAttachFile(this.Searchtarget)
+      .subscribe((data) => {
 
-      this.records = data;
+        this.records = data;
 
-    });
+      });
 
 
 
@@ -154,16 +155,17 @@ export class DownloadListComponent extends AgGridBaseComponent
 
   btnToDownload(AttachedFileCode): void {
 
-    this.repo.downloadFile(AttachedFileCode, "Web_download", "0").subscribe(blob => {
-      const downloadLink = document.createElement('a');
-      downloadLink.href = window.URL.createObjectURL(blob);
-      downloadLink.download = 'KowsarDownload.zip';
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-    }, error => {
-      console.error('Error downloading file: ', error);
-    });
+    this.repo.downloadFile(AttachedFileCode, "Web_download", "0")
+      .subscribe(blob => {
+        const downloadLink = document.createElement('a');
+        downloadLink.href = window.URL.createObjectURL(blob);
+        downloadLink.download = 'KowsarDownload.zip';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+      }, error => {
+        console.error('Error downloading file: ', error);
+      });
   }
 
 

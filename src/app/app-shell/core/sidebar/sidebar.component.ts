@@ -100,41 +100,43 @@ export class SidebarComponent implements OnInit {
 
   fetchImageData() {
 
-    this.repo.GetImageFromServer(this.CentralRef).subscribe((data: any) => {
+    this.repo.GetImageFromServer(this.CentralRef)
+      .subscribe((data: any) => {
 
-      this.Imageitem = `data:${Image};base64,${data.Text}`;
+        this.Imageitem = `data:${Image};base64,${data.Text}`;
 
-    });
-
-
-
+      });
 
 
 
 
 
-    this.repo.GetApplicationForMenu().subscribe((data: any) => {
 
-      if (data.applications != null) {
-        this.array_applications = data.applications;
-        for (var single_applications of this.array_applications) {
 
-          if (single_applications.KeyValue === 'AppOrder_ActivationCode') {
-            this.apporder = single_applications.DataValue
+
+    this.repo.GetApplicationForMenu()
+      .subscribe((data: any) => {
+
+        if (data.applications != null) {
+          this.array_applications = data.applications;
+          for (var single_applications of this.array_applications) {
+
+            if (single_applications.KeyValue === 'AppOrder_ActivationCode') {
+              this.apporder = single_applications.DataValue
+            }
+            if (single_applications.KeyValue === 'AppBroker_ActivationCode') {
+              this.appbroker = single_applications.DataValue
+
+            }
+            if (single_applications.KeyValue === 'AppOcr_ActivationCode') {
+              this.appocr = single_applications.DataValue
+
+            }
           }
-          if (single_applications.KeyValue === 'AppBroker_ActivationCode') {
-            this.appbroker = single_applications.DataValue
 
-          }
-          if (single_applications.KeyValue === 'AppOcr_ActivationCode') {
-            this.appocr = single_applications.DataValue
-
-          }
         }
 
-      }
-
-    });
+      });
 
 
     this.Get_Notification()
@@ -153,33 +155,35 @@ export class SidebarComponent implements OnInit {
 
 
   Get_Notification() {
-    this.repo.GetNotification(sessionStorage.getItem("PersonInfoRef")).subscribe((data: any) => {
+    this.repo.GetNotification(sessionStorage.getItem("PersonInfoRef"))
+      .subscribe((data: any) => {
 
 
-      sessionStorage.setItem("AlarmActive_Row", data.users[0].AlarmActive_Row)
-      sessionStorage.setItem("AlarmActtive_Conversation", data.users[0].AlarmActtive_Conversation)
+        sessionStorage.setItem("AlarmActive_Row", data.users[0].AlarmActive_Row)
+        sessionStorage.setItem("AlarmActtive_Conversation", data.users[0].AlarmActtive_Conversation)
 
-      this.AlarmActive_Row = parseInt(sessionStorage.getItem("AlarmActive_Row"))
-      this.AlarmActtive_Conversation = parseInt(sessionStorage.getItem("AlarmActtive_Conversation"))
+        this.AlarmActive_Row = parseInt(sessionStorage.getItem("AlarmActive_Row"))
+        this.AlarmActtive_Conversation = parseInt(sessionStorage.getItem("AlarmActtive_Conversation"))
 
-    });
+      });
   }
 
   Get_AttendanceDashboard() {
 
-    this.repo.AttendanceDashboard().subscribe((data: any) => {
-      //this.reportData = data.Attendances;
-      this.reportData = data.Attendances.filter(Attendance => Attendance.CentralRef === this.CentralRef);
-      console.log(this.reportData)
+    this.repo.AttendanceDashboard()
+      .subscribe((data: any) => {
+        //this.reportData = data.Attendances;
+        this.reportData = data.Attendances.filter(Attendance => Attendance.CentralRef === this.CentralRef);
+        console.log(this.reportData)
 
-      this.currentStatus = this.reportData[0].Status;
+        this.currentStatus = this.reportData[0].Status;
 
-      if (this.BrokerRef != '') {
+        if (this.BrokerRef != '') {
 
-      }
+        }
 
 
-    });
+      });
   }
 
   setStatus(status: string): void {
@@ -189,11 +193,12 @@ export class SidebarComponent implements OnInit {
     });
 
     this.currentStatus = status;
-    this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe((data: any) => {
-      this.Get_AttendanceDashboard()
-      this.sharedService.triggerActionAll('refresh');
+    this.repo.ManualAttendance(this.EditForm_Attendance.value)
+      .subscribe((data: any) => {
+        this.Get_AttendanceDashboard()
+        this.sharedService.triggerActionAll('refresh');
 
-    });
+      });
 
   }
 

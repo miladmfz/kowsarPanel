@@ -141,12 +141,13 @@ export class ApplicationActiveComponent extends AgGridBaseComponent
     //this.loading = true
 
 
-    this.repo.GetAppLogReport(this.EditForm_AppLog.value).subscribe((data) => {
-      this.selectedFlag = this.EditForm_AppLog.value.Flag
-      this.appLogResult = data;
-      this.loading = false
+    this.repo.GetAppLogReport(this.EditForm_AppLog.value)
+      .subscribe((data) => {
+        this.selectedFlag = this.EditForm_AppLog.value.Flag
+        this.appLogResult = data;
+        this.loading = false
 
-    });
+      });
 
 
 

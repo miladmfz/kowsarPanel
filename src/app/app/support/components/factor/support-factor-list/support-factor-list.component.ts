@@ -6,8 +6,9 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { FormControl, FormGroup } from '@angular/forms';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { CellActionSupportFactorList } from './cell-action-support-factor-list';
-import { Subscription } from 'rxjs';
+import { catchError, of, Subscription } from 'rxjs';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 
 @Component({
   selector: 'app-support-factor-list',
@@ -19,9 +20,9 @@ export class SupportFactorListComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: SupportFactorWebApiService,
-    private renderer: Renderer2
-
-    , private themeService: ThemeService
+    private renderer: Renderer2,
+    private notificationService: NotificationService,
+    private themeService: ThemeService,
   ) {
     super();
   }
@@ -150,63 +151,70 @@ export class SupportFactorListComponent extends AgGridBaseComponent
       Flag: "1"
     });
 
-    this.repo.GetSupportPanel(this.EditForm_SupportData.value).subscribe((data: any) => {
-      if (this.BrokerRef == '') {
-        this.reportData = data.SupportDatas;
-      } else {
-        this.reportData = data.SupportDatas.filter(panel => panel.BrokerCode === this.BrokerRef);
+    this.repo.GetSupportPanel(this.EditForm_SupportData.value)
+      .subscribe((data: any) => {
+        if (this.BrokerRef == '') {
+          this.reportData = data.SupportDatas;
+        } else {
+          this.reportData = data.SupportDatas.filter(panel => panel.BrokerCode === this.BrokerRef);
 
-        this.reportData.forEach(row => {
-          if (row.WithoutRows > 0 || row.OpenFactor > 0) {
-            this.loading_supportpanel = false
-          }
-        });
-      }
+          this.reportData.forEach(row => {
+            if (row.WithoutRows > 0 || row.OpenFactor > 0) {
+              this.loading_supportpanel = false
+            }
+          });
+        }
 
-    });
+      });
 
   }
   getGridSchema() {
-    this.repo.GetGridSchema('TFactor').subscribe((data: any) => {
-      if (data && data.GridSchemas && data.GridSchemas.length > 0) {
-        this.columnDefs = data.GridSchemas.filter(schema => schema.Visible === "True").map(schema => ({
-          field: schema.FieldName,
-          headerName: schema.Caption,
-          cellClass: 'text-center',
-          filter: 'agSetColumnFilter',
-          sortable: true,
-          resizable: true,
-          minWidth: parseInt(schema.Width),
-          valueFormatter: schema.Separator === '1' ? this.customNumberFormatter : undefined
-        }));
+    this.repo.GetGridSchema('TFactor')
+      .subscribe((data: any) => {
+        if (data && data.GridSchemas && data.GridSchemas.length > 0) {
+          this.columnDefs = data.GridSchemas.filter(schema => schema.Visible === "True").map(schema => ({
+            field: schema.FieldName,
+            headerName: schema.Caption,
+            cellClass: 'text-center',
+            filter: 'agSetColumnFilter',
+            sortable: true,
+            resizable: true,
+            minWidth: parseInt(schema.Width),
+            valueFormatter: schema.Separator === '1' ? this.customNumberFormatter : undefined
+          }));
 
-        this.columnDefs.unshift({
-          field: 'عملیات',
-          pinned: 'left',
-          cellRenderer: CellActionSupportFactorList,
+          this.columnDefs.unshift({
+            field: 'عملیات',
+            pinned: 'left',
+            cellRenderer: CellActionSupportFactorList,
 
-          width: 100,
-          sortable: false,
-          filter: false,
-          // resizable: false
+            width: 100,
+            sortable: false,
+            filter: false,
+            // resizable: false
+          });
+        }
+        this.EditForm_supportfactor.patchValue({
+          BrokerRef: this.BrokerRef,
+          isShopFactor: "0",
         });
-      }
-      this.EditForm_supportfactor.patchValue({
-        BrokerRef: this.BrokerRef,
-        isShopFactor: "0",
+        this.loading = true
+
+
+        this.repo.GetSupportFactors(this.EditForm_supportfactor.value).pipe(
+          catchError(error => {
+            this.notificationService.error('مشکل در برقراری ارتباط', "خطا");
+            return of(null); // یا هر مقدار جایگزین
+          })).subscribe((data: any) => {
+
+            console.log(data.Factors);
+            this.records = data.Factors;
+            this.loading = false
+
+          });
+
+
       });
-      this.loading = true
-
-      this.repo.GetSupportFactors(this.EditForm_supportfactor.value).subscribe((data: any) => {
-
-        console.log(data.Factors);
-        this.records = data.Factors;
-        this.loading = false
-
-      });
-
-
-    });
   }
 
   customNumberFormatter(params) {
@@ -276,11 +284,12 @@ export class SupportFactorListComponent extends AgGridBaseComponent
 
   Set_factor_Property() {
 
-    this.repo.EditFactorProperty(this.EditForm_supportfactor_property.value).subscribe((data: any) => {
-      this.property_dialog_close()
-      this.getList()
-      this.EditForm_supportfactor_property.reset()
-    });
+    this.repo.EditFactorProperty(this.EditForm_supportfactor_property.value)
+      .subscribe((data: any) => {
+        this.property_dialog_close()
+        this.getList()
+        this.EditForm_supportfactor_property.reset()
+      });
 
 
 

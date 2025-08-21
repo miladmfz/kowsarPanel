@@ -113,11 +113,12 @@ export class EducationListComponent extends AgGridBaseComponent
   }
   getList() {
 
-    this.repo.KowsarAttachUrl(this.Searchtarget).subscribe((data) => {
+    this.repo.KowsarAttachUrl(this.Searchtarget)
+      .subscribe((data) => {
 
-      this.records = data;
+        this.records = data;
 
-    });
+      });
 
 
 

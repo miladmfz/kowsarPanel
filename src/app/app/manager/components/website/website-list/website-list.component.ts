@@ -158,9 +158,10 @@ export class WebsiteListComponent extends AgGridBaseComponent
 
   getList() {
 
-    this.repo.GetWebSiteActivation(this.EditForm.value).subscribe((data) => {
-      this.records = data;
-    });
+    this.repo.GetWebSiteActivation(this.EditForm.value)
+      .subscribe((data) => {
+        this.records = data;
+      });
   }
 
   navigateToEdit(id) {

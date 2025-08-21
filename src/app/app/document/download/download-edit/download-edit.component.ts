@@ -53,11 +53,12 @@ export class DownloadEditComponent implements OnInit {
 
   ngOnInit() {
 
-    this.repo.GetTodeyFromServer().subscribe((data: any) => {
+    this.repo.GetTodeyFromServer()
+      .subscribe((data: any) => {
 
-      this.ToDayDate = data[0].TodeyFromServer
+        this.ToDayDate = data[0].TodeyFromServer
 
-    });
+      });
 
   }
 
@@ -122,9 +123,10 @@ export class DownloadEditComponent implements OnInit {
     }
 
 
-    this.repo.AttachFile_Insert(command).subscribe((data) => {
-      this.router.navigate(['/document/download-list']);
-    });
+    this.repo.AttachFile_Insert(command)
+      .subscribe((data) => {
+        this.router.navigate(['/document/download-list']);
+      });
 
 
 

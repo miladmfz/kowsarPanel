@@ -4,6 +4,8 @@ import { UntypedFormBuilder } from '@angular/forms';
 
 import { Location } from '@angular/common';
 import { OrderWebApiService } from '../../../services/OrderWebApi.service';
+import { catchError, of } from 'rxjs';
+import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 
 @Component({
   selector: 'app-order-column-edit',
@@ -15,7 +17,8 @@ export class OrderColumnEditComponent implements OnInit {
     private repo: OrderWebApiService,
     private route: ActivatedRoute,
     private formBuilder: UntypedFormBuilder,
-    private location: Location
+    private location: Location,
+    private notificationService: NotificationService,
   ) { }
 
 
@@ -76,10 +79,11 @@ export class OrderColumnEditComponent implements OnInit {
 
   GetGoodType() {
 
-    this.repo.GetGoodType().subscribe(e => {
-      this.Goodtypes = e;
-      this.Goodtypes.unshift({ GoodType: "همه", IsDefault: -1 });
-    });
+    this.repo.GetGoodType()
+      .subscribe(e => {
+        this.Goodtypes = e;
+        this.Goodtypes.unshift({ GoodType: "همه", IsDefault: -1 });
+      });
 
   }
 
@@ -103,10 +107,11 @@ export class OrderColumnEditComponent implements OnInit {
 
   GetProperty() {
 
-    this.repo.GetProperty(this.selected_GoodType).subscribe(e => {
-      this.Propertys = e;
+    this.repo.GetProperty(this.selected_GoodType)
+      .subscribe(e => {
+        this.Propertys = e;
 
-    });
+      });
 
 
   }
@@ -180,10 +185,15 @@ export class OrderColumnEditComponent implements OnInit {
       , this.selected_obj_Detail.value
       , this.selected_obj_Detail.value
       , this.ColumnType
-      , this.AppType
-    ).subscribe(e => {
-      this.location.back();
-    });
+      , this.AppType)
+      .pipe(
+        catchError(error => {
+          this.notificationService.error('مشکل در برقراری ارتباط', "خطا");
+          return of(null); // یا هر مقدار جایگزین
+        }))
+      .subscribe(e => {
+        this.location.back();
+      });
 
 
 

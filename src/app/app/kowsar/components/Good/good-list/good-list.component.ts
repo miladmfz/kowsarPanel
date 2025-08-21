@@ -68,35 +68,36 @@ export class GoodListComponent extends AgGridBaseComponent
   }
 
   getGridSchema() {
-    this.repo.GetGridSchema('TGood').subscribe((data: any) => {
-      if (data && data.GridSchemas && data.GridSchemas.length > 0) {
-        this.columnDefs = data.GridSchemas.filter(schema => schema.Visible === "True").map(schema => ({
-          field: schema.FieldName,
-          headerName: schema.Caption,
-          cellClass: 'text-center',
-          filter: 'agSetColumnFilter',
-          sortable: true,
-          resizable: true,
-          minWidth: parseInt(schema.Width) + 100,
-          valueFormatter: schema.Separator === '1' ? this.customNumberFormatter : undefined
-        }));
+    this.repo.GetGridSchema('TGood')
+      .subscribe((data: any) => {
+        if (data && data.GridSchemas && data.GridSchemas.length > 0) {
+          this.columnDefs = data.GridSchemas.filter(schema => schema.Visible === "True").map(schema => ({
+            field: schema.FieldName,
+            headerName: schema.Caption,
+            cellClass: 'text-center',
+            filter: 'agSetColumnFilter',
+            sortable: true,
+            resizable: true,
+            minWidth: parseInt(schema.Width) + 100,
+            valueFormatter: schema.Separator === '1' ? this.customNumberFormatter : undefined
+          }));
 
-        this.columnDefs.unshift({
-          field: 'عملیات',
-          pinned: 'left',
-          cellRenderer: CellActionGoodList,
-          cellRendererParams: {
-            editUrl: '/kowsar/good-edit',
-          },
-          width: 100,
-          sortable: false,
-          filter: false,
-          // resizable: false
-        });
-      }
-      this.getList()
+          this.columnDefs.unshift({
+            field: 'عملیات',
+            pinned: 'left',
+            cellRenderer: CellActionGoodList,
+            cellRendererParams: {
+              editUrl: '/kowsar/good-edit',
+            },
+            width: 100,
+            sortable: false,
+            filter: false,
+            // resizable: false
+          });
+        }
+        this.getList()
 
-    });
+      });
   }
 
 
@@ -204,7 +205,8 @@ ngOnInit() {
     this.GroupCode_str = this.id
     this.LoadList();
   } else {
-    this.repo.kowsar_info("AppOrder_DefaultGroupCode").subscribe(e => {
+    this.repo.kowsar_info("AppOrder_DefaultGroupCode")
+    )(e => {
 
       this.GroupCode_str = e[0].DataValue
       this.LoadList();
@@ -223,7 +225,8 @@ onInputChange() {
 
 LoadList() {
 
-  this.repo.GetOrderGoodList("30", this.Searchtarget, this.GroupCode_str).subscribe(e => {
+  this.repo.GetOrderGoodList("30", this.Searchtarget, this.GroupCode_str)
+    )(e => {
     this.items = e;
      this.items);
 

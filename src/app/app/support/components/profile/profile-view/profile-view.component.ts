@@ -83,44 +83,45 @@ export class ProfileViewComponent implements OnInit {
 
   getDetails() {
 
-    this.repo.GetKowsarPersonInfo(sessionStorage.getItem("PersonInfoRef")).subscribe((data: any) => {
-      this.CentralRefCustomer = data.users[0].CentralRefCustomer
-      this.CentralRefJob = data.users[0].CentralRefJob
-      this.PersonInfoRef = data.users[0].PersonInfoCode
-      this.JobPersonRef = data.users[0].JobPersonCode
+    this.repo.GetKowsarPersonInfo(sessionStorage.getItem("PersonInfoRef"))
+      .subscribe((data: any) => {
+        this.CentralRefCustomer = data.users[0].CentralRefCustomer
+        this.CentralRefJob = data.users[0].CentralRefJob
+        this.PersonInfoRef = data.users[0].PersonInfoCode
+        this.JobPersonRef = data.users[0].JobPersonCode
 
-      this.ProfileForm.patchValue({
-        PersonInfoCode: data.users[0].PersonInfoCode,
-        JobPersonCode: data.users[0].JobPersonCode,
-        CustomerCode: data.users[0].CustomerCode,
-        CentralRefCustomer: data.users[0].CentralRefCustomer,
-        CentralRefJob: data.users[0].CentralRefJob,
-        PhFirstName: data.users[0].PhFirstName,
-        PhLastName: data.users[0].PhLastName,
-        PhCompanyName: data.users[0].PhCompanyName,
-        PhAddress1: data.users[0].PhAddress1,
-        PhTel1: data.users[0].PhTel1,
-        PhMobile1: data.users[0].PhMobile1,
-        PhEmail: data.users[0].PhEmail,
-        CustName_Small: data.users[0].CustName_Small,
-        Phone: data.users[0].Phone,
-        Name: data.users[0].Name,
+        this.ProfileForm.patchValue({
+          PersonInfoCode: data.users[0].PersonInfoCode,
+          JobPersonCode: data.users[0].JobPersonCode,
+          CustomerCode: data.users[0].CustomerCode,
+          CentralRefCustomer: data.users[0].CentralRefCustomer,
+          CentralRefJob: data.users[0].CentralRefJob,
+          PhFirstName: data.users[0].PhFirstName,
+          PhLastName: data.users[0].PhLastName,
+          PhCompanyName: data.users[0].PhCompanyName,
+          PhAddress1: data.users[0].PhAddress1,
+          PhTel1: data.users[0].PhTel1,
+          PhMobile1: data.users[0].PhMobile1,
+          PhEmail: data.users[0].PhEmail,
+          CustName_Small: data.users[0].CustName_Small,
+          Phone: data.users[0].Phone,
+          Name: data.users[0].Name,
+        });
+
+        this.ProfileForm_Edit.patchValue({
+          PersonInfoCode: data.users[0].PersonInfoCode,
+          PhFirstName: data.users[0].PhFirstName,
+          PhLastName: data.users[0].PhLastName,
+          PhCompanyName: data.users[0].PhCompanyName,
+          PhAddress1: data.users[0].PhAddress1,
+          PhTel1: data.users[0].PhTel1,
+          PhMobile1: data.users[0].PhMobile1,
+          PhEmail: data.users[0].PhEmail,
+        });
+
+
+
       });
-
-      this.ProfileForm_Edit.patchValue({
-        PersonInfoCode: data.users[0].PersonInfoCode,
-        PhFirstName: data.users[0].PhFirstName,
-        PhLastName: data.users[0].PhLastName,
-        PhCompanyName: data.users[0].PhCompanyName,
-        PhAddress1: data.users[0].PhAddress1,
-        PhTel1: data.users[0].PhTel1,
-        PhMobile1: data.users[0].PhMobile1,
-        PhEmail: data.users[0].PhEmail,
-      });
-
-
-
-    });
   }
 
 
@@ -137,11 +138,12 @@ export class ProfileViewComponent implements OnInit {
 
   submit(action) {
     const command = this.ProfileForm_Edit.value;
-    this.repo.UpdatePersonInfo(command).subscribe((data: any) => {
-      this.notificationService.succeded();
+    this.repo.UpdatePersonInfo(command)
+      .subscribe((data: any) => {
+        this.notificationService.succeded();
 
-      this.sharedService.triggerActionAll('refresh');
-    });
+        this.sharedService.triggerActionAll('refresh');
+      });
   }
 
 

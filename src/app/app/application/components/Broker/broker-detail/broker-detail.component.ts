@@ -39,26 +39,29 @@ export class BrokerDetailComponent implements OnInit {
 
   ListVisible_Card() {
 
-    this.repo.BasketColumnCard("ListVisible", this.Apptype).subscribe(e => {
-      this.ListVisible_items = e;
+    this.repo.BasketColumnCard("ListVisible", this.Apptype)
+      .subscribe(e => {
+        this.ListVisible_items = e;
 
-    });
+      });
 
   }
 
   DetailVisible_Card() {
-    this.repo.BasketColumnCard("DetailVisible", this.Apptype).subscribe(e => {
-      this.DetailVisible_items = e;
+    this.repo.BasketColumnCard("DetailVisible", this.Apptype)
+      .subscribe(e => {
+        this.DetailVisible_items = e;
 
-    });
+      });
 
   }
 
   SearchVisible_Card() {
-    this.repo.BasketColumnCard("SearchVisible", this.Apptype).subscribe(e => {
-      this.SearchVisible_items = e;
+    this.repo.BasketColumnCard("SearchVisible", this.Apptype)
+      .subscribe(e => {
+        this.SearchVisible_items = e;
 
-    });
+      });
 
   }
 
