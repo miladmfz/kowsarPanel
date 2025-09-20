@@ -61,6 +61,11 @@
                       </div>
 
 
+
+
+
+
+
                       <ng-container *ngIf="FactorCode.length==0">
                         <div class="form-group col-md-8">
                           <label for="Explain" class="col-form-label">توضیحات</label>
@@ -76,6 +81,22 @@
                             autocomplete="off" readonly />
                         </div>
                       </ng-container>
+
+                      <ng-container *ngIf="FactorCode.length>0">
+                        <div class="form-group col-md-12 m-1">
+
+                          <ag-grid-angular #agGrid id="myGrid" style="height:250px; width: auto"
+                            [rowData]="records_factor" [columnDefs]="columnDefs4" [modules]="modules"
+                            [localeText]="localeText" [enableRtl]="true" (gridReady)="onGridReady($event)"
+                            (cellClicked)="onCellClicked($event)" [pagination]="true" [context]="context"
+                            [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
+                            [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
+                            [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+                            (selectionChanged)="onSelectionChanged($event)">
+                          </ag-grid-angular>
+                        </div>
+                      </ng-container>
+
 
                       <ng-container *ngIf="FactorCode.length>0">
                         <form [formGroup]="EditForm_supportfactor_property" id="submitForm">

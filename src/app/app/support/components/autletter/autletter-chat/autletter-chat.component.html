@@ -28,7 +28,7 @@
 
               <!-- Voice -->
               <!-- File preview button -->
-              <ng-container [ngSwitch]="chat.FileType?.toLowerCase()">
+              <ng-container [ngSwitch]="chat.ConversationText?.toLowerCase()">
 
                 <!-- Voice -->
                 <button *ngSwitchCase="'audio/mpeg'"
@@ -39,7 +39,7 @@
                 </button>
 
                 <!-- Image -->
-                <button *ngSwitchCase="'image/jpeg'"
+                <button *ngSwitchCase="'image'"
                   class="btn btn-outline-primary rounded-pill d-flex align-items-center gap-2"
                   (click)="GetFileFromAttach(index)">
                   <i class="bi bi-image"></i>
@@ -47,7 +47,7 @@
                 </button>
 
                 <!-- Video -->
-                <button *ngSwitchCase="'video/mp4'"
+                <button *ngSwitchCase="'video'"
                   class="btn btn-outline-warning rounded-pill d-flex align-items-center gap-2"
                   (click)="GetFileFromAttach(index)">
                   <i class="bi bi-camera-video"></i>
@@ -55,19 +55,41 @@
                 </button>
 
                 <!-- PDF -->
-                <button *ngSwitchCase="'application/pdf'"
+                <button *ngSwitchCase="'pdf'"
                   class="btn btn-outline-danger rounded-pill d-flex align-items-center gap-2"
                   (click)="GetFileFromAttach(index)">
                   <i class="bi bi-file-earmark-pdf"></i>
                   <span>نمایش PDF</span>
                 </button>
 
-                <!-- Other File -->
-                <button *ngSwitchDefault class="btn btn-outline-secondary rounded-pill d-flex align-items-center gap-2"
+
+                <button *ngSwitchCase="'zip'"
+                  class="btn btn-outline-danger rounded-pill d-flex align-items-center gap-2"
                   (click)="GetFileFromAttach(index)">
-                  <i class="bi bi-paperclip"></i>
+                  <i class="bi bi-file-earmark-pdf"></i>
+                  <span>نمایش PDF</span>
+                </button>
+
+                <button *ngSwitchCase="'other'"
+                  class="btn btn-outline-danger rounded-pill d-flex align-items-center gap-2"
+                  (click)="GetFileFromAttach(index)">
+                  <i class="bi bi-file-earmark-pdf"></i>
                   <span>نمایش فایل</span>
                 </button>
+
+
+                <button *ngSwitchCase="'rar'"
+                  class="btn btn-outline-danger rounded-pill d-flex align-items-center gap-2"
+                  (click)="GetFileFromAttach(index)">
+                  <i class="bi bi-file-earmark-pdf"></i>
+                  <span>نمایش فایل</span>
+                </button>
+                <!-- <button *ngSwitchDefault class="btn btn-outline-secondary rounded-pill d-flex align-items-center gap-2"
+                  (click)="GetFileFromAttach(index)">
+                  <i class="bi bi-paperclip"></i>
+                                    <span>نمایش فایل</span>
+
+                </button> -->
 
               </ng-container>
 

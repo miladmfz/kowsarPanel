@@ -3,6 +3,7 @@ export type Base_Lookup = {
     name: string
 }
 
+
 export type GoodType_lookup = {
     tid: string,
     aType: string,

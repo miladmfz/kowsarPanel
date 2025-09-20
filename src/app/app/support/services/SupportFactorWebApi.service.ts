@@ -28,6 +28,13 @@ export class SupportFactorWebApiService {
   }
 
 
+
+  GetKowsarCentral(SearchTarget: string): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetKowsarCentral", { SearchTarget }, { headers: this.headers })
+  }
+
+
+
   GetGoodListSupport(SearchTarget: string): Observable<any[]> {
     return this.client.post<any[]>(this.baseUrl + "GetGoodListSupport", { SearchTarget }, { headers: this.headers })
   }
@@ -35,6 +42,22 @@ export class SupportFactorWebApiService {
 
 
 
+
+  GetTasks(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetTasks", command, { headers: this.headers })
+  }
+
+  InsertTask(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "InsertTask", command, { headers: this.headers })
+  }
+
+  UpdateTask(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "UpdateTask", command, { headers: this.headers })
+  }
+
+  DeleteTask(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "DeleteTask", command, { headers: this.headers })
+  }
 
 
   GetFactor(command): Observable<any[]> {
@@ -128,6 +151,13 @@ export class SupportFactorWebApiService {
     return this.client.post<any[]>(this.baseUrl + "WebFactorInsertRow", command, { headers: this.headers })
   }
 
+  GetCustomerFactor(CustomerCode: string): Observable<any[]> {
+    const params = new HttpParams().append('Where', CustomerCode)
+    return this.client.get<any[]>(this.baseUrl + "GetCustomerFactor", { headers: this.headers, params: params })
+
+  }
+
+
   GetSupportPanel(command): Observable<any[]> {
     return this.client.post<any[]>(this.baseUrl + "GetSupportPanel", command, { headers: this.headers })
   }
@@ -141,6 +171,12 @@ export class SupportFactorWebApiService {
     return this.client.get<any[]>(this.baseUrl + "AttendanceDashboard", { headers: this.headers, params: params })
   }
 
+
+  GetAutLetterListByPerson(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "GetAutLetterListByPerson", command, { headers: this.headers })
+
+  }
 
 
   AttendanceHistory(CentralRef: string): Observable<any[]> {
@@ -159,7 +195,7 @@ export class SupportFactorWebApiService {
 
 
 
-  AutLetterRowInsert(
+  AutLetterRowInsert0(
     LetterRef: string,
     LetterDate: string,
     Description: string,
@@ -172,7 +208,7 @@ export class SupportFactorWebApiService {
   }
 
 
-  LetterInsert(
+  LetterInsert0(
     LetterDate: string,
     title: string,
     Description: string,
@@ -183,6 +219,23 @@ export class SupportFactorWebApiService {
 
   ): Observable<any[]> {
     return this.client.post<any[]>(this.baseUrl + "LetterInsert", { LetterDate, title, Description, LetterState, LetterPriority, CentralRef, InOutFlag }, { headers: this.headers })
+  }
+
+
+  AutLetterRowInsert(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "AutLetterRowInsert", command, { headers: this.headers })
+
+  }
+
+
+
+
+
+  LetterInsert(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "LetterInsert", command, { headers: this.headers })
+
   }
 
 

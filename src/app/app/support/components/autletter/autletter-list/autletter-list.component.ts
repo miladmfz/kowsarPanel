@@ -161,6 +161,13 @@ export class AutletterListComponent
 
 
       {
+        field: 'OwnerName',
+        headerName: 'مشتری ',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 200
+      },
+      {
         field: 'LetterDescription',
         headerName: 'متن تیکت',
         filter: 'agSetColumnFilter',
@@ -168,13 +175,17 @@ export class AutletterListComponent
         headerClass: 'text-center',
         minWidth: 200
       },
-      {
-        field: 'LetterTitle',
-        headerName: 'عنوان تیکت',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 200
-      },
+
+
+
+
+      // {
+      //   field: 'LetterTitle',
+      //   headerName: 'عنوان تیکت',
+      //   filter: 'agSetColumnFilter',
+      //   cellClass: 'text-center',
+      //   minWidth: 200
+      // },
       {
         field: 'LetterDate',
         headerName: 'تاریخ تیکت	',

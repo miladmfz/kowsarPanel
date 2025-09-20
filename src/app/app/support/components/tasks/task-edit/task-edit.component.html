@@ -1,0 +1,226 @@
+<div class="card-body">
+  <h4 class="header-title mb-4"> {{title}}</h4>
+
+
+
+  <div class="tab-content">
+
+
+
+    <div class="tab-pane active" id="GoodBase">
+
+
+      <form [formGroup]="EditForm_task" (ngSubmit)="submit('')" id="submitForm">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body row">
+
+
+                <ng-container *ngIf="Code.length==0">
+                  <div class="row col-md-12">
+
+
+
+
+                    <ng-container *ngIf="Parent_lvl1.length>0">
+                      <div class="form-group col-md-4">
+                        <label for="ParentCode1" class="col-form-label"> سطح 1 </label>
+
+                        <select formControlName="ParentCode1" id="ParentCode1" class="form-control custom-select"
+                          data-toggle="select2" (change)="GetParent_lvl2()">
+                          <option [value]="item.TaskCode" *ngFor="let item of Parent_lvl1">{{item.Title}}</option>
+                        </select>
+
+                      </div>
+
+                    </ng-container>
+
+
+
+                    <ng-container *ngIf="Parent_lvl2.length>0">
+
+                      <div class="form-group col-md-4">
+                        <label for="ParentCode2" class="col-form-label"> سطح 2 </label>
+
+                        <select formControlName="ParentCode2" id="ParentCode2" class="form-control custom-select"
+                          data-toggle="select2" (change)="GetParent_lvl3()">
+                          <option [value]="item.TaskCode" *ngFor="let item of Parent_lvl2">{{item.Title}}</option>
+                        </select>
+                      </div>
+                    </ng-container>
+
+
+
+                    <ng-container *ngIf="Parent_lvl3.length>0">
+                      <div class="form-group col-md-4">
+                        <label for="ParentCode3" class="col-form-label"> سطح 3 </label>
+                        <select formControlName="ParentCode3" id="ParentCode3" class="form-control custom-select"
+                          data-toggle="select2" (change)="GetParent_lvl4()">
+                          <option [value]="item.TaskCode" *ngFor="let item of Parent_lvl3">{{item.Title}}</option>
+                        </select>
+                      </div>
+                    </ng-container>
+
+
+                    <ng-container *ngIf="Parent_lvl4.length>0">
+
+                      <div class="form-group col-md-4">
+                        <label for="ParentCode4" class="col-form-label"> سطح 4 </label>
+                        <select formControlName="ParentCode4" id="ParentCode4" class="form-control custom-select"
+                          data-toggle="select2" (change)="GetParent_lvl5()">
+                          <option [value]="item.TaskCode" *ngFor="let item of Parent_lvl4">{{item.Title}}</option>
+                        </select>
+                      </div>
+                    </ng-container>
+
+
+                    <ng-container *ngIf="Parent_lvl5.length>0">
+                      <div class="form-group col-md-4">
+                        <label for="ParentCode5" class="col-form-label"> 5 سطح </label>
+                        <select formControlName="ParentCode5" id="ParentCode5" class="form-control custom-select"
+                          data-toggle="select2" (change)="GetParent_lvl6()">
+                          <option [value]="item.TaskCode" *ngFor="let item of Parent_lvl5">{{item.Title}}</option>
+                        </select>
+                      </div>
+                    </ng-container>
+
+
+                    <ng-container *ngIf="Parent_lvl6.length>0">
+                      <div class="form-group col-md-4">
+                        <label for="ParentCode6" class="col-form-label"> سطح 6 </label>
+                        <select formControlName="ParentCode6" id="ParentCode6" class="form-control custom-select"
+                          data-toggle="select2">
+                          <option [value]="item.TaskCode" *ngFor="let item of Parent_lvl6">{{item.Title}}</option>
+                        </select>
+                      </div>
+
+                    </ng-container>
+
+
+
+                  </div>
+                </ng-container>
+
+
+                <ng-container *ngIf="Code.length>0">
+                  <div class="form-group col-md-4">
+                    <label for="ParentName1" class="col-form-label"> سطح مرجع </label>
+
+
+                    <input type="text" class="form-control" id="ParentName1" formControlName="ParentName1"
+                      maxlength="400" autocomplete="off" readonly />
+
+                  </div>
+
+                </ng-container>
+
+
+
+
+                <div class="form-group col-md-12">
+                  <label for="Title" class="col-form-label">نام خدمت </label>
+                  <span class="text-danger">*</span>
+
+                  <input type="text" class="form-control" id="Title" formControlName="Title" maxlength="400"
+                    autocomplete="off" [ngClass]="{
+                      'is-invalid':
+                      EditForm_task.controls['Title'].invalid &&
+                      EditForm_task.controls['Title'].touched,
+                      'is-valid':
+                      EditForm_task.controls['Title'].valid &&
+                      EditForm_task.controls['Title'].touched
+                    }" />
+                  <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                                              validation: 'required',
+                                              message: 'اجباری است',
+                                              control: EditForm_task.controls['Title']
+                                            }">
+                  </ng-container>
+
+
+
+                </div>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="card">
+        <div class="card-body">
+          <div class="col-sm-12">
+            <ng-container *ngIf="Code.length==0">
+              <a href="javascript:void(0)" type="button" class="btn btn-warning waves-effect waves-light mx-1"
+                (click)="reset()">
+                <span class="btn-label"><i class="fas fa-check-double"></i></span>پاک کردن همه
+              </a>
+
+              <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mx-1"
+                (click)="submit('insert_back')">
+                <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره و بازگشت
+              </a>
+
+              <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mx-1"
+                (click)="submit('insert_new')">
+                <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره و رکورد جدید
+              </a>
+
+            </ng-container>
+
+            <ng-container *ngIf="Code.length>0">
+
+              <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mx-1"
+                (click)="submit('edit_back')">
+                <span class="btn-label"><i class="fas fa-check-double"></i></span>اصلاح و بازگشت
+              </a>
+
+              <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mx-1"
+                (click)="submit('edit_new')">
+                <span class="btn-label"><i class="fas fa-check-double"></i></span>اصلاح و ایجاد رکورد جدید
+              </a>
+
+
+            </ng-container>
+
+
+
+
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+
+
+
+    <ng-template #formError let-control="control" let-message="message" let-validation="validation">
+      <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
+        <div class="fv-plugins-message-container invalid-feedback">
+          <span role="alert">
+            {{ message }}
+          </span>
+        </div>
+      </ng-container>
+    </ng-template>
+
+
+
+
+    <div class="modal fade" id="loadingresponse" tabindex="-1" aria-labelledby="loadingresponseLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background-color: #d1dce7; border-radius: 10px; border: none;">
+          <div class="modal-body d-flex justify-content-center align-items-center" style="height: 150px;">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="ms-3">لطفا منتظر بمانید</div>
+          </div>
+        </div>
+      </div>
+    </div>

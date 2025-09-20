@@ -172,7 +172,7 @@ export class AutletterChatComponent implements OnInit, AfterViewInit, AfterViewC
       .pipe(
         catchError(error => {
           this.Loading_Modal_Response_close();
-          this.notificationService.error('این فاکتور دارای اقلام می باشد', "خطا");
+          this.notificationService.error('مشکل در برقراری ارتباط', "خطا");
           return of(null); // یا هر مقدار جایگزین
         })
       ).subscribe((data: any) => {
@@ -225,7 +225,21 @@ export class AutletterChatComponent implements OnInit, AfterViewInit, AfterViewC
 
 
 
+  convertToEnglishDigits(str: string): string {
+    if (!str) return str;
 
+    // اعداد فارسی ۰۱۲۳۴۵۶۷۸۹
+    const persianDigits = [/۰/g, /۱/g, /۲/g, /۳/g, /۴/g, /۵/g, /۶/g, /۷/g, /۸/g, /۹/g];
+    // اعداد عربی ٠١٢٣٤٥٦٧٨٩
+    const arabicDigits = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
+
+    for (let i = 0; i < 10; i++) {
+      str = str.replace(persianDigits[i], i.toString())
+        .replace(arabicDigits[i], i.toString());
+    }
+
+    return str;
+  }
 
 
 
@@ -235,7 +249,8 @@ export class AutletterChatComponent implements OnInit, AfterViewInit, AfterViewC
       return; // 👈 خالی بود برگرد
     }
 
-    this.repo.Conversation_Insert(this.LetterRef, this.CentralRef, this.newMessage.trim())
+    const cleanMessage = this.convertToEnglishDigits(this.newMessage.trim());
+    this.repo.Conversation_Insert(this.LetterRef, this.CentralRef, cleanMessage)
       .subscribe(() => {
         this.newMessage = '';
         this.GetAutConversation();

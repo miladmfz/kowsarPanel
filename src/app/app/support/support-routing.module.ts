@@ -16,6 +16,8 @@ import { SupportFactorListComponent } from './components/factor/support-factor-l
 import { SupportFactorEditComponent } from './components/factor/support-factor-edit/support-factor-edit.component';
 import { SupgoodListComponent } from './components/supgood/supgood-list/supgood-list.component';
 import { SupgoodEditComponent } from './components/supgood/supgood-edit/supgood-edit.component';
+import { TaskListComponent } from './components/tasks/task-list/task-list.component';
+import { TaskEditComponent } from './components/tasks/task-edit/task-edit.component';
 
 
 const routes: Routes = [
@@ -51,6 +53,14 @@ const routes: Routes = [
 
       { path: 'supgood-edit', component: SupgoodEditComponent, },
       { path: 'supgood-edit/:id', component: SupgoodEditComponent, },
+
+
+
+      { path: 'task-list', component: TaskListComponent, },
+
+      { path: 'task-edit', component: TaskEditComponent, },
+      { path: 'task-edit/:id', component: TaskEditComponent, },
+
 
 
 

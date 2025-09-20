@@ -30,27 +30,149 @@
 
 
 <div class="modal fade" id="letterexplain" tabindex="-1" aria-labelledby="letterexplainLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content" style="background-color: #d1dce7;">
       <div class="modal-header" style="background-color: #949494;">
         <h5 class="modal-title" id="letterexplainLabel">{{letterexplain_modal_title}}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
           (click)="letterexplain_dialog_close()"></button>
       </div>
+
       <div class="modal-body">
         <form [formGroup]="EditForm_LetterToEmployer" id="submitForm">
           <div class="row">
             <div class="col-12">
               <div class="card">
                 <div class="card-body row">
-
-
                   <div class="form-group col-md-12">
-                    <label for="DescriptionText" class="col-form-label">شرح</label>
-                    <textarea type="text" class="form-control" id="DescriptionText" formControlName="DescriptionText"
-                      maxlength="400" autocomplete="off"></textarea>
-
+                    <ag-grid-angular #agGrid id="myGrid" style="height: 250px; width: auto"
+                      [rowData]="records_letterfromperson" [columnDefs]="columnDefs3" [modules]="modules"
+                      [localeText]="localeText" [enableRtl]="true" (gridReady)="onGridReady2($event)"
+                      (cellClicked)="onCellClicked($event)" [pagination]="true"
+                      [frameworkComponents]="frameworkComponents" [context]="context"
+                      [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
+                      [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+                      (selectionChanged)="onSelectionChanged($event)">
+                    </ag-grid-angular>
                   </div>
+                  <ng-container *ngIf="!show_newletter">
+
+                    <div class="form-group col-md-3">
+                      <label for="DescriptionText" class="col-form-label">عملیات</label>
+
+                      <button type="button" class="form-control btn btn-success" (click)="toggel_show_newletter()">ایجاد
+                        تیکت
+                        جدید</button>
+
+                    </div>
+                  </ng-container>
+
+
+                  <ng-container *ngIf="show_newletter">
+                    <div class="form-group col-md-2">
+                      <label for="DescriptionText" class="col-form-label">عملیات</label>
+
+                      <button type="button" class="form-control btn btn-danger" (click)="toggel_show_newletter()">انصراف
+                        تیکت
+                      </button>
+
+                    </div>
+
+                    <ng-container *ngIf="LetterCode.length>0">
+                      <div class="form-group col-md-2">
+                        <label for="LetterCode" class="col-form-label">کد تیکت</label>
+                        <input type="text" class="form-control" id="LetterCode" formControlName="LetterCode"
+                          maxlength="400" autocomplete="off" readonly>
+
+                      </div>
+                    </ng-container>
+
+
+
+
+                    <div class=" form-group col-md-2">
+                      <label for="OwnerCentral" class="col-form-label">کد مشتری </label>
+
+                      <ng-container *ngIf="LetterCode.length>0">
+
+                        <input type="text" class="form-control" id="OwnerCentral" formControlName="OwnerCentral"
+                          placeholder="نمایش مشتریان" maxlength="100" autocomplete="off" readonly />
+
+                      </ng-container>
+
+                      <ng-container *ngIf="LetterCode.length==0">
+                        <label for="OwnerCentral" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                        <input type="text" class="form-control" id="OwnerCentral" (click)="GetCentral()"
+                          placeholder="نمایش مشتریان" formControlName="OwnerCentral" maxlength="100" autocomplete="off"
+                          readonly [ngClass]="{
+                              'is-invalid':
+                              EditForm_LetterToEmployer.controls['OwnerCentral'].invalid &&
+                              EditForm_LetterToEmployer.controls['OwnerCentral'].touched,
+                              'is-valid':
+                              EditForm_LetterToEmployer.controls['OwnerCentral'].valid &&
+                              EditForm_LetterToEmployer.controls['OwnerCentral'].touched
+                            }" />
+                        <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                              validation: 'required',
+                              message: 'اجباری است',
+                              control: EditForm_LetterToEmployer.controls['OwnerCentral']
+                            }"></ng-container>
+
+                      </ng-container>
+
+                    </div>
+
+                    <div class="form-group col-md-4">
+                      <label for="OwnerName" class="col-form-label">نام مشتری</label>
+                      <input type="text" class="form-control" id="OwnerName" formControlName="OwnerName" maxlength="400"
+                        autocomplete="off">
+
+                    </div>
+
+
+                    <div class="form-group col-md-2">
+                      <label for="SendSms" class="col-form-label">ارسال sms</label>
+
+                      <select formControlName="SendSms" id="SendSms" class="form-control custom-select"
+                        data-toggle="select2">
+                        <option [value]="item.id" *ngFor="let item of SendSms_Lookup">{{item.name}}</option>
+                      </select>
+
+                    </div>
+
+
+                    <ng-container *ngIf="LetterCode.length>0">
+                      <div class="form-group col-md-12">
+                        <label for="LetterDescriptionText" class="col-form-label">شرح تیکت</label>
+                        <textarea type="text" class="form-control" id="LetterDescriptionText"
+                          formControlName="LetterDescriptionText" maxlength="400" autocomplete="off"
+                          readonly></textarea>
+
+                      </div>
+                    </ng-container>
+                    <div class="form-group col-md-12">
+                      <label for="DescriptionText" class="col-form-label">شرح ارجاع</label>
+                      <textarea type="text" class="form-control" id="DescriptionText" formControlName="DescriptionText"
+                        maxlength="400" autocomplete="off" [ngClass]="{
+                              'is-invalid':
+                              EditForm_LetterToEmployer.controls['DescriptionText'].invalid &&
+                              EditForm_LetterToEmployer.controls['DescriptionText'].touched,
+                              'is-valid':
+                              EditForm_LetterToEmployer.controls['DescriptionText'].valid &&
+                              EditForm_LetterToEmployer.controls['DescriptionText'].touched
+                            }"></textarea>
+
+                      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                              validation: 'required',
+                              message: 'اجباری است',
+                              control: EditForm_LetterToEmployer.controls['DescriptionText']
+                            }"></ng-container>
+
+                    </div>
+
+                  </ng-container>
+
+
 
                 </div>
               </div>
@@ -59,10 +181,14 @@
         </form>
 
       </div>
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
           (click)="letterexplain_dialog_close()">بستن</button>
-        <button type="button" class="btn btn-primary" (click)="SendLetterToEmployer()">ارسال تیکت</button>
+        <ng-container *ngIf="show_newletter">
+          <button type="button" class="btn btn-primary" (click)="SendLetterToEmployer()">ارسال تیکت</button>
+        </ng-container>
+
       </div>
     </div>
   </div>
@@ -72,7 +198,7 @@
 
 <div class="modal fade" id="attendancehistory" tabindex="-1" aria-labelledby="attendancehistoryLabel"
   aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered ">
     <div class="modal-content" style="background-color: #d1dce7;">
       <div class="modal-header" style="background-color: #949494;">
         <h5 class="modal-title" id="attendancehistoryLabel">گزارش وضعیت حضور</h5>
@@ -96,3 +222,79 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+<div class="modal fade" id="centrallist" tabindex="-1" aria-labelledby="centrallistLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="centrallistLabel">لیست مشتریان</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="centrallist_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-2">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <input #modalsearch type="text" class="form-control" placeholder="جستجو..."
+                [(ngModel)]="Searchtarget_central" (ngModelChange)="onInputChange_Customer()"
+                [ngModelOptions]="{ standalone: true }" />
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="loading" class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
+        <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" [rowData]="records_support_central"
+          [columnDefs]="columnDefs4" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
+          [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+          [frameworkComponents]="frameworkComponents" [context]="context"
+          [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [suppressRowClickSelection]="true"
+          [rowSelection]="'single'" (selectionChanged)="onSelectionChanged($event)">
+        </ag-grid-angular>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="centrallist_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="Set_Customer()">انتخاب</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
+    <div class="fv-plugins-message-container invalid-feedback">
+      <span role="alert">
+        {{ message }}
+      </span>
+    </div>
+  </ng-container>
+</ng-template>

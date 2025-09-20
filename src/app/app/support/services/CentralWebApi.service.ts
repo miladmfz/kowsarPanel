@@ -44,6 +44,24 @@ export class CentralWebApiService {
     return this.client.post<any[]>(this.baseUrl + "UploadImage", command, { headers: this.headers })
   }
 
+
+
+  GetAddress(CentralCode: string): Observable<any[]> {
+    const params = new HttpParams().append('CentralCode', CentralCode)
+    return this.client.get<any[]>(this.baseUrl + "GetAddress", { headers: this.headers, params: params })
+
+  }
+
+  UpdateAddress(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "UpdateAddress", command, { headers: this.headers })
+  }
+
+
+
+
+
+
+
   GetImageFromServer(ObjectRef: string): Observable<any[]> {
     const params = new HttpParams().append('pixelScale', '300').append('ClassName', 'Central').append('ObjectRef', ObjectRef)
     return this.client.get<any[]>(this.baseUrl + "GetWebImagess", { headers: this.headers, params: params })

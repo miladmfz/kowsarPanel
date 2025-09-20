@@ -33,6 +33,9 @@ import { CellActionSupportGoodEdit } from './components/factor/support-factor-ed
 import { SupgoodListComponent } from './components/supgood/supgood-list/supgood-list.component';
 import { SupgoodEditComponent } from './components/supgood/supgood-edit/supgood-edit.component';
 import { CellActionSupGoodList } from './components/supgood/supgood-list/cell-action-supgood-ist';
+import { TaskListComponent } from './components/tasks/task-list/task-list.component';
+import { TaskEditComponent } from './components/tasks/task-edit/task-edit.component';
+import { CellActionTaskList } from './components/tasks/task-list/cell-action-task-ist';
 
 
 @NgModule({
@@ -81,6 +84,11 @@ import { CellActionSupGoodList } from './components/supgood/supgood-list/cell-ac
 
     SupgoodListComponent,
     SupgoodEditComponent,
+
+    TaskListComponent,
+    TaskEditComponent,
+    CellActionTaskList,
+
 
 
     CellActionSupGoodList,

@@ -45,7 +45,7 @@ export class AutletterWorkComponent
     CreationDate: new FormControl(''),
     OwnCentralRef: new FormControl(''),
     PersonInfoCode: new FormControl(''),
-
+    Flag: new FormControl(''),
   });
   loading: boolean = true;
 
@@ -176,7 +176,8 @@ export class AutletterWorkComponent
       CentralRef: "0",
       CreationDate: "",
       OwnCentralRef: "0",
-      PersonInfoCode: sessionStorage.getItem("PersonInfoRef")
+      PersonInfoCode: sessionStorage.getItem("PersonInfoRef"),
+      Flag: "0",
     });
 
     this.repo.GetAutLetterListByPerson(this.EditForm_autletter.value).subscribe((data) => {
@@ -198,7 +199,8 @@ export class AutletterWorkComponent
       CentralRef: "0",
       CreationDate: this.dateValue.value,
       OwnCentralRef: "0",
-      PersonInfoCode: sessionStorage.getItem("PersonInfoRef")
+      PersonInfoCode: sessionStorage.getItem("PersonInfoRef"),
+      Flag: "0",
     });
 
 

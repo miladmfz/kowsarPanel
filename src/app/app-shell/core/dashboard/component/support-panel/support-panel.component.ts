@@ -265,7 +265,9 @@ export class SupportPanelComponent
   getFirstpanel_data() {
 
 
-    if (sessionStorage.getItem("CentralRef") == '1139' || sessionStorage.getItem("CentralRef") == '1843') {
+    if (sessionStorage.getItem("CentralRef") == '1274' ||
+      sessionStorage.getItem("CentralRef") == '1139' ||
+      sessionStorage.getItem("CentralRef") == '1843') {
 
       this.Attendance_StatusDurations.patchValue({
         TargetDate: '',

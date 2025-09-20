@@ -1,0 +1,51 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">{{ title }}</h4>
+    <div class="row mb-2">
+      <div class="col-sm-12">
+
+        <!-- <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
+          [(ngModel)]="Searchtarget" (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" /> -->
+        <a type="button" class="btn btn-success waves-effect waves-light m-1" [routerLink]="['/support/task-edit']">
+          <span class="btn-label"><i class="fas fa-plus"></i></span>جدید
+        </a>
+        <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="GetTasks()">
+          <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
+        </a>
+        <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="removeAllFilters()">
+          <span class="btn-label"><i class="fas fa-eye-slash"></i></span>حذف
+          جستجو
+        </a>
+
+      </div>
+
+
+    </div>
+
+
+    <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
+      [columnDefs]="columnDefs6" [modules]="modules" [localeText]="localeText" [enableRtl]="true" [pagination]="true"
+      [context]="context" [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
+      [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents" [suppressRowClickSelection]="true"
+      [rowSelection]="'multiple'" (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged($event)"
+      (cellClicked)="onCellClicked($event)" (rowDoubleClicked)="onRowDoubleClicked($event)" [treeData]="true"
+      [getDataPath]="getDataPath_group">
+    </ag-grid-angular>
+
+
+  </div>
+</div>
+
+
+<div class="modal fade" id="loadingresponse" tabindex="-1" aria-labelledby="loadingresponseLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7; border-radius: 10px; border: none;">
+      <div class="modal-body d-flex justify-content-center align-items-center" style="height: 150px;">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="ms-3">لطفا منتظر بمانید</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -108,6 +108,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
   @ViewChild('modalsearch') modalsearch: ElementRef;
 
+  records_factor;
 
 
   time: Date = new Date();
@@ -279,7 +280,49 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
       },
     ];
 
+    this.columnDefs4 = [
 
+      {
+        field: 'FactorDate',
+        headerName: 'تاریخ',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        width: 80,
+        cellStyle: (params) => {
+          if (params.value === this.EditForm_Factor_Header.value.FactorDate) {  // مقدار دریافتی از سرور
+            return { backgroundColor: '#ffcccc', color: 'black' };
+          }
+          return null;  // حالت پیش‌فرض
+        }
+      },
+
+
+      {
+        field: 'Barbary',
+        headerName: 'شرح',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        width: 250,     // عرض ثابت
+        minWidth: 200,   // حداقل عرض
+        maxWidth: 500
+      },
+      {
+        field: 'BrokerNameWithoutType',
+        headerName: 'نام پشتیبان',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        width: 80,
+      },
+      {
+        field: 'starttime',
+        headerName: 'شروع',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        width: 80
+      },
+
+
+    ];
 
   }
 
@@ -586,6 +629,13 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
     this.searchSubject_Good.next(this.Searchtarget_Good);
   }
 
+  Factor_Customer_Property(CustomerCode) {
+
+    this.repo.GetCustomerFactor(CustomerCode).subscribe((data: any) => {
+      this.records_factor = data.Factors;
+
+    });
+  }
 
 
   Factor_Header_insert() {
@@ -794,7 +844,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
       this.Start_FactorTime = data.Factors[0].starttime
       this.End_FactorTime = data.Factors[0].Endtime
 
-
+      this.Factor_Customer_Property(data.Factors[0].CustomerCode)
 
 
       if (this.Start_FactorTime.length == 0) {
@@ -810,6 +860,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
     this.GetGood()
   }
+
   GetFactorrows() {
     this.repo.GetWebFactorRowsSupport(this.FactorCode).subscribe((data: any) => {
 

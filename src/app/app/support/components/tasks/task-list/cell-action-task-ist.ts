@@ -5,26 +5,23 @@ declare var $: any;
 @Component({
     selector: 'edit-delete-cell-renderer',
     template: ` 
-  <span [routerLink]="[params.editUrl, id]" class="btn btn-sm btn-outline-primary m-1" data-toggle="tooltip" title="اصلاح اطلاعات ">
+
+  <span [routerLink]="[params.editUrl, id]" class="btn btn-sm btn-outline-primary ">
   <a >
     <i class="fas fa-edit"></i>
   </a>
   </span>
-
-
-
-   <span   (click)="Address_Central()" class="btn btn-sm btn-outline-primary m-1" data-toggle="tooltip" title="جزئیات ">
+  <span (click)="btnDeleteClicked()" class="btn btn-sm btn-outline-danger ">
   <a >
-    <i class=" far fa-list-alt"></i>
+    <i class="fas fa-trash"></i>
   </a>
   </span>
 
-  
   `,
 
 })
 
-export class CellActionCentralList implements ICellRendererAngularComp {
+export class CellActionTaskList implements ICellRendererAngularComp {
     params: any;
     canEdit: true;
     canDelete: true;
@@ -48,17 +45,13 @@ export class CellActionCentralList implements ICellRendererAngularComp {
             this.canView = params.canView;
         }
 
-        if (params.data.CentralCode) {
-            this.id = params.data.CentralCode;
+        if (params.data.TaskCode) {
+            this.id = params.data.TaskCode;
         }
     }
 
-    btnDeleteClicked(arg) {
-        this.params.context.componentParent.delete(this.params.data.CentralCode);
-    }
-
-    Address_Central() {
-        this.params.context.componentParent.Address_Central(this.params.data.CentralCode, this.params.data.CentralName);
+    btnDeleteClicked() {
+        this.params.context.componentParent.delete(this.params.data.TaskCode);
     }
 
 
