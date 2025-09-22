@@ -58,7 +58,9 @@ export class SupportFactorWebApiService {
   DeleteTask(command): Observable<any[]> {
     return this.client.post<any[]>(this.baseUrl + "DeleteTask", command, { headers: this.headers })
   }
-
+  DeleteTaskAll(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "DeleteTaskAll", command, { headers: this.headers })
+  }
 
   GetFactor(command): Observable<any[]> {
     return this.client.post<any[]>(this.baseUrl + "GetFactor", command, { headers: this.headers })

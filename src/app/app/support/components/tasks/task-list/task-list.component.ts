@@ -102,8 +102,27 @@ export class TaskListComponent extends AgGridBaseComponent
   }
 
 
-
   getGridSchema() {
+    this.columnDefs6 = [
+
+      {
+        field: 'Explain',
+        headerName: 'شرح وظیفه',
+        minWidth: 250
+      },
+      {
+        field: 'عملیات',
+        pinned: 'left',
+        cellRenderer: CellActionTaskList,   // نام کلاس ریجستر شده
+        cellRendererParams: {
+          editUrl: '/support/task-edit',
+        },
+        width: 200,
+      }
+    ];
+  }
+
+  getGridSchema1() {
 
     this.columnDefs6 = [
       {
@@ -131,7 +150,7 @@ export class TaskListComponent extends AgGridBaseComponent
         cellRendererParams: {
           editUrl: '/support/task-edit',
         },
-        width: 150,
+        width: 250,
       }
     ];
 
@@ -148,6 +167,30 @@ export class TaskListComponent extends AgGridBaseComponent
       });
   }
 
+
+
+  deleteAll(TaskCode) {
+    this.EditForm_task.patchValue({
+      TaskCode: TaskCode,
+    });
+    this.Loading_Modal_Response_show()
+
+    this.repo.DeleteTaskAll(this.EditForm_task.value).subscribe((data: any) => {
+
+      if (data.KowsarTasks[0].Success == "0") {
+        this.Loading_Modal_Response_close()
+        this.notificationService.error(data.KowsarTasks[0].Message);
+
+      } else {
+        this.Loading_Modal_Response_close()
+        this.notificationService.succeded();
+        this.EditForm_task.reset()
+        this.GetTasks()
+      }
+
+    });
+
+  }
 
 
   delete(TaskCode) {
