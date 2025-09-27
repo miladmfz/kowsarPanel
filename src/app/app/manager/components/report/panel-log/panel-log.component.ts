@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { ManagerWebApiService } from '../../services/ManagerWebApi.service';
-import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { Router } from '@angular/router';
+import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
+import { ManagerWebApiService } from '../../../services/ManagerWebApi.service';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-application-log',
-  templateUrl: './application-log.component.html',
+  selector: 'app-panel-log',
+  templateUrl: './panel-log.component.html',
 })
-export class ApplicationLogComponent extends AgGridBaseComponent
+export class PanelLogComponent extends AgGridBaseComponent
   implements OnInit {
   records;
   title = 'لیست  لاگ های سیستم';

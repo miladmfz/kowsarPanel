@@ -1,18 +1,17 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { ManagerWebApiService } from '../../services/ManagerWebApi.service';
-import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { Router } from '@angular/router';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { IDatepickerTheme } from 'ng-persian-datepicker';
-import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
+import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
+import { ManagerWebApiService } from '../../../services/ManagerWebApi.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IDatepickerTheme } from 'ng-persian-datepicker';
 
 @Component({
-  selector: 'app-application-active',
-  templateUrl: './application-active.component.html',
+  selector: 'app-application-report',
+  templateUrl: './application-report.component.html',
 })
-export class ApplicationActiveComponent extends AgGridBaseComponent
+export class ApplicationReportComponent extends AgGridBaseComponent
   implements OnInit {
 
   constructor(

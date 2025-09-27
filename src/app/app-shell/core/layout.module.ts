@@ -30,6 +30,9 @@ import { CellStatusAttendancePanel } from './dashboard/component/attendance-pane
 import { CellWithoutRowsSupportPanel } from './dashboard/component/support-panel/cell-withoutrows-label-support-panel';
 import { CellOpenFactorSupportPanel } from './dashboard/component/support-panel/cell-openfactor-label-support-panel copy';
 import { CellActionAttendanceStatePanel } from './dashboard/component/support-panel/cell-action-attendance-panel';
+import { CellActionKowsarReport } from './dashboard/component/kowsar-report/cell-action-attendance-panel';
+import { KowsarReportComponent } from './dashboard/component/kowsar-report/kowsar-report.component';
+import { CellDateMinDate } from './dashboard/component/kowsar-report/cell-date-label-attendance-panel';
 
 const routes: Routes = [
   {
@@ -62,6 +65,7 @@ const routes: Routes = [
     DashboardComponent,
     AttendancePanelComponent,
     SupportPanelComponent,
+    KowsarReportComponent,
 
     CellActionAttendancePanel,
     CellDateAttendancePanel,
@@ -69,7 +73,9 @@ const routes: Routes = [
     CellStatusAttendancePanel,
     CellWithoutRowsSupportPanel,
     CellOpenFactorSupportPanel,
-    CellActionAttendanceStatePanel
+    CellActionAttendanceStatePanel,
+    CellActionKowsarReport,
+    CellDateMinDate,
 
   ],
   providers: [

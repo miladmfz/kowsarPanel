@@ -1,16 +1,15 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ManagerWebApiService } from '../../services/ManagerWebApi.service';
+import { Component, OnInit } from '@angular/core';
+import { ManagerWebApiService } from '../../../services/ManagerWebApi.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { Location } from '@angular/common';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
-@Component({
-  selector: 'app-application-form',
-  templateUrl: './application-form.component.html',
-})
 
-export class ApplicationFormComponent implements OnInit {
+@Component({
+  selector: 'app-application-edit',
+  templateUrl: './application-edit.component.html',
+})
+export class ApplicationEditComponent implements OnInit {
 
 
   constructor(

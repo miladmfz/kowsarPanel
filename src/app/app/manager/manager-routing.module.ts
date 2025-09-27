@@ -1,38 +1,24 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ApplicationFormComponent } from './components/application-form/application-form.component';
-import { ApplicationListComponent } from './components/application-list/application-list.component';
-import { ApplicationActiveComponent } from './components/application-active/application-active.component';
-import { ApplicationLogComponent } from './components/application-log/application-log.component';
+import { ApplicationListComponent } from './components/application/application-list/application-list.component';
+
 import { WebsiteListComponent } from './components/website/website-list/website-list.component';
 import { WebsiteEditComponent } from './components/website/website-edit/website-edit.component';
+import { PanelLogComponent } from './components/report/panel-log/panel-log.component';
+import { ApplicationReportComponent } from './components/report/application-report/application-report.component';
+import { ApplicationEditComponent } from './components/application/application-edit/application-edit.component';
 
 
 const routes: Routes = [
   {
     path: '',
     children: [
-      {
-        path: 'list',
-        component: ApplicationListComponent,
-      },
-      {
-        path: 'form',
-        component: ApplicationFormComponent,
-      },
-      {
-        path: 'form/:id',
-        component: ApplicationFormComponent,
-      },
 
-      {
-        path: 'active',
-        component: ApplicationActiveComponent,
-      },
-      {
-        path: 'log',
-        component: ApplicationLogComponent,
-      },
+
+      { path: 'application-list', component: ApplicationListComponent, },
+      { path: 'application-edit', component: ApplicationEditComponent, },
+      { path: 'application-edit/:id', component: ApplicationEditComponent, },
+
 
 
       { path: 'website-list', component: WebsiteListComponent, },
@@ -40,6 +26,13 @@ const routes: Routes = [
 
       { path: 'website-edit', component: WebsiteEditComponent, },
       { path: 'website-edit/:id', component: WebsiteEditComponent, },
+
+
+
+
+      { path: 'taskreport-list', component: WebsiteListComponent, },
+      { path: 'panel-log', component: PanelLogComponent, },
+      { path: 'application-report', component: ApplicationReportComponent, },
 
 
 

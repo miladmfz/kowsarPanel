@@ -147,25 +147,54 @@
                 <div class="card-body row">
 
                   <div class="col-md-12">
-                    <label for="AutLetterRow_PropDescription1" class="form-label">خلاصه عملکرد</label>
-                    <textarea formControlName="AutLetterRow_PropDescription1" id="AutLetterRow_PropDescription1"
-                      class="form-control" rows="4" autocomplete="off"></textarea>
-                  </div>
-
-                  <div class="col-md-12">
                     <label for="LetterRowDescription" class="form-label">شرح</label>
                     <input formControlName="LetterRowDescription" id="LetterRowDescription" class="form-control"
                       rows="4" autocomplete="off" readonly>
+
                   </div>
+
+
+                  <div class="col-md-12">
+                    <label for="AutLetterRow_PropDescription1" class="form-label">خلاصه عملکرد</label>
+                    <textarea formControlName="AutLetterRow_PropDescription1" id="AutLetterRow_PropDescription1"
+                      class="form-control" rows="4" autocomplete="off" [ngClass]="{
+                              'is-invalid':
+                              EditForm_explain.controls['AutLetterRow_PropDescription1'].invalid &&
+                              EditForm_explain.controls['AutLetterRow_PropDescription1'].touched,
+                              'is-valid':
+                              EditForm_explain.controls['AutLetterRow_PropDescription1'].valid &&
+                              EditForm_explain.controls['AutLetterRow_PropDescription1'].touched
+                            }"></textarea>
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                              validation: 'required',
+                              message: 'اجباری است',
+                              control: EditForm_explain.controls['AutLetterRow_PropDescription1']
+                            }"></ng-container>
+                  </div>
+
 
                   <div class="form-group col-md-12">
                     <label for="LetterRowState" class="col-form-label">وضعیت </label>
-                    <select formControlName="LetterRowState" id="LetterRowState" class="form-control custom-select">
+                    <select formControlName="LetterRowState" id="LetterRowState" class="form-control custom-select"
+                      [ngClass]="{
+                              'is-invalid':
+                              EditForm_explain.controls['LetterRowState'].invalid &&
+                              EditForm_explain.controls['LetterRowState'].touched,
+                              'is-valid':
+                              EditForm_explain.controls['LetterRowState'].valid &&
+                              EditForm_explain.controls['LetterRowState'].touched
+                            }">
                       <option value="">لطفاً انتخاب کنید</option>
 
                       <option *ngFor=" let item of LetterState_lookup" [value]="item.aType">{{ item.aType }}
                       </option>
+
                     </select>
+                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                              validation: 'required',
+                              message: 'اجباری است',
+                              control: EditForm_explain.controls['LetterRowState']
+                            }"></ng-container>
                   </div>
 
 

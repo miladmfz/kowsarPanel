@@ -3,7 +3,8 @@
     <h4 class="card-title">{{ title }}</h4>
     <div class="row mb-2">
       <div class="col-sm-12">
-        <a type="button" class="btn btn-success waves-effect waves-light m-1" [routerLink]="['/manager/form', 0]">
+        <a type="button" class="btn btn-success waves-effect waves-light m-1"
+          [routerLink]="['/manager/application-edit', 0]">
           <span class="btn-label"><i class="fas fa-plus"></i></span>جدید
         </a>
         <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">

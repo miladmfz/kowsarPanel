@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ManagerWebApiService } from '../../services/ManagerWebApi.service';
+import { ManagerWebApiService } from '../../../services/ManagerWebApi.service';
 import { Router } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { CellActionApplicationList } from './cell_action_application_list';
@@ -54,7 +54,7 @@ export class ApplicationListComponent
         pinned: 'left',
         cellRenderer: CellActionApplicationList,
         cellRendererParams: {
-          editUrl: '/manager/form',
+          editUrl: '/manager/application-edit',
         },
         width: 150,
       },
@@ -114,7 +114,7 @@ export class ApplicationListComponent
   }
 
   navigateToEdit(id) {
-    this.router.navigate(['/manager/form', id]);
+    this.router.navigate(['/manager/application-edit', id]);
   }
 
 

@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
 
     this.baseUrl = this.config.apiUrl
 
-    if (this.baseUrl == 'http://localhost:60006/api/') {
+    if (this.baseUrl == 'http://192.168.1.25:60006/api/') {
       this.developLogin()
     }
 
@@ -60,8 +60,16 @@ export class LoginComponent implements OnInit {
 
   developLogin() {
 
+    // this.LoginForm.setValue({
+    //   UName: 'mfz',
+    //   UPass: '123456'
+    // });
+
+
+
+
     this.LoginForm.setValue({
-      UName: 'mfz',
+      UName: 'سیروس',
       UPass: '123456'
     });
 

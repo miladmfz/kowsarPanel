@@ -80,8 +80,8 @@ export class AutletterItemComponent
   EditForm_explain = new FormGroup({
     ObjectRef: new FormControl('0'),
     LetterRowDescription: new FormControl(''),
-    LetterRowState: new FormControl(''),
-    AutLetterRow_PropDescription1: new FormControl(''),
+    LetterRowState: new FormControl('', Validators.required),
+    AutLetterRow_PropDescription1: new FormControl('', Validators.required),
   });
 
   customTheme: Partial<IDatepickerTheme> = {
@@ -308,6 +308,12 @@ export class AutletterItemComponent
 
 
   Set_Autletterrow_Property() {
+
+
+    this.EditForm_explain.markAllAsTouched();
+    if (!this.EditForm_explain.valid) return;
+
+
     this.Loading_Modal_Response_show()
     this.repo.Update_AutletterRow(this.EditForm_explain.value).subscribe((data: any) => {
       this.Loading_Modal_Response_close()

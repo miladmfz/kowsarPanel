@@ -6,19 +6,20 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Components Routing
 import { ManagerRoutingModule } from './manager-routing.module';
-import { ApplicationFormComponent } from './components/application-form/application-form.component';
-import { ApplicationListComponent } from './components/application-list/application-list.component';
-import { ApplicationActiveComponent } from './components/application-active/application-active.component';
-import { ApplicationLogComponent } from './components/application-log/application-log.component';
+import { ApplicationListComponent } from './components/application/application-list/application-list.component';
 import { AgGridModule } from 'ag-grid-angular';
-import { CellActionApplicationList } from './components/application-list/cell_action_application_list';
-import { ValidateionStateCellManageApplicationRenderer } from './components/application-list/validation-state-label-cell-manage-application';
+import { CellActionApplicationList } from './components/application/application-list/cell_action_application_list';
+import { ValidateionStateCellManageApplicationRenderer } from './components/application/application-list/validation-state-label-cell-manage-application';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import { NotifierModule } from 'angular-notifier';
 import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { WebsiteListComponent } from './components/website/website-list/website-list.component';
 import { WebsiteEditComponent } from './components/website/website-edit/website-edit.component';
 import { CellActionWebSiteList } from './components/website/website-list/cell_action_website_list';
+import { TaskReportComponent } from './components/report/task-report/task-report.component';
+import { PanelLogComponent } from './components/report/panel-log/panel-log.component';
+import { ApplicationReportComponent } from './components/report/application-report/application-report.component';
+import { ApplicationEditComponent } from './components/application/application-edit/application-edit.component';
 
 
 @NgModule({
@@ -33,16 +34,20 @@ import { CellActionWebSiteList } from './components/website/website-list/cell_ac
 
   ],
   declarations: [
-    ApplicationFormComponent,
+    ApplicationEditComponent,
     ApplicationListComponent,
-    ApplicationActiveComponent,
-    ApplicationLogComponent,
     CellActionApplicationList,
     ValidateionStateCellManageApplicationRenderer,
 
     WebsiteListComponent,
     WebsiteEditComponent,
-    CellActionWebSiteList
+    CellActionWebSiteList,
+
+
+    TaskReportComponent,
+    PanelLogComponent,
+    ApplicationReportComponent,
+
 
 
   ],

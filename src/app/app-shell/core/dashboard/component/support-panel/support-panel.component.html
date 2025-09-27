@@ -1,41 +1,39 @@
 <ng-container *ngIf="!loading_supportpanel">
-  <div class="container">
-    <div class="row">
-      <div class="col-12">
-        <div class="card shadow-sm" style="padding: 20px; border-radius: 10px;">
 
-          <!-- Header -->
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0">گزارش پشتیبانی پنل</h5>
 
-            <!-- Persian Date Picker -->
-            <form [formGroup]="Attendance_StatusDurations_temp" (ngSubmit)="onDateSubmit()" class="mb-0">
-              <div class="form-group mb-0">
-                <ng-persian-datepicker [uiHideAfterSelectDate]="true" (onSelect)="onDateChange()">
-                  <input type="text" class="form-control form-control-sm" formControlName="TargetDate"
-                    placeholder="انتخاب تاریخ..." />
-                </ng-persian-datepicker>
-              </div>
-              <button type="submit" class="btn btn-sm btn-primary">اعمال تاریخ</button>
+  <div class="card" style="padding: 20px;">
+    <!-- Header -->
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="card-title mb-0">گزارش پشتیبانی پنل</h5>
 
-            </form>
-          </div>
-
-          <!-- Body / Grid -->
-          <div class="card-body">
-            <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: 100%;"
-              [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [rowData]="records"
-              [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [modules]="modules" [localeText]="localeText"
-              [enableRtl]="true" [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context"
-              [suppressRowClickSelection]="true" [rowSelection]="'multiple'" (gridReady)="onGridReady($event)"
-              (cellClicked)="onCellClicked($event)" (selectionChanged)="onSelectionChanged($event)">
-            </ag-grid-angular>
-          </div>
-
+      <form [formGroup]="Attendance_StatusDurations_temp" (ngSubmit)="onDateSubmit()"
+        class="mb-0 d-flex align-items-center">
+        <div class="form-group mb-0 me-2" style="flex: 1;">
+          <ng-persian-datepicker [uiHideAfterSelectDate]="true" (onSelect)="onDateChange()">
+            <input type="text" class="form-control form-control-sm" formControlName="TargetDate"
+              placeholder="انتخاب تاریخ..." />
+          </ng-persian-datepicker>
         </div>
-      </div>
+
+        <button type="submit" class="btn btn-sm btn-primary">اعمال تاریخ</button>
+      </form>
+
+
+    </div>
+    <div class="card-body">
+
+      <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto;"
+        [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="records"
+        [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [modules]="modules" [localeText]="localeText"
+        [enableRtl]="true" [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context"
+        [suppressRowClickSelection]="true" [rowSelection]="'multiple'" (gridReady)="onGridReady($event)"
+        (cellClicked)="onCellClicked($event)" (selectionChanged)="onSelectionChanged($event)">
+      </ag-grid-angular>
+
     </div>
   </div>
+
+
 </ng-container>
 
 
@@ -52,11 +50,11 @@
           (click)="factorlisthistory_dialog_close()"></button>
       </div>
       <div class="modal-body">
-        <ag-grid-angular #agGrid id="myGrid" style="height: 500px; width: auto" [rowData]="records_history"
+        <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" [rowData]="records_history"
           [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
           (gridReady)="onGridReady2($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
           [frameworkComponents]="frameworkComponents" [context]="context"
-          [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [defaultColDef]="defaultColDef"
+          [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [defaultColDef]="defaultColDef"
           [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
           (selectionChanged)="onSelectionChanged($event)">
         </ag-grid-angular>

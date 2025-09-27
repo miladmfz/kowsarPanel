@@ -130,6 +130,13 @@ export class SupportFactorWebApiService {
   }
 
 
+  GetKowsarReport(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "GetKowsarReport", command, { headers: this.headers })
+
+  }
+
+
   GetGridSchema(Where: string): Observable<any[]> {
     const params = new HttpParams().append('Where', Where)
 
