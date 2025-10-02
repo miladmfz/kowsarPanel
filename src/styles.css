@@ -1,6 +1,6 @@
 @import 'ag-grid-enterprise/dist/styles/ag-grid.css';
-@import 'ag-grid-enterprise/dist/styles/ag-theme-alpine.css';
-@import 'ag-grid-enterprise/dist/styles/ag-theme-alpine-dark.css';
+@import 'ag-grid-enterprise/dist/styles/ag-theme-balham.css';
+@import 'ag-grid-enterprise/dist/styles/ag-theme-balham-dark.css';
 @import 'ag-grid-enterprise/dist/styles/ag-theme-balham.css';
 @import 'ag-grid-enterprise/dist/styles/ag-theme-balham-dark.css';
 
@@ -42,6 +42,6 @@ app-custom-button {
   margin: 0 -27px 20px;
 }
 
-.ag-theme-alpine .ag-header-cell-label {
+.ag-theme-balham .ag-header-cell-label {
   justify-content: center !important;
 }

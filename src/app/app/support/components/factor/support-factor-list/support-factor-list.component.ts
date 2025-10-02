@@ -80,8 +80,14 @@ export class SupportFactorListComponent extends AgGridBaseComponent
     SearchTarget: new FormControl(''),
     BrokerRef: new FormControl(''),
     isShopFactor: new FormControl('0'),
+    ClassName: new FormControl(''),
+    ObjectRef: new FormControl(''),
+
 
   });
+
+
+
 
   EditForm_supportfactor_property = new FormGroup({
     starttime: new FormControl(''),
@@ -168,6 +174,8 @@ export class SupportFactorListComponent extends AgGridBaseComponent
       });
 
   }
+
+
   getGridSchema() {
     this.repo.GetGridSchema('TFactor')
       .subscribe((data: any) => {

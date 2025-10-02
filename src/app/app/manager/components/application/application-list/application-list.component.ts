@@ -54,7 +54,7 @@ export class ApplicationListComponent
         pinned: 'left',
         cellRenderer: CellActionApplicationList,
         cellRendererParams: {
-          editUrl: '/manager/application-edit',
+          editUrl: '/manager/application-form',
         },
         width: 150,
       },
@@ -114,7 +114,7 @@ export class ApplicationListComponent
   }
 
   navigateToEdit(id) {
-    this.router.navigate(['/manager/application-edit', id]);
+    this.router.navigate(['/manager/application-form', id]);
   }
 
 

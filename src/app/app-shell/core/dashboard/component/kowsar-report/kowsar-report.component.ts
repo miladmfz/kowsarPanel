@@ -40,7 +40,8 @@ export class KowsarReportComponent extends AgGridBaseComponent
 
   records_letterrowstate
 
-  loading_supportpanel: boolean = true;
+  loading_person: boolean = true;
+  loading_letterrowstate: boolean = true;
   BrokerRef: string = '';
   BrokerHistroyName: string = '';
   letterexplain_modal_title: string = '';
@@ -332,10 +333,19 @@ export class KowsarReportComponent extends AgGridBaseComponent
 
   getFirstpanel_data() {
 
+    if (sessionStorage.getItem("CentralRef") == '1274' ||
+      sessionStorage.getItem("CentralRef") == '1139' ||
+      sessionStorage.getItem("CentralRef") == '1843') {
 
-    this.getpaneldata_report1()
-    //this.getpaneldata_report2("0", "0")
-    this.getpaneldata_report3()
+      this.getpaneldata_report1()
+      //this.getpaneldata_report2("0", "0")
+      this.getpaneldata_report3()
+
+    }
+
+
+
+
 
 
 
@@ -353,7 +363,7 @@ export class KowsarReportComponent extends AgGridBaseComponent
     });
 
     this.repo.GetKowsarReport(this.EditForm_KowsarReport1.value).subscribe((data: any) => {
-      this.loading_supportpanel = false
+      this.loading_person = false
 
       this.records_person = data.KowsarReports;
 
@@ -374,7 +384,6 @@ export class KowsarReportComponent extends AgGridBaseComponent
     });
 
     this.repo.GetKowsarReport(this.EditForm_KowsarReport2.value).subscribe((data: any) => {
-      this.loading_supportpanel = false
 
       this.records_personletterrow = data.KowsarReports;
 
@@ -402,7 +411,7 @@ export class KowsarReportComponent extends AgGridBaseComponent
     });
 
     this.repo.GetKowsarReport(this.EditForm_KowsarReport3.value).subscribe((data: any) => {
-      this.loading_supportpanel = false
+      this.loading_letterrowstate = false
 
       this.records_letterrowstate = data.KowsarReports;
 

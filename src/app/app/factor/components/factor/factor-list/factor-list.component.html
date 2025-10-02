@@ -123,6 +123,11 @@
 
             <!-- <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
                 [(ngModel)]="Searchtarget" (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" /> -->
+            <a type="button" class="btn btn-success waves-effect waves-light m-1"
+              [routerLink]="['/factor/factor-edit']">
+              <span class="btn-label"><i class="fas fa-plus"></i></span>جدید
+            </a>
+
             <a type="button" class="btn btn-primary waves-effect waves-light m-1" (click)="getList()">
               <span class="btn-label"><i class="fas fa-search"></i></span>جستجو
             </a>
@@ -169,7 +174,7 @@
         <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
           [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
           [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-          [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-alpine-dark"
+          [frameworkComponents]="frameworkComponents" [context]="context" class="ag-theme-balham-dark"
           [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
           (selectionChanged)="onSelectionChanged($event)">
         </ag-grid-angular>

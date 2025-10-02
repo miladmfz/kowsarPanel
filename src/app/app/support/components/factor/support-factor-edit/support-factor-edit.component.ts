@@ -41,6 +41,18 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
   isDarkMode: boolean = false;
   private themeSub!: Subscription;
 
+
+  EditForm_factor = new FormGroup({
+
+    ClassName: new FormControl(''),
+    ObjectRef: new FormControl(''),
+
+
+  });
+
+
+
+
   toggleTheme() {
     this.themeService.toggleTheme(); // از سرویس تم استفاده کن
   }
@@ -596,7 +608,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
       GoodName: good.GoodName,
       ClassName: 'Factor',
-      Amount: '0',
+      Amount: '1',
       Price: '0',
 
       maxsellprice: good.MaxSellPrice,
@@ -816,6 +828,10 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
   GetFactor() {
 
     this.Loading_Modal_Response_show()
+    this.EditForm_factor.patchValue({
+      ClassName: "Factor",
+      ObjectRef: this.FactorCode,
+    });
 
 
     this.repo.GetWebFactorSupport(this.FactorCode).subscribe((data: any) => {

@@ -18,6 +18,7 @@ import { SupgoodListComponent } from './components/supgood/supgood-list/supgood-
 import { SupgoodEditComponent } from './components/supgood/supgood-edit/supgood-edit.component';
 import { TaskListComponent } from './components/tasks/task-list/task-list.component';
 import { TaskEditComponent } from './components/tasks/task-edit/task-edit.component';
+import { ReportCustomerComponent } from './components/report/report-customer/report-customer.component';
 
 
 const routes: Routes = [
@@ -71,6 +72,8 @@ const routes: Routes = [
       { path: 'support-factor-edit', component: SupportFactorEditComponent, },
       { path: 'support-factor-edit/:id', component: SupportFactorEditComponent, },
 
+      { path: 'report-customer', component: ReportCustomerComponent, },
+      { path: 'report-factor', component: ReportCustomerComponent, },
 
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       { path: '**', redirectTo: 'list', pathMatch: 'full' },

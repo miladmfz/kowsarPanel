@@ -54,11 +54,7 @@
 
                       </div>
 
-                      <div class="form-group col-md-4">
-                        <label for="BrokerName" class="col-form-label">نام پشتیبان</label>
-                        <input type="text" class="form-control" id="BrokerName" formControlName="BrokerName"
-                          maxlength="100" autocomplete="off" readonly />
-                      </div>
+
                       <div class="form-group col-md-4">
                         <label for="CustName" class="col-form-label">نام مشتری</label>
                         <input type="text" class="form-control" id="CustName" formControlName="CustName" maxlength="100"
@@ -85,73 +81,12 @@
 
 
 
-
-                      <ng-container *ngIf="FactorCode.length>0">
-                        <form [formGroup]="EditForm_factor_property" id="submitForm">
-                          <div class="row">
-                            <div class="col-12">
-                              <div class="card">
-                                <div class="card-body row">
-
-
-
-
-                                  <ng-container *ngIf="Start_FactorTime.length>1">
-                                    <div class="form-group col-md-3">
-                                      <label for="starttime" class="col-form-label">شروع</label>
-                                      <input type="text" class="form-control" id="starttime" formControlName="starttime"
-                                        maxlength="100" autocomplete="off" readonly />
-                                    </div>
-
-                                    <div class="form-group col-md-3">
-                                      <label for="Endtime" class="col-form-label">پایان</label>
-                                      <input type="text" class="form-control" id="Endtime" formControlName="Endtime"
-                                        maxlength="100" autocomplete="off" readonly />
-                                    </div>
-
-                                    <div class="form-group col-md-3">
-                                      <label for="worktime" class="col-form-label">مدت </label>
-                                      <input type="text" class="form-control" id="worktime" formControlName="worktime"
-                                        maxlength="100" autocomplete="off" readonly />
-                                    </div>
-
-
-                                    <div class="form-group col-md-9">
-                                      <label for="Barbary" class="col-form-label">شرح</label>
-                                      <input type="text" class="form-control" id="Barbary" formControlName="Barbary"
-                                        maxlength="100" autocomplete="off" readonly />
-                                    </div>
-
-                                    <div class="form-group col-md-3">
-                                      <label for="Barbary" class="col-form-label">.</label>
-
-                                      <a type="button" class="form-control btn btn-primary waves-effect waves-light "
-                                        (click)="factor_property_dialog_show()">
-                                        <span class="btn-label"><i class="fas fa-file-alt"></i>
-                                        </span>اصلاح</a>
-                                    </div>
-
-                                  </ng-container>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </form>
-                      </ng-container>
-
                       <div class="row">
                         <div class="col-sm-12">
 
 
                           <ng-container *ngIf="FactorCode.length>0">
-                            <ng-container *ngIf="Start_FactorTime.length>1">
-                              <ng-container *ngIf="End_FactorTime.length==0">
-                                <a (click)="Set_EndFactorTime()" type="button"
-                                  class="btn btn-purple waves-effect waves-light m-1">
-                                  <span class=" btn-label"><i class="fas fa-arrow"></i></span>پایان کار
-                                </a>
-                              </ng-container>
-                            </ng-container>
+
 
 
                             <a type="button" class="btn btn-success waves-effect waves-light " (click)="NewFactor()">
@@ -215,7 +150,7 @@
                     [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
                     (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
                     [frameworkComponents]="frameworkComponents" [context]="context"
-                    [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [defaultColDef]="defaultColDef"
+                    [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [defaultColDef]="defaultColDef"
                     [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
                     (selectionChanged)="onSelectionChanged($event)">
                   </ag-grid-angular>
@@ -239,7 +174,7 @@
                 <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records_factorrows"
                   [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
                   (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-                  [context]="context" [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
+                  [context]="context" [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'"
                   [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
                   [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
                   (selectionChanged)="onSelectionChanged($event)">
@@ -289,7 +224,7 @@
           [columnDefs]="columnDefs3" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
           [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
           [frameworkComponents]="frameworkComponents" [context]="context"
-          [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [suppressRowClickSelection]="true"
+          [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [suppressRowClickSelection]="true"
           [rowSelection]="'single'" (selectionChanged)="onSelectionChanged($event)">
         </ag-grid-angular>
 
@@ -382,44 +317,6 @@
   </ng-container>
 </ng-template>
 
-
-
-
-
-<div class="modal fade" id="factorproperty" tabindex="-1" aria-labelledby="factorpropertyLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="background-color: #d1dce7;">
-      <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="factorpropertyLabel">شرح گزارش کاری </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-          (click)="factor_property_dialog_close()"></button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="EditForm_factor_property" id="submitForm">
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-body row">
-                  <div class="form-group col-md-12">
-                    <label for="Barbary" class="col-form-label">شرح</label>
-                    <input type="text" class="form-control" id="Barbary" formControlName="Barbary" maxlength="100"
-                      autocomplete="off" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-          (click)="factor_property_dialog_close()">بستن</button>
-        <button type="button" class="btn btn-primary" (click)="Set_ExplianFactorTime()">بروزرسانی</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 

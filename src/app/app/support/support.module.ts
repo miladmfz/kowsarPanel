@@ -36,6 +36,9 @@ import { CellActionSupGoodList } from './components/supgood/supgood-list/cell-ac
 import { TaskListComponent } from './components/tasks/task-list/task-list.component';
 import { TaskEditComponent } from './components/tasks/task-edit/task-edit.component';
 import { CellActionTaskList } from './components/tasks/task-list/cell-action-task-ist';
+import { ReportCustomerComponent } from './components/report/report-customer/report-customer.component';
+import { ReportFactorComponent } from './components/report/report-factor/report-factor.component';
+import { CellActionReportCustomer } from './components/report/report-customer/cell-action-report-customer-list';
 
 
 @NgModule({
@@ -89,10 +92,12 @@ import { CellActionTaskList } from './components/tasks/task-list/cell-action-tas
     TaskEditComponent,
     CellActionTaskList,
 
+    ReportCustomerComponent,
+    ReportFactorComponent,
 
 
     CellActionSupGoodList,
-
+    CellActionReportCustomer,
 
     CellActionSupportFactorList,
     CellActionSupportGoodEdit,

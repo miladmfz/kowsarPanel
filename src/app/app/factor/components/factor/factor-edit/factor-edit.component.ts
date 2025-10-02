@@ -39,6 +39,18 @@ export class FactorEditComponent extends AgGridBaseComponent
   toggleTheme() {
     this.themeService.toggleTheme(); // از سرویس تم استفاده کن
   }
+  EditForm_factor = new FormGroup({
+    StartDateTarget: new FormControl(''),
+    EndDateTarget: new FormControl(''),
+    SearchTarget: new FormControl(''),
+    BrokerRef: new FormControl(''),
+    isShopFactor: new FormControl('0'),
+    ClassName: new FormControl('PreFactor'),
+    ObjectRef: new FormControl('0'),
+
+
+  });
+
 
 
 
@@ -136,10 +148,12 @@ export class FactorEditComponent extends AgGridBaseComponent
 
   EditForm_Factor_Row = new FormGroup({
     FactorRef: new FormControl(''),
+    ObjectRef: new FormControl(''),
+
     GoodRef: new FormControl(''),
     GoodName: new FormControl(''),
     ClassName: new FormControl('Factor'),
-    Amount: new FormControl(''),
+    Amount: new FormControl('1'),
     Price: new FormControl(''),
     MustHasAmount: new FormControl('0'),
     MergeFlag: new FormControl('1'),
@@ -193,6 +207,27 @@ export class FactorEditComponent extends AgGridBaseComponent
       {
         field: 'GoodName',
         headerName: ' نام آیتم',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150,
+      },
+      {
+        field: 'FacAmount',
+        headerName: 'تعداد',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 50,
+      },
+      {
+        field: 'Price',
+        headerName: 'قیمت',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150,
+      },
+      {
+        field: 'SumPrice',
+        headerName: 'قیمت کل',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         minWidth: 150,
@@ -255,80 +290,14 @@ export class FactorEditComponent extends AgGridBaseComponent
     this.router.navigate(['/factor/factor-edit']);
   }
 
-  timeStringToDate(timeString: string): Date {
-    const [hours, minutes] = timeString.split(':').map(Number);
-    const date = new Date();
-    date.setHours(hours, minutes, 0, 0);
-    return date;
-  }
 
-  Set_StartFactorTime() {
-    this.Loading_Modal_Response_show()
-
-    const currentTime = new Date();
-    const hours = currentTime.getHours().toString().padStart(2, '0');
-    const minutes = currentTime.getMinutes().toString().padStart(2, '0');
-    const timeString = `${hours}:${minutes}`;
-
-    this.EditForm_factor_property.patchValue({
-      starttime: timeString,
-    });
-
-    this.repo.Support_StartFactorTime(this.EditForm_factor_property.value).subscribe((data: any) => {
-      this.notificationService.succeded();
-      this.Loading_Modal_Response_close()
-      this.GetFactor()
-    });
-  }
-
-  Set_EndFactorTime() {
-    this.Loading_Modal_Response_show()
-
-    const currentTime = new Date();
-    const hours = currentTime.getHours().toString().padStart(2, '0');
-    const minutes = currentTime.getMinutes().toString().padStart(2, '0');
-    const timeString = `${hours}:${minutes}`;
-
-    this.EditForm_factor_property.patchValue({
-      Endtime: timeString,
-    });
-
-    const start1 = this.timeStringToDate(this.EditForm_factor_property.value.starttime);
-    const end1 = this.timeStringToDate(this.EditForm_factor_property.value.Endtime);
-    let duration = (end1.getTime() - start1.getTime()) / 1000 / 60; // duration in minutes
-    this.EditForm_factor_property.patchValue({
-      worktime: duration + "",
-    });
-
-    if (duration < 0) {
-      this.EditForm_factor_property.patchValue({
-        worktime: "0",
-      });
-    }
-
-    this.repo.Support_EndFactorTime(this.EditForm_factor_property.value).subscribe((data: any) => {
-      this.notificationService.succeded();
-      this.Loading_Modal_Response_close()
-      this.GetFactor()
-    });
-  }
 
   handleEnterKey(event: KeyboardEvent) {
     if (event.key === 'Enter') {
       event.preventDefault();
-      this.Set_ExplianFactorTime();
     }
   }
 
-  Set_ExplianFactorTime() {
-    this.Loading_Modal_Response_show()
-    this.repo.Support_ExplainFactor(this.EditForm_factor_property.value).subscribe((data: any) => {
-      this.notificationService.succeded();
-      this.Loading_Modal_Response_close()
-      this.factor_property_dialog_close()
-      this.GetFactor()
-    });
-  }
 
   ngOnDestroy(): void {
     this.searchSubject_customer.unsubscribe();
@@ -373,6 +342,7 @@ export class FactorEditComponent extends AgGridBaseComponent
     this.selectedRows = []
     this.customer_dialog_close()
   }
+
   GoBack() {
     this.location.back();
   }
@@ -432,7 +402,7 @@ export class FactorEditComponent extends AgGridBaseComponent
   delete(id) {
     this.fireDeleteSwal1().then((result) => {
       if (result.isConfirmed) {
-        this.repo.DeleteWebFactorRowsSupport(id).subscribe((data: any) => {
+        this.repo.DeleteWebFactorRows(id).subscribe((data: any) => {
           this.GetFactorrows()
           this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
         });
@@ -443,34 +413,27 @@ export class FactorEditComponent extends AgGridBaseComponent
   }
 
   deletefactorRecord() {
-    this.repo.DeleteWebFactorSupport(this.FactorCode).subscribe((data: any) => {
+    this.repo.DeleteWebFactor(this.FactorCode).subscribe((data: any) => {
       this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
       this.location.back();
     });
   }
 
-  Show_Customer_Property(CustomerCode) {
-    this.property_dialog_show()
-    this.records_customer.forEach((customer: any) => {
-      if (customer.CustomerCode == CustomerCode) {
-        this.Customer_property.patchValue({
-          AppNumber: customer.AppNumber,
-          DatabaseNumber: customer.DatabaseNumber,
-          LockNumber: customer.LockNumber,
-          ObjectRef: customer.CustomerCode,
-          Address: customer.Address,
-          CityName: customer.CityName,
-          OstanName: customer.OstanName,
-        });
-      }
-    })
-  }
   // #endregion
 
   // #region Get_Data
   GetFactor() {
     this.Loading_Modal_Response_show()
-    this.repo.GetWebFactorSupport(this.FactorCode).subscribe((data: any) => {
+
+    this.EditForm_factor.patchValue({
+      ClassName: "Factor",
+      ObjectRef: this.FactorCode,
+      isShopFactor: "0",
+    });
+
+
+
+    this.repo.GetWebFactor(this.EditForm_factor.value).subscribe((data: any) => {
       this.selectedfactor = data.Factors[0]
       this.EditForm_Factor_Header.patchValue({
         FactorCode: data.Factors[0].FactorCode,
@@ -481,28 +444,17 @@ export class FactorEditComponent extends AgGridBaseComponent
         BrokerName: data.Factors[0].BrokerName,
         BrokerRef: data.Factors[0].BrokerRef,
       });
-
-      this.EditForm_factor_property.patchValue({
-        starttime: data.Factors[0].starttime,
-        Endtime: data.Factors[0].Endtime,
-        worktime: data.Factors[0].worktime,
-        Barbary: data.Factors[0].Barbary,
-        ObjectRef: data.Factors[0].FactorCode,
-      });
-
-      this.Start_FactorTime = data.Factors[0].starttime
-      this.End_FactorTime = data.Factors[0].Endtime
-
-      if (this.Start_FactorTime.length == 0) {
-        this.Set_StartFactorTime()
-      }
     });
+
+
+
 
     this.GetFactorrows()
     this.GetGood()
   }
+
   GetFactorrows() {
-    this.repo.GetWebFactorRowsSupport(this.FactorCode).subscribe((data: any) => {
+    this.repo.GetWebFactorRows(this.EditForm_factor.value).subscribe((data: any) => {
       this.records_factorrows = data.Factors
       this.Loading_Modal_Response_close()
     });
@@ -532,7 +484,9 @@ export class FactorEditComponent extends AgGridBaseComponent
     });
   }
 
-  insert_FactorRows() {
+  insert_FactorRows() { }
+
+  insert_FactorRows1() {
     this.EditForm_Factor_Row.patchValue({
       Amount: this.EditForm_Factor_Row.value.Amount + "",
       Price: this.EditForm_Factor_Row.value.Price + "",
@@ -596,7 +550,7 @@ export class FactorEditComponent extends AgGridBaseComponent
       GoodRef: good.GoodCode,
       GoodName: good.GoodName,
       ClassName: 'Factor',
-      Amount: '0',
+      Amount: '1',
       Price: '0',
       maxsellprice: good.MaxSellPrice,
       goodname: good.GoodName,
@@ -606,8 +560,8 @@ export class FactorEditComponent extends AgGridBaseComponent
       DefaultUnitValue: good.DefaultUnitValue
     });
 
-    //this.boxbuy_dialog_show();
-    this.insert_FactorRows()
+    this.boxbuy_dialog_show();
+    //this.insert_FactorRows()
   }
 
   // #endregion

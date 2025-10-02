@@ -63,7 +63,7 @@
 
           <div class="table-responsive">
             <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: 100%"
-              [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [rowData]="items"
+              [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="items"
               [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
               (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
               [context]="context" [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
@@ -85,7 +85,7 @@
 
           <div class="table-responsive">
             <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: 100%"
-              [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [rowData]="Printers"
+              [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="Printers"
               [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
               (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
               [context]="context" [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"

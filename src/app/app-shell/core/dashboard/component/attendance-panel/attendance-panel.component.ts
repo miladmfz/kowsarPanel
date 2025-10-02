@@ -102,6 +102,7 @@ export class AttendancePanelComponent
 
   BrokerRef: string = '';
   LetterCode: string = '';
+  ExecuterCentral: string = '';
   letterexplain_modal_title: string = '';
   ToDayDate: any;
   reportData: any[] = [];
@@ -224,19 +225,31 @@ export class AttendancePanelComponent
       LetterDate: this.ToDayDate,
       CreatorCentral: sessionStorage.getItem("CentralRef")
     });
+
+    this.EditForm_autletter.patchValue({
+      SearchTarget: "",
+      PersonInfoCode: this.ExecuterCentral,
+      Flag: "1",
+    });
+    this.EditForm_LetterToEmployer.patchValue({
+      DescriptionText: "",
+      ExecuterCentral: this.ExecuterCentral
+    });
     this.EditForm_LetterInsert.reset()
     this.EditForm_AutLetterRowInsert.reset()
 
     this.LetterCode = ""
   }
 
+
+
   SetLetter_config(item: any) {
 
-
+    this.ExecuterCentral = item.CentralRef
 
     this.EditForm_autletter.patchValue({
       SearchTarget: "",
-      PersonInfoCode: item.CentralRef,
+      PersonInfoCode: this.ExecuterCentral,
       Flag: "1",
     });
 
@@ -249,7 +262,7 @@ export class AttendancePanelComponent
 
       this.EditForm_LetterToEmployer.patchValue({
         DescriptionText: "",
-        ExecuterCentral: item.CentralRef
+        ExecuterCentral: this.ExecuterCentral
       });
 
 

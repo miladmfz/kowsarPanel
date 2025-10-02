@@ -6,7 +6,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Components Routing
 import { ManagerRoutingModule } from './manager-routing.module';
-import { ApplicationListComponent } from './components/application/application-list/application-list.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { CellActionApplicationList } from './components/application/application-list/cell_action_application_list';
 import { ValidateionStateCellManageApplicationRenderer } from './components/application/application-list/validation-state-label-cell-manage-application';
@@ -19,7 +18,8 @@ import { CellActionWebSiteList } from './components/website/website-list/cell_ac
 import { TaskReportComponent } from './components/report/task-report/task-report.component';
 import { PanelLogComponent } from './components/report/panel-log/panel-log.component';
 import { ApplicationReportComponent } from './components/report/application-report/application-report.component';
-import { ApplicationEditComponent } from './components/application/application-edit/application-edit.component';
+import { ApplicationListComponent } from './components/application/application-list/application-list.component';
+import { ApplicationFormComponent } from './components/application/application-form/application-form.component';
 
 
 @NgModule({
@@ -34,11 +34,10 @@ import { ApplicationEditComponent } from './components/application/application-e
 
   ],
   declarations: [
-    ApplicationEditComponent,
     ApplicationListComponent,
     CellActionApplicationList,
     ValidateionStateCellManageApplicationRenderer,
-
+    ApplicationFormComponent,
     WebsiteListComponent,
     WebsiteEditComponent,
     CellActionWebSiteList,

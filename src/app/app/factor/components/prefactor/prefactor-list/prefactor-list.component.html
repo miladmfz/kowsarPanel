@@ -55,13 +55,15 @@
 
               <!-- <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
                 [(ngModel)]="Searchtarget" (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" /> -->
-              <a type="button" class="btn btn-primary waves-effect waves-light m-1" (click)="getList()">
-                <span class="btn-label"><i class="fas fa-plus"></i></span>جستجو
-              </a>
+
               <a type="button" class="btn btn-success waves-effect waves-light m-1"
-                [routerLink]="['/factor/factor-edit']">
+                [routerLink]="['/factor/prefactor-edit']">
                 <span class="btn-label"><i class="fas fa-plus"></i></span>جدید
               </a>
+              <a type="button" class="btn btn-primary waves-effect waves-light m-1" (click)="getList()">
+                <span class="btn-label"></span>جستجو
+              </a>
+
               <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
                 <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
               </a>
@@ -96,7 +98,7 @@
             [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
             [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
             [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context"
-            [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [columnDefs]="columnDefs"
+            [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [columnDefs]="columnDefs"
             [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
             (selectionChanged)="onSelectionChanged($event)">
           </ag-grid-angular>

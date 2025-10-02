@@ -4,7 +4,7 @@
     <div class="row mb-2">
       <div class="col-sm-12">
         <a type="button" class="btn btn-success waves-effect waves-light m-1"
-          [routerLink]="['/manager/application-edit', 0]">
+          [routerLink]="['/manager/application-form', 0]">
           <span class="btn-label"><i class="fas fa-plus"></i></span>جدید
         </a>
         <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
@@ -37,7 +37,7 @@
       </div>
     </div>
     <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto"
-      [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [rowData]="records" [columnDefs]="columnDefs"
+      [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="records" [columnDefs]="columnDefs"
       [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef" [enableRtl]="true"
       (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
       [frameworkComponents]="frameworkComponents" [context]="context">

@@ -131,7 +131,7 @@
           </a>
         </li>
 
-        <!-- <li>
+        <li>
           <a href="#factor" data-bs-toggle="collapse" aria-expanded="false" aria-controls="factor">
             <i class="fas fa-cash-register"></i>
             <span>فروش</span>
@@ -139,15 +139,16 @@
           </a>
           <div class="collapse" id="factor">
             <ul class="nav-second-level">
+
               <li>
-                <a [routerLink]="['/factor/factor-edit">فاکتور فروش</a>
+                <a [routerLink]="['/factor/factor-list']">لیست فاکتور </a>
               </li>
               <li>
-                <a [routerLink]="['/factor/factor-list">لیست فاکتور فروش </a>
+                <a [routerLink]="['/factor/prefactor-list']">لیست پیش فاکتور </a>
               </li>
             </ul>
           </div>
-        </li> -->
+        </li>
 
 
         <ng-container *ngIf="JobPersonRef.length>0">
@@ -236,6 +237,12 @@
                 <li>
                   <a [routerLink]="['/support/support-factor-list']" routerLinkActive="active">لیست فاکتور پشتیبانی </a>
                 </li>
+
+                <li>
+                  <a [routerLink]="['/support/report-customer']" routerLinkActive="active">گزارش مشتریان</a>
+                </li>
+
+
                 <ng-container *ngIf="PhAddress3=='100'">
                   <li>
                     <a [routerLink]="['/support/task-list']" routerLinkActive="active">لیست خدمات</a>

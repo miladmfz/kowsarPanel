@@ -123,6 +123,10 @@ export class SupportFactorWebApiService {
   }
 
 
+
+
+
+
   GetSupportFactors(command): Observable<any[]> {
 
     return this.client.post<any[]>(this.baseUrl + "GetSupportFactors", command, { headers: this.headers })
@@ -170,6 +174,13 @@ export class SupportFactorWebApiService {
   GetSupportPanel(command): Observable<any[]> {
     return this.client.post<any[]>(this.baseUrl + "GetSupportPanel", command, { headers: this.headers })
   }
+
+
+
+  GetCustomerReport(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetCustomerReport", command, { headers: this.headers })
+  }
+
   GetAttendance_StatusDurations(command): Observable<any[]> {
     return this.client.post<any[]>(this.baseUrl + "GetAttendance_StatusDurations", command, { headers: this.headers })
   }
@@ -273,6 +284,13 @@ export class SupportFactorWebApiService {
     return this.client.get<any[]>(this.baseUrl + "GetSimilarGood", { headers: this.headers, params: params })
 
   }
+
+
+
+
+
+
+
 
   // GetProperty(Where: string): Observable<any[]> {
   //   const params = new HttpParams().append('Where', Where)

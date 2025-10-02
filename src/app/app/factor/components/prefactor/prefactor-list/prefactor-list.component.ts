@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { FactorWebApiService } from '../../../services/FactorWebApi.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
-import { Subscription } from 'rxjs';
+import { catchError, of, Subscription } from 'rxjs';
+import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
+import { CellActionPreFactorList } from './cell-action-prefactor-list';
 
 @Component({
   selector: 'app-prefactor-list',
@@ -16,8 +18,10 @@ export class PrefactorListComponent extends AgGridBaseComponent
 
   constructor(
     private readonly router: Router,
-    private basewebapi: FactorWebApiService,
-    private themeService: ThemeService
+    private repo: FactorWebApiService,
+    private renderer: Renderer2,
+    private notificationService: NotificationService,
+    private themeService: ThemeService,
   ) {
     super();
   }
@@ -28,26 +32,38 @@ export class PrefactorListComponent extends AgGridBaseComponent
   toggleTheme() {
     this.themeService.toggleTheme(); // از سرویس تم استفاده کن
   }
-  ngOnDestroy() {
 
-    this.themeSub.unsubscribe();
+  title = 'فاکتور پشتیبانی';
+  CentralRef: string = '';
+  JobPersonRef: string = '';
+  Searchtarget: string = '';
+  TextData: string = '';
+  BrokerRef: string = '';
+  BrokerRef_temp: string = '';
 
-  }
+  searchTerm: string = '';
+  selectedOption: string = '0';
 
+  EditForm_SupportData = new FormGroup({
+    DateTarget: new FormControl(''),
+    BrokerCode: new FormControl(''),
+    Flag: new FormControl('1'),
+  });
 
+  items: any[] = [];
 
   start_dateValue = new FormControl();
   End_dateValue = new FormControl();
+  loading: boolean = true;
 
-  CentralRef: string = '';
-  JobPersonRef: string = '';
+  records;
 
-  Searchtarget: string = '';
-  items: any[] = [];
-  TextData: string = '';
-  selectedOption: string = '0';
 
-  searchTerm: string = '';
+  loading_supportpanel: boolean = true;
+
+
+  reportData: any[] = [];
+
 
 
 
@@ -57,77 +73,281 @@ export class PrefactorListComponent extends AgGridBaseComponent
 
   };
 
+  EditForm_factor = new FormGroup({
+    StartDateTarget: new FormControl(''),
+    EndDateTarget: new FormControl(''),
+    SearchTarget: new FormControl(''),
+    BrokerRef: new FormControl(''),
+    isShopFactor: new FormControl('0'),
+    ClassName: new FormControl('PreFactor'),
+    ObjectRef: new FormControl('0'),
+  });
 
 
 
-  records;
-  title = 'پیش فاکتور های فروش  ';
+
+
+  EditForm_supportfactor_property = new FormGroup({
+    starttime: new FormControl(''),
+    Endtime: new FormControl(''),
+    worktime: new FormControl(''),
+    Barbary: new FormControl(''),
+    ObjectRef: new FormControl('0'),
+
+  });
+
+  submit(action) {
+  }
 
   onInputChange() {
     if (this.Searchtarget == "") {
       this.Searchtarget = ""
     }
     this.getList()
+
   }
+
+  ngOnDestroy() {
+
+    this.themeSub.unsubscribe();
+
+  }
+
 
 
   override ngOnInit(): void {
     super.ngOnInit();
+
     this.themeSub = this.themeService.theme$.subscribe(mode => {
       this.isDarkMode = (mode === 'dark');
     });
+    if (sessionStorage.getItem("PhAddress3") == '100') {
+      this.BrokerRef = ''
 
-    this.columnDefs = [
+    } else {
+      this.BrokerRef = sessionStorage.getItem("BrokerCode")
 
-      {
-        field: 'CustName_Small',
-        headerName: 'نام مشتری  ',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'Manager',
-        headerName: 'مدیریت',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'Explain',
-        headerName: 'پشتیبانی',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'Phone',
-        headerName: 'شماره تماس',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
+    }
 
-      {
-        field: 'Mobile',
-        headerName: 'موبایل',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-    ];
 
     this.getList();
+    this.getpanel_data()
+
+
+
+
   }
+
+  navigateToEdit(id) {
+    this.router.navigate(['/factor/prefactor-edit', id]);
+
+
+  }
+
+
+
+
+
+  getpanel_data() {
+    this.EditForm_SupportData.patchValue({
+      DateTarget: "",
+      BrokerCode: "1",
+      Flag: "1"
+    });
+
+    // this.repo.GetSupportPanel(this.EditForm_SupportData.value)
+    //   .subscribe((data: any) => {
+    //     if (this.BrokerRef == '') {
+    //       this.reportData = data.SupportDatas;
+    //     } else {
+    //       this.reportData = data.SupportDatas.filter(panel => panel.BrokerCode === this.BrokerRef);
+
+    //       this.reportData.forEach(row => {
+    //         if (row.WithoutRows > 0 || row.OpenFactor > 0) {
+    //           this.loading_supportpanel = false
+    //         }
+    //       });
+    //     }
+
+    //   });
+
+  }
+
+
+  getGridSchema() {
+    this.repo.GetGridSchema('TPreFactor')
+      .subscribe((data: any) => {
+        if (data && data.GridSchemas && data.GridSchemas.length > 0) {
+          this.columnDefs = data.GridSchemas.filter(schema => schema.Visible === "True").map(schema => ({
+            field: schema.FieldName,
+            headerName: schema.Caption,
+            cellClass: 'text-center',
+            filter: 'agSetColumnFilter',
+            sortable: true,
+            resizable: true,
+            minWidth: parseInt(schema.Width),
+            valueFormatter: schema.Separator === '1' ? this.customNumberFormatter : undefined
+          }));
+
+          this.columnDefs.unshift({
+            field: 'عملیات',
+            pinned: 'left',
+            cellRenderer: CellActionPreFactorList,
+
+            width: 150,
+            sortable: false,
+            filter: false,
+            // resizable: false
+          });
+        }
+        this.EditForm_factor.patchValue({
+          BrokerRef: this.BrokerRef,
+          isShopFactor: "0",
+        });
+        this.loading = true
+
+
+        this.repo.GetWebFactor(this.EditForm_factor.value).pipe(
+          catchError(error => {
+            this.notificationService.error('مشکل در برقراری ارتباط', "خطا");
+            return of(null); // یا هر مقدار جایگزین
+          })).subscribe((data: any) => {
+
+            console.log(data.Factors);
+            this.records = data.Factors;
+            this.loading = false
+
+          });
+
+
+      });
+  }
+
+  customNumberFormatter(params) {
+    if (params.value === null || params.value === undefined) {
+      return ''; // اگر مقدار خالی است، چیزی نمایش نده.
+    }
+
+    // اطمینان حاصل کن که مقدار یک عدد است
+    let value = parseFloat(params.value);
+    if (isNaN(value)) {
+      return params.value; // اگر مقدار عددی نیست، همان مقدار اولیه را برگردان.
+    }
+
+    // فرمت اعداد با کاما برای جداسازی هر سه رقم و حذف صفرهای اضافی در اعشار
+    let formattedValue = value.toLocaleString('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 20 // حداکثر تعداد رقم‌های اعشار را بزرگ بگیر تا هنگام حذف، دقیق باشد.
+    });
+
+    // حذف صفرهای اضافی اعشاری اگر لازم باشد
+    if (formattedValue.indexOf('.') > -1) {
+      formattedValue = formattedValue.replace(/\.?0+$/, '');
+    }
+
+    return formattedValue;
+  }
+
+
+  delete(PreFactorCode) {
+
+    this.repo.DeleteWebPreFactor(PreFactorCode).subscribe(
+      (data: any) => {
+        // ✅ وقتی موفق شد
+        this.notificationService.succeded('ردیف با موفقیت حذف شد.');
+        this.getGridSchema();
+      },
+      (error: any) => {
+        // ❌ وقتی خطا داد
+        console.error(error);
+        this.notificationService.error('حذف ردیف با خطا مواجه شد دارای رکورد وابسته می باشد.');
+      }
+    );
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
   getList() {
 
+    this.getGridSchema()
+
+    /*
+
+
+*/
+
+  }
 
 
 
+
+
+  Edit_factor_Property(FactorCode) {
+
+    this.property_dialog_show()
+    this.records.forEach((factor: any) => {
+
+      if (factor.FactorCode == FactorCode) {
+        this.EditForm_supportfactor_property.patchValue({
+          starttime: factor.starttime,
+          Endtime: factor.Endtime,
+          worktime: factor.worktime,
+          Barbary: factor.Barbary,
+          ObjectRef: factor.FactorCode,
+        });
+      }
+
+
+    })
+  }
+
+
+
+
+
+  Set_factor_Property() {
+
+    this.repo.EditFactorProperty(this.EditForm_supportfactor_property.value)
+      .subscribe((data: any) => {
+        this.property_dialog_close()
+        this.getList()
+        this.EditForm_supportfactor_property.reset()
+      });
+
+
+
+  }
+
+
+  property_dialog_show() {
+    const modal = this.renderer.selectRootElement('#supportfactorproperty', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  property_dialog_close() {
+    const modal = this.renderer.selectRootElement('#supportfactorproperty', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
   }
 
 

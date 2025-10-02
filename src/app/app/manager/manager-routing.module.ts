@@ -6,18 +6,23 @@ import { WebsiteListComponent } from './components/website/website-list/website-
 import { WebsiteEditComponent } from './components/website/website-edit/website-edit.component';
 import { PanelLogComponent } from './components/report/panel-log/panel-log.component';
 import { ApplicationReportComponent } from './components/report/application-report/application-report.component';
-import { ApplicationEditComponent } from './components/application/application-edit/application-edit.component';
+import { ApplicationFormComponent } from './components/application/application-form/application-form.component';
 
 
 const routes: Routes = [
   {
     path: '',
+    data: {
+      title: 'application',
+    },
     children: [
 
 
       { path: 'application-list', component: ApplicationListComponent, },
-      { path: 'application-edit', component: ApplicationEditComponent, },
-      { path: 'application-edit/:id', component: ApplicationEditComponent, },
+
+
+      { path: 'application-form', component: ApplicationFormComponent, },
+      { path: 'application-form/:id', component: ApplicationFormComponent, },
 
 
 

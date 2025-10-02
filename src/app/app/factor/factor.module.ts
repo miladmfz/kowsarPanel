@@ -14,6 +14,10 @@ import { CellActionFactorList } from './components/factor/factor-list/cell-actio
 import { CellActionFactorRowsEdit } from './components/factor/factor-edit/cell-action-factorrows-edit';
 import { CellActionGoodEdit } from './components/factor/factor-edit/cell-action-good-edit';
 import { CellActionFactorCustomerEdit } from './components/factor/factor-edit/cell-action-factor-customer-edit';
+import { CellActionPreFactorList } from './components/prefactor/prefactor-list/cell-action-prefactor-list';
+import { CellActionPreGoodEdit } from './components/prefactor/prefactor-edit/cell-action-pregood-edit';
+import { CellActionPreFactorRowsEdit } from './components/prefactor/prefactor-edit/cell-action-prefactorrows-edit';
+import { CellActionPreFactorCustomerEdit } from './components/prefactor/prefactor-edit/cell-action-prefactor-customer-edit';
 
 
 @NgModule({
@@ -38,6 +42,14 @@ import { CellActionFactorCustomerEdit } from './components/factor/factor-edit/ce
     CellActionGoodEdit,
     CellActionFactorRowsEdit,
     CellActionFactorCustomerEdit,
+
+
+    CellActionPreGoodEdit,
+    CellActionPreFactorRowsEdit,
+    CellActionPreFactorCustomerEdit,
+
+
+    CellActionPreFactorList,
   ]
 })
 export class FactorModule { }

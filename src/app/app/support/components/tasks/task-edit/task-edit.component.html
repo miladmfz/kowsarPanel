@@ -90,12 +90,51 @@
                       <div class="form-group col-md-4">
                         <label for="ParentCode6" class="col-form-label"> سطح 6 </label>
                         <select formControlName="ParentCode6" id="ParentCode6" class="form-control custom-select"
-                          data-toggle="select2">
+                          data-toggle="select2" (change)="GetParent_lvl7()">
                           <option [value]="item.TaskCode" *ngFor="let item of Parent_lvl6">{{item.Title}}</option>
                         </select>
                       </div>
 
                     </ng-container>
+
+
+                    <ng-container *ngIf="Parent_lvl7.length>0">
+                      <div class="form-group col-md-4">
+                        <label for="ParentCode7" class="col-form-label"> سطح 7 </label>
+                        <select formControlName="ParentCode7" id="ParentCode7" class="form-control custom-select"
+                          data-toggle="select2" (change)="GetParent_lvl8()">
+                          <option [value]="item.TaskCode" *ngFor="let item of Parent_lvl7">{{item.Title}}</option>
+                        </select>
+                      </div>
+
+                    </ng-container>
+
+
+
+                    <ng-container *ngIf="Parent_lvl8.length>0">
+                      <div class="form-group col-md-4">
+                        <label for="ParentCode8" class="col-form-label"> سطح 8 </label>
+                        <select formControlName="ParentCode8" id="ParentCode8" class="form-control custom-select"
+                          data-toggle="select2" (change)="GetParent_lvl9()">
+                          <option [value]="item.TaskCode" *ngFor="let item of Parent_lvl8">{{item.Title}}</option>
+                        </select>
+                      </div>
+
+                    </ng-container>
+
+
+
+                    <ng-container *ngIf="Parent_lvl9.length>0">
+                      <div class="form-group col-md-4">
+                        <label for="ParentCode9" class="col-form-label"> سطح 9 </label>
+                        <select formControlName="ParentCode9" id="ParentCode9" class="form-control custom-select"
+                          data-toggle="select2">
+                          <option [value]="item.TaskCode" *ngFor="let item of Parent_lvl9">{{item.Title}}</option>
+                        </select>
+                      </div>
+
+                    </ng-container>
+
 
 
 

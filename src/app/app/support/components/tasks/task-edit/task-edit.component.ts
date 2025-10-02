@@ -39,6 +39,9 @@ export class TaskEditComponent extends AgGridBaseComponent
   Parent_lvl4: any[] = [];
   Parent_lvl5: any[] = [];
   Parent_lvl6: any[] = [];
+  Parent_lvl7: any[] = [];
+  Parent_lvl8: any[] = [];
+  Parent_lvl9: any[] = [];
 
 
   EditForm_task = new FormGroup({
@@ -52,6 +55,9 @@ export class TaskEditComponent extends AgGridBaseComponent
     ParentCode4: new FormControl(''),
     ParentCode5: new FormControl(''),
     ParentCode6: new FormControl(''),
+    ParentCode7: new FormControl(''),
+    ParentCode8: new FormControl(''),
+    ParentCode9: new FormControl(''),
 
     ParentName1: new FormControl(''),
     ParentName2: new FormControl(''),
@@ -59,6 +65,9 @@ export class TaskEditComponent extends AgGridBaseComponent
     ParentName4: new FormControl(''),
     ParentName5: new FormControl(''),
     ParentName6: new FormControl(''),
+    ParentName7: new FormControl(''),
+    ParentName8: new FormControl(''),
+    ParentName9: new FormControl(''),
 
     Flag: new FormControl('1'),
 
@@ -162,6 +171,10 @@ export class TaskEditComponent extends AgGridBaseComponent
     this.Parent_lvl4 = [];
     this.Parent_lvl5 = [];
     this.Parent_lvl6 = [];
+    this.Parent_lvl7 = [];
+    this.Parent_lvl8 = [];
+    this.Parent_lvl9 = [];
+
     this.EditForm_task.patchValue({
       TaskRef: this.EditForm_task.value.ParentCode1,
 
@@ -179,6 +192,9 @@ export class TaskEditComponent extends AgGridBaseComponent
     this.Parent_lvl4 = [];
     this.Parent_lvl5 = [];
     this.Parent_lvl6 = [];
+    this.Parent_lvl7 = [];
+    this.Parent_lvl8 = [];
+    this.Parent_lvl9 = [];
     this.EditForm_task.patchValue({
       TaskRef: this.EditForm_task.value.ParentCode2,
 
@@ -194,6 +210,9 @@ export class TaskEditComponent extends AgGridBaseComponent
 
     this.Parent_lvl5 = [];
     this.Parent_lvl6 = [];
+    this.Parent_lvl7 = [];
+    this.Parent_lvl8 = [];
+    this.Parent_lvl9 = [];
     this.EditForm_task.patchValue({
       TaskRef: this.EditForm_task.value.ParentCode3,
 
@@ -205,9 +224,13 @@ export class TaskEditComponent extends AgGridBaseComponent
 
 
   }
+
   GetParent_lvl5() {
 
     this.Parent_lvl6 = [];
+    this.Parent_lvl7 = [];
+    this.Parent_lvl8 = [];
+    this.Parent_lvl9 = [];
     this.EditForm_task.patchValue({
       TaskRef: this.EditForm_task.value.ParentCode4,
 
@@ -223,6 +246,9 @@ export class TaskEditComponent extends AgGridBaseComponent
 
   GetParent_lvl6() {
 
+    this.Parent_lvl7 = [];
+    this.Parent_lvl8 = [];
+    this.Parent_lvl9 = [];
     this.EditForm_task.patchValue({
       TaskRef: this.EditForm_task.value.ParentCode5,
 
@@ -234,6 +260,54 @@ export class TaskEditComponent extends AgGridBaseComponent
 
 
   }
+
+  GetParent_lvl7() {
+    this.Parent_lvl8 = [];
+    this.Parent_lvl9 = [];
+    this.EditForm_task.patchValue({
+      TaskRef: this.EditForm_task.value.ParentCode6,
+
+    });
+    this.repo.GetTasks(this.EditForm_task.value)
+      .subscribe((data: any) => {
+        this.Parent_lvl7 = data.KowsarTasks;
+      });
+
+
+  }
+
+
+  GetParent_lvl8() {
+
+    this.Parent_lvl9 = [];
+    this.EditForm_task.patchValue({
+      TaskRef: this.EditForm_task.value.ParentCode7,
+
+    });
+    this.repo.GetTasks(this.EditForm_task.value)
+      .subscribe((data: any) => {
+        this.Parent_lvl8 = data.KowsarTasks;
+      });
+
+
+  }
+
+
+  GetParent_lvl9() {
+
+    this.Parent_lvl9 = [];
+    this.EditForm_task.patchValue({
+      TaskRef: this.EditForm_task.value.ParentCode8,
+
+    });
+    this.repo.GetTasks(this.EditForm_task.value)
+      .subscribe((data: any) => {
+        this.Parent_lvl9 = data.KowsarTasks;
+      });
+
+
+  }
+
 
 
 
@@ -249,6 +323,10 @@ export class TaskEditComponent extends AgGridBaseComponent
     this.Parent_lvl4 = [];
     this.Parent_lvl5 = [];
     this.Parent_lvl6 = [];
+    this.Parent_lvl7 = [];
+    this.Parent_lvl8 = [];
+    this.Parent_lvl9 = [];
+
     this.GetParent_lvl1()
   }
 

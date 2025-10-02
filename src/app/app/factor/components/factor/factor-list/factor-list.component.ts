@@ -53,8 +53,10 @@ export class FactorListComponent extends AgGridBaseComponent
     SearchTarget: new FormControl(''),
     BrokerRef: new FormControl(''),
     isShopFactor: new FormControl('0'),
-
+    ClassName: new FormControl('Factor'),
+    ObjectRef: new FormControl('0'),
   });
+
 
   EditForm_factor_property = new FormGroup({
     starttime: new FormControl(''),
@@ -193,7 +195,7 @@ export class FactorListComponent extends AgGridBaseComponent
       });
       this.loading = true
 
-      this.repo.GetFactors(this.EditForm_factor.value).subscribe((data: any) => {
+      this.repo.GetWebFactor(this.EditForm_factor.value).subscribe((data: any) => {
         this.records = data.Factors;
         this.loading = false
 

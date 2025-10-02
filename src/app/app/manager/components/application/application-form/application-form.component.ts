@@ -6,10 +6,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 
 @Component({
-  selector: 'app-application-edit',
-  templateUrl: './application-edit.component.html',
+  selector: 'app-application-form',
+  templateUrl: './application-form.component.html',
 })
-export class ApplicationEditComponent implements OnInit {
+export class ApplicationFormComponent implements OnInit {
 
 
   constructor(
@@ -17,7 +17,6 @@ export class ApplicationEditComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly notificationService: NotificationService,
     private readonly router: Router,
-    private location: Location,
   ) { }
 
   title = 'ایجاد نوع داده انتخابی';

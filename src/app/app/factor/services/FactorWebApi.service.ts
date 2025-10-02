@@ -73,14 +73,24 @@ export class FactorWebApiService {
 
 
 
-  DeleteWebFactorRowsSupport(FactorRowCode: string): Observable<any[]> {
+  DeleteWebFactorRows(FactorRowCode: string): Observable<any[]> {
     const params = new HttpParams().append('FactorRowCode', FactorRowCode)
-    return this.client.get<any[]>(this.baseUrl + "DeleteWebFactorRowsSupport", { headers: this.headers, params: params })
+    return this.client.get<any[]>(this.baseUrl + "DeleteWebFactorRows", { headers: this.headers, params: params })
   }
-  DeleteWebFactorSupport(FactorCode: string): Observable<any[]> {
+  DeleteWebFactor(FactorCode: string): Observable<any[]> {
     const params = new HttpParams().append('FactorCode', FactorCode)
-    return this.client.get<any[]>(this.baseUrl + "DeleteWebFactorSupport", { headers: this.headers, params: params })
+    return this.client.get<any[]>(this.baseUrl + "DeleteWebFactor", { headers: this.headers, params: params })
   }
+
+  DeleteWebPreFactorRows(FactorRowCode: string): Observable<any[]> {
+    const params = new HttpParams().append('PreFactorRowCode', FactorRowCode)
+    return this.client.get<any[]>(this.baseUrl + "DeleteWebPreFactorRows", { headers: this.headers, params: params })
+  }
+  DeleteWebPreFactor(FactorCode: string): Observable<any[]> {
+    const params = new HttpParams().append('PreFactorCode', FactorCode)
+    return this.client.get<any[]>(this.baseUrl + "DeleteWebPreFactor", { headers: this.headers, params: params })
+  }
+
 
 
   GetObjectTypeFromDbSetup(ObjectType: string): Observable<any[]> {
@@ -120,6 +130,20 @@ export class FactorWebApiService {
     return this.client.get<any[]>(this.baseUrl + "GetGridSchema", { headers: this.headers, params: params })
   }
 
+
+
+
+
+  GetWebFactor(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "GetWebFactor", command, { headers: this.headers })
+
+  }
+  GetWebFactorRows(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "GetWebFactorRows", command, { headers: this.headers })
+
+  }
 
 
   // GetProperty(Where: string): Observable<any[]> {

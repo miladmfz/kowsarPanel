@@ -1,16 +1,13 @@
-<ng-container *ngIf="!loading_supportpanel">
-
-
-
-
-
+<ng-container *ngIf="!loading_person">
 
   <div class="card" style="padding: 20px;">
     <!-- Header -->
     <div class="card-header d-flex justify-content-between align-items-center">
       <h5 class="card-title mb-0">گزارش ارجاعات کارشناسان </h5>
 
-
+      <button type="submit" class="btn btn-primary" style="height: 40px;" (click)="getpaneldata_report1()">
+        🔄 بروزرسانی
+      </button>
     </div>
     <div class="card-body">
 
@@ -28,8 +25,9 @@
   </div>
 
 
+</ng-container>
 
-
+<ng-container *ngIf="!loading_letterrowstate">
 
   <div class="card" style="padding: 20px;">
     <!-- Header -->
@@ -37,12 +35,12 @@
       <h5 class="card-title mb-0">گزارش وضعیت ارجاعات </h5>
 
       <!-- Persian Date Picker -->
-      <form [formGroup]="EditForm_KowsarReport3" class="mb-0">
+      <form [formGroup]="EditForm_KowsarReport3" class="mb-0 d-flex align-items-center">
 
 
 
 
-        <div class="form-group col-md-6">
+        <div class="form-group mb-0 me-2" style="flex: 1;">
           <select formControlName="SearchTarget" id="SearchTarget" class="form-control custom-select"
             style="height: 40px; font-size: 14px; min-width: 200px;" (change)="getpaneldata_report3()">
             <option *ngFor="let item of LetterState_Lookup" [value]="item.id">{{ item.name }}</option>
@@ -50,9 +48,14 @@
 
         </div>
 
-
+        <!-- Refresh Button -->
+        <button type="submit" class="btn btn-primary" style="height: 40px;" (click)="getpaneldata_report3()">
+          🔄 بروزرسانی
+        </button>
 
       </form>
+
+
 
     </div>
     <div class="card-body">
@@ -72,46 +75,33 @@
 
 
 
+</ng-container>
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="modal fade" id="personletter" tabindex="-1" aria-labelledby="personletterLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content" style="background-color: #d1dce7;">
-        <div class="modal-header" style="background-color: #949494;">
-          <h5 class="modal-title" id="personletterLabel">{{BrokerHistroyName}} </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-            (click)="personletter_dialog_close()"></button>
-        </div>
-        <div class="modal-body">
-          <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" [rowData]="records_personletterrow"
-            [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
-            (gridReady)="onGridReady2($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-            [frameworkComponents]="frameworkComponents" [context]="context"
-            [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [defaultColDef]="defaultColDef"
-            [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
-            (selectionChanged)="onSelectionChanged($event)">
-          </ag-grid-angular>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-            (click)="personletter_dialog_close()">بستن</button>
-        </div>
+<div class="modal fade" id="personletter" tabindex="-1" aria-labelledby="personletterLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="personletterLabel">{{BrokerHistroyName}} </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="personletter_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" [rowData]="records_personletterrow"
+          [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+          (gridReady)="onGridReady2($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+          [frameworkComponents]="frameworkComponents" [context]="context"
+          [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [defaultColDef]="defaultColDef"
+          [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+          (selectionChanged)="onSelectionChanged($event)">
+        </ag-grid-angular>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="personletter_dialog_close()">بستن</button>
       </div>
     </div>
   </div>
+</div>

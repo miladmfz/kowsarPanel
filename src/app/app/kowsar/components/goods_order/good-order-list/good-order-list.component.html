@@ -40,7 +40,7 @@
     </div>
 
     <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto"
-      [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" [rowData]="records" [columnDefs]="columnDefs"
+      [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="records" [columnDefs]="columnDefs"
       [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef" [enableRtl]="true"
       (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
       [frameworkComponents]="frameworkComponents" [context]="context">
