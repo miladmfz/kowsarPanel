@@ -56,7 +56,7 @@ export class CellActionletterPreFactorList implements ICellRendererAngularComp {
 
 
   NavigateToPreFactor() {
-    this.params.context.componentParent.NavigateToPreFactor(this.params.data.PreFactor);
+    this.params.context.componentParent.NavigateToPreFactor(this.params.data.PreFactorCode);
   }
 
 
