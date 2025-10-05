@@ -14,6 +14,8 @@ import { Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { AppConfigService } from 'src/app/app-config.service';
+import { CellActionSupportAutletterFactorList } from './cell-action-support-autletter-factor-list';
 
 @Component({
   selector: 'app-support-factor-edit',
@@ -32,7 +34,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
     private fb: FormBuilder,
     private sharedService: SharedService,
     private readonly notificationService: NotificationService,
-
+    private config: AppConfigService,
     private themeService: ThemeService
   ) {
     super();
@@ -41,14 +43,6 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
   isDarkMode: boolean = false;
   private themeSub!: Subscription;
 
-
-  EditForm_factor = new FormGroup({
-
-    ClassName: new FormControl(''),
-    ObjectRef: new FormControl(''),
-
-
-  });
 
 
 
@@ -103,11 +97,237 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
   }
 
 
+  EditForm_autletter = new FormGroup({
+    SearchTarget: new FormControl(''),
+    CentralRef: new FormControl(''),
+    CreationDate: new FormControl(''),
+    OwnCentralRef: new FormControl(''),
+    PersonInfoCode: new FormControl(''),
+    StartTime: new FormControl(''),
+    EndTime: new FormControl(''),
+
+  });
+
+
+
+  EditForm_search = new FormGroup({
+    SearchTarget: new FormControl(''),
+    ObjectRef: new FormControl(''),
+  });
+
+
+  users: any[] = [];
+
+
+  EditForm_LetterInsert = new FormGroup({
+    LetterDate: new FormControl(''),
+    title: new FormControl(''),
+    Description: new FormControl(''),
+    LetterState: new FormControl(''),
+    LetterPriority: new FormControl(''),
+    CentralRef: new FormControl(''),
+    InOutFlag: new FormControl(''),
+    CreatorCentral: new FormControl(''),
+    OwnerCentral: new FormControl(''),
+  });
+
+
+  EditForm_AutLetterRowInsert = new FormGroup({
+
+    LetterRef: new FormControl(''),
+    LetterDate: new FormControl(''),
+    Description: new FormControl(''),
+    LetterState: new FormControl(''),
+    LetterPriority: new FormControl(''),
+    CreatorCentral: new FormControl(''),
+    ExecuterCentral: new FormControl(''),
+
+  });
+
+
+
+  Autletterfromcustomer() {
+
+    this.Autletter_dialog_show()
+
+    this.loading_letterowener = true
+
+    this.letterexplain_modal_title = " تیکت ارتباط با " + this.EditForm_Factor_Header.value.CustName
+
+    this.EditForm_search.patchValue({
+      ObjectRef: this.EditForm_Factor_Header.value.CustomerCode,
+    });
+
+    this.repo.GetCentralUser().subscribe(e => {
+      this.users = e;
+    });
+
+    this.repo.GetCustomerById(this.EditForm_search.value).subscribe((data: any) => {
+
+
+
+      this.EditForm_LetterToEmployer.patchValue({
+        DescriptionText: "",
+        LetterDate: this.ToDayDate,
+        ExecuterCentral: "",
+        CreatorCentral: sessionStorage.getItem("CentralRef"),
+        OwnerCentral: data.Customers[0].CentralRef,
+        OwnerName: data.Customers[0].CustName_Small,
+      });
+
+
+
+      this.EditForm_autletter.patchValue({
+        CentralRef: data.Customers[0].CentralRef,
+        OwnCentralRef: "0",
+
+      });
+
+
+      this.repo.GetLetterList(this.EditForm_autletter.value).subscribe((data) => {
+        this.records_letterfromowner = data;
+        this.loading_letterowener = false
+      });
+
+
+
+    });
+
+
+
+  }
+
+
+  toggel_show_newletter() {
+
+    if (this.show_newletter) {
+
+      this.EditForm_LetterToEmployer.patchValue({
+        DescriptionText: "",
+        ExecuterCentral: "",
+      });
+    }
+
+    this.show_newletter = !this.show_newletter
+
+  }
+
+
+  SendLetter() {
+
+    this.EditForm_LetterToEmployer.markAllAsTouched();
+    if (!this.EditForm_LetterToEmployer.valid) return;
+
+
+
+
+    this.EditForm_LetterInsert.patchValue({
+
+      LetterDate: this.ToDayDate,
+      title: "ارتباط با همکاران",
+      Description: this.EditForm_LetterToEmployer.value.DescriptionText,
+      LetterState: "",
+      LetterPriority: "عادی",
+      CentralRef: sessionStorage.getItem("CentralRef"),
+      InOutFlag: "2",
+      CreatorCentral: this.EditForm_LetterToEmployer.value.CreatorCentral,
+      OwnerCentral: this.EditForm_LetterToEmployer.value.OwnerCentral,
+    });
+
+    this.repo.LetterInsert(this.EditForm_LetterInsert.value).subscribe(e => {
+
+      const intValue = parseInt(e[0].LetterCode, 10);
+      if (!isNaN(intValue) && intValue > 0) {
+
+        this.LetterCode = e[0].LetterCode
+
+        this.SendLetterRow()
+
+      } else {
+        //Todo notification erroor
+      }
+    });
+
+
+  }
+
+
+
+  SendLetterRow() {
+
+
+
+
+    this.EditForm_AutLetterRowInsert.patchValue({
+
+      LetterRef: this.LetterCode,
+      LetterDate: this.ToDayDate,
+      Description: this.EditForm_LetterToEmployer.value.DescriptionText,
+      LetterState: "",
+      LetterPriority: "عادی",
+      CreatorCentral: sessionStorage.getItem("CentralRef"),
+      ExecuterCentral: this.EditForm_LetterToEmployer.value.ExecuterCentral,
+    });
+
+
+    this.repo.AutLetterRowInsert(this.EditForm_AutLetterRowInsert.value).subscribe(e => {
+      const intValue = parseInt(e[0].LetterRef, 10);
+
+
+
+      if (!isNaN(intValue) && intValue > 0) {
+
+        this.notificationService.succeded();
+        this.LetterCode = ''
+        this.toggel_show_newletter()
+        this.Autletter_dialog_close()
+
+      } else {
+        //Todo notification erroor
+      }
+    });
+
+
+  }
+
+
+
   // #region Declare
 
 
-  loading: boolean = true;
+  EditForm_factor = new FormGroup({
 
+    ClassName: new FormControl(''),
+    ObjectRef: new FormControl(''),
+
+
+  });
+
+
+  loading_letterowener: boolean = true;
+  show_newletter: boolean = false;
+  loading: boolean = false;
+
+  BrokerRef: string = '';
+  LetterCode: string = '';
+  ExecuterCentral: string = '';
+  letterexplain_modal_title: string = '';
+  ToDayDate: any;
+  reportData: any[] = [];
+  attendanceInterval: any;
+
+  EditForm_LetterToEmployer = new FormGroup({
+    DescriptionText: new FormControl('', [Validators.required, Validators.minLength(10)]),
+    LetterDate: new FormControl(''),
+    ExecuterCentral: new FormControl('', Validators.required),
+    CreatorCentral: new FormControl(''),
+    OwnerCentral: new FormControl('', Validators.required),
+    OwnerName: new FormControl(''),
+    LetterCode: new FormControl(''),
+    LetterDescriptionText: new FormControl(''),
+    SendSms: new FormControl('0'),
+
+  });
 
   title = 'فاکتور پشتیبانی';
   Start_FactorTime: string = '';
@@ -121,7 +341,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
   @ViewChild('modalsearch') modalsearch: ElementRef;
 
   records_factor;
-
+  records_letterfromowner
 
   time: Date = new Date();
 
@@ -217,6 +437,14 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
     Status: new FormControl(''),
   });
 
+
+
+  sanitizeDescriptionText(event: any) {
+    const invalidChars = /[!@#$%^&*()|"'<>]/g;
+    let value = event.target.value.replace(invalidChars, '');
+    this.EditForm_LetterToEmployer.get('DescriptionText')?.setValue(value, { emitEvent: false });
+  }
+
   Config_Declare() {
 
     this.columnDefs = [
@@ -292,6 +520,9 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
       },
     ];
 
+
+
+
     this.columnDefs4 = [
 
       {
@@ -334,6 +565,61 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
       },
 
 
+    ];
+
+
+
+    this.columnDefs5 = [
+      {
+        field: 'عملیات',
+        pinned: 'left',
+        cellRenderer: CellActionSupportAutletterFactorList,
+        cellRendererParams: {
+          editUrl: '/support/letter-detail',
+        },
+        width: 80,
+      },
+      {
+        field: 'RowLetterDate',
+        headerName: 'تاریخ ارجاع ',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150,
+      },
+      {
+        field: 'LetterDescription',
+        headerName: 'شرح ارجاع',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'CreatorName',
+        headerName: 'ایجاد کننده',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      }, {
+        field: 'RowExecutorName',
+        headerName: 'انجام دهنده',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'RowLetterState',
+        headerName: 'وضعیت',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'AutLetterRow_PropDescription1',
+        headerName: 'شرح کار',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
     ];
 
   }
@@ -989,6 +1275,23 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
   boxbuy_dialog_close() {
     const modal = this.renderer.selectRootElement('#boxbuymodal', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
+
+  Autletter_dialog_show() {
+    const modal = this.renderer.selectRootElement('#autlettercustomer', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  Autletter_dialog_close() {
+    const modal = this.renderer.selectRootElement('#autlettercustomer', true);
     this.renderer.removeClass(modal, 'show');
     this.renderer.setStyle(modal, 'display', 'none');
     this.renderer.removeAttribute(modal, 'aria-modal');

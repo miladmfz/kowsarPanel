@@ -7,6 +7,7 @@ import { NotificationService } from 'src/app/app-shell/framework-services/notifi
 import { Subscription } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CellActionTaskList } from './cell-action-task-ist';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-task-list',
@@ -168,53 +169,66 @@ export class TaskListComponent extends AgGridBaseComponent
   }
 
 
-
   deleteAll(TaskCode) {
-    this.EditForm_task.patchValue({
-      TaskCode: TaskCode,
-    });
-    this.Loading_Modal_Response_show()
+    Swal.fire({
+      title: 'حذف همه؟',
+      text: 'آیا از حذف تمام تسک‌های مربوط به این مورد اطمینان دارید؟',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'بله، حذف شود',
+      cancelButtonText: 'انصراف',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.EditForm_task.patchValue({ TaskCode });
 
-    this.repo.DeleteTaskAll(this.EditForm_task.value).subscribe((data: any) => {
+        this.Loading_Modal_Response_show();
 
-      if (data.KowsarTasks[0].Success == "0") {
-        this.Loading_Modal_Response_close()
-        this.notificationService.error(data.KowsarTasks[0].Message);
+        this.repo.DeleteTaskAll(this.EditForm_task.value).subscribe((data: any) => {
+          this.Loading_Modal_Response_close();
 
-      } else {
-        this.Loading_Modal_Response_close()
-        this.notificationService.succeded();
-        this.EditForm_task.reset()
-        this.GetTasks()
+          if (data.KowsarTasks[0].Success == '0') {
+            this.notificationService.error(data.KowsarTasks[0].Message);
+          } else {
+            this.notificationService.succeded();
+            this.EditForm_task.reset();
+            this.GetTasks();
+          }
+        });
       }
-
     });
-
   }
+
 
 
   delete(TaskCode) {
-    this.EditForm_task.patchValue({
-      TaskCode: TaskCode,
-    });
-    this.Loading_Modal_Response_show()
+    Swal.fire({
+      title: 'حذف تسک',
+      text: 'آیا از حذف این تسک اطمینان دارید؟',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'بله، حذف شود',
+      cancelButtonText: 'انصراف',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.EditForm_task.patchValue({ TaskCode });
 
-    this.repo.DeleteTask(this.EditForm_task.value).subscribe((data: any) => {
+        this.Loading_Modal_Response_show();
 
-      if (data.KowsarTasks[0].Success == "0") {
-        this.Loading_Modal_Response_close()
-        this.notificationService.error(data.KowsarTasks[0].Message);
+        this.repo.DeleteTask(this.EditForm_task.value).subscribe((data: any) => {
+          this.Loading_Modal_Response_close();
 
-      } else {
-        this.Loading_Modal_Response_close()
-        this.notificationService.succeded();
-        this.EditForm_task.reset()
-        this.GetTasks()
+          if (data.KowsarTasks[0].Success === '0') {
+            this.notificationService.error(data.KowsarTasks[0].Message);
+          } else {
+            this.notificationService.succeded();
+            this.EditForm_task.reset();
+            this.GetTasks();
+          }
+        });
       }
-
     });
-
   }
+
 
   Loading_Modal_Response_show() {
     const modal = this.renderer.selectRootElement('#loadingresponse', true);

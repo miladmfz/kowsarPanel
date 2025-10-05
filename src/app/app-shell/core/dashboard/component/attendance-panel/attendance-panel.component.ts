@@ -39,17 +39,32 @@ export class AttendancePanelComponent
   records_central
   records_support_central
 
+  // EditForm_LetterToEmployer = new FormGroup({
+  //   DescriptionText: new FormControl('', Validators.required, Validators.minLength(10)),
+  //   LetterDate: new FormControl(''),
+  //   ExecuterCentral: new FormControl(''),
+  //   CreatorCentral: new FormControl(''),
+  //   OwnerCentral: new FormControl('', Validators.required),
+  //   OwnerName: new FormControl(''),
+  //   LetterCode: new FormControl(''),
+  //   LetterDescriptionText: new FormControl(''),
+  //   SendSms: new FormControl('0'),
+
+  // });
+
   EditForm_LetterToEmployer = new FormGroup({
-    DescriptionText: new FormControl('', Validators.required),
+    DescriptionText: new FormControl(
+      '',
+      [Validators.required, Validators.minLength(10)] // ✅ ولیدیتورها در آرایه
+    ),
     LetterDate: new FormControl(''),
     ExecuterCentral: new FormControl(''),
     CreatorCentral: new FormControl(''),
-    OwnerCentral: new FormControl('', Validators.required),
+    OwnerCentral: new FormControl('', [Validators.required]),
     OwnerName: new FormControl(''),
     LetterCode: new FormControl(''),
     LetterDescriptionText: new FormControl(''),
     SendSms: new FormControl('0'),
-
   });
 
 
@@ -86,6 +101,11 @@ export class AttendancePanelComponent
   });
 
 
+  sanitizeDescriptionText(event: any) {
+    const invalidChars = /[!@#$%^&*()|"'<>]/g;
+    let value = event.target.value.replace(invalidChars, '');
+    this.EditForm_LetterToEmployer.get('DescriptionText')?.setValue(value, { emitEvent: false });
+  }
 
 
   EditForm_Sms_LetterToEmployer = new FormGroup({

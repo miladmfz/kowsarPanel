@@ -18,6 +18,8 @@ import { CellActionPreFactorList } from './components/prefactor/prefactor-list/c
 import { CellActionPreGoodEdit } from './components/prefactor/prefactor-edit/cell-action-pregood-edit';
 import { CellActionPreFactorRowsEdit } from './components/prefactor/prefactor-edit/cell-action-prefactorrows-edit';
 import { CellActionPreFactorCustomerEdit } from './components/prefactor/prefactor-edit/cell-action-prefactor-customer-edit';
+import { CellActionAutletterFactorList } from './components/factor/factor-edit/cell-action-autletter-factor-list';
+import { CellActionAutletterPreFactorList } from './components/prefactor/prefactor-edit/cell-action-autletter-prefactor-list';
 
 
 @NgModule({
@@ -47,6 +49,8 @@ import { CellActionPreFactorCustomerEdit } from './components/prefactor/prefacto
     CellActionPreGoodEdit,
     CellActionPreFactorRowsEdit,
     CellActionPreFactorCustomerEdit,
+    CellActionAutletterFactorList,
+    CellActionAutletterPreFactorList,
 
 
     CellActionPreFactorList,

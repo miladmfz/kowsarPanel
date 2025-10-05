@@ -145,6 +145,41 @@ export class FactorWebApiService {
 
   }
 
+  AutLetterRowInsert(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "AutLetterRowInsert", command, { headers: this.headers })
+
+  }
+
+  LetterInsert(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "LetterInsert", command, { headers: this.headers })
+
+  }
+
+
+  GetCustomerById(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetCustomerById", command, { headers: this.headers })
+  }
+  GetCentralByCode(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetCentralByCode", command, { headers: this.headers })
+  }
+
+
+
+  GetLetterList(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "GetLetterList", command, { headers: this.headers })
+
+  }
+
+
+  GetCentralUser(
+  ): Observable<any[]> {
+    const params = new HttpParams()
+    return this.client.get<any[]>(this.baseUrl + "GetCentralUser", { headers: this.headers });
+  }
+
 
   // GetProperty(Where: string): Observable<any[]> {
   //   const params = new HttpParams().append('Where', Where)

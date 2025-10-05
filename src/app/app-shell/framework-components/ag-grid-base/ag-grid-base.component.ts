@@ -244,6 +244,20 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
     this.gridApi4.hideOverlay();
 
   }
+  onGridReady5(params) {
+    this.gridApi5 = params.api;
+    this.gridColumnApi5 = params.columnApi;
+    this.gridApi5.hideOverlay();
+
+  }
+
+  onGridReady6(params) {
+    this.gridApi6 = params.api;
+    this.gridColumnApi6 = params.columnApi;
+    this.gridApi6.hideOverlay();
+
+  }
+
 
 
   resizeColumn(column: any) {
@@ -262,6 +276,14 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
     if (this.gridColumnApi4) {
       const columnId = column.getColId();
       this.gridColumnApi4.autoSizeColumn(columnId);
+    }
+    if (this.gridColumnApi5) {
+      const columnId = column.getColId();
+      this.gridColumnApi5.autoSizeColumn(columnId);
+    }
+    if (this.gridColumnApi6) {
+      const columnId = column.getColId();
+      this.gridColumnApi6.autoSizeColumn(columnId);
     }
   }
 

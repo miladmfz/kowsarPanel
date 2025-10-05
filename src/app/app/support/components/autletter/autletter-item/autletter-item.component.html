@@ -84,26 +84,36 @@
                                             }">
                   </ng-container>
                 </div>
-
-                <!-- شرح -->
                 <div class="col-md-12">
                   <label for="descriptionFormControl" class="form-label">شرح</label>
                   <textarea formControlName="descriptionFormControl" id="descriptionFormControl" class="form-control"
-                    rows="4" autocomplete="off" [ngClass]="{
-                      'is-invalid':
-                      EditForm.controls['descriptionFormControl'].invalid &&
-                      EditForm.controls['descriptionFormControl'].touched,
-                      'is-valid':
-                      EditForm.controls['descriptionFormControl'].valid &&
-                      EditForm.controls['descriptionFormControl'].touched
-                    }">
-                    ></textarea>
-                  <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                                              validation: 'required',
-                                              message: 'اجباری است',
-                                              control: EditForm.controls['descriptionFormControl']
-                                            }">
-                  </ng-container>
+                    rows="4" autocomplete="off" (input)="sanitizeDescriptionText($event)" [ngClass]="{
+      'is-invalid':
+        EditForm.controls['descriptionFormControl'].invalid &&
+        EditForm.controls['descriptionFormControl'].touched,
+      'is-valid':
+        EditForm.controls['descriptionFormControl'].valid &&
+        EditForm.controls['descriptionFormControl'].touched
+    }" maxlength="400"></textarea>
+
+                  <!-- شمارش کاراکترها -->
+                  <small class="text-muted">
+                    {{ EditForm.controls['descriptionFormControl'].value?.length || 0 }}/400 کاراکتر
+                  </small>
+
+                  <!-- پیام خطا -->
+                  <div *ngIf="
+      EditForm.controls['descriptionFormControl'].invalid &&
+      EditForm.controls['descriptionFormControl'].touched
+    " class="text-danger">
+                    <div *ngIf="EditForm.controls['descriptionFormControl'].errors?.['required']">
+                      پر کردن این فیلد اجباری است
+                    </div>
+                    <div *ngIf="EditForm.controls['descriptionFormControl'].errors?.['minlength']">
+                      حداقل ۱۰ کاراکتر وارد کنید (الان
+                      {{ EditForm.controls['descriptionFormControl'].value?.length || 0 }} تایپ شده)
+                    </div>
+                  </div>
                 </div>
 
                 <!-- دکمه ارسال -->
@@ -157,19 +167,34 @@
                   <div class="col-md-12">
                     <label for="AutLetterRow_PropDescription1" class="form-label">خلاصه عملکرد</label>
                     <textarea formControlName="AutLetterRow_PropDescription1" id="AutLetterRow_PropDescription1"
-                      class="form-control" rows="4" autocomplete="off" [ngClass]="{
-                              'is-invalid':
-                              EditForm_explain.controls['AutLetterRow_PropDescription1'].invalid &&
-                              EditForm_explain.controls['AutLetterRow_PropDescription1'].touched,
-                              'is-valid':
-                              EditForm_explain.controls['AutLetterRow_PropDescription1'].valid &&
-                              EditForm_explain.controls['AutLetterRow_PropDescription1'].touched
-                            }"></textarea>
-                    <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                              validation: 'required',
-                              message: 'اجباری است',
-                              control: EditForm_explain.controls['AutLetterRow_PropDescription1']
-                            }"></ng-container>
+                      class="form-control" rows="4" autocomplete="off" maxlength="400"
+                      (input)="sanitizeDescriptionText1($event)" [ngClass]="{
+      'is-invalid':
+        EditForm_explain.controls['AutLetterRow_PropDescription1'].invalid &&
+        EditForm_explain.controls['AutLetterRow_PropDescription1'].touched,
+      'is-valid':
+        EditForm_explain.controls['AutLetterRow_PropDescription1'].valid &&
+        EditForm_explain.controls['AutLetterRow_PropDescription1'].touched
+    }"></textarea>
+
+                    <!-- شمارشگر -->
+                    <small class="text-muted">
+                      {{ EditForm_explain.controls['AutLetterRow_PropDescription1'].value?.length || 0 }}/400 کاراکتر
+                    </small>
+
+                    <!-- پیام‌های خطا -->
+                    <div *ngIf="
+      EditForm_explain.controls['AutLetterRow_PropDescription1'].invalid &&
+      EditForm_explain.controls['AutLetterRow_PropDescription1'].touched
+    " class="text-danger">
+                      <div *ngIf="EditForm_explain.controls['AutLetterRow_PropDescription1'].errors?.['required']">
+                        پر کردن این فیلد اجباری است
+                      </div>
+                      <div *ngIf="EditForm_explain.controls['AutLetterRow_PropDescription1'].errors?.['minlength']">
+                        حداقل ۱۰ کاراکتر وارد کنید (الان
+                        {{ EditForm_explain.controls['AutLetterRow_PropDescription1'].value?.length || 0 }} تایپ شده)
+                      </div>
+                    </div>
                   </div>
 
 

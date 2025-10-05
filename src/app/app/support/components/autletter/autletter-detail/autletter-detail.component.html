@@ -60,6 +60,15 @@
 
                         </div>
 
+                        <div class="form-group col-md-3">
+                            <label for="Barbary" class="col-form-label">.</label>
+
+                            <a type="button" class="form-control btn btn-primary waves-effect waves-light "
+                                (click)="owner_factor_prefactor()">
+                                <span class="btn-label"><i class="fas fa-file-alt"></i>
+                                </span>فاکتور مشتری</a>
+                        </div>
+
 
                     </div>
                 </div>
@@ -146,5 +155,114 @@
 
 
 
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="ownerfactorlist" tabindex="-1" aria-labelledby="ownerfactorlistLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="background-color: #d1dce7;">
+            <div class="modal-header" style="background-color: #949494;">
+                <h5 class="modal-title" id="ownerfactorlistLabel">لیست فاکتور های {{OwnerName}} </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="ownerfactorlist_dialog_close()"></button>
+            </div>
+            <div class="modal-body">
+
+
+                <div *ngIf="loading" class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
+                <!-- 
+                <div *ngIf="!VendorCode || +VendorCode === 0" class="text-center">
+                    <h4>این اجرای پایه به عنوان فروشنده تعریف نشده</h4>
+                </div> -->
+
+
+                <div *ngIf="!CustomerCode || +CustomerCode === 0" class="text-center">
+                    <h4>این اجرای پایه به عنوان مشتری تعریف نشده</h4>
+                </div>
+
+                <!-- <div *ngIf="+VendorCode > 0" class="text-center">
+                    <h4>این اجرای پایه به عنوان فروشنده تعریف شده</h4>
+                </div> -->
+
+                <div *ngIf="+CustomerCode > 0" class="text-center">
+
+                    <div *ngIf="loading_cust_factor" class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                    <ng-container *ngIf="!loading_cust_factor">
+
+                        <ng-container *ngIf="records_ownerfactorlist?.length; else noFactor">
+                            <h4>فاکتور</h4>
+
+                            <ag-grid-angular #agGrid id="myGrid" style="height: 250px; width: auto"
+                                [rowData]="records_ownerfactorlist" [columnDefs]="columnDefs2" [modules]="modules"
+                                [localeText]="localeText" [defaultColDef]="defaultColDef" [enableRtl]="true"
+                                (gridReady)="onGridReady2($event)" (cellClicked)="onCellClicked($event)"
+                                [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context"
+                                [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'"
+                                [suppressRowClickSelection]="true" [rowSelection]="'single'"
+                                (selectionChanged)="onSelectionChanged($event)">
+                            </ag-grid-angular>
+                        </ng-container>
+
+                        <ng-template #noFactor>
+                            <h4>فاکتوری ندارد</h4>
+                        </ng-template>
+                    </ng-container>
+
+
+                    <div *ngIf="loading_cust_prefactor" class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+
+                    <ng-container *ngIf="!loading_cust_prefactor">
+
+                        <ng-container *ngIf="records_ownerprefactorlist?.length; else noPrefactor">
+                            <h4>پیش فاکتور</h4>
+
+                            <ag-grid-angular #agGrid id="myGrid" style="height: 250px; width: auto"
+                                [rowData]="records_ownerprefactorlist" [columnDefs]="columnDefs3" [modules]="modules"
+                                [localeText]="localeText" [defaultColDef]="defaultColDef" [enableRtl]="true"
+                                (gridReady)="onGridReady3($event)" (cellClicked)="onCellClicked($event)"
+                                [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context"
+                                [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'"
+                                [suppressRowClickSelection]="true" [rowSelection]="'single'"
+                                (selectionChanged)="onSelectionChanged($event)">
+                            </ag-grid-angular>
+                        </ng-container>
+
+                        <ng-template #noPrefactor>
+                            <h4>پیش فاکتوری ندارد</h4>
+                        </ng-template>
+                    </ng-container>
+
+
+
+                </div>
+
+
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                    (click)="ownerfactorlist_dialog_close()">بستن</button>
+            </div>
+        </div>
     </div>
 </div>

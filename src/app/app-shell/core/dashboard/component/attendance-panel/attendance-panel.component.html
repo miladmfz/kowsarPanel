@@ -153,22 +153,35 @@
                     <div class="form-group col-md-12">
                       <label for="DescriptionText" class="col-form-label">شرح ارجاع</label>
                       <textarea type="text" class="form-control" id="DescriptionText" formControlName="DescriptionText"
-                        maxlength="400" autocomplete="off" [ngClass]="{
-                              'is-invalid':
+                        maxlength="400" autocomplete="off" (input)="sanitizeDescriptionText($event)" [ngClass]="{
+                      'is-invalid':
+                        EditForm_LetterToEmployer.controls['DescriptionText'].invalid &&
+                        EditForm_LetterToEmployer.controls['DescriptionText'].touched,
+                      'is-valid':
+                        EditForm_LetterToEmployer.controls['DescriptionText'].valid &&
+                        EditForm_LetterToEmployer.controls['DescriptionText'].touched
+                    }"></textarea>
+
+                      <!-- نمایش تعداد کاراکترها -->
+                      <small class="text-muted">
+                        {{ EditForm_LetterToEmployer.controls['DescriptionText'].value?.length || 0 }}/400 کاراکتر
+                      </small>
+
+                      <!-- پیام‌های خطا -->
+                      <div *ngIf="
                               EditForm_LetterToEmployer.controls['DescriptionText'].invalid &&
-                              EditForm_LetterToEmployer.controls['DescriptionText'].touched,
-                              'is-valid':
-                              EditForm_LetterToEmployer.controls['DescriptionText'].valid &&
                               EditForm_LetterToEmployer.controls['DescriptionText'].touched
-                            }"></textarea>
-
-                      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                              validation: 'required',
-                              message: 'اجباری است',
-                              control: EditForm_LetterToEmployer.controls['DescriptionText']
-                            }"></ng-container>
-
+                            " class="text-danger">
+                        <div *ngIf="EditForm_LetterToEmployer.controls['DescriptionText'].errors?.['required']">
+                          پر کردن این فیلد اجباری است
+                        </div>
+                        <div *ngIf="EditForm_LetterToEmployer.controls['DescriptionText'].errors?.['minlength']">
+                          حداقل ۱۰ کاراکتر وارد کنید (الان
+                          {{ EditForm_LetterToEmployer.controls['DescriptionText'].value?.length || 0 }} تایپ شده)
+                        </div>
+                      </div>
                     </div>
+
 
                   </ng-container>
 

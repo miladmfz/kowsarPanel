@@ -6,17 +6,17 @@ declare var $: any;
   selector: 'edit-delete-cell-renderer',
   template: ` 
 
-  <span [routerLink]="[params.editUrl, id]" class="btn btn-sm btn-outline-primary m-1" data-toggle="tooltip" title="اصلاح  ">
+  <span [routerLink]="[params.editUrl, id]" class="btn btn-sm btn-outline-primary" data-toggle="tooltip" title="اصلاح  ">
   <a >
     <i class="fas fa-edit"></i>
   </a>
   </span>
-      <span (click)="btnDeleteClicked()" class="btn btn-sm btn-outline-warning m-1" data-toggle="tooltip" title="حذف  ">
+      <span (click)="btnDeleteClicked()" class="btn btn-sm btn-outline-warning mx-1" data-toggle="tooltip" title="حذف  ">
   <a >
     <i class="fas fa-trash"></i>
   </a>
   </span>
-  <span (click)="btnDeleteClickedAll()" class="btn btn-sm btn-outline-danger m-1" data-toggle="tooltip" title="حذف کلی با زیر شاخه ها">
+  <span (click)="btnDeleteClickedAll()" class="btn btn-sm btn-outline-danger" data-toggle="tooltip" title="حذف کلی با زیر شاخه ها">
   <a >
     <i class="fas fa-trash"></i>
   </a>

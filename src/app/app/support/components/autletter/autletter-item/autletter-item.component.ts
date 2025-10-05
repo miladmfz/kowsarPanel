@@ -62,9 +62,24 @@ export class AutletterItemComponent
   LetterPriority_lookup: DbSetup_lookup[] = []
 
 
+  sanitizeDescriptionText(event: any) {
+    const invalidChars = /[!@#$%^&*()|"'<>]/g;
+    let value = event.target.value.replace(invalidChars, '');
+    this.EditForm.get('descriptionFormControl')?.setValue(value, { emitEvent: false });
+  }
+  sanitizeDescriptionText1(event: any) {
+    const invalidChars = /[!@#$%^&*()|"'<>]/g;
+    let value = event.target.value.replace(invalidChars, '');
+    this.EditForm_explain.get('AutLetterRow_PropDescription1')?.setValue(value, { emitEvent: false });
+  }
+
+
   EditForm = new FormGroup({
     dateValue: new FormControl(''),
-    descriptionFormControl: new FormControl('', Validators.required),
+    descriptionFormControl: new FormControl(
+      '',
+      [Validators.required, Validators.minLength(10)] // ✅ ولیدیتورها در آرایه
+    ),
     LetterState: new FormControl(''),
     LetterPriority: new FormControl('', Validators.required),
     selectedUserId: new FormControl('', Validators.required),
@@ -81,7 +96,10 @@ export class AutletterItemComponent
     ObjectRef: new FormControl('0'),
     LetterRowDescription: new FormControl(''),
     LetterRowState: new FormControl('', Validators.required),
-    AutLetterRow_PropDescription1: new FormControl('', Validators.required),
+    AutLetterRow_PropDescription1: new FormControl('', [
+      Validators.required,
+      Validators.minLength(10)
+    ])
   });
 
   customTheme: Partial<IDatepickerTheme> = {

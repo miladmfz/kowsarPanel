@@ -12,6 +12,7 @@ import { debounceTime } from 'rxjs/operators';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { CellActionAutletterFactorList } from './cell-action-autletter-factor-list';
 
 @Component({
   selector: 'app-factor-edit',
@@ -39,6 +40,53 @@ export class FactorEditComponent extends AgGridBaseComponent
   toggleTheme() {
     this.themeService.toggleTheme(); // از سرویس تم استفاده کن
   }
+
+
+  @ViewChild('modalsearch') modalsearch: ElementRef;
+
+  records_good;
+  records_factorrows;
+  records_customer;
+  records_letterfromowner
+
+
+  users: any[] = [];
+  reportData: any[] = [];
+  myForm: FormGroup;
+  selectedfactor: any
+  ToDayDate: any;
+  time: Date = new Date();
+
+  attendanceInterval: any;
+
+
+  loading_letterowener: boolean = true;
+  show_newletter: boolean = false;
+  loading: boolean = false;
+  ShowGoodList: boolean = false;
+
+
+  title = 'فاکتور فروش';
+  BrokerRef: string = '';
+  LetterCode: string = '';
+  ExecuterCentral: string = '';
+  letterexplain_modal_title: string = '';
+
+
+  Start_FactorTime: string = '';
+  End_FactorTime: string = '';
+  FactorCode: string = '';
+  CentralRef: string = '';
+  JobPersonRef: string = '';
+  Searchtarget_customer: string = '';
+  Searchtarget_Good: string = '';
+
+
+  private searchSubject_customer: Subject<string> = new Subject();
+  private searchSubject_Good: Subject<string> = new Subject();
+
+
+
   EditForm_factor = new FormGroup({
     StartDateTarget: new FormControl(''),
     EndDateTarget: new FormControl(''),
@@ -53,67 +101,66 @@ export class FactorEditComponent extends AgGridBaseComponent
 
 
 
+  EditForm_LetterToEmployer = new FormGroup({
+    DescriptionText: new FormControl('', [Validators.required, Validators.minLength(10)]),
+    LetterDate: new FormControl(''),
+    ExecuterCentral: new FormControl('', Validators.required),
+    CreatorCentral: new FormControl(''),
+    OwnerCentral: new FormControl('', Validators.required),
+    OwnerName: new FormControl(''),
+    LetterCode: new FormControl(''),
+    LetterDescriptionText: new FormControl(''),
+    SendSms: new FormControl('0'),
 
-  override ngOnInit(): void {
-    super.ngOnInit();
-    this.themeSub = this.themeService.theme$.subscribe(mode => {
-      this.isDarkMode = (mode === 'dark');
-    });
+  });
 
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      var idtemp = params.get('id');
-      if (idtemp != null) {
-        this.FactorCode = idtemp;
-        this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
-        this.CentralRef = sessionStorage.getItem("CentralRef");
-      }
-    });
 
-    this.Config_Declare()
-    this.pipe_function()
 
-    if (this.FactorCode.length > 0) {
-      this.GetFactor();
-    } else {
-      this.getdate();
-    }
+  EditForm_autletter = new FormGroup({
+    SearchTarget: new FormControl(''),
+    CentralRef: new FormControl(''),
+    CreationDate: new FormControl(''),
+    OwnCentralRef: new FormControl(''),
+    PersonInfoCode: new FormControl(''),
+    StartTime: new FormControl(''),
+    EndTime: new FormControl(''),
 
-    this.priceInput.pipe(debounceTime(1000)).subscribe(() => {
-      this.cal_takhfif_from_price();
-    });
+  });
 
-    // تنظیم تأخیر برای ورودی تخفیف
-    this.discountInput.pipe(debounceTime(1000)).subscribe(() => {
-      this.cal_price_from_takhfif();
-    });
-  }
 
-  // #region Declare
-  loading: boolean = true;
-  title = 'فاکتور فروش';
-  Start_FactorTime: string = '';
-  End_FactorTime: string = '';
-  FactorCode: string = '';
-  CentralRef: string = '';
-  JobPersonRef: string = '';
-  Searchtarget_customer: string = '';
-  Searchtarget_Good: string = '';
 
-  @ViewChild('modalsearch') modalsearch: ElementRef;
+  EditForm_search = new FormGroup({
+    SearchTarget: new FormControl(''),
+    ObjectRef: new FormControl(''),
+  });
 
-  time: Date = new Date();
 
-  myForm: FormGroup;
-  selectedfactor: any
+  EditForm_LetterInsert = new FormGroup({
+    LetterDate: new FormControl(''),
+    title: new FormControl(''),
+    Description: new FormControl(''),
+    LetterState: new FormControl(''),
+    LetterPriority: new FormControl(''),
+    CentralRef: new FormControl(''),
+    InOutFlag: new FormControl(''),
+    CreatorCentral: new FormControl(''),
+    OwnerCentral: new FormControl(''),
+  });
 
-  ShowGoodList: boolean = false;
 
-  records_good;
-  records_factorrows;
-  records_customer;
+  EditForm_AutLetterRowInsert = new FormGroup({
 
-  private searchSubject_customer: Subject<string> = new Subject();
-  private searchSubject_Good: Subject<string> = new Subject();
+    LetterRef: new FormControl(''),
+    LetterDate: new FormControl(''),
+    Description: new FormControl(''),
+    LetterState: new FormControl(''),
+    LetterPriority: new FormControl(''),
+    CreatorCentral: new FormControl(''),
+    ExecuterCentral: new FormControl(''),
+
+  });
+
+
 
   EditForm_factor_property = new FormGroup({
     starttime: new FormControl(''),
@@ -173,6 +220,220 @@ export class FactorEditComponent extends AgGridBaseComponent
     selectedBackground: '#D68E3A',
     selectedText: '#FFFFFF',
   };
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
+
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      var idtemp = params.get('id');
+      if (idtemp != null) {
+        this.FactorCode = idtemp;
+        this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
+        this.CentralRef = sessionStorage.getItem("CentralRef");
+      }
+    });
+
+    this.Config_Declare()
+    this.pipe_function()
+
+    if (this.FactorCode.length > 0) {
+      this.GetFactor();
+    } else {
+      this.getdate();
+    }
+
+    this.priceInput.pipe(debounceTime(1000)).subscribe(() => {
+      this.cal_takhfif_from_price();
+    });
+
+    // تنظیم تأخیر برای ورودی تخفیف
+    this.discountInput.pipe(debounceTime(1000)).subscribe(() => {
+      this.cal_price_from_takhfif();
+    });
+  }
+
+
+  insert_FactorRows() {
+
+    if (this.EditForm_Factor_Row.value.Amount + "" == "0") {
+      this.EditForm_Factor_Row.patchValue({
+        Amount: "1",
+      });
+    }
+
+    this.EditForm_Factor_Row.patchValue({
+      Amount: this.EditForm_Factor_Row.value.Amount + "",
+      Price: this.EditForm_Factor_Row.value.Price + "",
+      takhfif: this.EditForm_Factor_Row.value.takhfif + "",
+    });
+
+
+    this.Loading_Modal_Response_show()
+
+    this.repo.WebFactorInsertRow(this.EditForm_Factor_Row.value).subscribe((data: any) => {
+      this.notificationService.succeded();
+      this.boxbuy_dialog_close()
+      this.Loading_Modal_Response_close()
+      this.GetFactor()
+    });
+  }
+
+  Autletterfromcustomer() {
+
+    this.Autletter_dialog_show()
+
+
+    this.letterexplain_modal_title = " تیکت ارتباط با " + this.EditForm_Factor_Header.value.CustName
+
+    this.EditForm_search.patchValue({
+      ObjectRef: this.EditForm_Factor_Header.value.CustomerCode,
+    });
+
+    this.repo.GetCentralUser().subscribe(e => {
+      this.users = e;
+    });
+
+    this.repo.GetCustomerById(this.EditForm_search.value).subscribe((data: any) => {
+
+
+
+      this.EditForm_LetterToEmployer.patchValue({
+        DescriptionText: "",
+        LetterDate: this.ToDayDate,
+        ExecuterCentral: "",
+        CreatorCentral: sessionStorage.getItem("CentralRef"),
+        OwnerCentral: data.Customers[0].CentralRef,
+        OwnerName: data.Customers[0].CustName_Small,
+      });
+
+
+
+      this.EditForm_autletter.patchValue({
+        CentralRef: data.Customers[0].CentralRef,
+        OwnCentralRef: "0",
+
+      });
+
+
+      this.repo.GetLetterList(this.EditForm_autletter.value).subscribe((data) => {
+        this.records_letterfromowner = data;
+        this.loading_letterowener = false
+      });
+
+
+
+    });
+
+
+
+  }
+
+
+  toggel_show_newletter() {
+
+    if (this.show_newletter) {
+
+      this.EditForm_LetterToEmployer.patchValue({
+        DescriptionText: "",
+        ExecuterCentral: "",
+      });
+    }
+
+    this.show_newletter = !this.show_newletter
+
+  }
+
+
+  SendLetter() {
+
+    this.EditForm_LetterToEmployer.markAllAsTouched();
+    if (!this.EditForm_LetterToEmployer.valid) return;
+
+
+
+
+    this.EditForm_LetterInsert.patchValue({
+
+      LetterDate: this.ToDayDate,
+      title: "ارتباط با همکاران",
+      Description: this.EditForm_LetterToEmployer.value.DescriptionText,
+      LetterState: "",
+      LetterPriority: "عادی",
+      CentralRef: sessionStorage.getItem("CentralRef"),
+      InOutFlag: "2",
+      CreatorCentral: this.EditForm_LetterToEmployer.value.CreatorCentral,
+      OwnerCentral: this.EditForm_LetterToEmployer.value.OwnerCentral,
+    });
+
+    this.repo.LetterInsert(this.EditForm_LetterInsert.value).subscribe(e => {
+
+      const intValue = parseInt(e[0].LetterCode, 10);
+      if (!isNaN(intValue) && intValue > 0) {
+
+        this.LetterCode = e[0].LetterCode
+
+        this.SendLetterRow()
+
+      } else {
+        //Todo notification erroor
+      }
+    });
+
+
+  }
+
+
+
+  SendLetterRow() {
+
+
+
+
+    this.EditForm_AutLetterRowInsert.patchValue({
+
+      LetterRef: this.LetterCode,
+      LetterDate: this.ToDayDate,
+      Description: this.EditForm_LetterToEmployer.value.DescriptionText,
+      LetterState: "",
+      LetterPriority: "عادی",
+      CreatorCentral: sessionStorage.getItem("CentralRef"),
+      ExecuterCentral: this.EditForm_LetterToEmployer.value.ExecuterCentral,
+    });
+
+
+    this.repo.AutLetterRowInsert(this.EditForm_AutLetterRowInsert.value).subscribe(e => {
+      const intValue = parseInt(e[0].LetterRef, 10);
+
+
+
+      if (!isNaN(intValue) && intValue > 0) {
+
+        this.notificationService.succeded();
+        this.LetterCode = ''
+        this.toggel_show_newletter()
+        this.Autletter_dialog_close()
+
+      } else {
+        //Todo notification erroor
+      }
+    });
+
+
+  }
+
+
+
+  sanitizeDescriptionText(event: any) {
+    const invalidChars = /[!@#$%^&*()|"'<>]/g;
+    let value = event.target.value.replace(invalidChars, '');
+    this.EditForm_LetterToEmployer.get('DescriptionText')?.setValue(value, { emitEvent: false });
+  }
+
+  // #region Declare
+
 
   Config_Declare() {
     this.columnDefs = [
@@ -267,6 +528,61 @@ export class FactorEditComponent extends AgGridBaseComponent
         minWidth: 150
       },
     ];
+
+
+    this.columnDefs5 = [
+      {
+        field: 'عملیات',
+        pinned: 'left',
+        cellRenderer: CellActionAutletterFactorList,
+        cellRendererParams: {
+          editUrl: '/support/letter-detail',
+        },
+        width: 80,
+      },
+      {
+        field: 'RowLetterDate',
+        headerName: 'تاریخ ارجاع ',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150,
+      },
+      {
+        field: 'LetterDescription',
+        headerName: 'شرح ارجاع',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'CreatorName',
+        headerName: 'ایجاد کننده',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      }, {
+        field: 'RowExecutorName',
+        headerName: 'انجام دهنده',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'RowLetterState',
+        headerName: 'وضعیت',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'AutLetterRow_PropDescription1',
+        headerName: 'شرح کار',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+    ];
+
   }
 
   pipe_function() {
@@ -484,7 +800,6 @@ export class FactorEditComponent extends AgGridBaseComponent
     });
   }
 
-  insert_FactorRows() { }
 
   insert_FactorRows1() {
     this.EditForm_Factor_Row.patchValue({
@@ -638,6 +953,24 @@ export class FactorEditComponent extends AgGridBaseComponent
   }
   Loading_Modal_Response_close() {
     const modal = this.renderer.selectRootElement('#loadingresponse', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
+
+
+  Autletter_dialog_show() {
+    const modal = this.renderer.selectRootElement('#autlettercustomer', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+  Autletter_dialog_close() {
+    const modal = this.renderer.selectRootElement('#autlettercustomer', true);
     this.renderer.removeClass(modal, 'show');
     this.renderer.setStyle(modal, 'display', 'none');
     this.renderer.removeAttribute(modal, 'aria-modal');

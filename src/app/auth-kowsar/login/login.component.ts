@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
 
   isLoading: boolean = false;
   LoginForm: FormGroup;
-  baseUrl: string;
+
   // LoginForm = new FormGroup({
   //   UName: new FormControl('', Validators.required),
   //   UPass: new FormControl('', Validators.required),
@@ -44,9 +44,8 @@ export class LoginComponent implements OnInit {
     });
 
 
-    this.baseUrl = this.config.apiUrl
 
-    if (this.baseUrl == 'http://192.168.1.25:60006/api/') {
+    if (this.config.apiUrl == 'http://192.168.1.25:60006/api/') {
       this.developLogin()
     }
 

@@ -209,6 +209,13 @@ export class AutletterWebApiService {
   }
 
 
+  GetCentralByCode(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetCentralByCode", command, { headers: this.headers })
+  }
+
+  GetFactorByCustomerCode(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetFactorByCustomerCode", command, { headers: this.headers })
+  }
 
 
 

@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CellActionFactorList } from './cell-action-factor-list';
+import { Subscription } from 'rxjs';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 
 @Component({
   selector: 'app-factor-list',
@@ -16,11 +18,21 @@ export class FactorListComponent extends AgGridBaseComponent
   constructor(
     private readonly router: Router,
     private repo: FactorWebApiService,
-    private renderer: Renderer2
-
+    private renderer: Renderer2,
+    private themeService: ThemeService,
   ) {
     super();
   }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+  records_letterfromowner
+
+  toggleTheme() {
+    this.themeService.toggleTheme(); // از سرویس تم استفاده کن
+  }
+
+
 
   title = 'فاکتور فروش';
   CentralRef: string = '';

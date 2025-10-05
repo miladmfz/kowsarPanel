@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CentralWebApiService } from 'src/app/app/support/services/CentralWebApi.service';
 import { SharedService } from '../../framework-services/shared.service';
+import { AppConfigService } from 'src/app/app-config.service';
 declare var $: any;
 
 @Component({
@@ -14,6 +15,7 @@ export class SidebarComponent implements OnInit {
     private repo: CentralWebApiService,
     private sharedService: SharedService,
     private readonly router: Router,
+    private config: AppConfigService,
 
   ) { }
   PhFullName = '';
@@ -25,6 +27,12 @@ export class SidebarComponent implements OnInit {
   PhAddress3 = '';
   imageData: string = '';
   Imageitem: string = '';
+
+  IsCustomerBuild: boolean = false;
+
+
+  baseurl: string = '';
+
 
   currentStatus: string = "";  // پیش فرض وضعیت: 1 (حاضر)
   attendanceInterval: any;
@@ -51,6 +59,21 @@ export class SidebarComponent implements OnInit {
   });
 
   ngOnInit(): void {
+
+    const apiUrl_temp = this.config.apiUrl;
+
+
+
+
+
+    if (apiUrl_temp === 'http://192.168.1.25:60006/api/' || apiUrl_temp === 'http://itmali.ir/webapi/' || apiUrl_temp === 'http://5.160.152.173:60005/api/') {
+      this.IsCustomerBuild = false
+    } else {
+      this.IsCustomerBuild = true
+    }
+    console.log("IsCustomerBuild = " + this.IsCustomerBuild)
+
+
     this.PhFullName = sessionStorage.getItem("PhFullName")
     this.JobPersonRef = sessionStorage.getItem("JobPersonRef")
     this.CustName_Small = sessionStorage.getItem("CustName_Small")

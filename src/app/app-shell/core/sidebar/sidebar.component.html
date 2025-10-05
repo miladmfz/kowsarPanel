@@ -131,24 +131,29 @@
           </a>
         </li>
 
-        <li>
-          <a href="#factor" data-bs-toggle="collapse" aria-expanded="false" aria-controls="factor">
-            <i class="fas fa-cash-register"></i>
-            <span>فروش</span>
-            <span class="menu-arrow"></span>
-          </a>
-          <div class="collapse" id="factor">
-            <ul class="nav-second-level">
+        <ng-container *ngIf="IsCustomerBuild">
 
-              <li>
-                <a [routerLink]="['/factor/factor-list']">لیست فاکتور </a>
-              </li>
-              <li>
-                <a [routerLink]="['/factor/prefactor-list']">لیست پیش فاکتور </a>
-              </li>
-            </ul>
-          </div>
-        </li>
+
+          <li>
+            <a href="#factor" data-bs-toggle="collapse" aria-expanded="false" aria-controls="factor">
+              <i class="fas fa-cash-register"></i>
+              <span>فروش</span>
+              <span class="menu-arrow"></span>
+            </a>
+            <div class="collapse" id="factor">
+              <ul class="nav-second-level">
+
+                <li>
+                  <a [routerLink]="['/factor/factor-list']">لیست فاکتور </a>
+                </li>
+                <li>
+                  <a [routerLink]="['/factor/prefactor-list']">لیست پیش فاکتور </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ng-container>
+
 
 
         <ng-container *ngIf="JobPersonRef.length>0">
@@ -172,6 +177,10 @@
             </div>
           </li>
         </ng-container>
+
+
+
+
 
         <ng-container *ngIf="array_applications.length>0">
           <ng-container *ngIf="JobPersonRef.length>0">

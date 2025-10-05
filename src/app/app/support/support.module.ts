@@ -39,6 +39,9 @@ import { CellActionTaskList } from './components/tasks/task-list/cell-action-tas
 import { ReportCustomerComponent } from './components/report/report-customer/report-customer.component';
 import { ReportFactorComponent } from './components/report/report-factor/report-factor.component';
 import { CellActionReportCustomer } from './components/report/report-customer/cell-action-report-customer-list';
+import { CellActionletterPreFactorList } from './components/autletter/autletter-detail/cell-action-letterprefactor-list';
+import { CellActionletterFactorList } from './components/autletter/autletter-detail/cell-action-letterfactor-list';
+import { CellActionSupportAutletterFactorList } from './components/factor/support-factor-edit/cell-action-support-autletter-factor-list';
 
 
 @NgModule({
@@ -103,6 +106,9 @@ import { CellActionReportCustomer } from './components/report/report-customer/ce
     CellActionSupportGoodEdit,
     CellActionSupportFactorRowsEdit,
     CellActionSupportFactorCustomerEdit,
+    CellActionletterPreFactorList,
+    CellActionletterFactorList,
+    CellActionSupportAutletterFactorList,
 
   ]
 
