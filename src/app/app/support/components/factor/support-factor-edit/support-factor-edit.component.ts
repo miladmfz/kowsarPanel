@@ -16,6 +16,7 @@ import { SharedService } from 'src/app/app-shell/framework-services/shared.servi
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 import { AppConfigService } from 'src/app/app-config.service';
 import { CellActionSupportAutletterFactorList } from './cell-action-support-autletter-factor-list';
+import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
   selector: 'app-support-factor-edit',
@@ -34,6 +35,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
     private fb: FormBuilder,
     private sharedService: SharedService,
     private readonly notificationService: NotificationService,
+    private loadingService: LoadingService,
     private config: AppConfigService,
     private themeService: ThemeService
   ) {
@@ -666,7 +668,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
 
   Set_StartFactorTime() {
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     const currentTime = new Date();
     const hours = currentTime.getHours().toString().padStart(2, '0');
@@ -689,7 +691,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
       this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe((data: any) => {
         this.notificationService.succeded();
-        this.Loading_Modal_Response_close()
+        this.loadingService.hide()
         this.GetFactor()
 
         this.sharedService.triggerActionAll('refresh');
@@ -721,7 +723,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
     if (this.records_support_factorrows && this.records_support_factorrows.length > 0) {
 
-      this.Loading_Modal_Response_show()
+      this.loadingService.show()
 
       const currentTime = new Date();
       const hours = currentTime.getHours().toString().padStart(2, '0');
@@ -762,7 +764,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
           if (data.SupportDatas[0].EmptyEndTimeCount > 0) {
 
             this.notificationService.succeded();
-            this.Loading_Modal_Response_close()
+            this.loadingService.hide()
             this.notificationService.warning(data.SupportDatas[0].EmptyEndTimeCount + " فاکتور باز وجود دارد");
 
             this.GetFactor()
@@ -779,7 +781,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
             this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe((data: any) => {
               this.notificationService.succeded();
-              this.Loading_Modal_Response_close()
+              this.loadingService.hide()
               this.GetFactor()
 
               this.sharedService.triggerActionAll('refresh');
@@ -802,12 +804,12 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
   Set_ExplianFactorTime() {
 
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     this.repo.Support_ExplainFactor(this.EditForm_supportfactor_property.value).subscribe((data: any) => {
 
       this.notificationService.succeded();
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       this.factor_property_dialog_close()
       this.GetFactor()
     });
@@ -828,14 +830,14 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
     });
 
 
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     this.repo.WebFactorInsertRow(this.EditForm_Factor_Row.value).subscribe((data: any) => {
 
 
       this.notificationService.succeded();
       this.boxbuy_dialog_close()
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       this.GetFactor()
     });
 
@@ -942,7 +944,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
     this.EditForm_Factor_Header.markAllAsTouched();
     if (!this.EditForm_Factor_Header.valid) return;
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     this.EditForm_Factor_Header.patchValue({
       BrokerRef: sessionStorage.getItem("BrokerCode")
@@ -958,7 +960,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
       this.notificationService.succeded();
 
       this.router.navigate(['/support/support-factor-edit', data.Factors[0].FactorCode]);
-      //this.Loading_Modal_Response_close()
+      //this.loadingService.hide()
       //this.GetFactor()
 
     });
@@ -1113,7 +1115,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
 
   GetFactor() {
 
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
     this.EditForm_factor.patchValue({
       ClassName: "Factor",
       ObjectRef: this.FactorCode,
@@ -1167,7 +1169,7 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
     this.repo.GetWebFactorRowsSupport(this.FactorCode).subscribe((data: any) => {
 
       this.records_support_factorrows = data.Factors
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
 
     });
   }
@@ -1297,23 +1299,6 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
     this.renderer.removeAttribute(modal, 'aria-modal');
     this.renderer.removeAttribute(modal, 'role');
   }
-
-
-  Loading_Modal_Response_show() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.addClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'block');
-    this.renderer.setAttribute(modal, 'aria-modal', 'true');
-    this.renderer.setAttribute(modal, 'role', 'dialog');
-  }
-  Loading_Modal_Response_close() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.removeClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'none');
-    this.renderer.removeAttribute(modal, 'aria-modal');
-    this.renderer.removeAttribute(modal, 'role');
-  }
-
 
 
   // #endregion

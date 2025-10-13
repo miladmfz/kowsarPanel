@@ -8,6 +8,7 @@ import { KowsarWebApiService } from 'src/app/app/kowsar/services/KowsarWebApi.se
 import { Base_Lookup } from '../../../lookup-type';
 import Swal from 'sweetalert2';
 import { SupportFactorWebApiService } from '../../../services/SupportFactorWebApi.service';
+import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
   selector: 'app-supgood-edit',
@@ -17,6 +18,7 @@ export class SupgoodEditComponent extends AgGridBaseComponent implements OnInit 
 
   constructor(
     private notificationService: NotificationService,
+    private loadingService: LoadingService,
     private repo: SupportFactorWebApiService,
     private route: ActivatedRoute,
     private renderer: Renderer2,
@@ -185,7 +187,7 @@ export class SupgoodEditComponent extends AgGridBaseComponent implements OnInit 
   // #region Load_data
 
   getDetails() {
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
     this.changedValues = {};
     this.EditForm_Base.reset();
 
@@ -205,7 +207,7 @@ export class SupgoodEditComponent extends AgGridBaseComponent implements OnInit 
 
 
     this.repo.GetGood_base(this.Code).subscribe((data: any) => {
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       this.SellPriceType_Str = data.Goods[0].SellPriceType
 
       this.EditForm_Base.patchValue({
@@ -498,13 +500,13 @@ export class SupgoodEditComponent extends AgGridBaseComponent implements OnInit 
           JsonData: JSON.stringify(this.KowsarTemplate.value)
         });
 
-        this.Loading_Modal_Response_show()
+        this.loadingService.show()
 
 
 
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-          this.Loading_Modal_Response_close()
+          this.loadingService.hide()
           const result = JSON.parse(data.Goods[0].Result);
 
           if (result.Goods && result.Goods[0].ErrMessage === "") {
@@ -536,21 +538,6 @@ export class SupgoodEditComponent extends AgGridBaseComponent implements OnInit 
 
   // #region modal
 
-
-  Loading_Modal_Response_show() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.addClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'block');
-    this.renderer.setAttribute(modal, 'aria-modal', 'true');
-    this.renderer.setAttribute(modal, 'role', 'dialog');
-  }
-  Loading_Modal_Response_close() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.removeClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'none');
-    this.renderer.removeAttribute(modal, 'aria-modal');
-    this.renderer.removeAttribute(modal, 'role');
-  }
 
 
 

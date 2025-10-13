@@ -9,6 +9,7 @@ import { CellActionAutletterRowList } from './cell-action-autletterrow-list';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 import { Subscription } from 'rxjs';
+import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
   selector: 'app-autletter-item',
@@ -22,6 +23,7 @@ export class AutletterItemComponent
     private router: Router,
     private repo: AutletterWebApiService,
     private readonly notificationService: NotificationService,
+    private loadingService: LoadingService,
     private renderer: Renderer2,
     private themeService: ThemeService
   ) {
@@ -219,9 +221,9 @@ export class AutletterItemComponent
 
       this.fireDeleteFactor().then((result) => {
         if (result.isConfirmed) {
-          this.Loading_Modal_Response_show()
+          this.loadingService.show()
           this.repo.DeleteAutLetterRows(LetterRowCode).subscribe((data: any) => {
-            this.Loading_Modal_Response_close()
+            this.loadingService.hide()
             this.notificationService.succeded();
             this.Get_LetterRowList()
 
@@ -261,9 +263,9 @@ export class AutletterItemComponent
 
 
   Get_LetterRowList() {
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
     this.repo.GetLetterRowList(this.TextData).subscribe((data) => {
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       this.records = data;
     });
 
@@ -281,7 +283,7 @@ export class AutletterItemComponent
 
     }
 
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
     this.repo.AutLetterRowInsert(
       this.TextData,
       this.ToDayDate,
@@ -292,7 +294,7 @@ export class AutletterItemComponent
       this.EditForm.value.selectedUserId.toString()
     ).subscribe(e => {
 
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       const intValue = parseInt(e[0].LetterRef, 10);
       if (!isNaN(intValue) && intValue > 0) {
         this.notificationService.succeded();
@@ -332,9 +334,9 @@ export class AutletterItemComponent
     if (!this.EditForm_explain.valid) return;
 
 
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
     this.repo.Update_AutletterRow(this.EditForm_explain.value).subscribe((data: any) => {
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       this.notificationService.succeded();
       this.Get_LetterRowList()
       this.explain_dialog_close()
@@ -357,18 +359,5 @@ export class AutletterItemComponent
     this.renderer.removeAttribute(modal, 'role');
   }
 
-  Loading_Modal_Response_show() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.addClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'block');
-    this.renderer.setAttribute(modal, 'aria-modal', 'true');
-    this.renderer.setAttribute(modal, 'role', 'dialog');
-  }
-  Loading_Modal_Response_close() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.removeClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'none');
-    this.renderer.removeAttribute(modal, 'aria-modal');
-    this.renderer.removeAttribute(modal, 'role');
-  }
+
 }

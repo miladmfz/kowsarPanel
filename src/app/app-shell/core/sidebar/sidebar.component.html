@@ -72,6 +72,9 @@
             </ul>
           </div>
 
+
+
+
           <!-- نمایش وضعیت انتخاب‌شده - بزرگ‌تر و چشم‌گیر -->
           <div class="text-center">
             <span *ngIf="currentStatus === '1'" class="badge bg-success fs-5 fw-bold px-3 py-2">آزاد</span>
@@ -251,6 +254,9 @@
                   <a [routerLink]="['/support/report-customer']" routerLinkActive="active">گزارش مشتریان</a>
                 </li>
 
+                <li>
+                  <a [routerLink]="['/support/leavereq-list']" routerLinkActive="active">لیست مرخصی</a>
+                </li>
 
                 <ng-container *ngIf="PhAddress3=='100'">
                   <li>

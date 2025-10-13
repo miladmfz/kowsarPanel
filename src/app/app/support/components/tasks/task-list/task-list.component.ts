@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CellActionTaskList } from './cell-action-task-ist';
 import Swal from 'sweetalert2';
+import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
   selector: 'app-task-list',
@@ -20,6 +21,7 @@ export class TaskListComponent extends AgGridBaseComponent
     private readonly router: Router,
     private repo: SupportFactorWebApiService,
     private readonly notificationService: NotificationService,
+    private loadingService: LoadingService,
     private themeService: ThemeService,
     private renderer: Renderer2,
   ) {
@@ -181,10 +183,10 @@ export class TaskListComponent extends AgGridBaseComponent
       if (result.isConfirmed) {
         this.EditForm_task.patchValue({ TaskCode });
 
-        this.Loading_Modal_Response_show();
+        this.loadingService.show();
 
         this.repo.DeleteTaskAll(this.EditForm_task.value).subscribe((data: any) => {
-          this.Loading_Modal_Response_close();
+          this.loadingService.hide();
 
           if (data.KowsarTasks[0].Success == '0') {
             this.notificationService.error(data.KowsarTasks[0].Message);
@@ -212,10 +214,10 @@ export class TaskListComponent extends AgGridBaseComponent
       if (result.isConfirmed) {
         this.EditForm_task.patchValue({ TaskCode });
 
-        this.Loading_Modal_Response_show();
+        this.loadingService.show();
 
         this.repo.DeleteTask(this.EditForm_task.value).subscribe((data: any) => {
-          this.Loading_Modal_Response_close();
+          this.loadingService.hide();
 
           if (data.KowsarTasks[0].Success === '0') {
             this.notificationService.error(data.KowsarTasks[0].Message);
@@ -227,23 +229,6 @@ export class TaskListComponent extends AgGridBaseComponent
         });
       }
     });
-  }
-
-
-  Loading_Modal_Response_show() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.addClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'block');
-    this.renderer.setAttribute(modal, 'aria-modal', 'true');
-    this.renderer.setAttribute(modal, 'role', 'dialog');
-  }
-
-  Loading_Modal_Response_close() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.removeClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'none');
-    this.renderer.removeAttribute(modal, 'aria-modal');
-    this.renderer.removeAttribute(modal, 'role');
   }
 
 

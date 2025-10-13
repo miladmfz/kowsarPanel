@@ -7,6 +7,7 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
+import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
   selector: 'app-task-edit',
@@ -19,6 +20,7 @@ export class TaskEditComponent extends AgGridBaseComponent
     private readonly router: Router,
     private repo: SupportFactorWebApiService,
     private readonly notificationService: NotificationService,
+    private loadingService: LoadingService,
     private themeService: ThemeService,
     private route: ActivatedRoute,
     private renderer: Renderer2,
@@ -101,7 +103,7 @@ export class TaskEditComponent extends AgGridBaseComponent
     });
     this.route.paramMap.subscribe((params: ParamMap) => {
       var id = params.get('id');
-      this.Loading_Modal_Response_show()
+      this.loadingService.show()
 
       if (id != null) {
         this.Code = id
@@ -139,7 +141,7 @@ export class TaskEditComponent extends AgGridBaseComponent
           ParentName1: data.KowsarTasks[0].ParentTitle,
 
         });
-        this.Loading_Modal_Response_close()
+        this.loadingService.hide()
 
 
       });
@@ -158,7 +160,7 @@ export class TaskEditComponent extends AgGridBaseComponent
     this.repo.GetTasks(this.EditForm_task.value)
       .subscribe((data: any) => {
         this.Parent_lvl1 = data.KowsarTasks;
-        this.Loading_Modal_Response_close()
+        this.loadingService.hide()
 
       });
 
@@ -340,12 +342,12 @@ export class TaskEditComponent extends AgGridBaseComponent
 
     if (this.Code.length > 0) {
 
-      this.Loading_Modal_Response_show()
+      this.loadingService.show()
 
       this.repo.UpdateTask(this.EditForm_task.value)
         .subscribe((data: any) => {
           this.notificationService.succeded();
-          this.Loading_Modal_Response_close()
+          this.loadingService.hide()
 
           if (action == 'edit_back') {
 
@@ -361,12 +363,12 @@ export class TaskEditComponent extends AgGridBaseComponent
         });
 
     } else {
-      this.Loading_Modal_Response_show()
+      this.loadingService.show()
 
       this.repo.InsertTask(this.EditForm_task.value)
         .subscribe((data: any) => {
           this.notificationService.succeded();
-          this.Loading_Modal_Response_close()
+          this.loadingService.hide()
 
           if (action == 'insert_back') {
 
@@ -384,24 +386,6 @@ export class TaskEditComponent extends AgGridBaseComponent
 
   }
 
-
-
-
-  Loading_Modal_Response_show() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.addClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'block');
-    this.renderer.setAttribute(modal, 'aria-modal', 'true');
-    this.renderer.setAttribute(modal, 'role', 'dialog');
-  }
-
-  Loading_Modal_Response_close() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.removeClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'none');
-    this.renderer.removeAttribute(modal, 'aria-modal');
-    this.renderer.removeAttribute(modal, 'role');
-  }
 
 
 }

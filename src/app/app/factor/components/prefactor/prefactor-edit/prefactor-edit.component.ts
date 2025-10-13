@@ -15,6 +15,7 @@ import { CellActionPreFactorCustomerEdit } from './cell-action-prefactor-custome
 import { CellActionPreGoodEdit } from './cell-action-pregood-edit';
 import { Location } from '@angular/common';
 import { CellActionAutletterPreFactorList } from './cell-action-autletter-prefactor-list';
+import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
   selector: 'app-prefactor-edit',
@@ -30,6 +31,7 @@ export class PrefactorEditComponent extends AgGridBaseComponent
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private readonly notificationService: NotificationService,
+    private loadingService: LoadingService,
     private themeService: ThemeService,
     private location: Location
   ) {
@@ -611,7 +613,7 @@ export class PrefactorEditComponent extends AgGridBaseComponent
   Factor_Header_insert() {
     this.EditForm_Factor_Header.markAllAsTouched();
     if (!this.EditForm_Factor_Header.valid) return;
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     this.EditForm_Factor_Header.patchValue({
       BrokerRef: sessionStorage.getItem("BrokerCode")
@@ -619,7 +621,7 @@ export class PrefactorEditComponent extends AgGridBaseComponent
     this.repo.WebFactorInsert(this.EditForm_Factor_Header.value).subscribe((data: any) => {
       this.PreFactorCode = data.Factors[0].FactorCode
       this.notificationService.succeded();
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       this.GetFactor()
     });
   }
@@ -718,7 +720,8 @@ export class PrefactorEditComponent extends AgGridBaseComponent
 
   // #region Get_Data
   GetFactor() {
-    this.Loading_Modal_Response_show()
+
+    this.loadingService.show()
 
     this.EditForm_factor.patchValue({
       ClassName: "PreFactor",
@@ -751,7 +754,7 @@ export class PrefactorEditComponent extends AgGridBaseComponent
   GetFactorrows() {
     this.repo.GetWebFactorRows(this.EditForm_factor.value).subscribe((data: any) => {
       this.records_factorrows = data.Factors
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
     });
   }
 
@@ -794,12 +797,12 @@ export class PrefactorEditComponent extends AgGridBaseComponent
     });
 
 
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     this.repo.WebFactorInsertRow(this.EditForm_Factor_Row.value).subscribe((data: any) => {
       this.notificationService.succeded();
       this.boxbuy_dialog_close()
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       this.GetFactor()
     });
   }
@@ -931,22 +934,6 @@ export class PrefactorEditComponent extends AgGridBaseComponent
     this.renderer.removeAttribute(modal, 'aria-modal');
     this.renderer.removeAttribute(modal, 'role');
   }
-
-  Loading_Modal_Response_show() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.addClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'block');
-    this.renderer.setAttribute(modal, 'aria-modal', 'true');
-    this.renderer.setAttribute(modal, 'role', 'dialog');
-  }
-  Loading_Modal_Response_close() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.removeClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'none');
-    this.renderer.removeAttribute(modal, 'aria-modal');
-    this.renderer.removeAttribute(modal, 'role');
-  }
-
 
 
 

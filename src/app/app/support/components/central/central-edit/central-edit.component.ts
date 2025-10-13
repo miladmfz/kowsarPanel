@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { CentralWebApiService } from '../../../services/CentralWebApi.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
+import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
   selector: 'app-central-edit',
@@ -12,6 +13,7 @@ export class CentralEditComponent implements OnInit {
 
   constructor(
     private repo: CentralWebApiService,
+    private loadingService: LoadingService,
     private route: ActivatedRoute,
     private router: Router,
     private renderer: Renderer2,
@@ -88,7 +90,7 @@ export class CentralEditComponent implements OnInit {
     this.repo.GetImageFromServer(this.Code).subscribe((data: any) => {
 
       this.Imageitem = `data:${Image};base64,${data.Text}`;
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
     });
   }
 
@@ -96,7 +98,7 @@ export class CentralEditComponent implements OnInit {
 
 
   getDetails() {
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
     this.repo.GetCentralById(this.Code).subscribe((data: any) => {
 
       this.EditForm_Central.patchValue({
@@ -121,22 +123,6 @@ export class CentralEditComponent implements OnInit {
     this.router.navigateByUrl('support/central-list');
   }
 
-
-
-  Loading_Modal_Response_show() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.addClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'block');
-    this.renderer.setAttribute(modal, 'aria-modal', 'true');
-    this.renderer.setAttribute(modal, 'role', 'dialog');
-  }
-  Loading_Modal_Response_close() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.removeClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'none');
-    this.renderer.removeAttribute(modal, 'aria-modal');
-    this.renderer.removeAttribute(modal, 'role');
-  }
 
 
 }

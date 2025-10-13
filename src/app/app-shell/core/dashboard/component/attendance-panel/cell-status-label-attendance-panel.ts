@@ -5,23 +5,24 @@ declare var $: any;
 @Component({
     selector: 'validation-Status-cell-renderer',
     template: `
-    <span *ngIf="Status == '0'">
-        <span class="bg-soft-danger text-danger" style="padding: 3px">عدم حضور</span>
-    </span>
-    <span *ngIf="Status == '1'">
-        <span class="bg-soft-bg-success text-success " style="padding: 3px">آزاد</span>
-    </span>
-    <span *ngIf="Status == '2'">
-        <span class="btn-soft-warning text-dark" style="padding: 3px">در حال کار</span>
-    </span>  
-      <span *ngIf="Status == '3'">
-        <span class="btn-soft-info text-info" style="padding: 3px">مرخصی موقت</span>
-    </span>
-          <span *ngIf="Status == '4'">
-        <span class="btn-soft-info text-secondary" style="padding: 3px">مرخصی اداری</span>
-    </span> <span *ngIf="Status == '5'">
-        <span class="btn-soft-info text-secondary" style="padding: 3px">قطع برق و اینترنت</span>
-    </span>
+<!-- عدم حضور -->
+<span *ngIf="Status == '0'" class="badge bg-danger text-white" style="padding: 3px;">عدم حضور</span>
+
+<!-- آزاد -->
+<span *ngIf="Status == '1'" class="badge bg-success text-white" style="padding: 3px;">آزاد</span>
+
+<!-- در حال کار -->
+<span *ngIf="Status == '2'" class="badge bg-warning text-dark" style="padding: 3px;">در حال کار</span>
+
+<!-- مرخصی موقت -->
+<span *ngIf="Status == '3'" class="badge bg-info text-white" style="padding: 3px;">مرخصی موقت</span>
+
+<!-- مرخصی اداری -->
+<span *ngIf="Status == '4'" class="badge bg-secondary text-white" style="padding: 3px;">مرخصی اداری</span>
+
+<!-- قطع برق و اینترنت -->
+<span *ngIf="Status == '5'" class="badge bg-dark text-white" style="padding: 3px;">قطع برق و اینترنت</span>
+
     `,
 })
 export class CellStatusAttendancePanel implements ICellRendererAngularComp {

@@ -42,6 +42,10 @@ import { CellActionReportCustomer } from './components/report/report-customer/ce
 import { CellActionletterPreFactorList } from './components/autletter/autletter-detail/cell-action-letterprefactor-list';
 import { CellActionletterFactorList } from './components/autletter/autletter-detail/cell-action-letterfactor-list';
 import { CellActionSupportAutletterFactorList } from './components/factor/support-factor-edit/cell-action-support-autletter-factor-list';
+import { LeavereqListComponent } from './components/leaverequest/leavereq-list/leavereq-list.component';
+import { LeavereqEditComponent } from './components/leaverequest/leavereq-edit/leavereq-edit.component';
+import { CellActionLeaveReqList } from './components/leaverequest/leavereq-list/cell-action-leavereq-list';
+import { StateLabelCellLeaveReq } from './components/leaverequest/leavereq-list/state-label-cell-leavereq';
 
 
 @NgModule({
@@ -110,6 +114,13 @@ import { CellActionSupportAutletterFactorList } from './components/factor/suppor
     CellActionletterFactorList,
     CellActionSupportAutletterFactorList,
 
+
+
+
+    LeavereqListComponent,
+    LeavereqEditComponent,
+    CellActionLeaveReqList,
+    StateLabelCellLeaveReq
   ]
 
 })

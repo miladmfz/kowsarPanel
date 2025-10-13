@@ -19,6 +19,8 @@ import { SupgoodEditComponent } from './components/supgood/supgood-edit/supgood-
 import { TaskListComponent } from './components/tasks/task-list/task-list.component';
 import { TaskEditComponent } from './components/tasks/task-edit/task-edit.component';
 import { ReportCustomerComponent } from './components/report/report-customer/report-customer.component';
+import { LeavereqListComponent } from './components/leaverequest/leavereq-list/leavereq-list.component';
+import { LeavereqEditComponent } from './components/leaverequest/leavereq-edit/leavereq-edit.component';
 
 
 const routes: Routes = [
@@ -62,6 +64,12 @@ const routes: Routes = [
       { path: 'task-edit', component: TaskEditComponent, },
       { path: 'task-edit/:id', component: TaskEditComponent, },
 
+
+
+      { path: 'leavereq-list', component: LeavereqListComponent, },
+
+      { path: 'leavereq-edit', component: LeavereqEditComponent, },
+      { path: 'leavereq-edit/:id', component: LeavereqEditComponent, },
 
 
 

@@ -1,17 +1,5 @@
 <div class="card-body">
   <h4 class="header-title mb-4"> ویرایش کالا</h4>
-  <!-- 
-  <ul class="nav nav-pills navtab-bg nav-justified">
-    <li class="nav-item">
-      <a href="#GoodBase" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
-        <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
-        <span class="d-none d-sm-inline-block">اطلاعات کالا</span>
-      </a>
-    </li>
-
-  </ul>
-
- -->
 
 
   <div class="tab-content">
@@ -38,68 +26,9 @@
                       autocomplete="off" [readOnly]="true" />
                   </div>
 
-                  <!-- <div class="form-group col-md-3">
-                    <label for="GoodMainCode" class="col-form-label">کد اصلی</label>
-                    <input type="text" class="form-control" id="GoodMainCode" formControlName="GoodMainCode"
-                      maxlength="100" autocomplete="off" />
-                  </div>
-
-
-                  <div class="form-group col-md-3">
-                    <label for="GoodSubCode" class="col-form-label">کد زیر مجموعه </label>
-                    <input type="text" class="form-control" id="GoodSubCode" formControlName="GoodSubCode" maxlength="3"
-                      autocomplete="off" />
-                  </div>
-
-
-
-                  <div class="form-group col-md-3">
-                    <label for="SellPriceType" class="col-form-label">نرخ فروش </label>
-                    <select formControlName="SellPriceType" id="SellPriceType" class="form-control custom-select"
-                      data-toggle="select2" (change)="onSellPriceTypeChange()">
-                      <option [value]="item.id" *ngFor="let item of SellPriceType_Lookup">{{item.name}}</option>
-                    </select>
-                  </div> -->
 
 
                 </div>
-
-
-                <!-- 
-
-                <div class="row col-md-12">
-
-                  <div class="form-group col-md-3">
-                    <label for="GoodType" class="col-form-label">نوع کالا </label>
-                    <select formControlName="GoodType" id="GoodType" class="form-control custom-select"
-                      data-toggle="select2">
-                      <option [value]="item.aType" *ngFor="let item of GoodType_lookup">{{item.aType}}</option>
-                    </select>
-                  </div>
-                  <div class="form-group col-md-3">
-                    <label for="Type" class="col-form-label">ماهیت کالا</label>
-
-                    <select formControlName="Type" id="Type" class="form-control custom-select" data-toggle="select2">
-                      <option [value]="item.id" *ngFor="let item of Type_Lookup">{{item.name}}</option>
-                    </select>
-                  </div>
-
-
-
-                  <div class="form-group col-md-3">
-                    <label for="UsedGood" class="col-form-label">مدل کالا</label>
-
-                    <select formControlName="UsedGood" id="UsedGood" class="form-control custom-select"
-                      data-toggle="select2">
-                      <option [value]="item.id" *ngFor="let item of UsedGood_Lookup">{{item.name}}</option>
-                    </select>
-                  </div>
-
-
-
-                </div> -->
-
-
 
 
                 <div class="form-group col-md-12">
@@ -154,134 +83,6 @@
 
                 </div>
 
-                <!-- 
-                <div class="row col-md-12">
-
-
-                  <div class="form-group col-md-3">
-                    <label for="Isbn" class="col-form-label">شابک </label>
-                    <input type="text" class="form-control" id="Isbn" formControlName="Isbn" maxlength="100"
-                      autocomplete="off" />
-                  </div>
-
-
-
-                  <div class="form-group col-md-3">
-
-                  </div>
-
-
-
-
-                  <div class="form-group col-md-3">
-                    <label for="BarCodePrintState" class="col-form-label">بارکد روی جلد</label>
-                    <select formControlName="BarCodePrintState" id="BarCodePrintState"
-                      class="form-control custom-select" data-toggle="select2">
-                      <option [value]="item.name" *ngFor="let item of BarCodePrintState_Lookup">{{item.name}}</option>
-                    </select>
-                  </div>
-
-                </div>
- -->
-
-
-
-
-
-
-                <!-- <div class="row col-md-12">
-
-
-                  <div class="form-group col-md-4">
-                    <label for="SellPrice1" class="col-form-label">نرخ فروش 1 </label>
-
-                    <ng-container *ngIf="SellPriceType_Str=='1'">
-                      <span class="text-danger mx-2">%</span>
-                    </ng-container>
-
-
-
-                    <input type="number" class="form-control" id="SellPrice1" formControlName="SellPrice1"
-                      maxlength="100" autocomplete="off" />
-                  </div>
-
-
-                  <div class="form-group col-md-4">
-
-                    <label for="SellPrice2" class="col-form-label">نرخ فروش 2 </label>
-                    <ng-container *ngIf="SellPriceType_Str=='1'">
-                      <span class="text-danger mx-2">%</span>
-                    </ng-container>
-                    <input type="number" class="form-control" id="SellPrice2" formControlName="SellPrice2"
-                      maxlength="100" autocomplete="off" />
-                  </div>
-
-
-                  <div class="form-group col-md-4">
-                    <label for="SellPrice3" class="col-form-label">نرخ فروش 3 </label>
-                    <ng-container *ngIf="SellPriceType_Str=='1'">
-                      <span class="text-danger mx-2">%</span>
-                    </ng-container>
-                    <input type="number" class="form-control" id="SellPrice3" formControlName="SellPrice3"
-                      maxlength="100" autocomplete="off" />
-                  </div>
-                </div>
- -->
-
-
-                <!-- <div class="row col-md-12">
-
-
-                  <div class="form-group col-md-4">
-                    <label for="SellPrice4" class="col-form-label">نرخ فروش 4 </label>
-                    <ng-container *ngIf="SellPriceType_Str=='1'">
-                      <span class="text-danger mx-2">%</span>
-                    </ng-container>
-                    <input type="number" class="form-control" id="SellPrice4" formControlName="SellPrice4"
-                      maxlength="100" autocomplete="off" />
-                  </div>
-
-
-                  <div class="form-group col-md-4">
-                    <label for="SellPrice5" class="col-form-label">نرخ فروش 5 </label>
-                    <ng-container *ngIf="SellPriceType_Str=='1'">
-                      <span class="text-danger mx-2">%</span>
-                    </ng-container>
-                    <input type="number" class="form-control" id="SellPrice5" formControlName="SellPrice5"
-                      maxlength="100" autocomplete="off" />
-                  </div>
-
-
-                  <div class="form-group col-md-4">
-                    <label for="SellPrice6" class="col-form-label">نرخ فروش 6 </label>
-                    <ng-container *ngIf="SellPriceType_Str=='1'">
-                      <span class="text-danger mx-2">%</span>
-                    </ng-container>
-                    <input type="number" class="form-control" id="SellPrice6" formControlName="SellPrice6"
-                      maxlength="100" autocomplete="off" />
-                  </div>
-                </div> -->
-                <!-- <div class="row col-md-12">
-
-                  <div class="form-group col-md-4">
-                    <label for="MinSellPrice" class="col-form-label">حداقل قیمت فروش </label>
-                    <input type="number" class="form-control" id="MinSellPrice" formControlName="MinSellPrice"
-                      maxlength="100" autocomplete="off" />
-                  </div>
-
-                  <div class="form-group col-md-4">
-
-                  </div>
-
-                  <div class="form-group col-md-4">
-                    <label for="MaxSellPrice" class="col-form-label">فی ناخالص </label>
-                    <input type="number" (change)="onMaxPriceTypeChange()" class="form-control" id="MaxSellPrice"
-                      formControlName="MaxSellPrice" maxlength="100" autocomplete="off" />
-                  </div>
-
-
-                </div> -->
-
 
               </div>
             </div>
@@ -322,20 +123,3 @@
         </div>
       </ng-container>
     </ng-template>
-
-
-
-
-    <div class="modal fade" id="loadingresponse" tabindex="-1" aria-labelledby="loadingresponseLabel"
-      aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="background-color: #d1dce7; border-radius: 10px; border: none;">
-          <div class="modal-body d-flex justify-content-center align-items-center" style="height: 150px;">
-            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-            <div class="ms-3">لطفا منتظر بمانید</div>
-          </div>
-        </div>
-      </div>
-    </div>

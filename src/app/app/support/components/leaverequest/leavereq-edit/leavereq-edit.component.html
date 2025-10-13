@@ -1,0 +1,130 @@
+<div class="card-body">
+  <h4 class="header-title mb-4"> {{title}}</h4>
+
+
+
+  <div class="tab-content">
+
+
+
+    <div class="tab-pane active" id="GoodBase">
+
+
+
+      <form [formGroup]="EditForm_LeaveRequest" id="submitForm">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body row">
+
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="form-group col-md-3">
+                      <label for="LeaveRequestDate" class="form-label">تاریخ درخواست</label>
+                      <input formControlName="LeaveRequestDate" id="LeaveRequestDate" class="form-control" rows="4"
+                        autocomplete="off" readonly>
+                    </div>
+
+
+                    <div class="form-group col-md-3">
+                      <label for="LeaveRequestType" class="form-label">نوع مرخصی</label>
+
+                      <select formControlName="LeaveRequestType" id="LeaveRequestType"
+                        class="form-control custom-select" (change)="onLeaveTypeChange()">
+                        <option value="">لطفاً انتخاب کنید</option>
+                        <option [value]="item.id" *ngFor="let item of LeaveType_Lookup">{{item.name}}</option>
+                      </select>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+                <div class="form-group col-md-3">
+                  <label for="LeaveStartDate" class="col-form-label">از تاریخ</label>
+                  <div>
+                    <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true"
+                      [uiHideAfterSelectDate]="true">
+                      <input class="form-control text-center" id="LeaveStartDate" type="text"
+                        formControlName="LeaveStartDate" autocomplete="off" placeholder="انتخاب تاریخ شروع" />
+                    </ng-persian-datepicker>
+                  </div>
+                </div>
+
+                <ng-container *ngIf="!showTimeFields">
+                  <div class="form-group col-md-3">
+                    <label for="LeaveEndDate" class="col-form-label">تا تاریخ</label>
+                    <div>
+                      <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true"
+                        [uiHideAfterSelectDate]="true">
+                        <input class="form-control text-center" id="LeaveEndDate" type="text"
+                          formControlName="LeaveEndDate" autocomplete="off" placeholder="انتخاب تاریخ پایان" />
+                      </ng-persian-datepicker>
+                    </div>
+                  </div>
+                </ng-container>
+
+
+                <ng-container *ngIf="showTimeFields">
+
+
+
+                  <div class="form-group col-md-3">
+                    <label for="LeaveStartTime" class="form-label">از ساعت</label>
+                    <input formControlName="LeaveStartTime" id="LeaveStartTime" class="form-control" type="time"
+                      step="60">
+
+                  </div>
+
+
+
+                  <div class="form-group col-md-3">
+                    <label for="LeaveEndTime" class="form-label">تا ساعت</label>
+                    <input formControlName="LeaveEndTime" id="LeaveEndTime" class="form-control" type="time"
+                      autocomplete="off">
+                  </div>
+                </ng-container>
+
+                <div class="form-group col-md-12">
+                  <label for="LeaveRequestExplain" class="form-label">توضیحات</label>
+                  <textarea formControlName="LeaveRequestExplain" id="LeaveRequestExplain" class="form-control" rows="4"
+                    autocomplete="off"></textarea>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="col-sm-12">
+
+            <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mx-1"
+              (click)="submit()">
+              <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره و بازگشت
+            </a>
+
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+
+
+
+    <ng-template #formError let-control="control" let-message="message" let-validation="validation">
+      <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
+        <div class="fv-plugins-message-container invalid-feedback">
+          <span role="alert">
+            {{ message }}
+          </span>
+        </div>
+      </ng-container>
+    </ng-template>

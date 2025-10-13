@@ -8,6 +8,7 @@ import { debounceTime, Subject, Subscription } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { CellActionReportCustomer } from './cell-action-report-customer-list';
+import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
   selector: 'app-report-customer',
@@ -21,6 +22,7 @@ export class ReportCustomerComponent extends AgGridBaseComponent
     private repo: SupportFactorWebApiService,
     private renderer: Renderer2,
     private notificationService: NotificationService,
+    private loadingService: LoadingService,
     private themeService: ThemeService,
   ) {
     super();
@@ -145,7 +147,7 @@ export class ReportCustomerComponent extends AgGridBaseComponent
 
 
   getlist_report_customer_bydate(item: any) {
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     this.EditForm_reportCustomer_temp.patchValue({
       StartDateTarget: this.EditForm_reportCustomer.value.StartDateTarget,
@@ -159,7 +161,7 @@ export class ReportCustomerComponent extends AgGridBaseComponent
         this.Customer_temp = data.KowsarReports[0].CustomerName
 
         this.records_report_customer_bydate = data.KowsarReports
-        this.Loading_Modal_Response_close()
+        this.loadingService.hide()
 
         this.customerreportbydate_dialog_show()
 
@@ -169,7 +171,7 @@ export class ReportCustomerComponent extends AgGridBaseComponent
 
 
   getlist_report_customer_byrow(item: any) {
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     this.EditForm_reportCustomer_temp.patchValue({
       StartDateTarget: this.EditForm_reportCustomer.value.StartDateTarget,
@@ -183,7 +185,7 @@ export class ReportCustomerComponent extends AgGridBaseComponent
       .subscribe((data: any) => {
 
         this.records_report_customer_byrow = data.KowsarReports
-        this.Loading_Modal_Response_close()
+        this.loadingService.hide()
 
         this.customerreportbyrow_dialog_show()
       });
@@ -194,11 +196,11 @@ export class ReportCustomerComponent extends AgGridBaseComponent
   getlist() {
 
 
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     this.repo.GetCustomerReport(this.EditForm_reportCustomer.value)
       .subscribe((data: any) => {
-        this.Loading_Modal_Response_close()
+        this.loadingService.hide()
 
         this.records_report_customer = data.KowsarReports
 
@@ -349,22 +351,6 @@ export class ReportCustomerComponent extends AgGridBaseComponent
     this.renderer.removeAttribute(modal, 'aria-modal');
     this.renderer.removeAttribute(modal, 'role');
   }
-  Loading_Modal_Response_show() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.addClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'block');
-    this.renderer.setAttribute(modal, 'aria-modal', 'true');
-    this.renderer.setAttribute(modal, 'role', 'dialog');
-  }
-
-  Loading_Modal_Response_close() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.removeClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'none');
-    this.renderer.removeAttribute(modal, 'aria-modal');
-    this.renderer.removeAttribute(modal, 'role');
-  }
-
 
 
 }

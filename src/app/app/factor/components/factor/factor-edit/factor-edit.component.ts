@@ -13,6 +13,7 @@ import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 import { CellActionAutletterFactorList } from './cell-action-autletter-factor-list';
+import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
   selector: 'app-factor-edit',
@@ -29,6 +30,7 @@ export class FactorEditComponent extends AgGridBaseComponent
     private location: Location,
     private fb: FormBuilder,
     private readonly notificationService: NotificationService,
+    private loadingService: LoadingService,
     private themeService: ThemeService
   ) {
     super();
@@ -271,12 +273,12 @@ export class FactorEditComponent extends AgGridBaseComponent
     });
 
 
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     this.repo.WebFactorInsertRow(this.EditForm_Factor_Row.value).subscribe((data: any) => {
       this.notificationService.succeded();
       this.boxbuy_dialog_close()
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       this.GetFactor()
     });
   }
@@ -632,7 +634,7 @@ export class FactorEditComponent extends AgGridBaseComponent
   Factor_Header_insert() {
     this.EditForm_Factor_Header.markAllAsTouched();
     if (!this.EditForm_Factor_Header.valid) return;
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     this.EditForm_Factor_Header.patchValue({
       BrokerRef: sessionStorage.getItem("BrokerCode")
@@ -640,7 +642,7 @@ export class FactorEditComponent extends AgGridBaseComponent
     this.repo.WebFactorInsert(this.EditForm_Factor_Header.value).subscribe((data: any) => {
       this.FactorCode = data.Factors[0].FactorCode
       this.notificationService.succeded();
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       this.GetFactor()
     });
   }
@@ -739,7 +741,7 @@ export class FactorEditComponent extends AgGridBaseComponent
 
   // #region Get_Data
   GetFactor() {
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     this.EditForm_factor.patchValue({
       ClassName: "Factor",
@@ -772,7 +774,7 @@ export class FactorEditComponent extends AgGridBaseComponent
   GetFactorrows() {
     this.repo.GetWebFactorRows(this.EditForm_factor.value).subscribe((data: any) => {
       this.records_factorrows = data.Factors
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
     });
   }
 
@@ -808,12 +810,12 @@ export class FactorEditComponent extends AgGridBaseComponent
       takhfif: this.EditForm_Factor_Row.value.takhfif + "",
     });
 
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     this.repo.WebFactorInsertRow(this.EditForm_Factor_Row.value).subscribe((data: any) => {
       this.notificationService.succeded();
       this.boxbuy_dialog_close()
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       this.GetFactor()
     });
   }
@@ -943,22 +945,6 @@ export class FactorEditComponent extends AgGridBaseComponent
     this.renderer.removeAttribute(modal, 'aria-modal');
     this.renderer.removeAttribute(modal, 'role');
   }
-
-  Loading_Modal_Response_show() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.addClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'block');
-    this.renderer.setAttribute(modal, 'aria-modal', 'true');
-    this.renderer.setAttribute(modal, 'role', 'dialog');
-  }
-  Loading_Modal_Response_close() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.removeClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'none');
-    this.renderer.removeAttribute(modal, 'aria-modal');
-    this.renderer.removeAttribute(modal, 'role');
-  }
-
 
 
 

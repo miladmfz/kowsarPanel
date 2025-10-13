@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 import { catchError, of } from 'rxjs';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
+import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
   selector: 'app-autletter-chat',
@@ -17,6 +18,7 @@ export class AutletterChatComponent implements OnInit, AfterViewInit, AfterViewC
     private elementRef: ElementRef,
     private renderer: Renderer2,
     private readonly notificationService: NotificationService,
+    private loadingService: LoadingService,
 
   ) { }
 
@@ -122,9 +124,9 @@ export class AutletterChatComponent implements OnInit, AfterViewInit, AfterViewC
 
 
   GetAutConversation() {
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
     this.repo.GetAutConversation(this.LetterRef).subscribe(chats => {
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       this.chats = chats;
       setTimeout(() => this.scrollToListItem(), 200);
     });
@@ -132,9 +134,9 @@ export class AutletterChatComponent implements OnInit, AfterViewInit, AfterViewC
 
   GetImageFileFromAttach(index: any): void {
 
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
     this.repo.GetImageFileFromAttach(this.chats[index].ConversationCode).subscribe((data: any) => {
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       this.Imageitem = `data:${Image};base64,${data.Text}`;
 
 
@@ -146,9 +148,9 @@ export class AutletterChatComponent implements OnInit, AfterViewInit, AfterViewC
 
   GetVoiceFileFromAttach(index: any): void {
 
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
     this.repo.GetVoiceFileFromAttach(this.chats[index].ConversationCode).subscribe((data: any) => {
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       this.voiceModal_show()
 
       this.selectedVoiceUrl = `data:${data.ContentType};base64,${data.Text}`;
@@ -158,7 +160,7 @@ export class AutletterChatComponent implements OnInit, AfterViewInit, AfterViewC
   }
 
   GetFileFromAttach(index: number): void {
-    this.Loading_Modal_Response_show();
+    this.loadingService.show();
 
     this.EditForm_Attach.patchValue({
       Title: this.chats[index].ConversationText,
@@ -171,17 +173,17 @@ export class AutletterChatComponent implements OnInit, AfterViewInit, AfterViewC
     this.repo.GetConversationFileFromAttach(this.EditForm_Attach.value)
       .pipe(
         catchError(error => {
-          this.Loading_Modal_Response_close();
+          this.loadingService.hide();
           this.notificationService.error('مشکل در برقراری ارتباط', "خطا");
           return of(null); // یا هر مقدار جایگزین
         })
       ).subscribe((data: any) => {
-        this.Loading_Modal_Response_close();
+        this.loadingService.hide();
         console.error(data);
         this.downloadFile(data);
 
       }, error => {
-        this.Loading_Modal_Response_close();
+        this.loadingService.hide();
         console.error("❌ خطا در گرفتن فایل:", error);
       });
   }
@@ -370,9 +372,9 @@ export class AutletterChatComponent implements OnInit, AfterViewInit, AfterViewC
           CentralRef: this.CentralRef,
         });
 
-        this.Loading_Modal_Response_show()
+        this.loadingService.show()
         this.repo.Conversation_UploadFile(this.EditForm.value).subscribe(() => {
-          this.Loading_Modal_Response_close()
+          this.loadingService.hide()
           this.GetAutConversation()
         }
         );
@@ -469,10 +471,10 @@ export class AutletterChatComponent implements OnInit, AfterViewInit, AfterViewC
           });
 
           // ارسال به سرور
-          this.Loading_Modal_Response_show();
+          this.loadingService.show();
           this.repo.Conversation_UploadFile(this.EditForm.value).subscribe(() => {
             this.resetRecording()
-            this.Loading_Modal_Response_close();
+            this.loadingService.hide();
             this.GetAutConversation();
           });
         };
@@ -599,25 +601,6 @@ export class AutletterChatComponent implements OnInit, AfterViewInit, AfterViewC
     this.renderer.removeAttribute(modal, 'role');
   }
 
-
-
-
-
-
-  Loading_Modal_Response_show() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.addClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'block');
-    this.renderer.setAttribute(modal, 'aria-modal', 'true');
-    this.renderer.setAttribute(modal, 'role', 'dialog');
-  }
-  Loading_Modal_Response_close() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.removeClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'none');
-    this.renderer.removeAttribute(modal, 'aria-modal');
-    this.renderer.removeAttribute(modal, 'role');
-  }
 
 
   openModal(modalId: string) {

@@ -6,6 +6,7 @@ import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 import { DbSetup_lookup } from '../../../lookup-type';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
+import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
   selector: 'app-autletter-insert',
@@ -17,6 +18,7 @@ export class AutletterInsertComponent implements OnInit {
     private repo: AutletterWebApiService,
     private router: Router,
     private readonly notificationService: NotificationService,
+    private loadingService: LoadingService,
     private renderer: Renderer2,
 
   ) { }
@@ -114,9 +116,9 @@ export class AutletterInsertComponent implements OnInit {
 
     }
 
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
     this.repo.LetterInsert(this.EditForm.value).subscribe(e => {
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       const intValue = parseInt(e[0].LetterCode, 10);
       if (!isNaN(intValue) && intValue > 0) {
         this.notificationService.succeded();
@@ -138,25 +140,6 @@ export class AutletterInsertComponent implements OnInit {
 
 
   }
-
-
-
-
-  Loading_Modal_Response_show() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.addClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'block');
-    this.renderer.setAttribute(modal, 'aria-modal', 'true');
-    this.renderer.setAttribute(modal, 'role', 'dialog');
-  }
-  Loading_Modal_Response_close() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.removeClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'none');
-    this.renderer.removeAttribute(modal, 'aria-modal');
-    this.renderer.removeAttribute(modal, 'role');
-  }
-
 
 
 

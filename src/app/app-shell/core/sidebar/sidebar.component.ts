@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CentralWebApiService } from 'src/app/app/support/services/CentralWebApi.service';
 import { SharedService } from '../../framework-services/shared.service';
 import { AppConfigService } from 'src/app/app-config.service';
+import { LoadingService } from '../../framework-services/loading.service';
 declare var $: any;
 
 @Component({
@@ -16,8 +17,10 @@ export class SidebarComponent implements OnInit {
     private sharedService: SharedService,
     private readonly router: Router,
     private config: AppConfigService,
+    private loading: LoadingService
 
   ) { }
+
   PhFullName = '';
   JobPersonRef = '';
   CustName_Small = '';
@@ -65,7 +68,6 @@ export class SidebarComponent implements OnInit {
 
 
 
-
     if (apiUrl_temp === 'http://192.168.1.25:60006/api/' || apiUrl_temp === 'http://itmali.ir/webapi/' || apiUrl_temp === 'http://5.160.152.173:60005/api/') {
       this.IsCustomerBuild = false
     } else {
@@ -83,6 +85,7 @@ export class SidebarComponent implements OnInit {
     this.AlarmActive_Row = parseInt(sessionStorage.getItem("AlarmActive_Row"))
     this.AlarmActtive_Conversation = parseInt(sessionStorage.getItem("AlarmActtive_Conversation"))
     this.PhAddress3 = sessionStorage.getItem("PhAddress3")
+
     if (sessionStorage.getItem("PhAddress3") == '100') {
       this.BrokerRef = ''
     } else {
@@ -224,5 +227,8 @@ export class SidebarComponent implements OnInit {
       });
 
   }
+
+
+
 
 }

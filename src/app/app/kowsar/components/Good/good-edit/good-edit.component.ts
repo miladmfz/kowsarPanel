@@ -14,6 +14,7 @@ import { CellActionGoodImageBtn } from './cell-action-good-edit-image-btn';
 import { CellActionGoodGroupBtn } from './cell-action-good-edit-group-btn';
 import Swal from 'sweetalert2';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
   selector: 'app-good-edit',
@@ -23,6 +24,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   constructor(
     private notificationService: NotificationService,
+    private loadingService: LoadingService,
     private repo: KowsarWebApiService,
     private route: ActivatedRoute,
     private renderer: Renderer2,
@@ -417,7 +419,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   // #region Load_data
 
   getDetails() {
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
     this.changedValues = {};
     this.EditForm_Base.reset();
     this.EditForm_Explain.reset();
@@ -483,7 +485,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
     this.repo.GetGood_base(this.Code).subscribe((data: any) => {
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       this.SellPriceType_Str = data.Goods[0].SellPriceType
 
       this.EditForm_Base.patchValue({
@@ -694,11 +696,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       JsonData: JSON.stringify(this.KowsarTemplate.value)
     });
 
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
 
     this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       const result = JSON.parse(data.Goods[0].Result);
 
       if (result.Goods && result.Goods[0].ErrMessage === "") {
@@ -1431,12 +1433,12 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       JsonData: JSON.stringify(this.KowsarTemplate.value)
     });
 
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
 
 
     this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       const result = JSON.parse(data.Goods[0].Result);
 
       if (result.Goods && result.Goods[0].ErrMessage === "") {
@@ -1466,10 +1468,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
   DeleteImagefromGood(KsrImageCode) {
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     this.repo.DeleteKsrImageCode(KsrImageCode).subscribe(e => {
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
 
       this.notificationService.succeded();
       this.GetGood_Images_Relations()
@@ -1478,10 +1480,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
   DeleteGroupfromGood(GoodGroupCode) {
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     this.repo.DeleteGoodGroupCode(GoodGroupCode).subscribe(e => {
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
 
       this.notificationService.succeded();
       this.GetGood_Groups_Relations()
@@ -1490,10 +1492,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
   ShowImageModal(pixel, KsrImageCode) {
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     this.repo.GetImageFromServer(pixel, KsrImageCode).subscribe((data: any) => {
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
 
       this.showimage_dialog_show();
       this.Imageitem = `data:image;base64,${data.Text}`;
@@ -1504,7 +1506,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
   SetGroup() {
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
 
     this.GoodToGroup.patchValue({
@@ -1540,7 +1542,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
     this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       const result = JSON.parse(data.Goods[0].Result);
 
       if (result.Goods && result.Goods[0].ErrMessage === "") {
@@ -1889,7 +1891,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
   sendImageToServer(ObjectCode: string, imageData: string): void {
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
     const data = {
       ClassName: "TGood",
@@ -1898,7 +1900,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     };
 
     this.repo.SendImageToServer(data).subscribe((response) => {
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       this.notificationService.succeded()
       this.GetGood_Images_Relations();
     });
@@ -1950,13 +1952,13 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
           JsonData: JSON.stringify(this.KowsarTemplate.value)
         });
 
-        this.Loading_Modal_Response_show()
+        this.loadingService.show()
 
 
 
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-          this.Loading_Modal_Response_close()
+          this.loadingService.hide()
           const result = JSON.parse(data.Goods[0].Result);
 
           if (result.Goods && result.Goods[0].ErrMessage === "") {
@@ -1999,11 +2001,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
           JsonData: JSON.stringify(this.KowsarTemplate.value)
         });
 
-        this.Loading_Modal_Response_show()
+        this.loadingService.show()
 
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-          this.Loading_Modal_Response_close()
+          this.loadingService.hide()
           const result = JSON.parse(data.Goods[0].Result);
 
           if (result.Goods && result.Goods[0].ErrMessage === "") {
@@ -2049,10 +2051,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
           JsonData: JSON.stringify(this.KowsarTemplate.value)
         });
 
-        this.Loading_Modal_Response_show()
+        this.loadingService.show()
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-          this.Loading_Modal_Response_close()
+          this.loadingService.hide()
           const result = JSON.parse(data.Goods[0].Result);
 
           if (result.Goods && result.Goods[0].ErrMessage === "") {
@@ -2098,12 +2100,12 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
           JsonData: JSON.stringify(this.KowsarTemplate.value)
         });
 
-        this.Loading_Modal_Response_show()
+        this.loadingService.show()
 
 
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-          this.Loading_Modal_Response_close()
+          this.loadingService.hide()
           const result = JSON.parse(data.Goods[0].Result);
 
           if (result.Goods && result.Goods[0].ErrMessage === "") {
@@ -2156,12 +2158,12 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
           JsonData: JSON.stringify(this.KowsarTemplate.value)
         });
 
-        this.Loading_Modal_Response_show()
+        this.loadingService.show()
 
 
 
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-          this.Loading_Modal_Response_close()
+          this.loadingService.hide()
           const result = JSON.parse(data.Goods[0].Result);
 
           if (result.Goods && result.Goods[0].ErrMessage === "") {
@@ -2247,23 +2249,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     this.renderer.removeAttribute(modal, 'role');
   }
 
-
-  Loading_Modal_Response_show() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.addClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'block');
-    this.renderer.setAttribute(modal, 'aria-modal', 'true');
-    this.renderer.setAttribute(modal, 'role', 'dialog');
-  }
-  Loading_Modal_Response_close() {
-    const modal = this.renderer.selectRootElement('#loadingresponse', true);
-    this.renderer.removeClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'none');
-    this.renderer.removeAttribute(modal, 'aria-modal');
-    this.renderer.removeAttribute(modal, 'role');
-  }
-
-
   barcode_dialog_show() {
     const modal = this.renderer.selectRootElement('#Barcodemodal', true);
     this.renderer.addClass(modal, 'show');
@@ -2299,7 +2284,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   selectedBarcode: any = null;
 
   BarCodeModal(): void {
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
     this.repo.GetBarcodeList(this.Code).subscribe((data: any) => {
       this.barcode_dialog_show()
       console.log(data.Barcodes)
@@ -2314,7 +2299,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         this.barcodeList = [];  // Store the list of barcode objects
 
       }
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
     });
   }
 
@@ -2351,7 +2336,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   SetBarCode() {
 
 
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
 
 
@@ -2377,12 +2362,12 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       JsonData: JSON.stringify(this.KowsarTemplate.value)
     });
 
-    this.Loading_Modal_Response_show()
+    this.loadingService.show()
 
 
 
     this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-      this.Loading_Modal_Response_close()
+      this.loadingService.hide()
       const result = JSON.parse(data.Goods[0].Result);
 
       if (result.Goods && result.Goods[0].ErrMessage === "") {

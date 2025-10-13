@@ -312,48 +312,101 @@ export class AttendancePanelComponent
       this.isDarkMode = (mode === 'dark');
     });
 
-    this.columnDefs = [
-
-      {
-        field: 'کارشناس',
-        filter: 'agSetColumnFilter',
-        cellRenderer: CellNameAttendancePanel,
-        cellClass: 'text-center',
-        minWidth: 70
-      },
-      {
-        field: 'وضعیت حضور',
-        cellRenderer: CellStatusAttendancePanel,
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 100
-      },
-      {
-        field: 'عملیات',
-        pinned: 'left',
-        cellRenderer: CellActionAttendancePanel,
-        width: 200,
-      },
 
 
-      {
-        field: 'تاریخ',
-        cellRenderer: CellDateAttendancePanel,
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 100
-      },
-      {
-        field: 'CustNames',
-        headerName: 'مشتری',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 100
-      },
+    if (sessionStorage.getItem("PhAddress3") == '100') {
+
+
+      this.columnDefs = [
+        {
+          field: 'عملیات',
+          pinned: 'left',
+          cellRenderer: CellActionAttendancePanel,
+          width: 200,
+        },
+
+        {
+          field: 'کارشناس',
+          filter: 'agSetColumnFilter',
+          cellRenderer: CellNameAttendancePanel,
+          cellClass: 'text-center',
+          minWidth: 70
+        },
+        {
+          field: 'وضعیت حضور',
+          cellRenderer: CellStatusAttendancePanel,
+          filter: 'agSetColumnFilter',
+          cellClass: 'text-center',
+          minWidth: 100
+        },
+
+
+        {
+          field: 'تاریخ',
+          cellRenderer: CellDateAttendancePanel,
+          filter: 'agSetColumnFilter',
+          cellClass: 'text-center',
+          minWidth: 100
+        },
+        {
+          field: 'CustNames',
+          headerName: 'مشتری',
+          filter: 'agSetColumnFilter',
+          cellClass: 'text-center',
+          minWidth: 100
+        },
 
 
 
-    ];
+      ];
+
+    } else {
+      this.columnDefs = [
+        {
+          field: 'عملیات',
+          pinned: 'left',
+          cellRenderer: CellActionAttendancePanel,
+          width: 200,
+        },
+
+        {
+          field: 'کارشناس',
+          filter: 'agSetColumnFilter',
+          cellRenderer: CellNameAttendancePanel,
+          cellClass: 'text-center',
+          minWidth: 70
+        },
+        {
+          field: 'وضعیت حضور',
+          cellRenderer: CellStatusAttendancePanel,
+          filter: 'agSetColumnFilter',
+          cellClass: 'text-center',
+          minWidth: 100
+        },
+
+
+        {
+          field: 'CustNames',
+          headerName: 'مشتری',
+          filter: 'agSetColumnFilter',
+          cellClass: 'text-center',
+          minWidth: 100
+        },
+
+
+
+      ];
+
+
+    }
+
+
+
+
+
+
+
+
 
 
     this.columnDefs3 = [
