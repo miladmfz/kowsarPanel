@@ -57,6 +57,9 @@ export class AutletterWebApiService {
 
 
 
+  GetKowsarCustomer(SearchTarget: string): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetKowsarCustomer", { SearchTarget }, { headers: this.headers })
+  }
 
 
   GetLetterFromPersoninfo(

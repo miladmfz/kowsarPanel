@@ -85,6 +85,7 @@ export class AttendancePanelComponent
     InOutFlag: new FormControl(''),
     CreatorCentral: new FormControl(''),
     OwnerCentral: new FormControl(''),
+    OwnerPersonInfoRef: new FormControl(''),
   });
 
 
@@ -662,6 +663,7 @@ export class AttendancePanelComponent
       InOutFlag: "2",
       CreatorCentral: this.EditForm_LetterToEmployer.value.CreatorCentral,
       OwnerCentral: this.EditForm_LetterToEmployer.value.OwnerCentral,
+      OwnerPersonInfoRef: sessionStorage.getItem("PersonInfoRef"),
     });
 
     this.repo.LetterInsert(this.EditForm_LetterInsert.value).subscribe(e => {

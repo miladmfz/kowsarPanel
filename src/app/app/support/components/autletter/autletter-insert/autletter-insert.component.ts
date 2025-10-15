@@ -7,12 +7,17 @@ import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 import { DbSetup_lookup } from '../../../lookup-type';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
+import { debounceTime, Subject, Subscription } from 'rxjs';
+import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 
 @Component({
   selector: 'app-autletter-insert',
   templateUrl: './autletter-insert.component.html',
 })
-export class AutletterInsertComponent implements OnInit {
+export class AutletterInsertComponent extends AgGridBaseComponent
+  implements OnInit {
+
 
   constructor(
     private repo: AutletterWebApiService,
@@ -20,8 +25,13 @@ export class AutletterInsertComponent implements OnInit {
     private readonly notificationService: NotificationService,
     private loadingService: LoadingService,
     private renderer: Renderer2,
+    private themeService: ThemeService
+  ) {
+    super();
+  }
 
-  ) { }
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
 
   customTheme: Partial<IDatepickerTheme> = {
     selectedBackground: '#D68E3A',
@@ -29,6 +39,7 @@ export class AutletterInsertComponent implements OnInit {
 
   };
   ToDayDate: string = "";
+
 
   Title_Lookup: Base_Lookup[] = [
     { id: "ارتباط با همکاران", name: "ارتباط با همکاران" },
@@ -45,21 +56,83 @@ export class AutletterInsertComponent implements OnInit {
   LetterState_lookup: DbSetup_lookup[] = []
   LetterPriority_lookup: DbSetup_lookup[] = []
   JobPersonRef: string = '';
-
+  records_support_central
 
   CentralRef: string = '';
-  ngOnInit() {
+
+
+  loading: boolean = false;
+  IsEmploy: boolean = false;
+
+
+
+
+  override ngOnInit(): void {
+    super.ngOnInit();
     this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
     if (!(this.JobPersonRef.length > 0)) {
-      this.EditForm.patchValue({
+      this.EditForm_LetterInsert.patchValue({
         InOutFlag: "0",
       });
     }
 
 
+
+
+    if (sessionStorage.getItem("JobPersonRef").length > 0) {
+      this.IsEmploy = true
+      this.EditForm_LetterInsert.patchValue({
+        OwnerCentral: "",
+      });
+    } else {
+      this.IsEmploy = false
+
+      this.EditForm_LetterInsert.patchValue({
+
+        OwnerCentral: sessionStorage.getItem("CentralRef"),
+      });
+    }
+
+
+
+
+
+
+    this.columnDefs4 = [
+
+      {
+        field: 'CustName_Small',
+        headerName: 'نام مشتری  ',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150,
+        checkboxSelection: true,
+      },
+      {
+        field: 'Manager',
+        headerName: 'مدیریت',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'Explain',
+        headerName: 'پشتیبانی',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+
+    ];
+
+
     this.repo.GetTodeyFromServer().subscribe((data: any) => {
 
       this.ToDayDate = data[0].TodeyFromServer
+
+      this.EditForm_LetterInsert.patchValue({
+        LetterDate: this.ToDayDate,
+      });
 
     });
 
@@ -84,40 +157,89 @@ export class AutletterInsertComponent implements OnInit {
   ]
 
 
-  EditForm = new FormGroup({
-    ToDayDate: new FormControl(''),
-    dateValue: new FormControl(''),
-    title: new FormControl('', Validators.required),
-    description: new FormControl('', Validators.required),
+
+
+  EditForm_LetterInsert = new FormGroup({
+    LetterDate: new FormControl(''),
+    title: new FormControl('', [Validators.required]),
+    Description: new FormControl('', [Validators.required]),
     LetterState: new FormControl(''),
-    InOutFlag: new FormControl('2'),
     LetterPriority: new FormControl(''),
     CentralRef: new FormControl(''),
+    InOutFlag: new FormControl(''),
+    CreatorCentral: new FormControl(''),
+    OwnerCentral: new FormControl('', [Validators.required]),
+    OwnerPersonInfoRef: new FormControl(''),
+    OwnerName: new FormControl(''),
   });
 
+  pipe_function() {
+    this.searchSubject_central.pipe(
+      debounceTime(1000)  // 1 second debounce time
+    ).subscribe(searchText => {
+      this.GetCentral();
+    });
+
+
+  }
+  private searchSubject_central: Subject<string> = new Subject();
+  Searchtarget_central: string = '';
+
+  onInputChange_Customer() {
+    this.searchSubject_central.next(this.Searchtarget_central);
+  }
+
+  Set_Customer() {
+
+
+    this.EditForm_LetterInsert.patchValue({
+      LetterDate: this.ToDayDate,
+      OwnerCentral: this.selectedRows[0].CentralRef,
+      OwnerName: this.selectedRows[0].CustName_Small,
+
+    });
+
+    this.selectedRows = []
+
+    this.centrallist_dialog_close()
+
+
+  }
+
+  GetCentral() {
+    this.centrallist_dialog_show()
+    this.loading = true;
+
+    this.repo.GetKowsarCustomer(this.Searchtarget_central).subscribe((data: any) => {
+      this.records_support_central = data.Customers;
+      this.loading = false;
+
+    });
+  }
 
   submit(action) {
 
     this.CentralRef = sessionStorage.getItem("CentralRef");
 
-    this.EditForm.markAllAsTouched();
-    if (!this.EditForm.valid) return;
+    this.EditForm_LetterInsert.markAllAsTouched();
+    if (!this.EditForm_LetterInsert.valid) return;
 
-    this.EditForm.patchValue({
-      ToDayDate: this.ToDayDate,
-      CentralRef: this.CentralRef
-    });
+    // this.EditForm.patchValue({
+    //   ToDayDate: this.ToDayDate,
+    //   CentralRef: this.CentralRef
+    // });
 
 
-    if (this.EditForm.value.LetterPriority == "") {
-      this.EditForm.patchValue({
-        LetterPriority: "عادی",
-      });
+    // if (this.EditForm.value.LetterPriority == "") {
+    //   this.EditForm.patchValue({
+    //     LetterPriority: "عادی",
+    //   });
 
-    }
+    // }
+
 
     this.loadingService.show()
-    this.repo.LetterInsert(this.EditForm.value).subscribe(e => {
+    this.repo.LetterInsert(this.EditForm_LetterInsert.value).subscribe(e => {
       this.loadingService.hide()
       const intValue = parseInt(e[0].LetterCode, 10);
       if (!isNaN(intValue) && intValue > 0) {
@@ -140,6 +262,25 @@ export class AutletterInsertComponent implements OnInit {
 
 
   }
+
+
+  centrallist_dialog_show() {
+
+    const modal = this.renderer.selectRootElement('#centrallist', true);
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+
+  centrallist_dialog_close() {
+    const modal = this.renderer.selectRootElement('#centrallist', true);
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
 
 
 

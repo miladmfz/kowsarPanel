@@ -6,13 +6,13 @@
   </div>
 </div>
 
-<form [formGroup]="EditForm" (ngSubmit)="submit('')" id="submitForm">
+<form [formGroup]="EditForm_LetterInsert" (ngSubmit)="submit('')" id="submitForm">
   <div class="row">
     <div class="col-12">
       <div class="card">
         <div class="card-body row">
 
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-2">
             <label for="dateValue" class="col-form-label">تاریخ</label>
             <div>
               <h5>{{ToDayDate}}</h5>
@@ -21,18 +21,18 @@
 
           <div></div>
 
-          <div class="form-group col-md-4">
+          <div class="form-group col-md-3">
             <label for="title" class="col-form-label">عنوان تیکت </label>
-            <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+            <label for="title" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
             <span class="text-danger">*</span>
 
             <select formControlName="title" id="title" class="form-control custom-select" [ngClass]="{
                       'is-invalid':
-                      EditForm.controls['title'].invalid &&
-                      EditForm.controls['title'].touched,
+                      EditForm_LetterInsert.controls['title'].invalid &&
+                      EditForm_LetterInsert.controls['title'].touched,
                       'is-valid':
-                      EditForm.controls['title'].valid &&
-                      EditForm.controls['title'].touched
+                      EditForm_LetterInsert.controls['title'].valid &&
+                      EditForm_LetterInsert.controls['title'].touched
                     }">
               <option value="">لطفاً انتخاب کنید</option>
 
@@ -41,13 +41,45 @@
             <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
                                               validation: 'required',
                                               message: 'اجباری است',
-                                              control: EditForm.controls['title']
+                                              control: EditForm_LetterInsert.controls['title']
                                             }">
             </ng-container>
 
           </div>
+
+
+          <div class=" form-group col-md-2">
+            <label for="OwnerCentral" class="col-form-label">کد مشتری </label>
+
+
+            <label for="OwnerCentral" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+            <input type="text" class="form-control" id="OwnerCentral" (click)="GetCentral()" placeholder="نمایش مشتریان"
+              formControlName="OwnerCentral" maxlength="100" autocomplete="off" readonly [ngClass]="{
+                              'is-invalid':
+                              EditForm_LetterInsert.controls['OwnerCentral'].invalid &&
+                              EditForm_LetterInsert.controls['OwnerCentral'].touched,
+                              'is-valid':
+                              EditForm_LetterInsert.controls['OwnerCentral'].valid &&
+                              EditForm_LetterInsert.controls['OwnerCentral'].touched
+                            }" />
+            <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                              validation: 'required',
+                              message: 'اجباری است',
+                              control: EditForm_LetterInsert.controls['OwnerCentral']
+                            }"></ng-container>
+
+
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="OwnerName" class="col-form-label">نام مشتری</label>
+            <input type="text" class="form-control" id="OwnerName" formControlName="OwnerName" maxlength="400"
+              autocomplete="off" readonly>
+
+          </div>
+
           <ng-container *ngIf="JobPersonRef.length>0">
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-2">
               <label for="LetterPriority" class="col-form-label">الویت </label>
               <select formControlName="LetterPriority" id="LetterPriority" class="form-control custom-select">
                 <option value="">لطفاً انتخاب کنید</option>
@@ -58,7 +90,7 @@
 
 
 
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-2">
               <label for="InOutFlag" class="col-form-label">نوع نامه </label>
               <select formControlName="InOutFlag" id="InOutFlag" class="form-control custom-select">
                 <option value="">لطفاً انتخاب کنید</option>
@@ -74,23 +106,23 @@
 
 
           <div class="form-group col-md-12">
-            <label for="description" class="col-form-label">شرح تیکت </label>
+            <label for="Description" class="col-form-label">شرح تیکت </label>
             <span class="text-danger">*</span>
 
-            <textarea type="text" class="form-control" id="description" formControlName="description" autocomplete="off"
+            <textarea type="text" class="form-control" id="Description" formControlName="Description" autocomplete="off"
               [ngClass]="{
                       'is-invalid':
-                      EditForm.controls['description'].invalid &&
-                      EditForm.controls['description'].touched,
+                      EditForm_LetterInsert.controls['Description'].invalid &&
+                      EditForm_LetterInsert.controls['Description'].touched,
                       'is-valid':
-                      EditForm.controls['description'].valid &&
-                      EditForm.controls['description'].touched
+                      EditForm_LetterInsert.controls['Description'].valid &&
+                      EditForm_LetterInsert.controls['Description'].touched
                     }">
               </textarea>
             <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
                                               validation: 'required',
                                               message: 'اجباری است',
-                                              control: EditForm.controls['description']
+                                              control: EditForm_LetterInsert.controls['Description']
                                             }">
             </ng-container>
 
@@ -149,6 +181,58 @@
     </div>
   </div>
 </div>
+
+
+
+
+<div class="modal fade" id="centrallist" tabindex="-1" aria-labelledby="centrallistLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="centrallistLabel">لیست مشتریان</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="centrallist_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-2">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <input #modalsearch type="text" class="form-control" placeholder="جستجو..."
+                [(ngModel)]="Searchtarget_central" (ngModelChange)="onInputChange_Customer()"
+                [ngModelOptions]="{ standalone: true }" />
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="loading" class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
+        <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" [rowData]="records_support_central"
+          [columnDefs]="columnDefs4" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
+          [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+          [frameworkComponents]="frameworkComponents" [context]="context"
+          [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [suppressRowClickSelection]="true"
+          [rowSelection]="'single'" (selectionChanged)="onSelectionChanged($event)">
+        </ag-grid-angular>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="centrallist_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="Set_Customer()">انتخاب</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
 
 
 <ng-template #formError let-control="control" let-message="message" let-validation="validation">
