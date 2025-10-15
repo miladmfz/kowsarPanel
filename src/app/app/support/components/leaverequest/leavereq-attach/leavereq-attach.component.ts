@@ -1,28 +1,30 @@
 import { Component, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
-import { AutletterWebApiService } from '../../../services/AutletterWebApi.service';
+import { FormControl, FormGroup } from '@angular/forms';
+import { LeaveRequestWebApiService } from '../../../services/LeaveRequestWebApi.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { FormControl, FormGroup } from '@angular/forms';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
-import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
+import { AutletterWebApiService } from '../../../services/AutletterWebApi.service';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 import { Subscription } from 'rxjs';
-import { CellActionAutLetterAttach } from './cell-action-autletter-attach';
+import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
+import { CellActionLeaveReqAttach } from './cell-action-leavereq-attach';
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
-  selector: 'app-autletter-attach',
-  templateUrl: './autletter-attach.component.html',
+  selector: 'app-leavereq-attach',
+  templateUrl: './leavereq-attach.component.html',
 })
-export class AutletterAttachComponent extends AgGridBaseComponent
+export class LeavereqAttachComponent extends AgGridBaseComponent
   implements OnInit {
+
   constructor(
-    private repo: AutletterWebApiService,
+    private repo: LeaveRequestWebApiService,
+    private loadingService: LoadingService,
     private router: Router,
     private http: HttpClient,
     private elementRef: ElementRef,
     private renderer: Renderer2,
-    private loadingService: LoadingService,
     private sharedService: SharedService,
     private themeService: ThemeService
   ) {
@@ -32,16 +34,16 @@ export class AutletterAttachComponent extends AgGridBaseComponent
 
   isDarkMode: boolean = false;
   private themeSub!: Subscription;
+
   records
   loading_attach: boolean = true;
-
   @Input() TextData: string = '';
 
   EditForm = new FormGroup({
     Title: new FormControl(''),
     FileName: new FormControl(''),
     ObjectRef: new FormControl('0'),
-    ClassName: new FormControl('AutLetter'),
+    ClassName: new FormControl('LeaveReq'),
     Type: new FormControl('Zip'),
     FilePath: new FormControl(''),
     FileType: new FormControl(''),
@@ -50,16 +52,14 @@ export class AutletterAttachComponent extends AgGridBaseComponent
 
   attachfiles_array: any[] = [];
 
-
   override ngOnInit(): void {
     super.ngOnInit();
-
 
     this.columnDefs = [
       {
         field: 'عملیات',
         pinned: 'left',
-        cellRenderer: CellActionAutLetterAttach,
+        cellRenderer: CellActionLeaveReqAttach,
         cellRendererParams: {
           editUrl: '/support/leavereq-edit',
         },
@@ -90,8 +90,6 @@ export class AutletterAttachComponent extends AgGridBaseComponent
     this.CallService()
   }
 
-
-
   CallService() {
     this.sharedService.RefreshAllActions$.subscribe(action => {
       if (action === 'refresh') {
@@ -105,7 +103,22 @@ export class AutletterAttachComponent extends AgGridBaseComponent
   }
 
 
+  DownloadFile(Data: any) {
 
+    this.repo.downloadFile(Data.AttachedFileCode, "LeaveReq", this.TextData).subscribe(blob => {
+      const downloadLink = document.createElement('a');
+      downloadLink.href = window.URL.createObjectURL(blob);
+      downloadLink.download = 'KowsarDownload.zip'; // Set desired file name here
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }, error => {
+      console.error('Error downloading file: ', error);
+    });
+
+
+
+  }
 
 
 
@@ -144,7 +157,6 @@ export class AutletterAttachComponent extends AgGridBaseComponent
 
   submit(action) {
     this.loadingService.show()
-
     this.EditForm.patchValue({
       ObjectRef: this.TextData,
 
@@ -156,7 +168,6 @@ export class AutletterAttachComponent extends AgGridBaseComponent
     }
     this.repo.AttachFile_Insert(command).subscribe((data) => {
       this.loadingService.hide()
-
       this.EditForm.reset();
       this.sharedService.triggerActionAll('refresh');
       this.selectedImage = null
@@ -172,7 +183,7 @@ export class AutletterAttachComponent extends AgGridBaseComponent
       Title: "",
       FileName: "",
       ObjectRef: this.TextData,
-      ClassName: "AutLetter",
+      ClassName: "LeaveReq",
       Type: "Zip",
       FilePath: "",
       FileType: "",
@@ -190,33 +201,10 @@ export class AutletterAttachComponent extends AgGridBaseComponent
 
 
 
-  DownloadFile(data: any) {
-
-    this.repo.downloadFile(data.AttachedFileCode, "AutLetter", this.TextData).subscribe(blob => {
-      const downloadLink = document.createElement('a');
-      downloadLink.href = window.URL.createObjectURL(blob);
-      downloadLink.download = 'KowsarDownload.zip'; // Set desired file name here
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-    }, error => {
-      console.error('Error downloading file: ', error);
-    });
-
-
-
-  }
-
-
 
 
 
 }
-
-
-
-
-
 
 
 

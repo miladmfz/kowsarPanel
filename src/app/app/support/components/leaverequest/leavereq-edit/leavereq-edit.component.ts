@@ -7,14 +7,21 @@ import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { Base_Lookup, DbSetup_lookup } from '../../../lookup-type';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from "jalali-moment";
+import { HttpClient } from '@angular/common/http';
+import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
+import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-leavereq-edit',
   templateUrl: './leavereq-edit.component.html',
 })
-export class LeavereqEditComponent implements OnInit {
+export class LeavereqEditComponent extends AgGridBaseComponent
+  implements OnInit {
 
   constructor(
+    private http: HttpClient,
     private repo: LeaveRequestWebApiService,
     private router: Router,
     private route: ActivatedRoute,
@@ -22,15 +29,31 @@ export class LeavereqEditComponent implements OnInit {
     private readonly notificationService: NotificationService,
     private loadingService: LoadingService,
     private renderer: Renderer2,
+    private themeService: ThemeService
+  ) {
+    super();
+  }
 
-  ) { }
+
+  isDarkMode: boolean = false;
+  private themeSub!: Subscription;
+
+  records;
+  loading: boolean = true;
+
+
+  show_attachField: boolean = false;
+
+  loading_attach: boolean = true;
 
   customTheme: Partial<IDatepickerTheme> = {
     selectedBackground: '#D68E3A',
     selectedText: '#FFFFFF',
 
   };
+
   ToDayDate: string = "";
+  holidaysList: string[] = [];
 
   LeaveType_Lookup: Base_Lookup[] = [
     { id: "مرخصي استحقاقي", name: "مرخصي استحقاقي" },
@@ -54,6 +77,9 @@ export class LeavereqEditComponent implements OnInit {
     LeaveRequestDate: new FormControl(''),
     LeaveRequestType: new FormControl('', Validators.required),
     LeaveRequestExplain: new FormControl('', Validators.required),
+    TotalDay: new FormControl('0'),
+    WorkDay: new FormControl('0'),
+    OffDay: new FormControl('0'),
     LeaveStartDate: new FormControl('', Validators.required),
     LeaveEndDate: new FormControl('', Validators.required),
     LeaveStartTime: new FormControl('', Validators.required),
@@ -71,6 +97,54 @@ export class LeavereqEditComponent implements OnInit {
   LeaveRequestCode: string = '';
 
 
+  onLeaveStartDate() {
+    // برای جلوگیری از چندبار subscribe شدن
+    const leaveStartDateControl = this.EditForm_LeaveRequest.get('LeaveStartDate');
+    if (!leaveStartDateControl) return;
+
+    leaveStartDateControl.valueChanges.subscribe(value => {
+      this.calculateDays();
+      const leaveType = this.EditForm_LeaveRequest.get('LeaveRequestType')?.value;
+
+      console.log('📅 تاریخ شروع تغییر کرد:', value);
+      console.log('🔹 نوع مرخصی:', leaveType);
+
+      if (!leaveType) {
+        this.showTimeFields = false;
+        return;
+      }
+
+      switch (leaveType) {
+        case 'مرخصي ساعتي':
+          // ✅ مرخصی ساعتی → نمایش ساعت‌ها و هماهنگ کردن تاریخ پایان با شروع
+          this.showTimeFields = true;
+          this.EditForm_LeaveRequest.patchValue({
+            LeaveEndDate: value,
+          }, { emitEvent: false }); // جلوگیری از لوپ بی‌نهایت
+          break;
+
+        default:
+          // ✅ مرخصی روزانه → مخفی کردن ساعت‌ها و تنظیم زمان پیش‌فرض
+          this.showTimeFields = false;
+          this.EditForm_LeaveRequest.patchValue({
+            LeaveStartTime: '00:00',
+            LeaveEndTime: '23:59',
+          }, { emitEvent: false });
+          break;
+      }
+    });
+  }
+
+  onLeaveEndDate() {
+    const leaveEndDateControl = this.EditForm_LeaveRequest.get('LeaveEndDate');
+    if (!leaveEndDateControl) return;
+
+    leaveEndDateControl.valueChanges.subscribe(value => {
+      this.calculateDays()
+
+      console.log('📅 تاریخ پایان تغییر کرد:', value);
+    });
+  }
 
 
 
@@ -103,7 +177,73 @@ export class LeavereqEditComponent implements OnInit {
   }
 
 
-  ngOnInit() {
+
+  toEnglishNumber(str: string) {
+    if (!str) return str;
+    const persianNumbers = '۰۱۲۳۴۵۶۷۸۹';
+    return str.replace(/[۰-۹]/g, d => persianNumbers.indexOf(d).toString());
+  }
+
+  calculateDays() {
+    let startStr = this.EditForm_LeaveRequest.get('LeaveStartDate')?.value;
+    let endStr = this.EditForm_LeaveRequest.get('LeaveEndDate')?.value;
+    if (!startStr || !endStr) return;
+
+    // تبدیل اعداد فارسی به انگلیسی
+    startStr = this.toEnglishNumber(startStr);
+    endStr = this.toEnglishNumber(endStr);
+
+    // تبدیل به moment-jalaali
+    const start = moment(startStr, "jYYYY/jM/jD");
+    const end = moment(endStr, "jYYYY/jM/jD");
+
+    if (!start.isValid() || !end.isValid()) return;
+
+    if (end.isBefore(start)) {
+      const endControl = this.EditForm_LeaveRequest.get('LeaveEndDate');
+      const existingErrors = endControl?.errors || {};
+      endControl?.setErrors({ ...existingErrors, invalidDate: true });
+      endControl?.markAsTouched();
+      endControl?.updateValueAndValidity();
+      this.notificationService.error('تاریخ پایان نمی‌تواند قبل از تاریخ شروع باشد.');
+      return;
+    }
+
+
+
+    let total = 0;
+    let work = 0;
+    let off = 0;
+
+    let current = start.clone();
+    while (current.isSameOrBefore(end, 'day')) {
+      total++;
+
+      const dayOfWeek = current.day(); // 0=Sunday, 5=Friday
+      const currentJalali = current.format("jYYYY/jMM/jDD");
+
+      const isHoliday = this.holidaysList.includes(currentJalali);
+      if (dayOfWeek === 5 || isHoliday) {
+        off++;
+      } else {
+        work++;
+      }
+
+
+      current.add(1, 'day');
+    }
+
+    // ست کردن مقادیر در فرم
+    this.EditForm_LeaveRequest.patchValue({
+      TotalDay: total + "",
+      WorkDay: work + "",
+      OffDay: off + ""
+    });
+  }
+
+
+  override ngOnInit(): void {
+    super.ngOnInit();
 
     this.route.paramMap.subscribe((params: ParamMap) => {
       var id = params.get('id');
@@ -126,6 +266,14 @@ export class LeavereqEditComponent implements OnInit {
 
 
     });
+
+    const currentJYear = moment().format("jYYYY"); // سال شمسی فعلی
+    this.http.get<any>('assets/holidays.json').subscribe(res => {
+      this.holidaysList = res[currentJYear] || [];
+    });
+
+    this.onLeaveStartDate()
+    this.onLeaveEndDate()
 
 
     this.repo.GetTodeyFromServer().subscribe((data: any) => {
@@ -210,7 +358,7 @@ export class LeavereqEditComponent implements OnInit {
     const startTime = formValue.LeaveStartTime;
     const endTime = formValue.LeaveEndTime;
     const LeaveRequestExplain = formValue.LeaveRequestExplain;
-
+    const explain = formValue.LeaveRequestExplain;
 
     console.log("----------------------")
     console.log("leaveType", leaveType)
@@ -219,35 +367,42 @@ export class LeavereqEditComponent implements OnInit {
     console.log("startTime", startTime)
     console.log("endTime", endTime)
 
-    if (!leaveType || leaveType.trim() === '') {
-      this.notificationService.error('لطفاً نوع مرخصي را انتخاب کنيد.');
-      return;
-    }
+
 
 
     // --- 1️⃣ بررسي تاريخ‌ها ---
     if (endDate < startDate) {
+      this.EditForm_LeaveRequest.get('LeaveEndDate')?.setErrors({ invalidDate: true });
       this.notificationService.error('تاريخ پايان نمي‌تواند قبل از تاريخ شروع باشد.');
+      return;
+    }
+
+    if (!leaveType || leaveType.trim() === '') {
+      this.EditForm_LeaveRequest.get('LeaveRequestType')?.setErrors({ required: true });
+      this.notificationService.error('لطفاً نوع مرخصي را انتخاب کنيد.');
       return;
     }
 
     // --- 2️⃣ بررسي ساعت‌ها براي مرخصي ساعتي ---
     if (leaveType === 'مرخصي ساعتي') {
       if (!startTime || !endTime) {
+        this.EditForm_LeaveRequest.get('LeaveStartTime')?.setErrors({ required: true });
+        this.EditForm_LeaveRequest.get('LeaveEndTime')?.setErrors({ required: true });
         this.notificationService.error('براي مرخصي ساعتي، ساعت شروع و پايان الزامي است.');
         return;
       }
       if (endTime <= startTime) {
+        this.EditForm_LeaveRequest.get('LeaveEndDate')?.setErrors({ invalidDate: true });
         this.notificationService.error('ساعت پايان بايد بعد از ساعت شروع باشد.');
         return;
       }
     }
 
     if (!LeaveRequestExplain || LeaveRequestExplain.trim() === '') {
+      this.EditForm_LeaveRequest.get('LeaveRequestExplain')?.setErrors({ required: true });
       this.notificationService.error('لطفاً توضيحات مرخصي را وارد کنيد.');
       return;
     }
-
 
     this.loadingService.show()
 

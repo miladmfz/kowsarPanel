@@ -46,6 +46,9 @@ import { LeavereqListComponent } from './components/leaverequest/leavereq-list/l
 import { LeavereqEditComponent } from './components/leaverequest/leavereq-edit/leavereq-edit.component';
 import { CellActionLeaveReqList } from './components/leaverequest/leavereq-list/cell-action-leavereq-list';
 import { StateLabelCellLeaveReq } from './components/leaverequest/leavereq-list/state-label-cell-leavereq';
+import { LeavereqAttachComponent } from './components/leaverequest/leavereq-attach/leavereq-attach.component';
+import { CellActionLeaveReqAttach } from './components/leaverequest/leavereq-attach/cell-action-leavereq-attach';
+import { CellActionAutLetterAttach } from './components/autletter/autletter-attach/cell-action-autletter-attach';
 
 
 @NgModule({
@@ -83,7 +86,7 @@ import { StateLabelCellLeaveReq } from './components/leaverequest/leavereq-list/
     CellActionCentralList,
     CellActionCustomerList,
     CellActionAutletterRowList,
-
+    CellActionAutLetterAttach,
 
     ValidateionStateCellAutletterRenderer,
     ValidateionStateCellAutletterWorkRenderer,
@@ -116,11 +119,12 @@ import { StateLabelCellLeaveReq } from './components/leaverequest/leavereq-list/
 
 
 
-
+    LeavereqAttachComponent,
     LeavereqListComponent,
     LeavereqEditComponent,
     CellActionLeaveReqList,
-    StateLabelCellLeaveReq
+    CellActionLeaveReqAttach,
+    StateLabelCellLeaveReq,
   ]
 
 })

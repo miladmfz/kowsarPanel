@@ -24,6 +24,8 @@ export class DashboardComponent implements OnInit {
 
 
   BrokerRef: string = '';
+  JobPersonRef: string = '';
+
   letterexplain_modal_title: string = '';
   ToDayDate: any;
   reportData: any[] = [];
@@ -50,6 +52,11 @@ export class DashboardComponent implements OnInit {
       this.BrokerRef = sessionStorage.getItem("BrokerCode")
     }
 
+    if (sessionStorage.getItem("JobPersonRef").length > 0) {
+      this.JobPersonRef = sessionStorage.getItem("JobPersonRef")
+    } else {
+      this.JobPersonRef = ''
+    }
 
   }
 

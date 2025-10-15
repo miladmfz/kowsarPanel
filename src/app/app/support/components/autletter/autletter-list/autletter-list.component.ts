@@ -71,6 +71,7 @@ export class AutletterListComponent
     CreationDate: new FormControl(''),
     OwnCentralRef: new FormControl(''),
     PersonInfoCode: new FormControl(''),
+    OwnerPersonInfoRef: new FormControl(''),
     StartTime: new FormControl(''),
     EndTime: new FormControl(''),
 
@@ -94,6 +95,7 @@ export class AutletterListComponent
     LetterState: new FormControl(''),
     LetterTitle: new FormControl(''),
     OwnerCentralRef: new FormControl(''),
+    OwnerPersonInfoRef: new FormControl(''),
     OwnerName: new FormControl(''),
     RowExecutorCentralRef: new FormControl(''),
     RowExecutorName: new FormControl(''),
@@ -306,6 +308,7 @@ export class AutletterListComponent
       LetterState: singel.LetterState,
       LetterTitle: singel.LetterTitle,
       OwnerCentralRef: singel.OwnerCentralRef,
+      OwnerPersonInfoRef: singel.OwnerPersonInfoRef,
       OwnerName: singel.OwnerName,
       RowExecutorCentralRef: singel.RowExecutorCentralRef,
       RowExecutorName: singel.RowExecutorName,

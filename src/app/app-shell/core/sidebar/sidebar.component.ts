@@ -64,7 +64,11 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void {
 
     const apiUrl_temp = this.config.apiUrl;
-
+    if (sessionStorage.getItem("JobPersonRef").length > 0) {
+      this.JobPersonRef = sessionStorage.getItem("JobPersonRef")
+    } else {
+      this.JobPersonRef = ''
+    }
 
 
 
@@ -99,11 +103,13 @@ export class SidebarComponent implements OnInit {
 
     this.fetchImageData()
 
-    this.sharedService.RefreshAllActions$.subscribe(action => {
-      if (action === 'refresh') {
-        this.refreshpage();
-      }
-    });
+
+    if (this.JobPersonRef.length > 0)
+      this.sharedService.RefreshAllActions$.subscribe(action => {
+        if (action === 'refresh') {
+          this.refreshpage();
+        }
+      });
 
 
   }

@@ -390,15 +390,6 @@
 
 
 
-<ng-template #formError let-control="control" let-message="message" let-validation="validation">
-  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
-    <div class="fv-plugins-message-container invalid-feedback">
-      <span role="alert">
-        {{ message }}
-      </span>
-    </div>
-  </ng-container>
-</ng-template>
 
 
 
@@ -770,3 +761,14 @@
     </div>
   </div>
 </div>
+
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
+    <div class="fv-plugins-message-container invalid-feedback">
+      <span role="alert">
+        {{ message }}
+      </span>
+    </div>
+  </ng-container>
+</ng-template>

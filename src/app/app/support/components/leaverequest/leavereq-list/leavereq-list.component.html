@@ -93,9 +93,8 @@
       [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
       (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
       [frameworkComponents]="frameworkComponents" [context]="context"
-      [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [columnDefs]="columnDefs"
-      [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
-      (selectionChanged)="onSelectionChanged($event)">
+      [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [defaultColDef]="defaultColDef"
+      [suppressRowClickSelection]="true" [rowSelection]="'multiple'" (selectionChanged)="onSelectionChanged($event)">
     </ag-grid-angular>
   </div>
 </div>
@@ -106,11 +105,28 @@
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content" style="background-color: #d1dce7;">
       <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="leavedetailLabel">شرع جزئیات مرخصی</h5>
+        <h5 class="modal-title" id="leavedetailLabel">شرع جزئیات مرخصی {{mdoal_title}}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
           (click)="leavedetail_dialog_close()"></button>
       </div>
       <div class="modal-body">
+
+
+        <div *ngIf="loading_leavedetail" class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
+        <ag-grid-angular #agGrid id="myGrid" style="height: 200px; width: auto" [rowData]="records_leavedetails"
+          [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+          (gridReady)="onGridReady2($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+          [frameworkComponents]="frameworkComponents" [context]="context"
+          [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [defaultColDef]="defaultColDef"
+          [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+          (selectionChanged)="onSelectionChanged($event)">
+        </ag-grid-angular>
+
         <form [formGroup]="EditForm_LeaveRequest" id="submitForm">
           <div class="row">
             <div class="col-12">
@@ -141,29 +157,40 @@
                   </div>
 
 
-                  <div class="col-md-3">
+                  <div class="col-md-2">
                     <label for="LeaveStartDate" class="form-label">از تاریخ</label>
                     <input formControlName="LeaveStartDate" id="LeaveStartDate" class="form-control" rows="4"
                       autocomplete="off" readonly>
                   </div>
-                  <div class="col-md-3">
+                  <div class="col-md-2">
                     <label for="LeaveEndDate" class="form-label">تا تاریخ</label>
                     <input formControlName="LeaveEndDate" id="LeaveEndDate" class="form-control" rows="4"
                       autocomplete="off" readonly>
                   </div>
 
 
-                  <div class="col-md-3">
+                  <div class="col-md-2">
                     <label for="LeaveStartTime" class="form-label">از ساعت</label>
                     <input formControlName="LeaveStartTime" id="LeaveStartTime" class="form-control" rows="4"
                       autocomplete="off" readonly>
                   </div>
 
-                  <div class="col-md-3">
+                  <div class="col-md-2">
                     <label for="LeaveEndTime" class="form-label"> تا ساعت</label>
                     <input formControlName="LeaveEndTime" id="LeaveEndTime" class="form-control" rows="4"
                       autocomplete="off" readonly>
                   </div>
+                  <div class="col-md-2">
+                    <label for="TotalDay" class="form-label">روز کل</label>
+                    <input formControlName="TotalDay" id="TotalDay" class="form-control" rows="4" autocomplete="off"
+                      readonly>
+                  </div>
+                  <div class="col-md-2">
+                    <label for="WorkDay" class="form-label">روز کاری</label>
+                    <input formControlName="WorkDay" id="WorkDay" class="form-control" rows="4" autocomplete="off"
+                      readonly>
+                  </div>
+
 
                   <!-- 
                   <div class="col-md-2">

@@ -38,7 +38,11 @@ export class LeavereqListComponent extends AgGridBaseComponent
 
 
   records;
+  records_leavedetails;
+
   title = 'لیست مرخصی ها';
+  mdoal_title = 'لیست مرخصی ها';
+
   dateValue = new FormControl();
   StartTime = new FormControl();
 
@@ -54,6 +58,7 @@ export class LeavereqListComponent extends AgGridBaseComponent
   searchTerm: string = '';
   ToDayDate: string = '';
 
+  loading_leavedetail: boolean = true;
   loading: boolean = true;
   isManager: boolean = true;
 
@@ -79,6 +84,15 @@ export class LeavereqListComponent extends AgGridBaseComponent
 
   });
 
+  EditForm_LeaveRequest_detail = new FormGroup({
+    StartDate: new FormControl(''),
+    EndDate: new FormControl(''),
+    UserRef: new FormControl('0'),
+    ManagerRef: new FormControl('0'),
+    WorkFlowStatus: new FormControl('0'),
+
+  });
+
   EditForm_LeaveRequest_WorkFlow = new FormGroup({
     LeaveRequestCode: new FormControl(''),
     ManagerRef: new FormControl(''),
@@ -94,6 +108,9 @@ export class LeavereqListComponent extends AgGridBaseComponent
     UserRef: new FormControl(''),
     LeaveRequestType: new FormControl('', Validators.required),
     LeaveRequestDate: new FormControl('', Validators.required),
+    TotalDay: new FormControl('0'),
+    WorkDay: new FormControl('0'),
+    OffDay: new FormControl('0'),
     LeaveRequestExplain: new FormControl('', Validators.required),
     LeaveStartDate: new FormControl('', Validators.required),
     LeaveEndDate: new FormControl('', Validators.required),
@@ -140,7 +157,65 @@ export class LeavereqListComponent extends AgGridBaseComponent
         headerName: 'شروع مرخصی',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
+        minWidth: 80
+      }, {
+        field: 'TotalDay',
+        headerName: 'روز',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 70
+      }, {
+        field: 'WorkDay',
+        headerName: 'رور کاری',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 70
+      }, {
+        field: 'وضعیت',
+        cellRenderer: StateLabelCellLeaveReq,
+        cellClass: 'text-center',
+        minWidth: 80
+      },
+    ];
+
+
+    this.columnDefs2 = [
+      {
+        field: 'CentralName',
+        headerName: 'نام',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
         minWidth: 150
+      }, {
+        field: 'LeaveRequestType',
+        headerName: 'نوع مرخصی',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      }, {
+        field: 'LeaveRequestExplain',
+        headerName: 'توضیحات',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      }, {
+        field: 'LeaveStartDate',
+        headerName: 'شروع مرخصی',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 80
+      }, {
+        field: 'TotalDay',
+        headerName: 'روز',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 70
+      }, {
+        field: 'WorkDay',
+        headerName: 'رور کاری',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 70
       }, {
         field: 'وضعیت',
         cellRenderer: StateLabelCellLeaveReq,
@@ -211,15 +286,39 @@ export class LeavereqListComponent extends AgGridBaseComponent
     });
   }
 
+  Getleavedetail(data) {
+    this.loading_leavedetail = true
 
+    this.EditForm_LeaveRequest_detail.patchValue({
+      StartDate: "",
+      EndDate: "",
+      UserRef: data.UserRef,
+      ManagerRef: "0",
+      WorkFlowStatus: "0",
+    });
+
+    ////// get leave list by user
+    this.repo.GetLeaveRequest(this.EditForm_LeaveRequest_detail.value).subscribe((data: any) => {
+      this.records_leavedetails = data.LeaveRequests;
+      this.loading_leavedetail = false
+
+    });
+
+  }
 
   WorkFlow(data) {
+
+    this.records_leavedetails = []
+    this.mdoal_title = data.CentralName
 
     //modal workflow
     this.EditForm_LeaveRequest.patchValue({
       LeaveRequestCode: data.LeaveRequestCode,
       UserRef: data.UserRef,
       LeaveRequestDate: data.LeaveRequestDate,
+      TotalDay: data.TotalDay,
+      WorkDay: data.WorkDay,
+      OffDay: data.OffDay,
       LeaveRequestType: data.LeaveRequestType,
       LeaveRequestExplain: data.LeaveRequestExplain,
       LeaveStartDate: data.LeaveStartDate,
@@ -230,6 +329,7 @@ export class LeavereqListComponent extends AgGridBaseComponent
       WorkFlowStatus: data.WorkFlowStatus,
       WorkFlowExplain: data.WorkFlowExplain,
     });
+    this.Getleavedetail(data)
     this.leavedetail_dialog_show()
 
   }

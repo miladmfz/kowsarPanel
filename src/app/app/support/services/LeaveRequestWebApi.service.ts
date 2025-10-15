@@ -10,10 +10,13 @@ export class LeaveRequestWebApiService {
 
 
   baseUrl: string;
+  baseUrl_Attach: string;
   headers: HttpHeaders;
 
   constructor(private client: HttpClient, private config: AppConfigService) {
     this.baseUrl = this.config.apiUrl + 'KowsarWeb/';
+
+    this.baseUrl_Attach = this.config.apiUrl + 'Support/';
 
     this.headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
@@ -31,6 +34,41 @@ export class LeaveRequestWebApiService {
       return this.client.post<any[]>(this.baseUrl + "DeleteTaskAll", command, { headers: this.headers })
     }
   */
+
+
+
+  AttachFile_Insert(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl_Attach + "AttachFile_Insert", command, { headers: this.headers })
+  }
+
+  GetAttachFileList(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl_Attach + "GetAttachFileList", command, { headers: this.headers })
+  }
+
+  downloadFile(code: string, classname: string, ObjectRef: string): Observable<Blob> {
+    const url = `${this.baseUrl_Attach}GetAttachFile`;
+    const params = { AttachedFileCode: code, ClassName: classname, ObjectRef: ObjectRef };
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.client.get(url, {
+      params: params,
+      headers: headers,
+      responseType: 'blob' // Important! This tells HttpClient to parse the response as Blob
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
   GetTodeyFromServer(): Observable<any[]> {
     return this.client.get<any[]>(this.baseUrl + "GetTodeyFromServer", { headers: this.headers })
   }

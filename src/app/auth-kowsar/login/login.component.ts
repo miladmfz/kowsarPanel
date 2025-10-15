@@ -68,6 +68,11 @@ export class LoginComponent implements OnInit {
       UPass: '123456'
     });
 
+    // this.LoginForm.setValue({
+    //   UName: 'بختیاری',
+    //   UPass: '123456'
+    // });
+
 
 
 
@@ -88,43 +93,50 @@ export class LoginComponent implements OnInit {
 
     const command = this.LoginForm.value;
 
+    // this.repo.IsUser(command).subscribe((data: any) => {
 
-    this.repo.IsUser(command)
-      .subscribe((data: any) => {
-        this.isLoading = false
-        if (data.users[0].ErrCode != "0") {
-          alert(data.users[0].ErrDesc);
-          this.LoginForm.reset();
+
+
+    // });
+
+
+
+
+    this.repo.IsUser(command).subscribe((data: any) => {
+      this.isLoading = false
+      if (data.users[0].ErrCode != "0") {
+        alert(data.users[0].ErrDesc);
+        this.LoginForm.reset();
+      } else {
+        sessionStorage.setItem("Active", data.users[0].Active)
+        sessionStorage.setItem("ActiveDate", data.users[0].ActiveDate)
+        sessionStorage.setItem("CentralRef", data.users[0].CentralRef)
+        sessionStorage.setItem("JobPersonRef", data.users[0].JobPersonRef)
+        sessionStorage.setItem("PersonInfoRef", data.users[0].PersonInfoRef)
+        sessionStorage.setItem("PhFullName", data.users[0].PhFullName)
+        sessionStorage.setItem("UserName", data.users[0].UserName)
+        sessionStorage.setItem("CustName_Small", data.users[0].CustName_Small)
+        sessionStorage.setItem("Explain", data.users[0].Explain)
+
+        sessionStorage.setItem("PhAddress3", data.users[0].PhAddress3)
+        sessionStorage.setItem("BrokerCode", data.users[0].BrokerCode)
+        sessionStorage.setItem("BrokerName", data.users[0].BrokerName)
+
+        sessionStorage.setItem("AlarmActive_Row", data.users[0].AlarmActive_Row)
+        sessionStorage.setItem("AlarmActtive_Conversation", data.users[0].AlarmActtive_Conversation)
+
+
+
+        if (String(data.users[0].JobPersonRef).length > 0) {
+
+          this.setAttendance()
         } else {
-          sessionStorage.setItem("Active", data.users[0].Active)
-          sessionStorage.setItem("ActiveDate", data.users[0].ActiveDate)
-          sessionStorage.setItem("CentralRef", data.users[0].CentralRef)
-          sessionStorage.setItem("JobPersonRef", data.users[0].JobPersonRef)
-          sessionStorage.setItem("PersonInfoRef", data.users[0].PersonInfoRef)
-          sessionStorage.setItem("PhFullName", data.users[0].PhFullName)
-          sessionStorage.setItem("UserName", data.users[0].UserName)
-          sessionStorage.setItem("CustName_Small", data.users[0].CustName_Small)
-          sessionStorage.setItem("Explain", data.users[0].Explain)
-
-          sessionStorage.setItem("PhAddress3", data.users[0].PhAddress3)
-          sessionStorage.setItem("BrokerCode", data.users[0].BrokerCode)
-          sessionStorage.setItem("BrokerName", data.users[0].BrokerName)
-
-          sessionStorage.setItem("AlarmActive_Row", data.users[0].AlarmActive_Row)
-          sessionStorage.setItem("AlarmActtive_Conversation", data.users[0].AlarmActtive_Conversation)
-
-
-
-          if (String(data.users[0].JobPersonRef).length > 0) {
-
-            this.setAttendance()
-          } else {
-            this.router.navigate(['/dashboard']);
-
-          }
+          this.router.navigate(['/dashboard']);
 
         }
-      });
+
+      }
+    });
   }
 
 
