@@ -9,6 +9,7 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 import { CellActionAutLetterAttach } from './cell-action-autletter-attach';
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
+import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 
 @Component({
   selector: 'app-autletter-attach',
@@ -18,6 +19,8 @@ export class AutletterAttachComponent extends AgGridBaseComponent
   implements OnInit {
   constructor(
     private repo: AutletterWebApiService,
+    private readonly notificationService: NotificationService,
+
     private router: Router,
     private http: HttpClient,
     private elementRef: ElementRef,
@@ -54,7 +57,9 @@ export class AutletterAttachComponent extends AgGridBaseComponent
   override ngOnInit(): void {
     super.ngOnInit();
 
-
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
     this.columnDefs = [
       {
         field: 'عملیات',
@@ -207,6 +212,16 @@ export class AutletterAttachComponent extends AgGridBaseComponent
 
   }
 
+
+  btnDeleteClicked(Data: any) {
+
+    this.repo.DeleteAttachFile(Data.AttachedFileCode, "AutLetter", this.TextData).subscribe((data) => {
+      this.notificationService.succeded()
+      this.loadingService.hide()
+      this.GetAttachFileList()
+    });
+
+  }
 
 
 

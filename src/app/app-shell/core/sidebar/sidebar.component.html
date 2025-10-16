@@ -115,10 +115,21 @@
       <ng-container *ngIf="AlarmActtive_Conversation > 0">
         <div class="m-3">
           <a class="text-danger d-block fw-bold" [routerLink]="['/support/letter-mywork']">
-            پیام جدید دارید
+            {{AlarmActive_Row}} پیام جدید دارید
           </a>
         </div>
       </ng-container>
+
+
+      <ng-container *ngIf="AlarmActtive_LeaveRequest > 0">
+        <div class="m-3">
+          <a class="text-danger d-block fw-bold" [routerLink]="['/support/leavereq-list']">
+            {{AlarmActtive_LeaveRequest}} درخواست مرخصی جدید دارید
+          </a>
+        </div>
+      </ng-container>
+
+
     </div>
 
 

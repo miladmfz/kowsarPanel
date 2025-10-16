@@ -63,16 +63,21 @@ export class LoginComponent implements OnInit {
 
 
 
-    this.LoginForm.setValue({
-      UName: 'mfz',
-      UPass: '123456'
-    });
+    // this.LoginForm.setValue({
+    //   UName: 'mfz',
+    //   UPass: '123456'
+    // });
 
     // this.LoginForm.setValue({
     //   UName: 'بختیاری',
     //   UPass: '123456'
     // });
 
+
+    this.LoginForm.setValue({
+      UName: 'خسروی',
+      UPass: '123456'
+    });
 
 
 
@@ -186,6 +191,8 @@ export class LoginComponent implements OnInit {
         sessionStorage.setItem("PhFullName", data.users[0].PhFullName)
         sessionStorage.setItem("UserName", data.users[0].UserName)
         sessionStorage.setItem("CustName_Small", data.users[0].CustName_Small)
+        sessionStorage.setItem("CustomerCode", data.users[0].CustomerCode)
+
         sessionStorage.setItem("Explain", data.users[0].Explain)
 
         sessionStorage.setItem("PhAddress3", data.users[0].PhAddress3)

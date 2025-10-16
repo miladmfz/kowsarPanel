@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { CellActionLeaveReqAttach } from './cell-action-leavereq-attach';
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
+import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 
 @Component({
   selector: 'app-leavereq-attach',
@@ -20,6 +21,8 @@ export class LeavereqAttachComponent extends AgGridBaseComponent
 
   constructor(
     private repo: LeaveRequestWebApiService,
+    private readonly notificationService: NotificationService,
+
     private loadingService: LoadingService,
     private router: Router,
     private http: HttpClient,
@@ -54,6 +57,9 @@ export class LeavereqAttachComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
 
     this.columnDefs = [
       {
@@ -66,19 +72,19 @@ export class LeavereqAttachComponent extends AgGridBaseComponent
         width: 200,
       }, {
         field: 'Title',
-        headerName: 'Title',
+        headerName: 'عنوان',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         minWidth: 150
       }, {
         field: 'FileName',
-        headerName: 'FileName',
+        headerName: 'نام فایل',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         minWidth: 150
       }, {
         field: 'CreationDate',
-        headerName: 'CreationDate',
+        headerName: 'تاریخ ایجاد',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         minWidth: 150
@@ -117,6 +123,16 @@ export class LeavereqAttachComponent extends AgGridBaseComponent
     });
 
 
+
+  }
+
+  btnDeleteClicked(Data: any) {
+
+    this.repo.DeleteAttachFile(Data.AttachedFileCode, "LeaveReq", this.TextData).subscribe((data) => {
+      this.notificationService.succeded()
+      this.loadingService.hide()
+      this.GetAttachFileList()
+    });
 
   }
 

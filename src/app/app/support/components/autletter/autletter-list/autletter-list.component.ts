@@ -336,9 +336,16 @@ export class AutletterListComponent
         SearchTarget: '',
         CentralRef: '',
         CreationDate: '',
+        PersonInfoCode: '',
         OwnCentralRef: sessionStorage.getItem("CentralRef")
       });
+
+
     } else {
+
+      this.searchTerm = ''
+      this.CentralRef = sessionStorage.getItem("CentralRef");
+
       this.EditForm_autletter.patchValue({
         SearchTarget: '',
         CentralRef: sessionStorage.getItem("CentralRef"),
@@ -346,9 +353,33 @@ export class AutletterListComponent
         OwnCentralRef: sessionStorage.getItem("CentralRef")
 
       });
-      this.searchTerm = ''
-      this.CentralRef = sessionStorage.getItem("CentralRef");
+
+
+      if (sessionStorage.getItem("PhAddress3").length > 0) {
+
+        this.EditForm_autletter.patchValue({
+          PersonInfoCode: '',
+
+        });
+      } else {
+
+        this.EditForm_autletter.patchValue({
+          PersonInfoCode: sessionStorage.getItem("PersonInfoRef"),
+
+        });
+      }
+
+
+
+
     }
+
+
+
+
+
+
+
 
     this.repo.GetLetterList(this.EditForm_autletter.value).subscribe((data) => {
       this.records = data;

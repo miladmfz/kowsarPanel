@@ -244,6 +244,10 @@ export class LeavereqEditComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
+    this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
 
     this.route.paramMap.subscribe((params: ParamMap) => {
       var id = params.get('id');

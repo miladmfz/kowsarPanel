@@ -47,14 +47,15 @@
 
           </div>
 
+          <ng-container *ngIf="IsEmploy">
+            <div class=" form-group col-md-2">
+              <label for="OwnerCentral" class="col-form-label">کد مشتری </label>
 
-          <div class=" form-group col-md-2">
-            <label for="OwnerCentral" class="col-form-label">کد مشتری </label>
 
-
-            <label for="OwnerCentral" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
-            <input type="text" class="form-control" id="OwnerCentral" (click)="GetCentral()" placeholder="نمایش مشتریان"
-              formControlName="OwnerCentral" maxlength="100" autocomplete="off" readonly [ngClass]="{
+              <label for="OwnerCentral" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+              <input type="text" class="form-control" id="OwnerCentral" (click)="GetCentral()"
+                placeholder="نمایش مشتریان" formControlName="OwnerCentral" maxlength="100" autocomplete="off" readonly
+                [ngClass]="{
                               'is-invalid':
                               EditForm_LetterInsert.controls['OwnerCentral'].invalid &&
                               EditForm_LetterInsert.controls['OwnerCentral'].touched,
@@ -62,15 +63,15 @@
                               EditForm_LetterInsert.controls['OwnerCentral'].valid &&
                               EditForm_LetterInsert.controls['OwnerCentral'].touched
                             }" />
-            <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
                               validation: 'required',
                               message: 'اجباری است',
                               control: EditForm_LetterInsert.controls['OwnerCentral']
                             }"></ng-container>
 
 
-          </div>
-
+            </div>
+          </ng-container>
           <div class="form-group col-md-3">
             <label for="OwnerName" class="col-form-label">نام مشتری</label>
             <input type="text" class="form-control" id="OwnerName" formControlName="OwnerName" maxlength="400"
@@ -78,7 +79,7 @@
 
           </div>
 
-          <ng-container *ngIf="JobPersonRef.length>0">
+          <ng-container *ngIf="IsEmploy">
             <div class="form-group col-md-2">
               <label for="LetterPriority" class="col-form-label">الویت </label>
               <select formControlName="LetterPriority" id="LetterPriority" class="form-control custom-select">

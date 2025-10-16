@@ -160,7 +160,7 @@ export class LeavereqListComponent extends AgGridBaseComponent
         minWidth: 80
       }, {
         field: 'TotalDay',
-        headerName: 'روز',
+        headerName: 'کل روز',
         filter: 'agSetColumnFilter',
         cellClass: 'text-center',
         minWidth: 70
@@ -176,6 +176,15 @@ export class LeavereqListComponent extends AgGridBaseComponent
         cellClass: 'text-center',
         minWidth: 80
       },
+      {
+        field: 'WorkFlowExplain',
+        headerName: 'توضیحات ',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 70
+      },
+
+
     ];
 
 
@@ -222,6 +231,14 @@ export class LeavereqListComponent extends AgGridBaseComponent
         cellClass: 'text-center',
         minWidth: 80
       },
+      {
+        field: 'WorkFlowExplain',
+        headerName: 'توضیحات ',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 70
+      },
+
     ];
   }
 
@@ -340,7 +357,7 @@ export class LeavereqListComponent extends AgGridBaseComponent
       this.router.navigate(['/support/leavereq-edit', data.LeaveRequestCode])
 
     } else {
-      this.notificationService.error1("نمیتوان تغییری ایجاد کرد")
+      this.notificationService.warning("نمیتوان تغییری ایجاد کرد")
 
     }
 
@@ -370,7 +387,7 @@ export class LeavereqListComponent extends AgGridBaseComponent
 
 
     } else {
-      this.notificationService.error1("دارای نظر می باشد نمی توان حذف کرد")
+      this.notificationService.warning("دارای نظر می باشد نمی توان حذف کرد")
     }
 
   }
@@ -378,6 +395,31 @@ export class LeavereqListComponent extends AgGridBaseComponent
 
 
   getinitialList() {
+
+
+    if (sessionStorage.getItem("PhAddress3").length > 0) {
+
+      this.EditForm_LeaveRequest_Search.patchValue({
+        StartDate: "",
+        EndDate: "",
+        UserRef: "0",
+        ManagerRef: "0",
+        WorkFlowStatus: "0",
+      });
+
+    } else {
+
+      this.EditForm_LeaveRequest_Search.patchValue({
+        StartDate: "",
+        EndDate: "",
+        UserRef: sessionStorage.getItem("CentralRef"),
+        ManagerRef: "0",
+        WorkFlowStatus: "0",
+      });
+    }
+
+
+
 
     this.loading = true
     this.repo.GetLeaveRequest(this.EditForm_LeaveRequest_Search.value).subscribe((data: any) => {

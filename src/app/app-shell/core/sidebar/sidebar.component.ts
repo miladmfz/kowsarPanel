@@ -43,6 +43,7 @@ export class SidebarComponent implements OnInit {
 
   AlarmActive_Row: number = 0;
   AlarmActtive_Conversation: number = 0;
+  AlarmActtive_LeaveRequest: number = 0;
   reportData: any[] = [];
 
 
@@ -197,6 +198,13 @@ export class SidebarComponent implements OnInit {
         this.AlarmActive_Row = parseInt(sessionStorage.getItem("AlarmActive_Row"))
         this.AlarmActtive_Conversation = parseInt(sessionStorage.getItem("AlarmActtive_Conversation"))
 
+
+
+
+        if (sessionStorage.getItem("PhAddress3") == '100') {
+          sessionStorage.setItem("AlarmActtive_LeaveRequest", data.users[0].AlarmActtive_LeaveRequest)
+          this.AlarmActtive_LeaveRequest = parseInt(sessionStorage.getItem("AlarmActtive_LeaveRequest"))
+        }
       });
   }
 

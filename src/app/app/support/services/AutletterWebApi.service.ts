@@ -222,5 +222,9 @@ export class AutletterWebApiService {
 
 
 
+  DeleteAttachFile(AttachedFileCode: string, ClassName: string, ObjectRef: string,): Observable<any[]> {
+    const params = new HttpParams().append('AttachedFileCode', AttachedFileCode).append('ClassName', ClassName).append('ObjectRef', ObjectRef)
+    return this.client.get<any[]>(this.baseUrl + "DeleteAttachFile", { headers: this.headers, params: params })
+  }
 
 }

@@ -64,19 +64,21 @@ export class AutletterInsertComponent extends AgGridBaseComponent
   loading: boolean = false;
   IsEmploy: boolean = false;
 
-
+  InOut_Lookup: Base_Lookup[] = [
+    { id: "0", name: "وارده" },
+    { id: "1", name: "صادره" },
+    { id: "2", name: "داخلی" },
+  ]
 
 
   override ngOnInit(): void {
     super.ngOnInit();
     this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
-    if (!(this.JobPersonRef.length > 0)) {
-      this.EditForm_LetterInsert.patchValue({
-        InOutFlag: "0",
-      });
-    }
 
-
+    this.EditForm_LetterInsert.patchValue({
+      OwnerPersonInfoRef: sessionStorage.getItem("PersonInfoRef"),
+      CreatorCentral: sessionStorage.getItem("CentralRef"),
+    });
 
 
     if (sessionStorage.getItem("JobPersonRef").length > 0) {
@@ -88,8 +90,9 @@ export class AutletterInsertComponent extends AgGridBaseComponent
       this.IsEmploy = false
 
       this.EditForm_LetterInsert.patchValue({
-
         OwnerCentral: sessionStorage.getItem("CentralRef"),
+        OwnerName: sessionStorage.getItem("CustName_Small"),
+        InOutFlag: "0",
       });
     }
 
@@ -150,11 +153,7 @@ export class AutletterInsertComponent extends AgGridBaseComponent
   }
 
 
-  InOut_Lookup: Base_Lookup[] = [
-    { id: "0", name: "وارده" },
-    { id: "1", name: "صادره" },
-    { id: "2", name: "داخلی" },
-  ]
+
 
 
 
