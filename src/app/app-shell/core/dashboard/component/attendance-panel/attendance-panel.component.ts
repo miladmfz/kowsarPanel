@@ -31,10 +31,12 @@ export class AttendancePanelComponent
 
 
   loading_attendance: boolean = true;
+  loading_leaveperson: boolean = true;
   show_newletter: boolean = false;
   loading: boolean = false;
 
   records
+  records_leaveperson
   records_history
   records_letterfromperson
   records_central
@@ -318,6 +320,54 @@ export class AttendancePanelComponent
       this.isDarkMode = (mode === 'dark');
     });
 
+    this.columnDefs5 = [
+
+      {
+        field: 'CentralName',
+        headerName: 'کارشناس',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 100
+      },
+      {
+        field: 'LeaveRequestType',
+        headerName: 'نوع مرخصی',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 100
+      },
+      {
+        field: 'LeaveStartDate',
+        headerName: 'تاریخ شروع',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 100
+      },
+      {
+        field: 'LeaveEndDate',
+        headerName: 'تاریخ پایان',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 100
+      },
+      {
+        field: 'LeaveStartTime',
+        headerName: 'ساعت شروع',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 100
+      },
+      {
+        field: 'LeaveEndTime',
+        headerName: 'ساعت پایان',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 100
+      },
+
+
+
+    ];
 
 
     if (sessionStorage.getItem("PhAddress3") == '100') {
@@ -584,20 +634,24 @@ export class AttendancePanelComponent
 
   getAttendance_data() {
 
-    this.repo.AttendanceDashboard().pipe(
-      catchError(error => {
-        console.log("sssssssssssssssss", error)
-        this.notificationService.error('مشکل در برقراری ارتباط', "خطا");
-        return of(null); // یا هر مقدار جایگزین
-      })
-    ).subscribe((data: any) => {
-      this.loading_attendance = false
 
+
+
+    this.repo.AttendanceDashboard().subscribe((data: any) => {
+      this.loading_attendance = false
       this.records = data.Attendances;
-      // } else {
-      //   this.reportData = data.Panels.filter(panel => panel.BrokerCode === this.BrokerRef);
-      // }
     });
+
+    this.repo.GetLeaveRequestPerson(this.ToDayDate).subscribe((data: any) => {
+
+
+      if (data.LeaveRequests.length > 0) {
+        this.loading_leaveperson = false
+
+        this.records_leaveperson = data.LeaveRequests;
+      }
+    });
+
 
     if (this.BrokerRef == '') {
 

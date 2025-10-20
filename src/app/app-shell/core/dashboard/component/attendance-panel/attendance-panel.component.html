@@ -7,8 +7,25 @@
 
 
     </div>
-    <div class="card-body">
+    <ng-container *ngIf="!loading_leaveperson">
 
+      <div class="card-body">
+
+        <ag-grid-angular #agGrid id="myGrid" style="height: 150px; width: auto" [rowData]="records_leaveperson"
+          [columnDefs]="columnDefs5" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+          (gridReady)="onGridReady5($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+          [frameworkComponents]="frameworkComponents" [context]="context"
+          [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [defaultColDef]="defaultColDef"
+          [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+          (selectionChanged)="onSelectionChanged($event)">
+        </ag-grid-angular>
+
+
+
+      </div>
+    </ng-container>
+
+    <div class="card-body">
       <ag-grid-angular #agGrid id="myGrid" style="height: 450px; width: auto" [rowData]="records"
         [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
         (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
@@ -16,8 +33,6 @@
         [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [defaultColDef]="defaultColDef"
         [suppressRowClickSelection]="true" [rowSelection]="'multiple'" (selectionChanged)="onSelectionChanged($event)">
       </ag-grid-angular>
-
-
 
     </div>
   </div>

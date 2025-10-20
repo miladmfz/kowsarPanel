@@ -191,6 +191,11 @@ export class SupportFactorWebApiService {
     return this.client.get<any[]>(this.baseUrl + "AttendanceDashboard", { headers: this.headers, params: params })
   }
 
+  GetLeaveRequestPerson(TargetDate: string): Observable<any[]> {
+    const params = new HttpParams().append('TargetDate', TargetDate)
+    return this.client.get<any[]>(this.baseUrl + "GetLeaveRequestPerson", { headers: this.headers, params: params })
+  }
+
 
   GetAutLetterListByPerson(command): Observable<any[]> {
 
