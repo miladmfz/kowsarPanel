@@ -14,6 +14,7 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellActionLetterCentral } from './cell-action-letter-central';
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
+import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
   selector: 'app-attendance-panel',
@@ -135,6 +136,7 @@ export class AttendancePanelComponent
     private sharedService: SharedService,
     private readonly notificationService: NotificationService,
     private renderer: Renderer2,
+    private loadingService: LoadingService,
     private themeService: ThemeService
   ) {
     super();
@@ -160,8 +162,9 @@ export class AttendancePanelComponent
   GetCentral() {
     this.centrallist_dialog_show()
     this.loading = true;
-
+    this.loadingService.show()
     this.repo.GetKowsarCustomer(this.Searchtarget_central).subscribe((data: any) => {
+      this.loadingService.hide()
       this.records_support_central = data.Customers;
       this.loading = false;
 
@@ -273,8 +276,10 @@ export class AttendancePanelComponent
       PersonInfoCode: this.ExecuterCentral,
       Flag: "1",
     });
+    this.loadingService.show()
 
     this.repo.GetAutLetterListByPerson(this.EditForm_autletter.value).subscribe((data) => {
+      this.loadingService.hide()
       this.records_letterfromperson = data;
 
 
@@ -605,6 +610,7 @@ export class AttendancePanelComponent
 
 
 
+    this.loadingService.show()
 
     this.EditForm_AutLetterRowInsert.patchValue({
 
@@ -621,6 +627,7 @@ export class AttendancePanelComponent
 
 
     this.repo.AutLetterRowInsert(this.EditForm_AutLetterRowInsert.value).subscribe(e => {
+      this.loadingService.hide()
       const intValue = parseInt(e[0].LetterRef, 10);
 
 
@@ -665,9 +672,10 @@ export class AttendancePanelComponent
       OwnerCentral: this.EditForm_LetterToEmployer.value.OwnerCentral,
       OwnerPersonInfoRef: sessionStorage.getItem("PersonInfoRef"),
     });
-
+    this.loadingService.show()
     this.repo.LetterInsert(this.EditForm_LetterInsert.value).subscribe(e => {
 
+      this.loadingService.hide()
       const intValue = parseInt(e[0].LetterCode, 10);
       if (!isNaN(intValue) && intValue > 0) {
 
@@ -707,8 +715,9 @@ export class AttendancePanelComponent
       CentralRef: item.CentralRef
     });
 
-
+    this.loadingService.show()
     this.repo.AttendanceHistory(item.CentralRef).subscribe((data: any) => {
+      this.loadingService.hide()
       this.attendancehistory_dialog_show()
       this.records_history = data.Attendances;
 

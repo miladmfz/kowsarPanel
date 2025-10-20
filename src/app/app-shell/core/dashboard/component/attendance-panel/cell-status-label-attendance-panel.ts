@@ -14,8 +14,8 @@ declare var $: any;
 <!-- در حال کار -->
 <span *ngIf="Status == '2'" class="badge bg-warning text-dark" style="padding: 3px;">در حال کار</span>
 
-<!-- مرخصی موقت -->
-<span *ngIf="Status == '3'" class="badge bg-info text-white" style="padding: 3px;">مرخصی موقت</span>
+<!-- ناهار و نماز -->
+<span *ngIf="Status == '3'" class="badge bg-info text-white" style="padding: 3px;">ناهار و نماز</span>
 
 <!-- مرخصی اداری -->
 <span *ngIf="Status == '4'" class="badge bg-secondary text-white" style="padding: 3px;">مرخصی اداری</span>
