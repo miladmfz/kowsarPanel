@@ -200,7 +200,7 @@ export class OcrDetailComponent extends AgGridBaseComponent
       .subscribe((data) => {
 
         this.loading1 = false
-        //this.records_ocr_factors = data;
+        this.records_ocr_factors = data;
 
       });
 
@@ -208,14 +208,14 @@ export class OcrDetailComponent extends AgGridBaseComponent
       .subscribe((data) => {
 
         this.loading2 = false
-        //this.record_factor_headers = data;
+        this.record_factor_headers = data;
 
       });
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
       .subscribe((data) => {
 
         this.loading3 = false
-        //this.record_factor_rows = data;
+        this.record_factor_rows = data;
 
       });
 

@@ -278,14 +278,18 @@ export class FactorEditComponent extends AgGridBaseComponent
 
     this.repo.WebFactorInsertRow(this.EditForm_Factor_Row.value).subscribe((data: any) => {
 
-      if (data.Factors[0].ErrDesc.length > 0) {
-        this.notificationService.error(data.Factors[0].ErrDesc);
-      } else {
+      const factor = data.Factors[0];
+      const rowCode = Number(factor.RowCode);
+
+      if (rowCode > 0) {
         this.notificationService.succeded();
-        this.boxbuy_dialog_close()
-        this.loadingService.hide()
         this.GetFactor()
+      } else {
+        this.notificationService.error(data.Factors[0].ErrDesc);
       }
+
+      this.boxbuy_dialog_close()
+      this.loadingService.hide()
 
 
     });
