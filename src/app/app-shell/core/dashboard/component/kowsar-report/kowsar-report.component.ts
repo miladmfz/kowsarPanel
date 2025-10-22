@@ -11,6 +11,7 @@ import { CellActionKowsarReport } from './cell-action-attendance-panel';
 import * as moment from 'jalali-moment';
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 import { CellDateMinDate } from './cell-date-label-attendance-panel';
+import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
   selector: 'app-kowsar-report',
@@ -24,6 +25,7 @@ export class KowsarReportComponent extends AgGridBaseComponent
     private sharedService: SharedService,
     private readonly notificationService: NotificationService,
     private renderer: Renderer2,
+    private loadingService: LoadingService,
 
     private themeService: ThemeService
   ) {
@@ -362,9 +364,11 @@ export class KowsarReportComponent extends AgGridBaseComponent
       Flag: "1",
     });
 
+    this.loadingService.show()
     this.repo.GetKowsarReport(this.EditForm_KowsarReport1.value).subscribe((data: any) => {
       this.loading_person = false
 
+      this.loadingService.hide()
       this.records_person = data.KowsarReports;
 
 
@@ -382,8 +386,10 @@ export class KowsarReportComponent extends AgGridBaseComponent
       LetterRowCode: LetterRowCode,
       Flag: "2",
     });
+    this.loadingService.show()
 
     this.repo.GetKowsarReport(this.EditForm_KowsarReport2.value).subscribe((data: any) => {
+      this.loadingService.hide()
 
       this.records_personletterrow = data.KowsarReports;
 
@@ -409,8 +415,11 @@ export class KowsarReportComponent extends AgGridBaseComponent
     this.EditForm_KowsarReport3.patchValue({
       Flag: "3",
     });
+    this.loadingService.show()
 
     this.repo.GetKowsarReport(this.EditForm_KowsarReport3.value).subscribe((data: any) => {
+      this.loadingService.hide()
+
       this.loading_letterrowstate = false
 
       this.records_letterrowstate = data.KowsarReports;

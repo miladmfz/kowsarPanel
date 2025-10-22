@@ -41,7 +41,15 @@
               "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css"
             ],
             "scripts": [
-              "node_modules/leaflet/dist/leaflet.js"
+              "src/assets/js/vendor.min.js",
+              "src/assets/libs/select2/js/select2.min.js",
+              "src/assets/libs/jquery-knob/jquery.knob.min.js",
+              "src/assets/libs/sweetalert2/sweetalert2.min.js",
+              "src/assets/libs/jquery-toast-plugin/jquery.toast.min.js",
+              "src/assets/libs/jstree/jstree.min.js",
+              "src/assets/libs/apexcharts/apexcharts.min.js",
+              "src/assets/js/pages/toastr.init.js",
+              "src/assets/js/app.min.js"
             ],
             "allowedCommonJsDependencies": [
               "sweetalert2",
@@ -57,18 +65,6 @@
           },
           "configurations": {
             "production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
-                }
-              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -129,7 +125,15 @@
               "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css"
             ],
             "scripts": [
-              "node_modules/leaflet/dist/leaflet.js"
+              "src/assets/js/vendor.min.js",
+              "src/assets/libs/select2/js/select2.min.js",
+              "src/assets/libs/jquery-knob/jquery.knob.min.js",
+              "src/assets/libs/sweetalert2/sweetalert2.min.js",
+              "src/assets/libs/jquery-toast-plugin/jquery.toast.min.js",
+              "src/assets/libs/jstree/jstree.min.js",
+              "src/assets/libs/apexcharts/apexcharts.min.js",
+              "src/assets/js/pages/toastr.init.js",
+              "src/assets/js/app.min.js"
             ]
           }
         }

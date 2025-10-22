@@ -146,7 +146,7 @@ export class WebsiteListComponent extends AgGridBaseComponent
 
 
 
-
+    this.getList();
     this.searchSubject.pipe(
       debounceTime(1000)  // 1 second debounce time
     ).subscribe(searchText => {

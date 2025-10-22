@@ -21,6 +21,7 @@ export class SidebarComponent implements OnInit {
 
   ) { }
 
+
   PhFullName = '';
   JobPersonRef = '';
   CustName_Small = '';
@@ -33,12 +34,10 @@ export class SidebarComponent implements OnInit {
 
   IsCustomerBuild: boolean = false;
 
-
   baseurl: string = '';
 
 
   currentStatus: string = "";  // پیش فرض وضعیت: 1 (حاضر)
-  attendanceInterval: any;
 
 
   AlarmActive_Row: number = 0;
@@ -118,7 +117,6 @@ export class SidebarComponent implements OnInit {
   refreshpage() {
 
     this.Get_AttendanceDashboard();
-    this.Get_Notification();
   }
 
   logout() {
@@ -172,41 +170,13 @@ export class SidebarComponent implements OnInit {
       });
 
 
-    this.Get_Notification()
     this.Get_AttendanceDashboard()
 
 
-    this.attendanceInterval = setInterval(() => {
-      this.Get_Notification();
-    }, 15000);
-
 
 
   }
 
-
-
-
-  Get_Notification() {
-    this.repo.GetNotification(sessionStorage.getItem("PersonInfoRef"))
-      .subscribe((data: any) => {
-
-
-        sessionStorage.setItem("AlarmActive_Row", data.users[0].AlarmActive_Row)
-        sessionStorage.setItem("AlarmActtive_Conversation", data.users[0].AlarmActtive_Conversation)
-
-        this.AlarmActive_Row = parseInt(sessionStorage.getItem("AlarmActive_Row"))
-        this.AlarmActtive_Conversation = parseInt(sessionStorage.getItem("AlarmActtive_Conversation"))
-
-
-
-
-        if (sessionStorage.getItem("PhAddress3") == '100') {
-          sessionStorage.setItem("AlarmActtive_LeaveRequest", data.users[0].AlarmActtive_LeaveRequest)
-          this.AlarmActtive_LeaveRequest = parseInt(sessionStorage.getItem("AlarmActtive_LeaveRequest"))
-        }
-      });
-  }
 
   Get_AttendanceDashboard() {
 

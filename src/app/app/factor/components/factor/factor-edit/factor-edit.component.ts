@@ -215,6 +215,7 @@ export class FactorEditComponent extends AgGridBaseComponent
     DefaultUnitValue: new FormControl('1'),
   });
 
+
   priceInput = new Subject<void>();
   discountInput = new Subject<void>();
 
@@ -276,10 +277,17 @@ export class FactorEditComponent extends AgGridBaseComponent
     this.loadingService.show()
 
     this.repo.WebFactorInsertRow(this.EditForm_Factor_Row.value).subscribe((data: any) => {
-      this.notificationService.succeded();
-      this.boxbuy_dialog_close()
-      this.loadingService.hide()
-      this.GetFactor()
+
+      if (data.Factors[0].ErrDesc.length > 0) {
+        this.notificationService.error(data.Factors[0].ErrDesc);
+      } else {
+        this.notificationService.succeded();
+        this.boxbuy_dialog_close()
+        this.loadingService.hide()
+        this.GetFactor()
+      }
+
+
     });
   }
 

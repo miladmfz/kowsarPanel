@@ -3,14 +3,14 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 import { SupportFactorWebApiService } from 'src/app/app/support/services/SupportFactorWebApi.service';
-import { CellWithoutRowsSupportPanel } from './cell-withoutrows-label-support-panel';
-import { CellOpenFactorSupportPanel } from './cell-openfactor-label-support-panel copy';
+
 import { FormControl, FormGroup } from '@angular/forms';
 import { CellActionAttendanceStatePanel } from './cell-action-attendance-panel';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import * as moment from 'jalali-moment';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 import { Subscription } from 'rxjs';
+import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 @Component({
   selector: 'app-support-panel',
   templateUrl: './support-panel.component.html',
@@ -59,6 +59,7 @@ export class SupportPanelComponent
     private sharedService: SharedService,
     private readonly notificationService: NotificationService,
     private renderer: Renderer2,
+    private loadingService: LoadingService,
 
     private themeService: ThemeService
   ) {
@@ -247,6 +248,7 @@ export class SupportPanelComponent
 
   Show_History_Broker_Factors(item: any) {
 
+    this.loadingService.show()
     this.BrokerHistroyName = item.FullName + ' ' + item.FactorDate
     this.EditForm_supportfactor.patchValue({
       StartDateTarget: item.FactorDate,
@@ -256,6 +258,7 @@ export class SupportPanelComponent
     });
 
     this.repo.GetSupportFactors(this.EditForm_supportfactor.value).subscribe((data: any) => {
+      this.loadingService.hide()
       this.factorlisthistory_dialog_show()
       this.records_history = data.Factors;
     });
@@ -308,8 +311,9 @@ export class SupportPanelComponent
 
 
     if (sessionStorage.getItem("CentralRef") == '1139' || sessionStorage.getItem("CentralRef") == '1843') {
-
+      this.loadingService.show()
       this.repo.GetAttendance_StatusDurations(this.Attendance_StatusDurations.value).subscribe((data: any) => {
+        this.loadingService.hide()
         this.loading_supportpanel = false
 
         this.records = data.Attendances;

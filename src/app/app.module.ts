@@ -1,8 +1,8 @@
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { RouteReuseStrategy, RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 import {
   CommonModule,
   HashLocationStrategy,

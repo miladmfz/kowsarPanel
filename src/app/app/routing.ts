@@ -2,10 +2,10 @@ import { Routes } from '@angular/router';
 import { DashboardComponent } from '../app-shell/core/dashboard/dashboard.component';
 
 const Routing: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   {
     path: 'dashboard',
-    component: DashboardComponent,
+    loadChildren: () =>
+      import('../app-shell/core/dashboard/dashboard.module').then(m => m.DashboardModule)
   },
   {
     path: 'application',

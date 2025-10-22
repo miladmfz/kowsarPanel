@@ -1,12 +1,8 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { SupportFactorWebApiService } from 'src/app/app/support/services/SupportFactorWebApi.service';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import * as moment from 'jalali-moment';
+
 import { SharedService } from '../../framework-services/shared.service';
 import { NotificationService } from '../../framework-services/notification.service';
-import { FormControl, FormGroup } from '@angular/forms';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html'

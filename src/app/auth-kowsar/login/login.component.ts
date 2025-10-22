@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { AuthKowsarWebApiService } from '../services/AuthKowsarWebApi.service';
 import { Router } from '@angular/router';
 import { AppConfigService } from 'src/app/app-config.service';
-import { catchError, of } from 'rxjs';
+import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +16,7 @@ export class LoginComponent implements OnInit {
     private readonly router: Router,
     private fb: FormBuilder,
     private config: AppConfigService,
+
   ) {
     this.LoginForm = this.fb.group({
       UName: ['', Validators.required],
@@ -74,10 +75,10 @@ export class LoginComponent implements OnInit {
     // });
 
 
-    this.LoginForm.setValue({
-      UName: 'خسروی',
-      UPass: '123456'
-    });
+    // this.LoginForm.setValue({
+    //   UName: 'خسروی',
+    //   UPass: '123456'
+    // });
 
 
 
@@ -108,6 +109,7 @@ export class LoginComponent implements OnInit {
 
 
     this.repo.IsUser(command).subscribe((data: any) => {
+
       this.isLoading = false
       if (data.users[0].ErrCode != "0") {
         alert(data.users[0].ErrDesc);
@@ -178,6 +180,7 @@ export class LoginComponent implements OnInit {
     const command = this.LoginForm.value;
 
     this.repo.IsUser(command).subscribe((data: any) => {
+
       this.isLoading = false
       if (data.users[0].ErrCode != "0") {
         alert(data.users[0].ErrDesc);
