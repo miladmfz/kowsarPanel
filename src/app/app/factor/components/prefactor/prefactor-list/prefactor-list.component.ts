@@ -249,20 +249,28 @@ export class PrefactorListComponent extends AgGridBaseComponent
   }
 
 
-  delete(PreFactorCode) {
+  delete(data: any) {
 
-    this.repo.DeleteWebPreFactor(PreFactorCode).subscribe(
-      (data: any) => {
-        // ✅ وقتی موفق شد
-        this.notificationService.succeded('ردیف با موفقیت حذف شد.');
-        this.getGridSchema();
-      },
-      (error: any) => {
-        // ❌ وقتی خطا داد
-        console.error(error);
-        this.notificationService.error('حذف ردیف با خطا مواجه شد دارای رکورد وابسته می باشد.');
-      }
-    );
+    if (data.PFState == "1") {
+      this.notificationService.error(" این پیش فاکتور به حالت موقت تبدیل شده است ");
+
+    } else if (data.PFState == "2") {
+      this.notificationService.error(" این پیش فاکتور به حالت نهایی تبدیل شده است ");
+
+    } else {
+      this.repo.DeleteWebPreFactor(data.PreFactorCode).subscribe(
+        (data: any) => {
+          // ✅ وقتی موفق شد
+          this.notificationService.succeded('ردیف با موفقیت حذف شد.');
+          this.getGridSchema();
+        },
+        (error: any) => {
+          // ❌ وقتی خطا داد
+          console.error(error);
+          this.notificationService.error('حذف ردیف با خطا مواجه شد دارای رکورد وابسته می باشد.');
+        }
+      );
+    }
 
   }
 

@@ -27,8 +27,8 @@ export class FactorWebApiService {
 
 
 
-  GetKowsarCustomer(SearchTarget: string): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "GetKowsarCustomer", { SearchTarget }, { headers: this.headers })
+  GetKowsarCustomer(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetKowsarCustomer", command, { headers: this.headers })
   }
 
 
@@ -52,6 +52,16 @@ export class FactorWebApiService {
   WebFactorInsert(command): Observable<any[]> {
     return this.client.post<any[]>(this.baseUrl + "WebFactorInsert", command, { headers: this.headers })
   }
+
+  UpdateFactorInvoiceState(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "UpdateFactorInvoiceState", command, { headers: this.headers })
+  }
+
+  UpdatePreFactorPFState(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "UpdatePreFactorPFState", command, { headers: this.headers })
+  }
+
+
 
   WebFactorInsertRow(command): Observable<any[]> {
     return this.client.post<any[]>(this.baseUrl + "WebFactorInsertRow", command, { headers: this.headers })

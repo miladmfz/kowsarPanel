@@ -11,13 +11,13 @@
                   <div class="card">
                     <div class="card-body row">
 
-                      <div class="form-group col-md-4">
+                      <div class="form-group col-md-2">
                         <label for="FactorDate" class="col-form-label"> تاریخ فاکتور </label>
                         <input type="text" class="form-control" id="FactorDate" formControlName="FactorDate"
                           maxlength="100" autocomplete="off" readonly />
                       </div>
 
-                      <div class=" form-group col-md-4">
+                      <div class=" form-group col-md-2">
                         <label for="CustomerCode" class="col-form-label">کد مشتری </label>
 
                         <ng-container *ngIf="FactorCode.length>0">
@@ -60,6 +60,40 @@
                         <input type="text" class="form-control" id="CustName" formControlName="CustName" maxlength="100"
                           autocomplete="off" readonly />
                       </div>
+
+                      <ng-container *ngIf="FactorCode.length>0">
+
+
+                        <ng-container *ngIf="IsManager">
+
+                          <div class="form-group col-md-3">
+                            <label for="InvoiceState" class="col-form-label">نوع عملیات</label>
+
+                            <select class="form-select" id="InvoiceState" formControlName="InvoiceState"
+                              (change)="onInvoiceStateChange()">
+                              <option value="">لطفاً انتخاب کنید</option>
+                              <option [value]="item.id" *ngFor="let item of InvoiceState_Lookup">{{item.name}}</option>
+                            </select>
+                          </div>
+
+                        </ng-container>
+
+
+                        <ng-container *ngIf="!IsManager">
+                          <div class="form-group col-md-2">
+                            <label for="InvoiceState" class="col-form-label">نوع عملیات</label>
+                            <input type="text" class="form-control" id="InvoiceState"
+                              [value]="getInvoiceStateName(EditForm_Factor_Header.get('InvoiceState')?.value)"
+                              readonly />
+                          </div>
+                        </ng-container>
+
+                      </ng-container>
+
+
+
+
+
 
 
                       <ng-container *ngIf="FactorCode.length==0">
@@ -110,10 +144,15 @@
                               </span>ثبت فاکتور </a>
                           </ng-container>
                           <ng-container *ngIf="FactorCode.length>0">
-                            <a (click)="deleteFactor()" type="button"
-                              class="btn btn-danger waves-effect waves-light m-1">
-                              <span class=" btn-label"><i class="fas fa-trash"></i></span>حذف فاکتور
-                            </a>
+
+
+                            <ng-container *ngIf="CanEdit_InvoiceState">
+                              <a (click)="deleteFactor()" type="button"
+                                class="btn btn-danger waves-effect waves-light m-1">
+                                <span class=" btn-label"><i class="fas fa-trash"></i></span>حذف فاکتور
+                              </a>
+                            </ng-container>
+
                           </ng-container>
                           <ng-container *ngIf="FactorCode.length>0">
                             <a (click)="GoBack()" type="button" class="btn btn-info waves-effect waves-light m-1">
@@ -169,13 +208,16 @@
                   <h4 class="card-title col-sm-6">لیست اقلام فاکتور شده</h4>
 
 
-
-                  <ng-container *ngIf="!ShowGoodList">
-                    <a type="button" class="btn btn-soft-info rounded-pill waves-effect waves-light col-sm-3 m-1"
-                      (click)="taggelShowGoodList()">
-                      اضافه کردن
-                    </a>
+                  <ng-container *ngIf="CanEdit_InvoiceState">
+                    <ng-container *ngIf="!ShowGoodList">
+                      <a type="button" class="btn btn-soft-info rounded-pill waves-effect waves-light col-sm-3 m-1"
+                        (click)="taggelShowGoodList()">
+                        اضافه کردن
+                      </a>
+                    </ng-container>
                   </ng-container>
+
+
 
 
                 </div>

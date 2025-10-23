@@ -11,11 +11,12 @@ declare var $: any;
     <i class="  fas fa-shopping-cart"></i>
   </a>
   </span>
-  <!-- <span   (click)="Edit_Customer_Property()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="خصوصیت  ">
+    <span  (click)="NavigateTodelete()" class="btn btn-sm btn-outline-danger " data-toggle="tooltip" >
   <a >
-    <i class=" far fa-file-alt"></i>
+    <i class=" fas fa-trash"></i>
   </a>
-  </span> -->
+  </span>
+
   `,
 
 })
@@ -53,8 +54,8 @@ export class CellActionFactorList implements ICellRendererAngularComp {
     NavigateToEdit() {
         this.params.context.componentParent.navigateToEdit(this.params.data.FactorCode);
     }
-    Edit_Customer_Property() {
-        this.params.context.componentParent.Edit_factor_Property(this.params.data.FactorCode);
+    NavigateTodelete() {
+        this.params.context.componentParent.delete(this.params.data);
     }
 
 }

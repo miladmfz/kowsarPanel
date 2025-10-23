@@ -16,6 +16,7 @@ import { CellActionPreGoodEdit } from './cell-action-pregood-edit';
 import { Location } from '@angular/common';
 import { CellActionAutletterPreFactorList } from './cell-action-autletter-prefactor-list';
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
+import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 
 @Component({
   selector: 'app-prefactor-edit',
@@ -66,11 +67,26 @@ export class PrefactorEditComponent extends AgGridBaseComponent
   users: any[] = [];
 
 
+  EditForm_SearchTarget = new FormGroup({
+    SearchTarget: new FormControl(''),
+    BrokerRef: new FormControl(''),
+  });
+
+
+  PFState_Lookup: Base_Lookup[] = [
+    { id: "0", name: "یادداشت" },
+    { id: "1", name: "موقت" },
+    { id: "2", name: "نهایی" },
+  ]
+
+
+
   loading_letterowener: boolean = true;
   show_newletter: boolean = false;
   loading: boolean = false;
   ShowGoodList: boolean = false;
-
+  CanEdit_PFState: boolean = false;
+  IsManager: boolean = false;
 
   BrokerRef: string = '';
   LetterCode: string = '';
@@ -115,6 +131,7 @@ export class PrefactorEditComponent extends AgGridBaseComponent
   EditForm_Factor_Header = new FormGroup({
     FactorCode: new FormControl(''),
     FactorDate: new FormControl(''),
+    PFState: new FormControl(''),
     CustName: new FormControl(''),
     CustomerCode: new FormControl('', Validators.required),
     Explain: new FormControl(''),
@@ -610,6 +627,23 @@ export class PrefactorEditComponent extends AgGridBaseComponent
     this.searchSubject_Good.next(this.Searchtarget_Good);
   }
 
+
+  getPFStateName(id: string) {
+    return this.PFState_Lookup.find(x => x.id === id)?.name || '';
+  }
+
+  onPFStateChange() {
+
+    this.loadingService.show()
+    this.repo.UpdatePreFactorPFState(this.EditForm_Factor_Header.value).subscribe((data: any) => {
+      this.PreFactorCode = data.Factors[0].PreFactorCode
+      this.notificationService.succeded();
+      this.loadingService.hide()
+      location.reload()
+    });
+
+  }
+
   Factor_Header_insert() {
     this.EditForm_Factor_Header.markAllAsTouched();
     if (!this.EditForm_Factor_Header.valid) return;
@@ -696,17 +730,31 @@ export class PrefactorEditComponent extends AgGridBaseComponent
     })();
   }
 
-  delete(id) {
-    this.fireDeleteSwal1().then((result) => {
-      if (result.isConfirmed) {
-        this.repo.DeleteWebPreFactorRows(id).subscribe((data: any) => {
-          this.GetFactorrows()
-          this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
-        });
-      } else {
-        this.notificationService.warning('اطلاعات تغییری نکرد');
-      }
-    });
+  deleteprefactorrow(id) {
+
+
+
+
+    if (this.EditForm_Factor_Header.value.PFState == "1") {
+      this.notificationService.error(" این پیش فاکتور به حالت موقت تبدیل شده است ");
+
+    } else if (this.EditForm_Factor_Header.value.PFState == "2") {
+      this.notificationService.error(" این پیش فاکتور به حالت نهایی تبدیل شده است ");
+
+    } else {
+      this.fireDeleteSwal1().then((result) => {
+        if (result.isConfirmed) {
+          this.repo.DeleteWebPreFactorRows(id).subscribe((data: any) => {
+            this.GetFactorrows()
+            this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
+          });
+        } else {
+          this.notificationService.warning('اطلاعات تغییری نکرد');
+        }
+      });
+    }
+
+
   }
 
   deletefactorRecord() {
@@ -736,12 +784,36 @@ export class PrefactorEditComponent extends AgGridBaseComponent
       this.EditForm_Factor_Header.patchValue({
         FactorCode: data.Factors[0].PreFactorCode,
         FactorDate: data.Factors[0].PreFactorDate,
+        PFState: data.Factors[0].PFState,
         CustName: data.Factors[0].CustName,
         CustomerCode: data.Factors[0].CustomerRef,
         Explain: data.Factors[0].Explain,
         BrokerName: data.Factors[0].BrokerName,
         BrokerRef: data.Factors[0].BrokerRef,
       });
+
+      if (sessionStorage.getItem("PhAddress3") == '100') {
+        this.IsManager = true
+
+        this.CanEdit_PFState = true
+      } else {
+        this.IsManager = false
+
+        if (data.Factors[0].PFState == "2") {
+          this.CanEdit_PFState = false
+
+        } else if (data.Factors[0].PFState == "1") {
+          this.CanEdit_PFState = false
+
+        } else if (data.Factors[0].PFState == "0") {
+          this.CanEdit_PFState = true
+        }
+      }
+
+
+
+
+
     });
 
 
@@ -776,7 +848,11 @@ export class PrefactorEditComponent extends AgGridBaseComponent
     this.customer_dialog_show()
     this.loading = true;
 
-    this.repo.GetKowsarCustomer(this.Searchtarget_customer).subscribe((data: any) => {
+    this.EditForm_SearchTarget.patchValue({
+      SearchTarget: this.Searchtarget_customer,
+      BrokerRef: sessionStorage.getItem("BrokerCode"),
+    });
+    this.repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe((data: any) => {
       this.records_customer = data.Customers;
       this.loading = false;
     });

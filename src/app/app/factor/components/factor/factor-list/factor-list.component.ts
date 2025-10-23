@@ -7,6 +7,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { CellActionFactorList } from './cell-action-factor-list';
 import { Subscription } from 'rxjs';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
+import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 
 @Component({
   selector: 'app-factor-list',
@@ -19,6 +20,7 @@ export class FactorListComponent extends AgGridBaseComponent
     private readonly router: Router,
     private repo: FactorWebApiService,
     private renderer: Renderer2,
+    private notificationService: NotificationService,
     private themeService: ThemeService,
   ) {
     super();
@@ -93,6 +95,10 @@ export class FactorListComponent extends AgGridBaseComponent
 
   override ngOnInit(): void {
     super.ngOnInit();
+    this.themeSub = this.themeService.theme$.subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
+
     if (sessionStorage.getItem("PhAddress3") == '100') {
       this.BrokerRef = ''
 
@@ -195,7 +201,7 @@ export class FactorListComponent extends AgGridBaseComponent
           pinned: 'left',
           cellRenderer: CellActionFactorList,
 
-          width: 100,
+          width: 150,
           sortable: false,
           filter: false,
           // resizable: false
@@ -248,13 +254,35 @@ export class FactorListComponent extends AgGridBaseComponent
 
     this.getGridSchema()
 
-    /*
 
-
-*/
 
   }
 
+
+  delete(data: any) {
+
+    if (data.InvoiceState = "1") {
+      this.notificationService.error(" این فاکتور به حالت موقت تبدیل شده است ");
+
+    } else if (data.InvoiceState = "2") {
+      this.notificationService.error(" این فاکتور به حالت نهایی تبدیل شده است ");
+
+    } else {
+      this.repo.DeleteWebFactor(data.FactorCode).subscribe(
+        (data: any) => {
+          // ✅ وقتی موفق شد
+          this.notificationService.succeded('ردیف با موفقیت حذف شد.');
+          this.getGridSchema();
+        },
+        (error: any) => {
+          // ❌ وقتی خطا داد
+          console.error(error);
+          this.notificationService.error('حذف ردیف با خطا مواجه شد دارای رکورد وابسته می باشد.');
+        }
+      );
+    }
+
+  }
 
 
 

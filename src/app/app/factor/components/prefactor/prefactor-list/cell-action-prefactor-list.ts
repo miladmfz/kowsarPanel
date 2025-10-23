@@ -59,10 +59,8 @@ export class CellActionPreFactorList implements ICellRendererAngularComp {
         this.params.context.componentParent.navigateToEdit(this.params.data.PreFactorCode);
     }
     NavigateTodelete() {
-        this.params.context.componentParent.delete(this.params.data.PreFactorCode);
+        this.params.context.componentParent.delete(this.params.data);
     }
-    Edit_Customer_Property() {
-        this.params.context.componentParent.Edit_factor_Property(this.params.data.PreFactorCode);
-    }
+
 
 }

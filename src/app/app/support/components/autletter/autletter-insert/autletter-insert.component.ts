@@ -71,6 +71,10 @@ export class AutletterInsertComponent extends AgGridBaseComponent
   ]
 
 
+  EditForm_SearchTarget = new FormGroup({
+    SearchTarget: new FormControl(''),
+    BrokerRef: new FormControl(''),
+  });
   override ngOnInit(): void {
     super.ngOnInit();
     this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
@@ -209,7 +213,11 @@ export class AutletterInsertComponent extends AgGridBaseComponent
     this.centrallist_dialog_show()
     this.loading = true;
 
-    this.repo.GetKowsarCustomer(this.Searchtarget_central).subscribe((data: any) => {
+    this.EditForm_SearchTarget.patchValue({
+      SearchTarget: this.Searchtarget_central,
+      BrokerRef: sessionStorage.getItem("BrokerCode"),
+    });
+    this.repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe((data: any) => {
       this.records_support_central = data.Customers;
       this.loading = false;
 

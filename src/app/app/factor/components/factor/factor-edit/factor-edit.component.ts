@@ -14,6 +14,7 @@ import { NotificationService } from 'src/app/app-shell/framework-services/notifi
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 import { CellActionAutletterFactorList } from './cell-action-autletter-factor-list';
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
+import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 
 @Component({
   selector: 'app-factor-edit',
@@ -66,7 +67,8 @@ export class FactorEditComponent extends AgGridBaseComponent
   show_newletter: boolean = false;
   loading: boolean = false;
   ShowGoodList: boolean = false;
-
+  CanEdit_InvoiceState: boolean = true;
+  IsManager: boolean = false;
 
   title = 'فاکتور فروش';
   BrokerRef: string = '';
@@ -81,7 +83,22 @@ export class FactorEditComponent extends AgGridBaseComponent
   CentralRef: string = '';
   JobPersonRef: string = '';
   Searchtarget_customer: string = '';
+
   Searchtarget_Good: string = '';
+
+
+
+  EditForm_SearchTarget = new FormGroup({
+    SearchTarget: new FormControl(''),
+    BrokerRef: new FormControl(''),
+  });
+
+
+  InvoiceState_Lookup: Base_Lookup[] = [
+    { id: "0", name: "یادداشت" },
+    { id: "1", name: "موقت" },
+    { id: "2", name: "نهایی" },
+  ]
 
 
   private searchSubject_customer: Subject<string> = new Subject();
@@ -185,6 +202,7 @@ export class FactorEditComponent extends AgGridBaseComponent
   EditForm_Factor_Header = new FormGroup({
     FactorCode: new FormControl(''),
     FactorDate: new FormControl(''),
+    InvoiceState: new FormControl(''),
     CustName: new FormControl(''),
     CustomerCode: new FormControl('', Validators.required),
     Explain: new FormControl(''),
@@ -223,6 +241,7 @@ export class FactorEditComponent extends AgGridBaseComponent
     selectedBackground: '#D68E3A',
     selectedText: '#FFFFFF',
   };
+
 
   override ngOnInit(): void {
     super.ngOnInit();
@@ -643,6 +662,22 @@ export class FactorEditComponent extends AgGridBaseComponent
     this.searchSubject_Good.next(this.Searchtarget_Good);
   }
 
+  getInvoiceStateName(id: string) {
+    return this.InvoiceState_Lookup.find(x => x.id === id)?.name || '';
+  }
+
+  onInvoiceStateChange() {
+
+    this.loadingService.show()
+    this.repo.UpdateFactorInvoiceState(this.EditForm_Factor_Header.value).subscribe((data: any) => {
+      this.FactorCode = data.Factors[0].FactorCode
+      this.notificationService.succeded();
+      this.loadingService.hide()
+      location.reload()
+    });
+
+  }
+
   Factor_Header_insert() {
     this.EditForm_Factor_Header.markAllAsTouched();
     if (!this.EditForm_Factor_Header.valid) return;
@@ -729,17 +764,34 @@ export class FactorEditComponent extends AgGridBaseComponent
     })();
   }
 
-  delete(id) {
-    this.fireDeleteSwal1().then((result) => {
-      if (result.isConfirmed) {
-        this.repo.DeleteWebFactorRows(id).subscribe((data: any) => {
-          this.GetFactorrows()
-          this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
-        });
-      } else {
-        this.notificationService.warning('اطلاعات تغییری نکرد');
-      }
-    });
+  deletefactorrow(id) {
+
+
+    if (this.EditForm_Factor_Header.value.InvoiceState == "1") {
+      this.notificationService.error(" این فاکتور به حالت موقت تبدیل شده است ");
+
+    } else if (this.EditForm_Factor_Header.value.InvoiceState == "2") {
+      this.notificationService.error(" این فاکتور به حالت نهایی تبدیل شده است ");
+
+    } else {
+      this.fireDeleteSwal1().then((result) => {
+        if (result.isConfirmed) {
+          this.repo.DeleteWebFactorRows(id).subscribe((data: any) => {
+            this.GetFactorrows()
+            this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
+          });
+        } else {
+          this.notificationService.warning('اطلاعات تغییری نکرد');
+        }
+      });
+    }
+
+
+
+
+
+
+
   }
 
   deletefactorRecord() {
@@ -765,15 +817,38 @@ export class FactorEditComponent extends AgGridBaseComponent
 
     this.repo.GetWebFactor(this.EditForm_factor.value).subscribe((data: any) => {
       this.selectedfactor = data.Factors[0]
+
       this.EditForm_Factor_Header.patchValue({
         FactorCode: data.Factors[0].FactorCode,
         FactorDate: data.Factors[0].FactorDate,
+        InvoiceState: data.Factors[0].InvoiceState,
         CustName: data.Factors[0].CustName,
         CustomerCode: data.Factors[0].CustomerCode,
         Explain: data.Factors[0].Explain,
         BrokerName: data.Factors[0].BrokerName,
         BrokerRef: data.Factors[0].BrokerRef,
       });
+
+
+      if (sessionStorage.getItem("PhAddress3") == '100') {
+        this.IsManager = true
+        this.CanEdit_InvoiceState = true
+      } else {
+        this.IsManager = false
+
+        if (data.Factors[0].InvoiceState == "2") {
+          this.CanEdit_InvoiceState = false
+
+        } else if (data.Factors[0].InvoiceState == "1") {
+          this.CanEdit_InvoiceState = false
+
+        } else if (data.Factors[0].InvoiceState == "0") {
+          this.CanEdit_InvoiceState = true
+        }
+      }
+
+
+
     });
 
 
@@ -808,7 +883,12 @@ export class FactorEditComponent extends AgGridBaseComponent
     this.customer_dialog_show()
     this.loading = true;
 
-    this.repo.GetKowsarCustomer(this.Searchtarget_customer).subscribe((data: any) => {
+    this.EditForm_SearchTarget.patchValue({
+      SearchTarget: this.Searchtarget_customer,
+      BrokerRef: sessionStorage.getItem("BrokerCode"),
+    });
+
+    this.repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe((data: any) => {
       this.records_customer = data.Customers;
       this.loading = false;
     });

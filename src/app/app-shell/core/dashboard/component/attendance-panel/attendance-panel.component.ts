@@ -30,6 +30,10 @@ export class AttendancePanelComponent
   private searchSubject_central: Subject<string> = new Subject();
 
 
+  EditForm_SearchTarget = new FormGroup({
+    SearchTarget: new FormControl(''),
+    BrokerRef: new FormControl(''),
+  });
   loading_attendance: boolean = true;
   loading_leaveperson: boolean = true;
   show_newletter: boolean = false;
@@ -165,7 +169,11 @@ export class AttendancePanelComponent
     this.centrallist_dialog_show()
     this.loading = true;
     this.loadingService.show()
-    this.repo.GetKowsarCustomer(this.Searchtarget_central).subscribe((data: any) => {
+    this.EditForm_SearchTarget.patchValue({
+      SearchTarget: this.Searchtarget_central,
+      BrokerRef: sessionStorage.getItem("BrokerCode"),
+    });
+    this.repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe((data: any) => {
       this.loadingService.hide()
       this.records_support_central = data.Customers;
       this.loading = false;
@@ -600,6 +608,7 @@ export class AttendancePanelComponent
     }
 
     this.getAttendance_data()
+
     this.attendanceInterval = setInterval(() => {
       this.getAttendance_data();
     }, 15000);

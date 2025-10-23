@@ -34,6 +34,10 @@ export class CustomerListComponent extends AgGridBaseComponent
 
   PhAddress3: string = '';
 
+  EditForm_SearchTarget = new FormGroup({
+    SearchTarget: new FormControl(''),
+    BrokerRef: new FormControl(''),
+  });
   records;
   records_factor;
   records_support_factorrows;
@@ -291,7 +295,12 @@ export class CustomerListComponent extends AgGridBaseComponent
   getList() {
 
     this.loading = true
-    this.repo.GetKowsarCustomer(this.Searchtarget).subscribe((data: any) => {
+
+    this.EditForm_SearchTarget.patchValue({
+      SearchTarget: this.Searchtarget,
+      BrokerRef: sessionStorage.getItem("BrokerCode"),
+    });
+    this.repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe((data: any) => {
       this.records = data.Customers;
       this.loading = false
 

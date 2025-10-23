@@ -62,10 +62,13 @@
 
           <div class="text-center">
             <span *ngIf="currentStatus === '1'" class="badge bg-success fs-5 fw-bold px-3 py-2">آزاد</span>
-            <span *ngIf="currentStatus === '2'" class="badge bg-warning text-dark fs-5 fw-bold px-3 py-2">در حال
+            <span *ngIf="currentStatus === '2'" class="badge bg-warning text-dark fs-5 fw-bold px-3 py-2">در
+              حال
               کار</span>
-            <span *ngIf="currentStatus === '0'" class="badge bg-danger fs-5 fw-bold px-3 py-2">عدم حضور</span>
-            <span *ngIf="currentStatus === '3'" class="badge bg-info text-dark fs-5 fw-bold px-3 py-2">ناهار و
+            <span *ngIf="currentStatus === '0'" class="badge bg-danger fs-5 fw-bold px-3 py-2">عدم
+              حضور</span>
+            <span *ngIf="currentStatus === '3'" class="badge bg-info text-dark fs-5 fw-bold px-3 py-2">ناهار
+              و
               نماز</span>
             <!-- <span *ngIf="currentStatus === '4'" class="badge bg-secondary text-dark fs-5 fw-bold px-3 py-2">مرخصی
               اداری</span>
@@ -144,7 +147,8 @@
                   <a [routerLink]="['/kowsar/good-list']" routerLinkActive="active"> مدیریت کالا </a>
                 </li>
                 <li>
-                  <a [routerLink]="['/kowsar/goodsgrp-list']" routerLinkActive="active"> گروه کالایی </a>
+                  <a [routerLink]="['/kowsar/goodsgrp-list']" routerLinkActive="active"> گروه کالایی
+                  </a>
                 </li>
 
               </ul>
@@ -155,6 +159,7 @@
 
 
         <li>
+
           <a [routerLink]="['application/ocr-detail']" routerLinkActive="active"> بایگانی </a>
         </li>
 
@@ -173,7 +178,8 @@
 
                   <ng-container *ngIf="appbroker.length>0">
                     <li>
-                      <a [routerLink]="['/application/broker-detail']" routerLinkActive="active"> بازاریابی </a>
+                      <a [routerLink]="['/application/broker-detail']" routerLinkActive="active">
+                        بازاریابی </a>
                     </li>
 
                   </ng-container>
@@ -181,7 +187,8 @@
                   <ng-container *ngIf="appocr.length>0">
 
                     <li>
-                      <a [routerLink]="['application/ocr-detail']" routerLinkActive="active"> بایگانی </a>
+                      <a [routerLink]="['application/ocr-detail']" routerLinkActive="active">
+                        بایگانی </a>
                     </li>
 
                   </ng-container>
@@ -191,7 +198,8 @@
                   <ng-container *ngIf="apporder.length>0">
 
                     <li>
-                      <a [routerLink]="['application/order-detail']" routerLinkActive="active"> سفارشگیر </a>
+                      <a [routerLink]="['application/order-detail']" routerLinkActive="active">
+                        سفارشگیر </a>
                     </li>
                   </ng-container>
 
@@ -217,37 +225,45 @@
 
               <ng-container *ngIf="JobPersonRef.length>0">
                 <li>
-                  <a [routerLink]="['/support/support-factor-edit']" routerLinkActive="active">فاکتور پشتیبانی</a>
+                  <a [routerLink]="['/support/support-factor-edit']" routerLinkActive="active">فاکتور
+                    پشتیبانی</a>
 
                 </li>
 
                 <li>
-                  <a [routerLink]="['/support/support-factor-list']" routerLinkActive="active">لیست فاکتور پشتیبانی </a>
+                  <a [routerLink]="['/support/support-factor-list']" routerLinkActive="active">لیست
+                    فاکتور پشتیبانی </a>
                 </li>
 
                 <li>
-                  <a [routerLink]="['/support/report-customer']" routerLinkActive="active">گزارش مشتریان</a>
+                  <a [routerLink]="['/support/report-customer']" routerLinkActive="active">گزارش
+                    مشتریان</a>
                 </li>
 
                 <li>
-                  <a [routerLink]="['/support/leavereq-list']" routerLinkActive="active">لیست مرخصی</a>
+                  <a [routerLink]="['/support/leavereq-list']" routerLinkActive="active">لیست
+                    مرخصی</a>
                 </li>
 
                 <ng-container *ngIf="PhAddress3=='100'">
                   <li>
-                    <a [routerLink]="['/support/task-list']" routerLinkActive="active">لیست خدمات</a>
+                    <a [routerLink]="['/support/task-list']" routerLinkActive="active">لیست
+                      خدمات</a>
                   </li>
                 </ng-container>
                 <ng-container *ngIf="PhAddress3=='100'">
                   <li>
-                    <a [routerLink]="['/support/supgood-list']" routerLinkActive="active">لیست کالاها</a>
+                    <a [routerLink]="['/support/supgood-list']" routerLinkActive="active">لیست
+                      کالاها</a>
                   </li>
                 </ng-container>
                 <li>
-                  <a [routerLink]="['/support/customer-list']" routerLinkActive="active">لیست مشتریان</a>
+                  <a [routerLink]="['/support/customer-list']" routerLinkActive="active">لیست
+                    مشتریان</a>
                 </li>
                 <li>
-                  <a [routerLink]="['/support/central-list']" routerLinkActive="active">لیست اجزای پایه</a>
+                  <a [routerLink]="['/support/central-list']" routerLinkActive="active">لیست اجزای
+                    پایه</a>
                 </li>
               </ng-container>
 
@@ -256,15 +272,18 @@
                 <a [routerLink]="['/support/leavereq-list']" routerLinkActive="active">لیست مرخصی</a>
               </li>
               <li>
-                <a [routerLink]="['/support/letter-insert']" routerLinkActive="active"> ایجاد تیکت جدید </a>
+                <a [routerLink]="['/support/letter-insert']" routerLinkActive="active"> ایجاد تیکت جدید
+                </a>
               </li>
               <li>
-                <a [routerLink]="['/support/letter-list']" routerLinkActive="active"> لیست تمامی تیکت ها </a>
+                <a [routerLink]="['/support/letter-list']" routerLinkActive="active"> لیست تمامی تیکت ها
+                </a>
               </li>
 
               <ng-container *ngIf="JobPersonRef.length>0">
                 <li>
-                  <a [routerLink]="['/support/letter-mywork']" routerLinkActive="active"> وضعیت تیکت های من </a>
+                  <a [routerLink]="['/support/letter-mywork']" routerLinkActive="active"> وضعیت تیکت
+                    های من </a>
                 </li>
               </ng-container>
 
@@ -284,16 +303,19 @@
               <ul class="nav-second-level">
 
                 <li>
-                  <a [routerLink]="['/manager/application-list']" routerLinkActive="active"> ماژول های جانبی </a>
+                  <a [routerLink]="['/manager/application-list']" routerLinkActive="active"> ماژول های
+                    جانبی </a>
                 </li>
 
 
                 <li>
-                  <a [routerLink]="['/manager/website-list']" routerLinkActive="active"> وب سایت ها </a>
+                  <a [routerLink]="['/manager/website-list']" routerLinkActive="active"> وب سایت ها
+                  </a>
                 </li>
 
                 <li>
-                  <a [routerLink]="['/manager/application-report']" routerLinkActive="active"> گزارش ماژول های جانبی</a>
+                  <a [routerLink]="['/manager/application-report']" routerLinkActive="active"> گزارش
+                    ماژول های جانبی</a>
                 </li>
                 <li>
                   <a [routerLink]="['/manager/panel-log']" routerLinkActive="active"> لاگ سرور </a>
@@ -323,12 +345,8 @@
             </ul>
           </div>
         </li>
-
-
-
       </ul>
     </div>
-
     <div class="clearfix"></div>
   </div>
 </div>

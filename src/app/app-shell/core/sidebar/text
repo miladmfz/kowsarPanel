@@ -1,0 +1,523 @@
+<div class="left-side-menu">
+    <div class="logo-box">
+        <a href="index.html" class="logo logo-dark text-center">
+            <span class="logo-sm">
+                <img src="./assets/images/logo-sm-dark.png" alt="" height="24" />
+            </span>
+            <span class="logo-lg">
+                <img src="./assets/images/logo-dark.png" alt="" height="20" />
+            </span>
+        </a>
+
+        <a href="index.html" class="logo logo-light text-center">
+            <span class="logo-sm">
+                <img src="./assets/images/logo-sm.png" alt="" height="24" />
+            </span>
+            <span class="logo-lg">
+                <img src="./assets/images/logo-light.png" alt="" height="20" />
+            </span>
+        </a>
+
+    </div>
+
+    <div class="h-100" data-simplebar>
+        <div class="user-box text-center">
+            <ng-container *ngIf="Imageitem.length>100">
+                <img [src]="Imageitem" alt="No Photo" class="rounded-circle avatar-xl">
+            </ng-container>
+            <ng-container *ngIf="Imageitem.length<100">
+                <img src="./assets/images/KowsarSupport.png" alt="user-img" title="Mat Helme"
+                    class="rounded-circle avatar-xl">
+            </ng-container>
+            <div class="dropdown">
+                <a href="#" class="text-reset dropdown-toggle h5 mt-2 mb-1 d-block fw-medium" data-bs-toggle="dropdown">
+                    {{ PhFullName }}
+                    <i class="fe-user me-1"></i>
+                </a>
+
+            </div>
+
+
+            <ng-container *ngIf="JobPersonRef.length>0">
+
+                <div class="m-3 border-top pt-3">
+
+                    <div class="dropdown mb-3">
+                        <button class="btn btn-sm btn-outline-info dropdown-toggle w-100 text-center" type="button"
+                            id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            انتخاب وضعیت
+                        </button>
+                        <ul class="dropdown-menu w-100 text-center" aria-labelledby="statusDropdown">
+                            <li><a class="dropdown-item" (click)="setStatus('1')">آزاد</a></li>
+                            <!-- <li><a class="dropdown-item" (click)="setStatus('2')">در حال کار</a></li> -->
+                            <li><a class="dropdown-item" (click)="setStatus('0')">عدم حضور</a></li>
+                            <li><a class="dropdown-item" (click)="setStatus('3')">ناهار و نماز</a></li>
+                            <!-- <li><a class="dropdown-item" (click)="setStatus('4')">مرخصی اداری</a></li>
+              <li><a class="dropdown-item" (click)="setStatus('5')">قطع برق و اینترنت</a></li> -->
+
+                        </ul>
+                    </div>
+
+
+
+
+                    <div class="text-center">
+                        <span *ngIf="currentStatus === '1'" class="badge bg-success fs-5 fw-bold px-3 py-2">آزاد</span>
+                        <span *ngIf="currentStatus === '2'" class="badge bg-warning text-dark fs-5 fw-bold px-3 py-2">در
+                            حال
+                            کار</span>
+                        <span *ngIf="currentStatus === '0'" class="badge bg-danger fs-5 fw-bold px-3 py-2">عدم
+                            حضور</span>
+                        <span *ngIf="currentStatus === '3'" class="badge bg-info text-dark fs-5 fw-bold px-3 py-2">ناهار
+                            و
+                            نماز</span>
+                        <!-- <span *ngIf="currentStatus === '4'" class="badge bg-secondary text-dark fs-5 fw-bold px-3 py-2">مرخصی
+              اداری</span>
+            <span *ngIf="currentStatus === '5'" class="badge bg-secondary text-dark fs-5 fw-bold px-3 py-2">قطع برق و
+              اینترنت
+            </span> -->
+
+                    </div>
+                </div>
+
+
+            </ng-container>
+
+            <ng-container *ngIf="CustName_Small.length > 0">
+                <div class="m-3 border-top pt-3">
+                    <p class="mb-1 text-muted small">نام مجموعه</p>
+                    <h5 class="text-danger">{{ CustName_Small }}</h5>
+
+                    <p class="mb-1 text-muted small">پشتیبانی</p>
+                    <h5 class="text-danger">{{ Explain }}</h5>
+                </div>
+            </ng-container>
+
+
+        </div>
+
+
+        <div id="sidebar-menu">
+            <ul id="side-menu">
+                <li class="menu-title">منوی برنامه</li>
+
+                <li>
+                    <a [routerLink]="['/dashboard']" routerLinkActive="active" data-bs-toggle="collapse"
+                        aria-expanded="false" aria-controls="sidebarDashboards" class="waves-effect">
+                        <i class="ri-dashboard-line"></i>
+                        <span> داشبورد </span>
+                    </a>
+                </li>
+
+                <ng-container *ngIf="IsCustomerBuild">
+
+
+                    <li>
+                        <a href="#factor" data-bs-toggle="collapse" aria-expanded="false" aria-controls="factor">
+                            <i class="fas fa-cash-register"></i>
+                            <span>فروش</span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="factor">
+                            <ul class="nav-second-level">
+
+                                <li>
+                                    <a [routerLink]="['/factor/factor-list']">لیست فاکتور </a>
+                                </li>
+                                <li>
+                                    <a [routerLink]="['/factor/prefactor-list']">لیست پیش فاکتور </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ng-container>
+
+
+
+                <ng-container *ngIf="JobPersonRef.length>0">
+                    <li>
+                        <a href="#kowsar" data-bs-toggle="collapse" aria-expanded="false" aria-controls="kowsar">
+                            <i class="ri-layout-line"></i>
+                            <span>بازرگانی کوثر</span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="kowsar">
+                            <ul class="nav-second-level">
+
+                                <li>
+                                    <a [routerLink]="['/kowsar/good-list']" routerLinkActive="active"> مدیریت کالا </a>
+                                </li>
+                                <li>
+                                    <a [routerLink]="['/kowsar/goodsgrp-list']" routerLinkActive="active"> گروه کالایی
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+                </ng-container>
+
+
+
+                <li>
+
+                    <a [routerLink]="['application/ocr-detail']" routerLinkActive="active"> بایگانی </a>
+                </li>
+
+                <ng-container *ngIf="array_applications.length>0">
+                    <ng-container *ngIf="JobPersonRef.length>0">
+                        <li>
+                            <a href="#application" data-bs-toggle="collapse" aria-expanded="false"
+                                aria-controls="application">
+                                <i class="ri-apps-line"></i>
+                                <span>نرم افزار های جانبی</span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="application">
+                                <ul class="nav-second-level">
+
+
+
+                                    <ng-container *ngIf="appbroker.length>0">
+                                        <li>
+                                            <a [routerLink]="['/application/broker-detail']" routerLinkActive="active">
+                                                بازاریابی </a>
+                                        </li>
+
+                                    </ng-container>
+
+                                    <ng-container *ngIf="appocr.length>0">
+
+                                        <li>
+                                            <a [routerLink]="['application/ocr-detail']" routerLinkActive="active">
+                                                بایگانی </a>
+                                        </li>
+
+                                    </ng-container>
+
+
+
+                                    <ng-container *ngIf="apporder.length>0">
+
+                                        <li>
+                                            <a [routerLink]="['application/order-detail']" routerLinkActive="active">
+                                                سفارشگیر </a>
+                                        </li>
+                                    </ng-container>
+
+
+
+                                </ul>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ng-container>
+
+
+
+                <li>
+                    <a href="#support" data-bs-toggle="collapse" aria-expanded="false" aria-controls="support">
+                        <i class=" ri-customer-service-2-line"></i>
+                        <span>پشتیبانی</span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="support">
+                        <ul class="nav-second-level">
+
+
+                            <ng-container *ngIf="JobPersonRef.length>0">
+                                <li>
+                                    <a [routerLink]="['/support/support-factor-edit']" routerLinkActive="active">فاکتور
+                                        پشتیبانی</a>
+
+                                </li>
+
+                                <li>
+                                    <a [routerLink]="['/support/support-factor-list']" routerLinkActive="active">لیست
+                                        فاکتور پشتیبانی </a>
+                                </li>
+
+                                <li>
+                                    <a [routerLink]="['/support/report-customer']" routerLinkActive="active">گزارش
+                                        مشتریان</a>
+                                </li>
+
+                                <li>
+                                    <a [routerLink]="['/support/leavereq-list']" routerLinkActive="active">لیست
+                                        مرخصی</a>
+                                </li>
+
+                                <ng-container *ngIf="PhAddress3=='100'">
+                                    <li>
+                                        <a [routerLink]="['/support/task-list']" routerLinkActive="active">لیست
+                                            خدمات</a>
+                                    </li>
+                                </ng-container>
+                                <ng-container *ngIf="PhAddress3=='100'">
+                                    <li>
+                                        <a [routerLink]="['/support/supgood-list']" routerLinkActive="active">لیست
+                                            کالاها</a>
+                                    </li>
+                                </ng-container>
+                                <li>
+                                    <a [routerLink]="['/support/customer-list']" routerLinkActive="active">لیست
+                                        مشتریان</a>
+                                </li>
+                                <li>
+                                    <a [routerLink]="['/support/central-list']" routerLinkActive="active">لیست اجزای
+                                        پایه</a>
+                                </li>
+                            </ng-container>
+
+
+                            <li>
+                                <a [routerLink]="['/support/leavereq-list']" routerLinkActive="active">لیست مرخصی</a>
+                            </li>
+                            <li>
+                                <a [routerLink]="['/support/letter-insert']" routerLinkActive="active"> ایجاد تیکت جدید
+                                </a>
+                            </li>
+                            <li>
+                                <a [routerLink]="['/support/letter-list']" routerLinkActive="active"> لیست تمامی تیکت ها
+                                </a>
+                            </li>
+
+                            <ng-container *ngIf="JobPersonRef.length>0">
+                                <li>
+                                    <a [routerLink]="['/support/letter-mywork']" routerLinkActive="active"> وضعیت تیکت
+                                        های من </a>
+                                </li>
+                            </ng-container>
+
+                        </ul>
+                    </div>
+                </li>
+
+
+                <ng-container *ngIf="JobPersonRef.length>0">
+                    <li>
+                        <a href="#manager" data-bs-toggle="collapse" aria-expanded="false" aria-controls="manager">
+                            <i class="ri-code-box-line"></i>
+                            <span>توسعه نرم افزار</span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="manager">
+                            <ul class="nav-second-level">
+
+                                <li>
+                                    <a [routerLink]="['/manager/application-list']" routerLinkActive="active"> ماژول های
+                                        جانبی </a>
+                                </li>
+
+
+                                <li>
+                                    <a [routerLink]="['/manager/website-list']" routerLinkActive="active"> وب سایت ها
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a [routerLink]="['/manager/application-report']" routerLinkActive="active"> گزارش
+                                        ماژول های جانبی</a>
+                                </li>
+                                <li>
+                                    <a [routerLink]="['/manager/panel-log']" routerLinkActive="active"> لاگ سرور </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+                </ng-container>
+
+
+                <li>
+                    <a href="#document" data-bs-toggle="collapse" aria-expanded="false" aria-controls="document">
+                        <i class="ri-folder-open-line"></i>
+                        <span>مستندات</span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="document">
+                        <ul class="nav-second-level">
+
+                            <li>
+                                <a [routerLink]="['/document/download-list']" routerLinkActive="active">دانلود ها</a>
+                            </li>
+                            <li>
+                                <a [routerLink]="['/document/education-list']" routerLinkActive="active">اموزش ها</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="left-side-menu">
+    <div class="logo-box">
+        <a href="index.html" class="logo logo-dark text-center">
+            <span class="logo-sm">
+                <img src="./assets/images/logo-sm-dark.png" alt="" height="24" />
+            </span>
+            <span class="logo-lg">
+                <img src="./assets/images/logo-dark.png" alt="" height="20" />
+            </span>
+        </a>
+        <a href="index.html" class="logo logo-light text-center">
+            <span class="logo-sm">
+                <img src="./assets/images/logo-sm.png" alt="" height="24" />
+            </span>
+            <span class="logo-lg">
+                <img src="./assets/images/logo-light.png" alt="" height="20" />
+            </span>
+        </a>
+    </div>
+    <div class="h-100" data-simplebar>
+        <div class="user-box text-center">
+            <ng-container *ngIf="Imageitem.length>100">
+                <img [src]="Imageitem" alt="No Photo" class="rounded-circle avatar-xl">
+            </ng-container>
+            <ng-container *ngIf="Imageitem.length<100">
+                <img src="./assets/images/KowsarSupport.png" alt="user-img" title="Mat Helme"
+                    class="rounded-circle avatar-xl">
+            </ng-container>
+            <div class="dropdown">
+                <a href="#" class="text-reset dropdown-toggle h5 mt-2 mb-1 d-block fw-medium" data-bs-toggle="dropdown">
+                    {{ PhFullName }}
+                    <i class="fe-user me-1"></i>
+                </a>
+            </div>
+        </div>
+        <div id="sidebar-menu">
+            <ul id="side-menu">
+                <li class="menu-title">منوی برنامه</li>
+                <li>
+                    <a [routerLink]="['/dashboard']" routerLinkActive="active" data-bs-toggle="collapse"
+                        aria-expanded="false" aria-controls="sidebarDashboards" class="waves-effect">
+                        <i class="ri-dashboard-line"></i>
+                        <span> داشبورد </span>
+                    </a>
+                </li>
+                <ng-container *ngIf="IsCustomerBuild">
+                    <li>
+                        <a href="#factor" data-bs-toggle="collapse" aria-expanded="false" aria-controls="factor">
+                            <i class="fas fa-cash-register"></i>
+                            <span>فروش</span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="factor">
+                            <ul class="nav-second-level">
+
+                                <li>
+                                    <a [routerLink]="['/factor/factor-list']">لیست فاکتور </a>
+                                </li>
+                                <li>
+                                    <a [routerLink]="['/factor/prefactor-list']">لیست پیش فاکتور </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ng-container>
+                <ng-container *ngIf="JobPersonRef.length>0">
+                    <li>
+                        <a href="#kowsar" data-bs-toggle="collapse" aria-expanded="false" aria-controls="kowsar">
+                            <i class="ri-layout-line"></i>
+                            <span>بازرگانی کوثر</span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="kowsar">
+                            <ul class="nav-second-level">
+                                <li>
+                                    <a [routerLink]="['/kowsar/good-list']" routerLinkActive="active"> مدیریت کالا </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ng-container>
+                <li>
+                    <a href="#support" data-bs-toggle="collapse" aria-expanded="false" aria-controls="support">
+                        <i class=" ri-customer-service-2-line"></i>
+                        <span>پشتیبانی</span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="support">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a [routerLink]="['/support/leavereq-list']" routerLinkActive="active">لیست مرخصی</a>
+                            </li>
+                            <li>
+                                <a [routerLink]="['/support/letter-insert']" routerLinkActive="active"> ایجاد تیکت جدید
+                                </a>
+                            </li>
+                            <li>
+                                <a [routerLink]="['/support/letter-list']" routerLinkActive="active"> لیست تمامی تیکت ها
+                                </a>
+                            </li>
+
+                            <ng-container *ngIf="JobPersonRef.length>0">
+                                <li>
+                                    <a [routerLink]="['/support/letter-mywork']" routerLinkActive="active"> وضعیت تیکت
+                                        های من </a>
+                                </li>
+                            </ng-container>
+
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>

@@ -64,6 +64,10 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
   priceInput = new Subject<void>();
   discountInput = new Subject<void>();
 
+  EditForm_SearchTarget = new FormGroup({
+    SearchTarget: new FormControl(''),
+    BrokerRef: new FormControl(''),
+  });
   override ngOnInit(): void {
     super.ngOnInit();
     this.themeSub = this.themeService.theme$.subscribe(mode => {
@@ -1200,7 +1204,11 @@ export class SupportFactorEditComponent extends AgGridBaseComponent
     this.customer_dialog_show()
     this.loading = true;
 
-    this.repo.GetKowsarCustomer(this.Searchtarget_customer).subscribe((data: any) => {
+    this.EditForm_SearchTarget.patchValue({
+      SearchTarget: this.Searchtarget_customer,
+      BrokerRef: sessionStorage.getItem("BrokerCode"),
+    });
+    this.repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe((data: any) => {
       this.records_support_customer = data.Customers;
       this.loading = false;
 

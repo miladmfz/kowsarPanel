@@ -46,6 +46,6 @@ export class CellActionPreFactorRowsEdit implements ICellRendererAngularComp {
 
 
     btnDeleteClicked(arg) {
-        this.params.context.componentParent.delete(this.params.data.FactorRowCode);
+        this.params.context.componentParent.deleteprefactorrow(this.params.data.FactorRowCode);
     }
 }

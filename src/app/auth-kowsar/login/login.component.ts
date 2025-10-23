@@ -75,10 +75,10 @@ export class LoginComponent implements OnInit {
     // });
 
 
-    // this.LoginForm.setValue({
-    //   UName: 'خسروی',
-    //   UPass: '123456'
-    // });
+    this.LoginForm.setValue({
+      UName: 'خسروی',
+      UPass: '123456'
+    });
 
 
 
