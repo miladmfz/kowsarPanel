@@ -14,6 +14,7 @@ import { AuthConfigModule } from './auth/auth-config.module';
 import { AppRoutingModule } from './app-routing.module';
 import { NotifierModule } from 'angular-notifier';
 import { AppConfigService } from './app-config.service';
+import { NotFoundComponent } from './app-shell/core/not-found/not-found.component';
 
 export function initializeApp(appConfig: AppConfigService) {
   return () => appConfig.loadConfig();
@@ -21,7 +22,7 @@ export function initializeApp(appConfig: AppConfigService) {
 
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, NotFoundComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

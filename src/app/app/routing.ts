@@ -1,7 +1,9 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from '../app-shell/core/dashboard/dashboard.component';
+import { NotFoundComponent } from '../app-shell/core/not-found/not-found.component';
 
 const Routing: Routes = [
+  //{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
     path: 'dashboard',
     loadChildren: () =>

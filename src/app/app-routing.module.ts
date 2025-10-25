@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { NotFoundComponent } from './app-shell/core/not-found/not-found.component';
 const routes: Routes = [
   {
 
@@ -15,7 +16,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'error/404',
+    component: NotFoundComponent,
   },
 ];
 
@@ -27,6 +28,7 @@ const routes: Routes = [
       anchorScrolling: 'enabled',
       preloadingStrategy: PreloadAllModules,
       initialNavigation: 'enabledBlocking',
+      useHash: true
     }),
   ],
   exports: [RouterModule],

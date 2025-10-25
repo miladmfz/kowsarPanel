@@ -115,6 +115,8 @@ export class AutletterListComponent
 
 
   column_declare() {
+
+
     this.columnDefs = [
       {
         field: 'عملیات',

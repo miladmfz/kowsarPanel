@@ -23,7 +23,8 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
   public;
   modules: Module[] = AllModules;
   public defaultColDef;
-  public defaultColDef1;
+
+
   CellClickedEven
   resizeTimeout: any;
 
@@ -61,12 +62,12 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
 
   public localeText: any;
   public autoGroupColumnDef;
-  public rowGroupPanelShow = 'always';
   public statusBar;
-  public pivotPanelShow;
   public frameworkComponents;
   public context;
+
   @Output() afterGridReady = new EventEmitter<number>();
+
 
   constructor(
     @Inject(Boolean) hasPinnedRow = false
@@ -84,6 +85,7 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
       enableRowGroup: true,
       enablePivot: true,
       autosizeThiscolumn: true,
+
       rowSelection: "multiple",
       onCellClicked: () =>
         console.log('Cell was clicked'),
@@ -91,8 +93,6 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
     };
 
 
-    this.rowGroupPanelShow = 'always';
-    this.pivotPanelShow = 'always';
 
     this.statusBar = {
       statusPanels: [
@@ -140,31 +140,31 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
     this.resizeTimeout = setTimeout(() => {
       if (this.gridApi) {
         this.gridApi.doLayout();
-        this.gridApi.sizeColumnsToFit(); // فقط اگه بخوای ستون‌ها هم مقیاس‌پذیر باشن
+        this.gridApi.sizeColumnsToFit();
       }
       if (this.gridApi1) {
         this.gridApi1.doLayout();
-        this.gridApi1.sizeColumnsToFit(); // فقط اگه بخوای ستون‌ها هم مقیاس‌پذیر باشن
+        this.gridApi1.sizeColumnsToFit();
       }
       if (this.gridApi2) {
         this.gridApi2.doLayout();
-        this.gridApi2.sizeColumnsToFit(); // فقط اگه بخوای ستون‌ها هم مقیاس‌پذیر باشن
+        this.gridApi2.sizeColumnsToFit();
       }
       if (this.gridApi3) {
         this.gridApi3.doLayout();
-        this.gridApi3.sizeColumnsToFit(); // فقط اگه بخوای ستون‌ها هم مقیاس‌پذیر باشن
+        this.gridApi3.sizeColumnsToFit();
       }
       if (this.gridApi4) {
         this.gridApi4.doLayout();
-        this.gridApi4.sizeColumnsToFit(); // فقط اگه بخوای ستون‌ها هم مقیاس‌پذیر باشن
+        this.gridApi4.sizeColumnsToFit();
       }
       if (this.gridApi5) {
         this.gridApi5.doLayout();
-        this.gridApi5.sizeColumnsToFit(); // فقط اگه بخوای ستون‌ها هم مقیاس‌پذیر باشن
+        this.gridApi5.sizeColumnsToFit();
       }
       if (this.gridApi6) {
         this.gridApi6.doLayout();
-        this.gridApi6.sizeColumnsToFit(); // فقط اگه بخوای ستون‌ها هم مقیاس‌پذیر باشن
+        this.gridApi6.sizeColumnsToFit();
       }
 
     }, 200);
@@ -221,6 +221,9 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
     this.gridApi.hideOverlay();
+    setTimeout(() => {
+      this.gridApi.sizeColumnsToFit();
+    }, 200);
 
   }
 
@@ -228,6 +231,9 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
     this.gridApi2 = params.api;
     this.gridColumnApi2 = params.columnApi;
     this.gridApi2.hideOverlay();
+    setTimeout(() => {
+      this.gridApi2.sizeColumnsToFit();
+    }, 200);
 
   }
 
@@ -235,6 +241,9 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
     this.gridApi3 = params.api;
     this.gridColumnApi3 = params.columnApi;
     this.gridApi3.hideOverlay();
+    setTimeout(() => {
+      this.gridApi3.sizeColumnsToFit();
+    }, 200);
 
   }
 
@@ -242,12 +251,18 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
     this.gridApi4 = params.api;
     this.gridColumnApi4 = params.columnApi;
     this.gridApi4.hideOverlay();
+    setTimeout(() => {
+      this.gridApi4.sizeColumnsToFit();
+    }, 200);
 
   }
   onGridReady5(params) {
     this.gridApi5 = params.api;
     this.gridColumnApi5 = params.columnApi;
     this.gridApi5.hideOverlay();
+    setTimeout(() => {
+      this.gridApi5.sizeColumnsToFit();
+    }, 200);
 
   }
 
@@ -255,6 +270,9 @@ export class AgGridBaseComponent extends AppSharedDataComponent {
     this.gridApi6 = params.api;
     this.gridColumnApi6 = params.columnApi;
     this.gridApi6.hideOverlay();
+    setTimeout(() => {
+      this.gridApi6.sizeColumnsToFit();
+    }, 200);
 
   }
 
