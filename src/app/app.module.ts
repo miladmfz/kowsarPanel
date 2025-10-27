@@ -1,7 +1,7 @@
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import {
   CommonModule,
@@ -21,42 +21,34 @@ export function initializeApp(appConfig: AppConfigService) {
 }
 
 
-@NgModule({
-  declarations: [AppComponent, NotFoundComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    AuthConfigModule,
-    CommonModule,
-    HttpClientModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NotifierModule,
-  ],
-  exports: [],
-  providers: [
-
-    {
-      provide: LocationStrategy,
-      useClass: HashLocationStrategy
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeApp,
-      deps: [AppConfigService],
-      multi: true,
-    },
-
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: ExceptionInterceptor,
-    //   multi: true,
-    // },
-    Title
-  ],
-  bootstrap: [AppComponent],
-})
+@NgModule({ declarations: [AppComponent, NotFoundComponent],
+    exports: [],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        AuthConfigModule,
+        CommonModule,
+        RouterModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NotifierModule], providers: [
+        {
+            provide: LocationStrategy,
+            useClass: HashLocationStrategy
+        },
+        {
+            provide: APP_INITIALIZER,
+            useFactory: initializeApp,
+            deps: [AppConfigService],
+            multi: true,
+        },
+        // {
+        //   provide: HTTP_INTERCEPTORS,
+        //   useClass: ExceptionInterceptor,
+        //   multi: true,
+        // },
+        Title,
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule { }
 
 

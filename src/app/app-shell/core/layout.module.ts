@@ -13,7 +13,7 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
 import { RouterModule, Routes } from '@angular/router';
 import { Routing } from '../../app/routing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NotificationService } from '../framework-services/notification.service';
 import { NotFoundComponent } from './not-found/not-found.component';
 
@@ -24,31 +24,22 @@ const routes: Routes = [
     children: Routing,
   },
 ];
-@NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-
-  ],
-  declarations: [
-    LayoutComponent,
-    SidebarComponent,
-    HeaderComponent,
-    FooterComponent,
-    RightSliderComponent,
-    ToolbarComponent,
-  ],
-  providers: [
-    { provide: LocationStrategy, useClass: PathLocationStrategy },
-
-    NotificationService,
-    // SwalService,
-  ],
-  exports: [RouterModule],
-})
+@NgModule({ declarations: [
+        LayoutComponent,
+        SidebarComponent,
+        HeaderComponent,
+        FooterComponent,
+        RightSliderComponent,
+        ToolbarComponent,
+    ],
+    exports: [RouterModule], imports: [CommonModule,
+        RouterModule.forChild(routes),
+        FormsModule,
+        ReactiveFormsModule], providers: [
+        { provide: LocationStrategy, useClass: PathLocationStrategy },
+        NotificationService,
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class LayoutModule { }
 
 

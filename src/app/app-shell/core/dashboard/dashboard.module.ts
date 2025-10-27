@@ -8,7 +8,7 @@ import { AttendancePanelComponent } from './component/attendance-panel/attendanc
 import { SupportPanelComponent } from './component/support-panel/support-panel.component';
 import { KowsarReportComponent } from './component/kowsar-report/kowsar-report.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { CellActionAttendancePanel } from './component/attendance-panel/cell-action-attendance-panel';
 import { CellDateAttendancePanel } from './component/attendance-panel/cell-date-label-attendance-panel';
 import { CellNameAttendancePanel } from './component/attendance-panel/cell-name-label-attendance-panel';
@@ -23,13 +23,11 @@ const routes: Routes = [
     { path: '', component: DashboardComponent }
 ];
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         DashboardComponent,
         AttendancePanelComponent,
         SupportPanelComponent,
         KowsarReportComponent,
-
         CellActionAttendancePanel,
         CellDateAttendancePanel,
         CellNameAttendancePanel,
@@ -39,17 +37,10 @@ const routes: Routes = [
         CellActionAttendanceStatePanel,
         CellActionKowsarReport,
         CellDateMinDate,
-
-    ],
-    imports: [
-        CommonModule,
+    ], imports: [CommonModule,
         RouterModule.forChild(routes),
         AgGridModule,
         NgPersianDatepickerModule,
         FormsModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-
-    ]
-})
+        ReactiveFormsModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class DashboardModule { }
