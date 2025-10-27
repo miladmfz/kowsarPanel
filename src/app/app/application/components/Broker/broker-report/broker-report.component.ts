@@ -12,8 +12,9 @@ import { Subscription } from 'rxjs';
 
 
 @Component({
-  selector: 'app-broker-report',
-  templateUrl: './broker-report.component.html',
+    selector: 'app-broker-report',
+    templateUrl: './broker-report.component.html',
+    standalone: false
 })
 
 

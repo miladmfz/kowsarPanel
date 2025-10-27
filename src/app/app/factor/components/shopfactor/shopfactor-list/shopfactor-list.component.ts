@@ -8,8 +8,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-shopfactor-list',
-  templateUrl: './shopfactor-list.component.html',
+    selector: 'app-shopfactor-list',
+    templateUrl: './shopfactor-list.component.html',
+    standalone: false
 })
 export class ShopfactorListComponent extends AgGridBaseComponent
   implements OnInit {

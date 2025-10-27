@@ -12,8 +12,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 @Component({
-  selector: 'app-support-panel',
-  templateUrl: './support-panel.component.html',
+    selector: 'app-support-panel',
+    templateUrl: './support-panel.component.html',
+    standalone: false
 })
 export class SupportPanelComponent
   extends AgGridBaseComponent

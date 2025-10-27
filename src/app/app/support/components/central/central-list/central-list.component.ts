@@ -9,8 +9,9 @@ import { debounceTime } from 'rxjs/operators';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 @Component({
-  selector: 'app-central-list',
-  templateUrl: './central-list.component.html',
+    selector: 'app-central-list',
+    templateUrl: './central-list.component.html',
+    standalone: false
 })
 export class CentralListComponent extends AgGridBaseComponent
   implements OnInit {

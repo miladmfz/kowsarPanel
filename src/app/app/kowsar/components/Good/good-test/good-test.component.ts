@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { KowsarWebApiService } from '../../../services/KowsarWebApi.service';
 @Component({
-  selector: 'app-good-test',
-  templateUrl: './good-test.component.html',
-  styleUrls: ['./good-test.component.css']
-
+    selector: 'app-good-test',
+    templateUrl: './good-test.component.html',
+    styleUrls: ['./good-test.component.css'],
+    standalone: false
 })
 export class GoodTestComponent implements OnInit {
 

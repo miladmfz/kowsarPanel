@@ -6,8 +6,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-panel-log',
-  templateUrl: './panel-log.component.html',
+    selector: 'app-panel-log',
+    templateUrl: './panel-log.component.html',
+    standalone: false
 })
 export class PanelLogComponent extends AgGridBaseComponent
   implements OnInit {

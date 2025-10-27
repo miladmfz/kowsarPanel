@@ -12,8 +12,9 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 
 @Component({
-  selector: 'app-autletter-insert',
-  templateUrl: './autletter-insert.component.html',
+    selector: 'app-autletter-insert',
+    templateUrl: './autletter-insert.component.html',
+    standalone: false
 })
 export class AutletterInsertComponent extends AgGridBaseComponent
   implements OnInit {

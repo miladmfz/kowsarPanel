@@ -6,8 +6,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 
 @Component({
-  selector: 'app-application-form',
-  templateUrl: './application-form.component.html',
+    selector: 'app-application-form',
+    templateUrl: './application-form.component.html',
+    standalone: false
 })
 export class ApplicationFormComponent implements OnInit {
 

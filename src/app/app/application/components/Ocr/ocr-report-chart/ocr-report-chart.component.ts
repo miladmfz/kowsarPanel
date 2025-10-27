@@ -5,8 +5,9 @@ import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { OcrWebApiService } from '../../../services/OcrWebApi.service';
 
 @Component({
-  selector: 'app-ocr-report-chart',
-  templateUrl: './ocr-report-chart.component.html',
+    selector: 'app-ocr-report-chart',
+    templateUrl: './ocr-report-chart.component.html',
+    standalone: false
 })
 export class OcrReportChartComponent implements OnInit {
 

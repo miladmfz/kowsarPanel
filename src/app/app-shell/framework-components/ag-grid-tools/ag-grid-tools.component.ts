@@ -2,8 +2,9 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { AgGridStateService } from '../../framework-services/agGridState.service';
 
 @Component({
-  selector: 'ag-grid-tools',
-  templateUrl: './ag-grid-tools.component.html'
+    selector: 'ag-grid-tools',
+    templateUrl: './ag-grid-tools.component.html',
+    standalone: false
 })
 export class AgGridToolsComponent implements OnInit, OnChanges {
 

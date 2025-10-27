@@ -17,8 +17,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
-  selector: 'app-good-edit',
-  templateUrl: './good-edit.component.html',
+    selector: 'app-good-edit',
+    templateUrl: './good-edit.component.html',
+    standalone: false
 })
 export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 

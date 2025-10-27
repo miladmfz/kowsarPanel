@@ -8,8 +8,9 @@ import { LoadingService } from '../../framework-services/loading.service';
 declare var $: any;
 
 @Component({
-  selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html',
+    selector: 'app-sidebar',
+    templateUrl: './sidebar.component.html',
+    standalone: false
 })
 export class SidebarComponent implements OnInit {
   constructor(

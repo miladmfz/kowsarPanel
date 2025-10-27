@@ -10,8 +10,9 @@ import { Subject, Subscription } from 'rxjs';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 
 @Component({
-  selector: 'app-website-list',
-  templateUrl: './website-list.component.html',
+    selector: 'app-website-list',
+    templateUrl: './website-list.component.html',
+    standalone: false
 })
 export class WebsiteListComponent extends AgGridBaseComponent
   implements OnInit {

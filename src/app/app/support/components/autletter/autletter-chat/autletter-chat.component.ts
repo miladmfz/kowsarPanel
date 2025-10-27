@@ -7,8 +7,9 @@ import { NotificationService } from 'src/app/app-shell/framework-services/notifi
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
-  selector: 'app-autletter-chat',
-  templateUrl: './autletter-chat.component.html',
+    selector: 'app-autletter-chat',
+    templateUrl: './autletter-chat.component.html',
+    standalone: false
 })
 export class AutletterChatComponent implements OnInit, AfterViewInit, AfterViewChecked {
 

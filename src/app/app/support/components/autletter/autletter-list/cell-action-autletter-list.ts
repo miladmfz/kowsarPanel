@@ -25,7 +25,7 @@ declare var $: any;
 </ng-container>
 
   `,
-
+    standalone: false
 })
 
 export class CellActionAutletterList implements ICellRendererAngularComp {

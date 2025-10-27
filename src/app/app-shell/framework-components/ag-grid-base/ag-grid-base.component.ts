@@ -15,8 +15,9 @@ import { Module } from './ag-grid-module';
 declare var Swal: any;
 
 @Component({
-  selector: 'app-ag-grid-base',
-  template: '',
+    selector: 'app-ag-grid-base',
+    template: '',
+    standalone: false
 })
 export class AgGridBaseComponent extends AppSharedDataComponent {
   public childName: string;

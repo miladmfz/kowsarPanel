@@ -11,8 +11,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { catchError, of, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-order-setting',
-  templateUrl: './order-setting.component.html',
+    selector: 'app-order-setting',
+    templateUrl: './order-setting.component.html',
+    standalone: false
 })
 export class OrderSettingComponent extends AgGridBaseComponent
   implements OnInit {

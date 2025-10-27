@@ -9,8 +9,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-goodsgrp-list',
-  templateUrl: './goodsgrp-list.component.html',
+    selector: 'app-goodsgrp-list',
+    templateUrl: './goodsgrp-list.component.html',
+    standalone: false
 })
 export class GoodsgrpListComponent extends AgGridBaseComponent
   implements OnInit {

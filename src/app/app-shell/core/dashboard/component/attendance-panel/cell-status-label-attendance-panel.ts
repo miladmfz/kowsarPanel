@@ -24,6 +24,7 @@ declare var $: any;
 <span *ngIf="Status == '5'" class="badge bg-dark text-white" style="padding: 3px;">قطع برق و اینترنت</span>
 
     `,
+    standalone: false
 })
 export class CellStatusAttendancePanel implements ICellRendererAngularComp {
     params: any;

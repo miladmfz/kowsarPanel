@@ -8,8 +8,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-education-list',
-  templateUrl: './education-list.component.html',
+    selector: 'app-education-list',
+    templateUrl: './education-list.component.html',
+    standalone: false
 })
 export class EducationListComponent extends AgGridBaseComponent
   implements OnInit {

@@ -4,8 +4,9 @@ import { FormControl, FormGroup, UntypedFormBuilder } from '@angular/forms';
 import { OcrWebApiService } from '../../../services/OcrWebApi.service';
 
 @Component({
-  selector: 'app-ocr-factor-detail',
-  templateUrl: './ocr-factor-detail.component.html',
+    selector: 'app-ocr-factor-detail',
+    templateUrl: './ocr-factor-detail.component.html',
+    standalone: false
 })
 export class OcrFactorDetailComponent implements OnInit {
 

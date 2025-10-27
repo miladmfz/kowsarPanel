@@ -2,8 +2,9 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, ElementR
 declare var ApexCharts: any;
 
 @Component({
-  selector: 'app-minton-pie-chart',
-  templateUrl: './minton-pie-chart.component.html',
+    selector: 'app-minton-pie-chart',
+    templateUrl: './minton-pie-chart.component.html',
+    standalone: false
 })
 export class MintOnPieChartComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('chartpie') chartElement: ElementRef;  // استفاده از @ViewChild برای دسترسی به #chart

@@ -13,7 +13,7 @@ declare var $: any;
   </a>
   </span>
   `,
-
+    standalone: false
 })
 
 export class CellActionCustomerFactor implements ICellRendererAngularComp {

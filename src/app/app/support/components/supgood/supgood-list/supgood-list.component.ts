@@ -10,8 +10,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-supgood-list',
-  templateUrl: './supgood-list.component.html',
+    selector: 'app-supgood-list',
+    templateUrl: './supgood-list.component.html',
+    standalone: false
 })
 export class SupgoodListComponent extends AgGridBaseComponent
   implements OnInit {

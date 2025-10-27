@@ -11,8 +11,9 @@ import Swal from 'sweetalert2';
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
-  selector: 'app-task-list',
-  templateUrl: './task-list.component.html',
+    selector: 'app-task-list',
+    templateUrl: './task-list.component.html',
+    standalone: false
 })
 export class TaskListComponent extends AgGridBaseComponent
   implements OnInit {

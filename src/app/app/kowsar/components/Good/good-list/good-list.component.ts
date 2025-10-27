@@ -9,8 +9,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-good-list',
-  templateUrl: './good-list.component.html',
+    selector: 'app-good-list',
+    templateUrl: './good-list.component.html',
+    standalone: false
 })
 export class GoodListComponent extends AgGridBaseComponent
   implements OnInit {

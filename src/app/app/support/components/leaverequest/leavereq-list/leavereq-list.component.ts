@@ -13,8 +13,9 @@ import { CellActionLeaveReqList } from './cell-action-leavereq-list';
 import { Base_Lookup } from '../../../lookup-type';
 
 @Component({
-  selector: 'app-leavereq-list',
-  templateUrl: './leavereq-list.component.html',
+    selector: 'app-leavereq-list',
+    templateUrl: './leavereq-list.component.html',
+    standalone: false
 })
 export class LeavereqListComponent extends AgGridBaseComponent
   implements OnInit {

@@ -12,8 +12,9 @@ import { LoadingService } from 'src/app/app-shell/framework-services/loading.ser
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 
 @Component({
-  selector: 'app-autletter-attach',
-  templateUrl: './autletter-attach.component.html',
+    selector: 'app-autletter-attach',
+    templateUrl: './autletter-attach.component.html',
+    standalone: false
 })
 export class AutletterAttachComponent extends AgGridBaseComponent
   implements OnInit {

@@ -6,8 +6,9 @@ import { Location } from '@angular/common';
 import { CompanyWebApiService } from '../../../services/CompanyWebApi.service';
 
 @Component({
-  selector: 'app-company-column-edit',
-  templateUrl: './company-column-edit.component.html',
+    selector: 'app-company-column-edit',
+    templateUrl: './company-column-edit.component.html',
+    standalone: false
 })
 export class CompanyColumnEditComponent implements OnInit {
 

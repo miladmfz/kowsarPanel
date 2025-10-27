@@ -17,8 +17,9 @@ import { LoadingService } from 'src/app/app-shell/framework-services/loading.ser
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 
 @Component({
-  selector: 'app-factor-edit',
-  templateUrl: './factor-edit.component.html',
+    selector: 'app-factor-edit',
+    templateUrl: './factor-edit.component.html',
+    standalone: false
 })
 export class FactorEditComponent extends AgGridBaseComponent
   implements OnInit {

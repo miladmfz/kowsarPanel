@@ -8,8 +8,9 @@ import { Subscription } from 'rxjs';
 declare var ApexCharts: any;
 
 @Component({
-  selector: 'app-ocr-detail',
-  templateUrl: './ocr-detail.component.html',
+    selector: 'app-ocr-detail',
+    templateUrl: './ocr-detail.component.html',
+    standalone: false
 })
 export class OcrDetailComponent extends AgGridBaseComponent
   implements OnInit {

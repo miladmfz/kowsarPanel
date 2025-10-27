@@ -5,8 +5,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 
 @Component({
-  selector: 'app-download-edit',
-  templateUrl: './download-edit.component.html',
+    selector: 'app-download-edit',
+    templateUrl: './download-edit.component.html',
+    standalone: false
 })
 export class DownloadEditComponent implements OnInit {
 

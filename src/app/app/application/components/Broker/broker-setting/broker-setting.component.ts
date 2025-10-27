@@ -11,8 +11,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-broker-setting',
-  templateUrl: './broker-setting.component.html',
+    selector: 'app-broker-setting',
+    templateUrl: './broker-setting.component.html',
+    standalone: false
 })
 export class BrokerSettingComponent extends AgGridBaseComponent
   implements OnInit {

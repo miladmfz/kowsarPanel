@@ -3,8 +3,8 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 declare var $: any;
 
 @Component({
-  selector: 'edit-delete-cell-renderer',
-  template: ` 
+    selector: 'edit-delete-cell-renderer',
+    template: ` 
       <span   (click)="navigateToDetail()" class="btn btn-sm btn-outline-primary" data-toggle="tooltip" title="گزارشات">
   <a >
     <i class=" far fa-list-alt"></i>
@@ -12,7 +12,7 @@ declare var $: any;
   </span>
 
   `,
-
+    standalone: false
 })
 
 export class CellActionBrokerList implements ICellRendererAngularComp {

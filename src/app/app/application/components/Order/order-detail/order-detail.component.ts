@@ -3,8 +3,9 @@ import { OrderWebApiService } from '../../../services/OrderWebApi.service';
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-order-detail',
-  templateUrl: './order-detail.component.html',
+    selector: 'app-order-detail',
+    templateUrl: './order-detail.component.html',
+    standalone: false
 })
 export class OrderDetailComponent implements OnInit {
 

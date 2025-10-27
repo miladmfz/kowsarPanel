@@ -27,7 +27,7 @@ declare var $: any;
   </a>
   </span>
   `,
-
+    standalone: false
 })
 
 export class CellActionCustomerList implements ICellRendererAngularComp {

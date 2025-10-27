@@ -14,6 +14,7 @@ declare var $: any;
 
 
     `,
+    standalone: false
 })
 export class CellWithoutRowsSupportPanel implements ICellRendererAngularComp {
     params: any;

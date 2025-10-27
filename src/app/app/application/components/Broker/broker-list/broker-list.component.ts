@@ -7,8 +7,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-broker-list',
-  templateUrl: './broker-list.component.html',
+    selector: 'app-broker-list',
+    templateUrl: './broker-list.component.html',
+    standalone: false
 })
 export class BrokerListComponent extends AgGridBaseComponent
   implements OnInit {

@@ -10,6 +10,7 @@ declare var $: any;
     {{ formatToJalali(AttendanceDate) }}
     </span>
 `,
+    standalone: false
 })
 export class CellDateAttendancePanel implements ICellRendererAngularComp {
     params: any;

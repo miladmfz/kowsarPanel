@@ -21,6 +21,7 @@ declare var $: any;
         <span class="text-primary" style="padding: 3px">کالایاب</span>
     </span>
     `,
+    standalone: false
 })
 export class ValidateionStateCellManageApplicationRenderer implements ICellRendererAngularComp {
     params: any;

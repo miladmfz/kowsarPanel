@@ -4,8 +4,9 @@ import * as d3 from 'd3';
 declare var $: any;
 
 @Component({
-  selector: 'app-d3-org-chart',
-  templateUrl: './d3-org-chart.component.html'
+    selector: 'app-d3-org-chart',
+    templateUrl: './d3-org-chart.component.html',
+    standalone: false
 })
 export class D3OrgChartComponent implements OnInit, OnChanges {
   @ViewChild('chartContainer') chartContainer: ElementRef;

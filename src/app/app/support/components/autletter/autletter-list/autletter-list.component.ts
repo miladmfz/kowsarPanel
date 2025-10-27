@@ -11,8 +11,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-autletter-list',
-  templateUrl: './autletter-list.component.html',
+    selector: 'app-autletter-list',
+    templateUrl: './autletter-list.component.html',
+    standalone: false
 })
 export class AutletterListComponent
   extends AgGridBaseComponent

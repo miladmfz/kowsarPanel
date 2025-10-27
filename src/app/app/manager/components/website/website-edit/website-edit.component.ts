@@ -7,8 +7,9 @@ import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 import { catchError, of } from 'rxjs';
 
 @Component({
-  selector: 'app-website-edit',
-  templateUrl: './website-edit.component.html',
+    selector: 'app-website-edit',
+    templateUrl: './website-edit.component.html',
+    standalone: false
 })
 export class WebsiteEditComponent implements OnInit {
 

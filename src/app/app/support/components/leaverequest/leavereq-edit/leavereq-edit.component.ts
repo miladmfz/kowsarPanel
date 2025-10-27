@@ -14,8 +14,9 @@ import { Subscription } from 'rxjs';
 
 
 @Component({
-  selector: 'app-leavereq-edit',
-  templateUrl: './leavereq-edit.component.html',
+    selector: 'app-leavereq-edit',
+    templateUrl: './leavereq-edit.component.html',
+    standalone: false
 })
 export class LeavereqEditComponent extends AgGridBaseComponent
   implements OnInit {

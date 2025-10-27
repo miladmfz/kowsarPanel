@@ -19,8 +19,9 @@ import { CellActionSupportAutletterFactorList } from './cell-action-support-autl
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
-  selector: 'app-support-factor-edit',
-  templateUrl: './support-factor-edit.component.html',
+    selector: 'app-support-factor-edit',
+    templateUrl: './support-factor-edit.component.html',
+    standalone: false
 })
 export class SupportFactorEditComponent extends AgGridBaseComponent
   implements OnInit {

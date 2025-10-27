@@ -35,7 +35,7 @@ declare var $: any;
 
 
   `,
-
+    standalone: false
 })
 
 export class CellActionAutletterRowList implements ICellRendererAngularComp {

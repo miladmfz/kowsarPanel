@@ -4,8 +4,9 @@ import { UntypedFormBuilder } from '@angular/forms';
 import { CompanyWebApiService } from '../../../services/CompanyWebApi.service';
 
 @Component({
-  selector: 'app-company-detail',
-  templateUrl: './company-detail.component.html',
+    selector: 'app-company-detail',
+    templateUrl: './company-detail.component.html',
+    standalone: false
 })
 export class CompanyDetailComponent implements OnInit {
 

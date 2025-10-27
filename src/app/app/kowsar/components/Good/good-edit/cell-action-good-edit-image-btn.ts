@@ -22,7 +22,7 @@ declare var $: any;
   </a>
   </span> -->
   `,
-
+    standalone: false
 })
 
 export class CellActionGoodImageBtn implements ICellRendererAngularComp {

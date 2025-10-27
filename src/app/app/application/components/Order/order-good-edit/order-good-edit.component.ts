@@ -7,8 +7,9 @@ import { Location } from '@angular/common';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 
 @Component({
-  selector: 'app-order-good-edit',
-  templateUrl: './order-good-edit.component.html',
+    selector: 'app-order-good-edit',
+    templateUrl: './order-good-edit.component.html',
+    standalone: false
 })
 export class OrderGoodEditComponent implements OnInit {
 

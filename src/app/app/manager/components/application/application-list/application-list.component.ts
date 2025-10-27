@@ -10,8 +10,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-application-list',
-  templateUrl: './application-list.component.html',
+    selector: 'app-application-list',
+    templateUrl: './application-list.component.html',
+    standalone: false
 })
 export class ApplicationListComponent
   extends AgGridBaseComponent

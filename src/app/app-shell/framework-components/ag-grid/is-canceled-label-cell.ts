@@ -8,6 +8,7 @@ declare var $: any;
     <span *ngIf="isCanceled == 'باطل شده'">
         <span class="bg-soft-danger text-danger" style="padding: 3px">باطل شده</span>
     </span>`,
+    standalone: false
 })
 export class IsCanceledCellRenderer implements ICellRendererAngularComp {
     params: any;

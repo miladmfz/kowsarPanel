@@ -14,6 +14,7 @@ declare var $: any;
     <span *ngIf="state == 'بدون وضعيت'">
         <span class="bg-soft-primary text-primary" style="padding: 3px">بدون وضعيت</span>
     </span>`,
+    standalone: false
 })
 export class ValidateionStateCellRenderer implements ICellRendererAngularComp {
     params: any;

@@ -32,7 +32,7 @@ declare var $: any;
         </ng-container>
 
     `,
-
+    standalone: false
 })
 
 export class CellActionAttendancePanel implements ICellRendererAngularComp {

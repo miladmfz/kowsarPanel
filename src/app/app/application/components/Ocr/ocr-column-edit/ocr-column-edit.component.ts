@@ -6,8 +6,9 @@ import { Location } from '@angular/common';
 import { OcrWebApiService } from '../../../services/OcrWebApi.service';
 
 @Component({
-  selector: 'app-ocr-column-edit',
-  templateUrl: './ocr-column-edit.component.html',
+    selector: 'app-ocr-column-edit',
+    templateUrl: './ocr-column-edit.component.html',
+    standalone: false
 })
 export class OcrColumnEditComponent implements OnInit {
 

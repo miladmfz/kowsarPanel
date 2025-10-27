@@ -9,6 +9,7 @@ declare var $: any;
     {{ PhFirstName +' '+ PhLastName|| '-' }}
     </span>
     `,
+    standalone: false
 })
 export class CellNameAttendancePanel implements ICellRendererAngularComp {
     params: any;

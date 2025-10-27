@@ -4,8 +4,9 @@ import { UntypedFormBuilder } from '@angular/forms';
 import { BrokerWebApiService } from '../../../services/BrokerWebApi.service';
 
 @Component({
-  selector: 'app-broker-detail',
-  templateUrl: './broker-detail.component.html',
+    selector: 'app-broker-detail',
+    templateUrl: './broker-detail.component.html',
+    standalone: false
 })
 export class BrokerDetailComponent implements OnInit {
 

@@ -3,8 +3,9 @@ import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Input, OnChang
 declare var ApexCharts: any;
 
 @Component({
-  selector: 'app-minton-radial-chart',
-  templateUrl: './minton-radial-chart.component.html',
+    selector: 'app-minton-radial-chart',
+    templateUrl: './minton-radial-chart.component.html',
+    standalone: false
 })
 export class MintonRadialChartComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('chart') chartElement: ElementRef;

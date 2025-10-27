@@ -11,8 +11,9 @@ import { SupportFactorWebApiService } from '../../../services/SupportFactorWebAp
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
-  selector: 'app-supgood-edit',
-  templateUrl: './supgood-edit.component.html',
+    selector: 'app-supgood-edit',
+    templateUrl: './supgood-edit.component.html',
+    standalone: false
 })
 export class SupgoodEditComponent extends AgGridBaseComponent implements OnInit {
 

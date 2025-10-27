@@ -18,7 +18,7 @@ declare var $: any;
   </span>
 
   `,
-
+    standalone: false
 })
 
 export class CellActionFactorList implements ICellRendererAngularComp {

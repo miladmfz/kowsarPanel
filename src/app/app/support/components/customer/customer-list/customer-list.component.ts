@@ -10,8 +10,9 @@ import { debounceTime } from 'rxjs/operators';
 import { CellActionCustomerFactor } from './cell-action-customer-factor';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 @Component({
-  selector: 'app-customer-list',
-  templateUrl: './customer-list.component.html',
+    selector: 'app-customer-list',
+    templateUrl: './customer-list.component.html',
+    standalone: false
 })
 export class CustomerListComponent extends AgGridBaseComponent
   implements OnInit {

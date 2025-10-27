@@ -10,8 +10,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 
 @Component({
-  selector: 'app-factor-list',
-  templateUrl: './factor-list.component.html',
+    selector: 'app-factor-list',
+    templateUrl: './factor-list.component.html',
+    standalone: false
 })
 export class FactorListComponent extends AgGridBaseComponent
   implements OnInit {

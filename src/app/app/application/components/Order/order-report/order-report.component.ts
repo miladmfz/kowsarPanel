@@ -9,8 +9,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-order-report',
-  templateUrl: './order-report.component.html',
+    selector: 'app-order-report',
+    templateUrl: './order-report.component.html',
+    standalone: false
 })
 export class OrderReportComponent extends AgGridBaseComponent
   implements OnInit {

@@ -3,8 +3,8 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 declare var $: any;
 
 @Component({
-  selector: 'edit-delete-cell-renderer',
-  template: ` 
+    selector: 'edit-delete-cell-renderer',
+    template: ` 
 
   <span (click)="NavigateToEdit()" class="btn btn-sm btn-outline-primary ">
   <a >
@@ -24,7 +24,7 @@ declare var $: any;
   </button>
 
   `,
-
+    standalone: false
 })
 
 export class CellActionLeaveReqList implements ICellRendererAngularComp {

@@ -11,8 +11,9 @@ import { KowsarWebApiService } from '../../../services/KowsarWebApi.service';
 
 
 @Component({
-  selector: 'app-good-edit',
-  templateUrl: './good-order-edit.component.html',
+    selector: 'app-good-edit',
+    templateUrl: './good-order-edit.component.html',
+    standalone: false
 })
 export class GoodOrderEditComponent implements OnInit {
 

@@ -13,6 +13,7 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
       <img src="./assets/images/plugins/loading.gif" alt="No Photo" >
     </ng-container>
   `,
+    standalone: false
 })
 export class CellActionGoodEditImage implements ICellRendererAngularComp {
     params: any;

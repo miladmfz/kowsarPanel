@@ -17,8 +17,9 @@ import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
-  selector: 'app-attendance-panel',
-  templateUrl: './attendance-panel.component.html',
+    selector: 'app-attendance-panel',
+    templateUrl: './attendance-panel.component.html',
+    standalone: false
 })
 export class AttendancePanelComponent
   extends AgGridBaseComponent

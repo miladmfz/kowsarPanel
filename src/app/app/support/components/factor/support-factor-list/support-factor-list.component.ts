@@ -11,8 +11,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 
 @Component({
-  selector: 'app-support-factor-list',
-  templateUrl: './support-factor-list.component.html',
+    selector: 'app-support-factor-list',
+    templateUrl: './support-factor-list.component.html',
+    standalone: false
 })
 export class SupportFactorListComponent extends AgGridBaseComponent
   implements OnInit {

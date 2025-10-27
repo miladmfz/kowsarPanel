@@ -3,8 +3,8 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 declare var $: any;
 
 @Component({
-  selector: 'edit-delete-cell-renderer',
-  template: ` 
+    selector: 'edit-delete-cell-renderer',
+    template: ` 
 
 
   <span  (click)="DownloadFile()" class="btn btn-sm btn-outline-primary mx-1" data-toggle="tooltip" title="دانلود" >
@@ -19,7 +19,7 @@ declare var $: any;
   </button>
 
   `,
-
+    standalone: false
 })
 
 export class CellActionAutLetterAttach implements ICellRendererAngularComp {

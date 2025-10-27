@@ -8,8 +8,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 
 @Component({
-  selector: 'app-application-report',
-  templateUrl: './application-report.component.html',
+    selector: 'app-application-report',
+    templateUrl: './application-report.component.html',
+    standalone: false
 })
 export class ApplicationReportComponent extends AgGridBaseComponent
   implements OnInit {

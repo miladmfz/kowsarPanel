@@ -17,7 +17,7 @@ declare var $: any;
   </a>
   </span>
   `,
-
+    standalone: false
 })
 
 export class CellActionDownload implements ICellRendererAngularComp {

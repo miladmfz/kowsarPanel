@@ -6,8 +6,9 @@ import { SharedService } from 'src/app/app-shell/framework-services/shared.servi
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 
 @Component({
-  selector: 'app-profile-view',
-  templateUrl: './profile-view.component.html',
+    selector: 'app-profile-view',
+    templateUrl: './profile-view.component.html',
+    standalone: false
 })
 export class ProfileViewComponent implements OnInit {
 

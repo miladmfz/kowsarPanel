@@ -5,8 +5,9 @@ import { OcrWebApiService } from '../../../services/OcrWebApi.service';
 
 
 @Component({
-  selector: 'app-ocr-column',
-  templateUrl: './ocr-column.component.html',
+    selector: 'app-ocr-column',
+    templateUrl: './ocr-column.component.html',
+    standalone: false
 })
 export class OcrColumnComponent implements OnInit {
 

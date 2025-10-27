@@ -14,8 +14,9 @@ import { CellDateMinDate } from './cell-date-label-attendance-panel';
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
-  selector: 'app-kowsar-report',
-  templateUrl: './kowsar-report.component.html',
+    selector: 'app-kowsar-report',
+    templateUrl: './kowsar-report.component.html',
+    standalone: false
 })
 export class KowsarReportComponent extends AgGridBaseComponent
   implements OnInit {

@@ -10,8 +10,9 @@ import { Location } from '@angular/common';
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
-  selector: 'app-task-edit',
-  templateUrl: './task-edit.component.html',
+    selector: 'app-task-edit',
+    templateUrl: './task-edit.component.html',
+    standalone: false
 })
 export class TaskEditComponent extends AgGridBaseComponent
   implements OnInit {

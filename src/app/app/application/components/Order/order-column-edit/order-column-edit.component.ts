@@ -8,8 +8,9 @@ import { catchError, of } from 'rxjs';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 
 @Component({
-  selector: 'app-order-column-edit',
-  templateUrl: './order-column-edit.component.html',
+    selector: 'app-order-column-edit',
+    templateUrl: './order-column-edit.component.html',
+    standalone: false
 })
 export class OrderColumnEditComponent implements OnInit {
 

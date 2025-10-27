@@ -17,6 +17,7 @@ declare var $: any;
     <span *ngIf="state == 3">
         <span class="bg-soft-danger text-danger" style="padding: 3px">دارای خطا</span>
     </span>`,
+    standalone: false
 })
 export class TaxStateCellRenderer implements ICellRendererAngularComp {
     params: any;

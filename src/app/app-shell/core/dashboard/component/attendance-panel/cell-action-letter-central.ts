@@ -14,7 +14,7 @@ declare var $: any;
 
 
     `,
-
+    standalone: false
 })
 
 export class CellActionLetterCentral implements ICellRendererAngularComp {

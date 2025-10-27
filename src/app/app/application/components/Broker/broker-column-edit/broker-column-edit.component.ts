@@ -7,8 +7,9 @@ import { BrokerWebApiService } from '../../../services/BrokerWebApi.service';
 
 
 @Component({
-  selector: 'app-broker-column-edit',
-  templateUrl: './broker-column-edit.component.html',
+    selector: 'app-broker-column-edit',
+    templateUrl: './broker-column-edit.component.html',
+    standalone: false
 })
 export class BrokerColumnEditComponent implements OnInit {
 

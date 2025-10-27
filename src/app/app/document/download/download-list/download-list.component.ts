@@ -8,8 +8,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-download-list',
-  templateUrl: './download-list.component.html',
+    selector: 'app-download-list',
+    templateUrl: './download-list.component.html',
+    standalone: false
 })
 export class DownloadListComponent extends AgGridBaseComponent
   implements OnInit {

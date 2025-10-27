@@ -5,8 +5,9 @@ import { CompanyWebApiService } from '../../../services/CompanyWebApi.service';
 
 
 @Component({
-  selector: 'app-company-column',
-  templateUrl: './company-column.component.html',
+    selector: 'app-company-column',
+    templateUrl: './company-column.component.html',
+    standalone: false
 })
 export class CompanyColumnComponent implements OnInit {
 

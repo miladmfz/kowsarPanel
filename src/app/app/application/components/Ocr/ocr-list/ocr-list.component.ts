@@ -9,8 +9,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-ocr-list',
-  templateUrl: './ocr-list.component.html',
+    selector: 'app-ocr-list',
+    templateUrl: './ocr-list.component.html',
+    standalone: false
 })
 export class OcrListComponent extends AgGridBaseComponent
   implements OnInit {

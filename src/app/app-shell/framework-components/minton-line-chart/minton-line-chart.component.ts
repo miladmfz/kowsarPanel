@@ -3,8 +3,9 @@ import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Input, OnChang
 declare var ApexCharts: any;
 
 @Component({
-  selector: 'app-minton-line-chart',
-  templateUrl: './minton-line-chart.component.html',
+    selector: 'app-minton-line-chart',
+    templateUrl: './minton-line-chart.component.html',
+    standalone: false
 })
 export class MintOnLineChartComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('chart') chartElement: ElementRef;

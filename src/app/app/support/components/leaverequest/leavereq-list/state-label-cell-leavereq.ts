@@ -21,6 +21,7 @@ declare var $: any;
 
     
     `,
+    standalone: false
 })
 export class StateLabelCellLeaveReq implements ICellRendererAngularComp {
     params: any;

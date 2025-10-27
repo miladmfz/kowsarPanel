@@ -3,8 +3,9 @@ import { SharedService } from '../../framework-services/shared.service';
 import { ThemeService } from '../../framework-services/theme.service';
 import { CentralWebApiService } from 'src/app/app/support/services/CentralWebApi.service';
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    standalone: false
 })
 export class HeaderComponent implements OnInit {
 

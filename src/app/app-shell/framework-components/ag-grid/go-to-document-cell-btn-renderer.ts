@@ -8,7 +8,8 @@ declare var $: any;
         <div class="btn-group">
             <button class="btn btn-sm btn-outline-success" type="button" (click)="showDocument()">
                 مشاهده سند <i class="fas fa-eye"></i></button>
-        </div>`
+        </div>`,
+    standalone: false
 })
 export class GoToDocumentCellBtnRenderer implements ICellRendererAngularComp {
     params: any;

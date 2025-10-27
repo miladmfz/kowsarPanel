@@ -3,8 +3,8 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 declare var $: any;
 
 @Component({
-  selector: 'edit-delete-cell-renderer',
-  template: ` 
+    selector: 'edit-delete-cell-renderer',
+    template: ` 
   <span [routerLink]="[params.editUrl, id]" class="btn btn-sm btn-outline-primary ">
   <a >
     <i class="fas fa-edit"></i>
@@ -14,7 +14,7 @@ declare var $: any;
 
 
   `,
-
+    standalone: false
 })
 
 export class CellActionAutletterPreFactorList implements ICellRendererAngularComp {

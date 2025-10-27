@@ -4,9 +4,9 @@ import { UntypedFormBuilder } from '@angular/forms';
 import { BrokerWebApiService } from '../../../services/BrokerWebApi.service';
 
 @Component({
-  selector: 'app-broker-column',
-  templateUrl: './broker-column.component.html',
-
+    selector: 'app-broker-column',
+    templateUrl: './broker-column.component.html',
+    standalone: false
 })
 export class BrokerColumnComponent implements OnInit {
 

@@ -4,8 +4,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 
 @Component({
-  selector: 'app-company-setting',
-  templateUrl: './company-setting.component.html',
+    selector: 'app-company-setting',
+    templateUrl: './company-setting.component.html',
+    standalone: false
 })
 export class CompanySettingComponent implements OnInit {
 

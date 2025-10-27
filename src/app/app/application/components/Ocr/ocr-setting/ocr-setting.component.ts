@@ -11,8 +11,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-ocr-setting',
-  templateUrl: './ocr-setting.component.html',
+    selector: 'app-ocr-setting',
+    templateUrl: './ocr-setting.component.html',
+    standalone: false
 })
 export class OcrSettingComponent extends AgGridBaseComponent
   implements OnInit {

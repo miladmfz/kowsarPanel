@@ -11,6 +11,7 @@ declare var $: any;
     <span *ngIf="state == 'ثبت نشده'">
         <span class="bg-soft-warning text-warning" style="padding: 3px">ثبت نشده</span>
     </span>`,
+    standalone: false
 })
 export class ConfirmationStateCellRenderer implements ICellRendererAngularComp {
     params: any;

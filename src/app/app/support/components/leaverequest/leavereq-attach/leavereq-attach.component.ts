@@ -13,8 +13,9 @@ import { LoadingService } from 'src/app/app-shell/framework-services/loading.ser
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 
 @Component({
-  selector: 'app-leavereq-attach',
-  templateUrl: './leavereq-attach.component.html',
+    selector: 'app-leavereq-attach',
+    templateUrl: './leavereq-attach.component.html',
+    standalone: false
 })
 export class LeavereqAttachComponent extends AgGridBaseComponent
   implements OnInit {

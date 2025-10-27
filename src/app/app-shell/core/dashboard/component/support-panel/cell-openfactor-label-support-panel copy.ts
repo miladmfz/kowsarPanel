@@ -11,6 +11,7 @@ declare var $: any;
         {{ OpenFactor }}
 </span>
     `,
+    standalone: false
 })
 export class CellOpenFactorSupportPanel implements ICellRendererAngularComp {
     params: any;

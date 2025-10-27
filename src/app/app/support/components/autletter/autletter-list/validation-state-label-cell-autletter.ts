@@ -14,6 +14,7 @@ declare var $: any;
     <span *ngIf="state == ''">
         <span class="btn-soft-danger text-danger" style="padding: 3px">جدید</span>
     </span>`,
+    standalone: false
 })
 export class ValidateionStateCellAutletterRenderer implements ICellRendererAngularComp {
     params: any;

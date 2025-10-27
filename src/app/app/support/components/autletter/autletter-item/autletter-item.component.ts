@@ -12,8 +12,9 @@ import { Subscription } from 'rxjs';
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
-  selector: 'app-autletter-item',
-  templateUrl: './autletter-item.component.html',
+    selector: 'app-autletter-item',
+    templateUrl: './autletter-item.component.html',
+    standalone: false
 })
 export class AutletterItemComponent
   extends AgGridBaseComponent

@@ -11,8 +11,9 @@ import { CellActionReportCustomer } from './cell-action-report-customer-list';
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
-  selector: 'app-report-customer',
-  templateUrl: './report-customer.component.html',
+    selector: 'app-report-customer',
+    templateUrl: './report-customer.component.html',
+    standalone: false
 })
 export class ReportCustomerComponent extends AgGridBaseComponent
   implements OnInit {

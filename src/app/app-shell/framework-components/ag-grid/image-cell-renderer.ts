@@ -12,6 +12,7 @@ declare var $: any;
         <ng-template #defaultPhoto>
             <img src="./assets/media/logos/blanklogo.png" width="40" />
         </ng-template>`,
+    standalone: false
 })
 export class ImageCellRenderer implements ICellRendererAngularComp {
     params: any;

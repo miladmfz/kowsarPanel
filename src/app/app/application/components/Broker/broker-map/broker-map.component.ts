@@ -10,9 +10,10 @@ import { toGregorian } from 'jalaali-js';
 import * as moment from 'jalali-moment';
 
 @Component({
-  selector: 'app-broker-map',
-  templateUrl: './broker-map.component.html',
-  styleUrls: ['./broker-map.component.css']
+    selector: 'app-broker-map',
+    templateUrl: './broker-map.component.html',
+    styleUrls: ['./broker-map.component.css'],
+    standalone: false
 })
 export class BrokerMapComponent implements AfterViewInit {
   map: L.Map | undefined;

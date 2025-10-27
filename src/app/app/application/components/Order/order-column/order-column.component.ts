@@ -4,8 +4,9 @@ import { UntypedFormBuilder } from '@angular/forms';
 import { OrderWebApiService } from '../../../services/OrderWebApi.service';
 
 @Component({
-  selector: 'app-order-column',
-  templateUrl: './order-column.component.html',
+    selector: 'app-order-column',
+    templateUrl: './order-column.component.html',
+    standalone: false
 })
 export class OrderColumnComponent implements OnInit {
 

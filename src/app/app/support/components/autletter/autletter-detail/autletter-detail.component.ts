@@ -13,8 +13,9 @@ import { CellActionletterFactorList } from './cell-action-letterfactor-list';
 import { CellActionletterPreFactorList } from './cell-action-letterprefactor-list';
 
 @Component({
-  selector: 'app-autletter-detail',
-  templateUrl: './autletter-detail.component.html',
+    selector: 'app-autletter-detail',
+    templateUrl: './autletter-detail.component.html',
+    standalone: false
 })
 export class AutletterDetailComponent extends AgGridBaseComponent
   implements OnInit {

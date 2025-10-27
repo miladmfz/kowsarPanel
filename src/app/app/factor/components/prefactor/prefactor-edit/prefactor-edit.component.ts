@@ -19,8 +19,9 @@ import { LoadingService } from 'src/app/app-shell/framework-services/loading.ser
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 
 @Component({
-  selector: 'app-prefactor-edit',
-  templateUrl: './prefactor-edit.component.html',
+    selector: 'app-prefactor-edit',
+    templateUrl: './prefactor-edit.component.html',
+    standalone: false
 })
 export class PrefactorEditComponent extends AgGridBaseComponent
   implements OnInit {

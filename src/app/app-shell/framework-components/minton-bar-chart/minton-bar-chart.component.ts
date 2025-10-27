@@ -3,8 +3,9 @@ import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angula
 declare var ApexCharts: any;
 
 @Component({
-  selector: 'app-minton-bar-chart',
-  templateUrl: './minton-bar-chart.component.html',
+    selector: 'app-minton-bar-chart',
+    templateUrl: './minton-bar-chart.component.html',
+    standalone: false
 })
 export class MintOnBarChartComponent implements OnInit, AfterViewInit {
   @ViewChild('chart') chartElement: ElementRef;

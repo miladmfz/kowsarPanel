@@ -22,7 +22,7 @@ declare var $: any;
   </a>
   </span> -->
   `,
-
+    standalone: false
 })
 
 export class CellActionPreFactorList implements ICellRendererAngularComp {

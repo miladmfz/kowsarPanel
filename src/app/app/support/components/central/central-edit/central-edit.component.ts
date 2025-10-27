@@ -6,8 +6,9 @@ import { NotificationService } from 'src/app/app-shell/framework-services/notifi
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
-  selector: 'app-central-edit',
-  templateUrl: './central-edit.component.html',
+    selector: 'app-central-edit',
+    templateUrl: './central-edit.component.html',
+    standalone: false
 })
 export class CentralEditComponent implements OnInit {
 

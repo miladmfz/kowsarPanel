@@ -11,8 +11,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-autletter-work',
-  templateUrl: './autletter-work.component.html',
+    selector: 'app-autletter-work',
+    templateUrl: './autletter-work.component.html',
+    standalone: false
 })
 export class AutletterWorkComponent
   extends AgGridBaseComponent

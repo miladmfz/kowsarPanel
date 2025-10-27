@@ -10,8 +10,9 @@ import { ThemeService } from 'src/app/app-shell/framework-services/theme.service
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-order-customer',
-  templateUrl: './order-customer.component.html',
+    selector: 'app-order-customer',
+    templateUrl: './order-customer.component.html',
+    standalone: false
 })
 export class OrderCustomerComponent extends AgGridBaseComponent
   implements OnInit {

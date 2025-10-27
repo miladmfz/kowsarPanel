@@ -3,8 +3,8 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 declare var $: any;
 
 @Component({
-  selector: 'edit-delete-cell-renderer',
-  template: ` 
+    selector: 'edit-delete-cell-renderer',
+    template: ` 
 
   <span   (click)="getlist_report_customer_bydate()" class="btn btn-sm btn-outline-primary mx-1" data-toggle="tooltip" title="به تفکیک تاریخ ">
   <a >
@@ -23,7 +23,7 @@ declare var $: any;
   </a>
   </span> -->
   `,
-
+    standalone: false
 })
 
 export class CellActionReportCustomer implements ICellRendererAngularComp {

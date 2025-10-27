@@ -10,6 +10,7 @@ declare var $: any;
     {{ formatToJalali(MinCreationDate) }}
     </span>
 `,
+    standalone: false
 })
 export class CellDateMinDate implements ICellRendererAngularComp {
     params: any;

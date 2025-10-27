@@ -3,15 +3,15 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 declare var $: any;
 
 @Component({
-  selector: 'edit-delete-cell-renderer',
-  template: ` <span [routerLink]="[params.editUrl, id]" class="btn btn-sm btn-outline-primary ">
+    selector: 'edit-delete-cell-renderer',
+    template: ` <span [routerLink]="[params.editUrl, id]" class="btn btn-sm btn-outline-primary ">
   <a >
     <i class="fas fa-edit"></i>
   </a>
 </span>
 
 `,
-
+    standalone: false
 })
 export class CellActionWebSiteList implements ICellRendererAngularComp {
   params: any;

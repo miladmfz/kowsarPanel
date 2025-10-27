@@ -10,8 +10,9 @@ import { NotificationService } from 'src/app/app-shell/framework-services/notifi
 import { CellActionPreFactorList } from './cell-action-prefactor-list';
 
 @Component({
-  selector: 'app-prefactor-list',
-  templateUrl: './prefactor-list.component.html',
+    selector: 'app-prefactor-list',
+    templateUrl: './prefactor-list.component.html',
+    standalone: false
 })
 export class PrefactorListComponent extends AgGridBaseComponent
   implements OnInit {
