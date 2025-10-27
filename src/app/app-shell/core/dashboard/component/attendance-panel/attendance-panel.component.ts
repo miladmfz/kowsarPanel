@@ -1,6 +1,6 @@
 import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import * as moment from 'jalali-moment';
+import moment from 'jalali-moment';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { NotificationService } from 'src/app/app-shell/framework-services/notification.service';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
@@ -17,9 +17,9 @@ import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
-    selector: 'app-attendance-panel',
-    templateUrl: './attendance-panel.component.html',
-    standalone: false
+  selector: 'app-attendance-panel',
+  templateUrl: './attendance-panel.component.html',
+  standalone: false
 })
 export class AttendancePanelComponent
   extends AgGridBaseComponent

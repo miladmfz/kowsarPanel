@@ -1,4 +1,4 @@
-import * as moment from "jalali-moment";
+import moment from "jalali-moment";
 declare var $: any;
 
 export const noImagePath = "../../../../../assets/images/noimage.png";

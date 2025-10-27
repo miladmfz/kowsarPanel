@@ -6,14 +6,14 @@ import { CellActionAutletterWork } from './cell-action-autletter-work';
 import { ValidateionStateCellAutletterWorkRenderer } from './validation-state-label-cell-autletter-work';
 import { AutletterWebApiService } from 'src/app/app/support/services/AutletterWebApi.service';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
-import * as moment from 'jalali-moment';
+import moment from 'jalali-moment';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'app-autletter-work',
-    templateUrl: './autletter-work.component.html',
-    standalone: false
+  selector: 'app-autletter-work',
+  templateUrl: './autletter-work.component.html',
+  standalone: false
 })
 export class AutletterWorkComponent
   extends AgGridBaseComponent

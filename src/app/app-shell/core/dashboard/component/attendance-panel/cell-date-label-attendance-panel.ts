@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { ICellRendererAngularComp } from "ag-grid-angular";
-import * as moment from "jalali-moment";
+import moment from "jalali-moment";
 declare var $: any;
 
 @Component({

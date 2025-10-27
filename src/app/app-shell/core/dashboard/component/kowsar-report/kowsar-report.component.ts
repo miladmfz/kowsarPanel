@@ -8,15 +8,15 @@ import { SharedService } from 'src/app/app-shell/framework-services/shared.servi
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 import { SupportFactorWebApiService } from 'src/app/app/support/services/SupportFactorWebApi.service';
 import { CellActionKowsarReport } from './cell-action-attendance-panel';
-import * as moment from 'jalali-moment';
+import moment from 'jalali-moment';
 import { Base_Lookup } from 'src/app/app/kowsar/lookup-type';
 import { CellDateMinDate } from './cell-date-label-attendance-panel';
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 
 @Component({
-    selector: 'app-kowsar-report',
-    templateUrl: './kowsar-report.component.html',
-    standalone: false
+  selector: 'app-kowsar-report',
+  templateUrl: './kowsar-report.component.html',
+  standalone: false
 })
 export class KowsarReportComponent extends AgGridBaseComponent
   implements OnInit {

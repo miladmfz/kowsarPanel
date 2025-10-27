@@ -6,7 +6,7 @@ import { LoadingService } from 'src/app/app-shell/framework-services/loading.ser
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { Base_Lookup, DbSetup_lookup } from '../../../lookup-type';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import * as moment from "jalali-moment";
+import moment from "jalali-moment";
 import { HttpClient } from '@angular/common/http';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid-base/ag-grid-base.component';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
@@ -14,9 +14,9 @@ import { Subscription } from 'rxjs';
 
 
 @Component({
-    selector: 'app-leavereq-edit',
-    templateUrl: './leavereq-edit.component.html',
-    standalone: false
+  selector: 'app-leavereq-edit',
+  templateUrl: './leavereq-edit.component.html',
+  standalone: false
 })
 export class LeavereqEditComponent extends AgGridBaseComponent
   implements OnInit {

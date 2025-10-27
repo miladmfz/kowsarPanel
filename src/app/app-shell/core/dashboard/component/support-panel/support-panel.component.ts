@@ -7,14 +7,14 @@ import { SupportFactorWebApiService } from 'src/app/app/support/services/Support
 import { FormControl, FormGroup } from '@angular/forms';
 import { CellActionAttendanceStatePanel } from './cell-action-attendance-panel';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
-import * as moment from 'jalali-moment';
+import moment from 'jalali-moment';
 import { ThemeService } from 'src/app/app-shell/framework-services/theme.service';
 import { Subscription } from 'rxjs';
 import { LoadingService } from 'src/app/app-shell/framework-services/loading.service';
 @Component({
-    selector: 'app-support-panel',
-    templateUrl: './support-panel.component.html',
-    standalone: false
+  selector: 'app-support-panel',
+  templateUrl: './support-panel.component.html',
+  standalone: false
 })
 export class SupportPanelComponent
   extends AgGridBaseComponent
