@@ -4,37 +4,33 @@ declare var $: any;
 
 @Component({
     selector: 'edit-delete-cell-renderer',
-    template: ` 
+    template: `
 
-    <ng-container *ngIf="CentralRef==RowExecutorCentralRef">
-
-    
-    <span  >
-  <a  (click)="Get_Autletterrow_Property()" class="btn btn-sm btn-outline-primary mx-1 " data-toggle="tooltip" title="پشتیبانی">
-    <i class="fas fa-edit"></i>
-  </a>
+@if (CentralRef==RowExecutorCentralRef) {
+  <span  >
+    <a  (click)="Get_Autletterrow_Property()" class="btn btn-sm btn-outline-primary mx-1 " data-toggle="tooltip" title="پشتیبانی">
+      <i class="fas fa-edit"></i>
+    </a>
   </span>
-
-  
-    </ng-container>
+}
 
 <!-- <ng-container *ngIf="CentralRef==CreatorCentralRef || PhAddress3== '100'">
-  <span (click)="btnDeleteClicked(2)" class="btn btn-sm btn-outline-danger ">
+<span (click)="btnDeleteClicked(2)" class="btn btn-sm btn-outline-danger ">
   <a >
     <i class="fas fa-trash"></i>
   </a>
-  </span>
- </ng-container> -->
+</span>
+</ng-container> -->
 
- <ng-container *ngIf="PhAddress3 === '100'">
+@if (PhAddress3 === '100') {
   <button (click)="btnDeleteClicked(2)" class="btn btn-sm btn-outline-danger">
     <i class="fas fa-trash"></i>
   </button>
-</ng-container>
+}
 
 
 
-  `,
+`,
     standalone: false
 })
 

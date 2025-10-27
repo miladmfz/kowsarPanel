@@ -20,58 +20,58 @@
                     'is-invalid': LoginForm.controls['UName'].invalid && LoginForm.controls['UName'].touched,
                     'is-valid': LoginForm.controls['UName'].valid && LoginForm.controls['UName'].touched
                   }" />
-                <label for="UName">نام کاربری</label>
+                  <label for="UName">نام کاربری</label>
                 <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
                   validation: 'required',
                   message: 'اجباری است',
                   control: LoginForm.controls['UName']
                 }"></ng-container>
-              </div>
+                </div>
 
-              <!-- رمز عبور -->
-              <div class="form-floating mb-3 position-relative">
-                <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="UPass"
-                  placeholder="رمز عبور" formControlName="UPass" maxlength="100" autocomplete="current-password"
+                <!-- رمز عبور -->
+                <div class="form-floating mb-3 position-relative">
+                  <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="UPass"
+                    placeholder="رمز عبور" formControlName="UPass" maxlength="100" autocomplete="current-password"
                   [ngClass]="{
                     'is-invalid': LoginForm.controls['UPass'].invalid && LoginForm.controls['UPass'].touched,
                     'is-valid': LoginForm.controls['UPass'].valid && LoginForm.controls['UPass'].touched
                   }" />
-                <label for="UPass">رمز عبور</label>
+                    <label for="UPass">رمز عبور</label>
 
-                <!-- آیکون چشم -->
-                <span class="position-absolute top-50 end-0 translate-middle-y me-3 text-muted" style="cursor: pointer;"
-                  (click)="toggleShowPassword()">
-                  <i [class]="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
-                </span>
+                    <!-- آیکون چشم -->
+                    <span class="position-absolute top-50 end-0 translate-middle-y me-3 text-muted" style="cursor: pointer;"
+                      (click)="toggleShowPassword()">
+                      <i [class]="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+                    </span>
 
                 <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
                   validation: 'required',
                   message: 'اجباری است',
                   control: LoginForm.controls['UPass']
                 }"></ng-container>
+                  </div>
+
+                  <!-- دکمه ورود -->
+                  <div class="d-grid">
+                    <button type="submit" class="btn btn-lg text-white" style="background-color: #3B82F6;">
+                      ورود
+                    </button>
+                  </div>
+
+                </form>
+
               </div>
-
-              <!-- دکمه ورود -->
-              <div class="d-grid">
-                <button type="submit" class="btn btn-lg text-white" style="background-color: #3B82F6;">
-                  ورود
-                </button>
-              </div>
-
-            </form>
-
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- قالب خطا -->
-<ng-template #formError let-control="control" let-message="message" let-validation="validation">
-  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
-    <div class="invalid-feedback d-block mt-1">
-      <span role="alert">{{ message }}</span>
-    </div>
-  </ng-container>
-</ng-template>
+    <!-- قالب خطا -->
+    <ng-template #formError let-control="control" let-message="message" let-validation="validation">
+      @if (control.hasError(validation) && (control.dirty || control.touched)) {
+        <div class="invalid-feedback d-block mt-1">
+          <span role="alert">{{ message }}</span>
+        </div>
+      }
+    </ng-template>

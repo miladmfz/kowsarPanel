@@ -8,130 +8,132 @@
           <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
             [(ngModel)]="Searchtarget" (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" />
 
-        </div>
-        <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
-          <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
-        </a>
-        <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="removeAllFilters()">
-          <span class="btn-label"><i class="fas fa-eye-slash"></i></span>حذف
-          جستجو
-        </a>
-        <div class="btn-group">
-          <!-- *hasPermission="['Public']" -->
-          <button type="button" class="btn btn-light waves-effect waves-light m-1 dropdown-toggle" id="exportdropdown"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            دریافت خروجی <i class="mdi mdi-chevron-down"></i>
-          </button>
-          <div class="dropdown-menu" aria-labelledby="exportdropdown">
-            <button class="dropdown-item" type="button" (click)="onExportExcel()">
-              Excel <i class="fas fa-file-excel"></i>
+          </div>
+          <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
+            <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
+          </a>
+          <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="removeAllFilters()">
+            <span class="btn-label"><i class="fas fa-eye-slash"></i></span>حذف
+            جستجو
+          </a>
+          <div class="btn-group">
+            <!-- *hasPermission="['Public']" -->
+            <button type="button" class="btn btn-light waves-effect waves-light m-1 dropdown-toggle" id="exportdropdown"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              دریافت خروجی <i class="mdi mdi-chevron-down"></i>
             </button>
-            <button class="dropdown-item" type="button" (click)="onExportCSV()">
-              CSV <i class="fas fa-file-csv"></i>
-            </button>
+            <div class="dropdown-menu" aria-labelledby="exportdropdown">
+              <button class="dropdown-item" type="button" (click)="onExportExcel()">
+                Excel <i class="fas fa-file-excel"></i>
+              </button>
+              <button class="dropdown-item" type="button" (click)="onExportCSV()">
+                CSV <i class="fas fa-file-csv"></i>
+              </button>
 
+            </div>
           </div>
         </div>
-      </div>
 
 
-    </div>
-    <div *ngIf="loading" class="text-center">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
       </div>
+      @if (loading) {
+        <div class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      }
+      <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto"
+        [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="records" [columnDefs]="columnDefs"
+        [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef" [enableRtl]="true"
+        (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+        [frameworkComponents]="frameworkComponents" [context]="context">
+      </ag-grid-angular>
     </div>
-    <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto"
-      [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="records" [columnDefs]="columnDefs"
-      [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef" [enableRtl]="true"
-      (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-      [frameworkComponents]="frameworkComponents" [context]="context">
-    </ag-grid-angular>
   </div>
-</div>
 
 
 
 
-<div class="modal fade" id="centraladdress" tabindex="-1" aria-labelledby="centraladdressLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl">
-    <div class="modal-content" style="background-color: #d1dce7;">
-      <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="centraladdressLabel">جزئیات {{CentralName}}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+  <div class="modal fade" id="centraladdress" tabindex="-1" aria-labelledby="centraladdressLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content" style="background-color: #d1dce7;">
+        <div class="modal-header" style="background-color: #949494;">
+          <h5 class="modal-title" id="centraladdressLabel">جزئیات {{CentralName}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
           (click)="centraladdress_dialog_close()"></button>
-      </div>
-      <div class="modal-body">
+        </div>
+        <div class="modal-body">
 
-        <form [formGroup]="EditForm_address" id="submitForm">
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-body row">
+          <form [formGroup]="EditForm_address" id="submitForm">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body row">
 
-                  <div class="form-group col-md-12">
-                    <label for="Address" class="col-form-label">Address</label>
-                    <input type="text" class="form-control" id="Address" formControlName="Address" autocomplete="off" />
+                    <div class="form-group col-md-12">
+                      <label for="Address" class="col-form-label">Address</label>
+                      <input type="text" class="form-control" id="Address" formControlName="Address" autocomplete="off" />
+                    </div>
+
+                    <div class="form-group col-md-6">
+                      <label for="AddressTitle" class="col-form-label">AddressTitle</label>
+                      <input type="text" class="form-control" id="AddressTitle" formControlName="AddressTitle"
+                        autocomplete="off" />
+                      </div>
+
+                      <div class="form-group col-md-6">
+                        <label for="Email" class="col-form-label">Email</label>
+                        <input type="text" class="form-control" id="Email" formControlName="Email" autocomplete="off" />
+                      </div>
+
+                      <div class="form-group col-md-6">
+                        <label for="Fax" class="col-form-label">Fax</label>
+                        <input type="text" class="form-control" id="Fax" formControlName="Fax" autocomplete="off" />
+                      </div>
+
+                      <div class="form-group col-md-6">
+                        <label for="Mobile" class="col-form-label">Mobile</label>
+                        <input type="text" class="form-control" id="Mobile" formControlName="Mobile" autocomplete="off" />
+                      </div>
+
+                      <div class="form-group col-md-6">
+                        <label for="MobileName" class="col-form-label">MobileName</label>
+                        <input type="text" class="form-control" id="MobileName" formControlName="MobileName"
+                          autocomplete="off" />
+                        </div>
+
+                        <div class="form-group col-md-6">
+                          <label for="Phone" class="col-form-label">Phone</label>
+                          <input type="text" class="form-control" id="Phone" formControlName="Phone" autocomplete="off" />
+                        </div>
+
+                        <div class="form-group col-md-6">
+                          <label for="PostCode" class="col-form-label">PostCode</label>
+                          <input type="text" class="form-control" id="PostCode" formControlName="PostCode"
+                            autocomplete="off" />
+                          </div>
+
+                          <div class="form-group col-md-6">
+                            <label for="ZipCode" class="col-form-label">ZipCode</label>
+                            <input type="text" class="form-control" id="ZipCode" formControlName="ZipCode" autocomplete="off" />
+                          </div>
+
+
+
+                        </div>
+                      </div>
+                    </div>
                   </div>
+                </form>
 
-                  <div class="form-group col-md-6">
-                    <label for="AddressTitle" class="col-form-label">AddressTitle</label>
-                    <input type="text" class="form-control" id="AddressTitle" formControlName="AddressTitle"
-                      autocomplete="off" />
-                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                (click)="centraladdress_dialog_close()">بستن</button>
+                <button type="button" class="btn btn-primary" (click)="Set_centraladdress()">بروزرسانی</button>
 
-                  <div class="form-group col-md-6">
-                    <label for="Email" class="col-form-label">Email</label>
-                    <input type="text" class="form-control" id="Email" formControlName="Email" autocomplete="off" />
-                  </div>
-
-                  <div class="form-group col-md-6">
-                    <label for="Fax" class="col-form-label">Fax</label>
-                    <input type="text" class="form-control" id="Fax" formControlName="Fax" autocomplete="off" />
-                  </div>
-
-                  <div class="form-group col-md-6">
-                    <label for="Mobile" class="col-form-label">Mobile</label>
-                    <input type="text" class="form-control" id="Mobile" formControlName="Mobile" autocomplete="off" />
-                  </div>
-
-                  <div class="form-group col-md-6">
-                    <label for="MobileName" class="col-form-label">MobileName</label>
-                    <input type="text" class="form-control" id="MobileName" formControlName="MobileName"
-                      autocomplete="off" />
-                  </div>
-
-                  <div class="form-group col-md-6">
-                    <label for="Phone" class="col-form-label">Phone</label>
-                    <input type="text" class="form-control" id="Phone" formControlName="Phone" autocomplete="off" />
-                  </div>
-
-                  <div class="form-group col-md-6">
-                    <label for="PostCode" class="col-form-label">PostCode</label>
-                    <input type="text" class="form-control" id="PostCode" formControlName="PostCode"
-                      autocomplete="off" />
-                  </div>
-
-                  <div class="form-group col-md-6">
-                    <label for="ZipCode" class="col-form-label">ZipCode</label>
-                    <input type="text" class="form-control" id="ZipCode" formControlName="ZipCode" autocomplete="off" />
-                  </div>
-
-
-
-                </div>
               </div>
             </div>
           </div>
-        </form>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-          (click)="centraladdress_dialog_close()">بستن</button>
-        <button type="button" class="btn btn-primary" (click)="Set_centraladdress()">بروزرسانی</button>
-
-      </div>
-    </div>
-  </div>
-</div>
+        </div>

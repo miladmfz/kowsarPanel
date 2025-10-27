@@ -40,7 +40,9 @@
             <label for="AppType" class="col-form-label">نوع نرم افرار</label>
 
             <select formControlName="AppType" id="AppType" class="form-control custom-select" data-toggle="select2">
-              <option [value]="item.id" *ngFor="let item of Type_Lookup">{{item.name}}</option>
+              @for (item of Type_Lookup; track item) {
+                <option [value]="item.id">{{item.name}}</option>
+              }
             </select>
           </div>
 
@@ -121,11 +123,11 @@
 
 
 <ng-template #formError let-control="control" let-message="message" let-validation="validation">
-  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
+  @if (control.hasError(validation) && (control.dirty || control.touched)) {
     <div class="fv-plugins-message-container invalid-feedback">
       <span role="alert">
         {{ message }}
       </span>
     </div>
-  </ng-container>
+  }
 </ng-template>

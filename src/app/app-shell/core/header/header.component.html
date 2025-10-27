@@ -8,10 +8,12 @@
         <a class="nav-link dropdown-toggle waves-effect waves-light position-relative" data-bs-toggle="dropdown"
           href="#" role="button" aria-haspopup="false" aria-expanded="false">
           <i class="fe-bell noti-icon"></i>
-          <span *ngIf="AlarmActive_Row + AlarmActtive_Conversation + AlarmActtive_LeaveRequest > 0"
-            class="badge bg-danger rounded-circle noti-icon-badge animate-pulse">
-            {{ AlarmActive_Row + AlarmActtive_Conversation + AlarmActtive_LeaveRequest }}
-          </span>
+          @if (AlarmActive_Row + AlarmActtive_Conversation + AlarmActtive_LeaveRequest > 0) {
+            <span
+              class="badge bg-danger rounded-circle noti-icon-badge animate-pulse">
+              {{ AlarmActive_Row + AlarmActtive_Conversation + AlarmActtive_LeaveRequest }}
+            </span>
+          }
         </a>
 
         <div class="dropdown-menu dropdown-menu-end dropdown-lg shadow-lg border-0 rounded-3">
@@ -19,37 +21,39 @@
             اعلان‌ها
           </div>
 
-          <ng-container *ngIf="AlarmActive_Row > 0">
+          @if (AlarmActive_Row > 0) {
             <a class="dropdown-item notify-item" [routerLink]="['/support/letter-mywork']">
               <div class="notify-icon bg-info"><i class="fe-briefcase"></i></div>
               <p class="notify-details">
                 <span class="text-danger fw-semibold">{{ AlarmActive_Row }}</span> ارجاع جدید دارید
               </p>
             </a>
-          </ng-container>
+          }
 
-          <ng-container *ngIf="AlarmActtive_Conversation > 0">
+          @if (AlarmActtive_Conversation > 0) {
             <a class="dropdown-item notify-item" [routerLink]="['/support/letter-mywork']">
               <div class="notify-icon bg-warning"><i class="fe-message-circle"></i></div>
               <p class="notify-details">
                 <span class="text-danger fw-semibold">{{ AlarmActtive_Conversation }}</span> پیام جدید دارید
               </p>
             </a>
-          </ng-container>
+          }
 
-          <ng-container *ngIf="AlarmActtive_LeaveRequest > 0">
+          @if (AlarmActtive_LeaveRequest > 0) {
             <a class="dropdown-item notify-item" [routerLink]="['/support/leavereq-list']">
               <div class="notify-icon bg-success"><i class="fe-user-check"></i></div>
               <p class="notify-details">
                 <span class="text-danger fw-semibold">{{ AlarmActtive_LeaveRequest }}</span> درخواست مرخصی جدید دارید
               </p>
             </a>
-          </ng-container>
+          }
 
-          <div *ngIf="AlarmActive_Row + AlarmActtive_Conversation + AlarmActtive_LeaveRequest === 0"
-            class="text-center text-muted py-3 small">
-            هیچ اعلان جدیدی ندارید
-          </div>
+          @if (AlarmActive_Row + AlarmActtive_Conversation + AlarmActtive_LeaveRequest === 0) {
+            <div
+              class="text-center text-muted py-3 small">
+              هیچ اعلان جدیدی ندارید
+            </div>
+          }
         </div>
       </li>
 
@@ -59,11 +63,12 @@
         <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light d-flex align-items-center"
           data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
 
-          <img *ngIf="Imageitem && Imageitem.length > 100; else defaultAvatar" [src]="Imageitem" alt="user-image"
-            class="rounded-circle user-avatar" />
-          <ng-template #defaultAvatar>
+          @if (Imageitem && Imageitem.length > 100) {
+            <img [src]="Imageitem" alt="user-image"
+              class="rounded-circle user-avatar" />
+          } @else {
             <img src="./assets/images/KowsarSupport.png" alt="user-image" class="rounded-circle user-avatar" />
-          </ng-template>
+          }
 
           <span class="pro-user-name ms-2 fw-semibold">
             {{ PhFullName || 'کاربر سیستم' }}
@@ -144,84 +149,84 @@
 <!-- 🎨 Custom Styles -->
 <style>
   .user-avatar {
-    width: 38px;
-    height: 38px;
-    object-fit: cover;
-    border: 2px solid #fff;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  }
+  width: 38px;
+  height: 38px;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
 
-  .animate-pulse {
-    animation: pulse 1.5s infinite;
-  }
+.animate-pulse {
+animation: pulse 1.5s infinite;
+}
 
-  @keyframes pulse {
-    0% {
-      transform: scale(1);
-      opacity: 1;
-    }
+@keyframes pulse {
+0% {
+transform: scale(1);
+opacity: 1;
+}
 
-    50% {
-      transform: scale(1.2);
-      opacity: 0.7;
-    }
+50% {
+transform: scale(1.2);
+opacity: 0.7;
+}
 
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
+100% {
+transform: scale(1);
+opacity: 1;
+}
+}
 
-  .theme-switch {
-    position: relative;
-    display: inline-block;
-    width: 44px;
-    height: 22px;
-  }
+.theme-switch {
+position: relative;
+display: inline-block;
+width: 44px;
+height: 22px;
+}
 
-  .theme-switch input {
-    display: none;
-  }
+.theme-switch input {
+display: none;
+}
 
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 22px;
-  }
+.slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #ccc;
+transition: 0.4s;
+border-radius: 22px;
+}
 
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
-  }
+.slider:before {
+position: absolute;
+content: "";
+height: 16px;
+width: 16px;
+left: 3px;
+bottom: 3px;
+background-color: white;
+transition: 0.4s;
+border-radius: 50%;
+}
 
-  input:checked+.slider {
-    background-color: #4d94ff;
-  }
+input:checked+.slider {
+background-color: #4d94ff;
+}
 
-  input:checked+.slider:before {
-    transform: translateX(22px);
-  }
+input:checked+.slider:before {
+transform: translateX(22px);
+}
 
-  /* 🔵 Button styling for status dropdown */
-  .btn-outline-info {
-    font-size: 13px;
-    padding: 4px 10px;
-  }
+/* 🔵 Button styling for status dropdown */
+.btn-outline-info {
+font-size: 13px;
+padding: 4px 10px;
+}
 
-  .dropdown-menu {
-    min-width: 140px;
-  }
+.dropdown-menu {
+min-width: 140px;
+}
 </style>

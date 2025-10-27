@@ -36,7 +36,7 @@
               <div>
                 <a [routerLink]="['/application/broker-column-edit']" class="rounded-pill btn btn-outline-success">
                   ایجاد رکورد
-                  جدید</a>
+                جدید</a>
               </div>
             </div>
           </div>
@@ -65,140 +65,104 @@
 
                 </tr>
               </thead>
-              <tbody *ngFor="let item of BasketColumns; let i = index">
-                <tr>
-                  <td>{{ item.AppBasketColumnCode }}</td>
-                  <td>{{ item.ColumnDesc }}</td>
-
-                  <td>{{ item.ColumnName }}</td>
-                  <td>{{ item.ObjectType }}</td>
-                  <td>
-                    <ng-container *ngIf="item.ListVisible == 0; else nonZeroList">
-                      محاسباتی
-                    </ng-container>
-                    <ng-template #nonZeroList>
-                      <ng-container *ngIf="item.ListVisible > 0 && item.ListVisible < 10">
-                        نمایش و جستجو
-
-                      </ng-container>
-
-                      <ng-container *ngIf="item.ListVisible > 10">
-                        فقط نمایش
-                      </ng-container>
-
-
-                      <ng-container *ngIf="item.ListVisible < 0">
-                      </ng-container>
-
-                    </ng-template>
-                  </td>
-
-                  <td>
-
-                    <ng-container *ngIf="item.DetailVisible == 0; else nonZeroDetail">
-                      محاسباتی
-                    </ng-container>
-                    <ng-template #nonZeroDetail>
-
-                      <ng-container *ngIf="item.DetailVisible > 0">
-                        فقط نمایش
-                      </ng-container>
-                      <ng-container *ngIf="item.DetailVisible < 0">
-                        <!-- Content when DetailVisible is negative -->
-
-                      </ng-container>
-                    </ng-template>
-
-
-                  </td>
-
-
-                  <td>
-
-                    <ng-container *ngIf="item.BasketVisible == 0; else nonZeroBasket">
-                      <!-- Content when BasketVisible is zero -->
-                      محاسباتی
-                    </ng-container>
-                    <ng-template #nonZeroBasket>
-
-                      <ng-container *ngIf="item.BasketVisible > 0">
-                        <!-- Content when BasketVisible is positive -->
-                        فقط نمایش
-                      </ng-container>
-                      <ng-container *ngIf="item.BasketVisible < 0">
-                        <!-- Content when BasketVisible is negative -->
-
-                      </ng-container>
-                    </ng-template>
-
-                  </td>
-                  <td>
-
-                    <ng-container *ngIf="item.SearchVisible == 0; else nonZeroSearch">
-                      <!-- Content when SearchVisible is zero -->
-                      محاسباتی
-                    </ng-container>
-                    <ng-template #nonZeroSearch>
-                      <ng-container *ngIf="item.SearchVisible > 0">
-                        <!-- Content when SearchVisible is positive -->
-                        فقط نمایش
-                      </ng-container>
-                      <ng-container *ngIf="item.SearchVisible < 0">
-                        <!-- Content when SearchVisible is negative -->
-
-                      </ng-container>
-                    </ng-template>
-
-
-                  </td>
-                  <td>
-
-
-                    <ng-container *ngIf="item.ColumnType == 0; else nonZeroColumn">
-                      <!-- Content when ColumnType is zero -->
-                      متن
-                    </ng-container>
-                    <ng-template #nonZeroColumn>
-                      <ng-container *ngIf="item.ColumnType == 1">
-                        <!-- Content when ColumnType is positive -->
-                        عدد صحیح
-                      </ng-container>
-                      <ng-container *ngIf="item.ColumnType == 2">
-                        <!-- Content when ColumnType is negative -->
-                        عدد اعشاری
-
-                      </ng-container>
-                    </ng-template>
-
-                  </td>
-                  <td>
-                    <ng-container *ngIf="item.OrderIndex == 0; else nonZeroOrder">
-                      <!-- Content when OrderIndex is zero -->
-                      {{''}}
-                    </ng-container>
-                    <ng-template #nonZeroOrder>
-
-                      <ng-container *ngIf="item.OrderIndex == -3">
-                        <!-- Content when OrderIndex is negative -->
-                        اولویت سوم
-
-                      </ng-container>
-                      <ng-container *ngIf="item.OrderIndex == -2">
-                        <!-- Content when OrderIndex is negative -->
-                        اولویت اول
-
-                      </ng-container>
-                      <ng-container *ngIf="item.OrderIndex == -1">
-                        <!-- Content when OrderIndex is negative -->
-                        اولویت دوم
-
-                      </ng-container>
-
-                    </ng-template>
-                  </td>
-
-                </tr>
-              </tbody>
+              @for (item of BasketColumns; track item; let i = $index) {
+                <tbody>
+                  <tr>
+                    <td>{{ item.AppBasketColumnCode }}</td>
+                    <td>{{ item.ColumnDesc }}</td>
+                    <td>{{ item.ColumnName }}</td>
+                    <td>{{ item.ObjectType }}</td>
+                    <td>
+                      @if (item.ListVisible == 0) {
+                        محاسباتی
+                      } @else {
+                        @if (item.ListVisible > 0 && item.ListVisible < 10) {
+                          نمایش و جستجو
+                        }
+                        @if (item.ListVisible > 10) {
+                          فقط نمایش
+                        }
+                        @if (item.ListVisible < 0) {
+                        }
+                      }
+                    </td>
+                    <td>
+                      @if (item.DetailVisible == 0) {
+                        محاسباتی
+                      } @else {
+                        @if (item.DetailVisible > 0) {
+                          فقط نمایش
+                        }
+                        @if (item.DetailVisible < 0) {
+                          <!-- Content when DetailVisible is negative -->
+                        }
+                      }
+                    </td>
+                    <td>
+                      @if (item.BasketVisible == 0) {
+                        <!-- Content when BasketVisible is zero -->
+                        محاسباتی
+                      } @else {
+                        @if (item.BasketVisible > 0) {
+                          <!-- Content when BasketVisible is positive -->
+                          فقط نمایش
+                        }
+                        @if (item.BasketVisible < 0) {
+                          <!-- Content when BasketVisible is negative -->
+                        }
+                      }
+                    </td>
+                    <td>
+                      @if (item.SearchVisible == 0) {
+                        <!-- Content when SearchVisible is zero -->
+                        محاسباتی
+                      } @else {
+                        @if (item.SearchVisible > 0) {
+                          <!-- Content when SearchVisible is positive -->
+                          فقط نمایش
+                        }
+                        @if (item.SearchVisible < 0) {
+                          <!-- Content when SearchVisible is negative -->
+                        }
+                      }
+                    </td>
+                    <td>
+                      @if (item.ColumnType == 0) {
+                        <!-- Content when ColumnType is zero -->
+                        متن
+                      } @else {
+                        @if (item.ColumnType == 1) {
+                          <!-- Content when ColumnType is positive -->
+                          عدد صحیح
+                        }
+                        @if (item.ColumnType == 2) {
+                          <!-- Content when ColumnType is negative -->
+                          عدد اعشاری
+                        }
+                      }
+                    </td>
+                    <td>
+                      @if (item.OrderIndex == 0) {
+                        <!-- Content when OrderIndex is zero -->
+                        {{''}}
+                      } @else {
+                        @if (item.OrderIndex == -3) {
+                          <!-- Content when OrderIndex is negative -->
+                          اولویت سوم
+                        }
+                        @if (item.OrderIndex == -2) {
+                          <!-- Content when OrderIndex is negative -->
+                          اولویت اول
+                        }
+                        @if (item.OrderIndex == -1) {
+                          <!-- Content when OrderIndex is negative -->
+                          اولویت دوم
+                        }
+                      }
+                    </td>
+                  </tr>
+                </tbody>
+              }
             </table>
           </div>
         </div>

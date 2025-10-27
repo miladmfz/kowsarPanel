@@ -3,7 +3,7 @@
     <ul class="nav nav-pills nav-fill">
       <li class="nav-item">
         <a class="nav-link  " data-bs-toggle="pill" [routerLink]="['/application/ocr-detail']">پنل توزیع و
-          بایگانی</a>
+        بایگانی</a>
       </li>
 
       <li class="nav-item">
@@ -12,7 +12,7 @@
 
       <li class="nav-item">
         <a class="nav-link  active" data-bs-toggle="pill" [routerLink]="['/application/ocr-report-list']">گزارشات
-          لیستی</a>
+        لیستی</a>
       </li>
 
       <li class="nav-item">
@@ -20,7 +20,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/ocr-setting']">تنظیمات توزیع و
-          بایگانی</a>
+        بایگانی</a>
       </li>
     </ul>
   </div>
@@ -43,10 +43,10 @@
 
 
                     <!-- <div class="form-group col-md-9">
-                      <label for="Searchtarget" class="col-form-label">جستجو </label>
-                      <input type="text" placeholder="جستجو..." class="form-control" id="Searchtarget"
-                        formControlName="Searchtarget" maxlength="100" autocomplete="off"
-                        (ngModelChange)="onInputChange()" />
+                    <label for="Searchtarget" class="col-form-label">جستجو </label>
+                    <input type="text" placeholder="جستجو..." class="form-control" id="Searchtarget"
+                      formControlName="Searchtarget" maxlength="100" autocomplete="off"
+                      (ngModelChange)="onInputChange()" />
                     </div>
 
 
@@ -55,7 +55,7 @@
                       <select formControlName="SourceFlag" id="SourceFlag" class="form-control custom-select"
                         data-toggle="select2" (ngModelChange)="onInputChange()">
                         <option [value]="item.id" *ngFor="let item of SourceFlag_lookup">{{
-                          item.name }}</option>
+                        item.name }}</option>
                       </select>
 
                     </div> -->
@@ -87,8 +87,10 @@
                       <label for="State" class="col-form-label">دیتابیس مورد نظر </label>
                       <select formControlName="State" id="State" class="form-control custom-select"
                         data-toggle="select2" (ngModelChange)="onInputChange()">
-                        <option [value]="item.id" *ngFor="let item of ReportType_lookup">{{
+                        @for (item of ReportType_lookup; track item) {
+                          <option [value]="item.id">{{
                           item.name }}</option>
+                        }
                       </select>
                     </div>
                     <div class="form-group col-md-3">
@@ -129,22 +131,14 @@
 
             </div>
 
-            <ng-container *ngIf="Report_State=='0'">
-
+            @if (Report_State=='0') {
               <h4>گزارشات لیستی</h4>
-
-              <ng-container *ngIf="loading">
-
-
+              @if (loading) {
                 <div class="spinner-border" role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
-
-
-              </ng-container>
-
-              <ng-container *ngIf="!loading">
-
+              }
+              @if (!loading) {
                 <ag-grid-angular #agGrid id="myGrid" style="height: 700px; width: auto"
                   [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="records"
                   [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText"
@@ -152,107 +146,83 @@
                   (cellClicked)="onCellClicked($event)" [pagination]="true" [frameworkComponents]="frameworkComponents"
                   [context]="context">
                 </ag-grid-angular>
-
-              </ng-container>
-
-            </ng-container>
+              }
+            }
 
 
-            <ng-container *ngIf="Report_State=='1'">
+            @if (Report_State=='1') {
               <h4>گزارشات چارتی</h4>
-
-              <ng-container *ngIf="loading1">
-
+              @if (loading1) {
                 <div class="spinner-border " role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
-
-              </ng-container>
-
-              <ng-container *ngIf="!loading1">
-                <div *ngIf="data_state1.length>0">
-
-                  <h3>نمودار بسته بندی و تحویل </h3>
-
-                  <app-minton-column-chart [title]="''" [series]="columnChartData_state1"
+              }
+              @if (!loading1) {
+                @if (data_state1.length>0) {
+                  <div>
+                    <h3>نمودار بسته بندی و تحویل </h3>
+                    <app-minton-column-chart [title]="''" [series]="columnChartData_state1"
                     [categories]="columnChartCategories_state1"></app-minton-column-chart>
-
-                </div>
-              </ng-container>
-
-
-              <ng-container *ngIf="loading2">
-
+                  </div>
+                }
+              }
+              @if (loading2) {
                 <div class="spinner-border " role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
-
-              </ng-container>
-
-              <ng-container *ngIf="!loading2">
-                <div *ngIf="data_state2.length>0">
-                  <h3>نمودار وضعیت فاکتورها </h3>
-                  <app-minton-pie-chart [title]="''" [series]="series_state2"
+              }
+              @if (!loading2) {
+                @if (data_state2.length>0) {
+                  <div>
+                    <h3>نمودار وضعیت فاکتورها </h3>
+                    <app-minton-pie-chart [title]="''" [series]="series_state2"
                     [labels]="labels_state2"></app-minton-pie-chart>
-                </div>
-
-              </ng-container>
-
-              <ng-container *ngIf="loading5">
-
+                  </div>
+                }
+              }
+              @if (loading5) {
                 <div class="spinner-border " role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
-
-              </ng-container>
-
-              <ng-container *ngIf="!loading5">
-                <div *ngIf="data_state5.length>0">
-                  <h3>نمودار کسری بر اساس طبقات </h3>
-                  <app-minton-column-chart [title]="''" [series]="columnChartData_state5"
+              }
+              @if (!loading5) {
+                @if (data_state5.length>0) {
+                  <div>
+                    <h3>نمودار کسری بر اساس طبقات </h3>
+                    <app-minton-column-chart [title]="''" [series]="columnChartData_state5"
                     [categories]="columnChartCategories_state5"></app-minton-column-chart>
-                </div>
-
-              </ng-container>
-
-
-              <ng-container *ngIf="loading6">
-
+                  </div>
+                }
+              }
+              @if (loading6) {
                 <div class="spinner-border " role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
-
-              </ng-container>
-
-              <ng-container *ngIf="!loading6">
-                <div *ngIf="data_state6.length>0">
-                  <h3> نمودار کسری بر اساس طبقات </h3>
-                  <app-minton-column-chart [title]="''" [series]="columnChartData_state6"
+              }
+              @if (!loading6) {
+                @if (data_state6.length>0) {
+                  <div>
+                    <h3> نمودار کسری بر اساس طبقات </h3>
+                    <app-minton-column-chart [title]="''" [series]="columnChartData_state6"
                     [categories]="columnChartCategories_state6"></app-minton-column-chart>
-                </div>
-
-              </ng-container>
-
-
-              <ng-container *ngIf="loading7">
-
+                  </div>
+                }
+              }
+              @if (loading7) {
                 <div class="spinner-border " role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
-
-              </ng-container>
-
-              <ng-container *ngIf="!loading7">
-                <div *ngIf="data_state7.length>0">
-                  <h3>نمودار کسری بر اساس طبقات </h3>
-                  <app-minton-column-chart [title]="''" [series]="columnChartData_state7"
+              }
+              @if (!loading7) {
+                @if (data_state7.length>0) {
+                  <div>
+                    <h3>نمودار کسری بر اساس طبقات </h3>
+                    <app-minton-column-chart [title]="''" [series]="columnChartData_state7"
                     [categories]="columnChartCategories_state7"></app-minton-column-chart>
-                </div>
-
-              </ng-container>
-
-
-            </ng-container>
+                  </div>
+                }
+              }
+            }
 
 
 

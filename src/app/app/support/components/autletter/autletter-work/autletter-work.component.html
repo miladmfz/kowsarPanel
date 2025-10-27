@@ -11,62 +11,64 @@
             <label for="searchTerm" class="col-form-label">جستجو</label>
             <input class="form-control" id="searchTerm" type="text" [(ngModel)]="searchTerm"
               (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" />
+            </div>
+
+            <!-- Date Picker -->
+            <div class="form-group col-md-3">
+              <label for="datePicker" class="col-form-label">تاریخ</label>
+              <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
+                [uiHideAfterSelectDate]="true">
+                <input class="form-control" id="datePicker" type="text" [formControl]="dateValue" />
+              </ng-persian-datepicker>
+            </div>
+
+            <!-- Search Button -->
+            <div class="form-group col-md-3">
+              <button type="button" class="btn btn-primary w-100" (click)="LoadList()">
+                <i class="fas fa-search me-1"></i> جستجو
+              </button>
+            </div>
+
+            <!-- Refresh Button -->
+            <div class="form-group col-md-3">
+              <button type="button" class="btn btn-light w-100" (click)="getList()">
+                <i class="fas fa-recycle me-1"></i> بازخوانی
+              </button>
+            </div>
           </div>
 
-          <!-- Date Picker -->
-          <div class="form-group col-md-3">
-            <label for="datePicker" class="col-form-label">تاریخ</label>
-            <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
-              [uiHideAfterSelectDate]="true">
-              <input class="form-control" id="datePicker" type="text" [formControl]="dateValue" />
-            </ng-persian-datepicker>
-          </div>
 
-          <!-- Search Button -->
-          <div class="form-group col-md-3">
-            <button type="button" class="btn btn-primary w-100" (click)="LoadList()">
-              <i class="fas fa-search me-1"></i> جستجو
-            </button>
-          </div>
-
-          <!-- Refresh Button -->
-          <div class="form-group col-md-3">
-            <button type="button" class="btn btn-light w-100" (click)="getList()">
-              <i class="fas fa-recycle me-1"></i> بازخوانی
-            </button>
-          </div>
-        </div>
-
-
-        <!-- <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
+          <!-- <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
           [(ngModel)]="Searchtarget" (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" /> -->
 
 
+        </div>
+
+
+
+
       </div>
+
+      @if (loading) {
+        <div class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      }
+
+
+
+      <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
+        [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+        (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+        [frameworkComponents]="frameworkComponents" [context]="context"
+        [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [defaultColDef]="defaultColDef"
+        [suppressRowClickSelection]="true" [rowSelection]="'multiple'" (selectionChanged)="onSelectionChanged($event)">
+      </ag-grid-angular>
 
 
 
 
     </div>
-
-    <div *ngIf="loading" class="text-center">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-
-
-
-    <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
-      [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
-      (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-      [frameworkComponents]="frameworkComponents" [context]="context"
-      [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [defaultColDef]="defaultColDef"
-      [suppressRowClickSelection]="true" [rowSelection]="'multiple'" (selectionChanged)="onSelectionChanged($event)">
-    </ag-grid-angular>
-
-
-
-
   </div>
-</div>

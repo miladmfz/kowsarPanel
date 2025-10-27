@@ -5,15 +5,21 @@ declare var $: any;
 @Component({
     selector: 'validation-state-cell-renderer',
     template: `
-    <span *ngIf="state == 'عدم تاييد'">
+    @if (state == 'عدم تاييد') {
+      <span>
         <span class="bg-soft-danger text-danger" style="padding: 3px">عدم تاييد</span>
-    </span>
-    <span *ngIf="state == 'تاييد شده'">
+      </span>
+    }
+    @if (state == 'تاييد شده') {
+      <span>
         <span class="bg-soft-success text-success" style="padding: 3px">تایید شده</span>
-    </span>
-    <span *ngIf="state == 'بدون وضعيت'">
+      </span>
+    }
+    @if (state == 'بدون وضعيت') {
+      <span>
         <span class="bg-soft-primary text-primary" style="padding: 3px">بدون وضعيت</span>
-    </span>`,
+      </span>
+    }`,
     standalone: false
 })
 export class ValidateionStateCellRenderer implements ICellRendererAngularComp {

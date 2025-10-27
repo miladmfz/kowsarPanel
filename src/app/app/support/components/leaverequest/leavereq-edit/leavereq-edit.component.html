@@ -25,7 +25,7 @@
                         autocomplete="off" readonly>
                     </div>
 
-                    <!-- 
+                    <!--
                     <div class="form-group col-md-3">
                       <label for="LeaveRequestType" class="form-label">نوع مرخصی</label>
 
@@ -48,7 +48,9 @@
                                           EditForm_LeaveRequest.controls['LeaveRequestType'].touched
                             }">
                         <option value="">لطفاً انتخاب کنید</option>
-                        <option [value]="item.id" *ngFor="let item of LeaveType_Lookup">{{item.name}}</option>
+                        @for (item of LeaveType_Lookup; track item) {
+                          <option [value]="item.id">{{item.name}}</option>
+                        }
                       </select>
 
                       <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
@@ -116,7 +118,7 @@
                 </div>
 
 
-                <ng-container *ngIf="!showTimeFields">
+                @if (!showTimeFields) {
                   <div class="form-group col-md-3">
                     <label for="LeaveEndDate" class="col-form-label">انتخاب تاریخ پایان</label>
                     <div>
@@ -127,14 +129,13 @@
                       </ng-persian-datepicker>
                     </div>
                   </div>
-                </ng-container>
+                }
 
 
 
-                <ng-container *ngIf="showTimeFields">
+                @if (showTimeFields) {
                   <div class="form-group col-md-3">
                     <label for="LeaveEndDate" class="form-label">انتخاب تاریخ پایان</label>
-
                     <input formControlName="LeaveEndDate" id="LeaveEndDate" class="form-control text-center"
                       autocomplete="off" readonly [ngClass]="{
                       'is-invalid':
@@ -146,14 +147,12 @@
                         (EditForm_LeaveRequest.controls['LeaveEndDate'].dirty ||
                         EditForm_LeaveRequest.controls['LeaveEndDate'].touched)
                     }" />
-
                     <!-- خطای required -->
                     <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
                       validation: 'required',
                       message: 'تاریخ پایان الزامی است.',
                       control: EditForm_LeaveRequest.controls['LeaveEndDate']
                     }"></ng-container>
-
                     <!-- خطای custom برای تاریخ نامعتبر -->
                     <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
                       validation: 'invalidDate',
@@ -161,14 +160,10 @@
                       control: EditForm_LeaveRequest.controls['LeaveEndDate']
                     }"></ng-container>
                   </div>
+                }
 
 
-                </ng-container>
-
-
-                <ng-container *ngIf="showTimeFields">
-
-
+                @if (showTimeFields) {
                   <div class="form-group col-md-3">
                     <label for="LeaveStartTime" class="form-label">از ساعت</label>
                     <input formControlName="LeaveStartTime" id="LeaveStartTime" class="form-control" type="time"
@@ -182,9 +177,6 @@
         control: EditForm_LeaveRequest.controls['LeaveStartTime']
       }"></ng-container>
                   </div>
-
-
-
                   <div class="form-group col-md-3">
                     <label for="LeaveEndTime" class="form-label">تا ساعت</label>
                     <input formControlName="LeaveEndTime" id="LeaveEndTime" class="form-control" type="time"
@@ -203,12 +195,12 @@
         control: EditForm_LeaveRequest.controls['LeaveEndTime']
       }"></ng-container>
                   </div>
-                </ng-container>
+                }
 
                 <div class="form-group col-md-12">
                   <label for="LeaveRequestExplain" class="form-label">توضیحات</label>
                   <textarea formControlName="LeaveRequestExplain" id="LeaveRequestExplain" class="form-control" rows="4"
-                    autocomplete="off"></textarea>
+                  autocomplete="off"></textarea>
                 </div>
 
 
@@ -234,11 +226,9 @@
 
 
 
-      <ng-container *ngIf="LeaveRequestCode.length>0">
-
+      @if (LeaveRequestCode.length>0) {
         <app-leavereq-attach [TextData]="LeaveRequestCode"></app-leavereq-attach>
-
-      </ng-container>
+      }
 
 
     </div>
@@ -246,11 +236,11 @@
 
 
     <ng-template #formError let-control="control" let-message="message" let-validation="validation">
-      <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
+      @if (control.hasError(validation) && (control.dirty || control.touched)) {
         <div class="fv-plugins-message-container invalid-feedback">
           <span role="alert">
             {{ message }}
           </span>
         </div>
-      </ng-container>
+      }
     </ng-template>

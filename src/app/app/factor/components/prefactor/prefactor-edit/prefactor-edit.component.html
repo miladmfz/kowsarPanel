@@ -15,27 +15,20 @@
                         <label for="FactorDate" class="col-form-label"> تاریخ پیش فاکتور </label>
                         <input type="text" class="form-control" id="FactorDate" formControlName="FactorDate"
                           maxlength="100" autocomplete="off" readonly />
-                      </div>
+                        </div>
 
-                      <div class=" form-group col-md-2">
-                        <label for="CustomerCode" class="col-form-label">کد مشتری </label>
+                        <div class=" form-group col-md-2">
+                          <label for="CustomerCode" class="col-form-label">کد مشتری </label>
 
-                        <ng-container *ngIf="PreFactorCode.length>0">
+                          @if (PreFactorCode.length>0) {
+                            <input type="text" class="form-control" id="CustomerCode" formControlName="CustomerCode"
+                              placeholder="نمایش مشتریان" maxlength="100" autocomplete="off" readonly />
+                            }
 
-                          <input type="text" class="form-control" id="CustomerCode" formControlName="CustomerCode"
-                            placeholder="نمایش مشتریان" maxlength="100" autocomplete="off" readonly />
-
-                        </ng-container>
-
-                        <ng-container *ngIf="PreFactorCode.length==0">
-                          <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
-
-
-
-
-
-                          <input type="text" class="form-control" id="CustomerCode" (click)="GetCustomer()"
-                            placeholder="نمایش مشتریان" formControlName="CustomerCode" maxlength="100"
+                            @if (PreFactorCode.length==0) {
+                              <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                              <input type="text" class="form-control" id="CustomerCode" (click)="GetCustomer()"
+                                placeholder="نمایش مشتریان" formControlName="CustomerCode" maxlength="100"
                             autocomplete="off" readonly [ngClass]="{
                               'is-invalid':
                               EditForm_Factor_Header.controls['CustomerCode'].invalid &&
@@ -49,480 +42,446 @@
                               message: 'اجباری است',
                               control: EditForm_Factor_Header.controls['CustomerCode']
                             }"></ng-container>
+                              }
 
-                        </ng-container>
+                            </div>
+
+
+                            <div class="form-group col-md-4">
+                              <label for="CustName" class="col-form-label">نام مشتری</label>
+                              <input type="text" class="form-control" id="CustName" formControlName="CustName" maxlength="100"
+                                autocomplete="off" readonly />
+                              </div>
+
+                              @if (PreFactorCode.length>0) {
+                                @if (IsManager) {
+                                  <div class="form-group col-md-3">
+                                    <label for="PFState" class="col-form-label">نوع عملیات</label>
+                                    <select class="form-select" id="PFState" formControlName="PFState"
+                                      (change)="onPFStateChange()">
+                                      <option value="">لطفاً انتخاب کنید</option>
+                                      @for (item of PFState_Lookup; track item) {
+                                        <option [value]="item.id">{{item.name}}</option>
+                                      }
+                                    </select>
+                                  </div>
+                                }
+                                @if (!IsManager) {
+                                  <div class="form-group col-md-2">
+                                    <label for="PFState" class="col-form-label">نوع عملیات</label>
+                                    <input type="text" class="form-control" id="PFState"
+                                      [value]="getPFStateName(EditForm_Factor_Header.get('PFState')?.value)" readonly />
+                                    </div>
+                                  }
+                                }
+
+                                @if (PreFactorCode.length==0) {
+                                  <div class="form-group col-md-8">
+                                    <label for="Explain" class="col-form-label">توضیحات</label>
+                                    <input type="text" class="form-control" id="Explain" formControlName="Explain" maxlength="100"
+                                      autocomplete="off" />
+                                    </div>
+                                  }
+
+                                  @if (PreFactorCode.length>0) {
+                                    <div class="form-group col-md-9">
+                                      <label for="Explain" class="col-form-label">توضیحات</label>
+                                      <input type="text" class="form-control" id="Explain" formControlName="Explain" maxlength="100"
+                                        autocomplete="off" readonly />
+                                      </div>
+                                      <div class="form-group col-md-3">
+                                        <label for="Barbary" class="col-form-label">.</label>
+                                        <a type="button" class="form-control btn btn-primary waves-effect waves-light "
+                                          (click)="Autletterfromcustomer()">
+                                          <span class="btn-label"><i class="fas fa-file-alt"></i>
+                                        </span>ارجاعات مشتری</a>
+                                      </div>
+                                    }
+
+
+
+
+                                    <div class="row">
+                                      <div class="col-sm-12">
+
+
+                                        @if (PreFactorCode.length>0) {
+                                          <a type="button" class="btn btn-success waves-effect waves-light " (click)="NewPreFactor()">
+                                            <span class="btn-label"><i class="fas fa-plus"></i>
+                                          </span>ایجاد پیش فاکتور جدید
+                                        </a>
+                                      }
+
+                                      @if (PreFactorCode.length==0) {
+                                        <a type="button" class="btn btn-success waves-effect waves-light "
+                                          (click)="Factor_Header_insert()">
+                                          <span class="btn-label"><i class="fas fa-plus"></i>
+                                        </span>ثبت پیش فاکتور </a>
+                                      }
+                                      @if (CanEdit_PFState) {
+                                        @if (PreFactorCode.length>0) {
+                                          <a (click)="deleteFactor()" type="button"
+                                            class="btn btn-danger waves-effect waves-light m-1">
+                                            <span class=" btn-label"><i class="fas fa-trash"></i></span>حذف پیش فاکتور
+                                          </a>
+                                        }
+                                      }
+                                      @if (PreFactorCode.length>0) {
+                                        <a (click)="GoBack()" type="button" class="btn btn-info waves-effect waves-light m-1">
+                                          <span class=" btn-label"><i class="fas fa-arrow"></i></span>بازگشت
+                                        </a>
+                                      }
+                                    </div>
+                                  </div>
+
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+
+
 
                       </div>
 
 
-                      <div class="form-group col-md-4">
-                        <label for="CustName" class="col-form-label">نام مشتری</label>
-                        <input type="text" class="form-control" id="CustName" formControlName="CustName" maxlength="100"
-                          autocomplete="off" readonly />
+                      @if (PreFactorCode.length>0) {
+                        <div class="col-sm-12 row">
+                          @if (ShowGoodList) {
+                            <div class="col-sm-6">
+                              <div class="row">
+                                <h4 class="card-title col-sm-6">لیست کالاها</h4>
+                                <a type="button" class="btn btn-soft-danger rounded-pill waves-effect waves-light col-sm-3 m-1"
+                                  (click)="taggelShowGoodList()">
+                                  بستن کالاها
+                                </a>
+                              </div>
+                              <input cFormControl type="text" class="form-control my-1" placeholder="جستجو..." type="text"
+                                [(ngModel)]="Searchtarget_Good" (ngModelChange)="onInputChange_Good()"
+                                [ngModelOptions]="{ standalone: true }" />
+                                <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records_good"
+                                  [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+                                  (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+                                  [frameworkComponents]="frameworkComponents" [context]="context"
+                                  [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [defaultColDef]="defaultColDef"
+                                  [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+                                  (selectionChanged)="onSelectionChanged($event)">
+                                </ag-grid-angular>
+                              </div>
+                            }
+                            <div class="col-sm-6">
+                              <div class="row">
+                                <h4 class="card-title col-sm-6">لیست اقلام پیش فاکتور شده</h4>
+                                @if (CanEdit_PFState) {
+                                  @if (!ShowGoodList) {
+                                    <a type="button" class="btn btn-soft-info rounded-pill waves-effect waves-light col-sm-3 m-1"
+                                      (click)="taggelShowGoodList()">
+                                      اضافه کردن
+                                    </a>
+                                  }
+                                }
+                              </div>
+                              <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records_factorrows"
+                                [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+                                (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+                                [context]="context" [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'"
+                                [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
+                                [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+                                (selectionChanged)="onSelectionChanged($event)">
+                              </ag-grid-angular>
+                            </div>
+                          </div>
+                        }
+
                       </div>
+                    </div>
 
-                      <ng-container *ngIf="PreFactorCode.length>0">
+                  </div>
 
-
-                        <ng-container *ngIf="IsManager">
-
-                          <div class="form-group col-md-3">
-                            <label for="PFState" class="col-form-label">نوع عملیات</label>
-
-                            <select class="form-select" id="PFState" formControlName="PFState"
-                              (change)="onPFStateChange()">
-                              <option value="">لطفاً انتخاب کنید</option>
-                              <option [value]="item.id" *ngFor="let item of PFState_Lookup">{{item.name}}</option>
-                            </select>
-                          </div>
-
-                        </ng-container>
-
-
-                        <ng-container *ngIf="!IsManager">
-                          <div class="form-group col-md-2">
-                            <label for="PFState" class="col-form-label">نوع عملیات</label>
-                            <input type="text" class="form-control" id="PFState"
-                              [value]="getPFStateName(EditForm_Factor_Header.get('PFState')?.value)" readonly />
-                          </div>
-                        </ng-container>
-
-                      </ng-container>
-
-                      <ng-container *ngIf="PreFactorCode.length==0">
-                        <div class="form-group col-md-8">
-                          <label for="Explain" class="col-form-label">توضیحات</label>
-                          <input type="text" class="form-control" id="Explain" formControlName="Explain" maxlength="100"
-                            autocomplete="off" />
-                        </div>
-                      </ng-container>
-
-                      <ng-container *ngIf="PreFactorCode.length>0">
-                        <div class="form-group col-md-9">
-                          <label for="Explain" class="col-form-label">توضیحات</label>
-                          <input type="text" class="form-control" id="Explain" formControlName="Explain" maxlength="100"
-                            autocomplete="off" readonly />
-                        </div>
-                        <div class="form-group col-md-3">
-                          <label for="Barbary" class="col-form-label">.</label>
-
-                          <a type="button" class="form-control btn btn-primary waves-effect waves-light "
-                            (click)="Autletterfromcustomer()">
-                            <span class="btn-label"><i class="fas fa-file-alt"></i>
-                            </span>ارجاعات مشتری</a>
-                        </div>
-                      </ng-container>
+                </div>
+              </div>
 
 
 
 
-                      <div class="row">
+              <div class="modal fade" id="customerlist" tabindex="-1" aria-labelledby="customerlistLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
+                  <div class="modal-content" style="background-color: #d1dce7;">
+                    <div class="modal-header" style="background-color: #949494;">
+                      <h5 class="modal-title" id="customerlistLabel">لیست مشتریان</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                      (click)="customer_dialog_close()"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="row mb-2">
                         <div class="col-sm-12">
-
-
-                          <ng-container *ngIf="PreFactorCode.length>0">
-
-
-
-                            <a type="button" class="btn btn-success waves-effect waves-light " (click)="NewPreFactor()">
-                              <span class="btn-label"><i class="fas fa-plus"></i>
-                              </span>ایجاد پیش فاکتور جدید
-                            </a>
-                          </ng-container>
-
-                          <ng-container *ngIf="PreFactorCode.length==0">
-                            <a type="button" class="btn btn-success waves-effect waves-light "
-                              (click)="Factor_Header_insert()">
-                              <span class="btn-label"><i class="fas fa-plus"></i>
-                              </span>ثبت پیش فاکتور </a>
-                          </ng-container>
-                          <ng-container *ngIf="CanEdit_PFState">
-                            <ng-container *ngIf="PreFactorCode.length>0">
-                              <a (click)="deleteFactor()" type="button"
-                                class="btn btn-danger waves-effect waves-light m-1">
-                                <span class=" btn-label"><i class="fas fa-trash"></i></span>حذف پیش فاکتور
-                              </a>
-                            </ng-container>
-                          </ng-container>
-                          <ng-container *ngIf="PreFactorCode.length>0">
-                            <a (click)="GoBack()" type="button" class="btn btn-info waves-effect waves-light m-1">
-                              <span class=" btn-label"><i class="fas fa-arrow"></i></span>بازگشت
-                            </a>
-                          </ng-container>
+                          <div class="form-group">
+                            <input #modalsearch type="text" class="form-control" placeholder="جستجو..."
+                              [(ngModel)]="Searchtarget_customer" (ngModelChange)="onInputChange_Customer()"
+                              [ngModelOptions]="{ standalone: true }" />
+                            </div>
+                          </div>
                         </div>
-                      </div>
 
+                        @if (loading) {
+                          <div class="text-center">
+                            <div class="spinner-border" role="status">
+                              <span class="visually-hidden">Loading...</span>
+                            </div>
+                          </div>
+                        }
+
+                        <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" [rowData]="records_customer"
+                          [columnDefs]="columnDefs3" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
+                          [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+                          [frameworkComponents]="frameworkComponents" [context]="context"
+                          [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [suppressRowClickSelection]="true"
+                          [rowSelection]="'single'" (selectionChanged)="onSelectionChanged($event)">
+                        </ag-grid-angular>
 
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form>
-
-
-
-          </div>
-
-
-          <ng-container *ngIf="PreFactorCode.length>0">
-
-            <div class="col-sm-12 row">
-              <ng-container *ngIf="ShowGoodList">
-                <div class="col-sm-6">
-
-                  <div class="row">
-                    <h4 class="card-title col-sm-6">لیست کالاها</h4>
-                    <a type="button" class="btn btn-soft-danger rounded-pill waves-effect waves-light col-sm-3 m-1"
-                      (click)="taggelShowGoodList()">
-                      بستن کالاها
-                    </a>
-                  </div>
-
-
-
-                  <input cFormControl type="text" class="form-control my-1" placeholder="جستجو..." type="text"
-                    [(ngModel)]="Searchtarget_Good" (ngModelChange)="onInputChange_Good()"
-                    [ngModelOptions]="{ standalone: true }" />
-                  <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records_good"
-                    [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
-                    (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-                    [frameworkComponents]="frameworkComponents" [context]="context"
-                    [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [defaultColDef]="defaultColDef"
-                    [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
-                    (selectionChanged)="onSelectionChanged($event)">
-                  </ag-grid-angular>
-                </div>
-              </ng-container>
-              <div class="col-sm-6">
-                <div class="row">
-                  <h4 class="card-title col-sm-6">لیست اقلام پیش فاکتور شده</h4>
-
-                  <ng-container *ngIf="CanEdit_PFState">
-
-
-                    <ng-container *ngIf="!ShowGoodList">
-                      <a type="button" class="btn btn-soft-info rounded-pill waves-effect waves-light col-sm-3 m-1"
-                        (click)="taggelShowGoodList()">
-                        اضافه کردن
-                      </a>
-                    </ng-container>
-                  </ng-container>
-
-                </div>
-                <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records_factorrows"
-                  [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
-                  (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-                  [context]="context" [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'"
-                  [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
-                  [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
-                  (selectionChanged)="onSelectionChanged($event)">
-                </ag-grid-angular>
-              </div>
-
-            </div>
-          </ng-container>
-
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-</div>
-
-
-
-
-<div class="modal fade" id="customerlist" tabindex="-1" aria-labelledby="customerlistLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content" style="background-color: #d1dce7;">
-      <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="customerlistLabel">لیست مشتریان</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-          (click)="customer_dialog_close()"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row mb-2">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <input #modalsearch type="text" class="form-control" placeholder="جستجو..."
-                [(ngModel)]="Searchtarget_customer" (ngModelChange)="onInputChange_Customer()"
-                [ngModelOptions]="{ standalone: true }" />
-            </div>
-          </div>
-        </div>
-
-        <div *ngIf="loading" class="text-center">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-
-        <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" [rowData]="records_customer"
-          [columnDefs]="columnDefs3" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
-          [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-          [frameworkComponents]="frameworkComponents" [context]="context"
-          [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [suppressRowClickSelection]="true"
-          [rowSelection]="'single'" (selectionChanged)="onSelectionChanged($event)">
-        </ag-grid-angular>
-
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-          (click)="customer_dialog_close()">بستن</button>
-        <button type="button" class="btn btn-primary" (click)="Set_Customer()">انتخاب</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-<div class="modal fade" id="factorcustomerproperty" tabindex="-1" aria-labelledby="factorcustomerpropertyLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="background-color: #e7d1d6;">
-      <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="factorcustomerpropertyLabel">جزئیات</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-          (click)="property_dialog_close()"></button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="Customer_property" id="submitForm">
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-body row">
-
-                  <div class="form-group col-md-12">
-                    <label for="AppNumber" class="col-form-label">نسخه نرم افزار </label>
-                    <input type="text" class="form-control" id="AppNumber" formControlName="AppNumber" maxlength="100"
-                      autocomplete="off" readonly />
-                  </div>
-                  <div class="form-group col-md-12">
-                    <label for="DatabaseNumber" class="col-form-label">دیتابیس </label>
-                    <input type="text" class="form-control" id="DatabaseNumber" formControlName="DatabaseNumber"
-                      maxlength="100" autocomplete="off" readonly />
-                  </div>
-                  <div class="form-group col-md-12">
-                    <label for="LockNumber" class="col-form-label">تعداد قفل </label>
-                    <input type="text" class="form-control" id="LockNumber" formControlName="LockNumber" maxlength="100"
-                      autocomplete="off" readonly />
-                  </div>
-                  <div class="form-group col-md-12">
-                    <label for="Address" class="col-form-label">آدرس </label>
-                    <input type="text" class="form-control" id="Address" formControlName="Address" maxlength="100"
-                      autocomplete="off" readonly />
-                  </div>
-                  <div class="form-group col-md-12">
-                    <label for="CityName" class="col-form-label">شهر </label>
-                    <input type="text" class="form-control" id="CityName" formControlName="CityName" maxlength="100"
-                      autocomplete="off" readonly />
-                  </div>
-                  <div class="form-group col-md-12">
-                    <label for="OstanName" class="col-form-label">استان </label>
-                    <input type="text" class="form-control" id="OstanName" formControlName="OstanName" maxlength="100"
-                      autocomplete="off" readonly />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-          (click)="property_dialog_close()">بستن</button>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-<ng-template #formError let-control="control" let-message="message" let-validation="validation">
-  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
-    <div class="fv-plugins-message-container invalid-feedback">
-      <span role="alert">
-        {{ message }}
-      </span>
-    </div>
-  </ng-container>
-</ng-template>
-
-
-
-
-
-
-
-<div class="modal fade" id="boxbuymodal" tabindex="-1" aria-labelledby="boxbuymodalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="background-color: #d1dce7;">
-      <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="boxbuymodalLabel">تعداد و قیمت کالا</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-          (click)="boxbuy_dialog_close()"></button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="EditForm_Factor_Row" id="submitForm">
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-body row">
-
-
-                  <div class="form-group col-md-12">
-                    <label for="GoodName" class="col-form-label">نام کالا</label>
-                    <input type="text" class="form-control" id="GoodName" formControlName="GoodName" maxlength="100"
-                      autocomplete="off" readonly />
-                  </div>
-
-
-
-                  <div class="form-group col-md-12">
-                    <label for="maxsellprice" class="col-form-label">حداکثر قیمت </label>
-                    <input type="number" class="form-control" id="maxsellprice" formControlName="maxsellprice"
-                      maxlength="100" readonly />
-                  </div>
-
-
-
-
-                  <div class="form-group col-md-12">
-                    <label for="Amount" class="col-form-label">تعداد</label>
-                    <input type="number" class="form-control" id="Amount" formControlName="Amount" maxlength="100"
-                      autocomplete="off" (keyup)="cal_totalprice()" />
-                  </div>
-
-
-
-                  <div class="form-group col-md-12">
-                    <label for="takhfif" class="col-form-label">درصد تخفیف</label>
-                    <input type="number" class="form-control" id="takhfif" formControlName="takhfif" maxlength="100"
-                      autocomplete="off" (keyup)="discountInput.next()" />
-                  </div>
-
-
-
-
-                  <div class="form-group col-md-12">
-                    <label for="Price" class="col-form-label">فی</label>
-                    <input type="number" class="form-control" id="Price" formControlName="Price" maxlength="100"
-                      autocomplete="off" (keyup)="priceInput.next()" />
-                  </div>
-
-
-
-
-
-                  <div class="form-group col-md-12">
-                    <label for="totalprice" class="col-form-label">مبلغ کل</label>
-                    <input type="number" class="form-control" id="totalprice" formControlName="totalprice"
-                      maxlength="100" autocomplete="off" readonly />
-                  </div>
-
-
-
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-          (click)="boxbuy_dialog_close()">بستن</button>
-        <button type="button" class="btn btn-primary" (click)="insert_FactorRows()">تایید</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-<div class="modal fade" id="autlettercustomer" tabindex="-1" aria-labelledby="autlettercustomerLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl">
-    <div class="modal-content" style="background-color: #d1dce7;">
-      <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="autlettercustomerLabel">{{letterexplain_modal_title}}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-          (click)="Autletter_dialog_close()"></button>
-      </div>
-
-      <div class="modal-body">
-        <form [formGroup]="EditForm_LetterToEmployer" id="submitForm">
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-body row">
-                  <div class="form-group col-md-12">
-                    <ag-grid-angular #agGrid id="myGrid" style="height: 250px; width: auto"
-                      [rowData]="records_letterfromowner" [columnDefs]="columnDefs5" [modules]="modules"
-                      [localeText]="localeText" [enableRtl]="true" (gridReady)="onGridReady4($event)"
-                      (cellClicked)="onCellClicked($event)" [pagination]="true"
-                      [frameworkComponents]="frameworkComponents" [context]="context"
-                      [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'"
-                      [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
-                      (selectionChanged)="onSelectionChanged($event)">
-                    </ag-grid-angular>
-                  </div>
-                  <ng-container *ngIf="!show_newletter">
-
-                    <div class="form-group col-md-3">
-                      <label for="DescriptionText" class="col-form-label">عملیات</label>
-
-                      <button type="button" class="form-control btn btn-success" (click)="toggel_show_newletter()">ایجاد
-                        تیکت
-                        جدید</button>
-
-                    </div>
-                  </ng-container>
-
-
-                  <ng-container *ngIf="show_newletter">
-                    <div class="form-group col-md-2">
-                      <label for="DescriptionText" class="col-form-label">عملیات</label>
-
-                      <button type="button" class="form-control btn btn-danger" (click)="toggel_show_newletter()">انصراف
-                        تیکت
-                      </button>
-
-                    </div>
-
-                    <ng-container *ngIf="LetterCode.length>0">
-                      <div class="form-group col-md-2">
-                        <label for="LetterCode" class="col-form-label">کد تیکت</label>
-                        <input type="text" class="form-control" id="LetterCode" formControlName="LetterCode"
-                          maxlength="400" autocomplete="off" readonly>
 
                       </div>
-                    </ng-container>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        (click)="customer_dialog_close()">بستن</button>
+                        <button type="button" class="btn btn-primary" (click)="Set_Customer()">انتخاب</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
 
 
 
-                    <div class=" form-group col-md-2">
-                      <label for="OwnerCentral" class="col-form-label">کد مشتری </label>
 
-                      <ng-container *ngIf="LetterCode.length>0">
+                <div class="modal fade" id="factorcustomerproperty" tabindex="-1" aria-labelledby="factorcustomerpropertyLabel"
+                  aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content" style="background-color: #e7d1d6;">
+                      <div class="modal-header" style="background-color: #949494;">
+                        <h5 class="modal-title" id="factorcustomerpropertyLabel">جزئیات</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        (click)="property_dialog_close()"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form [formGroup]="Customer_property" id="submitForm">
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="card">
+                                <div class="card-body row">
 
-                        <input type="text" class="form-control" id="OwnerCentral" formControlName="OwnerCentral"
-                          placeholder="نمایش مشتریان" maxlength="100" autocomplete="off" readonly />
+                                  <div class="form-group col-md-12">
+                                    <label for="AppNumber" class="col-form-label">نسخه نرم افزار </label>
+                                    <input type="text" class="form-control" id="AppNumber" formControlName="AppNumber" maxlength="100"
+                                      autocomplete="off" readonly />
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                      <label for="DatabaseNumber" class="col-form-label">دیتابیس </label>
+                                      <input type="text" class="form-control" id="DatabaseNumber" formControlName="DatabaseNumber"
+                                        maxlength="100" autocomplete="off" readonly />
+                                      </div>
+                                      <div class="form-group col-md-12">
+                                        <label for="LockNumber" class="col-form-label">تعداد قفل </label>
+                                        <input type="text" class="form-control" id="LockNumber" formControlName="LockNumber" maxlength="100"
+                                          autocomplete="off" readonly />
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                          <label for="Address" class="col-form-label">آدرس </label>
+                                          <input type="text" class="form-control" id="Address" formControlName="Address" maxlength="100"
+                                            autocomplete="off" readonly />
+                                          </div>
+                                          <div class="form-group col-md-12">
+                                            <label for="CityName" class="col-form-label">شهر </label>
+                                            <input type="text" class="form-control" id="CityName" formControlName="CityName" maxlength="100"
+                                              autocomplete="off" readonly />
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                              <label for="OstanName" class="col-form-label">استان </label>
+                                              <input type="text" class="form-control" id="OstanName" formControlName="OstanName" maxlength="100"
+                                                autocomplete="off" readonly />
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </form>
 
-                      </ng-container>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                    (click)="property_dialog_close()">بستن</button>
 
-                      <ng-container *ngIf="LetterCode.length==0">
-                        <label for="OwnerCentral" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
-                        <input type="text" class="form-control" id="OwnerCentral" placeholder="نمایش مشتریان"
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+
+
+                            <ng-template #formError let-control="control" let-message="message" let-validation="validation">
+                              @if (control.hasError(validation) && (control.dirty || control.touched)) {
+                                <div class="fv-plugins-message-container invalid-feedback">
+                                  <span role="alert">
+                                    {{ message }}
+                                  </span>
+                                </div>
+                              }
+                            </ng-template>
+
+
+
+
+
+
+
+                            <div class="modal fade" id="boxbuymodal" tabindex="-1" aria-labelledby="boxbuymodalLabel" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content" style="background-color: #d1dce7;">
+                                  <div class="modal-header" style="background-color: #949494;">
+                                    <h5 class="modal-title" id="boxbuymodalLabel">تعداد و قیمت کالا</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                    (click)="boxbuy_dialog_close()"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <form [formGroup]="EditForm_Factor_Row" id="submitForm">
+                                      <div class="row">
+                                        <div class="col-12">
+                                          <div class="card">
+                                            <div class="card-body row">
+
+
+                                              <div class="form-group col-md-12">
+                                                <label for="GoodName" class="col-form-label">نام کالا</label>
+                                                <input type="text" class="form-control" id="GoodName" formControlName="GoodName" maxlength="100"
+                                                  autocomplete="off" readonly />
+                                                </div>
+
+
+
+                                                <div class="form-group col-md-12">
+                                                  <label for="maxsellprice" class="col-form-label">حداکثر قیمت </label>
+                                                  <input type="number" class="form-control" id="maxsellprice" formControlName="maxsellprice"
+                                                    maxlength="100" readonly />
+                                                  </div>
+
+
+
+
+                                                  <div class="form-group col-md-12">
+                                                    <label for="Amount" class="col-form-label">تعداد</label>
+                                                    <input type="number" class="form-control" id="Amount" formControlName="Amount" maxlength="100"
+                                                      autocomplete="off" (keyup)="cal_totalprice()" />
+                                                    </div>
+
+
+
+                                                    <div class="form-group col-md-12">
+                                                      <label for="takhfif" class="col-form-label">درصد تخفیف</label>
+                                                      <input type="number" class="form-control" id="takhfif" formControlName="takhfif" maxlength="100"
+                                                        autocomplete="off" (keyup)="discountInput.next()" />
+                                                      </div>
+
+
+
+
+                                                      <div class="form-group col-md-12">
+                                                        <label for="Price" class="col-form-label">فی</label>
+                                                        <input type="number" class="form-control" id="Price" formControlName="Price" maxlength="100"
+                                                          autocomplete="off" (keyup)="priceInput.next()" />
+                                                        </div>
+
+
+
+
+
+                                                        <div class="form-group col-md-12">
+                                                          <label for="totalprice" class="col-form-label">مبلغ کل</label>
+                                                          <input type="number" class="form-control" id="totalprice" formControlName="totalprice"
+                                                            maxlength="100" autocomplete="off" readonly />
+                                                          </div>
+
+
+
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </form>
+
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                                (click)="boxbuy_dialog_close()">بستن</button>
+                                                <button type="button" class="btn btn-primary" (click)="insert_FactorRows()">تایید</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+
+
+
+
+                                        <div class="modal fade" id="autlettercustomer" tabindex="-1" aria-labelledby="autlettercustomerLabel"
+                                          aria-hidden="true">
+                                          <div class="modal-dialog modal-dialog-centered modal-xl">
+                                            <div class="modal-content" style="background-color: #d1dce7;">
+                                              <div class="modal-header" style="background-color: #949494;">
+                                                <h5 class="modal-title" id="autlettercustomerLabel">{{letterexplain_modal_title}}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                                (click)="Autletter_dialog_close()"></button>
+                                              </div>
+
+                                              <div class="modal-body">
+                                                <form [formGroup]="EditForm_LetterToEmployer" id="submitForm">
+                                                  <div class="row">
+                                                    <div class="col-12">
+                                                      <div class="card">
+                                                        <div class="card-body row">
+                                                          <div class="form-group col-md-12">
+                                                            <ag-grid-angular #agGrid id="myGrid" style="height: 250px; width: auto"
+                                                              [rowData]="records_letterfromowner" [columnDefs]="columnDefs5" [modules]="modules"
+                                                              [localeText]="localeText" [enableRtl]="true" (gridReady)="onGridReady4($event)"
+                                                              (cellClicked)="onCellClicked($event)" [pagination]="true"
+                                                              [frameworkComponents]="frameworkComponents" [context]="context"
+                                                              [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'"
+                                                              [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+                                                              (selectionChanged)="onSelectionChanged($event)">
+                                                            </ag-grid-angular>
+                                                          </div>
+                                                          @if (!show_newletter) {
+                                                            <div class="form-group col-md-3">
+                                                              <label for="DescriptionText" class="col-form-label">عملیات</label>
+                                                              <button type="button" class="form-control btn btn-success" (click)="toggel_show_newletter()">ایجاد
+                                                                تیکت
+                                                              جدید</button>
+                                                            </div>
+                                                          }
+
+
+                                                          @if (show_newletter) {
+                                                            <div class="form-group col-md-2">
+                                                              <label for="DescriptionText" class="col-form-label">عملیات</label>
+                                                              <button type="button" class="form-control btn btn-danger" (click)="toggel_show_newletter()">انصراف
+                                                                تیکت
+                                                              </button>
+                                                            </div>
+                                                            @if (LetterCode.length>0) {
+                                                              <div class="form-group col-md-2">
+                                                                <label for="LetterCode" class="col-form-label">کد تیکت</label>
+                                                                <input type="text" class="form-control" id="LetterCode" formControlName="LetterCode"
+                                                                  maxlength="400" autocomplete="off" readonly>
+                                                                </div>
+                                                              }
+                                                              <div class=" form-group col-md-2">
+                                                                <label for="OwnerCentral" class="col-form-label">کد مشتری </label>
+                                                                @if (LetterCode.length>0) {
+                                                                  <input type="text" class="form-control" id="OwnerCentral" formControlName="OwnerCentral"
+                                                                    placeholder="نمایش مشتریان" maxlength="100" autocomplete="off" readonly />
+                                                                  }
+                                                                  @if (LetterCode.length==0) {
+                                                                    <label for="OwnerCentral" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                                                                    <input type="text" class="form-control" id="OwnerCentral" placeholder="نمایش مشتریان"
                           formControlName="OwnerCentral" maxlength="100" autocomplete="off" readonly [ngClass]="{
                               'is-invalid':
                               EditForm_LetterToEmployer.controls['OwnerCentral'].invalid &&
@@ -536,23 +495,17 @@
                               message: 'اجباری است',
                               control: EditForm_LetterToEmployer.controls['OwnerCentral']
                             }"></ng-container>
-
-                      </ng-container>
-
-                    </div>
-
-                    <div class="form-group col-md-4">
-                      <label for="OwnerName" class="col-form-label">نام مشتری</label>
-                      <input type="text" class="form-control" id="OwnerName" formControlName="OwnerName" maxlength="400"
-                        autocomplete="off">
-
-                    </div>
-
-
-                    <!-- انتخاب کاربر -->
-                    <div class="form-group col-md-4">
-                      <label for="ExecuterCentral" class="form-label">کاربر</label>
-                      <select formControlName="ExecuterCentral" id="ExecuterCentral" class="form-control custom-select"
+                                                                    }
+                                                                  </div>
+                                                                  <div class="form-group col-md-4">
+                                                                    <label for="OwnerName" class="col-form-label">نام مشتری</label>
+                                                                    <input type="text" class="form-control" id="OwnerName" formControlName="OwnerName" maxlength="400"
+                                                                      autocomplete="off">
+                                                                    </div>
+                                                                    <!-- انتخاب کاربر -->
+                                                                    <div class="form-group col-md-4">
+                                                                      <label for="ExecuterCentral" class="form-label">کاربر</label>
+                                                                      <select formControlName="ExecuterCentral" id="ExecuterCentral" class="form-control custom-select"
                         [ngClass]="{
                       'is-invalid':
                       EditForm_LetterToEmployer.controls['ExecuterCentral'].invalid &&
@@ -561,32 +514,31 @@
                       EditForm_LetterToEmployer.controls['ExecuterCentral'].valid &&
                       EditForm_LetterToEmployer.controls['ExecuterCentral'].touched
                     }">
-                        <option value="">لطفاً انتخاب کنید</option>
-                        <option *ngFor="let user of users" [value]="user.CentralCode">
-                          {{ user.CentralName }}
-                        </option>
-                      </select>
+                                                                        <option value="">لطفاً انتخاب کنید</option>
+                                                                        @for (user of users; track user) {
+                                                                          <option [value]="user.CentralCode">
+                                                                            {{ user.CentralName }}
+                                                                          </option>
+                                                                        }
+                                                                      </select>
                       <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
                                               validation: 'required',
                                               message: 'اجباری است',
                                               control: EditForm_LetterToEmployer.controls['ExecuterCentral']
                                             }">
-                      </ng-container>
-                    </div>
-
-
-                    <ng-container *ngIf="LetterCode.length>0">
-                      <div class="form-group col-md-12">
-                        <label for="LetterDescriptionText" class="col-form-label">شرح تیکت</label>
-                        <textarea type="text" class="form-control" id="LetterDescriptionText"
-                          formControlName="LetterDescriptionText" maxlength="400" autocomplete="off"
-                          readonly></textarea>
-
-                      </div>
-                    </ng-container>
-                    <div class="form-group col-md-12">
-                      <label for="DescriptionText" class="col-form-label">شرح ارجاع</label>
-                      <textarea type="text" class="form-control" id="DescriptionText" formControlName="DescriptionText"
+                                                                      </ng-container>
+                                                                    </div>
+                                                                    @if (LetterCode.length>0) {
+                                                                      <div class="form-group col-md-12">
+                                                                        <label for="LetterDescriptionText" class="col-form-label">شرح تیکت</label>
+                                                                        <textarea type="text" class="form-control" id="LetterDescriptionText"
+                                                                          formControlName="LetterDescriptionText" maxlength="400" autocomplete="off"
+                                                                        readonly></textarea>
+                                                                      </div>
+                                                                    }
+                                                                    <div class="form-group col-md-12">
+                                                                      <label for="DescriptionText" class="col-form-label">شرح ارجاع</label>
+                                                                      <textarea type="text" class="form-control" id="DescriptionText" formControlName="DescriptionText"
                         maxlength="400" autocomplete="off" [ngClass]="{
                               'is-invalid':
                               EditForm_LetterToEmployer.controls['DescriptionText'].invalid &&
@@ -595,17 +547,15 @@
                               EditForm_LetterToEmployer.controls['DescriptionText'].valid &&
                               EditForm_LetterToEmployer.controls['DescriptionText'].touched
                             }"></textarea>
-
                       <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
                               validation: 'required',
                               message: 'اجباری است',
                               control: EditForm_LetterToEmployer.controls['DescriptionText']
                             }"></ng-container>
-
-                    </div>
-                    <div class="form-group col-md-12">
-                      <label for="DescriptionText" class="col-form-label">شرح ارجاع</label>
-                      <textarea type="text" class="form-control" id="DescriptionText" formControlName="DescriptionText"
+                                                                    </div>
+                                                                    <div class="form-group col-md-12">
+                                                                      <label for="DescriptionText" class="col-form-label">شرح ارجاع</label>
+                                                                      <textarea type="text" class="form-control" id="DescriptionText" formControlName="DescriptionText"
                         maxlength="400" autocomplete="off" (input)="sanitizeDescriptionText($event)" [ngClass]="{
               'is-invalid':
               EditForm_LetterToEmployer.controls['DescriptionText'].invalid &&
@@ -614,37 +564,34 @@
               EditForm_LetterToEmployer.controls['DescriptionText'].valid &&
               EditForm_LetterToEmployer.controls['DescriptionText'].touched
             }">
-  </textarea>
-
+                                                                      </textarea>
                       <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
                   validation: 'required',
                   message: 'اجباری است',
                   control: EditForm_LetterToEmployer.controls['DescriptionText']
                 }">
-                      </ng-container>
-                    </div>
-
-
-                  </ng-container>
+                                                                      </ng-container>
+                                                                    </div>
+                                                                  }
 
 
 
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
+                                                                </div>
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                        </form>
 
-      </div>
+                                                      </div>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-          (click)="Autletter_dialog_close()">بستن</button>
-        <ng-container *ngIf="show_newletter">
-          <button type="button" class="btn btn-primary" (click)="SendLetter()">ارسال تیکت</button>
-        </ng-container>
+                                                      <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                                        (click)="Autletter_dialog_close()">بستن</button>
+                                                        @if (show_newletter) {
+                                                          <button type="button" class="btn btn-primary" (click)="SendLetter()">ارسال تیکت</button>
+                                                        }
 
-      </div>
-    </div>
-  </div>
-</div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>

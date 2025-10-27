@@ -31,11 +31,13 @@
         </div>
       </div>
     </div>
-    <div *ngIf="loading" class="text-center">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
+    @if (loading) {
+      <div class="text-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
       </div>
-    </div>
+    }
     <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto"
       [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="records" [columnDefs]="columnDefs"
       [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef" [enableRtl]="true"

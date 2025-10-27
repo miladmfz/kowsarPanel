@@ -7,96 +7,98 @@
 
         <div class="row">
           <!-- <div class="form-group col-md-3">
-            <label for="searchTerm" class="col-form-label">جستجو</label>
-            <input class="form-control" id="searchTerm" type="text" [(ngModel)]="searchTerm"
-              [ngModelOptions]="{ standalone: true }" />
+          <label for="searchTerm" class="col-form-label">جستجو</label>
+          <input class="form-control" id="searchTerm" type="text" [(ngModel)]="searchTerm"
+            [ngModelOptions]="{ standalone: true }" />
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="ticketDisplay" class="col-form-label">نمایش تیکت‌ها</label>
+          <select class="form-control" id="ticketDisplay" [(ngModel)]="selectedOption">
+            <option [value]="'0'">همه</option>
+            <option [value]="'1'">خودم</option>
+          </select>
+        </div> -->
+
+        <!-- Date Picker -->
+        <div class="form-group col-md-3">
+          <label for="StartTime" class="col-form-label">از تاریخ</label>
+          <div>
+            <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
+              [uiHideAfterSelectDate]="true">
+              <input class="form-control" id="StartTime" type="text" [formControl]="StartTime" />
+            </ng-persian-datepicker>
           </div>
 
-          <div class="form-group col-md-3">
-            <label for="ticketDisplay" class="col-form-label">نمایش تیکت‌ها</label>
-            <select class="form-control" id="ticketDisplay" [(ngModel)]="selectedOption">
-              <option [value]="'0'">همه</option>
-              <option [value]="'1'">خودم</option>
-            </select>
-          </div> -->
-
-          <!-- Date Picker -->
-          <div class="form-group col-md-3">
-            <label for="StartTime" class="col-form-label">از تاریخ</label>
-            <div>
-              <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
-                [uiHideAfterSelectDate]="true">
-                <input class="form-control" id="StartTime" type="text" [formControl]="StartTime" />
-              </ng-persian-datepicker>
-            </div>
-
+        </div>
+        <div class="form-group col-md-3">
+          <label for="EndTime" class="col-form-label">تا تاریخ</label>
+          <div>
+            <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
+              [uiHideAfterSelectDate]="true">
+              <input class="form-control" id="EndTime" type="text" [formControl]="EndTime" />
+            </ng-persian-datepicker>
           </div>
-          <div class="form-group col-md-3">
-            <label for="EndTime" class="col-form-label">تا تاریخ</label>
-            <div>
-              <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false"
-                [uiHideAfterSelectDate]="true">
-                <input class="form-control" id="EndTime" type="text" [formControl]="EndTime" />
-              </ng-persian-datepicker>
-            </div>
-
-          </div>
-
-
 
         </div>
 
 
-        <!-- <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
-          [(ngModel)]="Searchtarget" (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" /> -->
-        <a type="button" class="btn btn-primary waves-effect waves-light m-1" (click)="LoadList()">
-          <span class="btn-label"><i class="fas fa-search"></i></span>جستجو
-        </a>
-        <a type="button" class="btn btn-success waves-effect waves-light m-1" [routerLink]="['/support/leavereq-edit']">
-          <span class="btn-label"><i class="fas fa-plus"></i></span>جدید
-        </a>
-        <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getinitialList()">
-          <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
-        </a>
-        <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="removeAllFilters()">
-          <span class="btn-label"><i class="fas fa-eye-slash"></i></span>حذف
-          جستجو
-        </a>
-        <!-- <div class="btn-group">
-          <button type="button" class="btn btn-light waves-effect waves-light m-1 dropdown-toggle" id="exportdropdown"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            دریافت خروجی <i class="mdi mdi-chevron-down"></i>
-          </button>
-          <div class="dropdown-menu" aria-labelledby="exportdropdown">
-            <button class="dropdown-item" type="button" (click)="onExportExcel()">
-              Excel <i class="fas fa-file-excel"></i>
-            </button>
-            <button class="dropdown-item" type="button" (click)="onExportCSV()">
-              CSV <i class="fas fa-file-csv"></i>
-            </button>
 
-
-          </div>
-        </div> -->
       </div>
 
 
-    </div>
+      <!-- <input cFormControl type="text" class="form-control" placeholder="جستجو..." type="text"
+      [(ngModel)]="Searchtarget" (ngModelChange)="onInputChange()" [ngModelOptions]="{ standalone: true }" /> -->
+      <a type="button" class="btn btn-primary waves-effect waves-light m-1" (click)="LoadList()">
+        <span class="btn-label"><i class="fas fa-search"></i></span>جستجو
+      </a>
+      <a type="button" class="btn btn-success waves-effect waves-light m-1" [routerLink]="['/support/leavereq-edit']">
+        <span class="btn-label"><i class="fas fa-plus"></i></span>جدید
+      </a>
+      <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getinitialList()">
+        <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
+      </a>
+      <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="removeAllFilters()">
+        <span class="btn-label"><i class="fas fa-eye-slash"></i></span>حذف
+        جستجو
+      </a>
+      <!-- <div class="btn-group">
+      <button type="button" class="btn btn-light waves-effect waves-light m-1 dropdown-toggle" id="exportdropdown"
+        data-bs-toggle="dropdown" aria-expanded="false">
+        دریافت خروجی <i class="mdi mdi-chevron-down"></i>
+      </button>
+      <div class="dropdown-menu" aria-labelledby="exportdropdown">
+        <button class="dropdown-item" type="button" (click)="onExportExcel()">
+          Excel <i class="fas fa-file-excel"></i>
+        </button>
+        <button class="dropdown-item" type="button" (click)="onExportCSV()">
+          CSV <i class="fas fa-file-csv"></i>
+        </button>
 
-    <div *ngIf="loading" class="text-center">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
+
       </div>
-    </div>
-
-    <ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
-      [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
-      (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-      [frameworkComponents]="frameworkComponents" [context]="context"
-      [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [defaultColDef]="defaultColDef"
-      [suppressRowClickSelection]="true" [rowSelection]="'multiple'" (selectionChanged)="onSelectionChanged($event)">
-    </ag-grid-angular>
+    </div> -->
   </div>
+
+
+</div>
+
+@if (loading) {
+  <div class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+}
+
+<ag-grid-angular #agGrid id="myGrid" style="height: 600px; width: auto" [rowData]="records"
+  [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+  (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+  [frameworkComponents]="frameworkComponents" [context]="context"
+  [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [defaultColDef]="defaultColDef"
+  [suppressRowClickSelection]="true" [rowSelection]="'multiple'" (selectionChanged)="onSelectionChanged($event)">
+</ag-grid-angular>
+</div>
 </div>
 
 
@@ -107,16 +109,18 @@
       <div class="modal-header" style="background-color: #949494;">
         <h5 class="modal-title" id="leavedetailLabel">شرع جزئیات مرخصی {{mdoal_title}}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-          (click)="leavedetail_dialog_close()"></button>
+        (click)="leavedetail_dialog_close()"></button>
       </div>
       <div class="modal-body">
 
 
-        <div *ngIf="loading_leavedetail" class="text-center">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
+        @if (loading_leavedetail) {
+          <div class="text-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
           </div>
-        </div>
+        }
 
         <ag-grid-angular #agGrid id="myGrid" style="height: 200px; width: auto" [rowData]="records_leavedetails"
           [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
@@ -192,7 +196,7 @@
                   </div>
 
 
-                  <!-- 
+                  <!--
                   <div class="col-md-2">
                     <label for="WorkFlowStatus" class="form-label">وضعیت</label>
                     <input formControlName="WorkFlowStatus" id="WorkFlowStatus" class="form-control" rows="4"
@@ -205,11 +209,8 @@
                   </div>-->
 
                   <!-- بخش نظر مدیر و وضعیت -->
-                  <ng-container *ngIf="isManager">
-
-
+                  @if (isManager) {
                     <div class="card-body row">
-
                       <div class="form-group  col-md-2">
                         <label for="WorkFlowStatus" class="form-label">وضعیت درخواست</label>
                         <select formControlName="WorkFlowStatus" id="WorkFlowStatus" class="form-control">
@@ -219,26 +220,20 @@
                           <option value="3">بررسی مجدد</option>
                         </select>
                       </div>
-
                       <div class="form-group col-md-8">
                         <label for="WorkFlowExplain" class="form-label">توضیحات کارفرما</label>
                         <input formControlName="WorkFlowExplain" id="WorkFlowExplain" class="form-control" rows="3"
                           placeholder="توضیح دلایل تأیید یا رد درخواست">
                       </div>
-
-
                       <div class="form-group col-md-2">
                         <label for="Barbary" class="col-form-label">.</label>
-
                         <a type="button" class="form-control btn btn-primary waves-effect waves-light "
                           (click)="submitWorkflow()">
                           <span class="btn-label"><i class="fas fa-file-alt"></i>
-                          </span> ثبت</a>
+                        </span> ثبت</a>
                       </div>
-
-
                     </div>
-                  </ng-container>
+                  }
 
 
                 </div>
@@ -249,7 +244,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-          (click)="leavedetail_dialog_close()">بستن</button>
+        (click)="leavedetail_dialog_close()">بستن</button>
 
       </div>
     </div>

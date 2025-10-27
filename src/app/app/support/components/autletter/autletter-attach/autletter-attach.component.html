@@ -1,8 +1,10 @@
-<div *ngIf="loading_attach" class="text-center">
-  <div class="spinner-border" role="status">
-    <span class="visually-hidden">Loading...</span>
+@if (loading_attach) {
+  <div class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
   </div>
-</div>
+}
 
 
 <div class="card">
@@ -27,56 +29,62 @@
               <label for="Title" class="form-label fw-bold">عنوان</label>
               <input type="text" class="form-control" id="Title" formControlName="Title" maxlength="100"
                 autocomplete="off" placeholder="مثلاً: معرفی فایل جدید" />
-            </div>
+              </div>
 
-            <!-- انتخاب فایل -->
-            <div class="form-group col-md-4 mb-3 text-center">
-              <label class="form-label fw-bold d-block">انتخاب فایل</label>
-              <button type="button" class="btn btn-outline-info w-100" (click)="fileInput.click()">
-                <i class="fas fa-file-upload me-1"></i> انتخاب فایل
-              </button>
-              <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput style="display: none;" />
-            </div>
-          </div>
-
-          <!-- جزئیات فایل انتخاب‌شده -->
-          <div *ngIf="selectedImage" class="mt-4 text-center border-top pt-3">
-            <h6 class="text-secondary mb-3">جزئیات فایل انتخاب‌شده</h6>
-
-            <div class="row justify-content-center">
-              <div class="col-md-8">
-                <ul class="list-group list-group-flush small text-start">
-                  <li class="list-group-item">
-                    <strong>نام فایل:</strong> {{ selectedFileName }}
-                  </li>
-                  <li class="list-group-item">
-                    <strong>نوع فایل:</strong> {{ selectedFileType }}
-                  </li>
-                  <li class="list-group-item">
-                    <strong>حجم فایل:</strong> {{ selectedFileSize }} KB
-                  </li>
-                </ul>
+              <!-- انتخاب فایل -->
+              <div class="form-group col-md-4 mb-3 text-center">
+                <label class="form-label fw-bold d-block">انتخاب فایل</label>
+                <button type="button" class="btn btn-outline-info w-100" (click)="fileInput.click()">
+                  <i class="fas fa-file-upload me-1"></i> انتخاب فایل
+                </button>
+                <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput style="display: none;" />
               </div>
             </div>
 
-            <p *ngIf="selectedFileSize > 10240" class="text-danger fw-bold mt-3">
-              ⚠️ حجم فایل بیشتر از 10 مگابایت است.
-            </p>
-            <p *ngIf="selectedFileSize <= 10240" class="text-success fw-bold mt-3">
-              ✅ حجم فایل مورد تأیید است.
-            </p>
-            <div *ngIf="selectedFileName.length > 0 && selectedFileSize < 10240" class="text-center mt-4">
-              <button type="submit" class="btn btn-success px-4">
-                <i class="fas fa-check-double me-1"></i> ارسال
-              </button>
-            </div>
+            <!-- جزئیات فایل انتخاب‌شده -->
+            @if (selectedImage) {
+              <div class="mt-4 text-center border-top pt-3">
+                <h6 class="text-secondary mb-3">جزئیات فایل انتخاب‌شده</h6>
+                <div class="row justify-content-center">
+                  <div class="col-md-8">
+                    <ul class="list-group list-group-flush small text-start">
+                      <li class="list-group-item">
+                        <strong>نام فایل:</strong> {{ selectedFileName }}
+                      </li>
+                      <li class="list-group-item">
+                        <strong>نوع فایل:</strong> {{ selectedFileType }}
+                      </li>
+                      <li class="list-group-item">
+                        <strong>حجم فایل:</strong> {{ selectedFileSize }} KB
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                @if (selectedFileSize > 10240) {
+                  <p class="text-danger fw-bold mt-3">
+                    ⚠️ حجم فایل بیشتر از 10 مگابایت است.
+                  </p>
+                }
+                @if (selectedFileSize <= 10240) {
+                  <p class="text-success fw-bold mt-3">
+                    ✅ حجم فایل مورد تأیید است.
+                  </p>
+                }
+                @if (selectedFileName.length > 0 && selectedFileSize < 10240) {
+                  <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success px-4">
+                      <i class="fas fa-check-double me-1"></i> ارسال
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+
+
           </div>
-
-
         </div>
-      </div>
-    </form>
+      </form>
 
 
+    </div>
   </div>
-</div>

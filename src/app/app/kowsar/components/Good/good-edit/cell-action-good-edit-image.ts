@@ -6,13 +6,13 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 @Component({
     selector: 'edit-delete-cell-renderer',
     template: `
-    <ng-container *ngIf="Imageitem.length > 100">
+    @if (Imageitem.length > 100) {
       <img [src]="Imageitem" alt="No Photo" >
-    </ng-container>
-    <ng-container *ngIf="Imageitem.length < 100">
+    }
+    @if (Imageitem.length < 100) {
       <img src="./assets/images/plugins/loading.gif" alt="No Photo" >
-    </ng-container>
-  `,
+    }
+    `,
     standalone: false
 })
 export class CellActionGoodEditImage implements ICellRendererAngularComp {

@@ -5,13 +5,12 @@ declare var $: any;
 @Component({
     selector: 'image-cell-renderer',
     template: `
-        <div *ngIf="photo; then specialPhoto else defaultPhoto"></div>
-        <ng-template #specialPhoto>
-            <img src="data:image/jpg;base64,{{photo}}" width="40" />
-        </ng-template>
-        <ng-template #defaultPhoto>
-            <img src="./assets/media/logos/blanklogo.png" width="40" />
-        </ng-template>`,
+        @if (photo) {
+          <img src="data:image/jpg;base64,{{photo}}" width="40" />
+        } @else {
+          <img src="./assets/media/logos/blanklogo.png" width="40" />
+        }
+        `,
     standalone: false
 })
 export class ImageCellRenderer implements ICellRendererAngularComp {

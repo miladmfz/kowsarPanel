@@ -36,7 +36,9 @@
                     }">
               <option value="">لطفاً انتخاب کنید</option>
 
-              <option [value]="item.id" *ngFor="let item of Title_Lookup">{{item.name}}</option>
+              @for (item of Title_Lookup; track item) {
+                <option [value]="item.id">{{item.name}}</option>
+              }
             </select>
             <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
                                               validation: 'required',
@@ -47,11 +49,9 @@
 
           </div>
 
-          <ng-container *ngIf="IsEmploy">
+          @if (IsEmploy) {
             <div class=" form-group col-md-2">
               <label for="OwnerCentral" class="col-form-label">کد مشتری </label>
-
-
               <label for="OwnerCentral" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
               <input type="text" class="form-control" id="OwnerCentral" (click)="GetCentral()"
                 placeholder="نمایش مشتریان" formControlName="OwnerCentral" maxlength="100" autocomplete="off" readonly
@@ -68,49 +68,44 @@
                               message: 'اجباری است',
                               control: EditForm_LetterInsert.controls['OwnerCentral']
                             }"></ng-container>
+              </div>
+            }
+            <div class="form-group col-md-3">
+              <label for="OwnerName" class="col-form-label">نام مشتری</label>
+              <input type="text" class="form-control" id="OwnerName" formControlName="OwnerName" maxlength="400"
+                autocomplete="off" readonly>
 
+              </div>
 
-            </div>
-          </ng-container>
-          <div class="form-group col-md-3">
-            <label for="OwnerName" class="col-form-label">نام مشتری</label>
-            <input type="text" class="form-control" id="OwnerName" formControlName="OwnerName" maxlength="400"
-              autocomplete="off" readonly>
-
-          </div>
-
-          <ng-container *ngIf="IsEmploy">
-            <div class="form-group col-md-2">
-              <label for="LetterPriority" class="col-form-label">الویت </label>
-              <select formControlName="LetterPriority" id="LetterPriority" class="form-control custom-select">
-                <option value="">لطفاً انتخاب کنید</option>
-
-                <option [value]="item.aType" *ngFor="let item of LetterPriority_lookup">{{item.aType}}</option>
-              </select>
-            </div>
-
-
-
-            <div class="form-group col-md-2">
-              <label for="InOutFlag" class="col-form-label">نوع نامه </label>
-              <select formControlName="InOutFlag" id="InOutFlag" class="form-control custom-select">
-                <option value="">لطفاً انتخاب کنید</option>
-
-                <option [value]="item.id" *ngFor="let item of InOut_Lookup">{{item.name}}</option>
-              </select>
-            </div>
-
-
-          </ng-container>
+              @if (IsEmploy) {
+                <div class="form-group col-md-2">
+                  <label for="LetterPriority" class="col-form-label">الویت </label>
+                  <select formControlName="LetterPriority" id="LetterPriority" class="form-control custom-select">
+                    <option value="">لطفاً انتخاب کنید</option>
+                    @for (item of LetterPriority_lookup; track item) {
+                      <option [value]="item.aType">{{item.aType}}</option>
+                    }
+                  </select>
+                </div>
+                <div class="form-group col-md-2">
+                  <label for="InOutFlag" class="col-form-label">نوع نامه </label>
+                  <select formControlName="InOutFlag" id="InOutFlag" class="form-control custom-select">
+                    <option value="">لطفاً انتخاب کنید</option>
+                    @for (item of InOut_Lookup; track item) {
+                      <option [value]="item.id">{{item.name}}</option>
+                    }
+                  </select>
+                </div>
+              }
 
 
 
 
-          <div class="form-group col-md-12">
-            <label for="Description" class="col-form-label">شرح تیکت </label>
-            <span class="text-danger">*</span>
+              <div class="form-group col-md-12">
+                <label for="Description" class="col-form-label">شرح تیکت </label>
+                <span class="text-danger">*</span>
 
-            <textarea type="text" class="form-control" id="Description" formControlName="Description" autocomplete="off"
+                <textarea type="text" class="form-control" id="Description" formControlName="Description" autocomplete="off"
               [ngClass]="{
                       'is-invalid':
                       EditForm_LetterInsert.controls['Description'].invalid &&
@@ -119,13 +114,46 @@
                       EditForm_LetterInsert.controls['Description'].valid &&
                       EditForm_LetterInsert.controls['Description'].touched
                     }">
-              </textarea>
+                </textarea>
             <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
                                               validation: 'required',
                                               message: 'اجباری است',
                                               control: EditForm_LetterInsert.controls['Description']
                                             }">
-            </ng-container>
+                </ng-container>
+
+
+
+
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <!-- <div class="form-group col-md-3">
+    <label for="datePicker" class="col-form-label">تاریخ</label>
+    <div>
+      <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false" [uiHideAfterSelectDate]="true">
+        <input class="form-control" id="datePicker" type="text" />
+      </ng-persian-datepicker>
+    </div>
+
+  </div> -->
+  <div class="card">
+    <div class="card-body">
+      <div class="col-sm-6">
+        <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light m-2"
+          (click)="submit('')">
+          <span class="btn-label"><i class="fas fa-check-double"></i></span>ارسال تیکت </a>
+
+          @if (JobPersonRef.length>0) {
+            <a href="javascript:void(0)" type="button" class="btn btn-primary waves-effect waves-light m-2"
+              (click)="submit('detail')">
+              <span class="btn-label"><i class="fas fa-check-double"></i></span>ثبت و ارجاع تیکت </a>
+            }
 
 
 
@@ -135,113 +163,82 @@
 
         </div>
       </div>
-    </div>
-  </div>
-</form>
-<!-- <div class="form-group col-md-3">
-  <label for="datePicker" class="col-form-label">تاریخ</label>
-  <div>
-    <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="false" [uiHideAfterSelectDate]="true">
-      <input class="form-control" id="datePicker" type="text" />
-    </ng-persian-datepicker>
-  </div>
-
-</div> -->
-<div class="card">
-  <div class="card-body">
-    <div class="col-sm-6">
-      <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light m-2"
-        (click)="submit('')">
-        <span class="btn-label"><i class="fas fa-check-double"></i></span>ارسال تیکت </a>
-
-      <ng-container *ngIf="JobPersonRef.length>0">
-        <a href="javascript:void(0)" type="button" class="btn btn-primary waves-effect waves-light m-2"
-          (click)="submit('detail')">
-          <span class="btn-label"><i class="fas fa-check-double"></i></span>ثبت و ارجاع تیکت </a>
-      </ng-container>
 
 
-
-
-    </div>
-
-
-  </div>
-</div>
-
-
-<div class="modal fade" id="loadingresponse" tabindex="-1" aria-labelledby="loadingresponseLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="background-color: #d1dce7; border-radius: 10px; border: none;">
-      <div class="modal-body d-flex justify-content-center align-items-center" style="height: 150px;">
-        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
-          <span class="visually-hidden">Loading...</span>
+      <div class="modal fade" id="loadingresponse" tabindex="-1" aria-labelledby="loadingresponseLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content" style="background-color: #d1dce7; border-radius: 10px; border: none;">
+            <div class="modal-body d-flex justify-content-center align-items-center" style="height: 150px;">
+              <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <div class="ms-3">لطفا منتظر بمانید</div>
+            </div>
+          </div>
         </div>
-        <div class="ms-3">لطفا منتظر بمانید</div>
       </div>
-    </div>
-  </div>
-</div>
 
 
 
 
-<div class="modal fade" id="centrallist" tabindex="-1" aria-labelledby="centrallistLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content" style="background-color: #d1dce7;">
-      <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="centrallistLabel">لیست مشتریان</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-          (click)="centrallist_dialog_close()"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row mb-2">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <input #modalsearch type="text" class="form-control" placeholder="جستجو..."
-                [(ngModel)]="Searchtarget_central" (ngModelChange)="onInputChange_Customer()"
-                [ngModelOptions]="{ standalone: true }" />
+      <div class="modal fade" id="centrallist" tabindex="-1" aria-labelledby="centrallistLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content" style="background-color: #d1dce7;">
+            <div class="modal-header" style="background-color: #949494;">
+              <h5 class="modal-title" id="centrallistLabel">لیست مشتریان</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+              (click)="centrallist_dialog_close()"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row mb-2">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <input #modalsearch type="text" class="form-control" placeholder="جستجو..."
+                      [(ngModel)]="Searchtarget_central" (ngModelChange)="onInputChange_Customer()"
+                      [ngModelOptions]="{ standalone: true }" />
+                    </div>
+                  </div>
+                </div>
+
+                @if (loading) {
+                  <div class="text-center">
+                    <div class="spinner-border" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                }
+
+                <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" [rowData]="records_support_central"
+                  [columnDefs]="columnDefs4" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
+                  [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+                  [frameworkComponents]="frameworkComponents" [context]="context"
+                  [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [suppressRowClickSelection]="true"
+                  [rowSelection]="'single'" (selectionChanged)="onSelectionChanged($event)">
+                </ag-grid-angular>
+
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                (click)="centrallist_dialog_close()">بستن</button>
+                <button type="button" class="btn btn-primary" (click)="Set_Customer()">انتخاب</button>
+              </div>
             </div>
           </div>
         </div>
 
-        <div *ngIf="loading" class="text-center">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-
-        <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" [rowData]="records_support_central"
-          [columnDefs]="columnDefs4" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
-          [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-          [frameworkComponents]="frameworkComponents" [context]="context"
-          [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [suppressRowClickSelection]="true"
-          [rowSelection]="'single'" (selectionChanged)="onSelectionChanged($event)">
-        </ag-grid-angular>
-
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-          (click)="centrallist_dialog_close()">بستن</button>
-        <button type="button" class="btn btn-primary" (click)="Set_Customer()">انتخاب</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 
 
 
 
-
-<ng-template #formError let-control="control" let-message="message" let-validation="validation">
-  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
-    <div class="fv-plugins-message-container invalid-feedback">
-      <span role="alert">
-        {{ message }}
-      </span>
-    </div>
-  </ng-container>
-</ng-template>
+        <ng-template #formError let-control="control" let-message="message" let-validation="validation">
+          @if (control.hasError(validation) && (control.dirty || control.touched)) {
+            <div class="fv-plugins-message-container invalid-feedback">
+              <span role="alert">
+                {{ message }}
+              </span>
+            </div>
+          }
+        </ng-template>

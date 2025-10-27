@@ -15,12 +15,12 @@
 
           <div class="me-3">
             <label for="fileInput" class="position-relative">
-              <ng-container *ngIf="Imageitem.length>100">
+              @if (Imageitem.length>100) {
                 <img [src]="Imageitem" alt="No Photo" class="rounded-circle">
-              </ng-container>
-              <ng-container *ngIf="Imageitem.length<100">
+              }
+              @if (Imageitem.length<100) {
                 <img src="./assets/images/nophoto.png" alt="No Photo" class="rounded-circle">
-              </ng-container>
+              }
 
             </label>
 
@@ -28,89 +28,89 @@
 
           <div class="col-md-12 d-flex align-items-center">
             <button class="btn btn-link mx-2 text-info" style="font-size: 18px; padding: 10px 20px;"
-              (click)="fileInput.click()">اضافه کردن عکس</button>
+            (click)="fileInput.click()">اضافه کردن عکس</button>
             <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput style="display: none;"
               (click)="$event.stopPropagation()">
-          </div>
-
-
-
-          <div class="form-group col-md-12">
-            <div class="form-group col-md-4">
-              <label for="CentralCode" class="col-form-label">کد سیستمی </label>
-              <input type="text" class="form-control" id="CentralCode" formControlName="CentralCode" maxlength="100"
-                autocomplete="off" readonly />
             </div>
-          </div>
-
-          <div class="form-group col-md-4">
-            <label for="Title" class="col-form-label">عنوان </label>
-            <input type="text" class="form-control" id="Title" formControlName="Title" maxlength="100"
-              autocomplete="off" readonly />
-          </div>
-          <div class="form-group col-md-4">
-            <label for="Name" class="col-form-label">نام مجموعه </label>
-            <input type="text" class="form-control" id="Name" formControlName="Name" maxlength="100" autocomplete="off"
-              readonly />
-          </div>
-          <div class="form-group col-md-4">
-            <label for="FName" class="col-form-label">اسم </label>
-            <input type="text" class="form-control" id="FName" formControlName="FName" maxlength="100"
-              autocomplete="off" readonly />
-          </div>
-          <div class="form-group col-md-4">
-            <label for="Manager" class="col-form-label">مدیریت </label>
-            <input type="text" class="form-control" id="Manager" formControlName="Manager" maxlength="100"
-              autocomplete="off" readonly />
-          </div>
-          <div class="form-group col-md-4">
-            <label for="Delegacy" class="col-form-label">نماینده </label>
-            <input type="text" class="form-control" id="Delegacy" formControlName="Delegacy" maxlength="100"
-              autocomplete="off" readonly />
-          </div>
-          <div class="form-group col-md-4">
-            <label for="CentralName" class="col-form-label">نام کامل </label>
-            <input type="text" class="form-control" id="CentralName" formControlName="CentralName" maxlength="100"
-              autocomplete="off" readonly />
-          </div>
 
 
-        </div>
-      </div>
-    </div>
-  </div>
-</form>
 
-<div class="card">
-  <div class="card-body">
-    <div class="col-sm-6">
-      <!-- <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
-        (change)="onFileSelected($event)">
-        <span class="btn-label"><i class="fas fa-check-double"></i></span>بازگزاری عکس
-      </a> -->
-      <!-- <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
-        (click)="submit('')">
-        <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره
-      </a>
-      <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
-        (click)="submit('new')">
-        <span class="btn-label"><i class="fas fa-plus"></i></span>ذخیره و جدید
-      </a> -->
-      <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
-        (click)="onBtnCancelClick()">
-        <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
-      </a>
-    </div>
-  </div>
-</div>
+            <div class="form-group col-md-12">
+              <div class="form-group col-md-4">
+                <label for="CentralCode" class="col-form-label">کد سیستمی </label>
+                <input type="text" class="form-control" id="CentralCode" formControlName="CentralCode" maxlength="100"
+                  autocomplete="off" readonly />
+                </div>
+              </div>
+
+              <div class="form-group col-md-4">
+                <label for="Title" class="col-form-label">عنوان </label>
+                <input type="text" class="form-control" id="Title" formControlName="Title" maxlength="100"
+                  autocomplete="off" readonly />
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="Name" class="col-form-label">نام مجموعه </label>
+                  <input type="text" class="form-control" id="Name" formControlName="Name" maxlength="100" autocomplete="off"
+                    readonly />
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="FName" class="col-form-label">اسم </label>
+                    <input type="text" class="form-control" id="FName" formControlName="FName" maxlength="100"
+                      autocomplete="off" readonly />
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="Manager" class="col-form-label">مدیریت </label>
+                      <input type="text" class="form-control" id="Manager" formControlName="Manager" maxlength="100"
+                        autocomplete="off" readonly />
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="Delegacy" class="col-form-label">نماینده </label>
+                        <input type="text" class="form-control" id="Delegacy" formControlName="Delegacy" maxlength="100"
+                          autocomplete="off" readonly />
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label for="CentralName" class="col-form-label">نام کامل </label>
+                          <input type="text" class="form-control" id="CentralName" formControlName="CentralName" maxlength="100"
+                            autocomplete="off" readonly />
+                          </div>
 
 
-<ng-template #formError let-control="control" let-message="message" let-validation="validation">
-  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
-    <div class="fv-plugins-message-container invalid-feedback">
-      <span role="alert">
-        {{ message }}
-      </span>
-    </div>
-  </ng-container>
-</ng-template>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+
+                <div class="card">
+                  <div class="card-body">
+                    <div class="col-sm-6">
+                      <!-- <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mr-1"
+                      (change)="onFileSelected($event)">
+                      <span class="btn-label"><i class="fas fa-check-double"></i></span>بازگزاری عکس
+                    </a> -->
+                    <!-- <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+                    (click)="submit('')">
+                    <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره
+                  </a>
+                  <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+                    (click)="submit('new')">
+                    <span class="btn-label"><i class="fas fa-plus"></i></span>ذخیره و جدید
+                  </a> -->
+                  <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mr-1"
+                    (click)="onBtnCancelClick()">
+                    <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
+                  </a>
+                </div>
+              </div>
+            </div>
+
+
+            <ng-template #formError let-control="control" let-message="message" let-validation="validation">
+              @if (control.hasError(validation) && (control.dirty || control.touched)) {
+                <div class="fv-plugins-message-container invalid-feedback">
+                  <span role="alert">
+                    {{ message }}
+                  </span>
+                </div>
+              }
+            </ng-template>

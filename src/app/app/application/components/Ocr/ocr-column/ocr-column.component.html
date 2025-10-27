@@ -9,12 +9,12 @@
       </li>
       <li class="nav-item">
         <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/ocr-setting']">تنظیمات توزیع و
-          بایگانی</a>
+        بایگانی</a>
       </li>
 
       <li class="nav-item">
         <a class="nav-link active" data-bs-toggle="pill" [routerLink]="['/application/ocr-column']">تنظیم جدول توزیع و
-          بایگانی</a>
+        بایگانی</a>
       </li>
 
 
@@ -40,223 +40,186 @@
 
           <!-- <c-container class=" mt-5 mb-3">
 
-            <c-row class="justify-content-between">
-              <c-col xs="4">
-                <h3 class="card-title align-items-start flex-column">
-                  <span class="card-label ">تنظیم جدول اپلیکیشن :</span>
-                </h3>
-              </c-col>
-              <c-col xs="2">
-                <div>
-                  <button cButton color="success" class=" text-white" [routerLink]="['/application/ocr-column-edit']">
-                    ایجاد رکورد جدید</button>
-                </div>
-              </c-col>
-            </c-row>
-
-          </c-container> -->
-
-          <div class="mt-5 mb-3">
-            <div class="row justify-content-between">
-              <div class="col-4">
-                <h3 class="card-title align-items-start flex-column">
-                  <span class="card-label">تنظیم جدول اپلیکیشن :</span>
-                </h3>
+          <c-row class="justify-content-between">
+            <c-col xs="4">
+              <h3 class="card-title align-items-start flex-column">
+                <span class="card-label ">تنظیم جدول اپلیکیشن :</span>
+              </h3>
+            </c-col>
+            <c-col xs="2">
+              <div>
+                <button cButton color="success" class=" text-white" [routerLink]="['/application/ocr-column-edit']">
+                ایجاد رکورد جدید</button>
               </div>
-              <div class="col-2">
-                <button class="btn btn-success text-white" [routerLink]="['/application/ocr-column-edit']">
-                  ایجاد رکورد جدید
-                </button>
-              </div>
+            </c-col>
+          </c-row>
+
+        </c-container> -->
+
+        <div class="mt-5 mb-3">
+          <div class="row justify-content-between">
+            <div class="col-4">
+              <h3 class="card-title align-items-start flex-column">
+                <span class="card-label">تنظیم جدول اپلیکیشن :</span>
+              </h3>
+            </div>
+            <div class="col-2">
+              <button class="btn btn-success text-white" [routerLink]="['/application/ocr-column-edit']">
+                ایجاد رکورد جدید
+              </button>
             </div>
           </div>
+        </div>
 
 
 
 
-          <!-- End::header Table  -->
-          <!-- begin::Table container -->
-          <div class="table-responsive">
+        <!-- End::header Table  -->
+        <!-- begin::Table container -->
+        <div class="table-responsive">
 
-            <table class="table table-bordered align-middle gs-0 gy-4">
-              <thead>
-                <tr class="fw-bolder ">
-                  <th class="min-w-15px">کد</th>
-                  <th class="min-w-50px">نام ستون</th>
-                  <th class="min-w-50px">نام فیلد</th>
-                  <th class="min-w-30px">نوع کالا</th>
-                  <th class="min-w-30px">لیست ایتم</th>
-                  <th class="min-w-30px">جزییات</th>
-                  <th class="min-w-30px">سبد خرید</th>
-                  <th class="min-w-30px">جستجو پیشرفته</th>
-                  <th class="min-w-50px">نوع ستون</th>
-                  <th class="min-w-50px">صورت</th>
+          <table class="table table-bordered align-middle gs-0 gy-4">
+            <thead>
+              <tr class="fw-bolder ">
+                <th class="min-w-15px">کد</th>
+                <th class="min-w-50px">نام ستون</th>
+                <th class="min-w-50px">نام فیلد</th>
+                <th class="min-w-30px">نوع کالا</th>
+                <th class="min-w-30px">لیست ایتم</th>
+                <th class="min-w-30px">جزییات</th>
+                <th class="min-w-30px">سبد خرید</th>
+                <th class="min-w-30px">جستجو پیشرفته</th>
+                <th class="min-w-50px">نوع ستون</th>
+                <th class="min-w-50px">صورت</th>
 
-                  <!-- <th class="min-w-50px">Actions </th> -->
-                </tr>
-              </thead>
-              <tbody *ngFor="let item of BasketColumns; let i = index">
+                <!-- <th class="min-w-50px">Actions </th> -->
+              </tr>
+            </thead>
+            @for (item of BasketColumns; track item; let i = $index) {
+              <tbody>
                 <tr>
                   <td>{{ item.AppBasketColumnCode }}</td>
                   <td>{{ item.ColumnDesc }}</td>
-
                   <td>{{ item.ColumnName }}</td>
                   <td>{{ item.ObjectType }}</td>
                   <td>
-                    <ng-container *ngIf="item.ListVisible == 0; else nonZeroList">
+                    @if (item.ListVisible == 0) {
                       <!-- Content when ListVisible is zero -->
                       محاسباتی
-                    </ng-container>
-                    <ng-template #nonZeroList>
-                      <ng-container *ngIf="item.ListVisible > 0 && item.ListVisible < 10">
+                    } @else {
+                      @if (item.ListVisible > 0 && item.ListVisible < 10) {
                         نمایش و جستجو
-
-                      </ng-container>
-
-                      <ng-container *ngIf="item.ListVisible > 10">
+                      }
+                      @if (item.ListVisible > 10) {
                         <!-- Content when ListVisible is positive -->
                         فقط نمایش
-                      </ng-container>
-
-
-                      <ng-container *ngIf="item.ListVisible < 0">
+                      }
+                      @if (item.ListVisible < 0) {
                         <!-- Content when ListVisible is positive -->
-                      </ng-container>
-
-                    </ng-template>
+                      }
+                    }
                   </td>
-
                   <td>
-
-                    <ng-container *ngIf="item.DetailVisible == 0; else nonZeroDetail">
+                    @if (item.DetailVisible == 0) {
                       <!-- Content when DetailVisible is zero -->
                       محاسباتی
-                    </ng-container>
-                    <ng-template #nonZeroDetail>
-
-                      <ng-container *ngIf="item.DetailVisible > 0">
+                    } @else {
+                      @if (item.DetailVisible > 0) {
                         <!-- Content when DetailVisible is positive -->
                         فقط نمایش
-                      </ng-container>
-                      <ng-container *ngIf="item.DetailVisible < 0">
+                      }
+                      @if (item.DetailVisible < 0) {
                         <!-- Content when DetailVisible is negative -->
-
-                      </ng-container>
-                    </ng-template>
-
-
+                      }
+                    }
                   </td>
-
-
                   <td>
-
-                    <ng-container *ngIf="item.BasketVisible == 0; else nonZeroBasket">
+                    @if (item.BasketVisible == 0) {
                       <!-- Content when BasketVisible is zero -->
                       محاسباتی
-                    </ng-container>
-                    <ng-template #nonZeroBasket>
-
-                      <ng-container *ngIf="item.BasketVisible > 0">
+                    } @else {
+                      @if (item.BasketVisible > 0) {
                         <!-- Content when BasketVisible is positive -->
                         فقط نمایش
-                      </ng-container>
-                      <ng-container *ngIf="item.BasketVisible < 0">
+                      }
+                      @if (item.BasketVisible < 0) {
                         <!-- Content when BasketVisible is negative -->
-
-                      </ng-container>
-                    </ng-template>
-
+                      }
+                    }
                   </td>
                   <td>
-
-                    <ng-container *ngIf="item.SearchVisible == 0; else nonZeroSearch">
+                    @if (item.SearchVisible == 0) {
                       <!-- Content when SearchVisible is zero -->
                       محاسباتی
-                    </ng-container>
-                    <ng-template #nonZeroSearch>
-                      <ng-container *ngIf="item.SearchVisible > 0">
+                    } @else {
+                      @if (item.SearchVisible > 0) {
                         <!-- Content when SearchVisible is positive -->
                         فقط نمایش
-                      </ng-container>
-                      <ng-container *ngIf="item.SearchVisible < 0">
+                      }
+                      @if (item.SearchVisible < 0) {
                         <!-- Content when SearchVisible is negative -->
-
-                      </ng-container>
-                    </ng-template>
-
-
+                      }
+                    }
                   </td>
                   <td>
-
-
-                    <ng-container *ngIf="item.ColumnType == 0; else nonZeroColumn">
+                    @if (item.ColumnType == 0) {
                       <!-- Content when ColumnType is zero -->
                       متن
-                    </ng-container>
-                    <ng-template #nonZeroColumn>
-                      <ng-container *ngIf="item.ColumnType == 1">
+                    } @else {
+                      @if (item.ColumnType == 1) {
                         <!-- Content when ColumnType is positive -->
                         عدد صحیح
-                      </ng-container>
-                      <ng-container *ngIf="item.ColumnType == 2">
+                      }
+                      @if (item.ColumnType == 2) {
                         <!-- Content when ColumnType is negative -->
                         عدد اعشاری
-
-                      </ng-container>
-                    </ng-template>
-
+                      }
+                    }
                   </td>
                   <td>
-                    <ng-container *ngIf="item.OrderIndex == 0; else nonZeroOrder">
+                    @if (item.OrderIndex == 0) {
                       <!-- Content when OrderIndex is zero -->
                       {{''}}
-                    </ng-container>
-                    <ng-template #nonZeroOrder>
-
-                      <ng-container *ngIf="item.OrderIndex == -3">
+                    } @else {
+                      @if (item.OrderIndex == -3) {
                         <!-- Content when OrderIndex is negative -->
                         اولویت سوم
-
-                      </ng-container>
-                      <ng-container *ngIf="item.OrderIndex == -2">
+                      }
+                      @if (item.OrderIndex == -2) {
                         <!-- Content when OrderIndex is negative -->
                         اولویت اول
-
-                      </ng-container>
-                      <ng-container *ngIf="item.OrderIndex == -1">
+                      }
+                      @if (item.OrderIndex == -1) {
                         <!-- Content when OrderIndex is negative -->
                         اولویت دوم
-
-                      </ng-container>
-
-                    </ng-template>
+                      }
+                    }
                   </td>
                   <!-- <td>
-
-                    <button cButton color="info" variant="ghost">edit</button>
-
-                    <button cButton color="danger" variant="ghost">delete</button>
-                  </td> -->
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- end::Table container -->
-        </div>
-        <!-- end::DBSetup -->
-
-
-
-
-
-
-
-
-
-
-
-
+                  <button cButton color="info" variant="ghost">edit</button>
+                  <button cButton color="danger" variant="ghost">delete</button>
+                </td> -->
+              </tr>
+            </tbody>
+          }
+        </table>
       </div>
+      <!-- end::Table container -->
     </div>
+    <!-- end::DBSetup -->
+
+
+
+
+
+
+
+
+
+
+
+
   </div>
+</div>
+</div>
 </div>

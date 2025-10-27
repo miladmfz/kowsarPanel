@@ -3,17 +3,17 @@
     <ul class="nav nav-pills nav-fill">
       <li class="nav-item">
         <a class="nav-link  " data-bs-toggle="pill" [routerLink]="['/application/ocr-detail']">پنل توزیع و
-          بایگانی</a>
+        بایگانی</a>
       </li>
 
       <li class="nav-item">
         <a class="nav-link  active" data-bs-toggle="pill" [routerLink]="['/application/ocr-report-chart']">گزارشات
-          نموداری</a>
+        نموداری</a>
       </li>
 
       <li class="nav-item">
         <a class="nav-link  " data-bs-toggle="pill" [routerLink]="['/application/ocr-report-list']">گزارشات
-          لیستی</a>
+        لیستی</a>
       </li>
 
       <li class="nav-item">
@@ -21,7 +21,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/ocr-setting']">تنظیمات توزیع و
-          بایگانی</a>
+        بایگانی</a>
       </li>
     </ul>
   </div>
@@ -37,25 +37,21 @@
 
 
 
-                <ng-container *ngIf="loading1">
-
+                @if (loading1) {
                   <div class="spinner-border " role="status">
                     <span class="visually-hidden">Loading...</span>
                   </div>
+                }
 
-                </ng-container>
-
-                <ng-container *ngIf="!loading1">
-                  <div *ngIf="data_state1.length>0">
-
-                    <h3>نمودار بسته بندی و تحویل </h3>
-
-
-                    <app-minton-column-chart [title]="''" [series]="columnChartData_state1"
+                @if (!loading1) {
+                  @if (data_state1.length>0) {
+                    <div>
+                      <h3>نمودار بسته بندی و تحویل </h3>
+                      <app-minton-column-chart [title]="''" [series]="columnChartData_state1"
                       [categories]="columnChartCategories_state1"></app-minton-column-chart>
-
-                  </div>
-                </ng-container>
+                    </div>
+                  }
+                }
 
 
 
@@ -63,93 +59,80 @@
                 <div class="row">
                   <div class="col-md-6">
 
-                    <ng-container *ngIf="loading3">
-
+                    @if (loading3) {
                       <div class="spinner-border " role="status">
                         <span class="visually-hidden">Loading...</span>
                       </div>
+                    }
 
-                    </ng-container>
-
-                    <ng-container *ngIf="!loading3">
-                      <div *ngIf="data_state3.length>0">
-
-                        <h3>نمودار جمع آوری بر اساس نوع اقلام </h3>
-
-                        <app-minton-pie-chart [title]="''" [series]="series_state3"
+                    @if (!loading3) {
+                      @if (data_state3.length>0) {
+                        <div>
+                          <h3>نمودار جمع آوری بر اساس نوع اقلام </h3>
+                          <app-minton-pie-chart [title]="''" [series]="series_state3"
                           [labels]="labels_state3"></app-minton-pie-chart>
-                      </div>
-
-                    </ng-container>
+                        </div>
+                      }
+                    }
 
 
                   </div>
                   <div class="col-md-6">
 
 
-                    <ng-container *ngIf="loading4">
-
+                    @if (loading4) {
                       <div class="spinner-border " role="status">
                         <span class="visually-hidden">Loading...</span>
                       </div>
+                    }
 
-                    </ng-container>
-
-                    <ng-container *ngIf="!loading4">
-                      <div *ngIf="data_state4.length>0">
-
-                        <h3>نمودار جمع آوری بر اساس تعداد کالا </h3>
-
-                        <app-minton-pie-chart [title]="''" [series]="series_state4"
+                    @if (!loading4) {
+                      @if (data_state4.length>0) {
+                        <div>
+                          <h3>نمودار جمع آوری بر اساس تعداد کالا </h3>
+                          <app-minton-pie-chart [title]="''" [series]="series_state4"
                           [labels]="labels_state4"></app-minton-pie-chart>
-
-                      </div>
-
-                    </ng-container>
+                        </div>
+                      }
+                    }
 
                   </div>
                 </div>
 
 
-                <ng-container *ngIf="loading2">
-
+                @if (loading2) {
                   <div class="spinner-border " role="status">
                     <span class="visually-hidden">Loading...</span>
                   </div>
+                }
 
-                </ng-container>
-
-                <ng-container *ngIf="!loading2">
-                  <div *ngIf="data_state2.length>0">
-                    <h3>نمودار وضعیت فاکتورها </h3>
-
-
-                    <app-minton-pie-chart [title]="''" [series]="series_state2"
+                @if (!loading2) {
+                  @if (data_state2.length>0) {
+                    <div>
+                      <h3>نمودار وضعیت فاکتورها </h3>
+                      <app-minton-pie-chart [title]="''" [series]="series_state2"
                       [labels]="labels_state2"></app-minton-pie-chart>
-                  </div>
+                    </div>
+                  }
+                }
 
-                </ng-container>
 
 
-
-                <ng-container *ngIf="loading5">
-
+                @if (loading5) {
                   <div class="spinner-border " role="status">
                     <span class="visually-hidden">Loading...</span>
                   </div>
+                }
 
-                </ng-container>
-
-                <ng-container *ngIf="!loading5">
-                  <div *ngIf="data_state5.length>0">
-
-                    <h3>نمودار کسری بر اساس طبقات</h3>
-
-                    <app-minton-column-chart [title]="''" [series]="columnChartData_state5"
+                @if (!loading5) {
+                  @if (data_state5.length>0) {
+                    <div>
+                      <h3>نمودار کسری بر اساس طبقات</h3>
+                      <app-minton-column-chart [title]="''" [series]="columnChartData_state5"
                       [categories]="columnChartCategories_state5"></app-minton-column-chart>
-                  </div>
-
-                </ng-container>
+                    </div>
+                  }
+                }
 
 
               </div>

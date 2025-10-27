@@ -11,7 +11,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/order-customer']">
-          حساب پرسنل</a>
+        حساب پرسنل</a>
       </li>
 
       <li class="nav-item">
@@ -63,7 +63,9 @@
                 <div class="form-group col-md-2">
                   <label for="Filter" class="col-form-label">فیلتر بر اساس</label>
                   <select formControlName="Filter" id="Filter" class="form-control custom-select" data-toggle="select2">
-                    <option [value]="item.id" *ngFor="let item of Filter_Lookup">{{item.name}}</option>
+                    @for (item of Filter_Lookup; track item) {
+                      <option [value]="item.id">{{item.name}}</option>
+                    }
                   </select>
                 </div>
 

@@ -24,18 +24,18 @@
                     <label for="GoodCode" class="col-form-label">کد سیستمی کالا </label>
                     <input type="text" class="form-control" id="GoodCode" formControlName="GoodCode" maxlength="100"
                       autocomplete="off" [readOnly]="true" />
+                    </div>
+
+
+
                   </div>
 
 
+                  <div class="form-group col-md-12">
+                    <label for="GoodName" class="col-form-label">نام کالا </label>
+                    <span class="text-danger">*</span>
 
-                </div>
-
-
-                <div class="form-group col-md-12">
-                  <label for="GoodName" class="col-form-label">نام کالا </label>
-                  <span class="text-danger">*</span>
-
-                  <input type="text" class="form-control" id="GoodName" formControlName="GoodName" maxlength="400"
+                    <input type="text" class="form-control" id="GoodName" formControlName="GoodName" maxlength="400"
                     autocomplete="off" (keyup)="onKeyUp($event)" [ngClass]="{
                       'is-invalid':
                       EditForm_Base.controls['GoodName'].invalid &&
@@ -49,77 +49,79 @@
                                               message: 'اجباری است',
                                               control: EditForm_Base.controls['GoodName']
                                             }">
-                  </ng-container>
+                      </ng-container>
 
-                  <table *ngIf="simillar_good.length > 0" class="table table-bordered table-hover">
-                    <thead class="table-light">
-                      <tr>
-                        <th>نوع</th>
-                        <th>نام</th>
-                        <th>فی خالص</th>
-                        <th>فی ناخالص</th>
-                        <th>عملیات</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let single_object of simillar_good">
-                        <td>{{ single_object.GoodType }}</td>
-                        <td>
-                          {{ single_object.GoodName.length > 20 ? (single_object.GoodName | slice:0:30) + '...' :
-                          single_object.GoodName }}
-                        </td>
-                        <td>{{ single_object.MinSellPrice }}</td>
-                        <td>{{ single_object.MaxSellPrice }}</td>
-                        <td>
-                          <button class="btn btn-primary btn-sm"
-                            (click)="selectSuggestion(single_object)">انتخاب</button>
-                          <button class="btn btn-secondary btn-sm"
-                            (click)="GotoSuggestion(single_object)">بازخوانی</button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                      @if (simillar_good.length > 0) {
+                        <table class="table table-bordered table-hover">
+                          <thead class="table-light">
+                            <tr>
+                              <th>نوع</th>
+                              <th>نام</th>
+                              <th>فی خالص</th>
+                              <th>فی ناخالص</th>
+                              <th>عملیات</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            @for (single_object of simillar_good; track single_object) {
+                              <tr>
+                                <td>{{ single_object.GoodType }}</td>
+                                <td>
+                                  {{ single_object.GoodName.length > 20 ? (single_object.GoodName | slice:0:30) + '...' :
+                                  single_object.GoodName }}
+                                </td>
+                                <td>{{ single_object.MinSellPrice }}</td>
+                                <td>{{ single_object.MaxSellPrice }}</td>
+                                <td>
+                                  <button class="btn btn-primary btn-sm"
+                                  (click)="selectSuggestion(single_object)">انتخاب</button>
+                                  <button class="btn btn-secondary btn-sm"
+                                  (click)="GotoSuggestion(single_object)">بازخوانی</button>
+                                </td>
+                              </tr>
+                            }
+                          </tbody>
+                        </table>
+                      }
 
 
+                    </div>
+
+
+                  </div>
                 </div>
-
-
               </div>
             </div>
-          </div>
-        </div>
-      </form>
-      <ng-container *ngIf="changedValues_show()">
-        <div class="card">
-          <div class="card-body">
-            <div class="col-sm-12">
-
-              <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mx-1"
-                (click)="submit('base')">
-                <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره
-              </a>
-
-              <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mx-1"
-                (click)="changedValues_cansel_base()">
-                <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
-              </a>
+          </form>
+          @if (changedValues_show()) {
+            <div class="card">
+              <div class="card-body">
+                <div class="col-sm-12">
+                  <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mx-1"
+                    (click)="submit('base')">
+                    <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره
+                  </a>
+                  <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mx-1"
+                    (click)="changedValues_cansel_base()">
+                    <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
+                  </a>
+                </div>
+              </div>
             </div>
-          </div>
+          }
+
+
+
         </div>
-      </ng-container>
 
 
 
-    </div>
-
-
-
-    <ng-template #formError let-control="control" let-message="message" let-validation="validation">
-      <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
-        <div class="fv-plugins-message-container invalid-feedback">
-          <span role="alert">
-            {{ message }}
-          </span>
-        </div>
-      </ng-container>
-    </ng-template>
+        <ng-template #formError let-control="control" let-message="message" let-validation="validation">
+          @if (control.hasError(validation) && (control.dirty || control.touched)) {
+            <div class="fv-plugins-message-container invalid-feedback">
+              <span role="alert">
+                {{ message }}
+              </span>
+            </div>
+          }
+        </ng-template>

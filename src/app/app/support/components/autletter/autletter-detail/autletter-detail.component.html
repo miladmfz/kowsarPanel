@@ -1,268 +1,255 @@
 <div class="row">
-    <div class="col-12">
-        <div class="page-title-box d-flex justify-content-between align-items-center">
-            <h4 class="page-title">تیکت ارسالی </h4>
-            <button class="btn btn-danger" (click)="onBtnCancelClick()">بازگشت</button>
+  <div class="col-12">
+    <div class="page-title-box d-flex justify-content-between align-items-center">
+      <h4 class="page-title">تیکت ارسالی </h4>
+      <button class="btn btn-danger" (click)="onBtnCancelClick()">بازگشت</button>
 
-        </div>
     </div>
+  </div>
 </div>
 
 <div class="card-body">
 
-    <form [formGroup]="Autletter_data" id="submitForm">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body row">
+  <form [formGroup]="Autletter_data" id="submitForm">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body row">
 
-                        <div class="form-group col-md-3">
-                            <label for="LetterDate" class="col-form-label">تارخ</label>
-                            <input type="text" class="form-control" id="LetterDate" formControlName="LetterDate"
-                                maxlength="100" readonly />
-                        </div>
+            <div class="form-group col-md-3">
+              <label for="LetterDate" class="col-form-label">تارخ</label>
+              <input type="text" class="form-control" id="LetterDate" formControlName="LetterDate"
+                maxlength="100" readonly />
+              </div>
 
-                        <!-- 
-                        <div class="form-group col-md-3">
-                            <label for="LetterState" class="col-form-label">وضعیت</label>
-                            <input type="text" class="form-control" id="LetterState" formControlName="LetterState"
-                                maxlength="100" readonly />
-                        </div> -->
+              <!--
+              <div class="form-group col-md-3">
+                <label for="LetterState" class="col-form-label">وضعیت</label>
+                <input type="text" class="form-control" id="LetterState" formControlName="LetterState"
+                  maxlength="100" readonly />
+                </div> -->
 
-                        <div class="form-group col-md-3">
-                            <label for="LetterPriority" class="col-form-label">الویت</label>
-                            <input type="text" class="form-control" id="LetterPriority" formControlName="LetterPriority"
-                                maxlength="100" readonly />
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="CreatorName" class="col-form-label">ایجاد کننده</label>
-                            <input type="text" class="form-control" id="CreatorName" formControlName="CreatorName"
-                                maxlength="100" readonly />
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="OwnerName" class="col-form-label">مالکیت </label>
-                            <input type="text" class="form-control" id="OwnerName" formControlName="OwnerName"
-                                maxlength="100" readonly />
-                        </div>
+                <div class="form-group col-md-3">
+                  <label for="LetterPriority" class="col-form-label">الویت</label>
+                  <input type="text" class="form-control" id="LetterPriority" formControlName="LetterPriority"
+                    maxlength="100" readonly />
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="CreatorName" class="col-form-label">ایجاد کننده</label>
+                    <input type="text" class="form-control" id="CreatorName" formControlName="CreatorName"
+                      maxlength="100" readonly />
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="OwnerName" class="col-form-label">مالکیت </label>
+                      <input type="text" class="form-control" id="OwnerName" formControlName="OwnerName"
+                        maxlength="100" readonly />
+                      </div>
 
 
-                        <div class="form-group col-md-3">
-                            <label for="LetterTitle" class="col-form-label">عنوان</label>
-                            <input type="text" class="form-control" id="LetterTitle" formControlName="LetterTitle"
-                                maxlength="100" readonly />
+                      <div class="form-group col-md-3">
+                        <label for="LetterTitle" class="col-form-label">عنوان</label>
+                        <input type="text" class="form-control" id="LetterTitle" formControlName="LetterTitle"
+                          maxlength="100" readonly />
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="LetterDescription" class="col-form-label">شرح</label>
-                            <input type="text" class="form-control" id="LetterDescription"
-                                formControlName="LetterDescription" readonly />
+                          <label for="LetterDescription" class="col-form-label">شرح</label>
+                          <input type="text" class="form-control" id="LetterDescription"
+                            formControlName="LetterDescription" readonly />
 
 
-                        </div>
+                          </div>
 
-                        <div class="form-group col-md-3">
+                          <div class="form-group col-md-3">
                             <label for="Barbary" class="col-form-label">.</label>
 
                             <a type="button" class="form-control btn btn-primary waves-effect waves-light "
-                                (click)="owner_factor_prefactor()">
-                                <span class="btn-label"><i class="fas fa-file-alt"></i>
-                                </span>فاکتور مشتری</a>
+                              (click)="owner_factor_prefactor()">
+                              <span class="btn-label"><i class="fas fa-file-alt"></i>
+                            </span>فاکتور مشتری</a>
+                          </div>
+
+
                         </div>
-
-
+                      </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </form>
+                  </div>
+                </form>
 
 
 
 
-    <ul class="nav nav-pills navtab-bg nav-justified">
+                <ul class="nav nav-pills navtab-bg nav-justified">
 
 
-        <ng-container *ngIf="JobPersonRef.length>0">
+                  @if (JobPersonRef.length>0) {
+                    <li class="nav-item">
+                      <a href="#detail" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
+                        <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+                        <span class="d-none d-sm-inline-block">روند ارحاع تیکت</span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="#chat" data-bs-toggle="tab" aria-expanded="false" class="nav-link ">
+                        <span class="d-inline-block d-sm-none"><i class="mdi mdi-email-variant"></i></span>
+                        <span class="d-none d-sm-inline-block">مکاتبات </span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="#attach" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                        <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+                        <span class="d-none d-sm-inline-block">پیوست</span>
+                      </a>
+                    </li>
+                  }
+                  @if (JobPersonRef.length==0) {
+                    <li class="nav-item">
+                      <a href="#chat" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
+                        <span class="d-inline-block d-sm-none"><i class="mdi mdi-email-variant"></i></span>
+                        <span class="d-none d-sm-inline-block">مکاتبات </span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="#attach" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                        <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+                        <span class="d-none d-sm-inline-block">پیوست</span>
+                      </a>
+                    </li>
+                  }
+                </ul>
 
-            <li class="nav-item">
-                <a href="#detail" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
-                    <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
-                    <span class="d-none d-sm-inline-block">روند ارحاع تیکت</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#chat" data-bs-toggle="tab" aria-expanded="false" class="nav-link ">
-                    <span class="d-inline-block d-sm-none"><i class="mdi mdi-email-variant"></i></span>
-                    <span class="d-none d-sm-inline-block">مکاتبات </span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#attach" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
-                    <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
-                    <span class="d-none d-sm-inline-block">پیوست</span>
-                </a>
-            </li>
-
-        </ng-container>
-        <ng-container *ngIf="JobPersonRef.length==0">
-            <li class="nav-item">
-                <a href="#chat" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
-                    <span class="d-inline-block d-sm-none"><i class="mdi mdi-email-variant"></i></span>
-                    <span class="d-none d-sm-inline-block">مکاتبات </span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#attach" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
-                    <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
-                    <span class="d-none d-sm-inline-block">پیوست</span>
-                </a>
-            </li>
-
-
-        </ng-container>
-    </ul>
-
-    <div class="tab-content">
+                <div class="tab-content">
 
 
-        <ng-container *ngIf="JobPersonRef.length>0">
-
-            <div class="tab-pane " id="chat">
-                <app-autletter-chat [LetterRef]="id"></app-autletter-chat>
-            </div>
-            <div class="tab-pane active" id="detail">
-                <app-autletter-item [TextData]="id"></app-autletter-item>
-            </div>
-            <div class="tab-pane " id="attach">
-                <app-autletter-attach [TextData]="id"></app-autletter-attach>
-            </div>
-        </ng-container>
-
-        <ng-container *ngIf="JobPersonRef.length==0">
-
-            <div class="tab-pane active" id="chat">
-                <app-autletter-chat [LetterRef]="id"></app-autletter-chat>
-            </div>
-            <div class="tab-pane" id="detail">
-                <app-autletter-item [TextData]="id"></app-autletter-item>
-            </div>
-            <div class="tab-pane" id="attach">
-                <app-autletter-attach [TextData]="id"></app-autletter-attach>
-            </div>
-        </ng-container>
-
-
-
-
-
-    </div>
-</div>
-
-
-
-
-<div class="modal fade" id="ownerfactorlist" tabindex="-1" aria-labelledby="ownerfactorlistLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content" style="background-color: #d1dce7;">
-            <div class="modal-header" style="background-color: #949494;">
-                <h5 class="modal-title" id="ownerfactorlistLabel">لیست فاکتور های {{OwnerName}} </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                    (click)="ownerfactorlist_dialog_close()"></button>
-            </div>
-            <div class="modal-body">
-
-
-                <div *ngIf="loading" class="text-center">
-                    <div class="spinner-border" role="status">
-                        <span class="visually-hidden">Loading...</span>
+                  @if (JobPersonRef.length>0) {
+                    <div class="tab-pane " id="chat">
+                      <app-autletter-chat [LetterRef]="id"></app-autletter-chat>
                     </div>
+                    <div class="tab-pane active" id="detail">
+                      <app-autletter-item [TextData]="id"></app-autletter-item>
+                    </div>
+                    <div class="tab-pane " id="attach">
+                      <app-autletter-attach [TextData]="id"></app-autletter-attach>
+                    </div>
+                  }
+
+                  @if (JobPersonRef.length==0) {
+                    <div class="tab-pane active" id="chat">
+                      <app-autletter-chat [LetterRef]="id"></app-autletter-chat>
+                    </div>
+                    <div class="tab-pane" id="detail">
+                      <app-autletter-item [TextData]="id"></app-autletter-item>
+                    </div>
+                    <div class="tab-pane" id="attach">
+                      <app-autletter-attach [TextData]="id"></app-autletter-attach>
+                    </div>
+                  }
+
+
+
+
+
                 </div>
-
-                <!-- 
-                <div *ngIf="!VendorCode || +VendorCode === 0" class="text-center">
-                    <h4>این اجرای پایه به عنوان فروشنده تعریف نشده</h4>
-                </div> -->
+              </div>
 
 
-                <div *ngIf="!CustomerCode || +CustomerCode === 0" class="text-center">
-                    <h4>این اجرای پایه به عنوان مشتری تعریف نشده</h4>
-                </div>
 
-                <!-- <div *ngIf="+VendorCode > 0" class="text-center">
-                    <h4>این اجرای پایه به عنوان فروشنده تعریف شده</h4>
-                </div> -->
 
-                <div *ngIf="+CustomerCode > 0" class="text-center">
+              <div class="modal fade" id="ownerfactorlist" tabindex="-1" aria-labelledby="ownerfactorlistLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                  <div class="modal-content" style="background-color: #d1dce7;">
+                    <div class="modal-header" style="background-color: #949494;">
+                      <h5 class="modal-title" id="ownerfactorlistLabel">لیست فاکتور های {{OwnerName}} </h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                      (click)="ownerfactorlist_dialog_close()"></button>
+                    </div>
+                    <div class="modal-body">
 
-                    <div *ngIf="loading_cust_factor" class="text-center">
-                        <div class="spinner-border" role="status">
+
+                      @if (loading) {
+                        <div class="text-center">
+                          <div class="spinner-border" role="status">
                             <span class="visually-hidden">Loading...</span>
+                          </div>
                         </div>
-                    </div>
+                      }
 
-                    <ng-container *ngIf="!loading_cust_factor">
+                      <!--
+                      <div *ngIf="!VendorCode || +VendorCode === 0" class="text-center">
+                        <h4>این اجرای پایه به عنوان فروشنده تعریف نشده</h4>
+                      </div> -->
 
-                        <ng-container *ngIf="records_ownerfactorlist?.length; else noFactor">
+
+                      @if (!CustomerCode || +CustomerCode === 0) {
+                        <div class="text-center">
+                          <h4>این اجرای پایه به عنوان مشتری تعریف نشده</h4>
+                        </div>
+                      }
+
+                      <!-- <div *ngIf="+VendorCode > 0" class="text-center">
+                      <h4>این اجرای پایه به عنوان فروشنده تعریف شده</h4>
+                    </div> -->
+
+                    @if (+CustomerCode > 0) {
+                      <div class="text-center">
+                        @if (loading_cust_factor) {
+                          <div class="text-center">
+                            <div class="spinner-border" role="status">
+                              <span class="visually-hidden">Loading...</span>
+                            </div>
+                          </div>
+                        }
+                        @if (!loading_cust_factor) {
+                          @if (records_ownerfactorlist?.length) {
                             <h4>فاکتور</h4>
-
                             <ag-grid-angular #agGrid id="myGrid" style="height: 250px; width: auto"
-                                [rowData]="records_ownerfactorlist" [columnDefs]="columnDefs2" [modules]="modules"
-                                [localeText]="localeText" [defaultColDef]="defaultColDef" [enableRtl]="true"
-                                (gridReady)="onGridReady2($event)" (cellClicked)="onCellClicked($event)"
-                                [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context"
-                                [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'"
-                                [suppressRowClickSelection]="true" [rowSelection]="'single'"
-                                (selectionChanged)="onSelectionChanged($event)">
+                              [rowData]="records_ownerfactorlist" [columnDefs]="columnDefs2" [modules]="modules"
+                              [localeText]="localeText" [defaultColDef]="defaultColDef" [enableRtl]="true"
+                              (gridReady)="onGridReady2($event)" (cellClicked)="onCellClicked($event)"
+                              [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context"
+                              [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'"
+                              [suppressRowClickSelection]="true" [rowSelection]="'single'"
+                              (selectionChanged)="onSelectionChanged($event)">
                             </ag-grid-angular>
-                        </ng-container>
-
-                        <ng-template #noFactor>
+                          } @else {
                             <h4>فاکتوری ندارد</h4>
-                        </ng-template>
-                    </ng-container>
-
-
-                    <div *ngIf="loading_cust_prefactor" class="text-center">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-
-
-                    <ng-container *ngIf="!loading_cust_prefactor">
-
-                        <ng-container *ngIf="records_ownerprefactorlist?.length; else noPrefactor">
+                          }
+                        }
+                        @if (loading_cust_prefactor) {
+                          <div class="text-center">
+                            <div class="spinner-border" role="status">
+                              <span class="visually-hidden">Loading...</span>
+                            </div>
+                          </div>
+                        }
+                        @if (!loading_cust_prefactor) {
+                          @if (records_ownerprefactorlist?.length) {
                             <h4>پیش فاکتور</h4>
-
                             <ag-grid-angular #agGrid id="myGrid" style="height: 250px; width: auto"
-                                [rowData]="records_ownerprefactorlist" [columnDefs]="columnDefs3" [modules]="modules"
-                                [localeText]="localeText" [defaultColDef]="defaultColDef" [enableRtl]="true"
-                                (gridReady)="onGridReady3($event)" (cellClicked)="onCellClicked($event)"
-                                [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context"
-                                [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'"
-                                [suppressRowClickSelection]="true" [rowSelection]="'single'"
-                                (selectionChanged)="onSelectionChanged($event)">
+                              [rowData]="records_ownerprefactorlist" [columnDefs]="columnDefs3" [modules]="modules"
+                              [localeText]="localeText" [defaultColDef]="defaultColDef" [enableRtl]="true"
+                              (gridReady)="onGridReady3($event)" (cellClicked)="onCellClicked($event)"
+                              [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context"
+                              [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'"
+                              [suppressRowClickSelection]="true" [rowSelection]="'single'"
+                              (selectionChanged)="onSelectionChanged($event)">
                             </ag-grid-angular>
-                        </ng-container>
-
-                        <ng-template #noPrefactor>
+                          } @else {
                             <h4>پیش فاکتوری ندارد</h4>
-                        </ng-template>
-                    </ng-container>
-
-
-
-                </div>
-
+                          }
+                        }
+                      </div>
+                    }
 
 
 
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                     (click)="ownerfactorlist_dialog_close()">بستن</button>
+                  </div>
+                </div>
+              </div>
             </div>
-        </div>
-    </div>
-</div>

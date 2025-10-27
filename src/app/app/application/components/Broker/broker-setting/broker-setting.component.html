@@ -6,7 +6,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link active" data-bs-toggle="pill" [routerLink]="['/application/broker-setting']">تنظیمات
-          بازاریاب</a>
+        بازاریاب</a>
       </li>
       <li class="nav-item">
         <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/broker-list']">لیست بازاریاب</a>
@@ -27,17 +27,23 @@
                 <h5 class="card-title fw-bold mb-2">تنظیم جدول</h5>
                 <p class="card-text text-muted mb-3">ایجاد فیلدهای مورد نیاز برای نمایش در نرم‌افزارهای قابل استفاده</p>
 
-                <p *ngIf="BasketColumns.length < 1" class="text-danger">{{ AppBasketColumn_Status }}</p>
+                @if (BasketColumns.length < 1) {
+                  <p class="text-danger">{{ AppBasketColumn_Status }}</p>
+                }
 
-                <a *ngIf="BasketColumns.length > 0" [routerLink]="['/application/broker-column']"
-                  class="btn btn-outline-primary w-100">
-                  اصلاح تنظیم جدول
-                </a>
+                @if (BasketColumns.length > 0) {
+                  <a [routerLink]="['/application/broker-column']"
+                    class="btn btn-outline-primary w-100">
+                    اصلاح تنظیم جدول
+                  </a>
+                }
 
-                <button *ngIf="BasketColumns.length < 1" (click)="CreateAppBasketColumn()"
-                  class="btn btn-outline-primary w-100">
-                  ایجاد تنظیم جدول
-                </button>
+                @if (BasketColumns.length < 1) {
+                  <button (click)="CreateAppBasketColumn()"
+                    class="btn btn-outline-primary w-100">
+                    ایجاد تنظیم جدول
+                  </button>
+                }
               </div>
             </div>
           </div>
@@ -108,7 +114,7 @@
       <div class="modal-header" style="background-color: #949494;">
         <h5 class="modal-title" id="brokerdbsetupLabel">تنظیمات پایه</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-          (click)="brokerdbsetup_Modal_Response_close()"></button>
+        (click)="brokerdbsetup_Modal_Response_close()"></button>
       </div>
       <div class="modal-body">
         <div class="mb-3 row">
@@ -122,96 +128,96 @@
           <div class="col-sm-10">
             <input type="text" class="form-control" id="inputPassword" placeholder="{{selected_value}}"
               [(ngModel)]="selected_value" [ngModelOptions]="{ standalone: true }">
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-          (click)="brokerdbsetup_Modal_Response_close()">بستن</button>
-        <button type="button" class="btn btn-primary" (click)="UpdateDbSetup()">بروزرسانی</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-
-
-<div class="modal fade" #printerModal id="printerModal" tabindex="-1" aria-labelledby="printerModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="background-color: #d1dce7;">
-      <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="printerModalLabel">جزییات پرینتر</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-          (click)="printerModal_Modal_Response_close()"></button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="EditForm_printer" (submit)="Updateprinter()">
-
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-body row">
-
-                  <div class="form-group col-md-6">
-                    <label for="PrinterName" class="col-form-label">نام پا ادرس چاپگر</label>
-                    <input type="text" class="form-control" id="PrinterName" formControlName="PrinterName"
-                      maxlength="400" autocomplete="off" />
-                  </div>
-
-                  <div class="form-group col-md-6">
-                    <label for="PrinterExplain" class="col-form-label">توضیحات چاپگر</label>
-                    <input type="text" class="form-control" id="PrinterExplain" formControlName="PrinterExplain"
-                      maxlength="400" autocomplete="off" />
-                  </div>
-
-                  <div class="form-group col-md-6">
-                    <label for="GoodGroups" class="col-form-label">کد گروه برای چاپگر</label>
-                    <input type="text" class="form-control" id="GoodGroups" formControlName="GoodGroups" maxlength="400"
-                      autocomplete="off" />
-                  </div>
-
-
-                  <div class="form-group col-md-6">
-                    <label for="WhereClause" class="col-form-label">شرط چاپگر</label>
-                    <input type="text" class="form-control" id="WhereClause" formControlName="WhereClause"
-                      maxlength="400" autocomplete="off" />
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="PrintCount" class="col-form-label">تعداد چاپ </label>
-                    <input type="text" class="form-control" id="PrintCount" formControlName="PrintCount" maxlength="400"
-                      autocomplete="off" />
-                  </div>
-
-                  <div class="form-group col-md-6">
-                    <label for="PrinterActive" class="col-form-label">فعال بودن چاپگر</label>
-                    <input type="text" class="form-control" id="PrinterActive" formControlName="PrinterActive"
-                      maxlength="400" autocomplete="off" />
-                  </div>
-                  <div class="form-group col-md-12">
-                    <label for="FilePath" class="col-form-label">ادرس فایل چاپگر</label>
-                    <input type="text" class="form-control" id="FilePath" formControlName="FilePath" maxlength="400"
-                      autocomplete="off" />
-                  </div>
-
-                </div>
-              </div>
             </div>
           </div>
-
-        </form>
-      </div>
-      <div class="modal-footer">
-
-        <button type="button" class="btn btn-primary" (click)="Updateprinter()">ثبت اطلاعات</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-          (click)="printerModal_Modal_Response_close()">بستن</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="brokerdbsetup_Modal_Response_close()">بستن</button>
+          <button type="button" class="btn btn-primary" (click)="UpdateDbSetup()">بروزرسانی</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+
+
+
+
+
+
+
+  <div class="modal fade" #printerModal id="printerModal" tabindex="-1" aria-labelledby="printerModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="background-color: #d1dce7;">
+        <div class="modal-header" style="background-color: #949494;">
+          <h5 class="modal-title" id="printerModalLabel">جزییات پرینتر</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="printerModal_Modal_Response_close()"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="EditForm_printer" (submit)="Updateprinter()">
+
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body row">
+
+                    <div class="form-group col-md-6">
+                      <label for="PrinterName" class="col-form-label">نام پا ادرس چاپگر</label>
+                      <input type="text" class="form-control" id="PrinterName" formControlName="PrinterName"
+                        maxlength="400" autocomplete="off" />
+                      </div>
+
+                      <div class="form-group col-md-6">
+                        <label for="PrinterExplain" class="col-form-label">توضیحات چاپگر</label>
+                        <input type="text" class="form-control" id="PrinterExplain" formControlName="PrinterExplain"
+                          maxlength="400" autocomplete="off" />
+                        </div>
+
+                        <div class="form-group col-md-6">
+                          <label for="GoodGroups" class="col-form-label">کد گروه برای چاپگر</label>
+                          <input type="text" class="form-control" id="GoodGroups" formControlName="GoodGroups" maxlength="400"
+                            autocomplete="off" />
+                          </div>
+
+
+                          <div class="form-group col-md-6">
+                            <label for="WhereClause" class="col-form-label">شرط چاپگر</label>
+                            <input type="text" class="form-control" id="WhereClause" formControlName="WhereClause"
+                              maxlength="400" autocomplete="off" />
+                            </div>
+                            <div class="form-group col-md-6">
+                              <label for="PrintCount" class="col-form-label">تعداد چاپ </label>
+                              <input type="text" class="form-control" id="PrintCount" formControlName="PrintCount" maxlength="400"
+                                autocomplete="off" />
+                              </div>
+
+                              <div class="form-group col-md-6">
+                                <label for="PrinterActive" class="col-form-label">فعال بودن چاپگر</label>
+                                <input type="text" class="form-control" id="PrinterActive" formControlName="PrinterActive"
+                                  maxlength="400" autocomplete="off" />
+                                </div>
+                                <div class="form-group col-md-12">
+                                  <label for="FilePath" class="col-form-label">ادرس فایل چاپگر</label>
+                                  <input type="text" class="form-control" id="FilePath" formControlName="FilePath" maxlength="400"
+                                    autocomplete="off" />
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+
+                        <button type="button" class="btn btn-primary" (click)="Updateprinter()">ثبت اطلاعات</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        (click)="printerModal_Modal_Response_close()">بستن</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>

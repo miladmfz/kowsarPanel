@@ -5,9 +5,11 @@ declare var $: any;
 @Component({
     selector: 'is-canceled-cell-renderer',
     template: `
-    <span *ngIf="isCanceled == 'باطل شده'">
+    @if (isCanceled == 'باطل شده') {
+      <span>
         <span class="bg-soft-danger text-danger" style="padding: 3px">باطل شده</span>
-    </span>`,
+      </span>
+    }`,
     standalone: false
 })
 export class IsCanceledCellRenderer implements ICellRendererAngularComp {

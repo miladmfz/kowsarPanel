@@ -4,19 +4,23 @@ declare var $: any;
 
 @Component({
     selector: 'edit-delete-cell-renderer',
-    template: ` 
+    template: `
 
-  <span *ngIf="ClassName=='Web_url'" >
-  <a [href]="FilePath"  class="btn btn-sm btn-outline-primary ">
-    <i class="fas fa-eye"></i>
-  </a>
+@if (ClassName=='Web_url') {
+  <span >
+    <a [href]="FilePath"  class="btn btn-sm btn-outline-primary ">
+      <i class="fas fa-eye"></i>
+    </a>
   </span>
-  <span  *ngIf="ClassName=='Web_download'" (click)="btnToDownload()" class="btn btn-sm btn-outline-primary ">
-  <a >
-    <i class="fas fa-download"></i>
-  </a>
+}
+@if (ClassName=='Web_download') {
+  <span  (click)="btnToDownload()" class="btn btn-sm btn-outline-primary ">
+    <a >
+      <i class="fas fa-download"></i>
+    </a>
   </span>
-  `,
+}
+`,
     standalone: false
 })
 

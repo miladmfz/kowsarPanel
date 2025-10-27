@@ -15,11 +15,11 @@
 
       <li class="nav-item">
         <a class="nav-link active" data-bs-toggle="pill" [routerLink]="['/application/ocr-list']">لیست توزیع و
-          بایگانی</a>
+        بایگانی</a>
       </li>
       <li class="nav-item">
         <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/ocr-setting']">تنظیمات توزیع و
-          بایگانی</a>
+        بایگانی</a>
       </li>
     </ul>
   </div>
@@ -56,64 +56,66 @@
                       <input type="text" placeholder="جستجو..." class="form-control" id="Searchtarget"
                         formControlName="Searchtarget" maxlength="100" autocomplete="off"
                         (ngModelChange)="onInputChange()" />
+                      </div>
+
+
+                      <div class="form-group col-md-3">
+                        <label for="SourceFlag" class="col-form-label">دیتابیس مورد نظر </label>
+                        <select formControlName="SourceFlag" id="SourceFlag" class="form-control custom-select"
+                          data-toggle="select2" (ngModelChange)="onInputChange()">
+                          @for (item of SourceFlag_lookup; track item) {
+                            <option [value]="item.id">{{
+                            item.name }}</option>
+                          }
+                        </select>
+
+                      </div>
+
+
+
                     </div>
+                  </form>
 
 
-                    <div class="form-group col-md-3">
-                      <label for="SourceFlag" class="col-form-label">دیتابیس مورد نظر </label>
-                      <select formControlName="SourceFlag" id="SourceFlag" class="form-control custom-select"
-                        data-toggle="select2" (ngModelChange)="onInputChange()">
-                        <option [value]="item.id" *ngFor="let item of SourceFlag_lookup">{{
-                          item.name }}</option>
-                      </select>
+
+
+                  <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
+                    <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
+                  </a>
+                  <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="removeAllFilters()">
+                    <span class="btn-label"><i class="fas fa-eye-slash"></i></span>حذف
+                    جستجو
+                  </a>
+                  <div class="btn-group">
+                    <!-- *hasPermission="['Public']" -->
+                    <button type="button" class="btn btn-light waves-effect waves-light m-1 dropdown-toggle"
+                      id="exportdropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                      دریافت خروجی <i class="mdi mdi-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="exportdropdown">
+                      <button class="dropdown-item" type="button" (click)="onExportExcel()">
+                        Excel <i class="fas fa-file-excel"></i>
+                      </button>
+                      <button class="dropdown-item" type="button" (click)="onExportCSV()">
+                        CSV <i class="fas fa-file-csv"></i>
+                      </button>
+
 
                     </div>
-
-
-
-                  </div>
-                </form>
-
-
-
-
-                <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
-                  <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
-                </a>
-                <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="removeAllFilters()">
-                  <span class="btn-label"><i class="fas fa-eye-slash"></i></span>حذف
-                  جستجو
-                </a>
-                <div class="btn-group">
-                  <!-- *hasPermission="['Public']" -->
-                  <button type="button" class="btn btn-light waves-effect waves-light m-1 dropdown-toggle"
-                    id="exportdropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    دریافت خروجی <i class="mdi mdi-chevron-down"></i>
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="exportdropdown">
-                    <button class="dropdown-item" type="button" (click)="onExportExcel()">
-                      Excel <i class="fas fa-file-excel"></i>
-                    </button>
-                    <button class="dropdown-item" type="button" (click)="onExportCSV()">
-                      CSV <i class="fas fa-file-csv"></i>
-                    </button>
-
-
                   </div>
                 </div>
+
+
               </div>
 
-
+              <ag-grid-angular #agGrid id="myGrid" style="height: 700px; width: auto"
+                [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="records"
+                [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
+                [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
+                [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context">
+              </ag-grid-angular>
             </div>
-
-            <ag-grid-angular #agGrid id="myGrid" style="height: 700px; width: auto"
-              [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="records"
-              [columnDefs]="columnDefs" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
-              [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
-              [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context">
-            </ag-grid-angular>
           </div>
-        </div>
 
 
 
@@ -126,98 +128,98 @@
 
 
 
-        <!-- <c-input-group class="p-3 col-6">
+          <!-- <c-input-group class="p-3 col-6">
           <button cButton color="secondary" id="button-addon1" type="button" variant="outline" (click)="Searching()">
             جستجو
           </button>
           <input aria-describedby="button-addon1" aria-label="Example text with button addon" cFormControl
             placeholder="جستجو" [(ngModel)]="Searchtarget" [ngModelOptions]="{ standalone: true }" />
-        </c-input-group> -->
-        <!-- <div class="p-3 col-md-6">
+          </c-input-group> -->
+          <!-- <div class="p-3 col-md-6">
           <div class="input-group">
             <button class="btn btn-secondary" type="button" id="button-addon1" (click)="Searching()">جستجو</button>
             <input type="text" class="form-control" aria-describedby="button-addon1"
               aria-label="Example text with button addon" placeholder="جستجو" [(ngModel)]="Searchtarget"
               [ngModelOptions]="{ standalone: true }">
-          </div>
-        </div> -->
+            </div>
+          </div> -->
 
-        <!-- 
+          <!--
 
-        <div class="card-body py-3">
-          <div class="table-responsive">
+          <div class="card-body py-3">
+            <div class="table-responsive">
 
-            <table class="table table-bordered align-middle gs-0 gy-4">
-              <thead>
-                <tr class="fw-bolder ">
-                  <th class="min-w-100px">dbname</th>
-                  <th class="min-w-30px">Code</th>
-                  <th class="min-w-100px">FactorDate</th>
-                  <th class="min-w-100px">CustName</th>
-                  <th class="min-w-30px">CustomerCode</th>
-                  <th class="min-w-100px">Explain</th>
-                  <th class="min-w-50px">CustomerPath</th>
-                  <th class="min-w-100px">Active</th>
+              <table class="table table-bordered align-middle gs-0 gy-4">
+                <thead>
+                  <tr class="fw-bolder ">
+                    <th class="min-w-100px">dbname</th>
+                    <th class="min-w-30px">Code</th>
+                    <th class="min-w-100px">FactorDate</th>
+                    <th class="min-w-100px">CustName</th>
+                    <th class="min-w-30px">CustomerCode</th>
+                    <th class="min-w-100px">Explain</th>
+                    <th class="min-w-50px">CustomerPath</th>
+                    <th class="min-w-100px">Active</th>
 
 
-                </tr>
-              </thead>
-              <tbody *ngFor="let item of items">
+                  </tr>
+                </thead>
+                <tbody *ngFor="let item of items">
 
-                <tr>
-                  <td>{{ item.dbname }}</td>
-                  <td>{{ item.FactorPrivateCode }}</td>
-                  <td>{{ item.FactorDate }}</td>
-                  <td>{{ item.CustName }}</td>
-                  <td>{{ item.CustomerCode }}</td>
-                  <td>{{ item.Explain }}</td>
-                  <td>{{ item.CustomerPath }}</td>
-                  <td>
+                  <tr>
+                    <td>{{ item.dbname }}</td>
+                    <td>{{ item.FactorPrivateCode }}</td>
+                    <td>{{ item.FactorDate }}</td>
+                    <td>{{ item.CustName }}</td>
+                    <td>{{ item.CustomerCode }}</td>
+                    <td>{{ item.Explain }}</td>
+                    <td>{{ item.CustomerPath }}</td>
+                    <td>
 
-                    <ng-container *ngIf="item.AppIsControled === 'True'; else notControled">
-                      <ng-container *ngIf="item.AppIsPacked === 'True'; else notPacked">
-                        <ng-container *ngIf="item.AppIsDelivered === 'True'; else notDelivered">
-                          <ng-container *ngIf="item.HasSignature === 'True'; else notHasSignature">
-                            تحویل شده 
+                      <ng-container *ngIf="item.AppIsControled === 'True'; else notControled">
+                        <ng-container *ngIf="item.AppIsPacked === 'True'; else notPacked">
+                          <ng-container *ngIf="item.AppIsDelivered === 'True'; else notDelivered">
+                            <ng-container *ngIf="item.HasSignature === 'True'; else notHasSignature">
+                              تحویل شده
+                            </ng-container>
                           </ng-container>
                         </ng-container>
                       </ng-container>
-                    </ng-container>
 
-                    <ng-template #notControled>انبار</ng-template>
-                    <ng-template #notPacked> بسته بندی </ng-template>
-                    <ng-template #notDelivered>آماده ارسال </ng-template>
-                    <ng-template #notHasSignature>باربری </ng-template>
+                      <ng-template #notControled>انبار</ng-template>
+                      <ng-template #notPacked> بسته بندی </ng-template>
+                      <ng-template #notDelivered>آماده ارسال </ng-template>
+                      <ng-template #notHasSignature>باربری </ng-template>
 
-                  </td>
-
-
-                  <td>
-
-                    <a class="btn btn-warning btn-sm mx-1"
-                      [routerLink]="['/application/ocr-factor-detail', item.AppOCRFactorCode]">
-                      View
-                    </a>
+                    </td>
 
 
-                  </td>
-                </tr>
+                    <td>
 
-              </tbody>
-            </table>
+                      <a class="btn btn-warning btn-sm mx-1"
+                        [routerLink]="['/application/ocr-factor-detail', item.AppOCRFactorCode]">
+                        View
+                      </a>
+
+
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+
           </div>
+          -->
+
+
+
+
+
+
 
         </div>
- -->
-
-
-
-
-
-
 
       </div>
-
     </div>
   </div>
-</div>

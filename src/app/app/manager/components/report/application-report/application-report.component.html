@@ -37,7 +37,9 @@
                     }">
                       <option value="">لطفاً انتخاب کنید</option>
 
-                      <option [value]="item.id" *ngFor="let item of Title_Lookup">{{item.name}}</option>
+                      @for (item of Title_Lookup; track item) {
+                        <option [value]="item.id">{{item.name}}</option>
+                      }
                     </select>
                     <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
                                               validation: 'required',
@@ -87,20 +89,20 @@
 
 
 
+              </div>
+
+
             </div>
-
-
           </div>
-        </div>
 
+
+
+        </div>
 
 
       </div>
 
-
-    </div>
-
-    <!-- <div *ngIf="loading" class="text-center">
+      <!-- <div *ngIf="loading" class="text-center">
       <div class="spinner-border" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
@@ -109,164 +111,190 @@
 
 
 
-    <div *ngIf="!loading" class="text-center">
-
-      <div *ngIf="selectedFlag == '1'">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>مشتری</th>
-              <th>تعداد دستگاه</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of appLogResult">
-              <td>{{ row.ServerName }}</td>
-              <td>{{ row.UniqueDeviceCount }}</td>
-            </tr>
-          </tbody>
-        </table>
+    @if (!loading) {
+      <div class="text-center">
+        @if (selectedFlag == '1') {
+          <div>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>مشتری</th>
+                  <th>تعداد دستگاه</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of appLogResult; track row) {
+                  <tr>
+                    <td>{{ row.ServerName }}</td>
+                    <td>{{ row.UniqueDeviceCount }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+        @if (selectedFlag == '2') {
+          <div>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>مشتری</th>
+                  <th>تعداد لاگ</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of appLogResult; track row) {
+                  <tr>
+                    <td>{{ row.ServerName }}</td>
+                    <td>{{ row.TotalLogCount }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+        @if (selectedFlag == '3') {
+          <div>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>مشتری</th>
+                  <th>Device ID</th>
+                  <th>تاریخ آخر اتصال</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of appLogResult; track row) {
+                  <tr>
+                    <td>{{ row.ServerName }}</td>
+                    <td>{{ row.DeviceId }}</td>
+                    <td>{{ row.LastSeenDate }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+        @if (selectedFlag == '4') {
+          <div>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>مشتری</th>
+                  <th>تاریخ</th>
+                  <th>تعداد لاگ</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of appLogResult; track row) {
+                  <tr>
+                    <td>{{ row.ServerName }}</td>
+                    <td>{{ row.StrDate }}</td>
+                    <td>{{ row.LogCount }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+        @if (selectedFlag == '5') {
+          <div>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>مشتری</th>
+                  <th>Device ID</th>
+                  <th>تاریخ</th>
+                  <th>توضیح</th>
+                  <th>Agent</th>
+                  <th>SDK</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of appLogResult; track row) {
+                  <tr>
+                    <td>{{ row.ServerName }}</td>
+                    <td>{{ row.DeviceId }}</td>
+                    <td>{{ row.StrDate }}</td>
+                    <td>{{ row.Explain }}</td>
+                    <td>{{ row.DeviceAgant }}</td>
+                    <td>{{ row.SdkVersion }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+        @if (selectedFlag == '6') {
+          <div>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>مشتری</th>
+                  <th>BrokerRefها</th>
+                  <th>تعداد</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of appLogResult; track row) {
+                  <tr>
+                    <td>{{ row.ServerName }}</td>
+                    <td>{{ row.BrokerRefsList }}</td>
+                    <td>{{ row.CountOfBrokerRefs }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+        @if (selectedFlag == '7') {
+          <div>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Device ID</th>
+                  <th>مشتری</th>
+                  <th>تعداد Explain متفاوت</th>
+                  <th>لیست Explain</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of appLogResult; track row) {
+                  <tr>
+                    <td>{{ row.DeviceId }}</td>
+                    <td>{{ row.ServerName }}</td>
+                    <td>{{ row.DistinctExplainCount }}</td>
+                    <td>{{ row.ExplainList }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+        @if (selectedFlag == '8') {
+          <div>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>مشتری</th>
+                  <th>Explain</th>
+                  <th>تعداد تکرار</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of appLogResult; track row) {
+                  <tr>
+                    <td>{{ row.ServerName }}</td>
+                    <td>{{ row.Explain }}</td>
+                    <td>{{ row.CountByExplain }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
       </div>
-
-      <div *ngIf="selectedFlag == '2'">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>مشتری</th>
-              <th>تعداد لاگ</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of appLogResult">
-              <td>{{ row.ServerName }}</td>
-              <td>{{ row.TotalLogCount }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div *ngIf="selectedFlag == '3'">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>مشتری</th>
-              <th>Device ID</th>
-              <th>تاریخ آخر اتصال</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of appLogResult">
-              <td>{{ row.ServerName }}</td>
-              <td>{{ row.DeviceId }}</td>
-              <td>{{ row.LastSeenDate }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div *ngIf="selectedFlag == '4'">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>مشتری</th>
-              <th>تاریخ</th>
-              <th>تعداد لاگ</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of appLogResult">
-              <td>{{ row.ServerName }}</td>
-              <td>{{ row.StrDate }}</td>
-              <td>{{ row.LogCount }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div *ngIf="selectedFlag == '5'">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>مشتری</th>
-              <th>Device ID</th>
-              <th>تاریخ</th>
-              <th>توضیح</th>
-              <th>Agent</th>
-              <th>SDK</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of appLogResult">
-              <td>{{ row.ServerName }}</td>
-              <td>{{ row.DeviceId }}</td>
-              <td>{{ row.StrDate }}</td>
-              <td>{{ row.Explain }}</td>
-              <td>{{ row.DeviceAgant }}</td>
-              <td>{{ row.SdkVersion }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div *ngIf="selectedFlag == '6'">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>مشتری</th>
-              <th>BrokerRefها</th>
-              <th>تعداد</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of appLogResult">
-              <td>{{ row.ServerName }}</td>
-              <td>{{ row.BrokerRefsList }}</td>
-              <td>{{ row.CountOfBrokerRefs }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div *ngIf="selectedFlag == '7'">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>Device ID</th>
-              <th>مشتری</th>
-              <th>تعداد Explain متفاوت</th>
-              <th>لیست Explain</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of appLogResult">
-              <td>{{ row.DeviceId }}</td>
-              <td>{{ row.ServerName }}</td>
-              <td>{{ row.DistinctExplainCount }}</td>
-              <td>{{ row.ExplainList }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div *ngIf="selectedFlag == '8'">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>مشتری</th>
-              <th>Explain</th>
-              <th>تعداد تکرار</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of appLogResult">
-              <td>{{ row.ServerName }}</td>
-              <td>{{ row.Explain }}</td>
-              <td>{{ row.CountByExplain }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    }
 
   </div>
 </div>
@@ -274,11 +302,11 @@
 
 
 <ng-template #formError let-control="control" let-message="message" let-validation="validation">
-  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
+  @if (control.hasError(validation) && (control.dirty || control.touched)) {
     <div class="fv-plugins-message-container invalid-feedback">
       <span role="alert">
         {{ message }}
       </span>
     </div>
-  </ng-container>
+  }
 </ng-template>

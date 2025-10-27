@@ -18,7 +18,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/ocr-setting']">تنظیمات توزیع و
-          بایگانی</a>
+        بایگانی</a>
       </li>
     </ul>
   </div>
@@ -33,13 +33,13 @@
 
 
           <div class="col-md-4">
-            <ng-container *ngIf="loading1">
+            @if (loading1) {
               <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
               </div>
-            </ng-container>
+            }
 
-            <ng-container *ngIf="!loading1">
+            @if (!loading1) {
               <div class="d-flex align-items-start border border-info p-1">
                 <app-minton-radial-chart [percentage]="radial_value_1" [label]="' '"></app-minton-radial-chart>
                 <div class="flex-1 text-center align-self-center">
@@ -47,17 +47,17 @@
                   <h4 class="text-muted ">مانده انبار</h4>
                 </div>
               </div>
-            </ng-container>
+            }
           </div>
 
           <div class="col-md-4">
-            <ng-container *ngIf="loading2">
+            @if (loading2) {
               <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
               </div>
-            </ng-container>
+            }
 
-            <ng-container *ngIf="!loading2">
+            @if (!loading2) {
               <div class="d-flex align-items-start border border-info p-1">
                 <app-minton-radial-chart [percentage]="radial_value_2" [label]="' '"></app-minton-radial-chart>
                 <div class="flex-1 text-center align-self-center">
@@ -65,17 +65,17 @@
                   <h4 class="text-muted ">مانده بسته بندی </h4>
                 </div>
               </div>
-            </ng-container>
+            }
           </div>
 
           <div class="col-md-4">
-            <ng-container *ngIf="loading3">
+            @if (loading3) {
               <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
               </div>
-            </ng-container>
+            }
 
-            <ng-container *ngIf="!loading3">
+            @if (!loading3) {
               <div class="d-flex align-items-start border border-info p-1">
                 <app-minton-radial-chart [percentage]="radial_value_3" [label]="'label'"></app-minton-radial-chart>
                 <div class="flex-1 text-center align-self-center">
@@ -83,60 +83,58 @@
                   <h4 class="text-muted ">مانده تحویل</h4>
                 </div>
               </div>
-            </ng-container>
+            }
           </div>
 
           <div class="col-md-6 p-3">
 
 
 
-            <ng-container *ngIf="loading4">
+            @if (loading4) {
               <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
               </div>
-            </ng-container>
-            <ng-container *ngIf="!loading4">
+            }
+            @if (!loading4) {
               <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto"
                 [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="record_factor_headers"
                 [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
                 [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
                 [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context">
               </ag-grid-angular>
-            </ng-container>
-            <ng-container *ngIf="loading5">
+            }
+            @if (loading5) {
               <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
               </div>
-            </ng-container>
+            }
 
-            <ng-container *ngIf="!loading5">
+            @if (!loading5) {
               <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto"
                 [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="record_factor_rows"
                 [columnDefs]="columnDefs2" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
                 [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
                 [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context">
               </ag-grid-angular>
-            </ng-container>
+            }
 
           </div>
 
           <div class="col-md-6 p-3">
-            <ng-container *ngIf="loading6">
+            @if (loading6) {
               <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
               </div>
-            </ng-container>
+            }
 
-            <ng-container *ngIf="!loading6">
-
+            @if (!loading6) {
               <ag-grid-angular #agGrid id="myGrid" style="height: 800px; width: auto"
                 [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="records_ocr_factors"
                 [columnDefs]="columnDefs3" [modules]="modules" [localeText]="localeText" [defaultColDef]="defaultColDef"
                 [enableRtl]="true" (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
                 [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context">
               </ag-grid-angular>
-
-            </ng-container>
+            }
           </div>
 
         </div>

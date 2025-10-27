@@ -1,68 +1,58 @@
-<ng-container *ngIf="!loading_supportpanel">
-
-
+@if (!loading_supportpanel) {
   <div class="card" style="padding: 20px;">
     <!-- Header -->
     <div class="card-header d-flex justify-content-between align-items-center">
       <h5 class="card-title mb-0">گزارش پشتیبانی پنل</h5>
-
       <form [formGroup]="Attendance_StatusDurations_temp" (ngSubmit)="onDateSubmit()"
         class="mb-0 d-flex align-items-center">
         <div class="form-group mb-0 me-2" style="flex: 1;">
           <ng-persian-datepicker [uiHideAfterSelectDate]="true" (onSelect)="onDateChange()">
             <input type="text" class="form-control form-control-sm" formControlName="TargetDate"
               placeholder="انتخاب تاریخ..." />
-          </ng-persian-datepicker>
-        </div>
-
-        <button type="submit" class="btn btn-sm btn-primary">اعمال تاریخ</button>
-      </form>
-
-
-    </div>
-    <div class="card-body">
-
-      <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto;"
-        [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="records"
-        [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [modules]="modules" [localeText]="localeText"
-        [enableRtl]="true" [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context"
-        [suppressRowClickSelection]="true" [rowSelection]="'multiple'" (gridReady)="onGridReady($event)"
-        (cellClicked)="onCellClicked($event)" (selectionChanged)="onSelectionChanged($event)">
-      </ag-grid-angular>
-
-    </div>
-  </div>
-
-
-</ng-container>
-
-
-
-
-
-<div class="modal fade" id="factorlisthistory" tabindex="-1" aria-labelledby="factorlisthistoryLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content" style="background-color: #d1dce7;">
-      <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="factorlisthistoryLabel">{{BrokerHistroyName}} </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-          (click)="factorlisthistory_dialog_close()"></button>
+            </ng-persian-datepicker>
+          </div>
+          <button type="submit" class="btn btn-sm btn-primary">اعمال تاریخ</button>
+        </form>
       </div>
-      <div class="modal-body">
-        <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" [rowData]="records_history"
-          [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
-          (gridReady)="onGridReady2($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
-          [frameworkComponents]="frameworkComponents" [context]="context"
-          [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [defaultColDef]="defaultColDef"
-          [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
-          (selectionChanged)="onSelectionChanged($event)">
+      <div class="card-body">
+        <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto;"
+          [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="records"
+          [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [modules]="modules" [localeText]="localeText"
+          [enableRtl]="true" [pagination]="true" [frameworkComponents]="frameworkComponents" [context]="context"
+          [suppressRowClickSelection]="true" [rowSelection]="'multiple'" (gridReady)="onGridReady($event)"
+          (cellClicked)="onCellClicked($event)" (selectionChanged)="onSelectionChanged($event)">
         </ag-grid-angular>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+    </div>
+  }
+
+
+
+
+
+  <div class="modal fade" id="factorlisthistory" tabindex="-1" aria-labelledby="factorlisthistoryLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content" style="background-color: #d1dce7;">
+        <div class="modal-header" style="background-color: #949494;">
+          <h5 class="modal-title" id="factorlisthistoryLabel">{{BrokerHistroyName}} </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="factorlisthistory_dialog_close()"></button>
+        </div>
+        <div class="modal-body">
+          <ag-grid-angular #agGrid id="myGrid" style="height: 400px; width: auto" [rowData]="records_history"
+            [columnDefs]="columnDefs1" [modules]="modules" [localeText]="localeText" [enableRtl]="true"
+            (gridReady)="onGridReady2($event)" (cellClicked)="onCellClicked($event)" [pagination]="true"
+            [frameworkComponents]="frameworkComponents" [context]="context"
+            [ngClass]="isDarkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [defaultColDef]="defaultColDef"
+            [suppressRowClickSelection]="true" [rowSelection]="'multiple'"
+            (selectionChanged)="onSelectionChanged($event)">
+          </ag-grid-angular>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
           (click)="factorlisthistory_dialog_close()">بستن</button>
+        </div>
       </div>
     </div>
   </div>
-</div>

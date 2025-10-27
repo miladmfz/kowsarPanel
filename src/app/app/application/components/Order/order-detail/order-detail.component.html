@@ -11,7 +11,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/order-customer']">
-          حساب پرسنل</a>
+        حساب پرسنل</a>
       </li>
       <li class="nav-item">
         <a class="nav-link " data-bs-toggle="pill" [routerLink]="['/application/order-report']"> گزارش </a>
@@ -35,7 +35,7 @@
               <div class="card-body card-body">
                 <div class="d-flex align-items-start">
                   <div class="avatar-lg rounded-circle bg-icon-success"><i
-                      class="font-24 avatar-title mdi-lg mdi mdi-home-roof"></i></div>
+                  class="font-24 avatar-title mdi-lg mdi mdi-home-roof"></i></div>
                   <div class="flex-1 text-end  align-self-center">
                     <h3 class="mt-0"><span><span>میز خالی = {{items1.length}}</span></span></h3>
                     <h4 class="text-muted mb-0"><span>روف</span></h4>
@@ -50,7 +50,7 @@
               <div class="card-body card-body">
                 <div class="d-flex align-items-start">
                   <div class="avatar-lg rounded-circle bg-icon-primary"><i
-                      class="font-24 avatar-title  mdi mdi-flower"></i></div>
+                  class="font-24 avatar-title  mdi mdi-flower"></i></div>
 
                   <div class="flex-1 text-end align-self-center">
                     <h3 class="mt-0"><span><span>میز خالی = {{items2.length}}</span></span></h3>
@@ -65,7 +65,7 @@
               <div class="card-body card-body">
                 <div class="d-flex align-items-start">
                   <div class="avatar-lg rounded-circle bg-icon-danger"><i
-                      class="font-24 avatar-title mdi mdi-bookshelf"></i></div>
+                  class="font-24 avatar-title mdi mdi-bookshelf"></i></div>
                   <div class="flex-1 text-end align-self-center">
                     <h3 class="mt-0"><span><span>میز خالی = {{items3.length}}</span></span></h3>
                     <h4 class="text-muted mb-0">همایش</h4>
@@ -79,7 +79,7 @@
               <div class="card-body card-body">
                 <div class="d-flex align-items-start">
                   <div class="avatar-lg rounded-circle bg-icon-purple"><i
-                      class="font-24 avatar-title mdi mdi-table-chair"></i></div>
+                  class="font-24 avatar-title mdi mdi-table-chair"></i></div>
                   <div class="flex-1 text-end align-self-center">
                     <h3 class="mt-0"><span><span>میز خالی = {{items4.length}}</span></span></h3>
                     <h4 class="text-muted mb-0">تراس</h4>
@@ -137,12 +137,14 @@
                           <th class="min-w-20px">تعداد</th>
                         </tr>
                       </thead>
-                      <tbody *ngFor="let item of ItemsMax">
-                        <tr>
-                          <td>{{ item.GoodName }}</td>
-                          <td>{{ item.Amount }}</td>
-                        </tr>
-                      </tbody>
+                      @for (item of ItemsMax; track item) {
+                        <tbody>
+                          <tr>
+                            <td>{{ item.GoodName }}</td>
+                            <td>{{ item.Amount }}</td>
+                          </tr>
+                        </tbody>
+                      }
                     </table>
                   </div>
                 </div>
@@ -158,12 +160,14 @@
                           <th class="min-w-20px">تعداد</th>
                         </tr>
                       </thead>
-                      <tbody *ngFor="let item of ItemsMin">
-                        <tr>
-                          <td>{{ item.GoodName }}</td>
-                          <td>{{ item.Amount }}</td>
-                        </tr>
-                      </tbody>
+                      @for (item of ItemsMin; track item) {
+                        <tbody>
+                          <tr>
+                            <td>{{ item.GoodName }}</td>
+                            <td>{{ item.Amount }}</td>
+                          </tr>
+                        </tbody>
+                      }
                     </table>
                   </div>
                 </div>

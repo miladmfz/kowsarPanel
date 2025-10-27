@@ -4,34 +4,33 @@ declare var $: any;
 
 @Component({
     selector: 'edit-delete-cell-renderer',
-    template: ` 
-       
-        <span   (click)="SetLetter_config()" class="btn btn-sm btn-outline-primary" data-toggle="tooltip" title=" تیکت">
-            <a >
-                <i class=" far fa-list-alt"></i>
-            </a>
-        </span>
+    template: `
 
-        <ng-container *ngIf="BrokerRef==''"> 
-            <span   (click)="ShowHistory()" class="btn btn-sm btn-outline-primary mx-1" data-toggle="tooltip" title="تاریخچه">
-                <a >
-                    <i class="fas fa-history"></i>
-                </a>
-            </span>
-        </ng-container>
+<span   (click)="SetLetter_config()" class="btn btn-sm btn-outline-primary" data-toggle="tooltip" title=" تیکت">
+  <a >
+    <i class=" far fa-list-alt"></i>
+  </a>
+</span>
 
-        <ng-container *ngIf="BrokerRef!=''">   
-            <ng-container *ngIf="CentralRef==AttendanceCentralRef">
-                <span   (click)="ShowHistory()" class="btn btn-sm btn-outline-primary mx-1" data-toggle="tooltip" title="تاریخچه">
-                    <a >
-                         <i class="fas fa-history"></i>
-                    </a>
-                 </span>
+@if (BrokerRef=='') {
+  <span   (click)="ShowHistory()" class="btn btn-sm btn-outline-primary mx-1" data-toggle="tooltip" title="تاریخچه">
+    <a >
+      <i class="fas fa-history"></i>
+    </a>
+  </span>
+}
 
-             </ng-container>
-        </ng-container>
+@if (BrokerRef!='') {
+  @if (CentralRef==AttendanceCentralRef) {
+    <span   (click)="ShowHistory()" class="btn btn-sm btn-outline-primary mx-1" data-toggle="tooltip" title="تاریخچه">
+      <a >
+        <i class="fas fa-history"></i>
+      </a>
+    </span>
+  }
+}
 
-    `,
+`,
     standalone: false
 })
 

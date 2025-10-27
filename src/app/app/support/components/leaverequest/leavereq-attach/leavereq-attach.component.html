@@ -1,8 +1,10 @@
-<div *ngIf="loading_attach" class="text-center">
-  <div class="spinner-border" role="status">
-    <span class="visually-hidden">Loading...</span>
+@if (loading_attach) {
+  <div class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
   </div>
-</div>
+}
 
 
 <div class="card">
@@ -40,37 +42,43 @@
           </div>
 
           <!-- جزئیات فایل انتخاب‌شده -->
-          <div *ngIf="selectedImage" class="mt-4 text-center border-top pt-3">
-            <h6 class="text-secondary mb-3">جزئیات فایل انتخاب‌شده</h6>
-
-            <div class="row justify-content-center">
-              <div class="col-md-8">
-                <ul class="list-group list-group-flush small text-start">
-                  <li class="list-group-item">
-                    <strong>نام فایل:</strong> {{ selectedFileName }}
-                  </li>
-                  <li class="list-group-item">
-                    <strong>نوع فایل:</strong> {{ selectedFileType }}
-                  </li>
-                  <li class="list-group-item">
-                    <strong>حجم فایل:</strong> {{ selectedFileSize }} KB
-                  </li>
-                </ul>
+          @if (selectedImage) {
+            <div class="mt-4 text-center border-top pt-3">
+              <h6 class="text-secondary mb-3">جزئیات فایل انتخاب‌شده</h6>
+              <div class="row justify-content-center">
+                <div class="col-md-8">
+                  <ul class="list-group list-group-flush small text-start">
+                    <li class="list-group-item">
+                      <strong>نام فایل:</strong> {{ selectedFileName }}
+                    </li>
+                    <li class="list-group-item">
+                      <strong>نوع فایل:</strong> {{ selectedFileType }}
+                    </li>
+                    <li class="list-group-item">
+                      <strong>حجم فایل:</strong> {{ selectedFileSize }} KB
+                    </li>
+                  </ul>
+                </div>
               </div>
+              @if (selectedFileSize > 10240) {
+                <p class="text-danger fw-bold mt-3">
+                  ⚠️ حجم فایل بیشتر از 10 مگابایت است.
+                </p>
+              }
+              @if (selectedFileSize <= 10240) {
+                <p class="text-success fw-bold mt-3">
+                  ✅ حجم فایل مورد تأیید است.
+                </p>
+              }
+              @if (selectedFileName.length > 0 && selectedFileSize < 10240) {
+                <div class="text-center mt-4">
+                  <button type="submit" class="btn btn-success px-4">
+                    <i class="fas fa-check-double me-1"></i> ارسال
+                  </button>
+                </div>
+              }
             </div>
-
-            <p *ngIf="selectedFileSize > 10240" class="text-danger fw-bold mt-3">
-              ⚠️ حجم فایل بیشتر از 10 مگابایت است.
-            </p>
-            <p *ngIf="selectedFileSize <= 10240" class="text-success fw-bold mt-3">
-              ✅ حجم فایل مورد تأیید است.
-            </p>
-            <div *ngIf="selectedFileName.length > 0 && selectedFileSize < 10240" class="text-center mt-4">
-              <button type="submit" class="btn btn-success px-4">
-                <i class="fas fa-check-double me-1"></i> ارسال
-              </button>
-            </div>
-          </div>
+          }
 
           <!-- دکمه ارسال -->
 
@@ -85,11 +93,11 @@
 
 
 <ng-template #formError let-control="control" let-message="message" let-validation="validation">
-  <ng-container *ngIf="control.hasError(validation) && (control.dirty || control.touched)">
+  @if (control.hasError(validation) && (control.dirty || control.touched)) {
     <div class="fv-plugins-message-container invalid-feedback">
       <span role="alert">
         {{ message }}
       </span>
     </div>
-  </ng-container>
+  }
 </ng-template>
