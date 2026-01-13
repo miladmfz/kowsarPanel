@@ -1,0 +1,228 @@
+<div class="card">
+  <div class="card-body">
+
+    <h4 class="card-title">{{ title }}</h4>
+
+    <div class="ag-container" style="height:300px; border-radius: 8px; overflow: hidden;">
+
+      <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" (gridReady)="onGridReady($event, 1)"
+        [gridOptions]="gridOptions" class="w-100 h-100" (firstDataRendered)="gridApi1?.sizeColumnsToFit()">
+      </ag-grid-angular>
+    </div>
+
+
+  </div>
+</div>
+
+
+<!-- فرم ثبت ارجاع -->
+<div class="card mt-3">
+  <div class="card-body">
+
+    <form [formGroup]="EditForm_Item_Insert" (ngSubmit)="submit()">
+
+      <div class="row g-3">
+
+        <!-- تاریخ -->
+        <div class="col-md-2">
+          <label class="form-label">تاریخ</label>
+          <h5 class="mt-2">{{ ToDayDate }}</h5>
+          <input type="hidden" formControlName="LetterDate">
+        </div>
+
+        <!-- کاربر اجرایی -->
+        <div class="col-md-4">
+          <label class="form-label">کاربر</label>
+
+          <select formControlName="ExecuterCentral" class="form-control custom-select" [ngClass]="{
+          'is-invalid': EditForm_Item_Insert.controls['ExecuterCentral'].invalid && EditForm_Item_Insert.controls['ExecuterCentral'].touched,
+          'is-valid': EditForm_Item_Insert.controls['ExecuterCentral'].valid && EditForm_Item_Insert.controls['ExecuterCentral'].touched
+        }">
+
+            <option value="">لطفاً انتخاب کنید</option>
+
+            @for (user of users; track user.CentralCode) {
+            <option [value]="user.CentralCode">{{ user.CentralName }}</option>
+            }
+          </select>
+
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+          control: EditForm_Item_Insert.controls['ExecuterCentral'],
+          message: 'اجباری است',
+          validation: 'required'
+        }">
+          </ng-container>
+        </div>
+
+        <!-- اولویت -->
+        <div class="col-md-3">
+          <label class="form-label">اولویت</label>
+
+          <select formControlName="LetterPriority" class="form-control custom-select" [ngClass]="{
+          'is-invalid': EditForm_Item_Insert.controls['LetterPriority'].invalid && EditForm_Item_Insert.controls['LetterPriority'].touched,
+          'is-valid': EditForm_Item_Insert.controls['LetterPriority'].valid && EditForm_Item_Insert.controls['LetterPriority'].touched
+        }">
+
+            <option value="">لطفاً انتخاب کنید</option>
+
+            @for (p of LetterPriority_lookup; track p.aType) {
+            <option [value]="p.aType">{{ p.aType }}</option>
+            }
+          </select>
+
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+          control: EditForm_Item_Insert.controls['LetterPriority'],
+          message: 'اجباری است',
+          validation: 'required'
+        }">
+          </ng-container>
+        </div>
+
+        <!-- شرح -->
+        <div class="col-md-12">
+          <label class="form-label">شرح</label>
+
+          <textarea formControlName="Description" rows="4" class="form-control" maxlength="400" autocomplete="off"
+            [ngClass]="{
+          'is-invalid': EditForm_Item_Insert.controls['Description'].invalid && EditForm_Item_Insert.controls['Description'].touched,
+          'is-valid': EditForm_Item_Insert.controls['Description'].valid && EditForm_Item_Insert.controls['Description'].touched
+        }">
+      </textarea>
+
+          <small class="text-muted">
+            {{ EditForm_Item_Insert.controls['Description'].value?.length || 0 }}/400 کاراکتر
+          </small>
+
+          @if (EditForm_Item_Insert.controls['Description'].invalid &&
+          EditForm_Item_Insert.controls['Description'].touched) {
+
+          <div class="text-danger mt-1">
+            @if (EditForm_Item_Insert.controls['Description'].errors?.['required']) {
+            <div>پر کردن این فیلد اجباری است</div>
+            }
+            @if (EditForm_Item_Insert.controls['Description'].errors?.['minlength']) {
+            <div>
+              حداقل ۱۰ کاراکتر وارد کنید
+              ({{ EditForm_Item_Insert.controls['Description'].value?.length || 0 }} تایپ شده)
+            </div>
+            }
+          </div>
+
+          }
+        </div>
+
+        <!-- دکمه -->
+        <div class="col-md-12 text-end">
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-check-double me-1"></i>
+            ارسال
+          </button>
+        </div>
+
+      </div>
+    </form>
+
+
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="autletterrowmodal" tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title">شرح وضعیت و کار</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <form [formGroup]="EditForm_explain">
+
+          <div class="row g-3">
+
+            <div class="col-md-12">
+              <label class="form-label">شرح</label>
+              <input formControlName="LetterRowDescription" class="form-control" readonly>
+            </div>
+
+            <div class="col-md-12">
+              <label class="form-label">خلاصه عملکرد</label>
+
+              <textarea formControlName="AutLetterRow_PropDescription1" rows="4" maxlength="400" class="form-control"
+                autocomplete="off" [ngClass]="{
+                  'is-invalid': EditForm_explain.controls['AutLetterRow_PropDescription1'].invalid && EditForm_explain.controls['AutLetterRow_PropDescription1'].touched,
+                  'is-valid': EditForm_explain.controls['AutLetterRow_PropDescription1'].valid && EditForm_explain.controls['AutLetterRow_PropDescription1'].touched
+                }">
+              </textarea>
+
+              <small class="text-muted">
+                {{ EditForm_explain.controls['AutLetterRow_PropDescription1'].value?.length || 0 }}/400 کاراکتر
+              </small>
+
+              @if (EditForm_explain.controls['AutLetterRow_PropDescription1'].invalid &&
+              EditForm_explain.controls['AutLetterRow_PropDescription1'].touched) {
+              <div class="text-danger mt-1">
+                @if (EditForm_explain.controls['AutLetterRow_PropDescription1'].errors?.['required']) {
+                <div>پر کردن این فیلد اجباری است</div>
+                }
+                @if (EditForm_explain.controls['AutLetterRow_PropDescription1'].errors?.['minlength']) {
+                <div>
+                  حداقل ۱۰ کاراکتر وارد کنید
+                  ({{ EditForm_explain.controls['AutLetterRow_PropDescription1'].value?.length || 0 }} تایپ شده)
+                </div>
+                }
+              </div>
+              }
+            </div>
+
+            <div class="col-md-12">
+              <label class="form-label">وضعیت</label>
+
+              <select formControlName="LetterRowState" class="form-control custom-select" [ngClass]="{
+                  'is-invalid': EditForm_explain.controls['LetterRowState'].invalid && EditForm_explain.controls['LetterRowState'].touched,
+                  'is-valid': EditForm_explain.controls['LetterRowState'].valid && EditForm_explain.controls['LetterRowState'].touched
+                }">
+
+                <option value="">لطفاً انتخاب کنید</option>
+
+                @for (st of LetterState_lookup; track st.aType) {
+                <option [value]="st.aType">{{ st.aType }}</option>
+                }
+              </select>
+
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                  control: EditForm_explain.controls['LetterRowState'],
+                  message: 'اجباری است',
+                  validation: 'required'
+                }">
+              </ng-container>
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModal()">بستن</button>
+        <button class="btn btn-primary" (click)="Set_Autletterrow_Property()">بروزرسانی</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Template خطا -->
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  @if (control.hasError(validation) && (control.dirty || control.touched)) {
+  <div class="invalid-feedback d-block">
+    {{ message }}
+  </div>
+  }
+</ng-template>

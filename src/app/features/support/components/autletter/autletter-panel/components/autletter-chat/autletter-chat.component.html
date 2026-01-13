@@ -1,0 +1,217 @@
+<div class="card shadow-none border">
+
+  <div class="card-body p-0 d-flex flex-column" style="height: 600px;">
+
+    <!-- HEADER -->
+    <div class="p-3 border-bottom bg-light-alt">
+      <h5 class="mt-1 mb-1">گفتگوهای تیکت</h5>
+    </div>
+
+    <!-- CHAT LIST -->
+    <div #chatContainer class="p-3 flex-grow-1" style="overflow-y: auto; max-height: 100%;">
+
+      @for (msg of msgs; track msg.Id; let i = $index) {
+
+      <div class="mb-3" [class.text-end]="msg.IsMine">
+
+        <!-- Sender Name -->
+        @if (!msg.IsMine) {
+        <div class="text-muted small mb-1 fw-semibold">
+          {{ msg.Name }}
+        </div>
+        }
+
+        <!-- TEXT MESSAGE -->
+        @if (msg.ClassName === 'Text') {
+        <div class="d-inline-block px-3 py-2 rounded-3 shadow-sm" [class.bg-primary]="msg.IsMine"
+          [class.text-white]="msg.IsMine" [class.bg-light]="!msg.IsMine" [class.text-dark]="!msg.IsMine"
+          style="max-width: 70%;">
+          {{ msg.ConversationText }}
+        </div>
+        }
+
+        <!-- FILE MESSAGE (with switch) -->
+        @if (msg.ClassName === 'File') {
+
+        @switch (msg.ConversationText?.toLowerCase()) {
+
+        <!-- audio -->
+        @case ('audio/mpeg') {
+        <button class="btn btn-outline-info rounded-pill d-inline-flex align-items-center gap-2"
+          (click)="GetFileFromAttach(i, 'voice')">
+          <i class="bi bi-mic"></i>
+          <span>نمایش صدا</span>
+        </button>
+        }
+
+        <!-- image -->
+        @case ('image') {
+        <button class="btn btn-outline-primary rounded-pill d-inline-flex align-items-center gap-2"
+          (click)="GetFileFromAttach(i, 'image')">
+          <i class="bi bi-image"></i>
+          <span>نمایش تصویر</span>
+        </button>
+        }
+
+        <!-- video -->
+        @case ('video') {
+        <button class="btn btn-outline-warning rounded-pill d-inline-flex align-items-center gap-2"
+          (click)="GetFileFromAttach(i, 'video')">
+          <i class="bi bi-camera-video"></i>
+          <span>نمایش ویدئو</span>
+        </button>
+        }
+
+        <!-- pdf -->
+        @case ('pdf') {
+        <button class="btn btn-outline-danger rounded-pill d-inline-flex align-items-center gap-2"
+          (click)="GetFileFromAttach(i, 'pdf')">
+          <i class="bi bi-file-earmark-pdf"></i>
+          <span>نمایش PDF</span>
+        </button>
+        }
+
+        <!-- compressed -->
+        @case ('zip') {
+        <button class="btn btn-outline-secondary rounded-pill d-inline-flex align-items-center gap-2"
+          (click)="GetFileFromAttach(i, 'other')">
+          <i class="bi bi-file-earmark-zip"></i>
+          <span>دانلود فایل</span>
+        </button>
+        }
+
+        @case ('rar') {
+        <button class="btn btn-outline-secondary rounded-pill d-inline-flex align-items-center gap-2"
+          (click)="GetFileFromAttach(i, 'other')">
+          <i class="bi bi-file-earmark-zip"></i>
+          <span>دانلود فایل</span>
+        </button>
+        }
+
+        <!-- default -->
+        @default {
+        <button class="btn btn-outline-secondary rounded-pill d-inline-flex align-items-center gap-2"
+          (click)="GetFileFromAttach(i, 'other')">
+          <i class="bi bi-paperclip"></i>
+          <span>نمایش فایل</span>
+        </button>
+        }
+        }
+
+        }
+
+        <!-- DATE -->
+        <div class="small text-muted mt-1">{{ msg.CreationDate }}</div>
+
+      </div>
+
+      }
+
+    </div>
+
+    <!-- INPUT AREA -->
+    <div class="border-top p-3 bg-light-alt" [formGroup]="MessageForm">
+
+      <div class="d-flex align-items-center gap-2">
+
+        <!-- FILE UPLOAD -->
+        <app-autletter-file-upload (fileReady)="onFileReadyForUpload($event)">
+        </app-autletter-file-upload>
+
+        <!-- TEXT INPUT -->
+        <input type="text" class="form-control rounded-pill" formControlName="Description" placeholder="متن پیام..."
+          (keydown.enter)="onEnterPress($event)" />
+
+        <!-- SEND BUTTON -->
+        <button class="btn btn-success rounded-pill px-3" type="button" (click)="SendMessage()">
+          <i class="mdi mdi-send"></i>
+        </button>
+
+      </div>
+
+      <!-- VOICE RECORDER -->
+      <!-- <app-autletter-voice-recorder (voiceReady)="onVoiceReadyForUpload($event)">
+      </app-autletter-voice-recorder> -->
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================= -->
+<!--          MODALS              -->
+<!-- ============================= -->
+
+<!-- Voice Modal -->
+<div class="modal fade" id="voiceModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content bg-light border">
+      <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title">پخش صدا</h5>
+        <button type="button" class="btn-close" (click)="closeModal('voiceModal')"></button>
+      </div>
+      <div class="modal-body text-center">
+        <audio [src]="data_resive_FileUrl" controls autoplay></audio>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content bg-light border">
+
+      <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title">نمایش تصویر</h5>
+        <button type="button" class="btn-close" (click)="closeModal('imageModal')"></button>
+      </div>
+
+      <div class="modal-body text-center">
+
+        @if (modalLoading) {
+        <div class="p-4">
+          <div class="spinner-border text-primary"></div>
+          <p class="mt-2">در حال بارگذاری تصویر...</p>
+        </div>
+        } @else {
+        <img [src]="data_resive_FileUrl" class="img-fluid rounded" />
+        }
+
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+<!-- PDF Modal -->
+<div class="modal fade" id="pdfModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content bg-light border">
+      <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title">نمایش PDF</h5>
+        <button type="button" class="btn-close" (click)="closeModal('pdfModal')"></button>
+      </div>
+      <div class="modal-body text-center">
+        <iframe [src]="data_resive_FileUrl" width="100%" height="600px"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Other File Modal -->
+<div class="modal fade" id="fileModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content bg-light border">
+      <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title">دانلود فایل</h5>
+        <button type="button" class="btn-close" (click)="closeModal('fileModal')"></button>
+      </div>
+      <div class="modal-body text-center">
+        <a [href]="data_resive_FileUrl" [download]="data_resive_FileName">دانلود فایل</a>
+      </div>
+    </div>
+  </div>
+</div>

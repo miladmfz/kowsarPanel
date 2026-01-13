@@ -1,0 +1,46 @@
+/* ============================================
+     AG Grid Styles — Quartz Theme (v34+)
+   Fully Compatible with Theming API
+   ============================================ */
+
+/*   آیکون‌ها و فونت اصلی AG Grid */
+@import "ag-grid-community/styles/agGridQuartzFont.css";
+
+/* 🎨 تم اصلی Quartz */
+@import "ag-grid-community/styles/ag-theme-quartz.css";
+
+
+
+/* =====================================================
+     فونت فارسی (IRANSans)
+   ===================================================== */
+@font-face {
+  font-family: "IRANSans_Bold";
+  font-style: normal;
+  font-weight: 700;
+  src: url("assets/fonts/iransans/IRANSansWeb(FaNum)_Bold.woff2") format("woff2"),
+    url("assets/fonts/iransans/IRANSansWeb(FaNum)_Bold.woff") format("woff"),
+    url("assets/fonts/iransans/IRANSansWeb(FaNum)_Bold.ttf") format("truetype");
+}
+
+* {
+  font-family: "IRANSans_Bold", sans-serif;
+}
+
+/* =====================================================
+   🌞🌙 Bootstrap Theme Integration
+   ===================================================== */
+:root[data-bs-theme='light'] {
+  .card-header {
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+  }
+}
+
+:root[data-bs-theme='dark'] {
+  .card-header {
+    background-color: #1f1f1f !important;
+    color: #f1f1f1 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+}

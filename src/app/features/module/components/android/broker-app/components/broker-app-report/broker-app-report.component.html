@@ -1,0 +1,117 @@
+<div class="card border shadow-sm">
+  <div class="card-body d-flex flex-column flex-md-row align-items-center">
+    <div class="me-md-4 mb-3 mb-md-0 text-center">
+      <img [src]="Imageitem.length > 100 ? Imageitem : './assets/images/nophoto.png'"
+        class="rounded-circle border border-secondary object-fit-cover" style="width: 100px; height: 100px;"
+        alt="Profile" />
+      <div class="mt-2">
+        <label for="fileInput" class="btn btn-sm btn-outline-secondary">آپلود عکس</label>
+        <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput hidden />
+      </div>
+    </div>
+    <div class="flex-grow-1">
+      <h5 class="fw-semibold">{{ BrokerDetails[0]?.BrokerNameWithoutType }}</h5>
+      <p class="text-muted"><i class="mdi mdi-account"></i> {{ BrokerDetails[0]?.RelationType }}</p>
+      <hr>
+      <div class="row">
+        <div class="col-sm-6 mb-3"><strong>کد بازاریاب:</strong> {{ BrokerDetails[0]?.BrokerCode }}</div>
+        <div class="col-sm-6 mb-3"><strong>اجزای پایه:</strong> {{ BrokerDetails[0]?.CentralRef }}</div>
+        <div class="col-sm-6 mb-3"><strong>تعداد مشتری:</strong> {{ BrokerDetails[0]?.CustomerCount }}</div>
+        <div class="col-sm-6 mb-3"><strong>تعداد فاکتور امروز:</strong> {{ BrokerDetails[0]?.FactorCount }}
+        </div>
+        <div class="col-sm-6 mb-3"><strong>تعداد اقلام فاکتور:</strong> {{ BrokerDetails[0]?.AmountCount }}
+        </div>
+        <div class="col-sm-6"><strong>انبار:</strong> {{ BrokerDetails[0]?.Stack }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="card-body">
+
+  <ul class="nav nav-pills navtab-bg nav-justified">
+
+
+
+    <li class="nav-item">
+      <a href="#fromcustomer" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
+        <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+        <span class="d-none d-sm-inline-block">تفکیک مشتری</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#fromday" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+        <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+        <span class="d-none d-sm-inline-block">تفکیک روز </span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a href="#mapbroker" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+        <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+        <span class="d-none d-sm-inline-block">رهگیری بازاریاب</span>
+      </a>
+    </li>
+
+
+
+  </ul>
+
+
+
+
+  <div class="tab-content">
+
+
+
+
+
+    <div class="tab-pane active " id="fromcustomer">
+      <h3 class="card-title align-items-start flex-column">
+        <span class="card-label ">بیشترین سفارش به تفکیک مشتری</span>
+      </h3>
+
+
+      <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
+        <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="Broker_Prefactors" [gridOptions]="gridOptions"
+          (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+          class="w-100 h-100"></ag-grid-angular>
+      </div>
+
+    </div>
+
+
+
+
+    <div class="tab-pane" id="fromday">
+      <h3 class="card-title align-items-start flex-column">
+        <span class="card-label ">بیشترین سفارش به تفکیک روز</span>
+      </h3>
+
+      <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
+        <ag-grid-angular [columnDefs]="columnDefs2" [rowData]="DPreFactorDates" [gridOptions]="gridOptions"
+          (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()"
+          class="w-100 h-100"></ag-grid-angular>
+      </div>
+
+
+    </div>
+
+
+
+    <div class="tab-pane " id="mapbroker">
+      <h3 class="card-title ">
+        <span class="card-label ">نقشه بازاریاب :</span>
+      </h3>
+
+      <app-broker-app-map [BrokerCodeData]="BrokerCode"> </app-broker-app-map>
+
+    </div>
+
+
+
+  </div>
+</div>

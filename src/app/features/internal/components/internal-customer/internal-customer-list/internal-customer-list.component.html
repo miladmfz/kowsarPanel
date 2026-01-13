@@ -1,0 +1,239 @@
+<div class="card">
+  <div class="card-body">
+
+    <form [formGroup]="EditForm_SearchTarget">
+      <div class="row g-2 mb-3">
+        <div class="col-md-6">
+          <input type="text" class="form-control rounded-pill" placeholder="جستجو (نام/کد/مدیر/تلفن)"
+            formControlName="SearchTarget" (input)="onSearchChange()" />
+        </div>
+
+        <div class="col-md-6 text-start">
+          <button class="btn btn-success me-1" (click)="getList()">
+            <i class="fas fa-sync"></i> بازخوانی
+          </button>
+          <button class="btn btn-success me-1" (click)="NavigateToEdit(0)">
+            مشتری جدید
+          </button>
+        </div>
+      </div>
+    </form>
+
+
+    <!-- گرید اصلی -->
+    <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()" class="w-100 h-100">
+      </ag-grid-angular>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- نمایش مشخصات -->
+<div id="customerproperty" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">مشخصات مشتری</h5>
+        <button type="button" class="btn-close" (click)="property_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-2">
+          <div class="col-md-4">
+            <label class="form-label">نام مشتری</label>
+            <input class="form-control" [formControl]="ShowForm_property.controls['CustName_Small']" readonly />
+          </div>
+          <div class="col-md-8">
+            <label class="form-label">آدرس</label>
+            <input class="form-control" [formControl]="ShowForm_property.controls['Address']" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">نسخه نرم‌افزار</label>
+            <input class="form-control" [formControl]="ShowForm_property.controls['AppNumber']" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">دیتابیس</label>
+            <input class="form-control" [formControl]="ShowForm_property.controls['DatabaseNumber']" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">تعداد قفل</label>
+            <input class="form-control" [formControl]="ShowForm_property.controls['LockNumber']" readonly />
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">شهر</label>
+            <input class="form-control" [formControl]="ShowForm_property.controls['CityName']" readonly />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">استان</label>
+            <input class="form-control" [formControl]="ShowForm_property.controls['OstanName']" readonly />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">مدیر</label>
+            <input class="form-control" [formControl]="ShowForm_property.controls['Manager']" readonly />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">تلفن</label>
+            <input class="form-control" [formControl]="ShowForm_property.controls['Phone']" readonly />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">کدپستی</label>
+            <input class="form-control" [formControl]="ShowForm_property.controls['PostCode']" readonly />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">موبایل</label>
+            <input class="form-control" [formControl]="ShowForm_property.controls['Mobile']" readonly />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">نام صاحب موبایل</label>
+            <input class="form-control" [formControl]="ShowForm_property.controls['MobileName']" readonly />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">کد منطقه</label>
+            <input class="form-control" [formControl]="ShowForm_property.controls['ZipCode']" readonly />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">ایمیل</label>
+            <input class="form-control" [formControl]="ShowForm_property.controls['Email']" readonly />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">فکس</label>
+            <input class="form-control" [formControl]="ShowForm_property.controls['Fax']" readonly />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-light" (click)="property_dialog_close()">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="editcustomerproperty" class="modal fade" tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+
+      <!-- Header -->
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title">جزئیات</h5>
+        <button type="button" class="btn-close" (click)="Edit_property_dialog_close()"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <form [formGroup]="EditForm_property">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+                  <div class="form-group col-md-12">
+                    <label class="col-form-label">نام مشتری</label>
+                    <input type="text" class="form-control" formControlName="CustName_Small" readonly />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label class="col-form-label">نسخه نرم افزار</label>
+                    <input type="text" class="form-control" formControlName="AppNumber" />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label class="col-form-label">دیتابیس</label>
+                    <input type="text" class="form-control" formControlName="DatabaseNumber" />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label class="col-form-label">تعداد قفل</label>
+                    <input type="text" class="form-control" formControlName="Delegacy" />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label class="col-form-label">وضعیت پشتیبانی </label>
+                    <input type="text" class="form-control" formControlName="Explain" />
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="Edit_property_dialog_close()">
+          بستن
+        </button>
+        <button type="button" class="btn btn-primary" (click)="Set_Customer_Property_Explain()">
+          بروزرسانی
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- فهرست سوابق/فاکتور -->
+<div id="customerfactor" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">سوابق پشتیبانی/فاکتور</h5>
+        <button type="button" class="btn-close" (click)="CustomerFactor_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="ag-container rounded-3 overflow-hidden" style="height: 380px;">
+          <ag-grid-angular [columnDefs]="columnDefs2" [rowData]="records_factor" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()" class="w-100 h-100">
+          </ag-grid-angular>
+        </div>
+
+        <div class="text-start mt-2">
+          <button class="btn btn-outline-primary btn-sm"
+            (click)="records_factor?.[0]?.FactorCode && GetFactorrows(records_factor[0].FactorCode)">
+            نمایش ردیف‌های فاکتور انتخابی
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: ردیف‌های فاکتور -->
+<div id="customerfactorrow" class="modal fade" tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header bg-light">
+        <h5 class="modal-title">
+          <i class="fas fa-list-alt ms-2"></i>
+          ردیف‌های فاکتور
+        </h5>
+        <button type="button" class="btn-close" (click)="CustomerFactorRow_dialog_close()"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 350px;">
+          <ag-grid-angular class="w-100 h-100" [columnDefs]="columnDefs3" [rowData]="records_support_factorrows"
+            [gridOptions]="gridOptions" (gridReady)="onGridReady($event, 3)"
+            (firstDataRendered)="gridApi3?.sizeColumnsToFit()">
+          </ag-grid-angular>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

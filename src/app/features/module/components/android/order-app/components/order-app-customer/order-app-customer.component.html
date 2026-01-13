@@ -1,0 +1,45 @@
+<div class="tab-pane fade show active" role="tabpanel">
+
+  <div class="table-responsive">
+
+    <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records_Customer" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+        class="w-100 h-100"></ag-grid-angular>
+    </div>
+
+
+
+  </div>
+
+</div>
+
+
+<div class="modal fade" id="ordercustomer" tabindex="-1" aria-labelledby="ordercustomerLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="ordercustomerLabel">جزئیات سفارش </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="ordercustomer_Modal_Response_close()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+
+
+          <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
+            <ag-grid-angular [columnDefs]="columnDefs2" [rowData]="records_Customer_detail" [gridOptions]="gridOptions"
+              (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()"
+              class="w-100 h-100"></ag-grid-angular>
+          </div>
+
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="ordercustomer_Modal_Response_close()">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,171 @@
+<div class="card-body">
+  <div class="tab-content">
+    <div class="tab-pane fade show active" role="tabpanel">
+
+      <div class="card">
+        <div class="card-body">
+
+          @if (!loading_supportpanel) {
+          <div class="card-body">
+            <table class="table table-striped table-bordered"
+              style="border: 3px solid #000; border-collapse: collapse;">
+              <thead class="table-dark">
+                <tr>
+                  <th class="text-center">نام پشتیبان</th>
+                  <th class="text-center">تعداد فاکتور بدون رکورد</th>
+                  <th class="text-center">تعداد فاکتور باز</th>
+                  <th class="text-center">تعداد کل فاکتورها</th>
+                  <th class="text-center">تعداد ردیف‌ها</th>
+                  <th class="text-center">مجموع کارکرد</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of reportData; track row) {
+                <tr class="text-center">
+                  <td>{{ row.BrokerNameWithoutType }}</td>
+                  <td
+                    [ngClass]="{'text-danger': row.WithoutRows > 0, 'fw-bold': row.WithoutRows > 0, 'fs-2': row.WithoutRows > 0}">
+                    {{ row.WithoutRows }}
+                  </td>
+                  <td
+                    [ngClass]="{'text-danger': row.OpenFactor > 0, 'fw-bold': row.OpenFactor > 0, 'fs-2': row.OpenFactor > 0}">
+                    {{ row.OpenFactor }}
+                  </td>
+                  <td>{{ row.Factors }}</td>
+                  <td>{{ row.RowsCount }}</td>
+                  <td>{{ row.TotalWork }}</td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          }
+
+          <form [formGroup]="EditForm_supportfactor" (ngSubmit)="submit('')" id="submitForm">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body row">
+
+                    <div class="form-group col-md-12">
+                      <label for="SearchTarget" class="col-form-label">جستجو</label>
+                      <input type="text" id="SearchTarget" class="form-control" formControlName="SearchTarget"
+                        maxlength="100" autocomplete="off" />
+                    </div>
+
+                    <div class="form-group col-md-5">
+                      <label for="StartDateTarget" class="col-form-label">ابتدای تاریخ</label>
+                      <ng-persian-datepicker [uiHideAfterSelectDate]="true">
+                        <input id="StartDateTarget" type="text" class="form-control"
+                          formControlName="StartDateTarget" />
+                      </ng-persian-datepicker>
+                    </div>
+
+                    <div class="form-group col-md-5">
+                      <label for="EndDateTarget" class="col-form-label">انتهای تاریخ</label>
+                      <ng-persian-datepicker [uiHideAfterSelectDate]="true">
+                        <input id="EndDateTarget" type="text" class="form-control" formControlName="EndDateTarget" />
+                      </ng-persian-datepicker>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+        </div>
+
+        <div class="row mb-2">
+          <div class="col-sm-12">
+            <a type="button" class="btn btn-success m-1" (click)="navigateToNew()">
+              <span class="btn-label"><i class="fas fa-file-invoice-dollar"></i></span>
+              فاکتور جدید
+            </a>
+
+            <a type="button" class="btn btn-primary m-1" (click)="getList()">
+              <span class="btn-label"><i class="fas fa-search"></i></span> جستجو
+            </a>
+            <a type="button" class="btn btn-light m-1" (click)="getList()">
+              <span class="btn-label"><i class="fas fa-recycle"></i></span> بازخوانی
+            </a>
+
+          </div>
+        </div>
+
+      </div>
+
+      @if (loading) {
+      <div class="text-center">
+        <span class="loader"></span>
+      </div>
+      }
+
+
+
+      <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
+        <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" [gridOptions]="gridOptions"
+          (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()" class="w-100 h-100">
+        </ag-grid-angular>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal: ویرایش خصوصیت فاکتور -->
+<div class="modal fade" id="supportfactorproperty" tabindex="-1" aria-labelledby="supportfactorpropertyLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="supportfactorpropertyLabel">خصوصیت اضافه</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="property_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="EditForm_supportfactor_property" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+                  <div class="form-group col-md-12">
+                    <label class="col-form-label" for="starttime">شروع</label>
+                    <input id="starttime" type="text" class="form-control" formControlName="starttime" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label class="col-form-label" for="Endtime">پایان</label>
+                    <input id="Endtime" type="text" class="form-control" formControlName="Endtime" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label class="col-form-label" for="worktime">مدت کار</label>
+                    <input id="worktime" type="text" class="form-control" formControlName="worktime" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label class="col-form-label" for="Barbary">شرح</label>
+                    <input id="Barbary" type="text" class="form-control" formControlName="Barbary" maxlength="100"
+                      autocomplete="off" />
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="property_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="Set_factor_Property()">بروزرسانی</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+<!-- =============================================================== -->
+<!-- 📋 داشبورد وضعیت حضور کارشناسان -->
+<!-- توضیحات کلی:
+     این قالب شامل بخش‌های مختلف مرتبط با مدیریت حضور کارشناسان است:
+     1️⃣ کارت اصلی وضعیت حضور شامل گرید مرخصی و حضور
+     2️⃣ مودال تاریخچه حضور
+     3️⃣ مودال مدیریت تیکت‌ها
+     4️⃣ مودال انتخاب مشتری
+     تمامی بخش‌ها از کامپوننت‌های مستقل استفاده می‌کنند و وضعیت تم (تیره/روشن)
+     و سیگنال‌های نمایش مودال‌ها به‌صورت داینامیک کنترل می‌شود.
+-->
+<!-- =============================================================== -->
+
+<!-- =============================================================== -->
+<!-- 🟦 کارت وضعیت حضور -->
+<!-- =============================================================== -->
+<div class="card p-3">
+
+  <!-- =============================================================== -->
+  <!-- 🔹 Header -->
+  <!-- =============================================================== -->
+  <div class="card-header d-flex justify-content-between align-items-center" [ngClass]="{
+      'bg-dark text-white border-secondary': isDarkMode,
+      'bg-light text-dark border-light': !isDarkMode
+    }">
+    <h5 class="card-title mb-0">
+      <i class="fas fa-user-clock me-2"></i>
+      وضعیت حضور
+    </h5>
+
+    <!-- 🔁 دکمه رفرش -->
+    <button class="btn btn-sm" [ngClass]="isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'"
+      (click)="refreshData()">
+      <i class="fas fa-sync-alt"></i>
+    </button>
+  </div>
+
+  <!-- =============================================================== -->
+  <!--   گرید مرخصی -->
+  <!-- =============================================================== -->
+  <app-leave-grid #leaveGrid [darkMode]="isDarkMode"></app-leave-grid>
+
+  <div class="m-1"></div>
+
+  <!-- =============================================================== -->
+  <!-- 📋 گرید حضور کارشناسان -->
+  <!-- =============================================================== -->
+  <app-attendance-grid #attendanceGrid [darkMode]="isDarkMode" (openHistory)="openHistory($event)"
+    (openLetter)="openLetter($event)"></app-attendance-grid>
+</div>
+
+<!-- =============================================================== -->
+<!-- 🕓 مودال تاریخچه حضور -->
+<!-- =============================================================== -->
+@if (Attendance_history_Show_Modal()) {
+<app-attendance-history-modal [visible]="Attendance_history_Show_Modal()" [records]="Attendance_history_records()"
+  [darkMode]="isDarkMode" (close)="closeHistoryModal()"></app-attendance-history-modal>
+}
+
+<!-- =============================================================== -->
+<!-- 📬 مودال تیکت‌ها -->
+<!-- =============================================================== -->
+@if (showLetterModal()) {
+<app-letter-modal [visible]="showLetterModal()" [records]="Letter_records()" [darkMode]="isDarkMode"
+  [person]="selectedPerson()" (close)="closeLetterModal()" (submitLetter)="onSubmitLetter($event)"
+  (requestSelectCustomer)="openCustomerModal()"></app-letter-modal>
+}
+
+<!-- =============================================================== -->
+<!--   مودال لیست مشتریان -->
+<!-- =============================================================== -->
+@if (Customer_Show_Modal()) {
+<app-customer-list-modal [visible]="Customer_Show_Modal()" [records]="Customer_records()" [darkMode]="isDarkMode"
+  (close)="closeCustomerModal()" (selectCustomer)="onCustomerSelected($event)"
+  (searchRequested)="openCustomerModal($event)"></app-customer-list-modal>
+}

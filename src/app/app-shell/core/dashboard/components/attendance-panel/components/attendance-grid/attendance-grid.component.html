@@ -1,0 +1,29 @@
+<!-- =============================================================== -->
+<!-- 📋 Attendance Grid Template -->
+<!-- توضیحات کلی:
+     این بخش مربوط به نمایش وضعیت حضور کارشناسان است.
+     شامل دو حالت است:
+     1️⃣ نمایش لودر هنگام بارگذاری داده‌ها
+     2️⃣ نمایش جدول (AgGrid) پس از آماده شدن داده‌ها -->
+<!-- =============================================================== -->
+
+<!-- 🕓 حالت بارگذاری -->
+@if (loading()) {
+<div class="d-flex justify-content-center align-items-center text-muted" style="height: 500px;">
+  <div class="text-center">
+    <i class="fas fa-hourglass-half fa-spin fa-2x mb-3 text-primary"></i>
+    <div>در حال بارگذاری اطلاعات حضور...</div>
+  </div>
+</div>
+
+<!-- =============================================================== -->
+<!--   گرید حضور کارشناسان -->
+<!-- =============================================================== -->
+} @else {
+<div class="ag-container" style="height: 600px; border-radius: 8px; overflow: hidden;">
+
+  <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records()" (gridReady)="onGridReady($event, 1)"
+    [gridOptions]="gridOptions" class="w-100 h-100" (firstDataRendered)="gridApi1?.sizeColumnsToFit()">
+  </ag-grid-angular>
+</div>
+}

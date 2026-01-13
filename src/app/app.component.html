@@ -1,1 +1,22 @@
 <router-outlet></router-outlet>
+
+@if (loadingService.loading()) {
+<div class="modal fade show d-block" id="loadingModal" tabindex="-1" aria-hidden="true"
+    style="background-color: rgba(0, 0, 0, 0.5);" dir="rtl">
+
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg text-dark text-center"
+            style="background-color: #e6eef7; border-radius: 14px;">
+
+            <div class="modal-body py-4">
+                <i class="fas fa-hourglass-half fa-spin fa-2x mb-3 text-primary"></i>
+                <div class="fw-semibold" style="color: #003366;">
+                    لطفاً منتظر بمانید...
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+}

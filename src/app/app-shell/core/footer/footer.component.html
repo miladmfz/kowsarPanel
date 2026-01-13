@@ -1,15 +1,31 @@
+<!-- =============================================================== -->
+<!-- 📘 فوتر (Footer) اصلی سیستم -->
+<!-- توضیحات کلی:
+     این بخش فوتر عمومی داشبورد است که در تمام صفحات ثابت می‌ماند.
+     شامل نمایش سال جاری به‌صورت داینامیک و لینک به وب‌سایت رسمی
+     شرکت کوثر سامانه پرداز می‌باشد.
+-->
+<!-- =============================================================== -->
+
 <footer class="footer">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-6">
 
-      </div>
-      <div class="col-md-6">
+      <div class="col-md-6 text-end">
         <script>
           document.write(new Date().getFullYear());
         </script>
-        &copy; کوثر سامانه پرداز <a href="http://www.kits.ir/">kits.ir</a>
+        کوثر سامانه پرداز &copy;
+        <a href="http://www.kits.ir/" target="_blank" rel="noopener noreferrer">kits.ir</a>
+
       </div>
+      <div class="col-md-6 text-start">
+        <p class="page-title  fw-semibold">
+          نسخه :{{ AppVersion }}
+        </p>
+      </div>
+
+
     </div>
   </div>
 </footer>

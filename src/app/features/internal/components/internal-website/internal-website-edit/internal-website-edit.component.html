@@ -1,0 +1,165 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">{{ title }}</h4>
+
+    <form [formGroup]="EditForm_WebSite" (ngSubmit)="submit()" id="submitForm">
+
+      <div class="row">
+
+        <!-- نام مشتری -->
+        <div class="form-group col-md-6">
+          <label for="CompanyName">نام مشتری <span class="text-danger">*</span></label>
+          <input type="text" id="CompanyName" class="form-control" formControlName="CompanyName" [ngClass]="{
+                   'is-invalid': EditForm_WebSite.controls['CompanyName'].invalid && EditForm_WebSite.controls['CompanyName'].touched,
+                   'is-valid': EditForm_WebSite.controls['CompanyName'].valid && EditForm_WebSite.controls['CompanyName'].touched
+                 }" />
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm_WebSite.controls['CompanyName']
+          }"></ng-container>
+        </div>
+
+        <!-- مسئول -->
+        <div class="form-group col-md-6">
+          <label for="WebEmploy">مسئول <span class="text-danger">*</span></label>
+          <input type="text" id="WebEmploy" class="form-control" formControlName="WebEmploy" [ngClass]="{
+                   'is-invalid': EditForm_WebSite.controls['WebEmploy'].invalid && EditForm_WebSite.controls['WebEmploy'].touched,
+                   'is-valid': EditForm_WebSite.controls['WebEmploy'].valid && EditForm_WebSite.controls['WebEmploy'].touched
+                 }" />
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm_WebSite.controls['WebEmploy']
+          }"></ng-container>
+        </div>
+
+        <!-- شماره تماس -->
+        <div class="form-group col-md-6">
+          <label for="Phone">شماره تماس <span class="text-danger">*</span></label>
+          <input type="text" id="Phone" class="form-control" formControlName="Phone" [ngClass]="{
+                   'is-invalid': EditForm_WebSite.controls['Phone'].invalid && EditForm_WebSite.controls['Phone'].touched,
+                   'is-valid': EditForm_WebSite.controls['Phone'].valid && EditForm_WebSite.controls['Phone'].touched
+                 }" />
+
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm_WebSite.controls['Phone']
+          }"></ng-container>
+        </div>
+
+        <!-- بانک -->
+        <div class="form-group col-md-6">
+          <label for="PaymentGateway">درگاه بانک</label>
+          <input type="text" id="PaymentGateway" class="form-control" formControlName="PaymentGateway" [ngClass]="{
+                   'is-invalid': EditForm_WebSite.controls['PaymentGateway'].invalid && EditForm_WebSite.controls['PaymentGateway'].touched,
+                   'is-valid': EditForm_WebSite.controls['PaymentGateway'].valid && EditForm_WebSite.controls['PaymentGateway'].touched
+                 }" />
+        </div>
+
+        <!-- دامین اصلی -->
+        <div class="form-group col-md-3">
+          <label for="Domain1">دامین اصلی دارای اینماد <span class="text-danger">*</span></label>
+          <input type="text" id="Domain1" class="form-control" formControlName="Domain1" [ngClass]="{
+                   'is-invalid': EditForm_WebSite.controls['Domain1'].invalid && EditForm_WebSite.controls['Domain1'].touched,
+                   'is-valid': EditForm_WebSite.controls['Domain1'].valid && EditForm_WebSite.controls['Domain1'].touched
+                 }" />
+        </div>
+
+        <!-- وضعیت سایت -->
+        <div class="form-group col-md-3">
+          <label for="WebState">وضعیت سایت <span class="text-danger">*</span></label>
+          <select id="WebState" class="form-control" formControlName="WebState" [ngClass]="{
+                   'is-invalid': EditForm_WebSite.controls['WebState'].invalid && EditForm_WebSite.controls['WebState'].touched,
+                   'is-valid': EditForm_WebSite.controls['WebState'].valid && EditForm_WebSite.controls['WebState'].touched
+                 }">
+            <option value="">لطفاً انتخاب کنید</option>
+            @for (item of TrueFalse_Lookup; track item) {
+            <option [value]="item.id">{{ item.name }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- نسخه KCServer -->
+        <div class="form-group col-md-3">
+          <label for="KCServerVersion">نسخه KCServer <span class="text-danger">*</span></label>
+          <select id="KCServerVersion" class="form-control" formControlName="KCServerVersion" [ngClass]="{
+                   'is-invalid': EditForm_WebSite.controls['KCServerVersion'].invalid && EditForm_WebSite.controls['KCServerVersion'].touched,
+                   'is-valid': EditForm_WebSite.controls['KCServerVersion'].valid && EditForm_WebSite.controls['KCServerVersion'].touched
+                 }">
+            <option value="">لطفاً انتخاب کنید</option>
+            @for (item of KCServer_Lookup; track item) {
+            <option [value]="item.id">{{ item.name }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- نوع سایت -->
+        <div class="form-group col-md-3">
+          <label for="SiteType">نوع سایت <span class="text-danger">*</span></label>
+          <select id="SiteType" class="form-control" formControlName="SiteType" [ngClass]="{
+                   'is-invalid': EditForm_WebSite.controls['SiteType'].invalid && EditForm_WebSite.controls['SiteType'].touched,
+                   'is-valid': EditForm_WebSite.controls['SiteType'].valid && EditForm_WebSite.controls['SiteType'].touched
+                 }">
+            <option value="">لطفاً انتخاب کنید</option>
+            @for (item of SiteType_Lookup; track item) {
+            <option [value]="item.id">{{ item.name }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- دامنه‌ها -->
+        <div class="form-group col-md-3">
+          <label for="Domain2">دامین 2</label>
+          <input type="text" class="form-control" id="Domain2" formControlName="Domain2">
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="Domain3">دامین 3</label>
+          <input type="text" class="form-control" id="Domain3" formControlName="Domain3">
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="Domain4">دامین 4</label>
+          <input type="text" class="form-control" id="Domain4" formControlName="Domain4">
+        </div>
+
+        <!-- امکانات سایت -->
+        <div class="form-group col-md-12">
+          <label for="Features">امکانات سایت <span class="text-danger">*</span></label>
+          <textarea id="Features" class="form-control" rows="3" formControlName="Features"></textarea>
+        </div>
+
+        <!-- توضیحات -->
+        <div class="form-group col-md-12">
+          <label for="Explain">توضیحات API</label>
+          <textarea id="Explain" class="form-control" rows="3" formControlName="Explain"></textarea>
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+<!-- دکمه‌ها -->
+<div class="card mt-3">
+  <div class="card-body">
+    <button class="btn btn-success m-2" (click)="submit()">
+      <i class="fas fa-check-double"></i> ثبت
+    </button>
+    <button class="btn btn-light m-2" (click)="onCancel()">انصراف</button>
+  </div>
+</div>
+
+<app-kowsar-attach [ObjectRef]="WebsiteId" [ClassName]="'website'"></app-kowsar-attach>
+
+
+<!-- TEMPLATE ERROR -->
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  @if (control.hasError(validation) && (control.dirty || control.touched)) {
+  <div class="invalid-feedback d-block">{{ message }}</div>
+  }
+</ng-template>

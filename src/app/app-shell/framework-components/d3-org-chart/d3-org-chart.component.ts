@@ -1,14 +1,16 @@
-import { OnChanges, Component, OnInit, Input, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { OnChanges, Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { CommonModule } from '@angular/common';  // Import CommonModule for common Angular features
 import { OrgChart } from 'd3-org-chart';
 import * as d3 from 'd3';
 declare var $: any;
 
 @Component({
-    selector: 'app-d3-org-chart',
-    templateUrl: './d3-org-chart.component.html',
-    standalone: false
+  selector: 'app-d3-org-chart',
+  templateUrl: './d3-org-chart.component.html',
+  standalone: true,  // Make the component standalone
+  imports: [CommonModule]  // Include CommonModule directly in the component
 })
-export class D3OrgChartComponent implements OnInit, OnChanges {
+export class D3OrgChartComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild('chartContainer') chartContainer: ElementRef;
   @Input() data: any[];
   chart;
@@ -113,6 +115,6 @@ export class D3OrgChartComponent implements OnInit, OnChanges {
   }
 
   compact() {
-    this.chart.compact(false).render().fit()
+    this.chart.compact(false).render().fit();
   }
 }

@@ -1,0 +1,51 @@
+<div class="row g-4">
+
+  <!-- ListVisible -->
+  <div class="col-sm-12 col-md-4">
+    <div class="card shadow-sm h-100 border border-primary">
+      <div class="card-header fw-bold bg-light">🗂️ آیتم‌های نمایشی در لیست</div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          @for (item of ListVisible_items; track item) {
+          @if (item.ListVisible > 0) {
+          <li class="list-group-item">{{ item.ColumnDesc }}</li>
+          }
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- DetailVisible -->
+  <div class="col-sm-12 col-md-4">
+    <div class="card shadow-sm h-100 border border-success">
+      <div class="card-header fw-bold bg-light">📋 آیتم‌های نمایشی در جزییات</div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          @for (item of DetailVisible_items; track item) {
+          @if (item.DetailVisible > 0) {
+          <li class="list-group-item">{{ item.ColumnDesc }}</li>
+          }
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SearchVisible -->
+  <div class="col-sm-12 col-md-4">
+    <div class="card shadow-sm h-100 border border-warning">
+      <div class="card-header fw-bold bg-light"> آیتم‌های نمایشی در جستجوی پیشرفته</div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          @for (item of SearchVisible_items; track item) {
+          @if (item.SearchVisible > 0) {
+          <li class="list-group-item">{{ item.ColumnDesc }}</li>
+          }
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>

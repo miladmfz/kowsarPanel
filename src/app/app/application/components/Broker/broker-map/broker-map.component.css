@@ -1,9 +1,0 @@
-.ng-persian-datepicker {
-    direction: rtl;
-    /* جهت به راست به چپ */
-}
-
-.ng-persian-datepicker input {
-    text-align: right;
-    /* متن داخل ورودی هم راست به چپ بشه */
-}

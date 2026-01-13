@@ -1,0 +1,108 @@
+<div class="card">
+  <div class="card-body">
+    <div class="row mb-2">
+      <div class="col-sm-12">
+
+
+
+        @if (loading1) {
+        <div class="spinner-border " role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        }
+
+        @if (!loading1) {
+        @if (data_state1.length>0) {
+        <div>
+          <h3>نمودار بسته بندی و تحویل </h3>
+          <app-kowsar-chart-column [title]="''" [series]="columnChartData_state1"
+            [categories]="columnChartCategories_state1"></app-kowsar-chart-column>
+        </div>
+        }
+        }
+
+
+
+
+        <div class="row">
+          <div class="col-md-6">
+
+            @if (loading3) {
+            <div class="spinner-border " role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            }
+
+            @if (!loading3) {
+            @if (data_state3.length>0) {
+            <div>
+              <h3>نمودار جمع آوری بر اساس نوع اقلام </h3>
+              <app-kowsar-chart-pie [title]="''" [series]="series_state3"
+                [labels]="labels_state3"></app-kowsar-chart-pie>
+            </div>
+            }
+            }
+
+
+          </div>
+          <div class="col-md-6">
+
+
+            @if (loading4) {
+            <div class="spinner-border " role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            }
+
+            @if (!loading4) {
+            @if (data_state4.length>0) {
+            <div>
+              <h3>نمودار جمع آوری بر اساس تعداد کالا </h3>
+              <app-kowsar-chart-pie [title]="''" [series]="series_state4"
+                [labels]="labels_state4"></app-kowsar-chart-pie>
+            </div>
+            }
+            }
+
+          </div>
+        </div>
+
+
+        @if (loading2) {
+        <div class="spinner-border " role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        }
+
+        @if (!loading2) {
+        @if (data_state2.length>0) {
+        <div>
+          <h3>نمودار وضعیت فاکتورها </h3>
+          <app-kowsar-chart-pie [title]="''" [series]="series_state2" [labels]="labels_state2"></app-kowsar-chart-pie>
+        </div>
+        }
+        }
+
+
+
+        @if (loading5) {
+        <div class="spinner-border " role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        }
+
+        @if (!loading5) {
+        @if (data_state5.length>0) {
+        <div>
+          <h3>نمودار کسری بر اساس طبقات</h3>
+          <app-kowsar-chart-column [title]="''" [series]="columnChartData_state5"
+            [categories]="columnChartCategories_state5"></app-kowsar-chart-column>
+        </div>
+        }
+        }
+
+
+      </div>
+    </div>
+  </div>
+</div>

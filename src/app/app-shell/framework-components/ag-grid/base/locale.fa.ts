@@ -1,0 +1,200 @@
+export let localeFA = {
+    //   Set Filter
+    selectAll: '(انتخاب همه)',
+    selectAllSearchResults: '(انتخاب همه نتایج جستجو)',
+    searchOoo: 'جستجو...',
+    blanks: '(خالی)',
+    noMatches: 'هیچ موردی یافت نشد',
+
+    //   Number & Text Filters
+    filterOoo: 'فیلتر...',
+    equals: 'برابر باشد با',
+    notEqual: 'برابر نباشد با',
+    empty: 'انتخاب کنید',
+
+    lessThan: 'کمتر از',
+    greaterThan: 'بیشتر از',
+    lessThanOrEqual: 'کمتر یا مساوی با',
+    greaterThanOrEqual: 'بیشتر یا مساوی با',
+    inRange: 'در بازه',
+    inRangeStart: 'از',
+    inRangeEnd: 'تا',
+
+    contains: 'شامل باشد',
+    notContains: 'شامل نباشد',
+    startsWith: 'شروع شود با',
+    endsWith: 'پایان یابد با',
+
+    dateFormatOoo: 'yyyy-mm-dd',
+
+    //   Filter Conditions
+    andCondition: 'و',
+    orCondition: 'یا',
+
+    //   Filter Buttons
+    applyFilter: 'اعمال',
+    resetFilter: 'بازنشانی',
+    clearFilter: 'پاکسازی',
+    cancelFilter: 'انصراف',
+
+    //   Filter Titles
+    textFilter: 'فیلتر متنی',
+    numberFilter: 'فیلتر عددی',
+    dateFilter: 'فیلتر تاریخی',
+    setFilter: 'فیلتر مجموعه‌ای',
+
+    //   Side Bar
+    columns: 'ستون‌ها',
+    filters: 'فیلترها',
+
+    //   Columns Tool Panel
+    pivotMode: 'حالت Pivot',
+    groups: 'گروه‌بندی',
+    rowGroupColumnsEmptyMessage: 'ستون‌ها را به اینجا بکشید',
+    values: 'مقادیر',
+    valueColumnsEmptyMessage: 'ستون‌ها را به اینجا بکشید',
+    pivots: 'سرستون‌ها',
+    pivotColumnsEmptyMessage: 'ستون‌ها را به اینجا بکشید',
+
+    //   Header
+    group: 'دسته‌بندی',
+
+    //   Misc
+    loadingOoo: 'در حال بارگذاری...',
+    noRowsToShow: 'داده‌ای برای نمایش وجود ندارد',
+    enabled: 'فعال',
+
+    //   Menu Items (Context Menu)
+    sortAscending: 'مرتب‌سازی صعودی',
+    sortDescending: 'مرتب‌سازی نزولی',
+    pinColumn: 'پین کردن ستون',
+    pinLeft: 'پین به چپ',
+    pinRight: 'پین به راست',
+    noPin: 'بدون پین',
+    valueAggregation: 'تجمیع مقادیر',
+    autosizeThisColumn: 'بهینه‌سازی عرض این ستون',
+    autosizeAllColumns: 'بهینه‌سازی عرض تمام ستون‌ها',
+    groupBy: 'گروه‌بندی بر اساس',
+    ungroupBy: 'لغو گروه‌بندی',
+    resetColumns: 'بازنشانی ستون‌ها',
+    expandAll: 'باز کردن همه',
+    collapseAll: 'بستن همه',
+    copy: 'کپی',
+    ctrlC: 'Ctrl + C',
+    copyWithHeaders: 'کپی با سرستون‌ها',
+    paste: 'چسباندن',
+    ctrlV: 'Ctrl + V',
+    export: 'خروجی',
+    csvExport: 'خروجی CSV',
+    excelExport: 'خروجی Excel (.xlsx)',
+    excelXmlExport: 'خروجی XML (.xml)',
+    chartRange: 'رسم نمودار از محدوده انتخابی',
+
+    //   Aggregation & Status Bar
+    sum: 'جمع',
+    min: 'حداقل',
+    max: 'حداکثر',
+    none: 'هیچ‌کدام',
+    count: 'تعداد',
+    avg: 'میانگین',
+    average: 'میانگین',
+    filteredRows: 'ردیف‌های فیلترشده',
+    selectedRows: 'ردیف‌های انتخاب‌شده',
+    totalRows: 'کل ردیف‌ها',
+    totalAndFilteredRows: 'ردیف‌ها',
+    more: 'بیشتر',
+    to: 'تا',
+    of: 'از',
+    page: 'صفحه',
+    nextPage: 'بعدی',
+    lastPage: 'آخرین',
+    firstPage: 'اولین',
+    previousPage: 'قبلی',
+
+    //   Enterprise Charts
+    pivotChartAndPivotMode: 'نمودار Pivot و حالت Pivot',
+    pivotChart: 'نمودار Pivot',
+    chartRangeTitle: 'رسم نمودار از محدوده',
+    pivotChartTitle: 'نمودار Pivot',
+    rangeChartTitle: 'نمودار محدوده',
+    settings: 'تنظیمات',
+    data: 'داده‌ها',
+    format: 'فرمت',
+    categories: 'دسته‌ها',
+    defaultCategory: '(هیچ)',
+    series: 'سری‌ها',
+    xyValues: 'مقادیر X و Y',
+    paired: 'حالت جفتی',
+
+    //   Chart Types
+    columnChart: 'ستونی',
+    groupedColumn: 'ستونی گروهی',
+    stackedColumn: 'ستونی انباشته',
+    normalizedColumn: 'ستونی درصدی',
+
+    barChart: 'میله‌ای',
+    groupedBar: 'میله‌ای گروهی',
+    stackedBar: 'میله‌ای انباشته',
+    normalizedBar: 'میله‌ای درصدی',
+
+    pieChart: 'دایره‌ای',
+    pie: 'دایره‌ای',
+    doughnut: 'دونات',
+
+    line: 'خطی',
+
+    areaChart: 'منطقه‌ای',
+    area: 'منطقه‌ای',
+    stackedArea: 'منطقه‌ای انباشته',
+    normalizedArea: 'منطقه‌ای درصدی',
+
+    scatter: 'نقطه‌ای',
+    bubble: 'حبابی',
+    histogramChart: 'هیستوگرام',
+
+    //   Chart Settings
+    title: 'عنوان',
+    background: 'پس‌زمینه',
+    color: 'رنگ',
+    font: 'فونت',
+    size: 'اندازه',
+    position: 'موقعیت',
+    width: 'عرض',
+    height: 'ارتفاع',
+    padding: 'فاصله داخلی',
+    legend: 'راهنما',
+    labels: 'برچسب‌ها',
+    markerSize: 'اندازه مارکر',
+    strokeWidth: 'ضخامت خط',
+    shadow: 'سایه',
+    blur: 'ماتی',
+    offset: 'انحراف',
+    fillOpacity: 'شفافیت پس‌زمینه',
+    strokeOpacity: 'شفافیت خط',
+    normal: 'معمولی',
+    bold: 'پررنگ',
+    italic: 'کج',
+    boldItalic: 'پررنگ و کج',
+
+    //   New (AG Grid v31+)
+    copySelectedRangeDown: 'کپی به پایین',
+    copyRangeDown: 'کپی محدوده به پایین',
+    clearRange: 'پاک کردن انتخاب',
+    clearValue: 'پاک کردن مقدار',
+    fullWidth: 'تمام عرض',
+    resetLayout: 'بازنشانی چیدمان',
+    expandGroup: 'باز کردن گروه',
+    collapseGroup: 'بستن گروه',
+    autoSizeAllColumns: 'بهینه‌سازی همه ستون‌ها',
+    pivotModeOff: 'غیرفعال کردن حالت Pivot',
+    pivotModeOn: 'فعال کردن حالت Pivot',
+    aggregation: 'تجمیع',
+    chart: 'نمودار',
+    pin: 'پین کردن',
+    exportData: 'خروجی داده‌ها',
+    showColumns: 'نمایش ستون‌ها',
+    hideColumns: 'پنهان‌سازی ستون‌ها',
+    toggleToolPanel: 'نمایش/مخفی پنل ابزار',
+    sortBy: 'مرتب‌سازی بر اساس',
+    columnMenu: 'منوی ستون',
+};

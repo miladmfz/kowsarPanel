@@ -1,0 +1,72 @@
+<!-- =============================================================== -->
+<!-- 🟣 Modal انتخاب مشتری -->
+<!-- توضیحات کلی:
+     این مودال برای جستجو و انتخاب مشتری طراحی شده است.
+     شامل سه بخش اصلی است:
+     1️⃣ Header: عنوان و دکمه بستن
+     2️⃣ Body: فرم جستجو و گرید مشتریان
+     3️⃣ Footer: دکمه بستن مودال -->
+<!-- =============================================================== -->
+
+@if (visible) {
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" dir="rtl">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content border-0 shadow-lg" [ngClass]="darkMode ? 'bg-dark text-white' : 'bg-light text-dark'">
+
+      <!-- =============================================================== -->
+      <!-- 🟦 Header -->
+      <!-- =============================================================== -->
+      <div class="modal-header" [ngClass]="darkMode ? 'bg-secondary text-white' : 'bg-light text-dark'">
+        <h5 class="modal-title">
+          <i class="fas fa-users me-2"></i>
+          لیست مشتریان
+        </h5>
+        <button type="button" class="btn-close" (click)="close.emit()"></button>
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- 📋 Body -->
+      <!-- =============================================================== -->
+      <div class="modal-body">
+
+        <!-- =============================================================== -->
+        <!--   فرم جستجو مشتری -->
+        <!-- =============================================================== -->
+        <form class="mb-3" [formGroup]="searchForm" (ngSubmit)="onSearch()">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="جستجوی مشتری..." formControlName="query" />
+            <button class="btn btn-primary" type="submit">
+              <i class="fas fa-search"></i>
+              جستجو
+            </button>
+          </div>
+        </form>
+
+        <!-- =============================================================== -->
+        <!--   گرید لیست مشتریان -->
+        <!-- =============================================================== -->
+        <div style="height: 400px;">
+          <ag-grid-angular class="ag-theme-balham w-100 h-100"
+            [ngClass]="darkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="records"
+            [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [enableRtl]="true" [localeText]="localeText"
+            [rowSelection]="{ mode: 'singleRow' ,enableClickSelection: true}" (cellClicked)="onCellClicked($event)"
+            (rowDoubleClicked)="onRowDoubleClicked($event)">
+          </ag-grid-angular>
+
+        </div>
+
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- 🔻 Footer -->
+      <!-- =============================================================== -->
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-outline-secondary" (click)="close.emit()">
+          بستن
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+}

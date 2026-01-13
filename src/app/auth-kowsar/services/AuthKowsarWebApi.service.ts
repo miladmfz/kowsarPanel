@@ -10,7 +10,6 @@ import { AppConfigService } from 'src/app/app-config.service';
 export class AuthKowsarWebApiService {
 
 
-
   baseUrl: string;
   headers: HttpHeaders;
 
@@ -22,7 +21,6 @@ export class AuthKowsarWebApiService {
       .set('Access-Control-Allow-Origin', '*')
       .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') ?? '');
   }
-
 
 
 
@@ -43,3 +41,6 @@ export class AuthKowsarWebApiService {
 
 
 }
+
+
+

@@ -2937,7 +2937,7 @@ body[data-layout-mode=two-column][data-layout-width=boxed]:not([data-sidebar-siz
 }
 
 .bg-pattern {
-  background-image: url("../../../images/bg-pattern-2.png");
+  background-image: url("/assets/images/bg-pattern-2.png");
   background-size: cover;
 }
 
@@ -2948,7 +2948,7 @@ body.authentication-bg {
 }
 
 body.authentication-bg-pattern {
-  background-image: url("../../images/bg-pattern.png");
+  background-image: url("/assets/images/bg-pattern.png");
 }
 
 .logout-icon {
@@ -2962,7 +2962,7 @@ body.authentication-bg-pattern {
   min-height: 100vh;
   flex-direction: row;
   align-items: stretch;
-  background: url("../../images/bg-auth-dark.jpg") center;
+  background: url("/assets/images/bg-auth-dark.jpg") center;
   background-size: cover;
 }
 
@@ -6190,7 +6190,7 @@ div.hopscotch-bubble .hopscotch-content {
 
 .jstree-default .jstree-node,
 .jstree-default .jstree-icon {
-  background-image: url("../../images/plugins/jstree.png");
+  background-image: url("/assets/images/plugins/jstree.png");
 }
 
 .jstree-default .jstree-node {
@@ -6210,7 +6210,7 @@ div.hopscotch-bubble .hopscotch-content {
 }
 
 .jstree-default>.jstree-container-ul .jstree-loading>.jstree-ocl {
-  background: url("../../images/plugins/loading.gif") center center no-repeat;
+  background: url("/assets/images/plugins/loading.gif") center center no-repeat;
 }
 
 .jstree-default .jstree-icon:empty {
@@ -6680,8 +6680,8 @@ body[data-layout-mode=horizontal][data-layout-menu-position=scrollable] .fixed-s
 
 @font-face {
   font-family: "footable";
-  src: url("../../fonts/footable.eot");
-  src: url("../../fonts/footable.eot?#iefix") format("embedded-opentype"), url("../../fonts/footable.woff") format("woff"), url("../../fonts/footable.ttf") format("truetype"), url("../../fonts/footable.svg#footable") format("svg");
+  src: url("/assets/fonts/footable.eot");
+  src: url("/assets/fonts/footable.eot?#iefix") format("embedded-opentype"), url("/assets/fonts/footable.woff") format("woff"), url("/assets/fonts/footable.ttf") format("truetype"), url("/assets/fonts/footable.svg#footable") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -6689,7 +6689,7 @@ body[data-layout-mode=horizontal][data-layout-menu-position=scrollable] .fixed-s
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   @font-face {
     font-family: "footable";
-    src: url("../../fonts/footable.svg#footable") format("svg");
+    src: url("/assets/fonts/footable.svg#footable") format("svg");
     font-weight: normal;
     font-style: normal;
   }
@@ -7172,7 +7172,7 @@ table[data-toggle=table] {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-image: url("../../images/jsgrid.png");
+  background-image: url("/assets/images/jsgrid.png");
   background-color: #36404a;
   outline: none !important;
 }
@@ -7195,7 +7195,7 @@ table[data-toggle=table] {
 }
 
 .ms-container {
-  background: transparent url("../../images/plugins/multiple-arrow.png") no-repeat 50% 50%;
+  background: transparent url("/assets/images/plugins/multiple-arrow.png") no-repeat 50% 50%;
   width: auto;
   max-width: 370px;
 }
@@ -7613,8 +7613,8 @@ span.flatpickr-weekday,
 
 @font-face {
   font-family: "dropify";
-  src: url("../fonts/dropify.eot");
-  src: url("../fonts/dropify.eot#iefix") format("embedded-opentype"), url("../fonts/dropify.woff") format("woff"), url("../fonts/dropify.ttf") format("truetype"), url("../fonts/dropify.svg#dropify") format("svg");
+  src: url("/assets/fonts/dropify.eot");
+  src: url("/assets/fonts/dropify.eot#iefix") format("embedded-opentype"), url("/assets/fonts/dropify.woff") format("woff"), url("/assets/fonts/dropify.ttf") format("truetype"), url("/assets/fonts/dropify.svg#dropify") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -7635,11 +7635,11 @@ span.flatpickr-weekday,
 }
 
 .editable-clear-x {
-  background: url("../../images/plugins/clear.png") center center no-repeat;
+  background: url("/assets/images/plugins/clear.png") center center no-repeat;
 }
 
 .editableform-loading {
-  background: url("../../images/plugins/loading.gif") center center no-repeat;
+  background: url("/assets/images/plugins/loading.gif") center center no-repeat;
 }
 
 .editable-checklist label {

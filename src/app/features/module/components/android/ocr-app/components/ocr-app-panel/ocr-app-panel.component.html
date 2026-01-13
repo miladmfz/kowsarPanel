@@ -1,0 +1,116 @@
+<div class="row">
+
+
+
+
+  <div class="col-md-4">
+    @if (loading1) {
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    }
+
+    @if (!loading1) {
+    <div class="d-flex align-items-start border border-info p-1">
+      <app-kowsar-chart-radial [percentage]="radial_value_1" [label]="' '"></app-kowsar-chart-radial>
+      <div class="flex-1 text-center align-self-center">
+        <h3 class=""><span>{{radial_value_11}}</span></h3>
+        <h4 class="text-muted ">مانده انبار</h4>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="col-md-4">
+    @if (loading2) {
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    }
+
+    @if (!loading2) {
+    <div class="d-flex align-items-start border border-info p-1">
+      <app-kowsar-chart-radial [percentage]="radial_value_2" [label]="' '"></app-kowsar-chart-radial>
+      <div class="flex-1 text-center align-self-center">
+        <h3 class=""><span>{{radial_value_22}}</span></h3>
+        <h4 class="text-muted ">مانده بسته بندی </h4>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="col-md-4">
+    @if (loading3) {
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    }
+
+    @if (!loading3) {
+    <div class="d-flex align-items-start border border-info p-1">
+      <app-kowsar-chart-radial [percentage]="radial_value_3" [label]="'label'"></app-kowsar-chart-radial>
+      <div class="flex-1 text-center align-self-center">
+        <h3 class=""><span>{{radial_value_33}}</span></h3>
+        <h4 class="text-muted ">مانده تحویل</h4>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="col-md-6 p-3">
+
+
+
+    @if (loading4) {
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    }
+    @if (!loading4) {
+
+    <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="record_factor_headers" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+        class="w-100 h-100"></ag-grid-angular>
+    </div>
+
+    }
+    @if (loading5) {
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    }
+
+    @if (!loading5) {
+
+
+    <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [columnDefs]="columnDefs2" [rowData]="record_factor_rows" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()"
+        class="w-100 h-100"></ag-grid-angular>
+    </div>
+
+
+    }
+
+  </div>
+
+  <div class="col-md-6 p-3">
+    @if (loading6) {
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    }
+
+    @if (!loading6) {
+
+    <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [columnDefs]="columnDefs3" [rowData]="records_ocr_factors" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 3)" (firstDataRendered)="gridApi3?.sizeColumnsToFit()"
+        class="w-100 h-100"></ag-grid-angular>
+    </div>
+
+    }
+  </div>
+
+</div>

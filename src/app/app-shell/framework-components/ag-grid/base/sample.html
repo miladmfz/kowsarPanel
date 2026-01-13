@@ -1,0 +1,137 @@
+<div class="ag-container" style="
+    height: 700px;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: var(--grid-bg, #f8f9fa);
+  ">
+  <ag-grid-angular class="w-100 h-100" [class.ag-theme-balham]="!isDarkMode" [class.ag-theme-balham-dark]="isDarkMode"
+    [rowData]="records_person" [columnDefs]="columnDefs1" [defaultColDef]="defaultColDef" [gridOptions]="gridOptions"
+    [context]="context" [components]="frameworkComponents" [localeText]="localeText" [enableRtl]="true"
+    [suppressColumnVirtualisation]="false" [suppressRowVirtualisation]="false" [suppressDragLeaveHidesColumns]="true"
+    [suppressMenuHide]="false" [suppressHorizontalScroll]="false" [suppressCellFocus]="false"
+    [rowSelection]="{ mode: 'multiRow', checkboxes: true }" [animateRows]="true" [suppressRowClickSelection]="false"
+    [rowMultiSelectWithClick]="true" [enableRangeSelection]="true" [rowHeight]="42" [headerHeight]="45"
+    [domLayout]="'autoHeight'" [pagination]="true" [paginationAutoPageSize]="true" [enableBrowserTooltips]="true"
+    [tooltipShowDelay]="200" [tooltipHideDelay]="800" [statusBar]="{
+      statusPanels: [
+        { statusPanel: 'agTotalAndFilteredRowCountComponent', align: 'left' },
+        { statusPanel: 'agAggregationComponent', align: 'right' }
+      ]
+    }" [sideBar]="{
+      toolPanels: [
+        { id: 'columns', labelDefault: 'ستون‌ها', iconKey: 'columns', toolPanel: 'agColumnsToolPanel' },
+        { id: 'filters', labelDefault: 'فیلترها', iconKey: 'filter', toolPanel: 'agFiltersToolPanel' }
+      ],
+      defaultToolPanel: ''
+    }" [popupParent]="document.body" [suppressFieldDotNotation]="true" [stopEditingWhenCellsLoseFocus]="true"
+    [suppressAggFuncInHeader]="false" (gridReady)="onGridReady($event, 1)" (cellClicked)="onCellClicked($event)"
+    (cellDoubleClicked)="onCellDoubleClicked($event)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+    (sortChanged)="onReloadGrid()" (filterChanged)="onReloadGrid()" (rowSelected)="onRowSelected?.($event)"
+    (selectionChanged)="onSelectionChanged?.($event)" (rowDataUpdated)="onRowDataUpdated?.($event)"
+    (columnResized)="onColumnResized?.($event)" (columnVisible)="onColumnVisibleChanged?.($event)"
+    (gridSizeChanged)="onGridSizeChanged?.($event)"
+    [getContextMenuItems]="getCustomContextMenuItems.bind(this)"></ag-grid-angular>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div class="ag-container" style="
+    height: 600px;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: var(--grid-bg, #f9f9f9);
+  ">
+  <ag-grid-angular class="w-100 h-100" [class.ag-theme-balham]="!isDarkMode" [class.ag-theme-balham-dark]="isDarkMode"
+    [rowData]="records_person" [columnDefs]="columnDefs1" [defaultColDef]="defaultColDef" [gridOptions]="gridOptions"
+    [context]="context" [components]="frameworkComponents" [localeText]="localeText" [enableRtl]="true"
+    [suppressColumnVirtualisation]="false" [suppressRowVirtualisation]="false" [suppressDragLeaveHidesColumns]="true"
+    [suppressMenuHide]="false" [suppressHorizontalScroll]="false" [suppressCellFocus]="false"
+    [rowSelection]="{ mode: 'singleRow' }" [animateRows]="true" [suppressRowClickSelection]="false" [pagination]="true"
+    [paginationAutoPageSize]="true" [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+    [rowHeight]="40" [headerHeight]="42" [domLayout]="'autoHeight'" [stopEditingWhenCellsLoseFocus]="true"
+    [suppressFieldDotNotation]="true" (gridReady)="onGridReady($event, 1)" (cellClicked)="onCellClicked($event)"
+    (cellDoubleClicked)="onCellDoubleClicked($event)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+    (sortChanged)="onReloadGrid()" (filterChanged)="onReloadGrid()" (rowSelected)="onRowSelected?.($event)"
+    (selectionChanged)="onSelectionChanged?.($event)" (rowDataUpdated)="onRowDataUpdated?.($event)"></ag-grid-angular>
+</div>
+
+<!--
+    توضیح فنی ویژگی‌های AG Grid - نسخه کوثر
+  ----------------------------------------------------------
+  🎨 تم و ظاهر:
+    [class.ag-theme-balham] / [class.ag-theme-balham-dark]
+      → سوییچ خودکار بین حالت روشن و تیره بر اساس isDarkMode.
+
+    داده و ستون‌ها:
+    [rowData], [columnDefs], [defaultColDef]
+      → تأمین داده و تعریف ستون‌ها با تنظیمات پیش‌فرض مشترک.
+
+  🧱 Layout:
+    [domLayout]="'autoHeight'"
+      → ارتفاع خودکار گرید بر اساس داده‌ها (بدون اسکرول عمودی).
+
+  📏 ابعاد جدول:
+    [rowHeight]="40", [headerHeight]="42"
+      → اندازه استاندارد برای سطرها و عناوین ستون‌ها.
+
+    انیمیشن:
+    [animateRows]="true"
+      → فعال‌سازی انیمیشن هنگام تغییر، فیلتر یا مرتب‌سازی داده‌ها.
+
+  🧭 راست‌چین:
+    [enableRtl]="true"
+      → فعال‌سازی کامل پشتیبانی از زبان فارسی.
+
+    انتخاب سطر:
+    [rowSelection]="{ mode: 'singleRow' }"
+      → انتخاب تکی با مدل جدید AG Grid.
+
+  📑 صفحه‌بندی:
+    [pagination]="true"
+    [paginationAutoPageSize]="true"
+      → صفحه‌بندی خودکار با تطبیق به ارتفاع صفحه.
+
+  💬 Tooltip:
+    [enableBrowserTooltips]="true"
+    [tooltipShowDelay], [tooltipHideDelay]
+      → استفاده از tooltip مرورگر با زمان نمایش تنظیم‌شده.
+
+  ⚡ رویدادها:
+    (gridReady), (cellClicked), (filterChanged), (sortChanged)
+      → کنترل رفتار گرید هنگام بارگذاری و تعامل کاربر.
+
+  🔧 گزینه‌ها و سفارشی‌سازی:
+    [gridOptions], [context], [frameworkComponents]
+      → مدیریت رفتار و ارتباطات داخلی گرید از کلاس پایه.
+
+    زبان:
+    [localeText]="localeText"
+      → ترجمه فارسی برای تمامی پیام‌ها و دکمه‌های داخلی گرید.
+
+  🧠 دستیارهای هوشمند:
+    (rowDataUpdated), (selectionChanged), (rowSelected)
+      → واکنش خودکار به تغییر داده‌ها یا انتخاب سطرها.
+
+  🧰 ویرایش و کنترل:
+    [stopEditingWhenCellsLoseFocus], [suppressCellFocus]
+      → کنترل حالت ویرایش و جلوگیری از فوکوس ناخواسته سلول‌ها.
+
+  🧭 پایداری:
+    [suppressColumnVirtualisation], [suppressRowVirtualisation]
+      → حفظ سطرها و ستون‌ها برای پایداری رابط کاربری.
+
+  🔒 رابط کاربری:
+    [suppressDragLeaveHidesColumns], [suppressMenuHide]
+      → جلوگیری از مخفی‌شدن ناگهانی ستون‌ها و منوها.
+
+    بهینه‌سازی خودکار:
+    (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+      → تنظیم خودکار عرض ستون‌ها بعد از اولین رندر داده.
+-->

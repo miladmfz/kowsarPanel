@@ -1,0 +1,146 @@
+<!-- =============================================================== -->
+<!-- 📘 گزارش کارشناسان و وضعیت ارجاعات -->
+<!-- توضیحات کلی:
+     این قالب شامل سه بخش اصلی است:
+     1️⃣ کارت گزارش ارجاعات کارشناسان (Flag = 1)
+     2️⃣ کارت گزارش وضعیت ارجاعات (Flag = 3)
+     3️⃣ مودال نمایش جزئیات ارجاعات یک کارشناس
+     در هر بخش از ag-grid برای نمایش داده‌ها استفاده شده و حالت‌های مختلف
+     (در حال بارگذاری، بدون داده، و نمایش داده‌ها) به‌صورت پویا کنترل می‌شوند.
+-->
+<!-- =============================================================== -->
+
+<!--   کارت گزارش ارجاعات کارشناسان -->
+@if (!loading_person) {
+<div class="card p-3 mb-3 shadow-sm">
+
+  <!-- 🟦 Header -->
+  <div class="card-header d-flex justify-content-between align-items-center bg-body-secondary rounded">
+    <h5 class="card-title mb-0"> گزارش ارجاعات کارشناسان</h5>
+
+    <div class="d-flex align-items-center gap-2">
+      <!-- 🔁 دکمه بروزرسانی -->
+      <button class="btn btn-sm theme-btn-refresh" (click)="getpaneldata_report1()" [attr.title]="'بروزرسانی داده‌ها'">
+        <i class="fas fa-sync-alt fa-spin-hover"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 🟨 Body -->
+  <div class="card-body">
+    @if (records_person.length === 0) {
+    <!-- ⏳ حالت بدون داده -->
+    <div class="text-center py-5 text-muted">
+      <i class="fas fa-hourglass-half fa-spin fa-2x mb-3 d-block"></i>
+      <div>داده‌ای موجود نیست…</div>
+    </div>
+    } @else {
+    <!-- 📋 گرید ارجاعات کارشناسان -->
+
+
+    <div class="ag-container" style="height: 600px; border-radius: 8px; overflow: hidden;">
+
+
+
+      <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records_person" (gridReady)="onGridReady($event, 1)"
+        [gridOptions]="gridOptions" class="w-100 h-100" (firstDataRendered)="gridApi1?.sizeColumnsToFit()">
+      </ag-grid-angular>
+    </div>
+
+
+
+    }
+  </div>
+</div>
+}
+
+<!--   کارت گزارش وضعیت ارجاعات -->
+@if (!loading_letterrowstate) {
+<div class="card p-3 mb-3 shadow-sm">
+
+  <!-- 🟦 Header -->
+  <div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center bg-body-secondary rounded">
+    <h5 class="card-title mb-0">📋 گزارش وضعیت ارجاعات</h5>
+
+    <!--   فیلتر وضعیت + بروزرسانی -->
+    <form [formGroup]="EditForm_KowsarReport3" class="d-flex align-items-center gap-2 mb-0">
+      <select formControlName="SearchTarget" class="form-select form-select-sm" style="min-width: 200px;"
+        (change)="getpaneldata_report3()">
+        @for (item of LetterState_Lookup; track item.id) {
+        <option [value]="item.id">{{ item.name }}</option>
+        }
+      </select>
+
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-sm theme-btn-refresh" (click)="getpaneldata_report3()"
+          [attr.title]="'بروزرسانی داده‌ها'">
+          <i class="fas fa-sync-alt fa-spin-hover"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- 🟨 Body -->
+  <div class="card-body">
+    @if (records_letterrowstate.length === 0) {
+    <!-- ⏳ حالت بدون داده -->
+    <div class="text-center py-5 text-muted">
+      <i class="fas fa-hourglass-half fa-spin fa-2x mb-3 d-block"></i>
+      <div>داده‌ای موجود نیست…</div>
+    </div>
+    } @else {
+    <!-- 📋 گرید وضعیت ارجاعات -->
+    <div class="ag-container" style="height: 600px; border-radius: 8px; overflow: hidden;">
+
+
+      <ag-grid-angular [columnDefs]="columnDefs3" [rowData]="records_letterrowstate"
+        (gridReady)="onGridReady($event, 3)" [gridOptions]="gridOptions" class="w-100 h-100"
+        (firstDataRendered)="gridApi3?.sizeColumnsToFit()">
+      </ag-grid-angular>
+    </div>
+    }
+  </div>
+</div>
+}
+
+<!--   مودال جزئیات ارجاعات کارشناس -->
+<div #personletter class="modal fade" tabindex="-1" role="dialog" style="display: none;">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content bg-body text-body shadow-lg rounded-3">
+
+      <!-- 🟦 Header -->
+      <div class="modal-header bg-secondary-subtle text-body fw-bold">
+        <h5 class="modal-title">
+          <i class="fas fa-envelope-open-text me-2"></i>{{ BrokerHistroyName }}
+        </h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="personletter_dialog_close()"></button>
+      </div>
+
+      <!-- 🟨 Body -->
+      <div class="modal-body">
+        @if (records_personletterrow.length === 0) {
+        <!-- ⏳ حالت بدون داده -->
+        <div class="text-center py-5 text-muted">
+          <i class="fas fa-hourglass-half fa-spin fa-2x mb-3 d-block"></i>
+          <div>داده‌ای موجود نیست…</div>
+        </div>
+        } @else {
+        <!-- 📋 گرید جزئیات -->
+        <div class="ag-container" style="height: 400px; border-radius: 8px; overflow: hidden;">
+
+          <ag-grid-angular [columnDefs]="columnDefs2" [rowData]="records_personletterrow"
+            (gridReady)="onGridReady($event, 2)" [gridOptions]="gridOptions" class="w-100 h-100"
+            (firstDataRendered)="gridApi2?.sizeColumnsToFit()">
+          </ag-grid-angular>
+        </div>
+        }
+      </div>
+
+      <!-- 🟫 Footer -->
+      <div class="modal-footer bg-body-tertiary border-0">
+        <button type="button" class="btn btn-secondary px-4" (click)="personletter_dialog_close()">بستن</button>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,69 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-header">گزارش فروش بر اساس تاریخ</h5>
+
+
+
+
+    <form [formGroup]="EditForm_Complete">
+
+
+      <div class="row">
+
+        <div class="form-group col-md-5">
+          <label for="datePicker" class="col-form-label">ابتدای تاریخ</label>
+          <div>
+            <ng-persian-datepicker [uiHideAfterSelectDate]="true">
+              <input class="form-control" id="datePicker" type="text" formControlName="StartDate" />
+            </ng-persian-datepicker>
+          </div>
+
+        </div>
+        <div class="form-group col-md-5">
+          <label for="datePicker" class="col-form-label">انتهای تاریخ</label>
+          <div>
+            <ng-persian-datepicker [uiHideAfterSelectDate]="true">
+              <input class="form-control" id="datePicker" type="text" formControlName="EndDate" />
+            </ng-persian-datepicker>
+          </div>
+
+        </div>
+
+
+        <div class="form-group col-md-2">
+          <label for="Filter" class="col-form-label">فیلتر بر اساس</label>
+          <select formControlName="Filter" id="Filter" class="form-control custom-select" data-toggle="select2">
+            @for (item of Filter_Lookup; track item) {
+            <option [value]="item.id">{{item.name}}</option>
+            }
+          </select>
+        </div>
+
+
+      </div>
+
+
+
+
+
+
+    </form>
+
+
+
+
+
+
+    <a (click)="getList()" class="btn btn-primary m-3">اعمال تاریخ</a>
+
+
+
+    <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+        class="w-100 h-100"></ag-grid-angular>
+    </div>
+
+
+  </div>
+</div>

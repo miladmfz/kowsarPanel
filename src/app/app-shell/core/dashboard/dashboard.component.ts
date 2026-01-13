@@ -1,75 +1,142 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
-import { SupportFactorWebApiService } from 'src/app/app/support/services/SupportFactorWebApi.service';
+/* ===============================================================
+   📘 DashboardComponent
+   توضیحات کلی:
+   این کامپوننت نمای اصلی داشبورد است و به‌عنوان ورودی مرکزی 
+   برای نمایش بخش‌های مختلف سیستم عمل می‌کند.
+   شامل:
+   1️⃣ نمایش پنل حضور کارشناسان
+   2️⃣ نمایش گزارش کوثر
+   3️⃣ شناسایی نوع کاربر (ادمین / مشتری)
+   4️⃣ واکشی تاریخ جاری از سرور
+   5️⃣ هماهنگی بین اجزای مختلف داشبورد
+   
+   ویژگی‌ها:
+   - تعیین نوع کاربر از sessionStorage
+   - ذخیره تاریخ فعال سیستم در sessionStorage
+   - استفاده از سرویس Notification برای اطلاع‌رسانی
+   - ساختار کاملاً Standalone و ماژولار
+   =============================================================== */
 
+import { Component, OnInit, Renderer2, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+//   Subcomponents
+import { AttendancePanelComponent } from './components/attendance-panel/attendance-panel.component';
+// import { KowsarReportComponent } from './components/kowsar-report/kowsar-report.component';
+import { SupportPanelComponent } from './components/support-panel/support-panel.component';
+
+//   Services
+import { DashboardWebApiService } from '../services/dashboard-web-api.service';
 import { SharedService } from '../../framework-services/shared.service';
-import { NotificationService } from '../../framework-services/notification.service';
+import { NotificationService } from '../../framework-services/ui/notification.service';
+import { KowsarReportComponent } from './components/kowsar-report/kowsar-report.component';
+
 @Component({
-    selector: 'app-dashboard',
-    templateUrl: './dashboard.component.html',
-    standalone: false
+  selector: 'app-dashboard',
+  standalone: true,
+  imports: [
+    CommonModule,
+    AttendancePanelComponent,
+    KowsarReportComponent,
+    // SupportPanelComponent,
+  ],
+  templateUrl: './dashboard.component.html',
 })
-export class DashboardComponent implements OnInit {
-  constructor(
-    private repo: SupportFactorWebApiService,
-    private sharedService: SharedService,
-    private readonly notificationService: NotificationService,
-    private renderer: Renderer2,
-
-  ) { }
-
+export class DashboardComponent implements OnInit, OnDestroy {
+  // ===============================================================
+  //   وضعیت‌ها و داده‌های اصلی
+  // ===============================================================
+  BrokerRef = '';
+  JobPersonRef = '';
+  userType = '';
 
 
 
-  BrokerRef: string = '';
-  JobPersonRef: string = '';
 
-  letterexplain_modal_title: string = '';
-  ToDayDate: any;
+  ToDayDate: string = '';
   reportData: any[] = [];
   Attendance_Data: any[] = [];
-  attendanceInterval: any;
+  attendanceInterval!: ReturnType<typeof setInterval>;
 
+  // ===============================================================
+  //   سازنده
+  // ===============================================================
+  constructor(
+    private repo: DashboardWebApiService,
+    private sharedService: SharedService,
+    private readonly notificationService: NotificationService,
+    private renderer: Renderer2
+  ) { }
+
+  // ===============================================================
+  // 🚀 Lifecycle Hooks
+  // ===============================================================
   ngOnInit(): void {
-
-    this.repo.GetTodeyFromServer()
-      .subscribe((data: any) => {
-
-        this.ToDayDate = data[0].TodeyFromServer
-        if (this.ToDayDate != sessionStorage.getItem("ActiveDate")) {
-          sessionStorage.removeItem("ActiveDate")
-          location.reload();
-        }
-
-      });
-
-    if (sessionStorage.getItem("PhAddress3") == '100') {
-      this.BrokerRef = ''
-
-    } else {
-      this.BrokerRef = sessionStorage.getItem("BrokerCode")
-    }
-
-    if (sessionStorage.getItem("JobPersonRef").length > 0) {
-      this.JobPersonRef = sessionStorage.getItem("JobPersonRef")
-    } else {
-      this.JobPersonRef = ''
-    }
-
+    this.initDashboard();
   }
 
+  ngOnDestroy(): void {
+    if (this.attendanceInterval) {
+      clearInterval(this.attendanceInterval);
+    }
+  }
 
+  // ===============================================================
+  // 🟦 مقداردهی اولیه داشبورد
+  // ===============================================================
+  private initDashboard(): void {
+    this.loadTodayDate();
+    this.detectUserInfo();
+  }
 
+  // ===============================================================
+  // 📅 دریافت تاریخ امروز از سرور
+  // ===============================================================
+  private loadTodayDate(): void {
+    this.repo.GetTodeyFromServer().subscribe({
+      next: (data: any) => {
+        this.ToDayDate = data[0]?.TodeyFromServer ?? '';
 
+        // بررسی تغییر تاریخ نسبت به sessionStorage
+        const activeDate = sessionStorage.getItem('ActiveDate');
+        if (this.ToDayDate !== activeDate) {
+          sessionStorage.setItem('ActiveDate', this.ToDayDate);
+          this.notificationService.info('📆 تاریخ جدید از سرور بروزرسانی شد.');
+        }
+      },
+      error: () => {
+        this.notificationService.error('❌ دریافت تاریخ از سرور ناموفق بود.');
+      },
+    });
+  }
 
+  // ===============================================================
+  // 👤 شناسایی نوع کاربر و مقداردهی اطلاعات پایه
+  // ===============================================================
+  private detectUserInfo(): void {
+    const phAddress3 = sessionStorage.getItem('PhAddress3');
+    const brokerCode = sessionStorage.getItem('BrokerCode');
+    const jobPersonRef = sessionStorage.getItem('JobPersonRef');
+    const userRole = sessionStorage.getItem('UserType'); // نوع کاربر (admin / customer / ...)
 
+    // تعیین BrokerRef
+    this.BrokerRef = phAddress3 === '100' ? '' : brokerCode ?? '';
 
+    // تعیین JobPersonRef
+    this.JobPersonRef = jobPersonRef ?? '';
 
+    // تعیین نوع کاربر
+    if (userRole) {
+      this.userType = userRole.toLowerCase();
+    } else if (this.JobPersonRef) {
+      this.userType = 'admin'; // اگر شناسه دارد، ادمین یا پشتیبان است
+    } else {
+      this.userType = 'customer'; // در غیر این صورت مشتری
+    }
 
-
+    // هشدار در صورت عدم وجود JobPersonRef
+    if (!this.JobPersonRef && this.userType === 'admin') {
+      this.notificationService.warning('شناسه کاربر یافت نشد.');
+    }
+  }
 }
-
-
-
-
-
-

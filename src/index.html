@@ -28,42 +28,30 @@
     <link rel="shortcut icon" href="./assets/images/favicon.ico" />
     <!-- plugin css -->
 
+    <!--   Plugin CSS -->
+    <link href="assets/libs/multiselect/css/multi-select.css" rel="stylesheet" />
+    <link href="assets/libs/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="assets/libs/selectize/css/selectize.bootstrap3.css" rel="stylesheet" />
+    <link href="assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <link href="assets/libs/jquery-toast-plugin/jquery.toast.min.css" rel="stylesheet" />
+    <link href="assets/libs/jstree/themes/default/style.min.css" rel="stylesheet" />
+    <link href="assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <link href="assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css" rel="stylesheet" />
+    <link href="assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" />
+    <link href="assets/libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css" rel="stylesheet" />
 
-    <link href="./assets/libs/multiselect/css/multi-select.css" rel="stylesheet" type="text/css" />
-    <link href="./assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-    <link href="./assets/libs/selectize/css/selectize.bootstrap3.css" rel="stylesheet" type="text/css" />
+    <!--   اول فایل‌های Light -->
+    <link href="assets/css/modern/bootstrap-rtl.min.css" rel="stylesheet" id="bs-default-stylesheet" />
+    <link href="assets/css/modern/app-rtl.min.css" rel="stylesheet" id="app-default-stylesheet" />
 
-    <link href="./assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
-    <link href="./assets/libs/jquery-toast-plugin/jquery.toast.min.css" rel="stylesheet" type="text/css" />
-    <link href="./assets/libs/jstree/themes/default/style.min.css" rel="stylesheet" type="text/css" />
-
-    <link href="./assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
-    <link href="./assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css" rel="stylesheet"
-        type="text/css" />
-    <link href="./assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet"
-        type="text/css" />
-    <link href="./assets/libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css" rel="stylesheet"
-        type="text/css" />
-
-    <!-- App css -->
-    <link href="./assets/css/modern/bootstrap-rtl.min.css" rel="stylesheet" id="bs-default-stylesheet" />
-    <link href="./assets/css/modern/app-rtl.min.css" rel="stylesheet" id="app-default-stylesheet" />
-
-
-
-    <!-- <link href="./assets/css/modern/bootstrap-dark-rtl.min.css" rel="stylesheet" id="bs-default-stylesheet" />
-    <link href="./assets/css/modern/app-dark-rtl.min.css" rel="stylesheet" id="app-default-stylesheet" /> -->
+    <!--   بعدش فایل‌های Dark (آخرتر لود می‌شن) -->
+    <link href="assets/css/modern/bootstrap-dark-rtl.min.css" rel="stylesheet" id="bs-dark-stylesheet" disabled />
+    <link href="assets/css/modern/app-dark-rtl.min.css" rel="stylesheet" id="app-dark-stylesheet" disabled />
 
 
 
-
-
-
-    <link href="./assets/css/modern/bootstrap-dark-rtl.min.css" rel="stylesheet" id="bs-dark-stylesheet" />
-    <link href="./assets/css/modern/app-dark-rtl.min.css" rel="stylesheet" id="app-dark-stylesheet" />
-
-    <!-- icons -->
-    <link href="./assets/css/icons.min.css" rel="stylesheet" />
+    <!--   Icons -->
+    <link href="assets/css/icons.min.css" rel="stylesheet" />
 
 </head>
 
@@ -71,21 +59,20 @@
     data-layout='{"mode": "light", "width": "fluid", "menuPosition": "fixed", "sidebar": { "color": "dark", "size": "default", "showuser": true}, "topbar": {"color": "dark"}, "showRightSidebarOnPageLoad": true}'>
     <app-root></app-root>
 
-    <script src="./assets/js/vendor.min.js"></script>
-    <script src="./assets/libs/select2/js/select2.min.js"></script>
-    <script src="./assets/libs/jquery-knob/jquery.knob.min.js" defer></script>
-    <script src="./assets/libs/sweetalert2/sweetalert2.min.js"></script>
-    <script src="./assets/libs/jquery-toast-plugin/jquery.toast.min.js"></script>
-    <script src="./assets/libs/jstree/jstree.min.js"></script>
-    <script src="./assets/libs/apexcharts/apexcharts.min.js"></script>
+    <!--   JS: ترتیب صحیح بارگذاری -->
+    <!-- 1️⃣ jQuery باید اولین فایل باشد -->
+    <script src="assets/libs/jquery/jquery.min.js"></script>
 
+    <!-- 2️⃣ سایر پلاگین‌ها -->
+    <script src="assets/libs/select2/js/select2.min.js"></script>
+    <script src="assets/libs/sweetalert2/sweetalert2.min.js"></script>
+    <script src="assets/libs/jquery-toast-plugin/jquery.toast.min.js"></script>
+    <script src="assets/libs/jstree/jstree.min.js"></script>
+    <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
 
-
-    <!-- App init -->
-    <script src="./assets/js/pages/toastr.init.js"></script>
-
-    <script src="./assets/js/app.min.js"></script>
-
+    <!-- 3️⃣ صفحه خاص (در صورت نیاز) -->
+    <script src="assets/js/pages/toastr.init.js"></script>
+    <!-- ❌ app.min.js و vendor.min.js حذف شدند چون با Angular 20 تداخل داشتند -->
 
 
 

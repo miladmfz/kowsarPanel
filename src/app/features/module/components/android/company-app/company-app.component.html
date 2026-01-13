@@ -1,0 +1,50 @@
+<div class="card">
+    <div class="card-body pb-0">
+
+        <!-- Tabs Header - Minton FGD Style -->
+        <ul class="nav nav-pills navtab-bg nav-justified">
+
+            @for (tab of tabs; track tab.id) {
+            <li class="nav-item">
+                <a class="nav-link" [class.active]="activeTab === tab.id" (click)="activeTab = tab.id">
+                    {{ tab.title }}
+                </a>
+            </li>
+            }
+
+        </ul>
+
+    </div>
+
+    <!-- Tabs Content -->
+    <div class="card-body">
+
+        @switch (activeTab) {
+
+        @case ('panel') {
+        <app-company-app-panel></app-company-app-panel>
+
+        }
+
+
+        @case ('column-edit') {
+        <app-company-app-column-edit></app-company-app-column-edit>
+
+        }
+
+        @case ('column-list') {
+        <app-company-app-column-list></app-company-app-column-list>
+
+        }
+
+        @case ('setting') {
+        <app-company-app-setting></app-company-app-setting>
+
+        }
+
+
+
+        }
+
+    </div>
+</div>

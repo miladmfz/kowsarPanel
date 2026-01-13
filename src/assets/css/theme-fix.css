@@ -1,0 +1,182 @@
+/* 🌙 حالت تیره‌ی نرم و چشم‌نواز برای قالب مینتون */
+html[data-bs-theme='dark'] .left-side-menu,
+html[data-bs-theme='dark'] .logo-box {
+    background: #353e55 !important;
+    /* آبی-خاکستری نرم‌تر */
+    color: #e2e7ef !important;
+}
+
+html[data-bs-theme='dark'] body {
+    background-color: #3e475f !important;
+    /* پس‌زمینه‌ی گرم‌تر و نرم‌تر */
+    color: #e6ecf5 !important;
+}
+
+/* سایه‌ی ظریف برای جداسازی المان‌ها */
+html[data-bs-theme='dark'] .card,
+html[data-bs-theme='dark'] .navbar,
+html[data-bs-theme='dark'] .footer {
+    background-color: #424b63 !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+    border-color: #4a556e !important;
+}
+
+/* لینک‌ها و آیکون‌ها رنگ ملایم‌تر بگیرن */
+html[data-bs-theme='dark'] a,
+html[data-bs-theme='dark'] .nav-link,
+html[data-bs-theme='dark'] .menuitem a {
+    color: #b8c2d9 !important;
+}
+
+html[data-bs-theme='dark'] a:hover,
+html[data-bs-theme='dark'] .nav-link:hover,
+html[data-bs-theme='dark'] .menuitem a:hover {
+    color: #ffffff !important;
+}
+
+
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1050;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.loading-overlay .spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+
+/* =====================================================
+   ✨ افکت‌ها و انیمیشن‌ها
+   ===================================================== */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.animate-pulse {
+    animation: pulse 1.3s infinite;
+}
+
+.hover-highlight:hover {
+    background-color: #f0f6ff !important;
+    transition: background-color 0.2s ease;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(90deg, #003366 0%, #0d6efd 100%);
+}
+
+.user-box {
+    display: block !important;
+}
+
+#personletter.fade {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+#personletter.fade.show-fade {
+    opacity: 1;
+}
+
+
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.animate-pulse {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 22px;
+}
+
+.theme-switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: #4d94ff;
+}
+
+input:checked+.slider:before {
+    transform: translateX(22px);
+}
+
+/* 🔵 Button styling for status dropdown */
+.btn-outline-info {
+    font-size: 13px;
+    padding: 4px 10px;
+}
+
+.dropdown-menu {
+    min-width: 140px;
+}

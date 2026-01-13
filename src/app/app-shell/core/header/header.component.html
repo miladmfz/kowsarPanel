@@ -1,73 +1,114 @@
+<!-- =============================================================== -->
+<!-- 🔝 نوار بالای سیستم (Topbar Component) -->
+<!-- توضیحات کلی:
+     این بخش شامل مدیریت اعلان‌ها، پروفایل کاربر، تغییر حالت تیره/روشن،
+     و کنترل منو (Sidebar) است.
+     طراحی به‌صورت واکنش‌گرا و با استفاده از Bootstrap و آیکون‌های Feather.
+-->
+<!-- =============================================================== -->
+
 <!-- 🔝 Topbar Start -->
 <div class="navbar-custom">
   <div class="container-fluid">
     <ul class="list-unstyled topnav-menu float-end mb-0">
 
-      <!-- 🔔 Notifications -->
+      <!-- 🔔 اعلان‌ها -->
       <li class="dropdown notification-list topbar-dropdown">
         <a class="nav-link dropdown-toggle waves-effect waves-light position-relative" data-bs-toggle="dropdown"
-          href="#" role="button" aria-haspopup="false" aria-expanded="false">
-          <i class="fe-bell noti-icon"></i>
+          href="#" role="button">
+          <i class="fe-bell noti-icon text-primary fs-5"></i>
+
           @if (AlarmActive_Row + AlarmActtive_Conversation + AlarmActtive_LeaveRequest > 0) {
-            <span
-              class="badge bg-danger rounded-circle noti-icon-badge animate-pulse">
-              {{ AlarmActive_Row + AlarmActtive_Conversation + AlarmActtive_LeaveRequest }}
-            </span>
+          <span class="badge bg-danger rounded-circle noti-icon-badge animate-pulse shadow"
+            style="font-size: 0.7rem; top: 5px; right: 5px;">
+            {{ AlarmActive_Row + AlarmActtive_Conversation + AlarmActtive_LeaveRequest }}
+          </span>
           }
         </a>
 
-        <div class="dropdown-menu dropdown-menu-end dropdown-lg shadow-lg border-0 rounded-3">
-          <div class="dropdown-header noti-title bg-light text-center fw-bold py-2">
-            اعلان‌ها
+        <!-- 📬 Dropdown box -->
+        <div class="dropdown-menu dropdown-menu-end dropdown-lg shadow-lg border-0 rounded-4 overflow-hidden"
+          style="min-width: 340px;">
+
+          <!-- 🟦 Header -->
+          <div class="dropdown-header noti-title bg-gradient-primary text-white text-center fw-bold py-2">
+            <i class="fe-bell me-2"></i> اعلان‌ها
           </div>
 
-          @if (AlarmActive_Row > 0) {
-            <a class="dropdown-item notify-item" [routerLink]="['/support/letter-mywork']">
-              <div class="notify-icon bg-info"><i class="fe-briefcase"></i></div>
-              <p class="notify-details">
-                <span class="text-danger fw-semibold">{{ AlarmActive_Row }}</span> ارجاع جدید دارید
-              </p>
+          <!--   لیست اعلان‌ها -->
+          <div class="list-group list-group-flush">
+            <!-- 🟦 ارجاع جدید -->
+            @if (AlarmActive_Row > 0) {
+            <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 hover-highlight"
+              routerLink="/support/letter-mine">
+              <div
+                class="notify-icon bg-info text-white rounded-circle d-flex align-items-center justify-content-center"
+                style="width: 40px; height: 40px;">
+                <i class="fe-briefcase"></i>
+              </div>
+              <div>
+                <div class="fw-semibold text-dark">ارجاع جدید دارید</div>
+                <small class="text-muted">تعداد: {{ AlarmActive_Row }}</small>
+              </div>
             </a>
-          }
+            }
 
-          @if (AlarmActtive_Conversation > 0) {
-            <a class="dropdown-item notify-item" [routerLink]="['/support/letter-mywork']">
-              <div class="notify-icon bg-warning"><i class="fe-message-circle"></i></div>
-              <p class="notify-details">
-                <span class="text-danger fw-semibold">{{ AlarmActtive_Conversation }}</span> پیام جدید دارید
-              </p>
+            <!-- 🟨 پیام جدید -->
+            @if (AlarmActtive_Conversation > 0) {
+            <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 hover-highlight"
+              routerLink="/support/letter-mine">
+              <div
+                class="notify-icon bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center"
+                style="width: 40px; height: 40px;">
+                <i class="fe-message-circle"></i>
+              </div>
+              <div>
+                <div class="fw-semibold text-dark">پیام جدید دارید</div>
+                <small class="text-muted">تعداد: {{ AlarmActtive_Conversation }}</small>
+              </div>
             </a>
-          }
+            }
 
-          @if (AlarmActtive_LeaveRequest > 0) {
-            <a class="dropdown-item notify-item" [routerLink]="['/support/leavereq-list']">
-              <div class="notify-icon bg-success"><i class="fe-user-check"></i></div>
-              <p class="notify-details">
-                <span class="text-danger fw-semibold">{{ AlarmActtive_LeaveRequest }}</span> درخواست مرخصی جدید دارید
-              </p>
+            <!-- 🟩 مرخصی جدید -->
+            @if (AlarmActtive_LeaveRequest > 0) {
+            <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 hover-highlight"
+              routerLink="/support/leaverequest-list">
+              <div
+                class="notify-icon bg-success text-white rounded-circle d-flex align-items-center justify-content-center"
+                style="width: 40px; height: 40px;">
+                <i class="fe-user-check"></i>
+              </div>
+              <div>
+                <div class="fw-semibold text-dark">درخواست مرخصی جدید</div>
+                <small class="text-muted">تعداد: {{ AlarmActtive_LeaveRequest }}</small>
+              </div>
             </a>
-          }
+            }
 
-          @if (AlarmActive_Row + AlarmActtive_Conversation + AlarmActtive_LeaveRequest === 0) {
-            <div
-              class="text-center text-muted py-3 small">
-              هیچ اعلان جدیدی ندارید
+            <!-- 🩶 بدون اعلان -->
+            @if (AlarmActive_Row + AlarmActtive_Conversation + AlarmActtive_LeaveRequest === 0) {
+            <div class="text-center text-muted py-4 small">
+              <i class="fe-check-circle me-1"></i> هیچ اعلان جدیدی ندارید
             </div>
-          }
+            }
+          </div>
+
+          <!-- 🔹 Footer -->
+          <div class="text-center bg-light border-top small py-2 text-muted">
+            آخرین بروزرسانی: {{ currentStatus || 'چند لحظه پیش' }}
+          </div>
         </div>
       </li>
 
-
-      <!-- 👤 User Profile -->
+      <!-- 👤 پروفایل کاربر -->
       <li class="dropdown notification-list topbar-dropdown">
         <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light d-flex align-items-center"
-          data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+          data-bs-toggle="dropdown" href="#" role="button">
 
-          @if (Imageitem && Imageitem.length > 100) {
-            <img [src]="Imageitem" alt="user-image"
-              class="rounded-circle user-avatar" />
+          @if (Imageitem && Imageitem.startsWith('data:image')) {
+          <img [src]="Imageitem" alt="user-image" class="rounded-circle user-avatar" />
           } @else {
-            <img src="./assets/images/KowsarSupport.png" alt="user-image" class="rounded-circle user-avatar" />
+          <img src="./assets/images/KowsarSupport.png" alt="user-image" class="rounded-circle user-avatar" />
           }
 
           <span class="pro-user-name ms-2 fw-semibold">
@@ -76,10 +117,11 @@
           </span>
         </a>
 
+        <!-- 🩵 Dropdown User Menu -->
         <div class="dropdown-menu dropdown-menu-end profile-dropdown shadow-lg border-0 rounded-3">
           <div class="dropdown-divider my-2"></div>
 
-          <!-- 🌗 Theme Toggle -->
+          <!-- 🌗 تغییر تم -->
           <div class="theme-switch-wrapper px-3 py-2 d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-2">
               <i class="fe-moon text-secondary"></i>
@@ -93,11 +135,13 @@
 
           <div class="dropdown-divider my-2"></div>
 
-          <a [routerLink]="['/support/profile']" class="dropdown-item notify-item">
+          <!-- 👤 حساب کاربری -->
+          <a routerLink="/support/profile" class="dropdown-item notify-item">
             <i class="fe-user text-primary"></i>
             <span>حساب کاربری</span>
           </a>
 
+          <!-- 🚪 خروج -->
           <a (click)="logout()" class="dropdown-item notify-item text-danger">
             <i class="ri-logout-box-line"></i>
             <span>خروج</span>
@@ -106,31 +150,22 @@
       </li>
     </ul>
 
-    <!-- 🏷️ LOGO -->
+    <!--   لوگوی سیستم -->
     <div class="logo-box">
       <a href="/" class="logo logo-dark text-center">
-        <span class="logo-sm">
-          <img src="./assets/images/logo-sm-dark.png" alt="" height="24" />
-        </span>
-        <span class="logo-lg">
-          <img src="./assets/images/logo-dark.png" alt="" height="20" />
-        </span>
+        <span class="logo-sm"><img src="assets/images/logo-sm-dark.png" alt="" height="24" /></span>
+        <span class="logo-lg"><img src="assets/images/logo-dark.png" alt="" height="20" /></span>
       </a>
-
       <a href="/" class="logo logo-light text-center">
-        <span class="logo-sm">
-          <img src="./assets/images/logo-sm.png" alt="" height="24" />
-        </span>
-        <span class="logo-lg">
-          <img src="./assets/images/logo-light.png" alt="" height="20" />
-        </span>
+        <span class="logo-sm"><img src="assets/images/logo-sm.png" alt="" height="24" /></span>
+        <span class="logo-lg"><img src="assets/images/logo-light.png" alt="" height="20" /></span>
       </a>
     </div>
 
-    <!-- ☰ Menu -->
+    <!-- 📋 کنترل نوار سمت چپ -->
     <ul class="list-unstyled topnav-menu topnav-menu-left m-0">
       <li>
-        <button class="button-menu-mobile waves-effect waves-light">
+        <button class="button-menu-mobile waves-effect waves-light" (click)="toggleSidebar()" type="button">
           <i class="fe-menu"></i>
         </button>
       </li>
@@ -145,88 +180,3 @@
   </div>
 </div>
 <!-- 🔚 End Topbar -->
-
-<!-- 🎨 Custom Styles -->
-<style>
-  .user-avatar {
-  width: 38px;
-  height: 38px;
-  object-fit: cover;
-  border: 2px solid #fff;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.animate-pulse {
-animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-0% {
-transform: scale(1);
-opacity: 1;
-}
-
-50% {
-transform: scale(1.2);
-opacity: 0.7;
-}
-
-100% {
-transform: scale(1);
-opacity: 1;
-}
-}
-
-.theme-switch {
-position: relative;
-display: inline-block;
-width: 44px;
-height: 22px;
-}
-
-.theme-switch input {
-display: none;
-}
-
-.slider {
-position: absolute;
-cursor: pointer;
-top: 0;
-left: 0;
-right: 0;
-bottom: 0;
-background-color: #ccc;
-transition: 0.4s;
-border-radius: 22px;
-}
-
-.slider:before {
-position: absolute;
-content: "";
-height: 16px;
-width: 16px;
-left: 3px;
-bottom: 3px;
-background-color: white;
-transition: 0.4s;
-border-radius: 50%;
-}
-
-input:checked+.slider {
-background-color: #4d94ff;
-}
-
-input:checked+.slider:before {
-transform: translateX(22px);
-}
-
-/* 🔵 Button styling for status dropdown */
-.btn-outline-info {
-font-size: 13px;
-padding: 4px 10px;
-}
-
-.dropdown-menu {
-min-width: 140px;
-}
-</style>

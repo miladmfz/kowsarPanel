@@ -1,0 +1,10 @@
+<!-- File Upload Button + Hidden Input -->
+<div class="d-inline-block">
+
+  <input type="file" hidden #fileInput (change)="onFileSelected($event)" />
+
+  <button type="button" class="btn btn-soft-secondary btn-sm" (click)="fileInput.click()">
+    <i class="mdi mdi-paperclip"></i>
+  </button>
+
+</div>

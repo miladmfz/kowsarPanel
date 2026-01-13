@@ -1,0 +1,72 @@
+<div class="card">
+  <div class="card-body pb-0">
+
+    <!-- Tabs Header - Minton FGD Style -->
+    <ul class="nav nav-pills navtab-bg nav-justified">
+
+      @for (tab of tabs; track tab.id) {
+      <li class="nav-item">
+        <a class="nav-link" [class.active]="activeTab === tab.id" (click)="activeTab = tab.id">
+          {{ tab.title }}
+        </a>
+      </li>
+      }
+
+    </ul>
+
+  </div>
+
+  <!-- Tabs Content -->
+  <div class="card-body">
+
+    @switch (activeTab) {
+
+    @case ('panel') {
+    <app-ocr-app-panel></app-ocr-app-panel>
+
+    }
+
+
+    @case ('column-edit') {
+    <app-ocr-app-column-edit></app-ocr-app-column-edit>
+
+    }
+
+    @case ('column-list') {
+    <app-ocr-app-column-list></app-ocr-app-column-list>
+
+    }
+
+    @case ('factor-detail') {
+    <app-ocr-app-factor-detail></app-ocr-app-factor-detail>
+
+    }
+
+    @case ('factor-list') {
+    <app-ocr-app-factor-list></app-ocr-app-factor-list>
+
+    }
+
+    @case ('report-chart') {
+    <app-ocr-app-report-chart></app-ocr-app-report-chart>
+
+    }
+
+    @case ('report-list') {
+    <app-ocr-app-report-list></app-ocr-app-report-list>
+
+    }
+
+
+
+    @case ('setting') {
+    <app-ocr-app-setting></app-ocr-app-setting>
+
+    }
+
+
+
+    }
+
+  </div>
+</div>

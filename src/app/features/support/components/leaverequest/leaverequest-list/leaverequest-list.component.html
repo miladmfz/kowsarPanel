@@ -1,0 +1,165 @@
+<!-- ===============================================================
+📋 لیست درخواست‌های مرخصی
+شامل جستجو، ثبت جدید، مشاهده جزئیات و گردش‌کار مدیر
+=============================================================== -->
+
+<div class="card">
+  <div class="card-body">
+    <!-- 🔹 عنوان -->
+    <h4 class="card-title mb-3">لیست مرخصی‌ها</h4>
+
+    <!--   فرم جستجو -->
+    <form [formGroup]="EditForm_Search" class="row mb-3 align-items-end">
+      <!-- 📅 از تاریخ -->
+      <div class="col-md-3">
+        <label for="StartTime" class="form-label">از تاریخ</label>
+        <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
+          <input id="StartTime" type="text" class="form-control" formControlName="StartDate" />
+        </ng-persian-datepicker>
+      </div>
+
+      <!-- 📅 تا تاریخ -->
+      <div class="col-md-3">
+        <label for="EndTime" class="form-label">تا تاریخ</label>
+        <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
+          <input id="EndTime" type="text" class="form-control" formControlName="EndDate" />
+        </ng-persian-datepicker>
+      </div>
+
+      <!--  ️ دکمه‌ها -->
+      <div class="col-md-6 d-flex justify-content-end gap-2 mt-3 mt-md-0">
+        <button type="button" class="btn btn-primary" (click)="loadLeaveList()">
+          <i class="fas fa-search me-1"></i> جستجو
+        </button>
+
+        <a class="btn btn-success" [routerLink]="['/support/leaverequest-edit']">
+          <i class="fas fa-plus me-1"></i> جدید
+        </a>
+
+        <button type="button" class="btn btn-light" (click)="loadLeaveList()">
+          <i class="fas fa-sync me-1"></i> بازخوانی
+        </button>
+      </div>
+    </form>
+
+
+    <!--   جدول اصلی -->
+    <div class="ag-container" style="height: 600px; border-radius: 8px; overflow: hidden;">
+
+      <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" (gridReady)="onGridReady($event, 1)"
+        [gridOptions]="gridOptions" class="w-100 h-100" (firstDataRendered)="gridApi1?.sizeColumnsToFit()">
+      </ag-grid-angular>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ===============================================================
+  Modal جزئیات مرخصی و گردش‌کار
+=============================================================== -->
+<div class="modal fade" id="leavedetail" tabindex="-1" aria-labelledby="leavedetailLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <!-- 🔹 Header -->
+      <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title">جزئیات مرخصی {{ modal_title }}</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeModal()"></button>
+      </div>
+
+      <!-- 🔹 Body -->
+      <div class="modal-body bg-light">
+
+        <!-- 📋 جدول جزئیات -->
+
+        <div class="ag-container" style="height: 600px; border-radius: 8px; overflow: hidden;">
+
+          <ag-grid-angular [columnDefs]="columnDefs2" [rowData]="records_leavedetails"
+            (gridReady)="onGridReady($event, 2)" [gridOptions]="gridOptions" class="w-100 h-100"
+            (firstDataRendered)="gridApi2?.sizeColumnsToFit()">
+          </ag-grid-angular>
+
+        </div>
+
+
+
+        <!--   فرم گردش‌کار -->
+        <form [formGroup]="EditForm_WorkFlow" class="row g-3">
+          <!-- تاریخ درخواست -->
+          <div class="col-md-3">
+            <label class="form-label">تاریخ درخواست</label>
+            <input formControlName="LeaveRequestDate" class="form-control" readonly />
+          </div>
+
+          <!-- نوع مرخصی -->
+          <div class="col-md-3">
+            <label class="form-label">نوع مرخصی</label>
+            <input formControlName="LeaveRequestType" class="form-control" readonly />
+          </div>
+
+          <!-- توضیحات -->
+          <div class="col-md-6">
+            <label class="form-label">توضیحات</label>
+            <input formControlName="LeaveRequestExplain" class="form-control" readonly />
+          </div>
+
+          <!-- تاریخ شروع -->
+          <div class="col-md-3">
+            <label class="form-label">تاریخ شروع</label>
+            <input formControlName="LeaveStartDate" class="form-control" readonly />
+          </div>
+
+          <!-- تاریخ پایان -->
+          <div class="col-md-3">
+            <label class="form-label">تاریخ پایان</label>
+            <input formControlName="LeaveEndDate" class="form-control" readonly />
+          </div>
+
+          <!-- ساعت شروع -->
+          <div class="col-md-3">
+            <label class="form-label">ساعت شروع</label>
+            <input formControlName="LeaveStartTime" class="form-control" readonly />
+          </div>
+
+          <!-- ساعت پایان -->
+          <div class="col-md-3">
+            <label class="form-label">ساعت پایان</label>
+            <input formControlName="LeaveEndTime" class="form-control" readonly />
+          </div>
+
+          <!-- فقط برای مدیر -->
+          @if (isManager) {
+          <div class="col-md-3">
+            <label class="form-label">وضعیت درخواست</label>
+            <select class="form-select" formControlName="WorkFlowStatus">
+              <option value="0">انتخاب کنید</option>
+              <option value="1">تأیید</option>
+              <option value="2">رد</option>
+              <option value="3">بررسی مجدد</option>
+            </select>
+          </div>
+
+          <div class="col-md-7">
+            <label class="form-label">توضیحات مدیر</label>
+            <input formControlName="WorkFlowExplain" class="form-control" placeholder="توضیح نظر مدیر..." />
+          </div>
+
+          <div class="col-md-2 d-flex align-items-end">
+            <button type="button" class="btn btn-primary w-100" (click)="submitWorkflow()">
+              <i class="fas fa-save me-1"></i> ثبت
+            </button>
+          </div>
+          }
+        </form>
+
+      </div>
+
+      <!-- 🔹 Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">
+          بستن
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

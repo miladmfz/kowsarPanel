@@ -1,0 +1,65 @@
+<!-- =============================================================== -->
+<!-- 🟣 Modal نمایش گزارش حضور کارشناسان -->
+<!-- توضیحات کلی:
+     این مودال برای نمایش جزئیات گزارش‌های حضور استفاده می‌شود.
+     شامل سه بخش اصلی است:
+     1️⃣ Header: عنوان و دکمه بستن
+     2️⃣ Body: گرید داده‌ها یا پیام نبود داده
+     3️⃣ Footer: تعداد رکوردها و دکمه بستن -->
+<!-- =============================================================== -->
+
+@if (visibleValue) {
+<div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content border-0 shadow-lg" [ngClass]="darkMode ? 'bg-dark text-white' : 'bg-light text-dark'">
+
+      <!-- =============================================================== -->
+      <!-- 🟦 Header -->
+      <!-- =============================================================== -->
+      <div class="modal-header" [ngClass]="darkMode ? 'bg-secondary text-white' : 'bg-light text-dark'">
+        <h5 class="modal-title">
+          <i class="fas fa-clock me-2"></i>
+          {{ title }}
+        </h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- 📋 Body -->
+      <!-- =============================================================== -->
+      <div class="modal-body p-0">
+
+        @if (recordsValue.length === 0) {
+        <!-- ⏳ نمایش حالت بارگذاری یا نبود داده -->
+        <div class="text-center py-5 text-muted">
+          <i class="fas fa-hourglass-half fa-spin mb-3"></i>
+          <div>در حال بارگذاری اطلاعات یا داده‌ای موجود نیست...</div>
+        </div>
+        } @else {
+        <!--   جدول داده‌ها -->
+        <ag-grid-angular style="width: 100%; height: 450px;" [rowData]="recordsValue" [columnDefs]="columnDefs"
+          [defaultColDef]="defaultColDef" [localeText]="localeText" [enableRtl]="true" [pagination]="true"
+          [ngClass]="darkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'">
+        </ag-grid-angular>
+        }
+
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- 🔻 Footer -->
+      <!-- =============================================================== -->
+      <div class="modal-footer d-flex justify-content-between">
+        <small [ngClass]="darkMode ? 'text-light' : 'text-muted'">
+          تعداد رکوردها:
+          <strong>{{ totalRecords() }}</strong>
+        </small>
+
+        <button type="button" class="btn btn-secondary px-4" (click)="closeModal()">
+          بستن
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+}

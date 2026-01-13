@@ -1,25 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { LoadingService } from './app-shell/framework-services/ui/loading.service';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    standalone: false
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule, RouterOutlet],
+  templateUrl: './app.component.html',
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
+
   constructor(
     private readonly router: Router,
-
+    public loadingService: LoadingService
   ) { }
 
   ngOnInit(): void {
-    //document.body.classList.remove('loading');
 
-    if (sessionStorage.getItem("ActiveDate") == null) {
+    if (!sessionStorage.getItem('ActiveSession')) {
       this.router.navigate(['/auth/login']);
     }
 
-
+    // اگر می‌خوای لودینگ اولیه داشته باشی
+    this.loadingService.show();
+    setTimeout(() => this.loadingService.hide(), 1500);
   }
 }

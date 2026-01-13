@@ -1,0 +1,76 @@
+<!-- 🔹 صفحه ورود استاندارد Minton -->
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+  <div class="card shadow rounded-4 border-0" style="max-width: 420px; width: 100%;">
+    <div class="card-body p-4">
+
+      <!-- 🟦 لوگو -->
+      <div class="text-center mb-4">
+        <img src="assets/images/img_logo_kits_png.png" alt="لوگو" height="75" class="mb-2" />
+        <p class="text-muted fs-6 mb-0">
+          لطفاً نام کاربری و رمز عبور خود را وارد کنید
+        </p>
+      </div>
+
+      <!-- 🟨 فرم ورود -->
+      <form [formGroup]="loginForm" (ngSubmit)="submit()" autocomplete="on" novalidate>
+
+        <!-- 🔹 نام کاربری -->
+        <div class="form-floating mb-3">
+          <input type="text" id="UName" class="form-control" placeholder="نام کاربری" formControlName="UName"
+            maxlength="100" autocomplete="username" [ngClass]="{
+              'is-invalid': loginForm.controls['UName'].invalid && loginForm.controls['UName'].touched,
+              'is-valid': loginForm.controls['UName'].valid && loginForm.controls['UName'].touched
+            }" />
+          <label for="UName">نام کاربری</label>
+
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+              validation: 'required',
+              message: 'وارد کردن نام کاربری الزامی است',
+              control: loginForm.controls['UName']
+            }"></ng-container>
+        </div>
+
+        <!-- 🔹 رمز عبور -->
+        <div class="form-floating mb-4 position-relative">
+          <input [type]="showPassword() ? 'text' : 'password'" id="UPass" class="form-control" placeholder="رمز عبور"
+            formControlName="UPass" maxlength="100" autocomplete="current-password" [ngClass]="{
+              'is-invalid': loginForm.controls['UPass'].invalid && loginForm.controls['UPass'].touched,
+              'is-valid': loginForm.controls['UPass'].valid && loginForm.controls['UPass'].touched
+            }" />
+          <label for="UPass">رمز عبور</label>
+
+          <!-- 👁 آیکون چشم -->
+          <span class="position-absolute top-50 end-0 translate-middle-y me-3 text-muted" style="cursor: pointer;"
+            (click)="togglePassword()">
+            <i [class]="showPassword() ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+          </span>
+
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+              validation: 'required',
+              message: 'رمز عبور الزامی است',
+              control: loginForm.controls['UPass']
+            }"></ng-container>
+        </div>
+
+        <!-- 🔘 دکمه ورود -->
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary btn-lg fw-semibold text-white" [disabled]="isLoading()">
+            <span *ngIf="!isLoading()">ورود</span>
+            <span *ngIf="isLoading()">
+              <i class="fa fa-spinner fa-spin me-2"></i> در حال ورود...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 🔺 قالب خطاهای ورودی -->
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  @if (control.hasError(validation) && (control.dirty || control.touched)) {
+  <div class="invalid-feedback d-block mt-1">
+    <span role="alert">{{ message }}</span>
+  </div>
+  }
+</ng-template>

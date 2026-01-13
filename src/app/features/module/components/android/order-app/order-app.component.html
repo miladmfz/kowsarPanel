@@ -1,0 +1,63 @@
+<div class="card">
+    <div class="card-body pb-0">
+
+        <!-- Tabs Header - Minton FGD Style -->
+        <ul class="nav nav-pills navtab-bg nav-justified">
+
+            @for (tab of tabs; track tab.id) {
+            <li class="nav-item">
+                <a class="nav-link" [class.active]="activeTab === tab.id" (click)="activeTab = tab.id">
+                    {{ tab.title }}
+                </a>
+            </li>
+            }
+
+        </ul>
+
+    </div>
+
+    <!-- Tabs Content -->
+    <div class="card-body">
+
+        @switch (activeTab) {
+
+        @case ('panel') {
+        <app-order-app-panel></app-order-app-panel>
+
+        }
+
+        @case ('column-list') {
+        <app-order-app-column-list></app-order-app-column-list>
+        }
+
+        @case ('column-edit') {
+        <app-order-app-column-edit></app-order-app-column-edit>
+
+        }
+        @case ('customer') {
+        <app-order-app-customer></app-order-app-customer>
+
+        }
+        @case ('good-edit') {
+        <app-order-app-good-edit></app-order-app-good-edit>
+
+        }
+        @case ('good-list') {
+        <app-order-app-good-list></app-order-app-good-list>
+
+        }
+        @case ('report') {
+        <app-order-app-report></app-order-app-report>
+
+        }
+        @case ('setting') {
+        <app-order-app-setting></app-order-app-setting>
+
+        }
+
+
+
+        }
+
+    </div>
+</div>

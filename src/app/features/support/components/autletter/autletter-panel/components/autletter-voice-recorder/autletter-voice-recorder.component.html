@@ -1,0 +1,53 @@
+<div class="d-flex flex-column gap-2">
+
+  <div class="d-flex align-items-center gap-2">
+
+    <!-- START / STOP -->
+    <button type="button" class="btn" [ngClass]="isRecording ? 'btn-warning' : 'btn-danger'" [disabled]="isProcessing"
+      (mousedown)="startRecording()" (mouseup)="stopRecording()" (mouseleave)="stopRecording()"
+      (touchstart)="startRecording()" (touchend)="stopRecording()">
+
+      @if (isRecording) {
+      <span>{{ recordSeconds }}</span>
+      } @else if (isProcessing) {
+      <span>⏳ در حال پردازش...</span>
+      } @else if (recordReady) {
+      <span> ویس آماده</span>
+      } @else {
+      <span>🎤 ضبط ویس</span>
+      }
+
+    </button>
+
+    <!-- CANCEL -->
+    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancelVoice()"
+      [disabled]="!isRecording && !recordReady">
+      لغو
+    </button>
+
+  </div>
+
+  <!-- AUDIO PREVIEW + CONFIRM -->
+  @if (audioPreviewUrl) {
+  <div class="d-flex flex-column gap-2">
+
+    <div class="d-flex align-items-center gap-2">
+      <audio #audioPlayer [src]="audioPreviewUrl" controls></audio>
+
+      <button type="button" class="btn btn-success btn-sm" (click)="confirmVoice()" [disabled]="isProcessing">
+        ✔ ارسال ویس
+      </button>
+    </div>
+
+    <!-- TRANSCRIBED TEXT -->
+    @if (voiceToText) {
+    <div class="p-2 border rounded bg-light">
+      <strong>متن ویس:</strong>
+      <p class="mb-0">{{ voiceToText }}</p>
+    </div>
+    }
+
+  </div>
+  }
+
+</div>

@@ -1,47 +1,97 @@
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { AppModule } from './app/app.module';
-import { enableProdMode } from '@angular/core';
+import { enableProdMode, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { HttpClientModule, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { provideRouter, withRouterConfig } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
+import { AppComponent } from './app/app.component';
+import { routes } from './app/app.routes';
+
+import { SecurityInterceptor } from './app/app-shell/framework-services/interceptors/security.interceptor.service';
+import { ExceptionInterceptor } from './app/app-shell/framework-services/interceptors/exception.interceptor.service';
+
+import { AppConfigService } from './app/app-config.service';
+
+import { ModuleRegistry } from 'ag-grid-community';
+import {
+  AllCommunityModule,
+  AllEnterpriseModule,
+  LicenseManager,
+} from 'ag-grid-enterprise';
+
+// ✔ مجوز AG-Grid
+LicenseManager.setLicenseKey("MjAwMDAwMDAwMDAwMA==5a5ea3be8a8aaa9b54ce7186663066431");
+ModuleRegistry.registerModules([
+  AllCommunityModule,
+  AllEnterpriseModule,
+]);
+
+
+// 🌗 تم اولیه
 function applyInitialTheme() {
   const mode = localStorage.getItem('theme') || 'light';
 
   const lightCss = [
     document.getElementById('bs-default-stylesheet') as HTMLLinkElement,
-    document.getElementById('app-default-stylesheet') as HTMLLinkElement
-  ].filter(el => el !== null);
+    document.getElementById('app-default-stylesheet') as HTMLLinkElement,
+  ].filter(Boolean);
 
   const darkCss = [
     document.getElementById('bs-dark-stylesheet') as HTMLLinkElement,
-    document.getElementById('app-dark-stylesheet') as HTMLLinkElement
-  ].filter(el => el !== null);
+    document.getElementById('app-dark-stylesheet') as HTMLLinkElement,
+  ].filter(Boolean);
 
   if (mode === 'light') {
-    lightCss.forEach(l => l.disabled = false);
-    darkCss.forEach(l => l.disabled = true);
+    lightCss.forEach(l => (l.disabled = false));
+    darkCss.forEach(l => (l.disabled = true));
   } else {
-    lightCss.forEach(l => l.disabled = true);
-    darkCss.forEach(l => l.disabled = false);
+    lightCss.forEach(l => (l.disabled = true));
+    darkCss.forEach(l => (l.disabled = false));
   }
 }
 
-fetch(`./assets/config.json`)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return response.json();
-  })
-  .then(config => {
-    if (config.production) {
-      enableProdMode();
-    }
 
-    applyInitialTheme();  // <<< اینجا قبل از بوت‌استرپ تم رو ست می‌کنیم
+// ⭐ لود تنظیمات برنامه + Bootstrap Angular
+fetch('./assets/config.json')
+  .then(async response => {
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-    platformBrowserDynamic([{ provide: 'APP_CONFIG', useValue: config }])
-      .bootstrapModule(AppModule)
-      .catch(err => console.error('Bootstrap error:', err));
+    const config = await response.json();
+
+    const appConfig = new AppConfigService({} as any);
+    appConfig['config'] = config;
+
+    if (config.production) enableProdMode();
+
+    applyInitialTheme();
+
+    await bootstrapApplication(AppComponent, {
+      providers: [
+
+        // ⭐ نسخه رسمی و بدون deprecated
+        provideRouter(
+          routes,
+          withRouterConfig({
+            // اگر navigate به همان آدرس (با پارامتر متفاوت) باشد
+            // کامپوننت را مجدداً reload می‌کند
+            onSameUrlNavigation: 'reload',
+          })
+        ),
+
+
+        provideHttpClient(
+          withInterceptors([SecurityInterceptor, ExceptionInterceptor]),
+          withFetch()
+        ),
+
+        { provide: AppConfigService, useValue: appConfig },
+
+        importProvidersFrom(CommonModule, HttpClientModule),
+
+        // 🔥 مهم: چون بدون Zone کار می‌کنی، tooling درست فعال می‌شود
+        provideZonelessChangeDetection(),
+      ],
+    });
+
   })
-  .catch(err => {
-    console.error('Could not load config.json:', err);
-  });
+  .catch(err => console.error('❌ Could not load config.json:', err));

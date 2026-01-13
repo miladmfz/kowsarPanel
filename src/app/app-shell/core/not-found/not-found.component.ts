@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
-    selector: 'app-not-found',
-    templateUrl: './not-found.component.html',
-    standalone: false
+  selector: 'app-not-found',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './not-found.component.html',
 })
-export class NotFoundComponent implements OnInit {
+export class NotFoundComponent {
+  constructor(private router: Router) { }
 
-  constructor() { }
-
-  ngOnInit() {
+  goHome(): void {
+    this.router.navigate(['/dashboard']);
   }
-
 }

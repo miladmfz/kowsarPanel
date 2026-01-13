@@ -1,0 +1,163 @@
+<!-- =============================================================== -->
+<!-- 📩 کامپوننت Modal مدیریت و ایجاد تیکت کارشناسان -->
+<!-- توضیحات کلی:
+     این قالب برای نمایش، ایجاد و مدیریت تیکت‌های کارشناسان طراحی شده است.
+     ساختار شامل سه بخش اصلی است:
+     1️⃣ Header: عنوان مودال و دکمه بستن
+     2️⃣ Body: شامل گرید لیست تیکت‌ها و فرم ایجاد یا ادامه‌ی تیکت
+     3️⃣ Footer: شامل دکمه‌های بستن و ایجاد تیکت جدید
+     همچنین تم گرافیکی بر اساس وضعیت تاریک یا روشن به‌صورت پویا تغییر می‌کند.
+-->
+<!-- =============================================================== -->
+
+@if (visible) {
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" dir="rtl">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content border-0 shadow-lg" [ngClass]="darkMode ? 'bg-dark text-white' : 'bg-light text-dark'">
+
+      <!-- =============================================================== -->
+      <!-- 🟦 Header -->
+      <!-- =============================================================== -->
+      <div class="modal-header" [ngClass]="darkMode ? 'bg-secondary text-white' : 'bg-light text-dark'">
+        <h5 class="modal-title">
+          <i class="fas fa-envelope me-2"></i>
+          تیکت‌های {{ form.value.ExecuterName || person?.FullName || 'کارشناس' }}
+        </h5>
+        <button type="button" class="btn-close" (click)="close.emit()"></button>
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- 🟧 Body -->
+      <!-- =============================================================== -->
+      <div class="modal-body">
+
+        <!-- =============================================================== -->
+        <!-- 🟦 گرید لیست تیکت‌ها -->
+        <!-- =============================================================== -->
+        <div style="height: 300px;" class="mb-3">
+          <ag-grid-angular class="ag-theme-balham w-100 h-100"
+            [ngClass]="darkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="records"
+            [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [enableRtl]="true" [pagination]="true"
+            [localeText]="localeText" (rowClicked)="onRowClicked($event)"
+            [rowSelection]="{ mode: 'singleRow' ,enableClickSelection: true}">
+          </ag-grid-angular>
+        </div>
+
+        <!-- =============================================================== -->
+        <!-- 🟧 فرم ایجاد یا ادامه تیکت -->
+        <!-- =============================================================== -->
+        @if (isNewLetter()) {
+        <form [formGroup]="form" (ngSubmit)="saveLetter()" novalidate>
+          <div class="row g-3 align-items-start">
+
+            <!-- LetterCode -->
+            @if (form.value.LetterCode?.length > 0) {
+            <div class="col-md-3">
+              <label class="form-label">کد تیکت</label>
+              <input class="form-control" formControlName="LetterCode" readonly />
+            </div>
+            }
+
+            <!-- OwnerCentral -->
+            <div class="col-md-3">
+              <label class="form-label">کد مشتری</label>
+              <input class="form-control" formControlName="OwnerCentral" readonly placeholder="نمایش مشتریان"
+                [disabled]="form.value.LetterCode?.length > 0"
+                [ngClass]="{ 'bg-light': form.value.LetterCode?.length > 0 }"
+                (click)="form.value.LetterCode?.length === 0 && openCustomerPicker()" />
+              <small class="text-muted">
+                @if (form.value.LetterCode?.length > 0) {
+                (تیکت قبلاً ایجاد شده)
+                } @else {
+                برای انتخاب مشتری کلیک کنید
+                }
+              </small>
+            </div>
+
+            <!-- OwnerName -->
+            <div class="col-md-4">
+              <label class="form-label">نام مشتری</label>
+              <input class="form-control" formControlName="OwnerName" readonly />
+            </div>
+
+            <!-- SendSms -->
+            <div class="col-md-2">
+              <label class="form-label">ارسال SMS</label>
+              <select class="form-select" formControlName="SendSms">
+                <option value="0">خیر</option>
+                <option value="1">بله</option>
+              </select>
+            </div>
+
+            <!-- شرح تیکت -->
+            @if (form.value.LetterCode?.length > 0) {
+            <div class="col-12">
+              <label class="form-label">شرح تیکت</label>
+              <textarea rows="3" class="form-control" formControlName="LetterDescriptionText" readonly></textarea>
+            </div>
+            }
+
+            <!-- شرح ارجاع -->
+            <div class="col-12">
+              <label class="form-label">شرح ارجاع</label>
+              <textarea rows="3" class="form-control" id="DescriptionText" formControlName="DescriptionText"
+                maxlength="400" (input)="sanitizeDescriptionText($event)" [ngClass]="{
+                      'is-invalid':
+                        form.controls['DescriptionText'].invalid &&
+                        form.controls['DescriptionText'].touched,
+                      'is-valid':
+                        form.controls['DescriptionText'].valid &&
+                        form.controls['DescriptionText'].touched
+                    }"></textarea>
+
+              <small class="text-muted">
+                {{ form.controls['DescriptionText'].value?.length || 0 }}/400 کاراکتر
+              </small>
+
+              @if (form.controls['DescriptionText'].invalid && form.controls['DescriptionText'].touched) {
+              <div class="text-danger mt-1">
+                @if (form.controls['DescriptionText'].errors?.['required']) {
+                <div>پر کردن این فیلد اجباری است</div>
+                }
+                @if (form.controls['DescriptionText'].errors?.['minlength']) {
+                <div>
+                  حداقل ۱۰ کاراکتر وارد کنید (الان
+                  {{ form.controls['DescriptionText'].value?.length || 0 }})
+                </div>
+                }
+              </div>
+              }
+            </div>
+          </div>
+
+          <!-- =============================================================== -->
+          <!-- 🟢 دکمه‌های فرم -->
+          <!-- =============================================================== -->
+          <div class="text-end mt-3">
+            <button type="submit" class="btn btn-success px-4" [disabled]="form.invalid">
+              ارسال تیکت
+            </button>
+            <button type="button" class="btn btn-outline-secondary px-4 ms-2" (click)="cancelNewLetter()">
+              انصراف
+            </button>
+          </div>
+        </form>
+        }
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- 🟫 Footer -->
+      <!-- =============================================================== -->
+      <div class="modal-footer justify-content-between">
+        <button class="btn btn-outline-secondary" (click)="close.emit()">بستن</button>
+        @if (!isNewLetter()) {
+        <button class="btn btn-primary" (click)="startNewLetter()">
+          <i class="fas fa-plus-circle me-1"></i>
+          ایجاد تیکت جدید
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+}

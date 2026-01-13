@@ -1,0 +1,435 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { AppConfigService } from 'src/app/app-config.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class FactorWebApiService {
+
+
+  baseUrl: string;
+  headers: HttpHeaders;
+
+  constructor(private client: HttpClient, private config: AppConfigService) {
+    this.baseUrl = this.config.apiUrl + 'KowsarWeb/';
+
+    this.headers = new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('Access-Control-Allow-Origin', '*')
+      .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') ?? '');
+  }
+
+
+
+
+
+  GetKowsarCustomer(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetKowsarCustomer", command, { headers: this.headers })
+  }
+
+
+  GetGoodListSupport(SearchTarget: string): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetGoodListSupport", { SearchTarget }, { headers: this.headers })
+  }
+
+
+
+
+
+
+  GetFactor(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetFactor", command, { headers: this.headers })
+  }
+
+
+  EditFactorProperty(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "EditFactorProperty", command, { headers: this.headers })
+  }
+  WebFactorInsert(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "WebFactorInsert", command, { headers: this.headers })
+  }
+
+  UpdateFactorInvoiceState(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "UpdateFactorInvoiceState", command, { headers: this.headers })
+  }
+
+  UpdatePreFactorPFState(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "UpdatePreFactorPFState", command, { headers: this.headers })
+  }
+
+
+
+  WebFactorInsertRow(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "WebFactorInsertRow", command, { headers: this.headers })
+  }
+
+  WebFactorUpdateRow(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "WebFactorUpdateRow", command, { headers: this.headers })
+  }
+
+
+
+  DeleteWebFactorRows(FactorRowCode: string): Observable<any[]> {
+    const params = new HttpParams().append('FactorRowCode', FactorRowCode)
+    return this.client.get<any[]>(this.baseUrl + "DeleteWebFactorRows", { headers: this.headers, params: params })
+  }
+  DeleteWebFactor(FactorCode: string): Observable<any[]> {
+    const params = new HttpParams().append('FactorCode', FactorCode)
+    return this.client.get<any[]>(this.baseUrl + "DeleteWebFactor", { headers: this.headers, params: params })
+  }
+
+  DeleteWebPreFactorRows(FactorRowCode: string): Observable<any[]> {
+    const params = new HttpParams().append('PreFactorRowCode', FactorRowCode)
+    return this.client.get<any[]>(this.baseUrl + "DeleteWebPreFactorRows", { headers: this.headers, params: params })
+  }
+  DeleteWebPreFactor(FactorCode: string): Observable<any[]> {
+    const params = new HttpParams().append('PreFactorCode', FactorCode)
+    return this.client.get<any[]>(this.baseUrl + "DeleteWebPreFactor", { headers: this.headers, params: params })
+  }
+
+
+
+
+
+  GetObjectTypeFromDbSetup(ObjectType: string): Observable<any[]> {
+    const params = new HttpParams().append('ObjectType', ObjectType)
+    return this.client.get<any[]>(this.baseUrl + "GetObjectTypeFromDbSetup", { headers: this.headers, params: params })
+  }
+
+  GetTodeyFromServer(): Observable<any[]> {
+    return this.client.get<any[]>(this.baseUrl + "GetTodeyFromServer", { headers: this.headers })
+  }
+
+
+
+  GetFactors(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "GetFactors", { headers: this.headers })
+
+  }
+
+
+  GetGridSchema(Where: string): Observable<any[]> {
+    const params = new HttpParams().append('Where', Where)
+
+    return this.client.get<any[]>(this.baseUrl + "GetGridSchema", { headers: this.headers, params: params })
+  }
+
+
+
+
+
+  GetWebFactor(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "GetWebFactor", command, { headers: this.headers })
+
+  }
+  GetWebFactorRows(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "GetWebFactorRows", command, { headers: this.headers })
+
+  }
+
+  AutLetterRowInsert(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "AutLetterRowInsert", command, { headers: this.headers })
+
+  }
+
+  LetterInsert(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "LetterInsert", command, { headers: this.headers })
+
+  }
+
+
+  GetCustomerById(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetCustomerById", command, { headers: this.headers })
+  }
+  GetCentralByCode(command): Observable<any[]> {
+    return this.client.post<any[]>(this.baseUrl + "GetCentralByCode", command, { headers: this.headers })
+  }
+
+
+
+  GetAutLetterList(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "GetAutLetterList", command, { headers: this.headers })
+
+  }
+
+  GetAutLetterListByPerson(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "GetAutLetterListByPerson", command, { headers: this.headers })
+
+  }
+
+
+  GetCentralUser(
+  ): Observable<any[]> {
+    const params = new HttpParams()
+    return this.client.get<any[]>(this.baseUrl + "GetCentralUser", { headers: this.headers });
+  }
+
+  /*
+  
+    UpdateFactorInvoiceState(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "UpdateFactorInvoiceState", command, { headers: this.headers })
+    }
+    GetKowsarCustomer(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "GetKowsarCustomer", command, { headers: this.headers })
+    }
+  
+  
+  
+    GetKowsarCentral(SearchTarget: string): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "GetKowsarCentral", { SearchTarget }, { headers: this.headers })
+    }
+  
+  
+  
+    GetGoodListSupport(SearchTarget: string): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "GetGoodListSupport", { SearchTarget }, { headers: this.headers })
+    }
+  
+  
+  
+  
+  
+    GetTasks(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "GetTasks", command, { headers: this.headers })
+    }
+  
+    InsertTask(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "InsertTask", command, { headers: this.headers })
+    }
+  
+    UpdateTask(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "UpdateTask", command, { headers: this.headers })
+    }
+  
+    DeleteTask(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "DeleteTask", command, { headers: this.headers })
+    }
+    DeleteTaskAll(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "DeleteTaskAll", command, { headers: this.headers })
+    }
+  
+    GetFactor(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "GetFactor", command, { headers: this.headers })
+    }
+  
+  
+    EditFactorProperty(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "EditFactorProperty", command, { headers: this.headers })
+    }
+  
+  
+  
+  
+  
+  
+    GetObjectTypeFromDbSetup(ObjectType: string): Observable<any[]> {
+      const params = new HttpParams().append('ObjectType', ObjectType)
+      return this.client.get<any[]>(this.baseUrl + "GetObjectTypeFromDbSetup", { headers: this.headers, params: params })
+    }
+  
+    GetTodeyFromServer(): Observable<any[]> {
+      return this.client.get<any[]>(this.baseUrl + "GetTodeyFromServer", { headers: this.headers })
+    }
+  
+  
+  
+  
+    GetKowsarReport(command): Observable<any[]> {
+  
+      return this.client.post<any[]>(this.baseUrl + "GetKowsarReport", command, { headers: this.headers })
+  
+    }
+  
+  
+    GetGridSchema(Where: string): Observable<any[]> {
+      const params = new HttpParams().append('Where', Where)
+  
+      return this.client.get<any[]>(this.baseUrl + "GetGridSchema", { headers: this.headers, params: params })
+    }
+  
+    DeleteWebFactorRows(FactorRowCode: string): Observable<any[]> {
+      const params = new HttpParams().append('FactorRowCode', FactorRowCode)
+      return this.client.get<any[]>(this.baseUrl + "DeleteWebFactorRows", { headers: this.headers, params: params })
+    }
+    DeleteWebFactor(FactorCode: string): Observable<any[]> {
+      const params = new HttpParams().append('FactorCode', FactorCode)
+      return this.client.get<any[]>(this.baseUrl + "DeleteWebFactor", { headers: this.headers, params: params })
+    }
+  
+  
+    WebFactorInsert(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "WebFactorInsert", command, { headers: this.headers })
+    }
+  
+    WebFactorInsertRow(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "WebFactorInsertRow", command, { headers: this.headers })
+    }
+
+  
+  
+  
+    GetCustomerReport(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "GetCustomerReport", command, { headers: this.headers })
+    }
+  
+    GetAttendance_StatusDurations(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "GetAttendance_StatusDurations", command, { headers: this.headers })
+    }
+  
+  
+    AttendanceDashboard(): Observable<any[]> {
+      const params = new HttpParams()
+      return this.client.get<any[]>(this.baseUrl + "AttendanceDashboard", { headers: this.headers, params: params })
+    }
+  
+    GetLeaveRequestPerson(TargetDate: string): Observable<any[]> {
+      const params = new HttpParams().append('TargetDate', TargetDate)
+      return this.client.get<any[]>(this.baseUrl + "GetLeaveRequestPerson", { headers: this.headers, params: params })
+    }
+
+  
+  
+    AttendanceHistory(CentralRef: string): Observable<any[]> {
+      const params = new HttpParams().append('CentralRef', CentralRef)
+      return this.client.get<any[]>(this.baseUrl + "AttendanceHistory", { headers: this.headers, params: params })
+    }
+  
+  
+    ManualAttendance(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "ManualAttendance", command, { headers: this.headers })
+    }
+  
+    SendSmsAutLetter(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "SendSmsAutLetter", command, { headers: this.headers })
+    }
+  
+  
+  
+    AutLetterRowInsert0(
+      LetterRef: string,
+      LetterDate: string,
+      Description: string,
+      LetterState: string,
+      LetterPriority: string,
+      CreatorCentral: string,
+      ExecuterCentral: string
+    ): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "AutLetterRowInsert", { LetterRef, LetterDate, Description, LetterState, LetterPriority, CreatorCentral, ExecuterCentral }, { headers: this.headers })
+    }
+  
+  
+    LetterInsert0(
+      LetterDate: string,
+      title: string,
+      Description: string,
+      LetterState: string,
+      LetterPriority: string,
+      CentralRef: string,
+      InOutFlag: string,
+  
+    ): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "LetterInsert", { LetterDate, title, Description, LetterState, LetterPriority, CentralRef, InOutFlag }, { headers: this.headers })
+    }
+  
+  
+    AutLetterRowInsert(command): Observable<any[]> {
+  
+      return this.client.post<any[]>(this.baseUrl + "AutLetterRowInsert", command, { headers: this.headers })
+  
+    }
+  
+  
+  
+  
+  
+    LetterInsert(command): Observable<any[]> {
+  
+      return this.client.post<any[]>(this.baseUrl + "LetterInsert", command, { headers: this.headers })
+  
+    }
+  
+  
+  
+  
+    GetGood_base(GoodCode: string): Observable<any[]> {
+      const params = new HttpParams().append('GoodCode', GoodCode)
+      return this.client.get<any[]>(this.baseUrl + "GetGoodBase", { headers: this.headers, params: params })
+    }
+  
+  
+  
+    GetLastGoodData(): Observable<any[]> {
+      return this.client.get<any[]>(this.baseUrl + "GetLastGoodData", { headers: this.headers })
+    }
+  
+  
+    GoodCrudService(command): Observable<any[]> {
+  
+      return this.client.post<any[]>(this.baseUrl + "GoodCrudService", command, { headers: this.headers })
+  
+    }
+  
+    GetSimilarGood(Where: string): Observable<any[]> {
+      const params = new HttpParams().append('Where', Where)
+      return this.client.get<any[]>(this.baseUrl + "GetSimilarGood", { headers: this.headers, params: params })
+  
+    }
+  
+  
+  
+  
+    GetCustomerById(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "GetCustomerById", command, { headers: this.headers })
+    }
+  
+  
+
+  
+  
+    GetCentralUser(
+    ): Observable<any[]> {
+      const params = new HttpParams()
+      return this.client.get<any[]>(this.baseUrl + "GetCentralUser", { headers: this.headers });
+    }
+  
+    GetCentralByCode(command): Observable<any[]> {
+      return this.client.post<any[]>(this.baseUrl + "GetCentralByCode", command, { headers: this.headers })
+    }
+  
+  
+    // GetProperty(Where: string): Observable<any[]> {
+    //   const params = new HttpParams().append('Where', Where)
+    //   return this.client.get<any[]>(this.baseUrl + "GetProperty", { headers: this.headers, params: params })
+    // }
+  
+  
+    // Good_Insert(command): Observable<any[]> {
+    //   return this.client.post<any[]>(this.baseUrl + "GoodInsert", command, { headers: this.headers })
+    // }
+  
+  
+    // GetProperty(Where: string): Observable<any[]> {
+    //   const params = new HttpParams().append('Where', Where)
+    //   return this.client.get<any[]>(this.baseUrl + "GetProperty", { headers: this.headers, params: params })
+    // }
+  
+  */
+}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,149 @@
+<div class="card shadow-sm">
+  <div class="card-body">
+
+    <!-- Filter Card -->
+    <div class="card border-0 shadow-sm mb-3">
+      <div class="card-body">
+
+        <form [formGroup]="EditForm_reportCustomer" (ngSubmit)="submitforsearch()" id="submitForm">
+
+          <div class="row g-3">
+
+            <div class="col-6">
+              <label class="form-label">جستجو</label>
+              <input type="text" class="form-control" formControlName="SearchTarget" maxlength="100"
+                autocomplete="off" />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">ابتدای تاریخ</label>
+              <ng-persian-datepicker [uiHideAfterSelectDate]="true">
+                <input class="form-control" type="text" formControlName="StartDateTarget" />
+              </ng-persian-datepicker>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">انتهای تاریخ</label>
+              <ng-persian-datepicker [uiHideAfterSelectDate]="true">
+                <input class="form-control" type="text" formControlName="EndDateTarget" />
+              </ng-persian-datepicker>
+            </div>
+
+          </div>
+
+        </form>
+
+        <!-- Action Buttons -->
+        <div class="mt-3 d-flex gap-2 flex-wrap">
+
+          <button class="btn btn-primary" type="button" (click)="submitforsearch()">
+            <i class="fas fa-search me-1"></i>
+            جستجو
+          </button>
+
+          <button class="btn btn-light" type="button" (click)="config()">
+            <i class="fas fa-recycle me-1"></i>
+            بازخوانی
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Loader -->
+    @if (loading) {
+    <div class="text-center my-4">
+      <span class="loader"></span>
+    </div>
+    }
+
+    <!-- Grid Section -->
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+
+      <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records_report_customer" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()" class="w-100 h-100">
+      </ag-grid-angular>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- ---------------------- MODAL : BY DATE ---------------------- -->
+<div class="modal fade" id="customerreportbydate" tabindex="-1" aria-labelledby="customerreportbydateLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="customerreportbydateLabel">{{ Customer_temp }} به تفکیک تاریخ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="customerreportbydate_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+
+
+
+
+        <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
+          <ag-grid-angular [columnDefs]="columnDefs2" [rowData]="records_report_customer_bydate"
+            [gridOptions]="gridOptions" (gridReady)="onGridReady($event, 2)"
+            (firstDataRendered)="gridApi2?.sizeColumnsToFit()" class="w-100 h-100">
+          </ag-grid-angular>
+        </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="customerreportbydate_dialog_close()">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="customerreportbyrow" tabindex="-1" aria-labelledby="customerreportbyrowLabel"
+  aria-hidden="true">
+
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="background-color: #d1dce7;">
+
+      <!-- Header -->
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="customerreportbyrowLabel">
+          {{ Customer_temp }} به تفکیک خدمات
+        </h5>
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="customerreportbyrow_dialog_close()">
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+
+
+        <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
+          <ag-grid-angular [columnDefs]="columnDefs3" [rowData]="records_report_customer_byrow"
+            [gridOptions]="gridOptions" (gridReady)="onGridReady($event, 3)"
+            (firstDataRendered)="gridApi3?.sizeColumnsToFit()" class="w-100 h-100">
+          </ag-grid-angular>
+        </div>
+
+
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="customerreportbyrow_dialog_close()">
+          بستن
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

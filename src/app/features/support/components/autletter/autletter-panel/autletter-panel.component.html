@@ -1,0 +1,180 @@
+<div class="row">
+  <div class="col-12">
+    <div class="page-title-box d-flex justify-content-between align-items-center">
+      <h4 class="page-title">تیکت ارسالی </h4>
+      <button class="btn btn-danger" (click)="onBtnCancelClick()">بازگشت</button>
+
+    </div>
+  </div>
+</div>
+
+
+<div class="card">
+  <div class="card-body pb-0">
+
+
+    <form [formGroup]="Autletter_data" id="submitForm">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body row">
+
+              <div class="form-group col-md-3">
+                <label for="LetterDate" class="col-form-label">تارخ</label>
+                <input type="text" class="form-control" id="LetterDate" formControlName="LetterDate" maxlength="100"
+                  readonly />
+              </div>
+
+
+              <div class="form-group col-md-3">
+                <label for="LetterPriority" class="col-form-label">الویت</label>
+                <input type="text" class="form-control" id="LetterPriority" formControlName="LetterPriority"
+                  maxlength="100" readonly />
+              </div>
+              <div class="form-group col-md-3">
+                <label for="CreatorName" class="col-form-label">ایجاد کننده</label>
+                <input type="text" class="form-control" id="CreatorName" formControlName="CreatorName" maxlength="100"
+                  readonly />
+              </div>
+              <div class="form-group col-md-3">
+                <label for="OwnerName" class="col-form-label">مالکیت </label>
+                <input type="text" class="form-control" id="OwnerName" formControlName="OwnerName" maxlength="100"
+                  readonly />
+              </div>
+
+
+              <div class="form-group col-md-3">
+                <label for="LetterTitle" class="col-form-label">عنوان</label>
+                <input type="text" class="form-control" id="LetterTitle" formControlName="LetterTitle" maxlength="100"
+                  readonly />
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="LetterDescription" class="col-form-label">شرح</label>
+                <input type="text" class="form-control" id="LetterDescription" formControlName="LetterDescription"
+                  readonly />
+
+
+              </div>
+
+              <div class="form-group col-md-3">
+                <label for="Barbary" class="col-form-label">.</label>
+
+                <a type="button" class="form-control btn btn-primary waves-effect waves-light "
+                  (click)="owner_factor_prefactor()">
+                  <span class="btn-label"><i class="fas fa-file-alt"></i>
+                  </span>فاکتور مشتری</a>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- Tabs Header - Minton FGD Style -->
+    <ul class="nav nav-pills navtab-bg nav-justified">
+
+      @for (tab of tabs; track tab.id) {
+      <li class="nav-item">
+        <a class="nav-link" [class.active]="activeTab === tab.id" (click)="activeTab = tab.id">
+          {{ tab.title }}
+        </a>
+      </li>
+      }
+
+    </ul>
+
+  </div>
+
+  <!-- Tabs Content -->
+  <div class="card-body">
+
+    @switch (activeTab) {
+
+    @case ('detail') {
+    <app-autletter-item [ObjectRef]="LetterRef"></app-autletter-item>
+    }
+
+
+    @case ('chat') {
+    <app-autletter-chat [ObjectRef]="LetterRef"></app-autletter-chat>
+    }
+
+
+
+    @case ('attach') {
+    <app-kowsar-attach [ObjectRef]="LetterRef" [ClassName]="'AutLetter'"></app-kowsar-attach>
+    }
+    }
+
+  </div>
+</div>
+
+<div class="modal fade" id="ownerfactorlist" tabindex="-1" aria-labelledby="ownerfactorlistLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="ownerfactorlistLabel">لیست فاکتور های {{OwnerName}} </h5>
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="ownerfactorlist_dialog_close()">
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        @if (!CustomerCode() || +CustomerCode() === 0) {
+        <div class="text-center">
+          <h4>این اجرای پایه به عنوان مشتری تعریف نشده</h4>
+        </div>
+        }
+
+        @if (+CustomerCode() > 0) {
+        <div class="text-center">
+
+          <!-- ====== FACTOR ====== -->
+          <h4 class="mt-2">فاکتور</h4>
+
+          <!-- گرید همیشه ساخته می‌شود -->
+          <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
+            <ag-grid-angular [columnDefs]="columnDefs2" [rowData]="records_ownerfactorlist" [gridOptions]="gridOptions"
+              (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()"
+              class="w-100 h-100">
+            </ag-grid-angular>
+          </div>
+
+          @if (!loading_cust_factor && (!records_ownerfactorlist || records_ownerfactorlist.length === 0)) {
+          <h4 class="mt-2">فاکتوری ندارد</h4>
+          }
+
+          <!-- ====== PREFACTOR ====== -->
+          <h4 class="mt-4">پیش فاکتور</h4>
+
+          <!-- گرید همیشه ساخته می‌شود -->
+          <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
+            <ag-grid-angular [columnDefs]="columnDefs3" [rowData]="records_ownerprefactorlist"
+              [gridOptions]="gridOptions" (gridReady)="onGridReady($event, 3)"
+              (firstDataRendered)="gridApi3?.sizeColumnsToFit()" class="w-100 h-100">
+            </ag-grid-angular>
+          </div>
+
+          @if (!loading_cust_prefactor && (!records_ownerprefactorlist || records_ownerprefactorlist.length === 0)) {
+          <h4 class="mt-2">پیش فاکتوری ندارد</h4>
+          }
+
+        </div>
+        }
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="ownerfactorlist_dialog_close()">
+          بستن
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

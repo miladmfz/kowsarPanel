@@ -1,320 +1,256 @@
+<!-- =============================================================== -->
+<!-- 🧭 منوی کناری (Sidebar Component) -->
+<!-- توضیحات کلی:
+     این منو شامل لوگو، اطلاعات کاربر، وضعیت حضور و فهرست منوهای اصلی برنامه است.
+     ساختار پویا دارد و منوها بر اساس نقش کاربر (ادمین یا مشتری) نمایش داده می‌شوند.
+-->
+<!-- =============================================================== -->
+
 <div class="left-side-menu">
-  <div class="logo-box">
-    <a href="index.html" class="logo logo-dark text-center">
+
+  <!-- 🔹 لوگو -->
+  <div class="logo-box text-center">
+    <a routerLink="/" class="logo logo-dark">
       <span class="logo-sm">
-        <img src="./assets/images/logo-sm-dark.png" alt="" height="24" />
+        <img src="assets/images/logo-sm-dark.png" alt="Logo" height="24" />
       </span>
       <span class="logo-lg">
-        <img src="./assets/images/logo-dark.png" alt="" height="20" />
+        <img src="assets/images/logo-dark.png" alt="Logo" height="20" />
       </span>
     </a>
 
-    <a href="index.html" class="logo logo-light text-center">
+    <a routerLink="/" class="logo logo-light">
       <span class="logo-sm">
-        <img src="./assets/images/logo-sm.png" alt="" height="24" />
+        <img src="assets/images/logo-sm.png" alt="Logo" height="24" />
       </span>
       <span class="logo-lg">
-        <img src="./assets/images/logo-light.png" alt="" height="20" />
+        <img src="assets/images/logo-light.png" alt="Logo" height="20" />
       </span>
     </a>
-
   </div>
 
+  <!-- 🔹 محتوای داخلی منو -->
   <div class="h-100" data-simplebar>
-    <div class="user-box text-center">
-      @if (Imageitem.length>100) {
-        <img [src]="Imageitem" alt="No Photo" class="rounded-circle avatar-xl">
-      }
-      @if (Imageitem.length<100) {
-        <img src="./assets/images/KowsarSupport.png" alt="user-img" title="Mat Helme" class="rounded-circle avatar-xl">
-      }
-      <div class="dropdown">
-        <a href="#" class="text-reset dropdown-toggle h5 mt-2 mb-1 d-block fw-medium" data-bs-toggle="dropdown">
-          {{ PhFullName }}
-          <i class="fe-user me-1"></i>
-        </a>
+    <div class="user-box text-center border-bottom pb-3">
 
+      <!-- 👤 تصویر کاربر -->
+      <div class="avatar-lg mx-auto mb-2 position-relative">
+        @if (Imageitem && Imageitem.startsWith('data:image')) {
+        <img [src]="Imageitem" alt="user-image" class="img-thumbnail rounded-circle shadow-sm" />
+        } @else {
+        <img src="assets/images/KowsarSupport.png" alt="user-image" class="img-thumbnail rounded-circle shadow-sm" />
+        }
       </div>
 
+      <!-- 👤 نام کاربر -->
+      <h1 class="text-muted small mb-0">{{ PhFullName || '---' }}</h1>
 
-      @if (JobPersonRef.length>0) {
-        <div class="m-3 border-top pt-3">
-          <div class="dropdown mb-3">
-            <button class="btn btn-sm btn-outline-info dropdown-toggle w-100 text-center" type="button"
-              id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-              انتخاب وضعیت
-            </button>
-            <ul class="dropdown-menu w-100 text-center" aria-labelledby="statusDropdown">
-              <li><a class="dropdown-item" (click)="setStatus('1')">آزاد</a></li>
-              <!-- <li><a class="dropdown-item" (click)="setStatus('2')">در حال کار</a></li> -->
-              <li><a class="dropdown-item" (click)="setStatus('0')">عدم حضور</a></li>
-              <li><a class="dropdown-item" (click)="setStatus('3')">ناهار و نماز</a></li>
-              <!-- <li><a class="dropdown-item" (click)="setStatus('4')">مرخصی اداری</a></li>
-              <li><a class="dropdown-item" (click)="setStatus('5')">قطع برق و اینترنت</a></li> -->
-            </ul>
-          </div>
-          <div class="text-center">
-            @if (currentStatus === '1') {
-              <span class="badge bg-success fs-5 fw-bold px-3 py-2">آزاد</span>
-            }
-            @if (currentStatus === '2') {
-              <span class="badge bg-warning text-dark fs-5 fw-bold px-3 py-2">در
-                حال
-              کار</span>
-            }
-            @if (currentStatus === '0') {
-              <span class="badge bg-danger fs-5 fw-bold px-3 py-2">عدم
-              حضور</span>
-            }
-            @if (currentStatus === '3') {
-              <span class="badge bg-info text-dark fs-5 fw-bold px-3 py-2">ناهار
-                و
-              نماز</span>
-            }
-            <!-- <span *ngIf="currentStatus === '4'" class="badge bg-secondary text-dark fs-5 fw-bold px-3 py-2">مرخصی
-          اداری</span>
-          <span *ngIf="currentStatus === '5'" class="badge bg-secondary text-dark fs-5 fw-bold px-3 py-2">قطع برق و
-            اینترنت
-          </span> -->
+      <!-- 🟩 وضعیت حضور -->
+      @if (JobPersonRef?.length > 0) {
+      <div class="mt-3 border-top pt-3">
+        <button class="btn btn-sm btn-outline-info dropdown-toggle w-100" id="statusDropdown" data-bs-toggle="dropdown">
+          انتخاب وضعیت
+        </button>
+        <ul class="dropdown-menu w-100 text-center" aria-labelledby="statusDropdown">
+          <li><a class="dropdown-item" (click)="setStatus('1')">آزاد</a></li>
+          <li><a class="dropdown-item" (click)="setStatus('0')">عدم حضور</a></li>
+          <li><a class="dropdown-item" (click)="setStatus('3')">ناهار و نماز</a></li>
+        </ul>
+
+        <div class="mt-2">
+          @if (currentStatus === '1') {
+          <span class="badge bg-success fs-6 px-3 py-2">آزاد</span>
+          } @else if (currentStatus === '0') {
+          <span class="badge bg-danger fs-6 px-3 py-2">عدم حضور</span>
+          } @else if (currentStatus === '2') {
+          <span class="badge bg-warning text-dark fs-6 px-3 py-2">در حال کار</span>
+
+          } @else if (currentStatus === '3') {
+          <span class="badge bg-info text-dark fs-6 px-3 py-2">ناهار و نماز</span>
+          }
         </div>
       </div>
-    }
+      }
 
-    @if (CustName_Small.length > 0) {
-      <div class="m-3 border-top pt-3">
-        <p class="mb-1 text-muted small">نام مجموعه</p>
-        <h5 class="text-danger">{{ CustName_Small }}</h5>
-        <p class="mb-1 text-muted small">پشتیبانی</p>
-        <h5 class="text-danger">{{ Explain }}</h5>
+      <!-- 🧾 اطلاعات مشتری -->
+      @if (CustName_Small?.length > 0) {
+      <div class="mt-3 border-top pt-2 small text-muted">
+        <div>نام مجموعه: <span class="text-danger fw-semibold">{{ CustName_Small }}</span></div>
+        <div>پشتیبانی: <span class="text-primary fw-semibold">{{ Explain }}</span></div>
       </div>
-    }
+      }
+    </div>
 
+    <!-- =============================================================== -->
+    <!-- 📋 منوی اصلی -->
+    <!-- =============================================================== -->
+    <div id="sidebar-menu">
+      <ul id="side-menu" class="list-unstyled">
+        <li class="menu-title">منوی برنامه</li>
 
-  </div>
+        <!-- 🏠 داشبورد -->
+        <li>
+          <a [routerLink]="['/dashboard']" routerLinkActive="active" class="waves-effect">
+            <i class="ri-dashboard-line"></i>
+            <span>داشبورد</span>
+          </a>
+        </li>
 
-
-  <div id="sidebar-menu">
-    <ul id="side-menu">
-      <li class="menu-title">منوی برنامه</li>
-
-      <li>
-        <a [routerLink]="['/dashboard']" routerLinkActive="active" data-bs-toggle="collapse" aria-expanded="false"
-          aria-controls="sidebarDashboards" class="waves-effect">
-          <i class="ri-dashboard-line"></i>
-          <span> داشبورد </span>
-        </a>
-      </li>
-
-      @if (IsCustomerBuild) {
+        <!-- 💰 فروش (فقط برای مشتریان) -->
+        @if (IsCustomerBuild) {
         <li>
           <a href="#factor" data-bs-toggle="collapse" aria-expanded="false" aria-controls="factor">
             <i class="fas fa-cash-register"></i>
             <span>فروش</span>
             <span class="menu-arrow"></span>
           </a>
-          <div class="collapse" id="factor">
+          <div class="collapse" id="factor" data-bs-parent="#side-menu">
             <ul class="nav-second-level">
-              <li>
-                <a [routerLink]="['/factor/factor-list']">لیست فاکتور </a>
-              </li>
-              <li>
-                <a [routerLink]="['/factor/prefactor-list']">لیست پیش فاکتور </a>
-              </li>
+              <li><a [routerLink]="['/accounting/factor-list']">لیست فاکتور</a></li>
+              <li><a [routerLink]="['/accounting/prefactor-list']">لیست پیش‌فاکتور</a></li>
             </ul>
           </div>
         </li>
-      }
+        }
 
 
-
-      @if (JobPersonRef.length>0) {
+        @if (JobPersonRef?.length > 0) {
         <li>
-          <a href="#kowsar" data-bs-toggle="collapse" aria-expanded="false" aria-controls="kowsar">
+          <a href="#accounting" data-bs-toggle="collapse" aria-expanded="false" aria-controls="accounting">
             <i class="ri-layout-line"></i>
             <span>بازرگانی کوثر</span>
             <span class="menu-arrow"></span>
           </a>
-          <div class="collapse" id="kowsar">
+          <div class="collapse" id="accounting" data-bs-parent="#side-menu">
             <ul class="nav-second-level">
-              <li>
-                <a [routerLink]="['/kowsar/good-list']" routerLinkActive="active"> مدیریت کالا </a>
-              </li>
-              <li>
-                <a [routerLink]="['/kowsar/goodsgrp-list']" routerLinkActive="active"> گروه کالایی
-                </a>
-              </li>
+              <li><a [routerLink]="['/accounting/good-list']" routerLinkActive="active">مدیریت کالا</a></li>
+              <!-- <li><a [routerLink]="['/kowsar/goodsgrp-list']" routerLinkActive="active">گروه کالایی</a></li> -->
             </ul>
           </div>
         </li>
-      }
-
-
-
-      <li>
-
-        <a [routerLink]="['application/ocr-detail']" routerLinkActive="active"> بایگانی </a>
-      </li>
-
-      @if (array_applications.length>0) {
-        @if (JobPersonRef.length>0) {
-          <li>
-            <a href="#application" data-bs-toggle="collapse" aria-expanded="false" aria-controls="application">
-              <i class="ri-apps-line"></i>
-              <span>نرم افزار های جانبی</span>
-              <span class="menu-arrow"></span>
-            </a>
-            <div class="collapse" id="application">
-              <ul class="nav-second-level">
-                @if (appbroker.length>0) {
-                  <li>
-                    <a [routerLink]="['/application/broker-detail']" routerLinkActive="active">
-                    بازاریابی </a>
-                  </li>
-                }
-                @if (appocr.length>0) {
-                  <li>
-                    <a [routerLink]="['application/ocr-detail']" routerLinkActive="active">
-                    بایگانی </a>
-                  </li>
-                }
-                @if (apporder.length>0) {
-                  <li>
-                    <a [routerLink]="['application/order-detail']" routerLinkActive="active">
-                    سفارشگیر </a>
-                  </li>
-                }
-              </ul>
-            </div>
-          </li>
         }
-      }
 
 
+        <!--   نرم‌افزارهای جانبی -->
 
-      <li>
-        <a href="#support" data-bs-toggle="collapse" aria-expanded="false" aria-controls="support">
-          <i class=" ri-customer-service-2-line"></i>
-          <span>پشتیبانی</span>
-          <span class="menu-arrow"></span>
-        </a>
-        <div class="collapse" id="support">
-          <ul class="nav-second-level">
+        <!-- @if (array_applications.length>0 && JobPersonRef?.length > 0) {
+        <li>
+          <a href="#application" data-bs-toggle="collapse" aria-expanded="false" aria-controls="application">
+            <i class="ri-apps-line"></i>
+            <span>نرم‌افزارهای جانبی</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="application" data-bs-parent="#side-menu">
+            <ul class="nav-second-level">
 
+              @if (appbroker?.length > 0) {
+              <li><a [routerLink]="['/module/broker-app']" routerLinkActive="active">بازاریابی</a></li>
 
-            @if (JobPersonRef.length>0) {
-              <li>
-                <a [routerLink]="['/support/support-factor-edit']" routerLinkActive="active">فاکتور
-                پشتیبانی</a>
-              </li>
-              <li>
-                <a [routerLink]="['/support/support-factor-list']" routerLinkActive="active">لیست
-                فاکتور پشتیبانی </a>
-              </li>
-              <li>
-                <a [routerLink]="['/support/report-customer']" routerLinkActive="active">گزارش
-                مشتریان</a>
-              </li>
-              <li>
-                <a [routerLink]="['/support/leavereq-list']" routerLinkActive="active">لیست
-                مرخصی</a>
-              </li>
-              @if (PhAddress3=='100') {
-                <li>
-                  <a [routerLink]="['/support/task-list']" routerLinkActive="active">لیست
-                  خدمات</a>
-                </li>
               }
-              @if (PhAddress3=='100') {
-                <li>
-                  <a [routerLink]="['/support/supgood-list']" routerLinkActive="active">لیست
-                  کالاها</a>
-                </li>
+              @if (appocr?.length > 0) {
+              <li><a [routerLink]="['/module/ocr-app']" routerLinkActive="active">بایگانی</a></li>
+
               }
-              <li>
-                <a [routerLink]="['/support/customer-list']" routerLinkActive="active">لیست
-                مشتریان</a>
-              </li>
-              <li>
-                <a [routerLink]="['/support/central-list']" routerLinkActive="active">لیست اجزای
-                پایه</a>
-              </li>
-            }
+              @if (apporder?.length > 0) {
+              <li><a [routerLink]="['/module/order-app']" routerLinkActive="active">سفارشگیر</a></li>
+
+              }
+            </ul>
+          </div>
+        </li>
+        } -->
+
+        <!-- 🧰 پشتیبانی -->
+        <li>
+          <a href="#support" data-bs-toggle="collapse" aria-expanded="false" aria-controls="support">
+            <i class="ri-customer-service-2-line"></i>
+            <span>پشتیبانی</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="support" data-bs-parent="#side-menu">
+            <ul class="nav-second-level">
+
+              @if (JobPersonRef?.length > 0) {
+              <li><a [routerLink]="['/internal/internal-factors-edit']">فاکتور پشتیبانی</a></li>
+              <li><a [routerLink]="['/internal/internal-factors-list']">لیست فاکتور پشتیبانی</a></li>
+              <li><a [routerLink]="['/support/leaverequest-list']">لیست مرخصی</a></li>
+
+              @if (PhAddress3 === '100') {
+              <li><a [routerLink]="['/internal/internal-task-list']">لیست خدمات</a></li>
+              <li><a [routerLink]="['/internal/internal-good-list']">لیست کالاها</a></li>
+              }
+
+              <li><a [routerLink]="['/internal/internal-customer-list']">لیست مشتریان</a></li>
+              <li><a [routerLink]="['/internal/internal-report']">گزارش پشتیبانی کوثر</a></li>
+
+              }
+
+              <li><a [routerLink]="['/support/letter-insert']">ایجاد تیکت جدید</a></li>
+              <li><a [routerLink]="['/support/letter-list']">لیست تمامی تیکت‌ها</a></li>
+
+              @if (JobPersonRef?.length > 0) {
+              <li><a [routerLink]="['/support/letter-mine']">وضعیت تیکت‌های من</a></li>
+              }
+            </ul>
+          </div>
+        </li>
+
+        @if (ShowHoghogh) {
+        <li>
+          <a href="#salary" data-bs-toggle="collapse" aria-expanded="false" aria-controls="salary">
+            <i class="ri-customer-service-2-line"></i>
+            <span>حقوق دستمزد</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="salary" data-bs-parent="#side-menu">
+            <ul class="nav-second-level">
+
+              <li><a [routerLink]="['/support/employe-list']">کارمندان</a></li>
+              <li><a [routerLink]="['/support/monthsummary-list']">لیست ماه ها</a></li>
+              <li><a [routerLink]="['/support/salarysummary-list']">لیست حقوق</a></li>
+
+            </ul>
+          </div>
+        </li>
+        }
 
 
-            <li>
-              <a [routerLink]="['/support/leavereq-list']" routerLinkActive="active">لیست مرخصی</a>
-            </li>
-            <li>
-              <a [routerLink]="['/support/letter-insert']" routerLinkActive="active"> ایجاد تیکت جدید
-              </a>
-            </li>
-            <li>
-              <a [routerLink]="['/support/letter-list']" routerLinkActive="active"> لیست تمامی تیکت ها
-              </a>
-            </li>
-
-            @if (JobPersonRef.length>0) {
-              <li>
-                <a [routerLink]="['/support/letter-mywork']" routerLinkActive="active"> وضعیت تیکت
-                های من </a>
-              </li>
-            }
-
-          </ul>
-        </div>
-      </li>
 
 
-      @if (JobPersonRef.length>0) {
+
+        <!-- 👨‍💻 توسعه نرم‌افزار -->
+        @if (JobPersonRef?.length > 0) {
         <li>
           <a href="#manager" data-bs-toggle="collapse" aria-expanded="false" aria-controls="manager">
             <i class="ri-code-box-line"></i>
-            <span>توسعه نرم افزار</span>
+            <span>توسعه نرم‌افزار</span>
             <span class="menu-arrow"></span>
           </a>
-          <div class="collapse" id="manager">
+          <div class="collapse" id="manager" data-bs-parent="#side-menu">
             <ul class="nav-second-level">
-              <li>
-                <a [routerLink]="['/manager/application-list']" routerLinkActive="active"> ماژول های
-                جانبی </a>
-              </li>
-              <li>
-                <a [routerLink]="['/manager/website-list']" routerLinkActive="active"> وب سایت ها
-                </a>
-              </li>
-              <li>
-                <a [routerLink]="['/manager/application-report']" routerLinkActive="active"> گزارش
-                ماژول های جانبی</a>
-              </li>
-              <li>
-                <a [routerLink]="['/manager/panel-log']" routerLinkActive="active"> لاگ سرور </a>
-              </li>
+              <li><a [routerLink]="['/internal/internal-apps-list']">ماژول‌های جانبی</a></li>
+              <li><a [routerLink]="['/internal/internal-website-list']">وب‌سایت‌ها</a></li>
+              <li><a [routerLink]="['/internal/weblog']">لاگ سرور</a></li>
             </ul>
           </div>
         </li>
-      }
+        }
 
-
-      <li>
-        <a href="#document" data-bs-toggle="collapse" aria-expanded="false" aria-controls="document">
-          <i class="ri-folder-open-line"></i>
-          <span>مستندات</span>
-          <span class="menu-arrow"></span>
-        </a>
-        <div class="collapse" id="document">
-          <ul class="nav-second-level">
-
-            <li>
-              <a [routerLink]="['/document/download-list']" routerLinkActive="active">دانلود ها</a>
-            </li>
-            <li>
-              <a [routerLink]="['/document/education-list']" routerLinkActive="active">اموزش ها</a>
-            </li>
-          </ul>
-        </div>
-      </li>
-    </ul>
+        <!-- 📚 مستندات -->
+        <!-- <li>
+          <a href="#document" data-bs-toggle="collapse" aria-expanded="false" aria-controls="document">
+            <i class="ri-folder-open-line"></i>
+            <span>مستندات</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="document" data-bs-parent="#side-menu">
+            <ul class="nav-second-level">
+              <li><a [routerLink]="['/document/download-list']">دانلودها</a></li>
+              <li><a [routerLink]="['/document/education-list']">آموزش‌ها</a></li>
+            </ul>
+          </div>
+        </li> -->
+      </ul>
+    </div>
   </div>
-  <div class="clearfix"></div>
-</div>
 </div>

@@ -1,0 +1,24 @@
+<!-- =============================================================== -->
+<!-- 📘 Leave Grid View Template -->
+<!-- توضیحات کلی:
+     این بخش برای نمایش وضعیت گرید مرخصی کارشناسان طراحی شده است.
+     شامل سه حالت مختلف است:
+     1️⃣ حالت در حال بارگذاری
+     2️⃣ حالت بدون داده
+     3️⃣ حالت نمایش گرید داده‌ها -->
+<!-- =============================================================== -->
+
+<!-- =============================================================== -->
+<!-- 🌀 حالت در حال بارگذاری -->
+<!-- =============================================================== -->
+
+@if (records.length > 0) {
+<div class="ag-container" style="height: 250px; border-radius: 8px; overflow: hidden;">
+
+
+  <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" (gridReady)="onGridReady($event, 1)"
+    [gridOptions]="gridOptions" class="w-100 h-100" (firstDataRendered)="gridApi1?.sizeColumnsToFit()">
+  </ag-grid-angular>
+
+</div>
+}

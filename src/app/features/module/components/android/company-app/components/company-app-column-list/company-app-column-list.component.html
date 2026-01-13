@@ -1,0 +1,150 @@
+<div>
+
+
+  <div class="mt-5 mb-3">
+    <div class="row justify-content-between">
+      <div class="col-md-4">
+        <h3 class="card-title align-items-start flex-column">
+          <span class="card-label">تنظیم جدول اپلیکیشن :</span>
+        </h3>
+      </div>
+      <div class="col-md-2">
+        <div>
+          <button class="btn btn-success text-white" [routerLink]="['/application/company-column-edit']">ایجاد
+            رکورد
+            جدید</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <!-- End::header Table  -->
+  <!-- begin::Table container -->
+  <div class="table-responsive">
+
+    <table class="table table-bordered align-middle gs-0 gy-4">
+      <thead>
+        <tr class="fw-bolder ">
+          <th class="min-w-15px">کد</th>
+          <th class="min-w-50px">نام ستون</th>
+          <th class="min-w-50px">نام فیلد</th>
+          <th class="min-w-30px">نوع کالا</th>
+          <th class="min-w-30px">لیست ایتم</th>
+          <th class="min-w-30px">جزییات</th>
+          <th class="min-w-30px">سبد خرید</th>
+          <th class="min-w-30px">جستجو پیشرفته</th>
+          <th class="min-w-50px">نوع ستون</th>
+          <th class="min-w-50px">صورت</th>
+
+          <!-- <th class="min-w-50px">Actions </th> -->
+        </tr>
+      </thead>
+      @for (item of BasketColumns; track item; let i = $index) {
+      <tbody>
+        <tr>
+          <td>{{ item.AppBasketColumnCode }}</td>
+          <td>{{ item.ColumnDesc }}</td>
+          <td>{{ item.ColumnName }}</td>
+          <td>{{ item.ObjectType }}</td>
+          <td>
+            @if (item.ListVisible == 0) {
+            <!-- Content when ListVisible is zero -->
+            محاسباتی
+            } @else {
+            @if (item.ListVisible > 0 && item.ListVisible < 10) { نمایش و جستجو } @if (item.ListVisible> 10) {
+              <!-- Content when ListVisible is positive -->
+              فقط نمایش
+              }
+              @if (item.ListVisible < 0) { <!-- Content when ListVisible is positive -->
+                }
+                }
+          </td>
+          <td>
+            @if (item.DetailVisible == 0) {
+            <!-- Content when DetailVisible is zero -->
+            محاسباتی
+            } @else {
+            @if (item.DetailVisible > 0) {
+            <!-- Content when DetailVisible is positive -->
+            فقط نمایش
+            }
+            @if (item.DetailVisible < 0) { <!-- Content when DetailVisible is negative -->
+              }
+              }
+          </td>
+          <td>
+            @if (item.BasketVisible == 0) {
+            <!-- Content when BasketVisible is zero -->
+            محاسباتی
+            } @else {
+            @if (item.BasketVisible > 0) {
+            <!-- Content when BasketVisible is positive -->
+            فقط نمایش
+            }
+            @if (item.BasketVisible < 0) { <!-- Content when BasketVisible is negative -->
+              }
+              }
+          </td>
+          <td>
+            @if (item.SearchVisible == 0) {
+            <!-- Content when SearchVisible is zero -->
+            محاسباتی
+            } @else {
+            @if (item.SearchVisible > 0) {
+            <!-- Content when SearchVisible is positive -->
+            فقط نمایش
+            }
+            @if (item.SearchVisible < 0) { <!-- Content when SearchVisible is negative -->
+              }
+              }
+          </td>
+          <td>
+            @if (item.ColumnType == 0) {
+            <!-- Content when ColumnType is zero -->
+            متن
+            } @else {
+            @if (item.ColumnType == 1) {
+            <!-- Content when ColumnType is positive -->
+            عدد صحیح
+            }
+            @if (item.ColumnType == 2) {
+            <!-- Content when ColumnType is negative -->
+            عدد اعشاری
+            }
+            }
+          </td>
+          <td>
+            @if (item.OrderIndex == 0) {
+            <!-- Content when OrderIndex is zero -->
+            {{''}}
+            } @else {
+            @if (item.OrderIndex == -3) {
+            <!-- Content when OrderIndex is negative -->
+            اولویت سوم
+            }
+            @if (item.OrderIndex == -2) {
+            <!-- Content when OrderIndex is negative -->
+            اولویت اول
+            }
+            @if (item.OrderIndex == -1) {
+            <!-- Content when OrderIndex is negative -->
+            اولویت دوم
+            }
+            }
+          </td>
+          <!-- <td>
+                  <button cButton color="info" variant="ghost">edit</button>
+                  <button cButton color="danger" variant="ghost">delete</button>
+                </td> -->
+        </tr>
+      </tbody>
+      }
+    </table>
+  </div>
+  <!-- end::Table container -->
+</div>
+<!-- end::DBSetup -->

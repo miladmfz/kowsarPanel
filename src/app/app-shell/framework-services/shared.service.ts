@@ -1,48 +1,82 @@
-import { BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
+  /** 🔹 وضعیت منوی کناری (باز/بسته) */
+  private sidebarState = new BehaviorSubject<boolean>(false);
+  sidebarState$ = this.sidebarState.asObservable();
 
-  data: any;
-  _dataBS = new BehaviorSubject([]);
+  /** 🔹 وضعیت تم (روشن/تیره) */
+  private themeMode = new BehaviorSubject<'light' | 'dark'>('light');
+  themeMode$ = this.themeMode.asObservable();
 
+  /** 🔹 پیام‌های اشتراکی (برای هماهنگی بین کامپوننت‌ها) */
+  private messageSource = new BehaviorSubject<string>('');
+  message$ = this.messageSource.asObservable();
 
-  private _sharedData$ = new BehaviorSubject<any>(null);
-  sharedData$ = this._sharedData$.asObservable();
+  /** 🔹 داده موقت برای انتقال بین صفحات */
+  private tempData: any = null;
 
+  /** 🔁 رویدادهای عمومی (مثل Refresh) بین بخش‌های مختلف برنامه */
+  private refreshAllActionsSource = new Subject<string>();
+  RefreshAllActions$ = this.refreshAllActionsSource.asObservable();
 
-  private sidebarActionSubject = new BehaviorSubject<string | null>(null);
-  sidebarAction$ = this.sidebarActionSubject.asObservable();
+  constructor() { }
 
-  private RefreshAll = new BehaviorSubject<string | null>(null);
-  RefreshAllActions$ = this.RefreshAll.asObservable();
-
-
-  constructor() {
-    this._dataBS.next(this.data);
+  // === 🧭 Sidebar ===
+  toggleSidebar(): void {
+    this.sidebarState.next(!this.sidebarState.value);
   }
 
-  setData(data) {
-    this.data = data;
-    this._dataBS.next(data);
+  setSidebarState(isOpen: boolean): void {
+    this.sidebarState.next(isOpen);
   }
 
-  emptyData() {
-    this.data = [];
-    this._dataBS.next(this.data);
-  }
-  sendData(data: any) {
-    this._sharedData$.next(data);
+  // === 🎨 Theme ===
+  setTheme(mode: 'light' | 'dark'): void {
+    this.themeMode.next(mode);
+    localStorage.setItem('theme', mode);
   }
 
-  // triggerSidebarAction(action: string) {
-  //   this.sidebarActionSubject.next(action);
-  // }
+  getTheme(): 'light' | 'dark' {
+    return (localStorage.getItem('theme') as 'light' | 'dark') || 'light';
+  }
+
+  // === 💬 Message ===
+  sendMessage(message: string): void {
+    this.messageSource.next(message);
+  }
+
+  clearMessage(): void {
+    this.messageSource.next('');
+  }
+
+  // ===   Temp data storage ===
+  setTempData(data: any): void {
+    this.tempData = data;
+  }
+
+  getTempData<T = any>(): T | null {
+    return this.tempData;
+  }
+
+  clearTempData(): void {
+    this.tempData = null;
+  }
+
+  // === 🔁 Refresh Action ===
+  /** 🔔 ارسال رویداد رفرش به سایر کامپوننت‌ها */
+  triggerRefresh(action: string = 'refresh'): void {
+    this.refreshAllActionsSource.next(action);
+  }
+  private actionTrigger = new Subject<string>();
+  actionTriggered$ = this.actionTrigger.asObservable();
 
   triggerActionAll(action: string) {
-    this.RefreshAll.next(action);
+    this.actionTrigger.next(action);
   }
+
 }

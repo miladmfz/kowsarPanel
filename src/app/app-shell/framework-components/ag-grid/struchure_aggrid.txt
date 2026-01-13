@@ -1,0 +1,34 @@
+ag-grid/
+│
+├── base/
+│   ├── core/                                ← 💡 منطق اصلی پایه تقسیم‌شده
+│   │   ├── ag-grid-core.component.ts        ← تنظیمات عمومی (locale, defaultColDef, theme)
+│   │   ├── ag-grid-api.component.ts         ← مدیریت gridApiها و gridColumnApiها (1 تا 6)
+│   │   ├── ag-grid-export.component.ts      ← خروجی CSV / Excel
+│   │   ├── ag-grid-events.component.ts      ← مدیریت eventها، resize و context menu
+│   │   └── ag-grid-state.component.ts       ← ذخیره/بازیابی state ستون‌ها (localStorage)
+│   │
+│   ├── ag-grid-base.component.ts            ← ترکیب نهایی از core/*
+│   ├── ag-grid-module.ts                    ← export تجمیعی برای استفاده در featureها
+│   ├── grid-funcs.ts                        ← توابع کمکی عمومی (formatNumber, price,...)
+│   ├── locale.fa.ts                         ← ترجمه فارسی
+│   └── index.ts                             ← export مرکزی برای سایر ماژول‌ها
+│
+├── renderers/                               ←   رندررهای سلول‌ها
+│   ├── edit-delete-cell-btn.ts
+│   ├── go-to-document-cell-btn-renderer.ts
+│   ├── image-cell-renderer.ts
+│   ├── is-canceled-label-cell.ts
+│   ├── tax-state-label-cell.ts
+│   ├── validation-state-label-cell.ts
+│   ├── confirmation-state-label-cell.ts
+│   └── customPinnedRowRenderer.component.ts
+│
+├── tools/                                   ←   ابزارهای جدول (دکمه‌ها و تنظیمات)
+│   ├── ag-grid-tools.component.ts
+│   └── ag-grid-tools.component.html
+│
+└── services/                                ← 🔧 سرویس‌ها
+    ├── agGridState.service.ts
+    ├── grid-funcs.ts
+    └── ag-grid-memory-cache.service.ts      ← 🆕 حافظه موقت بین routeها (برای نگهداری داده‌ها)
