@@ -82,7 +82,7 @@ export class InternalTaskListComponent
       {
         headerName: 'عملیات',
         pinned: 'left',
-        width: 200,
+        minWidth: 250,
         cellRenderer: CellActionTaskList,
         cellRendererParams: {
           editUrl: '/internal/internal-task-edit'

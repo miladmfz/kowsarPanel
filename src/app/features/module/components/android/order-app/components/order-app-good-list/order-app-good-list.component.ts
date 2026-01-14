@@ -66,7 +66,7 @@ export class OrderAppGoodListComponent extends AgGridBaseComponent
         cellRendererParams: {
           editUrl: '/application/order-good-edit',
         },
-        width: 80,
+        minWidth: 80,
       },
 
 

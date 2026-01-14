@@ -95,7 +95,7 @@ export class OrderAppCustomerComponent extends AgGridBaseComponent
         field: 'عملیات',
         pinned: 'left',
         cellRenderer: CellActionOrderCustomer,
-        width: 100,
+        minWidth: 100,
       },
       {
         field: 'CustomerName',

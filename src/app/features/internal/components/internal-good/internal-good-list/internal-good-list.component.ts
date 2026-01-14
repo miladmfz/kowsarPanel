@@ -51,7 +51,7 @@ export class InternalGoodListComponent extends AgGridBaseComponent
       {
         headerName: 'عملیات',
         pinned: 'left',
-        width: 80,
+        minWidth: 80,
         cellRenderer: CellActionInternalGoodList,
         cellRendererParams: {
           editUrl: '/internal/internal-good-edit'

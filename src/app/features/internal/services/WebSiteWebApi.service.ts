@@ -27,22 +27,6 @@ export class WebSiteWebApiService {
 
 
 
-
-
-
-
-  ////////////////////////////////////////////////////////////////////
-
-  // GetAppActivation(): Observable<any[]> {
-  //   return this.client.get<any[]>(this.baseUrl + "GetAppActivation", { headers: this.headers });
-  // }
-
-
-  // GetAppActivationByCode(ActivationCode: string): Observable<any[]> {
-  //   const params = new HttpParams().append('ActivationCode', ActivationCode)
-  //   return this.client.get<any[]>(this.baseUrl + "GetAppActivationByCode", { headers: this.headers, params: params })
-  // }
-
   WebSiteInsert(command): Observable<any[]> {
 
     return this.client.post<any[]>(this.baseUrl + "WebSiteInsert", command, { headers: this.headers })

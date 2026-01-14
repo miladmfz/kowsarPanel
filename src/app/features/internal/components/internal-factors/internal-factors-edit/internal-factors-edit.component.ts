@@ -406,7 +406,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
         pinned: 'left',
         cellRenderer: CellActionSupportGoodEdit,
         cellRendererParams: { editUrl: '/support/letter-panel' },
-        width: 100,
+        minWidth: 100,
 
       },
       {
@@ -425,7 +425,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
         pinned: 'left',
         cellRenderer: CellActionSupportFactorRowsEdit,
         cellRendererParams: { editUrl: '/support/letter-panel' },
-        width: 100,
+        minWidth: 100,
       },
       {
         field: 'GoodName',
@@ -442,7 +442,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
         pinned: 'left',
         cellRenderer: CellActionSupportFactorCustomerEdit,
         cellRendererParams: { editUrl: '/support/letter-panel' },
-        width: 80,
+        minWidth: 80,
       },
       {
         field: 'CustName_Small',
@@ -512,7 +512,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
         pinned: 'left',
         cellRenderer: CellActionSupportAutletterFactorList,
         cellRendererParams: { editUrl: '/support/letter-panel' },
-        width: 80,
+        minWidth: 80,
       },
       {
         field: 'RowLetterDate',

@@ -48,7 +48,7 @@ export class InternalWebsiteListComponent
     this.columnDefs1 = [
       {
         field: 'عملیات',
-        width: 150,
+        minWidth: 150,
         pinned: 'left',
         cellRenderer: CellActionWebSiteList,
         cellRendererParams: {

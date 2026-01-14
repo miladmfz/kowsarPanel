@@ -126,7 +126,7 @@ export class KowsarReportComponent extends AgGridBaseComponent implements OnInit
     // ===============================================================
     private initColumns(): void {
         this.columnDefs1 = [
-            { field: 'عملیات', pinned: 'left', cellRenderer: CellActionKowsarReport, width: 100 },
+            { field: 'عملیات', pinned: 'left', cellRenderer: CellActionKowsarReport, minWidth: 100 },
             { field: 'Name', headerName: 'کارشناس', minWidth: 120 },
             { field: 'تاریخ', cellRenderer: CellDateMinDate, minWidth: 120 },
             { field: 'TotalLetters', headerName: 'کل ارجاعات', minWidth: 110 },

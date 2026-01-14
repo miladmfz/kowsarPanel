@@ -77,7 +77,7 @@ export class GoodListComponent extends AgGridBaseComponent
             pinned: 'left',
             cellRenderer: CellActionGoodList,
 
-            width: 100,
+            minWidth: 100,
             sortable: false,
             filter: false,
             // resizable: false

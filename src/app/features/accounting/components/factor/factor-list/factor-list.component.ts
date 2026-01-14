@@ -201,7 +201,7 @@ export class FactorListComponent extends AgGridBaseComponent
             field: 'عملیات',
             pinned: 'left',
             cellRenderer: CellActionFactorList,
-            width: 150,
+            minWidth: 150,
             sortable: false,
             filter: false
           });

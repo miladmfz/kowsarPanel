@@ -152,7 +152,7 @@ export class AutletterPanelComponent extends AgGridBaseComponent implements OnIn
         cellRendererParams: {
           editUrl: '/support/letter-detail',
         },
-        width: 100,
+        minWidth: 100,
       },
       {
         field: 'FactorCode',
@@ -186,7 +186,7 @@ export class AutletterPanelComponent extends AgGridBaseComponent implements OnIn
         cellRendererParams: {
           editUrl: '/support/letter-panel',
         },
-        width: 100,
+        minWidth: 100,
       },
       {
         field: 'PreFactorCode',

@@ -183,7 +183,7 @@ export class InternalFactorsListComponent
             field: 'عملیات',
             pinned: 'left',
             cellRenderer: CellActionSupportFactorList,
-            width: 100,
+            minWidth: 100,
             sortable: false,
             filter: false
           });

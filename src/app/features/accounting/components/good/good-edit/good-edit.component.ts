@@ -1050,7 +1050,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         cellRendererParams: {
           editUrl: '/accounting/good-edit',
         },
-        width: 100
+        minWidth: 100
       },
       {
         field: 'Name',
@@ -1079,7 +1079,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         cellRendererParams: {
           editUrl: '/accounting/good-edit',
         },
-        width: 150
+        minWidth: 150
       },
       {
         field: 'عملیات',
@@ -1087,7 +1087,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         cellRendererParams: {
           editUrl: '/accounting/good-edit',
         },
-        width: 150
+        minWidth: 150
       },
       {
         field: 'ClassName',

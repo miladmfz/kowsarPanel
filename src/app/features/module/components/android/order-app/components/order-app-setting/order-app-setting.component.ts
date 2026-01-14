@@ -82,7 +82,7 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
         pinned: 'left',
         cellRenderer: CellActionOrderDbsetup,
 
-        width: 100,
+        minWidth: 100,
       },
       {
         field: 'KeyId',
@@ -128,7 +128,7 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
         pinned: 'left',
         cellRenderer: CellActionOrderPrinter,
 
-        width: 100,
+        minWidth: 100,
       },
       {
         field: 'PrinterName',

@@ -102,10 +102,6 @@ export class BrokerWebApiService {
     }
 
 
-    //------------------------------------------------
-
-
-
     BasketColumnCard(Where: string, AppType: string): Observable<any[]> {
         const params = new HttpParams().append('Where', Where).append('AppType', AppType)
         return this.client.get<any[]>(this.baseUrl + "BasketColumnCard", { headers: this.headers, params: params })
@@ -177,25 +173,6 @@ export class BrokerWebApiService {
         return this.client.post<any[]>(this.baseUrl + "UpdatePrinter", command, { headers: this.headers });
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     OcrFactorList(SearchTarget: string): Observable<any[]> {

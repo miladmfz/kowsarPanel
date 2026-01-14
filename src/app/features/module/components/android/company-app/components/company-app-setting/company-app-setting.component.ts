@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 import { CompanyWebApiService } from 'src/app/features/module/services/CompanyWebApi.service';
@@ -11,7 +11,7 @@ import { CompanyWebApiService } from 'src/app/features/module/services/CompanyWe
   standalone: true,
   imports: [
     CommonModule,
-
+    FormsModule,
     ReactiveFormsModule,
     RouterModule,
   ],

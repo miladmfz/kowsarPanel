@@ -216,7 +216,7 @@ export class InternalReportCustomerComponent
       {
         field: 'عملیات',
         pinned: 'left',
-        width: 250,
+        minWidth: 250,
         cellRenderer: CellActionReportCustomer
       },
       { field: 'CustomerName', headerName: 'نام مشتری', cellClass: 'text-center', minWidth: 150 },

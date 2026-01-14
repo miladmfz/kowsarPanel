@@ -321,7 +321,7 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
         pinned: 'left',
         cellRenderer: CellActionGoodEdit,
         cellRendererParams: { editUrl: '/support/letter-panel' },
-        width: 150,
+        minWidth: 150,
 
       },
       {
@@ -340,7 +340,7 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
         pinned: 'left',
         cellRenderer: CellActionFactorRowsEdit,
         cellRendererParams: { editUrl: '/support/letter-panel' },
-        width: 150,
+        minWidth: 150,
       },
       {
         field: 'GoodName',
@@ -405,7 +405,7 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
         pinned: 'left',
         cellRenderer: CellActionAutletterFactorList,
         cellRendererParams: { editUrl: '/support/letter-panel' },
-        width: 150,
+        minWidth: 150,
       },
       {
         field: 'RowLetterDate',

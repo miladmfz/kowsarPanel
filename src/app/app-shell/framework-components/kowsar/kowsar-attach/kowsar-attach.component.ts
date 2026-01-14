@@ -47,7 +47,7 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
   ngOnInit(): void {
 
     this.columnDefs6 = [
-      { field: 'عملیات', pinned: 'left', cellRenderer: CellActionKowsarAttach, width: 180 },
+      { field: 'عملیات', pinned: 'left', cellRenderer: CellActionKowsarAttach, minWidth: 180 },
       { field: 'Title', headerName: 'عنوان', minWidth: 130 },
       { field: 'FileName', headerName: 'نام فایل', minWidth: 150 },
       { field: 'CreationDate', headerName: 'تاریخ ایجاد', minWidth: 130 },

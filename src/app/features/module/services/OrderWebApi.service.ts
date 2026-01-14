@@ -28,9 +28,6 @@ export class OrderWebApiService {
 
 
 
-    //-*---------------------------------------------------
-
-
     OrderMizList(InfoState: string, MizType: string): Observable<any[]> {
         const params = new HttpParams().append('InfoState', InfoState).append('MizType', MizType)
         return this.client.get<any[]>(this.baseUrl + "OrderMizList", { headers: this.headers, params: params })

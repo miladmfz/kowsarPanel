@@ -316,23 +316,6 @@ export class SupportFactorWebApiService {
   }
 
 
-  // GetProperty(Where: string): Observable<any[]> {
-  //   const params = new HttpParams().append('Where', Where)
-  //   return this.client.get<any[]>(this.baseUrl + "GetProperty", { headers: this.headers, params: params })
-  // }
-
-
-  // Good_Insert(command): Observable<any[]> {
-  //   return this.client.post<any[]>(this.baseUrl + "GoodInsert", command, { headers: this.headers })
-  // }
-
-
-  // GetProperty(Where: string): Observable<any[]> {
-  //   const params = new HttpParams().append('Where', Where)
-  //   return this.client.get<any[]>(this.baseUrl + "GetProperty", { headers: this.headers, params: params })
-  // }
-
-
 }
 
 

@@ -78,7 +78,7 @@ export class AttendanceGridComponent extends AgGridBaseComponent implements OnIn
 
         // 🧱 تعریف ستون‌های گرید حضور کارشناسان
         this.columnDefs1 = [
-            { field: 'عملیات', pinned: 'left', cellRenderer: CellActionAttendancePanel, width: 180 },
+            { field: 'عملیات', pinned: 'left', cellRenderer: CellActionAttendancePanel, minWidth: 180 },
             { field: 'کارشناس', cellRenderer: CellNameAttendancePanel, cellClass: 'text-center', minWidth: 120 },
             { field: 'وضعیت حضور', cellRenderer: CellStatusAttendancePanel, cellClass: 'text-center', minWidth: 120 },
             { field: 'تاریخ', cellRenderer: CellDateAttendancePanel, cellClass: 'text-center', minWidth: 120 },

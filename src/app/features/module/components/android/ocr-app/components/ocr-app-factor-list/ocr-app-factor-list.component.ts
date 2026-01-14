@@ -74,7 +74,7 @@ export class OcrAppFactorListComponent extends AgGridBaseComponent
         cellRendererParams: {
           editUrl: '/application/ocr-factor-detail',
         },
-        width: 80,
+        minWidth: 80,
       },
 
 

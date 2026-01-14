@@ -109,7 +109,7 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
         pinned: 'left',
         cellRenderer: CellActionBrokerDbsetup,
 
-        width: 100,
+        minWidth: 100,
       },
       {
         field: 'KeyId',
@@ -155,7 +155,7 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
         pinned: 'left',
         cellRenderer: CellActionBrokerPrinter,
 
-        width: 100,
+        minWidth: 100,
       },
       {
         field: 'PrinterName',

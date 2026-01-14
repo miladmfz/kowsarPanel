@@ -325,7 +325,7 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
         pinned: 'left',
         cellRenderer: CellActionPreGoodEdit,
         cellRendererParams: { editUrl: '/support/letter-panel' },
-        width: 100,
+        minWidth: 100,
 
       },
       {
@@ -344,7 +344,7 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
         pinned: 'left',
         cellRenderer: CellActionPreFactorRowsEdit,
         cellRendererParams: { editUrl: '/support/letter-panel' },
-        width: 100,
+        minWidth: 100,
       },
       {
         field: 'GoodName',
@@ -409,7 +409,7 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
         pinned: 'left',
         cellRenderer: CellActionAutletterPreFactorList,
         cellRendererParams: { editUrl: '/support/letter-panel' },
-        width: 80,
+        minWidth: 80,
       },
       {
         field: 'RowLetterDate',

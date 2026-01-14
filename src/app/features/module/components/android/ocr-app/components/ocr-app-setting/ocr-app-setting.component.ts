@@ -88,7 +88,7 @@ export class OcrAppSettingComponent extends AgGridBaseComponent
         pinned: 'left',
         cellRenderer: CellActionOcrDbsetup,
 
-        width: 100,
+        minWidth: 100,
       },
       {
         field: 'KeyId',
@@ -134,7 +134,7 @@ export class OcrAppSettingComponent extends AgGridBaseComponent
         pinned: 'left',
         cellRenderer: CellActionOcrPrinter,
 
-        width: 100,
+        minWidth: 100,
       },
       {
         field: 'PrinterName',

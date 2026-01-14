@@ -133,7 +133,7 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
       {
         headerName: 'عملیات',
         pinned: 'left',
-        width: 150,
+        minWidth: 150,
         cellRenderer: CellActionCustomerFactor
       },
       { field: 'FactorDate', headerName: 'تاریخ فاکتور', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 130 },

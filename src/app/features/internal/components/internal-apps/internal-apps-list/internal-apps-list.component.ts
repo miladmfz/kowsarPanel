@@ -61,7 +61,7 @@ export class InternalAppsListComponent
         cellRendererParams: {
           editUrl: '/manager/application-form',
         },
-        width: 150,
+        minWidth: 150,
       },
       {
         field: 'ActivationCode',

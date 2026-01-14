@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CompanyWebApiService } from 'src/app/features/module/services/CompanyWebApi.service';
 import { Location } from '@angular/common';
@@ -14,6 +14,7 @@ import { Location } from '@angular/common';
 
     ReactiveFormsModule,
     RouterModule,
+    FormsModule
   ],
 })
 export class CompanyAppColumnEditComponent implements OnInit {

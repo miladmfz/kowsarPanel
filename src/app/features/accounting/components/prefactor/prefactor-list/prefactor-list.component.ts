@@ -151,7 +151,7 @@ export class PrefactorListComponent extends AgGridBaseComponent
             field: 'عملیات',
             pinned: 'left',
             cellRenderer: CellActionPreFactorList,
-            width: 150,
+            minWidth: 150,
             sortable: false,
             filter: false
           });
