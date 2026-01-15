@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
@@ -14,12 +14,14 @@ import { InternalAppsWebApiService } from '../../../services/InternalAppsWebApi.
 })
 export class InternalAppsEditComponent implements OnInit {
 
-  constructor(
-    private repo: InternalAppsWebApiService,
-    private readonly route: ActivatedRoute,
-    private readonly notificationService: NotificationService,
-    private readonly router: Router,
-  ) { }
+
+  private readonly router = inject(Router);
+  private readonly repo = inject(InternalAppsWebApiService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly notificationService = inject(NotificationService);
+
+
+  constructor() { }
 
   title = 'فرم اطلاعات اپلیکیشن';
   ActivationCode: string = '';

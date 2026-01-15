@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, inject, OnInit, Renderer2 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
@@ -25,17 +25,13 @@ import { AgGridModule } from 'ag-grid-angular';
 export class BrokerAppSettingComponent extends AgGridBaseComponent
   implements OnInit {
 
+  private readonly repo = inject(BrokerWebApiService);
+  private readonly sharedService = inject(SharedService);
+  private readonly notificationService = inject(NotificationService);
+  private readonly renderer = inject(Renderer2);
 
-  constructor(
-    private readonly router: Router,
-    private renderer: Renderer2,
-    private route: ActivatedRoute,
-    private fb: FormBuilder,
-    private repo: BrokerWebApiService,
-    private sharedService: SharedService,
-    private readonly notificationService: NotificationService,
 
-  ) {
+  constructor() {
     super();
   }
 

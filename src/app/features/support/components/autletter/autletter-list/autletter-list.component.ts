@@ -24,7 +24,6 @@ import { CellActionAutletterList } from './cell-action-autletter-list';
 import { CellStateAutletter } from './cell-state-autletter';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
-import { ThemeService } from 'src/app/app-shell/framework-services/ui/theme.service';
 
 //   Models
 import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
@@ -136,7 +135,6 @@ export class AutLetterListComponent extends AgGridBaseComponent implements OnIni
     private readonly repo = inject(AutletterWebApiService);
     private readonly router = inject(Router);
     private readonly notify = inject(NotificationService);
-    private readonly renderer = inject(Renderer2);
     private readonly loadingservice = inject(LoadingService);
 
     constructor() {

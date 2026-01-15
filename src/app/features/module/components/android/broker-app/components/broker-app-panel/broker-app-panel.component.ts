@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { BrokerWebApiService } from 'src/app/features/module/services/BrokerWebApi.service';
@@ -13,12 +13,9 @@ import { BrokerWebApiService } from 'src/app/features/module/services/BrokerWebA
   ],
 })
 export class BrokerAppPanelComponent implements OnInit {
+  private readonly repo = inject(BrokerWebApiService);
 
-  constructor(
-    private repo: BrokerWebApiService,
-    private route: ActivatedRoute,
-    private formBuilder: UntypedFormBuilder
-  ) { }
+  constructor() { }
 
 
   ListVisible_items: any[] = [];

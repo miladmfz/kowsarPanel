@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi.service';
 
 @Component({
@@ -11,11 +11,10 @@ import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi
   ],
 })
 export class OrderAppPanelComponent implements OnInit {
+  private readonly repo = inject(OrderWebApiService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-  constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private repo: OrderWebApiService,
-  ) { }
+  constructor() { }
 
 
   items1: any[] = [];

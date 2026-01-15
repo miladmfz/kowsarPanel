@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
@@ -30,12 +30,13 @@ import { CellActionPreFactorList } from './cell-action-prefactor-list';
 export class PrefactorListComponent extends AgGridBaseComponent
   implements OnInit, OnDestroy {
 
-  constructor(
-    private readonly router: Router,
-    private repo: PreFactorWebApiService,
-    private renderer: Renderer2,
-    private notificationService: NotificationService,
-  ) {
+  private readonly router = inject(Router);
+  private readonly repo = inject(PreFactorWebApiService);
+  private readonly notificationService = inject(NotificationService);
+  private readonly renderer = inject(Renderer2);
+
+
+  constructor() {
     super();
   }
 

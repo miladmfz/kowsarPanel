@@ -10,7 +10,7 @@
 =============================================================== */
 
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -27,8 +27,8 @@ import { NotificationService } from 'src/app/app-shell/framework-services/ui/not
 import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
 import { IDatepickerTheme, NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { LeaveRequestWebApiService } from '../../../services/LeaveRequestWebApi.service';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
     selector: 'app-leaverequest-list',
@@ -112,14 +112,16 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
     // ---------------------------------------------------------------
     //   Constructor
     // ---------------------------------------------------------------
-    constructor(
-        private repo: LeaveRequestWebApiService,
-        private router: Router,
-        private notify: NotificationService,
-        private renderer: Renderer2,
-        private loadingservice: LoadingService
 
-    ) {
+
+    private readonly router = inject(Router);
+    private readonly repo = inject(LeaveRequestWebApiService);
+    private readonly notificationService = inject(NotificationService);
+    private readonly loadingService = inject(LoadingService);
+    private readonly renderer = inject(Renderer2);
+
+
+    constructor() {
         super();
     }
 
@@ -138,7 +140,7 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
                 this.ToDayDate = data[0]?.TodeyFromServer ?? '';
                 this.loadinitialLeaveList();
             },
-            error: () => this.notify.error('❌ خطا در دریافت تاریخ امروز'),
+            error: () => this.notificationService.error('❌ خطا در دریافت تاریخ امروز'),
         });
     }
 
@@ -215,7 +217,7 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
             error: () => {
                 this.records = [];
                 this.loading = false;
-                this.notify.error('❌ خطا در دریافت لیست مرخصی‌ها');
+                this.notificationService.error('❌ خطا در دریافت لیست مرخصی‌ها');
             },
         });
     }
@@ -241,7 +243,7 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
             error: () => {
                 this.records = [];
                 this.loading = false;
-                this.notify.error('❌ خطا در دریافت لیست مرخصی‌ها');
+                this.notificationService.error('❌ خطا در دریافت لیست مرخصی‌ها');
             },
         });
     }
@@ -254,7 +256,7 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
         if (data.WorkFlowStatus === '0' || data.WorkFlowStatus === '3') {
             this.router.navigate(['/support/leaverequest-edit', data.LeaveRequestCode]);
         } else {
-            this.notify.warning('⛔ این مرخصی قابل ویرایش نیست');
+            this.notificationService.warning('⛔ این مرخصی قابل ویرایش نیست');
         }
     }
 
@@ -279,7 +281,7 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
             LeaveEndTime: data.LeaveEndTime,
         });
 
-        this.loadingservice.show()
+        this.loadingService.show()
         const filter = {
             StartDate: '',
             EndDate: '',
@@ -291,14 +293,14 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
         this.repo.GetLeaveRequest(filter).subscribe({
             next: (res: any) => {
                 this.records_leavedetails = res?.LeaveRequests ?? [];
-                this.loadingservice.hide()
+                this.loadingService.hide()
                 this.updateGridData(2, this.records_leavedetails);
 
                 this.openModal();
             },
             error: () => {
-                this.loadingservice.hide()
-                this.notify.error('❌ خطا در دریافت جزئیات مرخصی');
+                this.loadingService.hide()
+                this.notificationService.error('❌ خطا در دریافت جزئیات مرخصی');
             },
         });
     }
@@ -308,7 +310,7 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
     // ---------------------------------------------------------------
     async btnDeleteClicked(data: any): Promise<void> {
         if (data.WorkFlowStatus !== '0') {
-            this.notify.warning('⛔ این درخواست دارای نظر است و قابل حذف نیست');
+            this.notificationService.warning('⛔ این درخواست دارای نظر است و قابل حذف نیست');
             return;
         }
 
@@ -330,13 +332,13 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
         if (result.isConfirmed) {
             this.repo.DeleteLeaveRequest(data.LeaveRequestCode).subscribe({
                 next: () => {
-                    this.notify.success('  مرخصی با موفقیت حذف شد');
+                    this.notificationService.success('  مرخصی با موفقیت حذف شد');
                     this.loadLeaveList();
                 },
-                error: () => this.notify.error('❌ خطا در حذف رکورد'),
+                error: () => this.notificationService.error('❌ خطا در حذف رکورد'),
             });
         } else {
-            this.notify.warning('عملیات حذف لغو شد');
+            this.notificationService.warning('عملیات حذف لغو شد');
         }
     }
 
@@ -345,7 +347,7 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
     // ---------------------------------------------------------------
     submitWorkflow(): void {
         if (this.EditForm_WorkFlow.invalid) {
-            this.notify.warning('  لطفاً وضعیت و توضیحات را تکمیل کنید');
+            this.notificationService.warning('  لطفاً وضعیت و توضیحات را تکمیل کنید');
             return;
         }
 
@@ -356,11 +358,11 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
 
         this.repo.LeaveRequest_WorkFlow(payload).subscribe({
             next: () => {
-                this.notify.success('  نظر مدیر با موفقیت ثبت شد');
+                this.notificationService.success('  نظر مدیر با موفقیت ثبت شد');
                 this.closeModal();
                 this.loadLeaveList();
             },
-            error: () => this.notify.error('❌ خطا در ثبت نظر مدیر'),
+            error: () => this.notificationService.error('❌ خطا در ثبت نظر مدیر'),
         });
     }
 

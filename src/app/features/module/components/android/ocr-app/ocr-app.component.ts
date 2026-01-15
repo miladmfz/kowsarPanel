@@ -52,9 +52,7 @@ export class OcrAppComponent implements OnInit {
 
   ];
 
-  constructor(
-
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
   }

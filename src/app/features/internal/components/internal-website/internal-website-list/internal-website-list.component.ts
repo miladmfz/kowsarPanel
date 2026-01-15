@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Subject, debounceTime } from 'rxjs';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -35,11 +35,11 @@ export class InternalWebsiteListComponent
     SearchTarget: new FormControl('')
   });
 
-  constructor(
-    private repo: WebSiteWebApiService,
-    private router: Router,
-    private notify: NotificationService,
-  ) {
+  private readonly router = inject(Router);
+  private readonly repo = inject(WebSiteWebApiService);
+  private readonly notificationService = inject(NotificationService);
+
+  constructor() {
     super();
   }
 
@@ -112,7 +112,7 @@ export class InternalWebsiteListComponent
 
   btnDeleteClicked(data: any): void {
     if (data.Explain.length > 0) {
-      this.notify.error('⛔ این آیتم دارای توضیحات می‌باشد.');
+      this.notificationService.error('⛔ این آیتم دارای توضیحات می‌باشد.');
       return;
     }
 
@@ -135,15 +135,15 @@ export class InternalWebsiteListComponent
 
           this.repo.DeleteWebSiteActivation(data.WebSiteActivationCode).subscribe({
             next: () => {
-              this.notify.success('  تیکت با موفقیت حذف شد');
+              this.notificationService.success('  تیکت با موفقیت حذف شد');
               setTimeout(() => this.getList(), 10);
             },
-            error: () => this.notify.error('❌ خطا در حذف رکورد'),
+            error: () => this.notificationService.error('❌ خطا در حذف رکورد'),
           });
 
 
         } else {
-          this.notify.info('عملیات حذف لغو شد');
+          this.notificationService.info('عملیات حذف لغو شد');
         }
       });
     });

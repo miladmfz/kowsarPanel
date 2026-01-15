@@ -21,7 +21,6 @@ export class InternalTaskEditComponent implements OnInit {
 
   // inject اسلوب مدرن
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
   private repo = inject(TaskWebApiService);
   private notificationService = inject(NotificationService);
   private loadingService = inject(LoadingService);

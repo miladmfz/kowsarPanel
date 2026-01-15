@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, signal } from '@angular/core';
+import { Component, inject, OnInit, Renderer2, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -99,16 +99,15 @@ export class AutletterPanelComponent extends AgGridBaseComponent implements OnIn
     { id: 'attach', title: 'پیوست' }
   ];
 
-  constructor(
-    private route: ActivatedRoute,
-    private repo: AutletterWebApiService,
-    private renderer: Renderer2,
-    private location: Location,
-    private config: AppConfigService,
-    private router: Router,
 
+  private readonly router = inject(Router);
+  private readonly repo = inject(AutletterWebApiService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly location = inject(Location);
+  private readonly config = inject(AppConfigService);
+  private readonly renderer = inject(Renderer2);
 
-  ) {
+  constructor() {
     super();
   }
 

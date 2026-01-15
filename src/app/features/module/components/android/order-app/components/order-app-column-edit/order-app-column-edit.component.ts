@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
@@ -20,13 +20,12 @@ import { catchError, of } from 'rxjs';
 })
 export class OrderAppColumnEditComponent implements OnInit {
 
-  constructor(
-    private repo: OrderWebApiService,
-    private route: ActivatedRoute,
-    private formBuilder: UntypedFormBuilder,
-    private location: Location,
-    private notificationService: NotificationService,
-  ) { }
+  private readonly repo = inject(OrderWebApiService);
+  private readonly location = inject(Location);
+  private readonly notificationService = inject(NotificationService);
+
+
+  constructor() { }
 
 
   AppType: string = "3";

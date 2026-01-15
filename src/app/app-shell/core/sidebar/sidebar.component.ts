@@ -12,7 +12,7 @@
    5️⃣ پشتیبانی از حالت تیره و روشن  
    =============================================================== */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -82,13 +82,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
   // ===============================================================
   //   سازنده
   // ===============================================================
-  constructor(
-    private config: AppConfigService,
-    private themeService: ThemeService,
-    private repo: DashboardWebApiService,
-    private sharedService: SharedService,
-    private router: Router
-  ) { }
+  private readonly config = inject(AppConfigService);
+  private readonly themeService = inject(ThemeService);
+  private readonly repo = inject(DashboardWebApiService);
+  private readonly sharedService = inject(SharedService);
+  private readonly router = inject(Router);
+
+  constructor() { }
 
   // ===============================================================
   // 🚀 Lifecycle Hooks

@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
 import { AgGridAngular } from 'ag-grid-angular';
 import { Subscription, catchError, of } from 'rxjs';
@@ -30,12 +30,12 @@ import { CellActionFactorList } from './cell-action-factor-list';
 export class FactorListComponent extends AgGridBaseComponent
   implements OnInit, OnDestroy {
 
-  constructor(
-    private readonly router: Router,
-    private repo: FactorWebApiService,
-    private renderer: Renderer2,
-    private notificationService: NotificationService,
-  ) {
+  private readonly router = inject(Router);
+  private readonly repo = inject(FactorWebApiService);
+  private readonly notificationService = inject(NotificationService);
+  private readonly renderer = inject(Renderer2);
+
+  constructor() {
     super();
   }
 

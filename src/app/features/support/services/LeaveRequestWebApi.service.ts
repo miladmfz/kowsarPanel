@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { AppConfigService } from 'src/app/app-config.service';
@@ -13,7 +13,11 @@ export class LeaveRequestWebApiService {
   baseUrl_Attach: string;
   headers: HttpHeaders;
 
-  constructor(private client: HttpClient, private config: AppConfigService) {
+
+  private readonly client = inject(HttpClient);
+  private readonly config = inject(AppConfigService);
+
+  constructor() {
     this.baseUrl = this.config.apiUrl + 'KowsarWeb/';
 
     this.baseUrl_Attach = this.config.apiUrl + 'Support/';

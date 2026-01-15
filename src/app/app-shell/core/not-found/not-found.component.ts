@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -9,7 +9,9 @@ import { CommonModule } from '@angular/common';
   templateUrl: './not-found.component.html',
 })
 export class NotFoundComponent {
-  constructor(private router: Router) { }
+  private readonly router = inject(Router);
+
+  constructor() { }
 
   goHome(): void {
     this.router.navigate(['/dashboard']);

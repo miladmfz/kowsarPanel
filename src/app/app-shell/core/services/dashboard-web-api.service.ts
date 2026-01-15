@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AppConfigService } from 'src/app/app-config.service';
@@ -11,7 +11,12 @@ export class DashboardWebApiService {
     private baseUrl: string;
     private headers: HttpHeaders;
 
-    constructor(private client: HttpClient, private config: AppConfigService) {
+
+
+    private readonly client = inject(HttpClient);
+    private readonly config = inject(AppConfigService);
+
+    constructor() {
         this.baseUrl = this.config.apiUrl + 'Support/';
 
         this.headers = new HttpHeaders()

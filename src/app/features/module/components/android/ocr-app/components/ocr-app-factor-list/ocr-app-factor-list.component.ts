@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
@@ -22,10 +22,10 @@ import { AgGridModule } from 'ag-grid-angular';
 export class OcrAppFactorListComponent extends AgGridBaseComponent
   implements OnInit {
 
-  constructor(
-    private readonly router: Router,
-    private repo: OcrWebApiService,
-  ) {
+  private readonly router = inject(Router);
+  private readonly repo = inject(OcrWebApiService);
+
+  constructor() {
     super();
   }
 

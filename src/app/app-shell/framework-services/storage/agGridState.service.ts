@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+
 import { NotificationService } from '../ui/notification.service';
 import { SessionStorageService } from './session.storage.service';
 

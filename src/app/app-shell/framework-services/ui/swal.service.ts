@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+
 
 type SwalIcon = 'info' | 'success' | 'error' | 'warning' | 'question';
 

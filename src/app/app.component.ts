@@ -11,6 +11,7 @@ import { LoadingService } from './app-shell/framework-services/ui/loading.servic
 })
 export class AppComponent {
 
+
   constructor(
     private readonly router: Router,
     public loadingService: LoadingService

@@ -52,9 +52,7 @@ export class BrokerAppComponent implements OnInit {
 
   ];
 
-  constructor(
-
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
   }

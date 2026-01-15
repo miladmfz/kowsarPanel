@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
@@ -22,11 +22,9 @@ import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.ser
 })
 export class OcrAppReportChartComponent implements OnInit {
 
-  constructor(
-    private readonly router: Router,
-    private repo: OcrWebApiService,
-  ) {
-  }
+  private readonly repo = inject(OcrWebApiService);
+
+  constructor() { }
 
 
   GetOcrPanel_frm = new FormGroup({

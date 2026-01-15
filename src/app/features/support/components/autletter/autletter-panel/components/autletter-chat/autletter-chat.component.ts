@@ -5,7 +5,8 @@ import {
   OnInit,
   ViewChild,
   AfterViewInit,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  inject
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
@@ -16,7 +17,6 @@ import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.
 
 import { AutletterWebApiService } from 'src/app/features/support/services/AutletterWebApi.service';
 import { AutletterFileUploadComponent } from '../autletter-file-upload/autletter-file-upload.component';
-import { AutletterVoiceRecorderComponent } from '../autletter-voice-recorder/autletter-voice-recorder.component';
 import { catchError, of } from 'rxjs';
 declare var bootstrap: any;   //   اینجا باید باشد
 
@@ -74,12 +74,13 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
     CentralRef: new FormControl('')
   });
 
-  constructor(
-    private repo: AutletterWebApiService,
-    private notify: NotificationService,
-    private loadingService: LoadingService,
-    private cdr: ChangeDetectorRef
-  ) { }
+  private readonly repo = inject(AutletterWebApiService);
+  private readonly notificationService = inject(NotificationService);
+  private readonly loadingService = inject(LoadingService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+
+  constructor() { }
 
   ngOnInit(): void {
     this.LetterRef = this.ObjectRef;
@@ -132,7 +133,7 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
       },
       error: () => {
         this.loadingService.hide();
-        this.notify.error('خطا در دریافت پیام‌ها');
+        this.notificationService.error('خطا در دریافت پیام‌ها');
       }
     });
   }
@@ -160,7 +161,7 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
   SendMessage() {
     const desc = this.MessageForm.get('Description')?.value?.trim();
     if (!desc) {
-      this.notify.warning('متن پیام نباید خالی باشد');
+      this.notificationService.warning('متن پیام نباید خالی باشد');
       return;
     }
 
@@ -176,7 +177,7 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
         },
         error: () => {
           this.loadingService.hide();
-          this.notify.error('ارسال پیام با خطا مواجه شد');
+          this.notificationService.error('ارسال پیام با خطا مواجه شد');
         }
       });
   }
@@ -232,7 +233,7 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
       },
       error: () => {
         this.loadingService.hide();
-        this.notify.error('خطا در ارسال فایل');
+        this.notificationService.error('خطا در ارسال فایل');
       }
     });
   }
@@ -255,7 +256,7 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
         catchError(error => {
           this.loadingService.hide();
           this.modalLoading = true;
-          this.notify.error("مشکل در اتصال به سرور", "خطا");
+          this.notificationService.error("مشکل در اتصال به سرور", "خطا");
           return of(null);
         })
       )
@@ -380,7 +381,7 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
         next: (data: any) => {
           this.loadingService.hide();
           if (!data || !data.text || !data.contentType || !data.fileName) {
-            this.notify.error('فایل نامعتبر است');
+            this.notificationService.error('فایل نامعتبر است');
             return;
           }
 
@@ -400,7 +401,7 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
         },
         error: () => {
           this.loadingService.hide();
-          this.notify.error('خطا در دانلود فایل');
+          this.notificationService.error('خطا در دانلود فایل');
         }
       });
   }

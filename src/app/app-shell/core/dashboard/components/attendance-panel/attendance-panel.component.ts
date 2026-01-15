@@ -20,6 +20,7 @@ import {
     OnDestroy,
     OnInit,
     ViewChild,
+    inject,
     signal,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -94,13 +95,14 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
     private themeSub?: Subscription;
     private refreshSub?: Subscription;
 
-    constructor(
-        private repo: DashboardWebApiService,
-        private sharedService: SharedService,
-        private notificationService: NotificationService,
-        private themeService: ThemeService,
-        private config: AppConfigService,
-    ) { }
+
+    private readonly repo = inject(DashboardWebApiService);
+    private readonly sharedService = inject(SharedService);
+    private readonly notificationService = inject(NotificationService);
+    private readonly themeService = inject(ThemeService);
+    private readonly config = inject(AppConfigService);
+
+    constructor() { }
 
     // ===============================================================
     // 🔁 Lifecycle Hooks

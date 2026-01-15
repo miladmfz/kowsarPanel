@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
@@ -21,11 +21,9 @@ import { AgGridModule } from 'ag-grid-angular';
 })
 export class OrderAppGoodListComponent extends AgGridBaseComponent
   implements OnInit {
+  private readonly repo = inject(OrderWebApiService);
 
-  constructor(
-    private readonly router: Router,
-    private repo: OrderWebApiService,
-  ) {
+  constructor() {
     super();
   }
 

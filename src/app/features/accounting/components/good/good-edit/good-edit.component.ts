@@ -1,5 +1,5 @@
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
-import { Component, HostListener, OnInit, Renderer2 } from '@angular/core';
+import { Component, HostListener, inject, OnInit, Renderer2 } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Base_Lookup, GoodType_lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
 import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
@@ -29,15 +29,16 @@ import { GoodWebApiService } from '../../../services/goodWebApi.service';
 })
 export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
-  constructor(
-    private notificationService: NotificationService,
-    private loadingService: LoadingService,
-    private repo: GoodWebApiService,
-    private route: ActivatedRoute,
-    private renderer: Renderer2,
-    private location: Location,
-    private router: Router,
-  ) {
+
+  private readonly router = inject(Router);
+  private readonly repo = inject(GoodWebApiService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly location = inject(Location);
+  private readonly notificationService = inject(NotificationService);
+  private readonly loadingService = inject(LoadingService);
+  private readonly renderer = inject(Renderer2);
+
+  constructor() {
     super();
   }
 

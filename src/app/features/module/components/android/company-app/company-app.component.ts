@@ -39,9 +39,7 @@ export class CompanyAppComponent implements OnInit {
 
   ];
 
-  constructor(
-
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
   }

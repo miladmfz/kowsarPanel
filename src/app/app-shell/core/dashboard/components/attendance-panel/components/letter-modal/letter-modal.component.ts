@@ -23,6 +23,7 @@ import {
   signal,
   OnChanges,
   SimpleChanges,
+  inject,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -79,7 +80,10 @@ export class LetterModalComponent implements OnChanges {
   // ===============================================================
   // 🧱 سازنده
   // ===============================================================
-  constructor(private fb: FormBuilder) {
+
+  private readonly fb = inject(FormBuilder);
+
+  constructor() {
     this.form = this.fb.group({
       LetterCode: [''],
       OwnerCentral: [''],

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Renderer2, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -85,13 +85,14 @@ export class AutletterItemComponent
 
 
   // =============== Constructor ===============
-  constructor(
-    private router: Router,
-    private repo: AutletterWebApiService,
-    private notify: NotificationService,
-    private loading: LoadingService,
-    private renderer: Renderer2,
-  ) { super(); }
+  private readonly router = inject(Router);
+  private readonly repo = inject(AutletterWebApiService);
+  private readonly notificationService = inject(NotificationService);
+  private readonly loadingService = inject(LoadingService);
+  private readonly renderer = inject(Renderer2);
+
+
+  constructor() { super(); }
 
   // =============== Init ===============
   ngOnInit(): void {
@@ -155,12 +156,12 @@ export class AutletterItemComponent
   }
 
   private loadRows() {
-    this.loading.show();
+    this.loadingService.show();
     this.repo.GetLetterRowList(this.ObjectRef).subscribe((data: any) => {
       this.records = data?.AutLetters ?? [];
       console.log(this.records)
       this.updateGridData(1, this.records);
-      this.loading.hide();
+      this.loadingService.hide();
     });
   }
 
@@ -192,16 +193,16 @@ export class AutletterItemComponent
 
   async delete(code: any, summary: string) {
     if (summary.length > 0)
-      return this.notify.error('برای این ارجاع عملکرد ثبت شده است');
+      return this.notificationService.error('برای این ارجاع عملکرد ثبت شده است');
 
     const r = await this.confirmDelete();
     if (!r.isConfirmed) return;
 
-    this.loading.show();
+    this.loadingService.show();
     this.repo.DeleteAutLetterRows(code).subscribe(() => {
-      this.notify.success("حذف انجام شد");
+      this.notificationService.success("حذف انجام شد");
       this.loadRows();
-      this.loading.hide();
+      this.loadingService.hide();
     });
   }
 
@@ -243,7 +244,7 @@ export class AutletterItemComponent
 
     if (!this.EditForm_Item_Insert.valid) return;
 
-    this.loading.show();
+    this.loadingService.show();
 
 
 
@@ -257,11 +258,11 @@ export class AutletterItemComponent
 
 
     this.repo.AutLetterRowInsert(this.EditForm_Item_Insert.value).subscribe((data: any) => {
-      this.loading.hide();
+      this.loadingService.hide();
 
       const id = parseInt(data.AutLetterRows[0].LetterRef, 10);
       if (id > 0) {
-        this.notify.success("عملیات با موفقیت انجام شد");
+        this.notificationService.success("عملیات با موفقیت انجام شد");
         this.router.navigate(['/support/letter-list']);
       }
     });
@@ -285,12 +286,12 @@ export class AutletterItemComponent
     this.EditForm_explain.markAllAsTouched();
     if (!this.EditForm_explain.valid) return;
 
-    this.loading.show();
+    this.loadingService.show();
     this.repo.Update_AutletterRow(this.EditForm_explain.value).subscribe(() => {
-      this.notify.success("با موفقیت ثبت شد");
+      this.notificationService.success("با موفقیت ثبت شد");
       this.loadRows();
       this.closeModal();
-      this.loading.hide();
+      this.loadingService.hide();
     });
   }
 

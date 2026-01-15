@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, ParamMap, RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
@@ -24,10 +24,11 @@ import { BrokerAppMapComponent } from '../broker-app-map/broker-app-map.componen
 export class BrokerAppReportComponent extends AgGridBaseComponent
   implements OnInit {
 
-  constructor(
-    private repo: BrokerWebApiService,
-    private route: ActivatedRoute,
-  ) {
+  private readonly repo = inject(BrokerWebApiService);
+  private readonly route = inject(ActivatedRoute);
+
+
+  constructor() {
     super();
   }
 

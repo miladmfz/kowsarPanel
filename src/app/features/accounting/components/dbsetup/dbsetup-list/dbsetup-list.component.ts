@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { DbSetupWebApiService } from '../../../services/DbSetupWebApi.service';
 import { Router, RouterModule } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
@@ -20,13 +20,11 @@ import { AgGridAngular } from 'ag-grid-angular';
 })
 export class DbsetupListComponent extends AgGridBaseComponent
   implements OnInit, OnDestroy {
+  private readonly router = inject(Router);
+  private readonly repo = inject(DbSetupWebApiService);
+  private readonly renderer = inject(Renderer2);
 
-  constructor(
-    private readonly router: Router,
-    private repo: DbSetupWebApiService,
-    private renderer: Renderer2,
-
-  ) {
+  constructor() {
     super();
   }
 

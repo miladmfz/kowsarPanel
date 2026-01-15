@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -39,12 +39,11 @@ export class InternalAppsListComponent
   title = 'لیست مشتریان سامانه';
   loading = false;
 
-  constructor(
-    private repo: InternalAppsWebApiService,
-    private readonly router: Router,
-    private notify: NotificationService,
+  private readonly router = inject(Router);
+  private readonly repo = inject(InternalAppsWebApiService);
+  private readonly notificationService = inject(NotificationService);
 
-  ) {
+  constructor() {
     super();
   }
 
@@ -148,7 +147,7 @@ export class InternalAppsListComponent
 
   btnDeleteClicked(data: any): void {
     if (data.IsActive === "1") {
-      this.notify.error('⛔ این آیتم فعال می‌باشد.');
+      this.notificationService.error('⛔ این آیتم فعال می‌باشد.');
       return;
     }
 
@@ -171,15 +170,15 @@ export class InternalAppsListComponent
 
           this.repo.DeleteAppActivation(data.AppActivationCode).subscribe({
             next: () => {
-              this.notify.succeded()
+              this.notificationService.succeded()
               setTimeout(() => this.getList(), 10);
             },
-            error: () => this.notify.error('❌ خطا در حذف رکورد'),
+            error: () => this.notificationService.error('❌ خطا در حذف رکورد'),
           });
 
 
         } else {
-          this.notify.info('عملیات حذف لغو شد');
+          this.notificationService.info('عملیات حذف لغو شد');
         }
       });
     });

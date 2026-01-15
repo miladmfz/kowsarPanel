@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { KowsarBaseWebApi } from '../../../framework-services/base/KowsarBaseWebApi.service';
 import { AgGridBaseComponent } from '../../ag-grid/base';
 import { AgGridModule } from 'ag-grid-angular';
@@ -20,11 +20,10 @@ export class KowsarWeblogComponent extends AgGridBaseComponent
   records: any;
   loading = false;
 
+  private readonly repo = inject(KowsarBaseWebApi);
 
 
-  constructor(
-    private repo: KowsarBaseWebApi,
-  ) {
+  constructor() {
     super();
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -22,10 +22,10 @@ import { CellActionGoodList } from './cell-action-good-list';
 export class GoodListComponent extends AgGridBaseComponent
   implements OnInit, OnDestroy {
 
-  constructor(
-    private readonly router: Router,
-    private repo: GoodWebApiService,
-  ) {
+  private readonly router = inject(Router);
+  private readonly repo = inject(GoodWebApiService);
+
+  constructor() {
     super();
   }
 

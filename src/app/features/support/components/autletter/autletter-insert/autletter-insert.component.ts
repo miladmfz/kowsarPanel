@@ -17,6 +17,7 @@ import {
     Renderer2,
     ViewChild,
     CUSTOM_ELEMENTS_SCHEMA,
+    inject,
 } from '@angular/core';
 import {
     FormControl,
@@ -133,14 +134,16 @@ export class AutletterInsertComponent extends AgGridBaseComponent implements OnI
     // ===============================================================
     //   سازنده
     // ===============================================================
-    constructor(
-        private repo: AutletterWebApiService,
-        private router: Router,
-        private notificationService: NotificationService,
-        private loadingService: LoadingService,
-        private renderer: Renderer2,
-        private config: AppConfigService,
-    ) {
+
+    private readonly router = inject(Router);
+    private readonly repo = inject(AutletterWebApiService);
+    private readonly config = inject(AppConfigService);
+    private readonly notificationService = inject(NotificationService);
+    private readonly loadingService = inject(LoadingService);
+    private readonly renderer = inject(Renderer2);
+
+
+    constructor() {
         super();
     }
 

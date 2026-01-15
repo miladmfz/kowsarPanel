@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
@@ -18,10 +18,10 @@ import { CompanyWebApiService } from 'src/app/features/module/services/CompanyWe
 })
 export class CompanyAppSettingComponent implements OnInit {
 
-  constructor(
-    private repo: CompanyWebApiService,
-    private sharedService: SharedService,
-  ) { }
+  private readonly repo = inject(CompanyWebApiService);
+  private readonly sharedService = inject(SharedService);
+
+  constructor() { }
 
 
 

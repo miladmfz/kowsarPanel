@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
@@ -188,13 +188,11 @@ export class SalarysummaryListComponent extends AgGridBaseComponent
     Explain: new FormControl('')
   });
 
-  constructor(
-    private readonly router: Router,
-    private readonly repo: SalaryWebApiService,
-    private readonly renderer: Renderer2,
-    private readonly loadingservice: LoadingService,
+  private readonly repo = inject(SalaryWebApiService);
+  private readonly loadingService = inject(LoadingService);
 
-  ) {
+
+  constructor() {
     super();
   }
 
@@ -311,10 +309,10 @@ export class SalarysummaryListComponent extends AgGridBaseComponent
       });
     }
 
-    this.loadingservice.show()
+    this.loadingService.show()
     this.repo.GetSalarySummary(this.EditForm_SearchTarget.value).subscribe({
       next: (data: any) => {
-        this.loadingservice.hide()
+        this.loadingService.hide()
 
         this.records = data?.SalarySummarys ?? [];
         this.updateGridData(1, this.records);
@@ -325,7 +323,7 @@ export class SalarysummaryListComponent extends AgGridBaseComponent
           this.gridApi1.sizeColumnsToFit();
         }
       },
-      error: () => (this.loadingservice.hide()),
+      error: () => (this.loadingService.hide()),
     });
   }
 
@@ -377,14 +375,14 @@ export class SalarysummaryListComponent extends AgGridBaseComponent
     console.log(this.EditForm_WorkingEmploye.value)
 
 
-    this.loadingservice.show()
+    this.loadingService.show()
     this.repo.UpdateWorkingEmployee(this.EditForm_WorkingEmploye.value).subscribe({
       next: (data: any) => {
-        this.loadingservice.hide()
+        this.loadingService.hide()
         this.getList()
         this.WorkingEmploye_dialog_close();
       },
-      error: () => (this.loadingservice.hide()),
+      error: () => (this.loadingService.hide()),
     });
 
 
@@ -394,10 +392,10 @@ export class SalarysummaryListComponent extends AgGridBaseComponent
   ShowModalAddSalary(): void {
 
 
-    this.loadingservice.show()
+    this.loadingService.show()
     this.repo.GetMonthSummary(this.EditForm_SearchTarget.value).subscribe({
       next: (data: any) => {
-        this.loadingservice.hide()
+        this.loadingService.hide()
 
         this.records_MonthSummarys = data?.MonthSummarys ?? [];
         this.updateGridData(2, this.records_MonthSummarys);
@@ -410,7 +408,7 @@ export class SalarysummaryListComponent extends AgGridBaseComponent
 
         this.addsalary_dialog_show()
       },
-      error: () => (this.loadingservice.hide()),
+      error: () => (this.loadingService.hide()),
     });
 
 
@@ -428,14 +426,14 @@ export class SalarysummaryListComponent extends AgGridBaseComponent
       MonthSummaryCode: this.selectedRows[0].MonthSummaryCode,
     });
 
-    this.loadingservice.show()
+    this.loadingService.show()
     this.repo.AddSalaryForAllEmployees(this.EditForm_AddSalary.value).subscribe({
       next: (data: any) => {
-        this.loadingservice.hide()
+        this.loadingService.hide()
         this.getList()
         this.addsalary_dialog_close();
       },
-      error: () => (this.loadingservice.hide()),
+      error: () => (this.loadingService.hide()),
     });
 
   }

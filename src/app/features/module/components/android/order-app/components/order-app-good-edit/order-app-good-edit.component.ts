@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router, RouterModule } from '@angular/router';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
@@ -22,16 +22,15 @@ import { AgGridModule } from 'ag-grid-angular';
 })
 export class OrderAppGoodEditComponent implements OnInit {
 
-  constructor(
-    private repo: OrderWebApiService,
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
-    private sharedService: SharedService,
-    private location: Location,
-    private http: HttpClient,
-    private formBuilder: UntypedFormBuilder
+  private readonly repo = inject(OrderWebApiService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly location = inject(Location);
+  private readonly sharedService = inject(SharedService);
+  private readonly formBuilder = inject(UntypedFormBuilder);
 
-  ) { }
+
+
+  constructor() { }
 
   private cache: { [key: string]: any } = {}; // Basic caching object
 

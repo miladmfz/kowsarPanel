@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CompanyWebApiService } from 'src/app/features/module/services/CompanyWebApi.service';
@@ -17,11 +17,11 @@ import { CompanyWebApiService } from 'src/app/features/module/services/CompanyWe
 })
 export class CompanyAppColumnListComponent implements OnInit {
 
-  constructor(
-    private repo: CompanyWebApiService,
-    private route: ActivatedRoute,
-    private formBuilder: UntypedFormBuilder
-  ) { }
+
+  private readonly repo = inject(CompanyWebApiService);
+
+
+  constructor() { }
 
 
 

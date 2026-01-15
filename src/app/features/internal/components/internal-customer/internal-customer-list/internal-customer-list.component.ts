@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, Subscription, debounceTime } from 'rxjs';
@@ -91,13 +91,11 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
     ObjectRef: new FormControl('0'),
   });
 
-  constructor(
-    private readonly router: Router,
-    private readonly repo: CustomerWebApiService,
-    private readonly renderer: Renderer2,
-    private readonly loadingservice: LoadingService,
+  private readonly router = inject(Router);
+  private readonly repo = inject(CustomerWebApiService);
+  private readonly loadingservice = inject(LoadingService);
 
-  ) {
+  constructor() {
     super();
   }
 

@@ -131,7 +131,6 @@ export class AutLetterMineComponent extends AgGridBaseComponent implements OnIni
   private readonly repo = inject(AutletterWebApiService);
   private readonly router = inject(Router);
   private readonly notify = inject(NotificationService);
-  private readonly renderer = inject(Renderer2);
   private readonly loadingservice = inject(LoadingService);
 
   constructor() {

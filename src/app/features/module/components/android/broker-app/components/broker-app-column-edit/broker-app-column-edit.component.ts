@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { BrokerWebApiService } from 'src/app/features/module/services/BrokerWebApi.service';
@@ -21,12 +21,10 @@ import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
 })
 export class BrokerAppColumnEditComponent implements OnInit {
 
-  constructor(
-    private repo: BrokerWebApiService,
-    private route: ActivatedRoute,
-    private formBuilder: UntypedFormBuilder,
-    private location: Location
-  ) { }
+  private readonly repo = inject(BrokerWebApiService);
+  private readonly location = inject(Location);
+
+  constructor() { }
 
 
   AppType: string = "1";

@@ -13,7 +13,7 @@
    =============================================================== */
 
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, AfterViewInit, NgZone } from '@angular/core';
+import { Component, OnInit, AfterViewInit, NgZone, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DashboardWebApiService } from '../services/dashboard-web-api.service';
 
@@ -44,10 +44,11 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   // ===============================================================
   //   سازنده
   // ===============================================================
-  constructor(
-    private zone: NgZone,
-    private repo: DashboardWebApiService
-  ) { }
+  private readonly zone = inject(NgZone);
+  private readonly repo = inject(DashboardWebApiService);
+
+
+  constructor() { }
 
   // ===============================================================
   // 🚀 Lifecycle Hooks

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, inject, OnInit, Renderer2 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { BrokerWebApiService } from 'src/app/features/module/services/BrokerWebApi.service';
@@ -24,11 +24,10 @@ import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
 export class BrokerAppSellbrokerListComponent extends AgGridBaseComponent
   implements OnInit {
 
-  constructor(
-    private readonly router: Router,
-    private repo: BrokerWebApiService,
-    private renderer: Renderer2,
-  ) {
+  private readonly router = inject(Router);
+  private readonly repo = inject(BrokerWebApiService);
+
+  constructor() {
     super();
   }
 

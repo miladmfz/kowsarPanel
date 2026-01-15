@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppConfigService } from 'src/app/app-config.service';
 
@@ -10,10 +10,9 @@ import { AppConfigService } from 'src/app/app-config.service';
 })
 export class FooterComponent implements OnInit {
     AppVersion: string = '';
+    private readonly config = inject(AppConfigService);
 
-    constructor(
-        private config: AppConfigService
-    ) { }
+    constructor() { }
     ngOnInit() {
         this.AppVersion = this.config.AppVersion
 

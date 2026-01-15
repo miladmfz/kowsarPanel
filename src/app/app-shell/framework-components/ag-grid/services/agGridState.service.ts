@@ -5,7 +5,8 @@
  * برای هر childName به صورت مجزا.
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+
 import type { GridApi, ColumnState } from 'ag-grid-community';
 
 @Injectable({ providedIn: 'root' })

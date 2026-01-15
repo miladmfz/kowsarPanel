@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime, Subject, Subscription } from 'rxjs';
@@ -35,19 +35,20 @@ import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-t
 })
 export class PrefactorEditComponent extends AgGridBaseComponent implements OnInit {
 
-  constructor(
-    private readonly router: Router,
-    private repo: PreFactorWebApiService,
-    private renderer: Renderer2,
-    private route: ActivatedRoute,
-    private location: Location,
-    private fb: FormBuilder,
-    private sharedService: SharedService,
-    private readonly notificationService: NotificationService,
-    private loadingService: LoadingService,
-    private config: AppConfigService,
-    private cdr: ChangeDetectorRef
-  ) {
+
+  private readonly router = inject(Router);
+  private readonly repo = inject(PreFactorWebApiService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly location = inject(Location);
+  private readonly sharedService = inject(SharedService);
+  private readonly notificationService = inject(NotificationService);
+  private readonly loadingService = inject(LoadingService);
+
+
+
+
+
+  constructor() {
     super();
   }
 

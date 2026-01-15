@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router, RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
@@ -84,12 +84,13 @@ export class InternalWebsiteEditComponent implements OnInit {
 
   ]
 
-  constructor(
-    private repo: WebSiteWebApiService,
-    private route: ActivatedRoute,
-    private notify: NotificationService,
-    private router: Router
-  ) { }
+  private readonly router = inject(Router);
+  private readonly repo = inject(WebSiteWebApiService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly notificationService = inject(NotificationService);
+
+
+  constructor() { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((p: ParamMap) => {
@@ -126,7 +127,7 @@ export class InternalWebsiteEditComponent implements OnInit {
 
     request$.pipe(
       catchError(err => {
-        this.notify.error('مشکل در برقراری ارتباط', 'خطا');
+        this.notificationService.error('مشکل در برقراری ارتباط', 'خطا');
         return of(null);
       })
     ).subscribe((data: any) => {
@@ -135,7 +136,7 @@ export class InternalWebsiteEditComponent implements OnInit {
       const newId = Number(data.WebSites[0].WebSiteActivationCode);
 
       if (newId > 0) {
-        this.notify.succeded();
+        this.notificationService.succeded();
 
         if (id === 0) {
           // درج → رفتن به صفحه ویرایش

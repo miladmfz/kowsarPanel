@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+
 import { of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';

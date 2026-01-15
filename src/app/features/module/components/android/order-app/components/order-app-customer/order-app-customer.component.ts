@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, inject, OnInit, Renderer2 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
@@ -24,18 +24,11 @@ import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
 export class OrderAppCustomerComponent extends AgGridBaseComponent
   implements OnInit {
 
+  private readonly renderer = inject(Renderer2);
+  private readonly repo = inject(OrderWebApiService);
 
 
-  constructor(
-    private readonly router: Router,
-    private renderer: Renderer2,
-    private route: ActivatedRoute,
-    private fb: FormBuilder,
-    private repo: OrderWebApiService,
-    private sharedService: SharedService,
-    private readonly notificationService: NotificationService,
-
-  ) {
+  constructor() {
     super();
   }
 

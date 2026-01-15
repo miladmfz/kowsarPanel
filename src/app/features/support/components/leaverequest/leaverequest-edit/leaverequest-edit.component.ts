@@ -9,7 +9,7 @@
 =============================================================== */
 
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, inject, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -41,15 +41,18 @@ export class LeaverequestEditComponent extends AgGridBaseComponent implements On
     // ---------------------------------------------------------------
     //   سازنده و تزریق سرویس‌ها
     // ---------------------------------------------------------------
-    constructor(
-        private http: HttpClient,
-        private repo: LeaveRequestWebApiService,
-        private router: Router,
-        private route: ActivatedRoute,
-        private notify: NotificationService,
-        private loadingService: LoadingService,
-        private renderer: Renderer2,
-    ) {
+
+    private readonly router = inject(Router);
+    private readonly repo = inject(LeaveRequestWebApiService);
+    private readonly route = inject(ActivatedRoute);
+    private readonly notificationService = inject(NotificationService);
+    private readonly loadingService = inject(LoadingService);
+
+    private readonly client = inject(HttpClient);
+
+
+
+    constructor() {
         super();
     }
 
@@ -134,7 +137,7 @@ export class LeaverequestEditComponent extends AgGridBaseComponent implements On
 
         // بارگذاری لیست تعطیلات از فایل JSON
         const currentJYear = moment().format('jYYYY');
-        this.http.get<any>('assets/holidays.json').subscribe((res) => {
+        this.client.get<any>('assets/holidays.json').subscribe((res) => {
             this.holidaysList = res[currentJYear] || [];
         });
 
@@ -234,7 +237,7 @@ export class LeaverequestEditComponent extends AgGridBaseComponent implements On
 
         if (!start.isValid() || !end.isValid()) return;
         if (end.isBefore(start)) {
-            this.notify.error('تاریخ پایان نمی‌تواند قبل از تاریخ شروع باشد.');
+            this.notificationService.error('تاریخ پایان نمی‌تواند قبل از تاریخ شروع باشد.');
             return;
         }
 
@@ -280,7 +283,7 @@ export class LeaverequestEditComponent extends AgGridBaseComponent implements On
         this.EditForm_LeaveRequest.patchValue({ UserRef: this.CentralRef });
 
         if (!this.EditForm_LeaveRequest.valid) {
-            this.notify.warning('لطفاً فیلدهای ضروری را تکمیل کنید.');
+            this.notificationService.warning('لطفاً فیلدهای ضروری را تکمیل کنید.');
             return;
         }
 
@@ -297,15 +300,15 @@ export class LeaverequestEditComponent extends AgGridBaseComponent implements On
                 this.loadingService.hide();
                 const success = data?.LeaveRequests?.[0]?.LeaveRequestCode?.length > 0;
                 if (success) {
-                    this.notify.success('  اطلاعات با موفقیت ثبت شد');
+                    this.notificationService.success('  اطلاعات با موفقیت ثبت شد');
                     this.router.navigate(['/support/leaverequest-list']);
                 } else {
-                    this.notify.error('❌ خطا در ثبت اطلاعات');
+                    this.notificationService.error('❌ خطا در ثبت اطلاعات');
                 }
             },
             error: () => {
                 this.loadingService.hide();
-                this.notify.error('❌ خطای ارتباط با سرور');
+                this.notificationService.error('❌ خطای ارتباط با سرور');
             },
         });
     }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
@@ -20,10 +20,11 @@ import { CellActionInternalGoodList } from './cell-action-internal-good-list';
 export class InternalGoodListComponent extends AgGridBaseComponent
   implements OnInit {
 
-  constructor(
-    private readonly router: Router,
-    private repo: SupportFactorWebApiService,
-  ) {
+  private readonly router = inject(Router);
+  private readonly repo = inject(SupportFactorWebApiService);
+
+
+  constructor() {
     super();
   }
 

@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+
 
 export type ToastType = 'success' | 'info' | 'warning' | 'error';
 

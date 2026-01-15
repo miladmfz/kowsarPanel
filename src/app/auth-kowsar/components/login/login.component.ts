@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,14 +18,14 @@ export class LoginComponent implements OnInit {
   isLoading = signal(false);
   showPassword = signal(false);
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private repo: AuthKowsarWebApiService,
-    private config: AppConfigService,
-    private loading: LoadingService,
-    private swal: SwalService
-  ) { }
+  private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
+  private readonly repo = inject(AuthKowsarWebApiService);
+  private readonly config = inject(AppConfigService);
+  private readonly loading = inject(LoadingService);
+  private readonly swal = inject(SwalService);
+
+  constructor() { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({

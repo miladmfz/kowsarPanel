@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, inject, OnInit, Renderer2 } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { Base_Lookup, GoodType_lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
@@ -21,14 +21,15 @@ import { AgGridAngular } from 'ag-grid-angular';
 })
 export class InternalGoodEditComponent extends AgGridBaseComponent implements OnInit {
 
-  constructor(
-    private notificationService: NotificationService,
-    private loadingService: LoadingService,
-    private repo: SupportFactorWebApiService,
-    private route: ActivatedRoute,
-    private renderer: Renderer2,
-    private router: Router,
-  ) {
+
+  private readonly router = inject(Router);
+  private readonly repo = inject(SupportFactorWebApiService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly notificationService = inject(NotificationService);
+  private readonly loadingService = inject(LoadingService);
+
+
+  constructor() {
     super();
   }
 

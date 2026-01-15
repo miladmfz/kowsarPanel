@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
@@ -18,12 +18,13 @@ import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.ser
 })
 export class OcrAppFactorDetailComponent implements OnInit {
 
-  constructor(
-    private repo: OcrWebApiService,
-    private route: ActivatedRoute,
-    private formBuilder: UntypedFormBuilder,
-    private router: Router,
-  ) { }
+  private readonly router = inject(Router);
+  private readonly repo = inject(OcrWebApiService);
+  private readonly route = inject(ActivatedRoute);
+
+
+
+  constructor() { }
 
 
   EditForm_Base = new FormGroup({

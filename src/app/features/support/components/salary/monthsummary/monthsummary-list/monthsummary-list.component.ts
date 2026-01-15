@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
@@ -71,13 +71,11 @@ export class MonthsummaryListComponent extends AgGridBaseComponent
   ]
 
 
-  constructor(
-    private readonly router: Router,
-    private readonly repo: SalaryWebApiService,
-    private readonly renderer: Renderer2,
-    private readonly loadingservice: LoadingService,
+  private readonly router = inject(Router);
+  private readonly repo = inject(SalaryWebApiService);
+  private readonly loadingService = inject(LoadingService);
 
-  ) {
+  constructor() {
     super();
   }
 
@@ -169,10 +167,10 @@ export class MonthsummaryListComponent extends AgGridBaseComponent
       });
     }
 
-    this.loadingservice.show()
+    this.loadingService.show()
     this.repo.GetMonthSummary(this.EditForm_SearchTarget.value).subscribe({
       next: (data: any) => {
-        this.loadingservice.hide()
+        this.loadingService.hide()
 
         this.records = data?.MonthSummarys ?? [];
         this.updateGridData(1, this.records);
@@ -183,7 +181,7 @@ export class MonthsummaryListComponent extends AgGridBaseComponent
           this.gridApi1.sizeColumnsToFit();
         }
       },
-      error: () => (this.loadingservice.hide()),
+      error: () => (this.loadingService.hide()),
     });
   }
 

@@ -15,7 +15,7 @@
    =============================================================== */
 
 import { CommonModule } from '@angular/common';
-import { Component, Renderer2, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, Renderer2, OnInit, ElementRef, ViewChild, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
@@ -102,12 +102,13 @@ export class KowsarReportComponent extends AgGridBaseComponent implements OnInit
     //   سازنده
     // ===============================================================
 
-    constructor(
-        private repo: DashboardWebApiService,
-        private notify: NotificationService,
-        private loading: LoadingService,
-        private renderer: Renderer2,
-        theme: ThemeService
+    private readonly repo = inject(DashboardWebApiService);
+    private readonly notify = inject(NotificationService);
+    private readonly loading = inject(LoadingService);
+    private readonly renderer = inject(Renderer2);
+    private readonly theme = inject(ThemeService);
+
+    constructor(theme: ThemeService
     ) {
         super();
         this.childName = 'KowsarReport'; // برای ذخیره state ستون‌ها در localStorage

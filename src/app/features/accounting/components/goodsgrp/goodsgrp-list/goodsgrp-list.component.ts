@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
@@ -24,12 +24,10 @@ import { CellActionGoodsGrpList } from './cell-action-goodsgrp-list';
 export class GoodsgrpListComponent extends AgGridBaseComponent
   implements OnInit {
 
-  constructor(
-    private readonly router: Router,
-    private repo: GoodsGrpWebApiService,
-    private notificationService: NotificationService,
-    private loadingService: LoadingService,
-  ) {
+  private readonly router = inject(Router);
+  private readonly repo = inject(GoodsGrpWebApiService);
+
+  constructor() {
     super();
   }
 

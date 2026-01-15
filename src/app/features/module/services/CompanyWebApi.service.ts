@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -14,7 +15,11 @@ export class CompanyWebApiService {
     baseUrl: string;
     headers: HttpHeaders;
 
-    constructor(private client: HttpClient, private config: AppConfigService) {
+
+    private readonly client = inject(HttpClient);
+    private readonly config = inject(AppConfigService);
+
+    constructor() {
         this.baseUrl = this.config.apiUrl + 'CompanyWeb/';
 
         this.headers = new HttpHeaders()

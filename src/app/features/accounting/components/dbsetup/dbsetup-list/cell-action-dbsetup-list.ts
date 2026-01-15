@@ -15,18 +15,6 @@ declare var $: any;
 
 
 
-<!-- 
-      <span (click)="btnDeleteClicked()" class="btn btn-sm btn-outline-warning mx-1" data-toggle="tooltip" title="حذف  ">
-  <a >
-    <i class="fas fa-trash"></i>
-  </a>
-  </span>
-  <span (click)="btnDeleteClickedAll()" class="btn btn-sm btn-outline-danger" data-toggle="tooltip" title="حذف کلی با زیر شاخه ها">
-  <a >
-    <i class="fas fa-trash"></i>
-  </a>
-  </span> -->
-
 
   `,
   standalone: false

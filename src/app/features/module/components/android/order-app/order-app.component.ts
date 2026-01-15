@@ -52,10 +52,7 @@ export class OrderAppComponent implements OnInit {
 
   ];
 
-  constructor(
-
-
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
   }

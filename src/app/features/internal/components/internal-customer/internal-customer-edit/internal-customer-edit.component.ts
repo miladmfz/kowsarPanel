@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
@@ -22,14 +22,14 @@ import { CustomerWebApiService } from '../../../services/CustomerWebApi.service'
 })
 export class InternalCustomerEditComponent extends AgGridBaseComponent implements OnInit {
 
-  constructor(
-    private repo: CustomerWebApiService,
-    private readonly route: ActivatedRoute,
-    private readonly notificationService: NotificationService,
-    private readonly router: Router,
-    private loadingService: LoadingService,
 
-  ) { super(); }
+  private readonly router = inject(Router);
+  private readonly repo = inject(CustomerWebApiService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly notificationService = inject(NotificationService);
+  private readonly loadingService = inject(LoadingService);
+
+  constructor() { super(); }
 
   title = 'فرم اطلاعات اپلیکیشن';
   SingleItems: any[] = [];

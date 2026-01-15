@@ -19,6 +19,7 @@ import {
     signal,
     effect,
     OnInit,
+    inject,
 } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
 import { ThemeService } from 'src/app/app-shell/framework-services/ui/theme.service';
@@ -58,9 +59,9 @@ export class AttendanceGridComponent extends AgGridBaseComponent implements OnIn
     // ===============================================================
     // 🔹 سازنده کلاس و مدیریت Signal‌ها
     // ===============================================================
-    constructor(
-        private repo: DashboardWebApiService,
-    ) {
+    private readonly repo = inject(DashboardWebApiService);
+
+    constructor() {
         super();
 
         // 💡 هر زمان داده‌ها تغییر کنند → گرید را به‌روزرسانی کن

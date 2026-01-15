@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
@@ -25,10 +25,10 @@ import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi
 export class OrderAppReportComponent extends AgGridBaseComponent
   implements OnInit {
 
-  constructor(
-    private readonly router: Router,
-    private repo: OrderWebApiService,
-  ) {
+  private readonly repo = inject(OrderWebApiService);
+
+
+  constructor() {
     super();
   }
 

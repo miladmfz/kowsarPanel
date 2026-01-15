@@ -89,13 +89,8 @@ export class ReportDetailComponent extends AgGridBaseComponent implements OnInit
   // 🧠 Injected Services
   // ===============================================================
   private readonly repo = inject(ReportWebApiService);
-  private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-
-
-
   private readonly notify = inject(NotificationService);
-  private readonly renderer = inject(Renderer2);
   private readonly loadingservice = inject(LoadingService);
 
   constructor() {

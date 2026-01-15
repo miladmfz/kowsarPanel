@@ -15,7 +15,7 @@
    =============================================================== */
 
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
 import { DashboardWebApiService } from 'src/app/app-shell/core/services/dashboard-web-api.service';
@@ -52,10 +52,10 @@ export class LeaveGridComponent extends AgGridBaseComponent implements OnInit {
     // ===============================================================
     // 🧱 سازنده
     // ===============================================================
-    constructor(
-        private repo: DashboardWebApiService,
-        private dateSyncService: DateSyncService
-    ) {
+    private readonly repo = inject(DashboardWebApiService);
+    private readonly dateSyncService = inject(DateSyncService);
+
+    constructor() {
         super();
     }
 

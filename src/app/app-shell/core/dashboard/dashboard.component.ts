@@ -17,7 +17,7 @@
    - ساختار کاملاً Standalone و ماژولار
    =============================================================== */
 
-import { Component, OnInit, Renderer2, OnDestroy } from '@angular/core';
+import { Component, OnInit, Renderer2, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 //   Subcomponents
@@ -61,12 +61,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // ===============================================================
   //   سازنده
   // ===============================================================
-  constructor(
-    private repo: DashboardWebApiService,
-    private sharedService: SharedService,
-    private readonly notificationService: NotificationService,
-    private renderer: Renderer2
-  ) { }
+  private readonly repo = inject(DashboardWebApiService);
+  private readonly sharedService = inject(SharedService);
+  private readonly notificationService = inject(NotificationService);
+  private readonly renderer = inject(Renderer2);
+
+  constructor() { }
 
   // ===============================================================
   // 🚀 Lifecycle Hooks

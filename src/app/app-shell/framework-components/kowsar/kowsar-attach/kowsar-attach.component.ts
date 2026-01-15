@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AgGridAngular } from 'ag-grid-angular';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
@@ -36,11 +36,11 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
   selectedFileSize = 0;
   selectedFileType = '';
 
-  constructor(
-    private repo: KowsarBaseWebApi,
-    private notify: NotificationService,
-    private loading: LoadingService,
-  ) {
+  private readonly repo = inject(KowsarBaseWebApi);
+  private readonly notify = inject(NotificationService);
+  private readonly loading = inject(LoadingService);
+
+  constructor() {
     super();
   }
 

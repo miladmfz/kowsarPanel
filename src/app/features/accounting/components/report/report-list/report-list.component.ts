@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
@@ -25,12 +25,10 @@ import { ReportWebApiService } from '../../../services/ReportWebApi.service';
 export class ReportListComponent extends AgGridBaseComponent
   implements OnInit {
 
-  constructor(
-    private readonly router: Router,
-    private repo: ReportWebApiService,
-    private notificationService: NotificationService,
-    private loadingService: LoadingService,
-  ) {
+  private readonly router = inject(Router);
+  private readonly repo = inject(ReportWebApiService);
+
+  constructor() {
     super();
   }
 

@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
@@ -45,9 +45,9 @@ export class AutletterVoiceRecorderComponent {
   voiceToText: string = '';
   audioFile: File | null = null;
 
-  constructor(
-    private http: HttpClient
-  ) { }
+  private readonly client = inject(HttpClient);
+
+  constructor() { }
 
   private resetRecording() {
     this.audioPreviewUrl = null;
@@ -101,7 +101,7 @@ export class AutletterVoiceRecorderComponent {
         const formData = new FormData();
         formData.append('file', this.audioFile);
 
-        const response = await this.http
+        const response = await this.client
           .post<{ text: string }>('http://localhost:60006/api/Support/UploadAndTranscribe', formData)
           .toPromise();
 

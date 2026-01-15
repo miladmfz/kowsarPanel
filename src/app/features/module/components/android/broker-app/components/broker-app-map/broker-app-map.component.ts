@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Input, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, inject, Input, OnInit, Renderer2 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import moment from 'jalali-moment';
@@ -104,15 +104,11 @@ export class BrokerAppMapComponent implements AfterViewInit {
 
   Customerlocation: any[] = []
 
+  private readonly repo = inject(BrokerWebApiService);
+  private readonly fb = inject(FormBuilder);
 
 
-  constructor(
-    private readonly router: Router,
-    private repo: BrokerWebApiService,
-    private renderer: Renderer2,
-    private fb: FormBuilder           // ← افزوده شد
-
-  ) { }
+  constructor() { }
 
   ngAfterViewInit(): void {
     // اطمینان از اینکه نقشه بارگذاری شده و به درستی مقداردهی شده است

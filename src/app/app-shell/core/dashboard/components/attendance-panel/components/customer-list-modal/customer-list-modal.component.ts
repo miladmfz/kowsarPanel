@@ -12,7 +12,7 @@
    =============================================================== */
 
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
@@ -90,8 +90,9 @@ export class CustomerListModalComponent implements OnInit, OnDestroy {
   // ===============================================================
   // 🧱 سازنده
   // ===============================================================
+  private readonly fb = inject(FormBuilder);
 
-  constructor(private fb: FormBuilder) {
+  constructor() {
     this.searchForm = this.fb.group({
       query: [''],
     });

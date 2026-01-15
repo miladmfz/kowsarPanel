@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { debounceTime, Subject, Subscription } from 'rxjs';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { debounceTime, Subject } from 'rxjs';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { CellActionSupportGoodEdit } from './cell-action-support-good-edit';
 import { CellActionSupportFactorRowsEdit } from './cell-action-support-factorrows-edit';
@@ -10,7 +10,6 @@ import { CommonModule, Location } from '@angular/common';
 
 import Swal from 'sweetalert2';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
-import { AppConfigService } from 'src/app/app-config.service';
 import { CellActionSupportAutletterFactorList } from './cell-action-support-autletter-factor-list';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { SupportFactorWebApiService } from '../../../services/SupportFactorWebApi.service';
@@ -31,19 +30,18 @@ import { AgGridAngular } from 'ag-grid-angular';
 })
 export class InternalFactorsEditComponent extends AgGridBaseComponent implements OnInit {
 
-  constructor(
-    private readonly router: Router,
-    private repo: SupportFactorWebApiService,
-    private renderer: Renderer2,
-    private route: ActivatedRoute,
-    private location: Location,
-    private fb: FormBuilder,
-    private sharedService: SharedService,
-    private readonly notificationService: NotificationService,
-    private loadingService: LoadingService,
-    private config: AppConfigService,
-    private cdr: ChangeDetectorRef
-  ) {
+
+  private readonly router = inject(Router);
+  private readonly repo = inject(SupportFactorWebApiService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly location = inject(Location);
+  private readonly sharedService = inject(SharedService);
+  private readonly notificationService = inject(NotificationService);
+  private readonly loadingService = inject(LoadingService);
+
+
+
+  constructor() {
     super();
   }
 

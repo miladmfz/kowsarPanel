@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { IDatepickerTheme, NgPersianDatepickerModule } from 'ng-persian-datepicker';
@@ -25,8 +25,9 @@ import { InternalAppsWebApiService } from 'src/app/features/internal/services/In
 })
 export class InternalReportApplicationComponent extends AgGridBaseComponent
   implements OnInit {
+  private readonly repo = inject(InternalAppsWebApiService);
 
-  constructor(private repo: InternalAppsWebApiService) {
+  constructor() {
     super();
   }
   customTheme: Partial<IDatepickerTheme> = {

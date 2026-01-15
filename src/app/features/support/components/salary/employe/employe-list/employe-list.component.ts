@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
@@ -155,14 +155,11 @@ export class EmployeListComponent extends AgGridBaseComponent
     Explain: new FormControl('')
   });
 
+  private readonly router = inject(Router);
+  private readonly repo = inject(SalaryWebApiService);
+  private readonly loadingService = inject(LoadingService);
 
-  constructor(
-    private readonly router: Router,
-    private readonly repo: SalaryWebApiService,
-    private readonly renderer: Renderer2,
-    private readonly loadingservice: LoadingService,
-
-  ) {
+  constructor() {
     super();
   }
 
@@ -277,10 +274,10 @@ export class EmployeListComponent extends AgGridBaseComponent
   // Load Data
   // ---------------------------
   getList() {
-    this.loadingservice.show()
+    this.loadingService.show()
     this.repo.GetEmployee(this.EditForm_SearchTarget.value).subscribe({
       next: (data: any) => {
-        this.loadingservice.hide()
+        this.loadingService.hide()
 
         this.records = data?.Employees ?? [];
         this.updateGridData(1, this.records);
@@ -291,7 +288,7 @@ export class EmployeListComponent extends AgGridBaseComponent
           this.gridApi1.sizeColumnsToFit();
         }
       },
-      error: () => (this.loadingservice.hide()),
+      error: () => (this.loadingService.hide()),
     });
   }
 
@@ -308,10 +305,10 @@ export class EmployeListComponent extends AgGridBaseComponent
       EmployeCode: EmployeCode
     });
 
-    this.loadingservice.show()
+    this.loadingService.show()
     this.repo.GetSalarySummary(this.EditForm_EmploySalary.value).subscribe({
       next: (data: any) => {
-        this.loadingservice.hide()
+        this.loadingService.hide()
 
         this.records_salary = data?.SalarySummarys ?? [];
         this.updateGridData(2, this.records_salary);
@@ -323,7 +320,7 @@ export class EmployeListComponent extends AgGridBaseComponent
         }
         this.Employeesalary_dialog_show()
       },
-      error: () => (this.loadingservice.hide()),
+      error: () => (this.loadingService.hide()),
     });
   }
 

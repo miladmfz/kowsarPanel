@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi.service';
@@ -15,12 +15,9 @@ import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi
   ],
 })
 export class OrderAppColumnListComponent implements OnInit {
+  private readonly repo = inject(OrderWebApiService);
 
-  constructor(
-    private repo: OrderWebApiService,
-    private route: ActivatedRoute,
-    private formBuilder: UntypedFormBuilder
-  ) { }
+  constructor() { }
 
   Apptype: string = "3";
   BasketColumns: any[] = [];

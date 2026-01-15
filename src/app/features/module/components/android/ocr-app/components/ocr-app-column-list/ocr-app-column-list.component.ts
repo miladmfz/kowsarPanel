@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.service';
@@ -17,11 +17,9 @@ import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.ser
 })
 export class OcrAppColumnListComponent implements OnInit {
 
-  constructor(
-    private repo: OcrWebApiService,
-    private route: ActivatedRoute,
-    private formBuilder: UntypedFormBuilder
-  ) { }
+  private readonly repo = inject(OcrWebApiService);
+
+  constructor() { }
 
   Apptype: string = "2";
   BasketColumns: any[] = [];

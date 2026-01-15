@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router, RouterModule } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -22,14 +22,14 @@ import { SalaryWebApiService } from 'src/app/features/support/services/SalaryWeb
 })
 export class MonthsummaryEditComponent extends AgGridBaseComponent implements OnInit {
 
-  constructor(
-    private repo: SalaryWebApiService,
-    private readonly route: ActivatedRoute,
-    private readonly notificationService: NotificationService,
-    private readonly router: Router,
-    private loadingService: LoadingService,
 
-  ) { super(); }
+  private readonly router = inject(Router);
+  private readonly repo = inject(SalaryWebApiService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly notificationService = inject(NotificationService);
+
+
+  constructor() { super(); }
 
   title = 'فرم اطلاعات اپلیکیشن';
   SingleItems: any[] = [];

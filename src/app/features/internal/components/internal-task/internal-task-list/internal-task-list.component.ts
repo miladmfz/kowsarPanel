@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import Swal from 'sweetalert2';
@@ -26,12 +26,12 @@ export class InternalTaskListComponent
   extends AgGridBaseComponent
   implements OnInit {
 
-  constructor(
-    private readonly router: Router,
-    private repo: SupportFactorWebApiService,
-    private notificationService: NotificationService,
-    private loadingService: LoadingService,
-  ) {
+
+  private readonly repo = inject(SupportFactorWebApiService);
+  private readonly notificationService = inject(NotificationService);
+  private readonly loadingService = inject(LoadingService);
+
+  constructor() {
     super();
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -31,13 +31,10 @@ export class InternalReportCustomerComponent
   extends AgGridBaseComponent
   implements OnInit, OnDestroy {
 
-  constructor(
-    private readonly router: Router,
-    private repo: SupportFactorWebApiService,
-    private renderer: Renderer2,
-    private notificationService: NotificationService,
-    private loadingService: LoadingService,
-  ) {
+  private readonly repo = inject(SupportFactorWebApiService);
+  private readonly loadingService = inject(LoadingService);
+
+  constructor() {
     super();
   }
 
