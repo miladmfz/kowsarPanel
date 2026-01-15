@@ -1,18 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
+import { GoodsGrpWebApiService } from '../../../services/GoodsGrpWebApi.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
-import Swal from 'sweetalert2';
-import { CellActionReportList } from './cell-action-report-list';
-import { ReportWebApiService } from '../../../services/ReportWebApi.service';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
+import { CellActionGoodsGrpList } from './cell-action-goodsgrp-list';
 
 @Component({
-  selector: 'app-report-list',
-  templateUrl: './report-list.component.html',
+  selector: 'app-goodsgrp-list',
+  templateUrl: './goodsgrp-list.component.html',
   standalone: true,
   imports: [
     CommonModule,
@@ -22,12 +21,12 @@ import { ReportWebApiService } from '../../../services/ReportWebApi.service';
 
   ]
 })
-export class ReportListComponent extends AgGridBaseComponent
+export class GoodsgrpListComponent extends AgGridBaseComponent
   implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private repo: ReportWebApiService,
+    private repo: GoodsGrpWebApiService,
     private notificationService: NotificationService,
     private loadingService: LoadingService,
   ) {
@@ -44,61 +43,20 @@ export class ReportListComponent extends AgGridBaseComponent
     ClassName: new FormControl(''),
   });
 
-  getDataPath_report = (task: any): string[] => {
-    const path: string[] = [];
+  getDataPath_GoodsGrp = (task: any): string[] => {
+    const pathgroup: string[] = [];
     let current = task;
 
     while (current) {
-      path.unshift(current.ReportTitle);
-      if (current.ReportRef === 0) break;
-      current = this.records.find(t => t.ReportCode === current.ReportRef);
+      pathgroup.unshift(current.Name);
+      if (current.GroupRef === 0) break;
+      current = this.records.find(t => t.GroupCode === current.GroupRef);
     }
 
-    return path;
+    return pathgroup;
   };
 
-  getDataPath_report1 = (data: any) => {
 
-    const path: string[] = [];
-
-    // Construct the path based on L1, L2, L3, L4, and L5
-
-
-    if (data.l1 !== '0') {
-      const parentL1 = this.findReportByCode(data.l1);
-      if (parentL1) {
-        path.push(parentL1.ReportTitle); // Add the L1 parent Report ReportTitle
-      }
-    }
-
-    if (data.l2 !== '0') {
-      const parentL2 = this.findReportByCode(data.l2);
-      if (parentL2) {
-        path.push(parentL2.ReportTitle); // Add the L2 parent Report ReportTitle
-      }
-    }
-
-
-    if (data.l3 !== '0') {
-      const parentL3 = this.findReportByCode(data.l3);
-      if (parentL3) {
-        path.push(parentL3.ReportTitle); // Add the L3 parent Report ReportTitle
-      }
-    }
-
-    if (data.l4 !== '0') {
-      const parentL4 = this.findReportByCode(data.l4);
-      if (parentL4) {
-        path.push(parentL4.ReportTitle); // Add the L4 parent Report ReportTitle
-      }
-    }
-
-
-    path.push(data.ReportTitle);
-
-
-    return path;
-  };
 
   // Helper method to find a Report by its ReportCode
   findReportByCode(ReportCode: string): any | undefined {
@@ -129,7 +87,7 @@ export class ReportListComponent extends AgGridBaseComponent
         headerName: 'عملیات',
         pinned: 'left',
         minWidth: 100,
-        cellRenderer: CellActionReportList,
+        cellRenderer: CellActionGoodsGrpList,
         cellRendererParams: {
           editUrl: '/accounting/report-detail'
         }
@@ -155,17 +113,17 @@ export class ReportListComponent extends AgGridBaseComponent
   }
 
   GetReports() {
-    this.repo.GetReports(this.EditForm_SearchTarget.value)
+    this.repo.GetGoodsGrp(this.EditForm_SearchTarget.value)
       .subscribe((data: any) => {
-        this.records = data?.Reports ?? [];
+        this.records = data?.GoodsGrps ?? [];
         this.updateGridData(1, this.records);
       });
   }
 
 
 
-  navigatetodetail(data: any): void {
-    this.router.navigate(['/accounting/report-detail', data.ReportCode]);
+  navigatetoedit(data: any): void {
+    this.router.navigate(['/accounting/goodsgrp-edit', data.GroupCode]);
   }
 
   // delete(TaskCode: any) {

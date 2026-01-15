@@ -1585,11 +1585,12 @@
           <div class="modal-body">
 
 
+
+
             <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
               <ag-grid-angular [columnDefs]="columnDefs6" [rowData]="base_Group_list" [gridOptions]="gridOptions"
                 (gridReady)="onGridReady($event, 6)" (firstDataRendered)="gridApi6?.sizeColumnsToFit()"
-                class="w-100 h-100" [rowSelection]="{ mode: 'singleRow' ,enableClickSelection: true}"
-                (selectionChanged)="onSelectionChanged($event)" [treeData]="true" [getDataPath]="getDataPath_group">
+                class="w-100 h-100" [treeData]="true" [getDataPath]="getDataPath_group">
               </ag-grid-angular>
             </div>
 

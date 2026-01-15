@@ -115,5 +115,15 @@ export const Accounting_ROUTES: Routes = [
     },
 
 
+    //goodsgrp
+
+    {
+        path: 'goodsgrp-list',
+        title: 'لیست تنظیمات کوثر',
+        loadComponent: () =>
+            import('./components/goodsgrp/goodsgrp-list/goodsgrp-list.component')
+                .then(m => m.GoodsgrpListComponent),
+    },
+
 
 ];

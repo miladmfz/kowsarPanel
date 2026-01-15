@@ -442,10 +442,6 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     this.repo.GetGoodsGrp().subscribe((data: any) => {
       this.base_Group_list = data.GoodsGrps
 
-      const treeStructure = this.buildTree_group(data.GoodsGrps);
-
-
-
     });
 
   }
@@ -454,10 +450,8 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
     // Initial data fetch
     this.repo.GetStacks().subscribe((data: any) => {
+
       this.base_Stack_list = data.Stacks
-
-      const treeStructure = this.buildTree_stack(data.Stacks);
-
     });
 
   }
@@ -1209,196 +1203,33 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
   // #region Func
+  getDataPath_group = (task: any): string[] => {
+    const pathgroup: string[] = [];
+    let current = task;
 
-
-  getDataPath_group = (data: Group) => {
-    const path: string[] = [];
-
-    // Construct the path based on L1, L2, L3, L4, and L5
-    if (data.L1 !== '0') {
-      const parentL1 = this.findGroupByCode(data.L1);
-      if (parentL1) {
-        path.push(parentL1.Name); // Add the L1 parent group name
-      }
+    while (current) {
+      pathgroup.unshift(current.Name);
+      if (current.GroupRef === 0) break;
+      current = this.base_Group_list.find(t => t.GroupCode === current.GroupRef);
     }
 
-    if (data.L2 !== '0') {
-      const parentL2 = this.findGroupByCode(data.L2);
-      if (parentL2) {
-        path.push(parentL2.Name); // Add the L2 parent group name
-      }
-    }
-
-    if (data.L3 !== '0') {
-      const parentL3 = this.findGroupByCode(data.L3);
-      if (parentL3) {
-        path.push(parentL3.Name); // Add the L3 parent group name
-      }
-    }
-
-    if (data.L4 !== '0') {
-      const parentL4 = this.findGroupByCode(data.L4);
-      if (parentL4) {
-        path.push(parentL4.Name); // Add the L4 parent group name
-      }
-    }
-
-    // Finally, add the current group's name
-    path.push(data.Name);
-
-    return path;
+    return pathgroup;
   };
 
-  // Helper method to find a group by its GroupCode
-  findGroupByCode(groupCode: string): Group | undefined {
-    return this.base_Group_list.find(group => group.GroupCode === groupCode);
-  }
+  // #region Func
+  getDataPath_stack = (task: any): string[] => {
+    const pathstack: string[] = [];
+    let current = task;
 
-
-
-  getDataPath_stack = (data: Stack) => {
-    const path: string[] = [];
-
-    // Construct the path based on L1, L2, L3, L4, and L5
-    if (data.L1 !== '0') {
-      const parentL1 = this.findstackByCode(data.L1);
-      if (parentL1) {
-        path.push(parentL1.Name); // Add the L1 parent group name
-      }
+    while (current) {
+      pathstack.unshift(current.Name);
+      if (current.StackRef === 0) break;
+      current = this.base_Stack_list.find(t => t.StackCode === current.StackRef);
     }
 
-    if (data.L2 !== '0') {
-      const parentL2 = this.findstackByCode(data.L2);
-      if (parentL2) {
-        path.push(parentL2.Name); // Add the L2 parent group name
-      }
-    }
-
-    if (data.L3 !== '0') {
-      const parentL3 = this.findstackByCode(data.L3);
-      if (parentL3) {
-        path.push(parentL3.Name); // Add the L3 parent group name
-      }
-    }
-
-    if (data.L4 !== '0') {
-      const parentL4 = this.findstackByCode(data.L4);
-      if (parentL4) {
-        path.push(parentL4.Name); // Add the L4 parent group name
-      }
-    }
-
-    // Finally, add the current group's name
-    path.push(data.Name);
-
-    return path;
+    return pathstack;
   };
 
-  // Helper method to find a group by its GroupCode
-  findstackByCode(StackCode: string): Group | undefined {
-    return this.base_Stack_list.find(stack => stack.StackCode === StackCode);
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-  buildTree_stack(stacks: Stack[]): Stack[] {
-    const stackMap = new Map<string, Stack>();
-
-    for (const stack of stacks) {
-      stack.children = [];
-      stackMap.set(stack.StackCode, stack);
-    }
-
-    // Step 2: Build the tree structure
-    const tree: Stack[] = [];
-
-    for (const stack of stacks) {
-      const { L1, L2, L3, L4, L5, StackCode } = stack;
-
-      // Determine the parent based on the L values
-      let parent: Stack | undefined;
-
-      if (L1 === '0') {
-        // Top-level group (L1 is 0)
-        tree.push(stack);
-      } else {
-        // Find the appropriate parent group
-        if (L2 === '0') {
-          parent = stackMap.get(L1); // Parent is L1
-        } else if (L3 === '0') {
-          parent = stackMap.get(L2); // Parent is L2
-        } else if (L4 === '0') {
-          parent = stackMap.get(L3); // Parent is L3
-        } else if (L5 === '0') {
-          parent = stackMap.get(L4); // Parent is L4
-        } else {
-          parent = stackMap.get(L5); // Parent is L5
-        }
-
-        // If a parent is found, push this group to its children's array
-        if (parent) {
-          parent.children.push(stack);
-        }
-      }
-    }
-
-    return tree;
-  }
-
-
-  buildTree_group(groups: Group[]): Group[] {
-    const groupMap = new Map<string, Group>();
-
-    // Step 1: Create a map of groups for easy lookup
-    for (const group of groups) {
-      group.children = [];
-      groupMap.set(group.GroupCode, group);
-    }
-
-    // Step 2: Build the tree structure
-    const tree: Group[] = [];
-
-    for (const group of groups) {
-      const { L1, L2, L3, L4, L5, GroupCode } = group;
-
-      // Determine the parent based on the L values
-      let parent: Group | undefined;
-
-      if (L1 === '0') {
-        // Top-level group (L1 is 0)
-        tree.push(group);
-      } else {
-        // Find the appropriate parent group
-        if (L2 === '0') {
-          parent = groupMap.get(L1); // Parent is L1
-        } else if (L3 === '0') {
-          parent = groupMap.get(L2); // Parent is L2
-        } else if (L4 === '0') {
-          parent = groupMap.get(L3); // Parent is L3
-        } else if (L5 === '0') {
-          parent = groupMap.get(L4); // Parent is L4
-        } else {
-          parent = groupMap.get(L5); // Parent is L5
-        }
-
-        // If a parent is found, push this group to its children's array
-        if (parent) {
-          parent.children.push(group);
-        }
-      }
-    }
-
-    return tree;
-  }
 
 
 
