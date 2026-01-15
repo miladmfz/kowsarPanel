@@ -78,4 +78,42 @@ export const Accounting_ROUTES: Routes = [
                 .then(m => m.GoodEditComponent),
     },
 
+
+    //report
+
+    {
+        path: 'report-list',
+        title: 'لیست گزارشات',
+        loadComponent: () =>
+            import('./components/report/report-list/report-list.component')
+                .then(m => m.ReportListComponent),
+    },
+    {
+        path: 'report-detail',
+        title: 'جزئیات گزارش',
+        loadComponent: () =>
+            import('./components/report/report-detail/report-detail.component')
+                .then(m => m.ReportDetailComponent),
+    },
+    {
+        path: 'report-detail/:id',
+        title: 'جزئیات گزارش',
+        loadComponent: () =>
+            import('./components/report/report-detail/report-detail.component')
+                .then(m => m.ReportDetailComponent),
+    },
+
+
+    //report
+
+    {
+        path: 'dbsetup',
+        title: 'لیست تنظیمات کوثر',
+        loadComponent: () =>
+            import('./components/dbsetup/dbsetup-list/dbsetup-list.component')
+                .then(m => m.DbsetupListComponent),
+    },
+
+
+
 ];

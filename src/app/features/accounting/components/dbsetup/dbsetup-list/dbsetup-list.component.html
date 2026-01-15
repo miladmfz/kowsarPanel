@@ -1,0 +1,127 @@
+<div class="card-body">
+  <div class="tab-content">
+
+    <div class="tab-pane fade show active" role="tabpanel">
+
+      <div class="card">
+        <div class="card-body">
+
+
+          <form [formGroup]="EditForm_Search" id="submitForm">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body row">
+
+
+                    <div class="form-group col-md-12">
+                      <label for="SearchTarget" class="col-form-label">جستجو </label>
+
+                      <input type="text" class="form-control" id="SearchTarget" formControlName="SearchTarget"
+                        maxlength="100" autocomplete="off" />
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+
+
+        </div>
+
+        <div class="row mb-2">
+          <div class="col-sm-12">
+
+
+
+            <a type="button" class="btn btn-primary waves-effect waves-light m-1" (click)="GetDbSetup()">
+              <span class="btn-label"><i class="fas fa-search"></i></span>جستجو
+            </a>
+
+
+          </div>
+
+
+        </div>
+
+
+
+        <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
+          <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()" class="w-100 h-100">
+          </ag-grid-angular>
+        </div>
+
+
+      </div>
+    </div>
+
+
+  </div>
+
+</div>
+
+
+
+
+<div class="modal fade" id="orderdbsetup" tabindex="-1" aria-labelledby="orderdbsetupLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #d1dce7;">
+      <div class="modal-header" style="background-color: #949494;">
+        <h5 class="modal-title" id="orderdbsetupLabel">تنظیمات پایه</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="orderdbsetup_Modal_Response_close()"></button>
+      </div>
+      <div class="modal-body">
+
+
+        <form [formGroup]="EditForm_DbSetup" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+
+                  <div class="form-group col-md-12">
+                    <label for="Description" class="col-form-label">عنوان تنظیمات </label>
+
+                    <input type="text" class="form-control" id="Description" formControlName="Description"
+                      autocomplete="off" readonly />
+                  </div>
+
+
+
+                  <div class="form-group col-md-12">
+                    <label for="KeyValue" class="col-form-label">عنوان تنظیمات </label>
+
+                    <input type="text" class="form-control" id="KeyValue" formControlName="KeyValue" autocomplete="off"
+                      readonly />
+                  </div>
+
+                  <div class="form-group col-md-12">
+                    <label for="DataValue" class="col-form-label">مقدار تنظیمات </label>
+
+                    <textarea type="text" class="form-control" id="DataValue" formControlName="DataValue"
+                      autocomplete="off"></textarea>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="orderdbsetup_Modal_Response_close()">بستن</button> <button type="button" class="btn btn-primary"
+          (click)="UpdateDbSetup()">به‌روزرسانی</button>
+      </div>
+    </div>
+  </div>
+</div>

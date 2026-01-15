@@ -32,6 +32,8 @@ import { AutletterWebApiService } from '../../../services/AutletterWebApi.servic
 
 @Component({
     selector: 'app-autletter-list',
+
+    templateUrl: './autletter-list.component.html',
     standalone: true,
     imports: [
         CommonModule,
@@ -40,7 +42,6 @@ import { AutletterWebApiService } from '../../../services/AutletterWebApi.servic
         AgGridModule,
         NgPersianDatepickerModule,
     ],
-    templateUrl: './autletter-list.component.html',
 })
 export class AutLetterListComponent extends AgGridBaseComponent implements OnInit, OnDestroy {
     // ===============================================================

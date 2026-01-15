@@ -111,6 +111,32 @@
             </ul>
           </div>
         </li>
+
+        <li>
+          <a href="#report" data-bs-toggle="collapse" aria-expanded="false" aria-controls="report">
+            <i class="fas fa-report"></i>
+            <span>گزارشات</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="report" data-bs-parent="#side-menu">
+            <ul class="nav-second-level">
+              <li><a [routerLink]="['/accounting/report-list']">لیست گزارشات</a></li>
+            </ul>
+          </div>
+        </li>
+
+        <li>
+          <a href="#setting" data-bs-toggle="collapse" aria-expanded="false" aria-controls="setting">
+            <i class="fas fa-setting"></i>
+            <span>تنظیمات</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="setting" data-bs-parent="#side-menu">
+            <ul class="nav-second-level">
+              <li><a [routerLink]="['/accounting/dbsetup']">لیست تنظیمات کوثر</a></li>
+            </ul>
+          </div>
+        </li>
         }
 
 

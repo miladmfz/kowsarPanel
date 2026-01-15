@@ -1,0 +1,32 @@
+<div class="card">
+  <div class="card-body">
+
+    <h4 class="card-title">{{ title }}</h4>
+
+    <div class="d-flex flex-wrap mb-3 gap-2">
+
+      <a type="button" class="btn btn-success m-1" [routerLink]="['/internal/internal-task-edit']">
+        <span class="btn-label"><i class="fas fa-plus"></i></span>
+        جدید
+      </a>
+
+      <button class="btn btn-light m-1" (click)="GetReports()">
+        <span class="btn-label"><i class="fas fa-recycle"></i></span>
+        بازخوانی
+      </button>
+
+
+
+    </div>
+
+
+    <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()" class="w-100 h-100"
+        [treeData]="true" [getDataPath]="getDataPath_report">
+      </ag-grid-angular>
+    </div>
+
+
+  </div>
+</div>
