@@ -290,7 +290,7 @@ export class ReportDetailComponent extends AgGridBaseComponent implements OnInit
 
   private readonly repo = inject(ReportWebApiService);
   private readonly route = inject(ActivatedRoute);
-  private readonly notify = inject(NotificationService);
+  private readonly notificationService = inject(NotificationService);
   private readonly loadingservice = inject(LoadingService);
 
   constructor() {
@@ -390,7 +390,7 @@ export class ReportDetailComponent extends AgGridBaseComponent implements OnInit
       },
       error: () => {
         this.loadingservice.hide();
-        this.notify.error('❌ خطا در دریافت لیست نامه‌ها');
+        this.notificationService.error('❌ خطا در دریافت لیست نامه‌ها');
       },
     });
 

@@ -3,11 +3,12 @@
     <h4 class="card-title mb-3">{{ title }}</h4>
 
     <form [formGroup]="EditForm_SearchTarget" class="row mb-4 align-items-end">
-      <div class="col-md-3">
+
+      <!-- <div class="col-md-3">
         <label class="form-label">جستجو</label>
         <input type="text" class="form-control" formControlName="SearchTarget" placeholder="عبارت مورد نظر..."
           (input)="loadList()" />
-      </div>
+      </div> -->
 
       <!-- <div class="col-md-3">
         <label class="form-label">نمایش تیکت‌ها</label>
@@ -20,7 +21,7 @@
       <div class="col-md-3">
         <label class="form-label">از تاریخ</label>
         <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
-          <input type="text" class="form-control text-center" formControlName="StartTime" placeholder="انتخاب تاریخ"
+          <input type="text" class="form-control text-center" formControlName="FromDate" placeholder="انتخاب تاریخ"
             autocomplete="off" />
         </ng-persian-datepicker>
       </div>
@@ -28,7 +29,7 @@
       <div class="col-md-3">
         <label class="form-label">تا تاریخ</label>
         <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
-          <input type="text" class="form-control text-center" formControlName="EndTime" placeholder="انتخاب تاریخ"
+          <input type="text" class="form-control text-center" formControlName="ToDate" placeholder="انتخاب تاریخ"
             autocomplete="off" />
         </ng-persian-datepicker>
       </div>

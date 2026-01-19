@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
 import { IDatepickerTheme, NgPersianDatepickerModule } from 'ng-persian-datepicker';
+import { catchError, of } from 'rxjs';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
@@ -25,7 +26,7 @@ export class CustomerForoshRptComponent extends AgGridBaseComponent implements O
 
   private readonly repo = inject(ReportWebApiService);
   private readonly route = inject(ActivatedRoute);
-  private readonly notify = inject(NotificationService);
+  private readonly notificationService = inject(NotificationService);
   private readonly loadingservice = inject(LoadingService);
 
   constructor() {
@@ -49,9 +50,19 @@ export class CustomerForoshRptComponent extends AgGridBaseComponent implements O
   EditForm_SearchTarget = new FormGroup({
     SearchTarget: new FormControl(''),
     CentralRef: new FormControl(''),
-    StartTime: new FormControl(''),
-    EndTime: new FormControl(''),
     ObjectRef: new FormControl('0'),
+    ReportCode: new FormControl(''),
+    ReportTitle: new FormControl(''),
+
+    FromDate: new FormControl(''),
+    ToDate: new FormControl(''),
+
+    ClassName: new FormControl(''),
+    Department: new FormControl(''),
+    WhereCluase: new FormControl(''),
+    OrderBy: new FormControl(''),
+    Column: new FormControl(''),
+
   });
 
 
@@ -59,31 +70,88 @@ export class CustomerForoshRptComponent extends AgGridBaseComponent implements O
 
 
 
+
+
+
   ngOnInit(): void {
+    console.log(this.ReportData)
 
     this.title = this.ReportData.ReportTitle
 
+    this.EditForm_SearchTarget.patchValue({
+      ReportCode: this.ReportData.ReportCode,
+      ReportTitle: this.ReportData.ReportTitle,
+      ClassName: this.ReportData.ReportForm,
+    });
 
-    //this.initColumns();
+
+
+    this.initColumns();
     //this.loadList();
   }
 
 
 
+  customNumberFormatter(params: any) {
+    if (params.value === null || params.value === undefined) return '';
+    const value = parseFloat(params.value);
+    if (isNaN(value)) return params.value;
+
+    let formatted = value.toLocaleString('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 20
+    });
+
+    // حذف صفرهای اعشار اضافی
+    if (formatted.includes('.')) {
+      formatted = formatted.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    return formatted;
+  }
 
   private initColumns(): void {
-    this.columnDefs1 = [
 
-      {
-        field: 'TiTle',
-        headerName: 'TiTle',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150,
-      },
+    this.loadingservice.show()
 
-    ];
+    this.repo.GetGridSchema('T' + this.ReportData.ReportForm)
+      .pipe(
+        catchError((_error) => {
+          this.loadingservice.hide()
+          return of(null);
+        })
+      )
+      .subscribe((data: any) => {
+        if (data?.GridSchemas?.length > 0) {
+          this.columnDefs1 = data.GridSchemas
+            .filter((schema: any) => schema.Visible === 'True')
+            .map((schema: any) => ({
+              field: schema.FieldName,
+              headerName: schema.Caption,
+              cellClass: 'text-center',
+              filter: 'agSetColumnFilter',
+              sortable: true,
+              resizable: true,
+              minWidth: parseInt(schema.Width, 10),
+              valueFormatter: schema.Separator === 'True' ? this.customNumberFormatter : undefined
+            }));
 
+          // ستون عملیات
+          // this.columnDefs1.unshift({
+          //   field: 'عملیات',
+          //   pinned: 'left',
+          //   cellRenderer: CellActionFactorList,
+          //   minWidth: 150,
+          //   sortable: false,
+          //   filter: false
+          // });
+        }
+        this.loadingservice.hide()
+
+
+
+        this.loadList()
+
+      });
 
 
   }
@@ -111,7 +179,19 @@ export class CustomerForoshRptComponent extends AgGridBaseComponent implements O
 
 
   loadList(): void {
+    this.loadingservice.show()
 
+    this.repo.CustomerForoshRpt(this.EditForm_SearchTarget.value)
+      .subscribe((data: any) => {
+
+        this.records = data?.Reports || [];
+
+        this.updateGridData(1, this.records);
+        this.loadingservice.hide()
+
+
+
+      });
 
 
 

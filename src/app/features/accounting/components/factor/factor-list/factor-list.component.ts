@@ -263,7 +263,7 @@ export class FactorListComponent extends AgGridBaseComponent
 
     // حذف صفرهای اعشار اضافی
     if (formatted.includes('.')) {
-      formatted = formatted.replace(/\.?0+$/, '');
+      formatted = formatted.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
     return formatted;
   }
