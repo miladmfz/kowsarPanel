@@ -11,7 +11,7 @@ declare var ApexCharts: any;
 export class KowsarChartPieComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('chartpie') chartElement: ElementRef;  // استفاده از @ViewChild برای دسترسی به #chart
   @Input() series: any[] = [];
-  @Input() labels: string[] = [];
+  @Input() categories: string[] = [];
   @Input() title: string = ''; // ورودی برای عنوان نمودار
   chart: any;
 
@@ -27,7 +27,7 @@ export class KowsarChartPieComponent implements OnInit, AfterViewInit, OnChanges
     if (this.chart) {
       this.chart.updateOptions({
         series: this.series,
-        labels: this.labels,
+        labels: this.categories,
         title: {
           text: this.title, // استفاده از عنوان ورودی
         },
@@ -44,7 +44,7 @@ export class KowsarChartPieComponent implements OnInit, AfterViewInit, OnChanges
         height: 350,
       },
       series: this.series,
-      labels: this.labels,
+      labels: this.categories,
       title: {
         text: this.title,
         align: 'center',

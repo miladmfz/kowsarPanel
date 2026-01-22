@@ -44,3 +44,14 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
   }
 }
+
+.apexcharts-title-text,
+.apexcharts-legend-text,
+.apexcharts-xaxis-label,
+.apexcharts-yaxis-label,
+.apexcharts-tooltip,
+.apexcharts-datalabel,
+.apexcharts-text {
+  font-family: "IRANSans_Bold", sans-serif !important;
+  direction: rtl;
+}

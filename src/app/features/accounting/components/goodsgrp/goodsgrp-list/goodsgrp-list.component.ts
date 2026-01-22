@@ -32,7 +32,7 @@ export class GoodsgrpListComponent extends AgGridBaseComponent
   }
 
 
-  title = 'لیست خدمات';
+  title = 'لیست گروه بندی ها';
   records: any[] = [];
 
   EditForm_SearchTarget = new FormGroup({

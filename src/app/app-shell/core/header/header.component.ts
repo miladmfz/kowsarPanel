@@ -88,11 +88,17 @@ export class HeaderComponent implements OnInit, AfterViewInit {
 
     this.repo.GetImageFromServer(centralRef).subscribe({
       next: (data: any) => {
-        if (data?.Text) {
+        if (data?.Text && data?.Text !== "Nophoto") {
           this.zone.run(() => {
             this.Imageitem = `data:image/png;base64,${data.Text}`;
           });
+        } else {
+          this.zone.run(() => {
+            this.Imageitem = 'assets/images/KowsarSupport.png';
+          });
         }
+
+
       },
       error: () => console.warn('❌ خطا در دریافت تصویر کاربر'),
     });

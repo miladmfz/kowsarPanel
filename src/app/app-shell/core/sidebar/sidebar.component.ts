@@ -181,7 +181,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     this.repo.GetImageFromServer(this.CentralRef).subscribe({
       next: (data: any) => {
-        if (data?.Text) {
+        if (data?.Text && data?.Text !== "Nophoto") {
           this.Imageitem = `data:image/png;base64,${data.Text}`;
         } else {
           this.Imageitem = 'assets/images/KowsarSupport.png';

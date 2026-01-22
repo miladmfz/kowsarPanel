@@ -97,6 +97,7 @@
         </li>
 
         <!-- 💰 فروش (فقط برای مشتریان) -->
+        @if (JobPersonRef?.length > 0) {
         @if (IsCustomerBuild) {
         <li>
           <a href="#factor" data-bs-toggle="collapse" aria-expanded="false" aria-controls="factor">
@@ -111,7 +112,8 @@
             </ul>
           </div>
         </li>
-
+        }
+        @if (JobPersonRef?.length > 0) {
         <li>
           <a href="#report" data-bs-toggle="collapse" aria-expanded="false" aria-controls="report">
             <i class="fas fa-report"></i>
@@ -124,7 +126,10 @@
             </ul>
           </div>
         </li>
+        }
 
+
+        @if (JobPersonRef?.length > 0) {
         <li>
           <a href="#setting" data-bs-toggle="collapse" aria-expanded="false" aria-controls="setting">
             <i class="fas fa-setting"></i>
@@ -137,6 +142,8 @@
             </ul>
           </div>
         </li>
+        }
+
         }
 
 

@@ -28,12 +28,19 @@ export class ReportWebApiService {
 
 
 
+  GetGridSchemaAll(ClassName: string): Observable<any[]> {
+    const params = new HttpParams().append('ClassName', ClassName)
+    return this.client.get<any[]>(this.baseUrl + "GetGridSchemaAll", { headers: this.headers, params: params })
+  }
 
   GetGridSchema(ClassName: string): Observable<any[]> {
     const params = new HttpParams().append('ClassName', ClassName)
     return this.client.get<any[]>(this.baseUrl + "GetGridSchema", { headers: this.headers, params: params })
   }
 
+  GetStacks(): Observable<any[]> {
+    return this.client.get<any[]>(this.baseUrl + "GetStacks", { headers: this.headers })
+  }
 
 
 

@@ -49,18 +49,14 @@ export class KowsarChartColumnComponent implements OnInit, AfterViewInit, OnChan
 
         labels: {
           rotate: 90, // چرخش برچسب‌ها (اگر نیاز دارید)
-          style: {
-            fontFamily: 'Vazir, Tahoma, Arial', // فونت فارسی برای عنوان
-          },
+
         }
 
       },
       title: {
         text: this.title, // استفاده از عنوان ورودی
         align: 'center',
-        style: {
-          fontFamily: 'Vazir, Tahoma, Arial', // فونت فارسی برای عنوان
-        },
+
       },
       plotOptions: {
         bar: {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 declare var ApexCharts: any;
@@ -10,7 +10,8 @@ declare var ApexCharts: any;
 })
 export class KowsarChartDonutComponent implements OnInit, AfterViewInit {
   @ViewChild('chart') chartElement: ElementRef;
-
+  @Input() series: any[] = [];
+  @Input() categories: string[] = [];
   constructor() { }
 
   ngOnInit(): void { }

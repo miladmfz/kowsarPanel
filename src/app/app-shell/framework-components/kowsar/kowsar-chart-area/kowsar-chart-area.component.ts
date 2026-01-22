@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 declare var ApexCharts: any;
@@ -11,6 +11,8 @@ declare var ApexCharts: any;
 })
 export class KowsarChartAreaComponent implements OnInit, AfterViewInit {
   @ViewChild('chart') chartElement: ElementRef;
+  @Input() series: any[] = [];
+  @Input() categories: string[] = [];
 
   constructor() { }
 
@@ -28,14 +30,9 @@ export class KowsarChartAreaComponent implements OnInit, AfterViewInit {
         type: 'area',
         height: 350
       },
-      series: [
-        {
-          name: "درآمد",
-          data: [10, 15, 25, 30, 45, 50, 70]
-        }
-      ],
+      series: this.series,
       xaxis: {
-        categories: ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر"]
+        categories: this.categories
       },
       title: {
         text: "روند درآمد ماهانه",
