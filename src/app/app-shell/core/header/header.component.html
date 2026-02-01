@@ -12,6 +12,11 @@
   <div class="container-fluid">
     <ul class="list-unstyled topnav-menu float-end mb-0">
 
+      <li class="d-flex align-items-center mx-auto fw-bold m-3 text-white">
+        <i class=" fe-calendar me-1"></i>
+        تاریخ روز : {{ ActiveSession_str || '1404/01/01' }}
+      </li>
+
       <!-- 🔔 اعلان‌ها -->
       <li class="dropdown notification-list topbar-dropdown">
         <a class="nav-link dropdown-toggle waves-effect waves-light position-relative" data-bs-toggle="dropdown"
@@ -100,6 +105,9 @@
         </div>
       </li>
 
+
+
+
       <!-- 👤 پروفایل کاربر -->
       <li class="dropdown notification-list topbar-dropdown">
         <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light d-flex align-items-center"
@@ -148,6 +156,8 @@
           </a>
         </div>
       </li>
+
+
     </ul>
 
     <!--   لوگوی سیستم -->
@@ -174,6 +184,7 @@
           <div class="lines"><span></span><span></span><span></span></div>
         </a>
       </li>
+
     </ul>
 
     <div class="clearfix"></div>

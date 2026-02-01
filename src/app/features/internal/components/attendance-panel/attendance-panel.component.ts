@@ -37,6 +37,7 @@ import { NotificationService } from 'src/app/app-shell/framework-services/ui/not
 import { ThemeService } from 'src/app/app-shell/framework-services/ui/theme.service';
 import { AppConfigService } from 'src/app/app-config.service';
 import { DashboardWebApiService } from '../../services/DashboardWebApi.service';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
     selector: 'app-attendance-panel',
@@ -96,6 +97,7 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
     private refreshSub?: Subscription;
 
 
+    private readonly loadingService = inject(LoadingService);
     private readonly repo = inject(DashboardWebApiService);
     private readonly sharedService = inject(SharedService);
     private readonly notificationService = inject(NotificationService);
@@ -152,8 +154,10 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
         this.Attendance_history_Show_Modal.set(true);
         this.Attendance_history_records.set([]);
 
+        this.loadingService.show()
         this.repo.AttendanceHistory(item?.CentralRef).subscribe({
             next: (data: any) => {
+                this.loadingService.hide()
                 this.Attendance_history_records.set(data?.Attendances ?? []);
             },
             error: () => this.notificationService.error('❌ خطا در دریافت تاریخچه حضور'),
@@ -187,8 +191,10 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
 
         this.notificationService.info(`📨 در حال دریافت تیکت‌های ${item.FullName}...`);
 
+        this.loadingService.show()
         this.repo.GetAutLetterListByPerson(filter).subscribe({
             next: (data: any) => {
+                this.loadingService.hide()
                 this.Letter_records.set(data.AutLetters ?? []);
                 this.notificationService.success('  لیست تیکت‌ها با موفقیت بارگذاری شد.');
             },
@@ -247,8 +253,10 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
             OwnerPersonInfoRef: sessionStorage.getItem('PersonInfoRef'),
         };
 
+        this.loadingService.show()
         this.repo.LetterInsert(payload).subscribe({
             next: (data: any) => {
+                this.loadingService.hide()
                 const intValue = parseInt(data?.AutLetters[0]?.LetterCode ?? 0, 10);
 
                 if (!isNaN(intValue) && intValue > 0) {
@@ -279,8 +287,10 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
             ExecuterCentral: formData.ExecuterCentral ?? this.selectedPerson()?.CentralRef,
         };
 
+        this.loadingService.show()
         this.repo.AutLetterRowInsert(payload).subscribe({
             next: (data: any) => {
+                this.loadingService.hide()
                 const intValue = parseInt(data?.AutLetterRows[0]?.LetterRef ?? 0, 10);
 
                 if (!isNaN(intValue) && intValue > 0) {
@@ -291,6 +301,7 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
                             CONTACTS: formData.ExecuterName,
                             NumberPhone: formData.NumberPhone,
                         };
+                        this.loadingService.show()
                         this.repo.SendSmsAutLetter(smsPayload).subscribe();
                     }
 
@@ -314,6 +325,7 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
             Flag: '1',
         };
 
+        this.loadingService.show()
         this.repo.GetAutLetterListByPerson(filter).subscribe({
             next: (data: any) => this.Letter_records.set(data ?? []),
         });
@@ -345,8 +357,10 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
 
 
 
+        this.loadingService.show()
         this.repo.GetKowsarCustomer(filter).subscribe({
             next: (data: any) => {
+                this.loadingService.hide()
                 this.Customer_records.set(data?.Customers ?? []);
                 this.notificationService.success('  لیست مشتریان با موفقیت دریافت شد.');
             },

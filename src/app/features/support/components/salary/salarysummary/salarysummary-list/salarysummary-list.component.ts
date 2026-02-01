@@ -188,8 +188,8 @@ export class SalarysummaryListComponent extends AgGridBaseComponent
     Explain: new FormControl('')
   });
 
-  private readonly repo = inject(SalaryWebApiService);
   private readonly loadingService = inject(LoadingService);
+  private readonly repo = inject(SalaryWebApiService);
 
 
   constructor() {
@@ -310,9 +310,11 @@ export class SalarysummaryListComponent extends AgGridBaseComponent
     }
 
     this.loadingService.show()
+    this.loadingService.show()
     this.repo.GetSalarySummary(this.EditForm_SearchTarget.value).subscribe({
       next: (data: any) => {
         this.loadingService.hide()
+
 
         this.records = data?.SalarySummarys ?? [];
         this.updateGridData(1, this.records);
@@ -332,8 +334,10 @@ export class SalarysummaryListComponent extends AgGridBaseComponent
 
   updateWorkingEmploye(input_data: any): void {
 
+    this.loadingService.show()
     this.repo.GetEmployeeByCode(input_data?.EmployeeCode)
       .subscribe((data: any) => {
+        this.loadingService.hide()
         this.EditForm_WorkingEmploye.patchValue(data?.Employees[0]);
 
         this.EditForm_WorkingEmploye.patchValue({
@@ -376,9 +380,11 @@ export class SalarysummaryListComponent extends AgGridBaseComponent
 
 
     this.loadingService.show()
+    this.loadingService.show()
     this.repo.UpdateWorkingEmployee(this.EditForm_WorkingEmploye.value).subscribe({
       next: (data: any) => {
         this.loadingService.hide()
+
         this.getList()
         this.WorkingEmploye_dialog_close();
       },
@@ -393,9 +399,11 @@ export class SalarysummaryListComponent extends AgGridBaseComponent
 
 
     this.loadingService.show()
+    this.loadingService.show()
     this.repo.GetMonthSummary(this.EditForm_SearchTarget.value).subscribe({
       next: (data: any) => {
         this.loadingService.hide()
+
 
         this.records_MonthSummarys = data?.MonthSummarys ?? [];
         this.updateGridData(2, this.records_MonthSummarys);
@@ -427,9 +435,11 @@ export class SalarysummaryListComponent extends AgGridBaseComponent
     });
 
     this.loadingService.show()
+    this.loadingService.show()
     this.repo.AddSalaryForAllEmployees(this.EditForm_AddSalary.value).subscribe({
       next: (data: any) => {
         this.loadingService.hide()
+
         this.getList()
         this.addsalary_dialog_close();
       },

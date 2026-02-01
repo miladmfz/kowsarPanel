@@ -18,7 +18,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 export class LayoutComponent implements OnInit {
 
   ngOnInit(): void {
-    // 🔸 موقع اجرا، آخرین تم ذخیره‌شده رو اعمال کن
+    //   موقع اجرا، آخرین تم ذخیره‌شده رو اعمال کن
     const savedTheme = localStorage.getItem('theme') === 'dark';
     this.setTheme(savedTheme);
   }
@@ -51,7 +51,7 @@ export class LayoutComponent implements OnInit {
     }
   }
 
-  // 🔸 توابع قابل استفاده در سایر کامپوننت‌ها (مثلاً Header)
+  //   توابع قابل استفاده در سایر کامپوننت‌ها (مثلاً Header)
   toggleTheme(): void {
     const isDark = localStorage.getItem('theme') === 'dark';
     this.setTheme(!isDark);

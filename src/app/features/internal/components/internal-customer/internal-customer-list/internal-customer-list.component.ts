@@ -92,8 +92,8 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   });
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(CustomerWebApiService);
-  private readonly loadingservice = inject(LoadingService);
 
   constructor() {
     super();
@@ -201,10 +201,12 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   // Load Data
   // ---------------------------
   getList() {
-    this.loadingservice.show()
+    this.loadingService.show()
+    this.loadingService.show()
     this.repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe({
       next: (data: any) => {
-        this.loadingservice.hide()
+        this.loadingService.hide()
+
 
         this.records = data?.Customers ?? [];
         this.updateGridData(1, this.records);
@@ -253,6 +255,7 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
 
 
   Set_Customer_Property_Explain() {
+    this.loadingService.show()
     this.repo.EditCustomerProperty(this.EditForm_property.value).subscribe(() => {
       this.Edit_property_dialog_close();
       this.getList();
@@ -287,7 +290,9 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   // ---------------------------
   Factor_Customer_Property(CustomerCode: any) {
     this.loading_factor = true;
+    this.loadingService.show()
     this.repo.GetCustomerFactor(CustomerCode).subscribe((data: any) => {
+      this.loadingService.hide()
       this.records_factor = data?.Factors ?? [];
       this.loading_factor = false;
       this.CustomerFactor_dialog_show();
@@ -297,7 +302,9 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   }
 
   GetFactorrows(FactorCode: any) {
+    this.loadingService.show()
     this.repo.GetWebFactorRowsSupport(FactorCode).subscribe((data: any) => {
+      this.loadingService.hide()
       this.records_support_factorrows = data?.Factors ?? [];
       this.CustomerFactorRow_dialog_show();
       this.updateGridData(3, this.records_support_factorrows);

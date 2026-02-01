@@ -53,7 +53,7 @@ export abstract class AgGridEventsComponent extends AgGridApiComponent {
             this.clickCount = 0;
         }
 
-        // 🔸 قابل override در Component فرزند
+        //   قابل override در Component فرزند
         // مثال: if (event.colDef.field === 'عملیات') this.openDetails(event.data);
     }
 

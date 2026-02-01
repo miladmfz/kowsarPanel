@@ -72,8 +72,8 @@ export class MonthsummaryListComponent extends AgGridBaseComponent
 
 
   private readonly router = inject(Router);
-  private readonly repo = inject(SalaryWebApiService);
   private readonly loadingService = inject(LoadingService);
+  private readonly repo = inject(SalaryWebApiService);
 
   constructor() {
     super();
@@ -168,9 +168,11 @@ export class MonthsummaryListComponent extends AgGridBaseComponent
     }
 
     this.loadingService.show()
+    this.loadingService.show()
     this.repo.GetMonthSummary(this.EditForm_SearchTarget.value).subscribe({
       next: (data: any) => {
         this.loadingService.hide()
+
 
         this.records = data?.MonthSummarys ?? [];
         this.updateGridData(1, this.records);

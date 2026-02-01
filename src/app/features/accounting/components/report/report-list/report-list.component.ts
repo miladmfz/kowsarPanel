@@ -26,6 +26,7 @@ export class ReportListComponent extends AgGridBaseComponent
   implements OnInit {
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(ReportWebApiService);
 
   constructor() {
@@ -56,6 +57,7 @@ export class ReportListComponent extends AgGridBaseComponent
   };
 
   getDataPath_report1 = (data: any) => {
+    this.loadingService.hide()
 
     const path: string[] = [];
 
@@ -153,8 +155,10 @@ export class ReportListComponent extends AgGridBaseComponent
   }
 
   GetReports() {
+    this.loadingService.show()
     this.repo.GetReports(this.EditForm_SearchTarget.value)
       .subscribe((data: any) => {
+        this.loadingService.hide()
 
         const reports = data?.Reports ?? [];
 
@@ -190,10 +194,12 @@ export class ReportListComponent extends AgGridBaseComponent
   //     if (result.isConfirmed) {
   //       this.EditForm_task.patchValue({ TaskCode });
 
-  //       this.loadingService.show();
+  //       this.loadingService.show()
 
-  //       this.repo.DeleteTask(this.EditForm_task.value).subscribe((data: any) => {
-  //         this.loadingService.hide();
+  //           this.loadingService.show()
+  // this.repo.DeleteTask(this.EditForm_task.value).subscribe((data: any) => {
+  // this.loadingService.hide()
+  //         this.loadingService.hide()
 
   //         if (data.KowsarTasks[0].Success === '0') {
   //           this.notificationService.error(data.KowsarTasks[0].Message);

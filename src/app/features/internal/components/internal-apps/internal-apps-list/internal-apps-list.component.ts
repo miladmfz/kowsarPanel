@@ -18,6 +18,7 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { LableIsActiveAppActivation } from './lable-isactive-appactivation copy';
 import { InternalAppsWebApiService } from '../../../services/InternalAppsWebApi.service';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-application-list',
@@ -40,6 +41,7 @@ export class InternalAppsListComponent
   loading = false;
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(InternalAppsWebApiService);
   private readonly notificationService = inject(NotificationService);
 
@@ -134,7 +136,9 @@ export class InternalAppsListComponent
     }, 50);
   }
   getList(): void {
+    this.loadingService.show()
     this.repo.GetAppActivation().subscribe((data: any) => {
+      this.loadingService.hide()
       this.records = data?.AppActivations ?? [];
       this.updateGridData(1, this.records);
     });
@@ -168,6 +172,7 @@ export class InternalAppsListComponent
         if (result.isConfirmed) {
 
 
+          this.loadingService.show()
           this.repo.DeleteAppActivation(data.AppActivationCode).subscribe({
             next: () => {
               this.notificationService.succeded()
@@ -192,7 +197,8 @@ export class InternalAppsListComponent
   //   const ip = data.ServerURL.match(/\/\/(.*?):/)[1];
   //   const port = data.ServerURL.match(/:(\d+)\//)[1];
 
-  //   this.repo.CheckPort(ip, port).subscribe((e: any) => {
+  //       this.loadingService.show()
+  // this.repo.CheckPort(ip, port).subscribe((e: any) => {
   //     this.loading = false;
 
   //     if (e.status === "open") {

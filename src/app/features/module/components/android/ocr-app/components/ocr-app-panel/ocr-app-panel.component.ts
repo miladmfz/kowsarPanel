@@ -5,6 +5,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { KowsarChartRadialComponent } from 'src/app/app-shell/framework-components/kowsar/kowsar-chart-radial/kowsar-chart-radial.component';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.service';
 
 @Component({
@@ -23,6 +24,7 @@ import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.ser
 export class OcrAppPanelComponent extends AgGridBaseComponent
   implements OnInit {
 
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(OcrWebApiService);
 
   constructor() {
@@ -180,6 +182,7 @@ export class OcrAppPanelComponent extends AgGridBaseComponent
       },
 
     ];
+    this.loadingService.show()
     this.repo.GetTodeyFromServer("-1")
       .subscribe(e => {
 
@@ -195,31 +198,35 @@ export class OcrAppPanelComponent extends AgGridBaseComponent
 
 
 
+    this.loadingService.show()
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
-      .subscribe((data) => {
+      .subscribe((data: any) => {
 
         this.loading1 = false
         this.records_ocr_factors = data;
 
       });
 
+    this.loadingService.show()
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
-      .subscribe((data) => {
+      .subscribe((data: any) => {
 
         this.loading2 = false
         this.record_factor_headers = data;
 
       });
+    this.loadingService.show()
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
-      .subscribe((data) => {
+      .subscribe((data: any) => {
 
         this.loading3 = false
         this.record_factor_rows = data;
 
       });
 
+    this.loadingService.show()
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
-      .subscribe((data) => {
+      .subscribe((data: any) => {
 
         this.loading4 = false
         this.radial_value_1 = 30;
@@ -227,15 +234,17 @@ export class OcrAppPanelComponent extends AgGridBaseComponent
 
       });
 
+    this.loadingService.show()
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
-      .subscribe((data) => {
+      .subscribe((data: any) => {
 
         this.loading5 = false
         this.radial_value_2 = 60;
         this.radial_value_22 = 6000;
       });
+    this.loadingService.show()
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
-      .subscribe((data) => {
+      .subscribe((data: any) => {
 
         this.loading6 = false
         this.radial_value_3 = 90;

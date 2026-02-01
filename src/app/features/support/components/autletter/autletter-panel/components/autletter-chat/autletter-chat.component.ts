@@ -74,9 +74,9 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
     CentralRef: new FormControl('')
   });
 
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(AutletterWebApiService);
   private readonly notificationService = inject(NotificationService);
-  private readonly loadingService = inject(LoadingService);
   private readonly cdr = inject(ChangeDetectorRef);
 
 
@@ -107,10 +107,11 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
   // دریافت لیست پیام‌ها
   // ============================================================
   GetAutConversation() {
-    this.loadingService.show();
+    this.loadingService.show()
+    this.loadingService.show()
     this.repo.GetAutConversation(this.LetterRef).subscribe({
       next: (res: any) => {
-        this.loadingService.hide();
+        this.loadingService.hide()
 
         // اگر API جدید شبیه نسخه جدید فعلی‌ات باشد
         const list = res.Conversations ?? res;
@@ -132,7 +133,7 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
         setTimeout(() => this.scrollToBottom(), 50);
       },
       error: () => {
-        this.loadingService.hide();
+        this.loadingService.hide()
         this.notificationService.error('خطا در دریافت پیام‌ها');
       }
     });
@@ -166,17 +167,18 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
     }
 
     const cleanMessage = this.convertToEnglishDigits(desc);
-    this.loadingService.show();
+    this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.Conversation_Insert(this.LetterRef, this.CentralRef, cleanMessage)
       .subscribe({
         next: () => {
           this.MessageForm.get('Description')?.setValue('');
           this.GetAutConversation();
-          this.loadingService.hide();
+          this.loadingService.hide()
         },
         error: () => {
-          this.loadingService.hide();
+          this.loadingService.hide()
           this.notificationService.error('ارسال پیام با خطا مواجه شد');
         }
       });
@@ -224,15 +226,16 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
   }
 
   UploadFile() {
-    this.loadingService.show();
+    this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.Conversation_UploadFile(this.FileForm.value).subscribe({
       next: () => {
-        this.loadingService.hide();
+        this.loadingService.hide()
         this.GetAutConversation();
       },
       error: () => {
-        this.loadingService.hide();
+        this.loadingService.hide()
         this.notificationService.error('خطا در ارسال فایل');
       }
     });
@@ -241,7 +244,7 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
   GetFileFromAttach(index: number, type: string): void {
 
     this.resetModalState();
-    this.loadingService.show();
+    this.loadingService.show()
 
     this.EditForm_Attach.patchValue({
       Title: this.msgs[index].ConversationText,
@@ -251,19 +254,21 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
       ConversationRef: this.msgs[index].ConversationCode,
     });
 
+    this.loadingService.show()
     this.repo.GetConversationFileFromAttach(this.EditForm_Attach.value)
       .pipe(
         catchError(error => {
-          this.loadingService.hide();
+          this.loadingService.hide()
           this.modalLoading = true;
           this.notificationService.error("مشکل در اتصال به سرور", "خطا");
           return of(null);
         })
       )
       .subscribe((data: any) => {
+        this.loadingService.hide()
 
         if (!data) return;
-        this.loadingService.hide();
+        this.loadingService.hide()
 
         const blob = this.base64ToBlob(data.text, data.contentType);
         const url = URL.createObjectURL(blob);
@@ -294,7 +299,7 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
             this.cdr.detectChanges();
           }, 10);
 
-          this.loadingService.hide();
+          this.loadingService.hide()
 
         }, 50)
         */;
@@ -357,6 +362,7 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
     // اگر خواستی متن ویس هم به‌صورت پیام متنی ارسال شود:
     if (payload.transcript?.trim()) {
       const cleanMessage = this.convertToEnglishDigits(payload.transcript.trim());
+      this.loadingService.show()
       this.repo.Conversation_Insert(this.LetterRef, this.CentralRef, cleanMessage)
         .subscribe(() => this.GetAutConversation());
     }
@@ -375,11 +381,13 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
       ConversationRef: msg.Id
     };
 
-    this.loadingService.show();
+    this.loadingService.show()
+    this.loadingService.show()
     this.repo.GetConversationFileFromAttach(editFormAttach)
       .subscribe({
         next: (data: any) => {
-          this.loadingService.hide();
+          this.loadingService.hide()
+          this.loadingService.hide()
           if (!data || !data.text || !data.contentType || !data.fileName) {
             this.notificationService.error('فایل نامعتبر است');
             return;
@@ -400,7 +408,7 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
           window.URL.revokeObjectURL(url);
         },
         error: () => {
-          this.loadingService.hide();
+          this.loadingService.hide()
           this.notificationService.error('خطا در دانلود فایل');
         }
       });

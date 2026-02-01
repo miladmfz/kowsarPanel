@@ -7,6 +7,7 @@ import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-t
 import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.service';
 import { CellActionOcrList } from './cell-action-ocr-list';
 import { AgGridModule } from 'ag-grid-angular';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-ocr-app-factor-list',
@@ -23,6 +24,7 @@ export class OcrAppFactorListComponent extends AgGridBaseComponent
   implements OnInit {
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(OcrWebApiService);
 
   constructor() {
@@ -135,8 +137,10 @@ export class OcrAppFactorListComponent extends AgGridBaseComponent
   }
   getList() {
 
+    this.loadingService.show()
     this.repo.OcrFactorList(this.EditForm_ocr.value.Searchtarget, this.EditForm_ocr.value.SourceFlag + "")
-      .subscribe((data) => {
+      .subscribe((data: any) => {
+        this.loadingService.hide()
         this.records = data;
 
       });

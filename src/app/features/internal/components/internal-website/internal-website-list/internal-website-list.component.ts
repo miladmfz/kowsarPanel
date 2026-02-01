@@ -9,6 +9,7 @@ import { CellLableWebSite } from './cell-label-website';
 import { CellActionWebSiteList } from './cell_action_website_list';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { WebSiteWebApiService } from '../../../services/WebSiteWebApi.service';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-internal-website-list',
@@ -36,6 +37,7 @@ export class InternalWebsiteListComponent
   });
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(WebSiteWebApiService);
   private readonly notificationService = inject(NotificationService);
 
@@ -80,8 +82,10 @@ export class InternalWebsiteListComponent
   getList(): void {
     this.loading = true;
 
+    this.loadingService.show()
     this.repo.GetWebSiteActivation(this.EditForm.value)
       .subscribe((data: any) => {
+        this.loadingService.hide()
         this.records = data?.WebSites ?? [];
         this.loading = false;
         this.updateGridData(1, this.records);
@@ -133,6 +137,7 @@ export class InternalWebsiteListComponent
         if (result.isConfirmed) {
 
 
+          this.loadingService.show()
           this.repo.DeleteWebSiteActivation(data.WebSiteActivationCode).subscribe({
             next: () => {
               this.notificationService.success('  تیکت با موفقیت حذف شد');

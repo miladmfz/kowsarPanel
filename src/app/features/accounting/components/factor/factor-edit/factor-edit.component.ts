@@ -32,12 +32,12 @@ import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-t
 export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(FactorWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
   private readonly sharedService = inject(SharedService);
   private readonly notificationService = inject(NotificationService);
-  private readonly loadingService = inject(LoadingService);
 
   constructor() {
     super();
@@ -477,7 +477,9 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
   onInvoiceStateChange() {
 
     this.loadingService.show()
+    this.loadingService.show()
     this.repo.UpdateFactorInvoiceState(this.EditForm_Factor_Header.value).subscribe((data: any) => {
+      this.loadingService.hide()
       this.FactorCode = data.Factors[0].FactorCode
       this.notificationService.succeded();
       this.loadingService.hide()
@@ -502,11 +504,14 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
       ObjectRef: this.EditForm_Factor_Header.value.CustomerCode,
     });
 
+    this.loadingService.show()
     this.repo.GetCentralUser().subscribe(e => {
       this.users = e;
     });
 
+    this.loadingService.show()
     this.repo.GetCustomerById(this.EditForm_search.value).subscribe((data: any) => {
+      this.loadingService.hide()
       this.EditForm_LetterToEmployer.patchValue({
         DescriptionText: "",
         LetterDate: this.ToDayDate,
@@ -521,8 +526,10 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
         OwnCentralRef: "0",
       });
 
+      this.loadingService.show()
       this.repo.GetAutLetterList(this.EditForm_autletter.value).subscribe((data: any) => {
         this.loadingService.hide()
+
 
         this.records_letterfromowner = data?.AutLetters ?? [];
         this.updateGridData(5, this.records_letterfromowner);
@@ -562,7 +569,6 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
     this.EditForm_LetterToEmployer.markAllAsTouched();
     if (!this.EditForm_LetterToEmployer.valid) return;
 
-    this.loadingService.show()
 
     this.EditForm_LetterInsert.patchValue({
       LetterDate: this.ToDayDate,
@@ -577,7 +583,9 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
     });
 
 
+    this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.LetterInsert(this.EditForm_LetterInsert.value).subscribe(e => {
       const intValue = parseInt(e[0].LetterCode, 10);
       this.loadingService.hide()
@@ -604,6 +612,7 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
       ExecuterCentral: this.EditForm_LetterToEmployer.value.ExecuterCentral,
     });
 
+    this.loadingService.show()
     this.repo.AutLetterRowInsert(this.EditForm_AutLetterRowInsert.value).subscribe(e => {
       const intValue = parseInt(e[0].LetterRef, 10);
       this.loadingService.hide()
@@ -654,7 +663,9 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
 
     this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.WebFactorInsertRow(this.EditForm_Factor_Row.value).subscribe((data: any) => {
+      this.loadingService.hide()
       const factor = data.Factors[0];
       const rowCode = Number(factor.RowCode);
 
@@ -749,7 +760,9 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
       Price: this.EditForm_UpdateRow.value.Price + "",
     });
     this.loadingService.show()
+    this.loadingService.show()
     this.repo.WebFactorUpdateRow(this.EditForm_UpdateRow.value).subscribe((data: any) => {
+      this.loadingService.hide()
       this.notificationService.succeded();
       this.updaterow_dialog_close()
       this.loadingService.hide()
@@ -770,13 +783,15 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
   Factor_Header_insert() {
     this.EditForm_Factor_Header.markAllAsTouched();
     if (!this.EditForm_Factor_Header.valid) return;
-    this.loadingService.show()
 
     this.EditForm_Factor_Header.patchValue({
       BrokerRef: sessionStorage.getItem("BrokerCode")
     });
+    this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.WebFactorInsert(this.EditForm_Factor_Header.value).subscribe((data: any) => {
+      this.loadingService.hide()
       this.FactorCode.set(data.Factors[0].FactorCode)
       this.notificationService.succeded();
       this.loadingService.hide()
@@ -862,7 +877,11 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
     } else {
       this.fireDeleteSwal1().then((result) => {
         if (result.isConfirmed) {
+          this.loadingService.show()
+
+          this.loadingService.show()
           this.repo.DeleteWebFactorRows(id).subscribe((data: any) => {
+            this.loadingService.hide()
             this.GetFactorrows()
             this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
           });
@@ -881,7 +900,11 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
   deletefactorRecord() {
+    this.loadingService.show()
+
+    this.loadingService.show()
     this.repo.DeleteWebFactor(this.FactorCode()).subscribe((data: any) => {
+      this.loadingService.hide()
       this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
       this.location.back();
     });
@@ -915,7 +938,9 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
       isShopFactor: "0",
     });
 
+    this.loadingService.show()
     this.repo.GetWebFactor(this.EditForm_factor.value).subscribe((data: any) => {
+      this.loadingService.hide()
       this.selectedfactor = data.Factors[0]
       this.FactorCode.set(data.Factors[0].FactorCode);
       this.HasFactorCode.set(true)
@@ -959,6 +984,7 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
   GetFactorrows() {
     this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.GetWebFactorRows(this.EditForm_factor.value).subscribe((data: any) => {
       this.loadingService.hide()
 
@@ -968,7 +994,9 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
   getdate() {
+    this.loadingService.show()
     this.repo.GetTodeyFromServer().subscribe((data: any) => {
+      this.loadingService.hide()
       this.EditForm_Factor_Header.patchValue({
         FactorDate: data.Text,
       });
@@ -976,7 +1004,11 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
   GetGood() {
+    this.loadingService.show()
+
+    this.loadingService.show()
     this.repo.GetGoodListSupport(this.Searchtarget_Good).subscribe((data: any) => {
+      this.loadingService.hide()
       this.records_good = data?.Goods ?? [];;
       this.updateGridData(1, this.records_good);
 
@@ -999,7 +1031,9 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
 
     this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.WebFactorInsertRow(this.EditForm_Factor_Row.value).subscribe((data: any) => {
+      this.loadingService.hide()
       this.notificationService.succeded();
       this.boxbuy_dialog_close()
       this.loadingService.hide()
@@ -1007,7 +1041,6 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
     });
   }
   GetCustomer() {
-    this.loadingService.show()
 
     // this.EditForm_SearchTarget.patchValue({
     //   SearchTarget: this.Searchtarget_customer,
@@ -1019,7 +1052,9 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
       BrokerRef: "0",
     });
 
+    this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe((data: any) => {
       this.loadingService.hide()
       this.customer_dialog_show()

@@ -115,9 +115,9 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
 
 
     private readonly router = inject(Router);
+    private readonly loadingService = inject(LoadingService);
     private readonly repo = inject(LeaveRequestWebApiService);
     private readonly notificationService = inject(NotificationService);
-    private readonly loadingService = inject(LoadingService);
     private readonly renderer = inject(Renderer2);
 
 
@@ -135,8 +135,10 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
         this.initColumns();
 
         // 📅 دریافت تاریخ امروز و لیست اولیه
+        this.loadingService.show()
         this.repo.GetTodeyFromServer().subscribe({
             next: (data: any) => {
+                this.loadingService.hide()
                 this.ToDayDate = data[0]?.TodeyFromServer ?? '';
                 this.loadinitialLeaveList();
             },
@@ -207,8 +209,10 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
         });
 
         this.loading = true;
+        this.loadingService.show()
         this.repo.GetLeaveRequest(this.EditForm_Search.value).subscribe({
             next: (data: any) => {
+                this.loadingService.hide()
                 this.records = data?.LeaveRequests ?? [];
                 this.loading = false;
                 this.updateGridData(1, this.records);
@@ -233,8 +237,10 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
         });
 
         this.loading = true;
+        this.loadingService.show()
         this.repo.GetLeaveRequest(this.EditForm_Search.value).subscribe({
             next: (data: any) => {
+                this.loadingService.hide()
                 this.records = data?.LeaveRequests ?? [];
                 this.loading = false;
                 this.updateGridData(1, this.records);
@@ -290,6 +296,7 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
             WorkFlowStatus: '0',
         };
 
+        this.loadingService.show()
         this.repo.GetLeaveRequest(filter).subscribe({
             next: (res: any) => {
                 this.records_leavedetails = res?.LeaveRequests ?? [];
@@ -330,6 +337,7 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
         });
 
         if (result.isConfirmed) {
+            this.loadingService.show()
             this.repo.DeleteLeaveRequest(data.LeaveRequestCode).subscribe({
                 next: () => {
                     this.notificationService.success('  مرخصی با موفقیت حذف شد');
@@ -356,6 +364,7 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
             ManagerRef: sessionStorage.getItem('CentralRef'),
         };
 
+        this.loadingService.show()
         this.repo.LeaveRequest_WorkFlow(payload).subscribe({
             next: () => {
                 this.notificationService.success('  نظر مدیر با موفقیت ثبت شد');

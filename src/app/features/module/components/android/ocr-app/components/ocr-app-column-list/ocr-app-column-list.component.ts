@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.service';
 
 @Component({
@@ -17,7 +18,9 @@ import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.ser
 })
 export class OcrAppColumnListComponent implements OnInit {
 
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(OcrWebApiService);
+
 
   constructor() { }
 
@@ -29,6 +32,7 @@ export class OcrAppColumnListComponent implements OnInit {
   }
 
   GetBasketColumnList() {
+    this.loadingService.show()
     this.repo.GetBasketColumnList(this.Apptype)
       .subscribe(e => {
         this.BasketColumns = e;

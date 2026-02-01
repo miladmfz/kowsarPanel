@@ -14,6 +14,7 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { FactorWebApiService } from '../../../services/FactorWebApi.service';
 import { CellActionFactorList } from './cell-action-factor-list';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-factor-list',
@@ -31,6 +32,7 @@ export class FactorListComponent extends AgGridBaseComponent
   implements OnInit, OnDestroy {
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(FactorWebApiService);
   private readonly notificationService = inject(NotificationService);
   private readonly renderer = inject(Renderer2);
@@ -158,8 +160,10 @@ export class FactorListComponent extends AgGridBaseComponent
   //     Flag: '1'
   //   });
 
-  //   this.repo.GetSupportPanel(this.EditForm_SupportData.value)
+  //       this.loadingService.show()
+  // this.repo.GetSupportPanel(this.EditForm_SupportData.value)
   //     .subscribe((data: any) => {
+  // this.loadingService.hide()
   //       if (this.BrokerRef === '') {
   //         this.reportData = data.SupportDatas;
   //       } else {
@@ -180,8 +184,11 @@ export class FactorListComponent extends AgGridBaseComponent
   // Grid Schema + Data
   // ---------------------------
   getGridSchema() {
+    this.loadingService.show()
+
     this.repo.GetGridSchema('TFactor')
       .subscribe((data: any) => {
+        this.loadingService.hide()
         if (data?.GridSchemas?.length > 0) {
           this.columnDefs1 = data.GridSchemas
             .filter((schema: any) => schema.Visible === 'True')
@@ -216,6 +223,7 @@ export class FactorListComponent extends AgGridBaseComponent
         // لود داده‌ها
         this.loading = true;
 
+        this.loadingService.show()
         this.repo.GetWebFactor(this.EditForm_factor.value)
           .pipe(
             catchError((_error) => {
@@ -223,8 +231,9 @@ export class FactorListComponent extends AgGridBaseComponent
               return of(null);
             })
           )
-          .subscribe((res: any) => {
-            this.records = res?.Factors || [];
+          .subscribe((data: any) => {
+            this.loadingService.hide()
+            this.records = data?.Factors || [];
             this.loading = false;
             this.updateGridData(1, this.records);
 
@@ -292,6 +301,9 @@ export class FactorListComponent extends AgGridBaseComponent
   }
 
   Set_factor_Property() {
+    this.loadingService.show()
+
+    this.loadingService.show()
     this.repo.EditFactorProperty(this.EditForm_factor_property.value)
       .subscribe((_data: any) => {
         this.property_dialog_close();

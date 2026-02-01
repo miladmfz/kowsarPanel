@@ -1,0 +1,394 @@
+<div class="card">
+  <div class="card-body">
+
+
+    <form [formGroup]="EditForm_SearchTarget" id="submitForm">
+
+      <div class="card shadow-sm border-0">
+        <div class="card-body row g-3">
+
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">جستجو</label>
+
+            <input type="text" class="form-control rounded-pill" placeholder="جستجو" formControlName="SearchTarget"
+              (input)="getList()" />
+          </div>
+
+
+
+          <div class="form-group col-md-3">
+            <label class="form-label fw-semibold">وضعیت</label>
+            <select id="Status" class="form-control" formControlName="Status" [ngClass]="{
+                   'is-invalid': EditForm_SearchTarget.controls['Status'].invalid && EditForm_SearchTarget.controls['Status'].touched,
+                   'is-valid': EditForm_SearchTarget.controls['Status'].valid && EditForm_SearchTarget.controls['Status'].touched
+                 }">
+              <option value="">لطفاً انتخاب کنید</option>
+              @for (item of StateSearch_Lookup; track item) {
+              <option [value]="item.id">{{ item.name }}</option>
+              }
+            </select>
+          </div>
+
+
+          <div class="col-md-6 text-start">
+
+            @if (show_grid){
+            <button class="btn btn-primary me-1" (click)="getList()">
+              <i class="fas fa-sync"></i> بازخوانی
+            </button>
+            }
+
+
+            <button class="btn btn-success me-1" (click)="Create_New_Workitem()">
+              <i class="fas fa-sync"></i> شرح کار جدید
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+
+    @if (show_grid){
+    <div class="ag-container rounded-3 overflow-hidden" style="height: 300px;">
+      <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()" class="w-100 h-100">
+      </ag-grid-angular>
+    </div>
+    } @else{
+    <div class="text-center py-1">
+      <i class="bi bi-exclamation-circle fs-1 text-warning"></i> <!-- آیکون Bootstrap Icons -->
+      <h4 class="mt-1">هیچ آیتم کاری پیدا نشد!</h4>
+      <p class="text-muted">لطفاً شرایط جستجو یا فیلترهای خود را بررسی کنید.</p>
+    </div>
+    }
+
+
+
+
+  </div>
+</div>
+
+
+
+<!-- Template خطا -->
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  @if (control.hasError(validation) && (control.dirty || control.touched)) {
+  <div class="invalid-feedback d-block">
+    {{ message }}
+  </div>
+  }
+</ng-template>
+
+
+
+
+
+
+
+
+
+
+<div id="workitemmodal" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+
+
+      <div class="modal-header">
+        <h5 class="modal-title">{{title_workitem_modal}}</h5>
+        <button type="button" class="btn-close" (click)="workitem_dialog_close()"></button>
+      </div>
+
+      <form [formGroup]="EditForm_WorkItem">
+        <div class="modal-body">
+          <div class="row g-2">
+
+
+
+            @if(show_person){
+
+            <div class="form-group col-md-3">
+              <label class="form-label">کاربر</label>
+
+              <select formControlName="OwnerRef" class="form-control custom-select" [ngClass]="{
+          'is-invalid': EditForm_WorkItem.controls['OwnerRef'].invalid && EditForm_WorkItem.controls['OwnerRef'].touched,
+          'is-valid': EditForm_WorkItem.controls['OwnerRef'].valid && EditForm_WorkItem.controls['OwnerRef'].touched
+        }">
+
+                <option value="">لطفاً انتخاب کنید</option>
+
+                @for (user of records_Persons; track user.CentralRef) {
+                <option [value]="user.CentralRef">{{ user.FullName }}</option>
+                }
+              </select>
+
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+          control: EditForm_WorkItem.controls['OwnerRef'],
+          message: 'اجباری است',
+          validation: 'required'
+        }">
+              </ng-container>
+            </div>
+
+            } @else{
+            <div class="form-group col-md-3">
+              <label class="form-label">نام کاربر</label>
+              <input formControlName="OwnerName" class="form-control">
+            </div>
+
+            }
+
+
+            <div class="form-group col-md-3">
+              <label class="form-label">وضعیت</label>
+
+              <select formControlName="Status" class="form-control custom-select" [ngClass]="{
+                  'is-invalid': EditForm_WorkItem.controls['Status'].invalid && EditForm_WorkItem.controls['Status'].touched,
+                  'is-valid': EditForm_WorkItem.controls['Status'].valid && EditForm_WorkItem.controls['Status'].touched
+                }">
+
+                <option value="">لطفاً انتخاب کنید</option>
+
+                @for (st of State_Lookup; track st.name) {
+                <option [value]="st.id">{{ st.icon ? st.icon + ' ' : '' }}{{ st.name }}</option>
+                }
+              </select>
+
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                  control: EditForm_WorkItem.controls['Status'],
+                  message: 'اجباری است',
+                  validation: 'required'
+                }">
+              </ng-container>
+            </div>
+
+
+
+            <div class="form-group col-md-3">
+              <label class="form-label">فوریت</label>
+
+              <select formControlName="Priority" class="form-control custom-select" [ngClass]="{
+                  'is-invalid': EditForm_WorkItem.controls['Priority'].invalid && EditForm_WorkItem.controls['Priority'].touched,
+                  'is-valid': EditForm_WorkItem.controls['Priority'].valid && EditForm_WorkItem.controls['Priority'].touched
+                }">
+
+                <option value="">لطفاً انتخاب کنید</option>
+
+                @for (st of Priority_Lookup; track st.name) {
+                <option [value]="st.id">{{ st.icon ? st.icon + ' ' : '' }}{{ st.name }}</option>
+                }
+              </select>
+
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                  control: EditForm_WorkItem.controls['Priority'],
+                  message: 'اجباری است',
+                  validation: 'required'
+                }">
+              </ng-container>
+            </div>
+
+
+            <div class="form-group col-md-3">
+              <label class="form-label">تاریخ</label>
+              <ng-persian-datepicker [uiHideAfterSelectDate]="true">
+                <input id="TargetDate" type="text" class="form-control" formControlName="TargetDate" />
+              </ng-persian-datepicker>
+            </div>
+
+
+            <div class="form-group col-md-12">
+              <label class="form-label">عنوان</label>
+              <input formControlName="Title" class="form-control" [ngClass]="{
+                  'is-invalid': EditForm_WorkItem.controls['Title'].invalid && EditForm_WorkItem.controls['Title'].touched,
+                  'is-valid': EditForm_WorkItem.controls['Title'].valid && EditForm_WorkItem.controls['Title'].touched
+                }">
+            </div>
+
+            <div class="col-md-12">
+              <label class="form-label">توضیحات</label>
+              <input formControlName="Explain" class="form-control">
+            </div>
+
+
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-light" type="button" (click)="workitem_dialog_close()">
+            بستن
+          </button>
+
+          <button class="btn btn-primary" type="button" (click)="Submit()">
+            ذخیره
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div id="editworkitemmodal" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+
+
+      <div class="modal-header">
+        <h5 class="modal-title">{{title_workitem_modal}}</h5>
+        <button type="button" class="btn-close" (click)="editworkitem_dialog_close()"></button>
+      </div>
+
+      <form [formGroup]="EditForm_WorkItem">
+        <div class="modal-body">
+          <div class="row g-2">
+
+
+
+            @if(show_person){
+
+            <div class="form-group col-md-3">
+              <label class="form-label">کاربر</label>
+
+              <select formControlName="OwnerRef" class="form-control custom-select" [ngClass]="{
+          'is-invalid': EditForm_WorkItem.controls['OwnerRef'].invalid && EditForm_WorkItem.controls['OwnerRef'].touched,
+          'is-valid': EditForm_WorkItem.controls['OwnerRef'].valid && EditForm_WorkItem.controls['OwnerRef'].touched
+        }">
+
+                <option value="">لطفاً انتخاب کنید</option>
+
+                @for (user of records_Persons; track user.CentralRef) {
+                <option [value]="user.CentralRef">{{ user.FullName }}</option>
+                }
+              </select>
+
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+          control: EditForm_WorkItem.controls['OwnerRef'],
+          message: 'اجباری است',
+          validation: 'required'
+        }">
+              </ng-container>
+            </div>
+
+            } @else{
+            <div class="form-group col-md-3">
+              <label class="form-label">نام کاربر</label>
+              <input formControlName="OwnerName" class="form-control" readonly>
+            </div>
+
+            }
+
+
+
+            <div class="form-group col-md-3">
+              <label class="form-label">وضعیت</label>
+
+              <select formControlName="Status" class="form-control custom-select" [ngClass]="{
+                  'is-invalid': EditForm_WorkItem.controls['Status'].invalid && EditForm_WorkItem.controls['Status'].touched,
+                  'is-valid': EditForm_WorkItem.controls['Status'].valid && EditForm_WorkItem.controls['Status'].touched
+                }">
+
+                <option value="">لطفاً انتخاب کنید</option>
+
+                @for (st of State_Lookup; track st.name) {
+                <option [value]="st.id">{{ st.icon ? st.icon + ' ' : '' }}{{ st.name }}</option>
+                }
+              </select>
+
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                  control: EditForm_WorkItem.controls['Status'],
+                  message: 'اجباری است',
+                  validation: 'required'
+                }">
+              </ng-container>
+            </div>
+
+
+            @if (CanEdit){
+            <div class="form-group col-md-3">
+              <label class="form-label">فوریت</label>
+
+              <select formControlName="Priority" class="form-control custom-select" [ngClass]="{
+                  'is-invalid': EditForm_WorkItem.controls['Priority'].invalid && EditForm_WorkItem.controls['Priority'].touched,
+                  'is-valid': EditForm_WorkItem.controls['Priority'].valid && EditForm_WorkItem.controls['Priority'].touched
+                }">
+
+                <option value="">لطفاً انتخاب کنید</option>
+
+                @for (st of Priority_Lookup; track st.name) {
+                <option [value]="st.id">{{ st.icon ? st.icon + ' ' : '' }}{{ st.name }}</option>
+                }
+              </select>
+
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                  control: EditForm_WorkItem.controls['Priority'],
+                  message: 'اجباری است',
+                  validation: 'required'
+                }">
+              </ng-container>
+            </div>
+            } @else{
+
+
+            }
+
+            @if (CanEdit){
+            <div class="form-group col-md-3">
+              <label class="form-label">تاریخ</label>
+              <ng-persian-datepicker [uiHideAfterSelectDate]="true">
+                <input id="TargetDate" type="text" class="form-control" formControlName="TargetDate" />
+              </ng-persian-datepicker>
+            </div>
+            } @else{
+
+            <div class="form-group col-md-3">
+              <label class="form-label">تاریخ </label>
+              <input formControlName="TargetDate" class="form-control" readonly>
+            </div>
+            }
+
+            @if (CanEdit){
+
+            <div class="form-group col-md-12">
+              <label class="form-label">عنوان</label>
+              <input formControlName="Title" class="form-control" [ngClass]="{
+                  'is-invalid': EditForm_WorkItem.controls['Title'].invalid && EditForm_WorkItem.controls['Title'].touched,
+                  'is-valid': EditForm_WorkItem.controls['Title'].valid && EditForm_WorkItem.controls['Title'].touched
+                }">
+            </div>
+            } @else{
+            <div class="form-group col-md-12">
+              <label class="form-label">عنوان </label>
+              <input formControlName="Title" class="form-control" readonly>
+            </div>
+
+            }
+
+            <div class="col-md-12">
+              <label class="form-label">توضیحات</label>
+              <input formControlName="Explain" class="form-control">
+            </div>
+
+
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-light" type="button" (click)="editworkitem_dialog_close()">
+            بستن
+          </button>
+
+          <button class="btn btn-primary" type="button" (click)="Submit()">
+            ذخیره
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

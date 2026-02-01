@@ -2,11 +2,11 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CellActionInternalGoodList } from 'src/app/features/internal/components/internal-good/internal-good-list/cell-action-internal-good-list';
 import { CommonModule } from '@angular/common';
 import { AgGridAngular } from 'ag-grid-angular';
 import { GoodWebApiService } from '../../../services/goodWebApi.service';
 import { CellActionGoodList } from './cell-action-good-list';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-good-list',
@@ -23,6 +23,7 @@ export class GoodListComponent extends AgGridBaseComponent
   implements OnInit, OnDestroy {
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(GoodWebApiService);
 
   constructor() {
@@ -58,8 +59,11 @@ export class GoodListComponent extends AgGridBaseComponent
   }
 
   getGridSchema() {
+    this.loadingService.show()
+    this.loadingService.show()
     this.repo.GetGridSchema('TGood')
       .subscribe((data: any) => {
+        this.loadingService.hide()
         if (data && data.GridSchemas && data.GridSchemas.length > 0) {
           this.columnDefs1 = data.GridSchemas.filter(schema => schema.Visible === "True").map(schema => ({
             field: schema.FieldName,
@@ -118,8 +122,12 @@ export class GoodListComponent extends AgGridBaseComponent
 
 
   GetGood() {
+
+    this.loadingService.show()
+    this.loadingService.show()
     this.repo.GetGoodList()
       .subscribe((data: any) => {
+        this.loadingService.hide()
         this.records = data.Goods;
         this.updateGridData(1, this.records);
 

@@ -136,10 +136,10 @@ export class AutletterInsertComponent extends AgGridBaseComponent implements OnI
     // ===============================================================
 
     private readonly router = inject(Router);
+    private readonly loadingService = inject(LoadingService);
     private readonly repo = inject(AutletterWebApiService);
     private readonly config = inject(AppConfigService);
     private readonly notificationService = inject(NotificationService);
-    private readonly loadingService = inject(LoadingService);
     private readonly renderer = inject(Renderer2);
 
 
@@ -206,17 +206,23 @@ export class AutletterInsertComponent extends AgGridBaseComponent implements OnI
     //   بارگذاری Lookupها
     // ===============================================================
     private loadLookups(): void {
+        this.loadingService.show()
         this.repo.GetTodeyFromServer().subscribe((data: any) => {
+            this.loadingService.hide()
             this.ToDayDate = data.Text;
             this.EditForm_LetterInsert.patchValue({ LetterDate: this.ToDayDate });
         });
 
 
+        this.loadingService.show()
         this.repo.GetObjectTypeFromDbSetup('AutomationLetterState').subscribe((data: any) => {
+            this.loadingService.hide()
             this.LetterState_lookup = data.ObjectTypes;
         });
 
+        this.loadingService.show()
         this.repo.GetObjectTypeFromDbSetup('AutomationLetterPriority').subscribe((data: any) => {
+            this.loadingService.hide()
             this.LetterPriority_lookup = data.ObjectTypes;
         });
     }
@@ -247,8 +253,10 @@ export class AutletterInsertComponent extends AgGridBaseComponent implements OnI
         });
 
 
+        this.loadingService.show()
         this.repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe({
             next: (data: any) => {
+                this.loadingService.hide()
                 this.records_support_central = data?.Customers ?? [];
                 this.updateGridData(1, this.records_support_central);
                 this.loading = false;
@@ -284,9 +292,11 @@ export class AutletterInsertComponent extends AgGridBaseComponent implements OnI
         this.EditForm_LetterInsert.markAllAsTouched();
         if (!this.EditForm_LetterInsert.valid) return;
 
-        this.loadingService.show();
+        this.loadingService.show()
+        this.loadingService.show()
         this.repo.LetterInsert(this.EditForm_LetterInsert.value).subscribe((data: any) => {
-            this.loadingService.hide();
+            this.loadingService.hide()
+            this.loadingService.hide()
 
             const intValue = parseInt(data.AutLetters[0].LetterCode, 10);
             if (!isNaN(intValue) && intValue > 0) {

@@ -6,6 +6,7 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi.service';
 import { OrderCellActionGoodList } from './order-cell-action-good-ist';
 import { AgGridModule } from 'ag-grid-angular';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-order-app-good-list',
@@ -21,6 +22,7 @@ import { AgGridModule } from 'ag-grid-angular';
 })
 export class OrderAppGoodListComponent extends AgGridBaseComponent
   implements OnInit {
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(OrderWebApiService);
 
   constructor() {
@@ -104,8 +106,9 @@ export class OrderAppGoodListComponent extends AgGridBaseComponent
   getList() {
 
 
+    this.loadingService.show()
     this.repo.GetOrderGoodList("50", this.Searchtarget, "0")
-      .subscribe((data) => {
+      .subscribe((data: any) => {
         this.records = data;
 
       });

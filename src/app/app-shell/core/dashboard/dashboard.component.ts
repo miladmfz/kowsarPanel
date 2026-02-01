@@ -25,10 +25,11 @@ import { CommonModule } from '@angular/common';
 
 //   Services
 import { DashboardWebApiService } from '../services/dashboard-web-api.service';
-import { SharedService } from '../../framework-services/shared.service';
 import { NotificationService } from '../../framework-services/ui/notification.service';
 import { AttendancePanelComponent } from 'src/app/features/internal/components/attendance-panel/attendance-panel.component';
 import { KowsarReportComponent } from 'src/app/features/internal/components/kowsar-report/kowsar-report.component';
+import { LoadingService } from '../../framework-services/ui/loading.service';
+import { WorkitemComponent } from 'src/app/features/internal/components/workitem/workitem.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,6 +38,7 @@ import { KowsarReportComponent } from 'src/app/features/internal/components/kows
     CommonModule,
     AttendancePanelComponent,
     KowsarReportComponent,
+    WorkitemComponent,
     // SupportPanelComponent,
   ],
   templateUrl: './dashboard.component.html',
@@ -60,10 +62,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // ===============================================================
   //   سازنده
   // ===============================================================
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(DashboardWebApiService);
-  private readonly sharedService = inject(SharedService);
   private readonly notificationService = inject(NotificationService);
-  private readonly renderer = inject(Renderer2);
 
   constructor() { }
 
@@ -93,8 +94,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // 📅 دریافت تاریخ امروز از سرور
   // ===============================================================
   private loadTodayDate(): void {
+
+    this.loadingService.show()
     this.repo.GetTodeyFromServer().subscribe({
       next: (data: any) => {
+        this.loadingService.hide()
         this.ToDayDate = data[0]?.TodeyFromServer ?? '';
 
         // بررسی تغییر تاریخ نسبت به sessionStorage

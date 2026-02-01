@@ -21,6 +21,7 @@ import { ColDef } from 'ag-grid-community';
 import { DashboardWebApiService } from 'src/app/app-shell/core/services/dashboard-web-api.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { DateSyncService } from 'src/app/app-shell/framework-services/date-sync.service';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
     selector: 'app-leave-grid',
@@ -52,6 +53,7 @@ export class LeaveGridComponent extends AgGridBaseComponent implements OnInit {
     // ===============================================================
     // 🧱 سازنده
     // ===============================================================
+    private readonly loadingService = inject(LoadingService);
     private readonly repo = inject(DashboardWebApiService);
     private readonly dateSyncService = inject(DateSyncService);
 
@@ -82,10 +84,14 @@ export class LeaveGridComponent extends AgGridBaseComponent implements OnInit {
     // 📡 بارگذاری داده از سرور
     // ===============================================================
     private loadFromServer(): void {
+        this.loadingService.show()
         this.repo.GetTodeyFromServer().subscribe((data: any) => {
+            this.loadingService.hide()
             this.ToDayDate = data.Text
+            this.loadingService.show()
             this.repo.GetLeaveRequestPerson(this.ToDayDate).subscribe({
                 next: (data: any) => {
+                    this.loadingService.hide()
                     this.records = data?.LeaveRequests ?? [];
                     this.loading = false;
                     this.updateGridData(1, this.records);

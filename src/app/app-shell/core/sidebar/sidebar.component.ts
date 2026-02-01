@@ -23,6 +23,7 @@ import { AppConfigService } from '../../../app-config.service';
 import { ThemeService } from '../../framework-services/ui/theme.service';
 import { DashboardWebApiService } from '../services/dashboard-web-api.service';
 import { SharedService } from '../../framework-services/shared.service';
+import { LoadingService } from '../../framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -84,6 +85,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   // ===============================================================
   private readonly config = inject(AppConfigService);
   private readonly themeService = inject(ThemeService);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(DashboardWebApiService);
   private readonly sharedService = inject(SharedService);
   private readonly router = inject(Router);
@@ -131,8 +133,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
   // ===============================================================
   private LoadAttendance(): void {
 
+    this.loadingService.show()
     this.repo.AttendanceDashboard().subscribe({
       next: (data: any) => {
+        this.loadingService.hide()
         const matched = data?.Attendances?.find(x => x.CentralRef === sessionStorage.getItem('CentralRef'));
         console.log(matched)
 
@@ -187,8 +191,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
   private loadProfileImage(): void {
     if (!this.CentralRef) return;
 
+    this.loadingService.show()
     this.repo.GetImageFromServer(this.CentralRef).subscribe({
       next: (data: any) => {
+        this.loadingService.hide()
         if (data?.Text && data?.Text !== "Nophoto") {
           this.Imageitem = `data:image/png;base64,${data.Text}`;
         } else {
@@ -209,8 +215,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     // ۱️⃣ بروزرسانی فرم
     this.EditForm_Attendance.patchValue({ Status: status });
     this.currentStatus = status;
+    this.loadingService.show()
 
     // ۲️⃣ ارسال به API
+    this.loadingService.show()
     this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe({
       next: (response: any) => {
         console.log('  ManualAttendance success:', response);

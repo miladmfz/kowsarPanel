@@ -7,6 +7,7 @@ import { SharedService } from 'src/app/app-shell/framework-services/shared.servi
 import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi.service';
 import { Location } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-order-app-good-edit',
@@ -22,6 +23,7 @@ import { AgGridModule } from 'ag-grid-angular';
 })
 export class OrderAppGoodEditComponent implements OnInit {
 
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(OrderWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
@@ -100,6 +102,7 @@ export class OrderAppGoodEditComponent implements OnInit {
       this.TagName = "Update Good";
 
 
+      this.loadingService.show()
       this.repo.Web_UpdateGoodDetail(
         this.formValues.GoodCode,
         this.formValues.GoodName,
@@ -121,6 +124,7 @@ export class OrderAppGoodEditComponent implements OnInit {
     } else {
 
 
+      this.loadingService.show()
       this.repo.Web_InsertGood(
         this.formValues.GoodCode,
         this.formValues.GoodName,
@@ -149,12 +153,14 @@ export class OrderAppGoodEditComponent implements OnInit {
     if (parseInt(this.id) > 0) {
 
 
+      this.loadingService.show()
       this.repo.GetGoodEdit(this.id).subscribe(e => {
 
 
         this.SingleItems = e
         this.LoadDataSet();
 
+        this.loadingService.show()
         this.repo.GetActiveGood(e[0].GoodCode).subscribe(e => {
 
 
@@ -198,6 +204,7 @@ export class OrderAppGoodEditComponent implements OnInit {
 
 
 
+    this.loadingService.show()
     this.repo.GetGroupFromGood(this.id).subscribe(e => {
 
 
@@ -231,6 +238,7 @@ export class OrderAppGoodEditComponent implements OnInit {
 
   DeleteGoodGroupCode(GoodGroupCode: string) {
 
+    this.loadingService.show()
     this.repo.DeleteGoodGroupCode(GoodGroupCode).subscribe(e => {
       this.sharedService.triggerActionAll('refresh');
     });
@@ -260,6 +268,7 @@ export class OrderAppGoodEditComponent implements OnInit {
       image: imageData
     };
 
+    this.loadingService.show()
     this.repo.SendImageToServer(data).subscribe((response) => {
       this.sharedService.triggerActionAll('refresh');
     });
@@ -271,7 +280,9 @@ export class OrderAppGoodEditComponent implements OnInit {
 
   fetchImageData() {
 
+    this.loadingService.show()
     this.repo.GetImageFromServer(this.SingleItems[0].GoodCode).subscribe((data: any) => {
+      this.loadingService.hide()
 
       this.Imageitem = `data:${Image};base64,${data.Text}`;
 
@@ -292,6 +303,7 @@ export class OrderAppGoodEditComponent implements OnInit {
         this.ActiveFlag = "0"
 
       }
+      this.loadingService.show()
       this.repo.ChangeGoodActive(this.SingleItems[0].GoodCode, this.ActiveFlag).subscribe(e => {
         this.sharedService.triggerActionAll('refresh');
       });

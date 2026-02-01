@@ -65,13 +65,6 @@ export const routes: Routes = [
                         .then(m => m.Module_ROUTES),
             },
 
-            // 📈 گزارش‌ها
-            {
-                path: 'reports',
-                loadChildren: () =>
-                    import('./features/reports/reports.routes')
-                        .then(m => m.Report_ROUTES),
-            },
 
             // 🧰 پنل داخلی
             {

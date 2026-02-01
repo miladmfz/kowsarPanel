@@ -156,16 +156,16 @@ export class EmployeListComponent extends AgGridBaseComponent
   });
 
   private readonly router = inject(Router);
-  private readonly repo = inject(SalaryWebApiService);
   private readonly loadingService = inject(LoadingService);
+  private readonly repo = inject(SalaryWebApiService);
 
   constructor() {
     super();
   }
 
-  // ---------------------------
-  // Lifecycle
-  // ---------------------------
+
+
+
   ngOnInit(): void {
 
     // --- ستون‌های گرید اصلی مشتریان ---
@@ -275,9 +275,11 @@ export class EmployeListComponent extends AgGridBaseComponent
   // ---------------------------
   getList() {
     this.loadingService.show()
+    this.loadingService.show()
     this.repo.GetEmployee(this.EditForm_SearchTarget.value).subscribe({
       next: (data: any) => {
         this.loadingService.hide()
+
 
         this.records = data?.Employees ?? [];
         this.updateGridData(1, this.records);
@@ -306,9 +308,11 @@ export class EmployeListComponent extends AgGridBaseComponent
     });
 
     this.loadingService.show()
+    this.loadingService.show()
     this.repo.GetSalarySummary(this.EditForm_EmploySalary.value).subscribe({
       next: (data: any) => {
         this.loadingService.hide()
+
 
         this.records_salary = data?.SalarySummarys ?? [];
         this.updateGridData(2, this.records_salary);

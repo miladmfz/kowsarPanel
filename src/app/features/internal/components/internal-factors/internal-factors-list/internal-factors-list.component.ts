@@ -14,6 +14,7 @@ import { CellActionSupportFactorList } from './cell-action-support-factor-list';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { SupportFactorWebApiService } from '../../../services/SupportFactorWebApi.service';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-internal-factors-list',
@@ -32,6 +33,7 @@ export class InternalFactorsListComponent
 
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(SupportFactorWebApiService);
   private readonly notificationService = inject(NotificationService);
   private readonly renderer = inject(Renderer2);
@@ -143,8 +145,10 @@ export class InternalFactorsListComponent
       Flag: '1'
     });
 
+    this.loadingService.show()
     this.repo.GetSupportPanel(this.EditForm_SupportData.value)
       .subscribe((data: any) => {
+        this.loadingService.hide()
         if (this.BrokerRef === '') {
           this.reportData = data.SupportDatas;
         } else {
@@ -165,8 +169,10 @@ export class InternalFactorsListComponent
   // Grid Schema + Data
   // ---------------------------
   getGridSchema() {
+    this.loadingService.show()
     this.repo.GetGridSchema('TFactor')
       .subscribe((data: any) => {
+        this.loadingService.hide()
         if (data?.GridSchemas?.length > 0) {
           this.columnDefs1 = data.GridSchemas
             .filter((schema: any) => schema.Visible === 'True')
@@ -201,6 +207,7 @@ export class InternalFactorsListComponent
         // لود داده‌ها
         this.loading = true;
 
+        this.loadingService.show()
         this.repo.GetSupportFactors(this.EditForm_supportfactor.value)
           .pipe(
             catchError((_error) => {
@@ -208,8 +215,9 @@ export class InternalFactorsListComponent
               return of(null);
             })
           )
-          .subscribe((res: any) => {
-            this.records = res?.Factors || [];
+          .subscribe((data: any) => {
+            this.loadingService.hide()
+            this.records = data?.Factors || [];
             this.loading = false;
             this.updateGridData(1, this.records);
 
@@ -277,6 +285,7 @@ export class InternalFactorsListComponent
   }
 
   Set_factor_Property() {
+    this.loadingService.show()
     this.repo.EditFactorProperty(this.EditForm_supportfactor_property.value)
       .subscribe((_data: any) => {
         this.property_dialog_close();

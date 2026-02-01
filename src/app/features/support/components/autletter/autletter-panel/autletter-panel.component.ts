@@ -13,6 +13,7 @@ import { CellActionletterFactorList } from './cell-action-letterfactor-list';
 import { CellActionletterPreFactorList } from './cell-action-letterprefactor-list';
 import { AppConfigService } from 'src/app/app-config.service';
 import { AgGridAngular } from 'ag-grid-angular';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-autletter-panel',
@@ -101,6 +102,7 @@ export class AutletterPanelComponent extends AgGridBaseComponent implements OnIn
 
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(AutletterWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
@@ -117,7 +119,9 @@ export class AutletterPanelComponent extends AgGridBaseComponent implements OnIn
       const id = params.get('id');
       this.LetterRef = id ?? '';
 
+      this.loadingService.show()
       this.repo.GetAutletterById(this.LetterRef).subscribe((data: any) => {
+        this.loadingService.hide()
 
         this.Autletter_data.patchValue({
           OwnerName: data.AutLetters[0].OwnerName,
@@ -281,7 +285,9 @@ export class AutletterPanelComponent extends AgGridBaseComponent implements OnIn
 
     this.OwnerName = this.Autletter_data.value.OwnerName;
 
+    this.loadingService.show()
     this.repo.GetCentralByCode(centralPayload).subscribe((data: any) => {
+      this.loadingService.hide()
       this.OwnerCode = data?.Centrals?.[0]?.CentralCode ?? '';
       this.VendorCode = data?.Centrals?.[0]?.VendorCode ?? '0';
       this.CustomerCode.set(data?.Centrals?.[0]?.CustomerCode ?? '0')
@@ -301,7 +307,9 @@ export class AutletterPanelComponent extends AgGridBaseComponent implements OnIn
       };
 
       // 4) فاکتور
+      this.loadingService.show()
       this.repo.GetFactorByCustomerCode(factorPayload).subscribe((data: any) => {
+        this.loadingService.hide()
         this.loading_cust_factor = false;
         this.records_ownerfactorlist = data?.Factors ?? [];
         this.updateGridData(2, this.records_ownerfactorlist);
@@ -309,7 +317,9 @@ export class AutletterPanelComponent extends AgGridBaseComponent implements OnIn
       });
 
       // 5) پیش‌فاکتور
+      this.loadingService.show()
       this.repo.GetFactorByCustomerCode(prefactorPayload).subscribe((data: any) => {
+        this.loadingService.hide()
         this.loading_cust_prefactor = false;
         this.records_ownerprefactorlist = data?.Factors ?? [];
 

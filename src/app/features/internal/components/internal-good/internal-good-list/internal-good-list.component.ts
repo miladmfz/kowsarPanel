@@ -6,6 +6,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { SupportFactorWebApiService } from '../../../services/SupportFactorWebApi.service';
 import { CellActionInternalGoodList } from './cell-action-internal-good-list';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-internal-good-list',
@@ -21,6 +22,7 @@ export class InternalGoodListComponent extends AgGridBaseComponent
   implements OnInit {
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(SupportFactorWebApiService);
 
 
@@ -106,8 +108,10 @@ export class InternalGoodListComponent extends AgGridBaseComponent
 
 
   GetGood() {
+    this.loadingService.show()
     this.repo.GetGoodListSupport(this.Searchtarget)
       .subscribe((data: any) => {
+        this.loadingService.hide()
         this.records = data.Goods;
         this.updateGridData(1, this.records);
 

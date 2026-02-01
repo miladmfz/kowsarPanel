@@ -7,6 +7,7 @@ import { CellActionBrokerList } from './cell-action-broker-list';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular';
 import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-broker-app-sellbroker-list',
@@ -25,6 +26,7 @@ export class BrokerAppSellbrokerListComponent extends AgGridBaseComponent
   implements OnInit {
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(BrokerWebApiService);
 
   constructor() {
@@ -98,6 +100,7 @@ export class BrokerAppSellbrokerListComponent extends AgGridBaseComponent
 
 
 
+    this.loadingService.show()
     this.repo.GetBrokers()
       .subscribe(e => {
         this.records = e;

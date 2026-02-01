@@ -24,7 +24,7 @@ export class AppComponent {
     }
 
     // اگر می‌خوای لودینگ اولیه داشته باشی
-    this.loadingService.show();
+    this.loadingService.show()
     setTimeout(() => this.loadingService.hide(), 1500);
   }
 }

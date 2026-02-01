@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, AfterViewInit, NgZone, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DashboardWebApiService } from '../services/dashboard-web-api.service';
+import { LoadingService } from '../../framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-header',
@@ -40,6 +41,8 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   PhFullName = '';
   JobPersonRef = '';
   currentStatus = '';
+  ActiveSession_str = '';
+
 
   // ===============================================================
   //   سازنده
@@ -61,6 +64,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     // 👤 اطلاعات پایه کاربر
     this.PhFullName = sessionStorage.getItem('PhFullName') || '';
     this.JobPersonRef = sessionStorage.getItem('JobPersonRef') || '';
+    this.ActiveSession_str = sessionStorage.getItem('ActiveSession') || '';
 
     // 🔔 بروزرسانی اعلان‌ها هر ۱۵ ثانیه
     this.attendanceInterval = setInterval(() => this.Get_Notification(), 15000);

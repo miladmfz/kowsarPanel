@@ -8,6 +8,7 @@ import { BrokerWebApiService } from 'src/app/features/module/services/BrokerWebA
 import * as L from 'leaflet';
 import { toGregorian } from 'jalaali-js';
 import 'leaflet.markercluster';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-broker-app-map',
@@ -104,6 +105,7 @@ export class BrokerAppMapComponent implements AfterViewInit {
 
   Customerlocation: any[] = []
 
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(BrokerWebApiService);
   private readonly fb = inject(FormBuilder);
 
@@ -289,7 +291,9 @@ export class BrokerAppMapComponent implements AfterViewInit {
     // const endDate = '1404/03/10 13:00:00';
     try {
 
-      await this.repo.GetBrokerCustomer(brokerCode, day).subscribe((data: any) => {
+      await this.loadingService.show()
+      this.repo.GetBrokerCustomer(brokerCode, day).subscribe((data: any) => {
+        this.loadingService.hide()
 
         this.Customerlocation = data.BrokerCustomers
         this.addCustomerMarkers();  // ← اضافه شد
@@ -301,7 +305,9 @@ export class BrokerAppMapComponent implements AfterViewInit {
 
 
 
-      await this.repo.GetGpstracker(brokerCode, startDate, endDate).subscribe((data: any) => {
+      await this.loadingService.show()
+      this.repo.GetGpstracker(brokerCode, startDate, endDate).subscribe((data: any) => {
+        this.loadingService.hide()
         this.apiData = data.Gpstrackers;
 
 

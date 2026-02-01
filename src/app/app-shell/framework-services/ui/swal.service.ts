@@ -11,7 +11,7 @@ export class SwalService {
     return (window as any)?.Swal;
   }
 
-  /** 🔸 پیام عمومی */
+  /**   پیام عمومی */
   async alert(
     title: string,
     text: string = '',

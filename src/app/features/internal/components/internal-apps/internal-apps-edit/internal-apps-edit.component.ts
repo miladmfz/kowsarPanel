@@ -5,6 +5,7 @@ import { NotificationService } from 'src/app/app-shell/framework-services/ui/not
 import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
 import { CommonModule } from '@angular/common';
 import { InternalAppsWebApiService } from '../../../services/InternalAppsWebApi.service';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-application-form',
@@ -16,6 +17,7 @@ export class InternalAppsEditComponent implements OnInit {
 
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(InternalAppsWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
@@ -70,8 +72,10 @@ export class InternalAppsEditComponent implements OnInit {
   }
 
   getDetails() {
+    this.loadingService.show()
     this.repo.GetAppActivationByCode(this.ActivationCode)
       .subscribe((data: any) => {
+        this.loadingService.hide()
         this.EditForm.patchValue({
           ActivationCode: data.AppActivations[0].ActivationCode,
           EnglishCompanyName: data.AppActivations[0].EnglishCompanyName,
@@ -97,8 +101,10 @@ export class InternalAppsEditComponent implements OnInit {
   }
 
   submit(action: string) {
+    this.loadingService.show()
     this.repo.CrudAppActivation(this.EditForm.value)
       .subscribe((data: any) => {
+        this.loadingService.hide()
         if (data.AppActivations[0].ActivationCode.length > 0) {
           this.ActivationCode = data.AppActivations[0].ActivationCode;
           this.getDetails();

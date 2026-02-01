@@ -28,15 +28,15 @@ import { CellDateMinDate } from './cell-date-label-attendance-panel';
 //   سرویس‌ها
 import { ThemeService } from 'src/app/app-shell/framework-services/ui/theme.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base/ag-grid-base.component';
 import { DashboardWebApiService } from '../../services/DashboardWebApi.service';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
+import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
 
 //   پایه AG Grid (نسخه Standalone جدید)
 // یا اگر alias src کار نمی‌کند، بنویس:
 // import { AgGridBaseComponent } from '../../../../../../framework-components/ag-grid/base/ag-grid-base.component';
 
-type Lookup = { id: string; name: string };
 
 @Component({
     selector: 'app-kowsar-report',
@@ -57,8 +57,8 @@ export class KowsarReportComponent extends AgGridBaseComponent implements OnInit
     records_personletterrow: any[] = [];
     records_letterrowstate: any[] = [];
 
-    loading_person = true;
-    loading_letterrowstate = true;
+    loadingService_person = true;
+    loadingService_letterrowstate = true;
 
     // ===============================================================
     //   فرم‌ها برای سه نوع گزارش
@@ -88,9 +88,9 @@ export class KowsarReportComponent extends AgGridBaseComponent implements OnInit
     });
 
     // ===============================================================
-    // 🔸 وضعیت‌های لوکاپ برای فیلتر گزارش
+    //   وضعیت‌های لوکاپ برای فیلتر گزارش
     // ===============================================================
-    LetterState_Lookup: Lookup[] = [
+    LetterState_Lookup: Base_Lookup[] = [
         { id: '', name: 'دیده نشده' },
         { id: 'منتظراقدام', name: 'منتظراقدام' },
         { id: 'درحال انجام', name: 'درحال انجام' },
@@ -102,11 +102,10 @@ export class KowsarReportComponent extends AgGridBaseComponent implements OnInit
     //   سازنده
     // ===============================================================
 
+    private readonly loadingService = inject(LoadingService);
     private readonly repo = inject(DashboardWebApiService);
     private readonly notify = inject(NotificationService);
-    private readonly loading = inject(LoadingService);
-    private readonly renderer = inject(Renderer2);
-    private readonly theme = inject(ThemeService);
+
 
     constructor(theme: ThemeService
     ) {
@@ -168,19 +167,21 @@ export class KowsarReportComponent extends AgGridBaseComponent implements OnInit
     // ===============================================================
     public getpaneldata_report1(): void {
         this.EditForm_KowsarReport1.patchValue({ Flag: '1' });
-        this.loading.show();
+        this.loadingService.show();
+
 
         this.repo.GetKowsarReport(this.EditForm_KowsarReport1.value).subscribe({
             next: (data: any) => {
-                this.loading.hide();
-                this.loading_person = false;
+
+                this.loadingService.hide();
+                this.loadingService_person = false;
                 this.records_person = data?.KowsarReports ?? [];
 
                 this.updateGridData(1, this.records_person);
             },
             error: () => {
-                this.loading.hide();
-                this.loading_person = false;
+                this.loadingService.hide();
+                this.loadingService_person = false;
                 this.records_person = [];
                 this.notify.error('❌ خطا در دریافت گزارش کارشناسان');
             },
@@ -192,18 +193,20 @@ export class KowsarReportComponent extends AgGridBaseComponent implements OnInit
     // ===============================================================
     public getpaneldata_report3(): void {
         this.EditForm_KowsarReport3.patchValue({ Flag: '3' });
-        this.loading.show();
+        this.loadingService.show();
+
 
         this.repo.GetKowsarReport(this.EditForm_KowsarReport3.value).subscribe({
             next: (data: any) => {
-                this.loading.hide();
-                this.loading_letterrowstate = false;
+
+                this.loadingService.hide();
+                this.loadingService_letterrowstate = false;
                 this.records_letterrowstate = data?.KowsarReports ?? [];
                 this.updateGridData(3, this.records_letterrowstate);
             },
             error: () => {
-                this.loading.hide();
-                this.loading_letterrowstate = false;
+                this.loadingService.hide();
+                this.loadingService_letterrowstate = false;
                 this.records_letterrowstate = [];
                 this.notify.error('❌ خطا در دریافت وضعیت ارجاعات');
             },
@@ -220,17 +223,19 @@ export class KowsarReportComponent extends AgGridBaseComponent implements OnInit
             Flag: '2',
         });
 
-        this.loading.show();
+        this.loadingService.show();
+
         this.repo.GetKowsarReport(this.EditForm_KowsarReport2.value).subscribe({
             next: (data: any) => {
-                this.loading.hide();
+
+                this.loadingService.hide();
                 this.records_personletterrow = data?.KowsarReports ?? [];
                 this.BrokerHistroyName = this.records_personletterrow?.[0]?.Name || 'جزئیات ارجاع';
                 this.updateGridData(2, this.records_personletterrow);
                 this.personletter_dialog_show();
             },
             error: () => {
-                this.loading.hide();
+                this.loadingService.hide();
                 this.records_personletterrow = [];
                 this.notify.error('❌ خطا در دریافت جزئیات ارجاع');
             },

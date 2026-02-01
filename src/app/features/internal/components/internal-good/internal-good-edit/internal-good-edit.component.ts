@@ -23,10 +23,10 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
 
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(SupportFactorWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
-  private readonly loadingService = inject(LoadingService);
 
 
   constructor() {
@@ -214,6 +214,7 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
 
 
 
+    this.loadingService.show()
     this.repo.GetGood_base(this.Code).subscribe((data: any) => {
       this.loadingService.hide()
       this.SellPriceType_Str = data.Goods[0].SellPriceType
@@ -287,13 +288,17 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
 
 
   GetLastGoodData() {
+    this.loadingService.show()
     this.repo.GetLastGoodData().subscribe((data: any) => {
+      this.loadingService.hide()
       this.router.navigateByUrl('/internal/internal-good-edit', data.Goods[0].GoodCode);
     });
   }
 
   GetObjectTypeFromDbSetup() {
+    this.loadingService.show()
     this.repo.GetObjectTypeFromDbSetup("GoodType").subscribe((data: any) => {
+      this.loadingService.hide()
 
       this.GoodType_lookup = data.ObjectTypes
       data.ObjectTypes.forEach((item: GoodType_lookup) => {
@@ -309,7 +314,9 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
   EditForm_Base_reset() {
     this.GetLastGoodData()
 
+    this.loadingService.show()
     this.repo.GetObjectTypeFromDbSetup("GoodType").subscribe((data: any) => {
+      this.loadingService.hide()
 
       data.ObjectTypes.forEach((item: GoodType_lookup) => {
         if (item.IsDefault == "True") {
@@ -513,7 +520,9 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
 
 
 
+        this.loadingService.show()
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+          this.loadingService.hide()
           this.loadingService.hide()
           const result = JSON.parse(data.Goods[0].Result);
 
@@ -590,8 +599,10 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
   fetchSuggestions(query: string) {
     // Replace the URL below with your actual API endpoint
 
+    this.loadingService.show()
     this.repo.GetSimilarGood(query).subscribe(
       (data: any) => {
+        this.loadingService.hide()
         this.simillar_good = data.Goods.slice(0, 5); // Limit to top 5 results
         console.log(this.simillar_good);
       },

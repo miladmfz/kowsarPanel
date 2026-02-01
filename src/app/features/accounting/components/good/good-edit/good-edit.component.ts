@@ -31,11 +31,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(GoodWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
   private readonly notificationService = inject(NotificationService);
-  private readonly loadingService = inject(LoadingService);
   private readonly renderer = inject(Renderer2);
 
   constructor() {
@@ -44,9 +44,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.themeSub = this.themeService.theme$.subscribe(mode => {
-      this.isDarkMode = (mode === 'dark');
-    });
+
     this.GetObjectTypeFromDbSetup()
     this.route.paramMap.subscribe((params: ParamMap) => {
       var id = params.get('id');
@@ -444,7 +442,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   LoadData_GetGoodsGrp() {
 
     // Initial data fetch
+    this.loadingService.show()
+
+    this.loadingService.show()
     this.repo.GetGoodsGrp(this.SearchTarget_frm.value).subscribe((data: any) => {
+      this.loadingService.hide()
       this.base_Group_list = data.GoodsGrps
 
     });
@@ -454,7 +456,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   LoadData_GetStacks() {
 
     // Initial data fetch
+    this.loadingService.show()
+
+    this.loadingService.show()
     this.repo.GetStacks(this.SearchTarget_frm.value).subscribe((data: any) => {
+      this.loadingService.hide()
 
       this.base_Stack_list = data.Stacks
     });
@@ -475,8 +481,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   LoadData_base() {
 
 
+    this.loadingService.show()
 
 
+    this.loadingService.show()
     this.repo.GetGood_base(this.Code).subscribe((data: any) => {
       this.loadingService.hide()
       this.SellPriceType_Str = data.Goods[0].SellPriceType
@@ -559,9 +567,12 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   LoadData_explain() {
     // Initialize form tracking for changes
 
+    this.loadingService.show()
 
     // Initial data fetch
+    this.loadingService.show()
     this.repo.GetGood_Explain(this.Code).subscribe((data: any) => {
+      this.loadingService.hide()
       this.EditForm_Explain.patchValue({
         GoodCode: data.Goods[0].GoodCode,
         GoodSubCode: data.Goods[0].GoodSubCode,
@@ -598,8 +609,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   LoadData_complete() {
 
+    this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.GetGood_Complete(this.Code).subscribe((data: any) => {
+      this.loadingService.hide()
 
       this.EditForm_Complete.patchValue({
         GoodCode: data.Goods[0].GoodCode,
@@ -692,6 +706,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     this.loadingService.show()
 
 
+    this.loadingService.show()
     this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
       this.loadingService.hide()
       const result = JSON.parse(data.Goods[0].Result);
@@ -711,7 +726,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
   LoadData_property() {
+    this.loadingService.show()
+
+    this.loadingService.show()
     this.repo.GetGood_Propertys(this.Code).subscribe((data: any) => {
+      this.loadingService.hide()
       if (data.response) {
         this.Errormsg_property = data.response.Errormessage
       } else {
@@ -833,7 +852,9 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
           ObjectType: this.GoodTypeStr,
         });
 
+        this.loadingService.show()
         this.repo.GetProperty(this.propertyDto.value).subscribe((data: any) => {
+          this.loadingService.hide()
 
           this.Propertys = data.Propertys;
 
@@ -959,31 +980,42 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       //   ObjectType: this.GoodTypeStr,
       // });
 
-      // this.repo.GetProperty(this.propertyDto.value).subscribe((data: any) => {
+      //     this.loadingService.show()
+      this.repo.GetProperty(this.propertyDto.value).subscribe((data: any) => {
+        this.loadingService.hide()
 
-      //   this.Propertys = data.Propertys;
+        //   this.Propertys = data.Propertys;
 
 
 
-      // });
+        // });
 
-    });
+      });
+    })
+
   }
-
-
   GetGood_Stacks_Relations() {
+    this.loadingService.show()
+
+    this.loadingService.show()
     this.repo.GetGood_Stacks(this.Code).subscribe((e: any) => {
       this.Stack_list = e.Goods;
     });
   }
 
   GetGood_Images_Relations() {
+    this.loadingService.show()
+
+    this.loadingService.show()
     this.repo.GetGood_Images(this.Code).subscribe((e: any) => {
       this.Image_list = e.Goods;
     });
   }
 
   GetGood_Groups_Relations() {
+    this.loadingService.show()
+
+    this.loadingService.show()
     this.repo.GetGood_Groups(this.Code).subscribe((e: any) => {
       this.Group_list = e.Goods;
     });
@@ -1138,13 +1170,19 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
   GetLastGoodData() {
+    this.loadingService.show()
+
+    this.loadingService.show()
     this.repo.GetLastGoodData().subscribe((data: any) => {
+      this.loadingService.hide()
       this.router.navigateByUrl('accounting/good-edit', data.Goods[0].GoodCode);
     });
   }
 
   GetObjectTypeFromDbSetup() {
+    this.loadingService.show()
     this.repo.GetObjectTypeFromDbSetup("GoodType").subscribe((data: any) => {
+      this.loadingService.hide()
 
       this.GoodType_lookup = data.ObjectTypes
       data.ObjectTypes.forEach((item: GoodType_lookup) => {
@@ -1157,10 +1195,13 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
     });
   }
 
+
   EditForm_Base_reset() {
     this.GetLastGoodData()
 
+    this.loadingService.show()
     this.repo.GetObjectTypeFromDbSetup("GoodType").subscribe((data: any) => {
+      this.loadingService.hide()
 
       data.ObjectTypes.forEach((item: GoodType_lookup) => {
         if (item.IsDefault == "True") {
@@ -1266,7 +1307,9 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
+    this.loadingService.show()
     this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+      this.loadingService.hide()
       this.loadingService.hide()
       const result = JSON.parse(data.Goods[0].Result);
 
@@ -1299,6 +1342,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   DeleteImagefromGood(KsrImageCode) {
     this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.DeleteKsrImageCode(KsrImageCode).subscribe(e => {
       this.loadingService.hide()
 
@@ -1311,6 +1355,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   DeleteGroupfromGood(GoodGroupCode) {
     this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.DeleteGoodGroupCode(GoodGroupCode).subscribe(e => {
       this.loadingService.hide()
 
@@ -1323,7 +1368,9 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   ShowImageModal(pixel, KsrImageCode) {
     this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.GetImageFromServer(pixel, KsrImageCode).subscribe((data: any) => {
+      this.loadingService.hide()
       this.loadingService.hide()
 
       this.showimage_dialog_show();
@@ -1372,6 +1419,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
+    this.loadingService.show()
     this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
       this.loadingService.hide()
       const result = JSON.parse(data.Goods[0].Result);
@@ -1730,6 +1778,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
       image: imageData
     };
 
+    this.loadingService.show()
     this.repo.SendImageToServer(data).subscribe((response) => {
       this.loadingService.hide()
       this.notificationService.succeded()
@@ -1788,7 +1837,9 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
+        this.loadingService.show()
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+          this.loadingService.hide()
           this.loadingService.hide()
           const result = JSON.parse(data.Goods[0].Result);
 
@@ -1835,7 +1886,9 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
         this.loadingService.show()
 
 
+        this.loadingService.show()
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+          this.loadingService.hide()
           this.loadingService.hide()
           const result = JSON.parse(data.Goods[0].Result);
 
@@ -1884,7 +1937,9 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
         this.loadingService.show()
 
+        this.loadingService.show()
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+          this.loadingService.hide()
           this.loadingService.hide()
           const result = JSON.parse(data.Goods[0].Result);
 
@@ -1935,7 +1990,9 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
+        this.loadingService.show()
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+          this.loadingService.hide()
           this.loadingService.hide()
           const result = JSON.parse(data.Goods[0].Result);
 
@@ -1993,7 +2050,9 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
+        this.loadingService.show()
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
+          this.loadingService.hide()
           this.loadingService.hide()
           const result = JSON.parse(data.Goods[0].Result);
 
@@ -2116,7 +2175,9 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
   BarCodeModal(): void {
     this.loadingService.show()
+    this.loadingService.show()
     this.repo.GetBarcodeList(this.Code).subscribe((data: any) => {
+      this.loadingService.hide()
       this.barcode_dialog_show()
       console.log(data.Barcodes)
 
@@ -2197,6 +2258,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
+    this.loadingService.show()
     this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
       this.loadingService.hide()
       const result = JSON.parse(data.Goods[0].Result);
@@ -2255,8 +2317,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   fetchSuggestions(query: string) {
     // Replace the URL below with your actual API endpoint
 
+    this.loadingService.show()
     this.repo.GetSimilarGood(query).subscribe(
       (data: any) => {
+        this.loadingService.hide()
         this.simillar_good = data.Goods.slice(0, 5); // Limit to top 5 results
         console.log(this.simillar_good);
       },
@@ -2340,10 +2404,11 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
   IsbnToBarcode() {
+    this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.IsbnToBarcode(this.EditForm_Base.value.Isbn, this.Code).subscribe((data: any) => {
-      console.log(data)
-
+      this.loadingService.hide()
       this.IsbnToBarcode_frm.patchValue({
         ErrMessage: data.Goods[0].ErrMessage,
         StandardMsg: data.Goods[0].StandardMsg,

@@ -8,6 +8,7 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { KowsarChartColumnComponent } from 'src/app/app-shell/framework-components/kowsar/kowsar-chart-column/kowsar-chart-column.component';
 import { KowsarChartPieComponent } from 'src/app/app-shell/framework-components/kowsar/kowsar-chart-pie/kowsar-chart-pie.component';
 import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.service';
 
 @Component({
@@ -27,12 +28,68 @@ import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.ser
 })
 export class OcrAppReportListComponent extends AgGridBaseComponent
   implements OnInit {
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(OcrWebApiService);
 
   constructor() {
     super();
   }
 
+  ngOnInit(): void {
+    this.columnDefs1 = [
+      {
+        field: 'dbname',
+        headerName: 'نام دیتابیس',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+
+      {
+        field: 'CustName',
+        headerName: 'نام مشتری',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 250
+      },
+      {
+        field: 'FactorDate',
+        headerName: 'تاریخ فاکتور',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'CustomerCode',
+        headerName: 'کد مشتری',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'Explain',
+        headerName: 'توضیحات',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'CustomerPath',
+        headerName: 'منطقه',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+      {
+        field: 'AppFactorState',
+        headerName: 'وضعیت فاکتور',
+        filter: 'agSetColumnFilter',
+        cellClass: 'text-center',
+        minWidth: 150
+      },
+
+    ];
+  }
 
 
   toggleTheme() {
@@ -129,11 +186,25 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
     }
 
   }
+  getList() {
+    this.loadingService.show()
+    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6").subscribe((data: any) => {
+      this.loadingService.hide()
+
+      this.Report_State = this.GetOcrPanel_frm.value.State
+      this.loading = false
+      this.records = data;
+
+    });
+
+  }
 
 
   LoadList_state_0() {
     this.loading = true
-    this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "6").subscribe((data) => {
+    this.loadingService.show()
+    this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "6").subscribe((data: any) => {
+      this.loadingService.hide()
       this.loading = false
       this.records = data;
 
@@ -149,7 +220,9 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
     this.loading7 = true
 
 
-    this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "1").subscribe((data) => {
+    this.loadingService.show()
+    this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "1").subscribe((data: any) => {
+      this.loadingService.hide()
       this.loading1 = false
       if (data.length > 0) {
 
@@ -177,7 +250,9 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
     });
 
 
-    this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "2").subscribe((data) => {
+    this.loadingService.show()
+    this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "2").subscribe((data: any) => {
+      this.loadingService.hide()
       this.loading2 = false
       if (data.length > 0) {
 
@@ -195,7 +270,9 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
     });
 
 
-    this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "5").subscribe((data) => {
+    this.loadingService.show()
+    this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "5").subscribe((data: any) => {
+      this.loadingService.hide()
       this.loading5 = false
       if (data.length > 0) {
 
@@ -222,59 +299,63 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
     });
 
 
+    this.loadingService.show()
+    this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "3").subscribe((data: any) => {
+      this.loadingService.hide()
+      this.loadingService.show()
+      this.repo.GetOcrPanel("1402/07/08", "1402/07/11", "3").subscribe((data: any) => {
+        this.loadingService.hide()
 
-    //this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "3").subscribe((data) => {
-    this.repo.GetOcrPanel("1402/07/08", "1402/07/11", "3").subscribe((data) => {
+        this.loading6 = false
+        if (data.length > 0) {
 
-      this.loading6 = false
-      if (data.length > 0) {
+          this.data_state6 = data
 
-        this.data_state6 = data
-
-        const factorKeys = Object.keys(data[0]).filter(key => key !== 'FactorDate' && key !== 'RowsCount');
-
-
-        this.columnChartData_state6 = factorKeys.map(key => ({
-          name: key,
-          data: data.map(item => parseInt(item[key], 10))
-        }));
-
-        this.columnChartCategories_state6 = factorKeys;
+          const factorKeys = Object.keys(data[0]).filter(key => key !== 'FactorDate' && key !== 'RowsCount');
 
 
+          this.columnChartData_state6 = factorKeys.map(key => ({
+            name: key,
+            data: data.map(item => parseInt(item[key], 10))
+          }));
+
+          this.columnChartCategories_state6 = factorKeys;
 
 
 
-      } else {
-        this.data_state6 = []
-      }
+
+
+        } else {
+          this.data_state6 = []
+        }
+      });
+
+
+      this.loadingService.show()
+      this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "4").subscribe((data: any) => {
+        this.loadingService.hide()
+
+        this.loading7 = false
+        if (data.length > 0) {
+
+          this.data_state7 = data
+
+          const factorKeys = Object.keys(data[0]).filter(key => key !== 'FactorDate' && key !== 'SumAmount');
+
+
+          this.columnChartData_state7 = factorKeys.map(key => ({
+            name: key,
+            data: data.map(item => parseInt(item[key], 10))
+          }));
+
+          this.columnChartCategories_state7 = factorKeys;
+
+
+        } else {
+          this.data_state7 = []
+        }
+      });
     });
-
-
-    this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "4").subscribe((data) => {
-      this.loading7 = false
-      if (data.length > 0) {
-
-        this.data_state7 = data
-
-        const factorKeys = Object.keys(data[0]).filter(key => key !== 'FactorDate' && key !== 'SumAmount');
-
-
-        this.columnChartData_state7 = factorKeys.map(key => ({
-          name: key,
-          data: data.map(item => parseInt(item[key], 10))
-        }));
-
-        this.columnChartCategories_state7 = factorKeys;
-
-
-      } else {
-        this.data_state7 = []
-      }
-    });
-
-
-
 
 
 
@@ -283,97 +364,6 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
 
 
   }
-
-
-
-
-
-  ngOnInit(): void {
-    this.themeSub = this.themeService.theme$.subscribe(mode => {
-      this.isDarkMode = (mode === 'dark');
-    });
-
-
-    this.columnDefs1 = [
-      {
-        field: 'dbname',
-        headerName: 'نام دیتابیس',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-
-      {
-        field: 'CustName',
-        headerName: 'نام مشتری',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 250
-      },
-      {
-        field: 'FactorDate',
-        headerName: 'تاریخ فاکتور',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'CustomerCode',
-        headerName: 'کد مشتری',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'Explain',
-        headerName: 'توضیحات',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'CustomerPath',
-        headerName: 'منطقه',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'AppFactorState',
-        headerName: 'وضعیت فاکتور',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-
-    ];
-
-    this.repo.GetTodeyFromServer("-1").subscribe(e => {
-
-      this.ToDayDate = e[0].TodeyFromServer
-      this.getList();
-    });
-
-
-
-  }
-
-  getList() {
-    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6").subscribe((data) => {
-
-      this.Report_State = this.GetOcrPanel_frm.value.State
-      this.loading = false
-      this.records = data;
-
-    });
-
-  }
-
 
 }
-
-
-
-
-
 

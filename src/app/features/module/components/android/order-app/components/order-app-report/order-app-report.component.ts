@@ -6,6 +6,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { IDatepickerTheme, NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { ThemeService } from 'src/app/app-shell/framework-services/ui/theme.service';
 import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi.service';
 
@@ -24,6 +25,7 @@ import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi
 })
 export class OrderAppReportComponent extends AgGridBaseComponent
   implements OnInit {
+  private readonly loadingService = inject(LoadingService);
 
   private readonly repo = inject(OrderWebApiService);
 
@@ -62,7 +64,7 @@ export class OrderAppReportComponent extends AgGridBaseComponent
     if (this.Searchtarget == "") {
       this.Searchtarget = ""
     }
-    this.getList()
+    // this.getList()
   }
 
 
@@ -101,7 +103,7 @@ export class OrderAppReportComponent extends AgGridBaseComponent
 
     ];
 
-    this.getList();
+    // this.getList();
   }
 
 
@@ -114,141 +116,26 @@ export class OrderAppReportComponent extends AgGridBaseComponent
 
   getList() {
 
-    // this.repo.GetOrderPanel(this.StartDate.value, this.EndDate.value, "4").subscribe(e => {
-    //   this.records = e;
+    //     this.loadingService.show()
+    this.repo.GetOrderPanel(this.StartDate.value, this.EndDate.value, "4").subscribe((data: any) => {
+      //   this.records = e;
 
-    // });
+      // });
 
 
-    this.repo.GetOrderPanel(this.EditForm_Complete.value.StartDate, this.EditForm_Complete.value.EndDate, this.EditForm_Complete.value.Filter).subscribe(e => {
-      this.records = e;
+      this.loadingService.show()
+      this.repo.GetOrderPanel(this.EditForm_Complete.value.StartDate, this.EditForm_Complete.value.EndDate, this.EditForm_Complete.value.Filter).subscribe(e => {
+        this.records = data;
+        this.loadingService.hide()
 
-    });
-
-    // this.repo.GetOrderPanel("30", this.Searchtarget, "0").subscribe((data) => {
-    //   this.records = data;
-
-    // });
+      });
 
 
 
 
+    })
   }
 
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-implements OnInit {
-
-constructor(
-private repo: KowsarWebApiService,
-private route: ActivatedRoute,
-
-) { }
-
-items: any[] = [];
-TextData: string = '';
-selectedOption: string = '0';
-dateValue = new FormControl();
-id: string = "0";
-
-Searchtarget: string = '';
-CentralRef: string = '';
-GroupCode_str: string = '0';
-
-
-
-ngOnInit() {
-
-if (this.route.snapshot.params['id']) {
-  this.id = this.route.snapshot.params['id'];
-}
-
-if (parseInt(this.id) > 0) {
-  this.GroupCode_str = this.id
-  this.LoadList();
-} else {
-  this.repo.kowsar_info("AppOrder_DefaultGroupCode").subscribe(e => {
-
-    this.GroupCode_str = e[0].DataValue
-    this.LoadList();
-  });
-}
-
-
-
-}
-
-
-onInputChange() {
-
-}
-
-
-LoadList() {
-
-this.repo.GetOrderGoodList("30", this.Searchtarget, this.GroupCode_str).subscribe(e => {
-  this.items = e;
-   this.items);
-
-});
-
-}
-
-
-
-
-
-
-}
-*/

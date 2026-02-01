@@ -57,7 +57,7 @@ export class AttendanceHistoryModalComponent {
   @Input() darkMode = false;
 
   // ===============================================================
-  // 🔸 خروجی‌ها
+  //   خروجی‌ها
   // ===============================================================
   @Output() close = new EventEmitter<void>();
 

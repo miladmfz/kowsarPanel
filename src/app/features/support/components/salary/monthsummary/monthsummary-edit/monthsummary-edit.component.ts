@@ -24,6 +24,7 @@ export class MonthsummaryEditComponent extends AgGridBaseComponent implements On
 
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(SalaryWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
@@ -106,8 +107,10 @@ export class MonthsummaryEditComponent extends AgGridBaseComponent implements On
 
 
   getDetails() {
+    this.loadingService.show()
     this.repo.GetMonthSummaryByCode(this.MonthSummaryCode)
       .subscribe((data: any) => {
+        this.loadingService.hide()
         this.EditForm_MonthSummary.patchValue(data?.MonthSummarys[0]);
 
       });
@@ -139,8 +142,10 @@ export class MonthsummaryEditComponent extends AgGridBaseComponent implements On
     });
 
 
+    this.loadingService.show()
     this.repo.InUp_MonthSummary(payload)
       .subscribe((data: any) => {
+        this.loadingService.hide()
 
         this.router.navigate(['/support/monthsummary-list']);
         this.notificationService.success('اطلاعات با موفقیت ذخیره شد');
@@ -156,8 +161,10 @@ export class MonthsummaryEditComponent extends AgGridBaseComponent implements On
 
 
 
-    //   // this.repo.CustomerUpdate(this.EditForm_Customer.value)
+    //   //     this.loadingService.show()
+    // this.repo.CustomerUpdate(this.EditForm_Customer.value)
     //   //   .subscribe((data: any) => {
+    // this.loadingService.hide()
     //   //     if (data.Customers[0].CustomerCode.length > 0) {
     //   //       // this.router.navigate(['/internal/internal-customer-edit', data.Customers[0].CustomerCode]);
     //   //       this.router.navigate(['/internal/internal-customer-list']);

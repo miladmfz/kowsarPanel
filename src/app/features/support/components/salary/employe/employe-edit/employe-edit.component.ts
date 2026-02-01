@@ -28,10 +28,10 @@ export class EmployeEditComponent extends AgGridBaseComponent implements OnInit 
 
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(SalaryWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
-  private readonly loadingService = inject(LoadingService);
 
 
   constructor(
@@ -175,8 +175,10 @@ export class EmployeEditComponent extends AgGridBaseComponent implements OnInit 
   }
 
   getDetails() {
+    this.loadingService.show()
     this.repo.GetEmployeeByCode(this.EmployeeCode)
       .subscribe((data: any) => {
+        this.loadingService.hide()
         this.EditForm_Employee.patchValue(data?.Employees[0]);
 
       });
@@ -208,8 +210,10 @@ export class EmployeEditComponent extends AgGridBaseComponent implements OnInit 
     });
 
 
+    this.loadingService.show()
     this.repo.InUp_Employee(payload)
       .subscribe((data: any) => {
+        this.loadingService.hide()
 
         this.router.navigate(['/support/employe-list']);
         this.notificationService.success('اطلاعات با موفقیت ذخیره شد');
@@ -225,8 +229,10 @@ export class EmployeEditComponent extends AgGridBaseComponent implements OnInit 
 
 
 
-    //   // this.repo.CustomerUpdate(this.EditForm_Customer.value)
+    //   //     this.loadingService.show()
+    // this.repo.CustomerUpdate(this.EditForm_Customer.value)
     //   //   .subscribe((data: any) => {
+    // this.loadingService.hide()
     //   //     if (data.Customers[0].CustomerCode.length > 0) {
     //   //       // this.router.navigate(['/internal/internal-customer-edit', data.Customers[0].CustomerCode]);
     //   //       this.router.navigate(['/internal/internal-customer-list']);

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi.service';
 
 @Component({
@@ -15,7 +16,10 @@ import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi
   ],
 })
 export class OrderAppColumnListComponent implements OnInit {
+
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(OrderWebApiService);
+
 
   constructor() { }
 
@@ -27,6 +31,7 @@ export class OrderAppColumnListComponent implements OnInit {
   }
 
   GetBasketColumnList() {
+    this.loadingService.show()
     this.repo.GetBasketColumnList(this.Apptype)
       .subscribe(e => {
         this.BasketColumns = e;

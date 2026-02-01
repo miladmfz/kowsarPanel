@@ -25,10 +25,10 @@ import { KowsarNumberService } from 'src/app/app-shell/framework-services/kowsar
 })
 export class CustomerForoshRptComponent extends AgGridBaseComponent implements OnInit, OnDestroy {
 
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(ReportWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
-  private readonly loadingservice = inject(LoadingService);
   private readonly kowsarNumber = inject(KowsarNumberService);
 
   constructor() {
@@ -113,16 +113,18 @@ export class CustomerForoshRptComponent extends AgGridBaseComponent implements O
 
   private initColumns(): void {
 
-    this.loadingservice.show()
+    this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.GetGridSchema('T' + this.ReportData.ReportForm)
       .pipe(
         catchError((_error) => {
-          this.loadingservice.hide()
+          this.loadingService.hide()
           return of(null);
         })
       )
       .subscribe((data: any) => {
+        this.loadingService.hide()
         if (data?.GridSchemas?.length > 0) {
           this.columnDefs1 = data.GridSchemas
             .filter((schema: any) => schema.Visible === 'True')
@@ -147,7 +149,7 @@ export class CustomerForoshRptComponent extends AgGridBaseComponent implements O
           //   filter: false
           // });
         }
-        this.loadingservice.hide()
+        this.loadingService.hide()
 
 
 
@@ -181,15 +183,17 @@ export class CustomerForoshRptComponent extends AgGridBaseComponent implements O
 
 
   loadList(): void {
-    this.loadingservice.show()
+    this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.CustomerForoshRpt(this.EditForm_SearchTarget.value)
       .subscribe((data: any) => {
+        this.loadingService.hide()
 
         this.records = data?.Reports || [];
 
         this.updateGridData(1, this.records);
-        this.loadingservice.hide()
+        this.loadingService.hide()
 
 
 

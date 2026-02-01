@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { CompanyWebApiService } from 'src/app/features/module/services/CompanyWebApi.service';
 
 @Component({
@@ -17,6 +18,7 @@ import { CompanyWebApiService } from 'src/app/features/module/services/CompanyWe
 })
 export class CompanyAppPanelComponent implements OnInit {
 
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(CompanyWebApiService);
 
 
@@ -46,6 +48,7 @@ export class CompanyAppPanelComponent implements OnInit {
 
   ListVisible_Card() {
 
+    this.loadingService.show()
     this.repo.BasketColumnCard("ListVisible", this.Apptype)
       .subscribe(e => {
         this.ListVisible_items = e;
@@ -55,6 +58,7 @@ export class CompanyAppPanelComponent implements OnInit {
   }
 
   DetailVisible_Card() {
+    this.loadingService.show()
     this.repo.BasketColumnCard("DetailVisible", this.Apptype)
       .subscribe(e => {
         this.DetailVisible_items = e;
@@ -64,6 +68,7 @@ export class CompanyAppPanelComponent implements OnInit {
   }
 
   SearchVisible_Card() {
+    this.loadingService.show()
     this.repo.BasketColumnCard("SearchVisible", this.Apptype)
       .subscribe(e => {
         this.SearchVisible_items = e;

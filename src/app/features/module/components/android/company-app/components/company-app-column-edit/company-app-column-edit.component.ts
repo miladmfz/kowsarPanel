@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule, UntypedFormBuilder } from '@angular/f
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CompanyWebApiService } from 'src/app/features/module/services/CompanyWebApi.service';
 import { Location } from '@angular/common';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-company-app-column-edit',
@@ -19,6 +20,7 @@ import { Location } from '@angular/common';
 })
 export class CompanyAppColumnEditComponent implements OnInit {
 
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(CompanyWebApiService);
   private readonly location = inject(Location);
 
@@ -82,6 +84,7 @@ export class CompanyAppColumnEditComponent implements OnInit {
 
   GetGoodType() {
 
+    this.loadingService.show()
     this.repo.GetGoodType().subscribe(e => {
       this.Goodtypes = e;
       this.Goodtypes.unshift({ GoodType: "همه", IsDefault: -1 });
@@ -109,6 +112,7 @@ export class CompanyAppColumnEditComponent implements OnInit {
 
   GetProperty() {
 
+    this.loadingService.show()
     this.repo.GetProperty(this.selected_GoodType).subscribe(e => {
       this.Propertys = e;
 
@@ -178,6 +182,7 @@ export class CompanyAppColumnEditComponent implements OnInit {
 
   InsertSingleColumn() {
 
+    this.loadingService.show()
     this.repo.InsertSingleColumn(
       this.selected_obj_Property.PropertyValueMap
       , this.getDisplayName(this.selected_obj_Property.PropertySchema)

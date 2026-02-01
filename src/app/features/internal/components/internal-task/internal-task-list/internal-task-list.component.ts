@@ -27,9 +27,9 @@ export class InternalTaskListComponent
   implements OnInit {
 
 
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(SupportFactorWebApiService);
   private readonly notificationService = inject(NotificationService);
-  private readonly loadingService = inject(LoadingService);
 
   constructor() {
     super();
@@ -109,8 +109,10 @@ export class InternalTaskListComponent
   }
 
   GetTasks() {
+    this.loadingService.show()
     this.repo.GetTasks(this.EditForm_task.value)
       .subscribe((data: any) => {
+        this.loadingService.hide()
         this.records = data?.KowsarTasks ?? [];
         this.updateGridData(1, this.records);
       });
@@ -128,10 +130,12 @@ export class InternalTaskListComponent
       if (result.isConfirmed) {
         this.EditForm_task.patchValue({ TaskCode });
 
-        this.loadingService.show();
+        this.loadingService.show()
 
+        this.loadingService.show()
         this.repo.DeleteTask(this.EditForm_task.value).subscribe((data: any) => {
-          this.loadingService.hide();
+          this.loadingService.hide()
+          this.loadingService.hide()
 
           if (data.KowsarTasks[0].Success === '0') {
             this.notificationService.error(data.KowsarTasks[0].Message);

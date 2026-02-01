@@ -6,6 +6,7 @@ import { BrokerWebApiService } from 'src/app/features/module/services/BrokerWebA
 import { Location } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
 import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-broker-app-column-edit',
@@ -21,6 +22,7 @@ import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
 })
 export class BrokerAppColumnEditComponent implements OnInit {
 
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(BrokerWebApiService);
   private readonly location = inject(Location);
 
@@ -77,6 +79,7 @@ export class BrokerAppColumnEditComponent implements OnInit {
 
 
   GetGoodType() {
+    this.loadingService.show()
     this.repo.GetGoodType().subscribe(e => {
       this.Goodtypes = e;
       this.Goodtypes.unshift({ GoodType: "همه", IsDefault: -1 });
@@ -95,6 +98,7 @@ export class BrokerAppColumnEditComponent implements OnInit {
   }
 
   GetProperty() {
+    this.loadingService.show()
     this.repo.GetProperty(this.selected_GoodType).subscribe(e => {
       this.Propertys = e;
     });
@@ -159,6 +163,7 @@ export class BrokerAppColumnEditComponent implements OnInit {
 
   InsertSingleColumn() {
 
+    this.loadingService.show()
     this.repo.InsertSingleColumn(
       this.selected_obj_Property.PropertyValueMap
       , this.getDisplayName(this.selected_obj_Property.PropertySchema)

@@ -36,6 +36,7 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
   selectedFileSize = 0;
   selectedFileType = '';
 
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(KowsarBaseWebApi);
   private readonly notify = inject(NotificationService);
   private readonly loading = inject(LoadingService);
@@ -76,9 +77,12 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
 
   GetAttachList() {
 
+
+    this.loadingService.show()
     this.repo.GetAttachFileList(this.EditForm.value).subscribe({
-      next: (resp: any) => {
-        this.records = resp.AttachedFiles ?? [];
+      next: (data: any) => {
+        this.loadingService.hide()
+        this.records = data.AttachedFiles ?? [];
         this.updateGridData(6, this.records);
       },
       error: () => this.notify.error('خطا در دریافت فایل‌ها'),
@@ -159,7 +163,9 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
     }
 
     this.loading.show();
+    this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.AttachFile_Insert(this.EditForm.value).subscribe({
       next: () => {
         this.loading.hide();
@@ -194,6 +200,9 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
   // دانلود
   // =============================
   DownloadFile(row: any) {
+    this.loadingService.show()
+
+    this.loadingService.show()
     this.repo.downloadFile(row.AttachedFileCode, this.ClassName, this.ObjectRef).subscribe({
       next: (res: any) => {
         if (!res?.success) {
@@ -236,7 +245,9 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
     });
 
     if (!confirm.isConfirmed) return;
+    this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.DeleteAttachFile(row.AttachedFileCode, this.ClassName, this.ObjectRef).subscribe({
       next: () => {
         this.notify.success('فایل حذف شد');

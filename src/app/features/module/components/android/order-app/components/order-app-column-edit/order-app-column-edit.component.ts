@@ -6,6 +6,7 @@ import { NotificationService } from 'src/app/app-shell/framework-services/ui/not
 import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi.service';
 import { Location } from '@angular/common';
 import { catchError, of } from 'rxjs';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-order-app-column-edit',
@@ -20,6 +21,7 @@ import { catchError, of } from 'rxjs';
 })
 export class OrderAppColumnEditComponent implements OnInit {
 
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(OrderWebApiService);
   private readonly location = inject(Location);
   private readonly notificationService = inject(NotificationService);
@@ -85,6 +87,7 @@ export class OrderAppColumnEditComponent implements OnInit {
 
   GetGoodType() {
 
+    this.loadingService.show()
     this.repo.GetGoodType()
       .subscribe(e => {
         this.Goodtypes = e;
@@ -113,6 +116,7 @@ export class OrderAppColumnEditComponent implements OnInit {
 
   GetProperty() {
 
+    this.loadingService.show()
     this.repo.GetProperty(this.selected_GoodType)
       .subscribe(e => {
         this.Propertys = e;
@@ -183,6 +187,7 @@ export class OrderAppColumnEditComponent implements OnInit {
 
   InsertSingleColumn() {
 
+    this.loadingService.show()
     this.repo.InsertSingleColumn(
       this.selected_obj_Property.PropertyValueMap
       , this.getDisplayName(this.selected_obj_Property.PropertySchema)

@@ -9,6 +9,7 @@ import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi
 import { CellActionOrderCustomer } from './cell-action-order-customer';
 import { AgGridModule } from 'ag-grid-angular';
 import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-order-app-customer',
@@ -25,6 +26,7 @@ export class OrderAppCustomerComponent extends AgGridBaseComponent
   implements OnInit {
 
   private readonly renderer = inject(Renderer2);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(OrderWebApiService);
 
 
@@ -64,6 +66,7 @@ export class OrderAppCustomerComponent extends AgGridBaseComponent
 
   GetCustomer() {
 
+    this.loadingService.show()
     this.repo.GetCustomerMandeh()
       .subscribe(e => {
         this.records_Customer = e;
@@ -73,6 +76,7 @@ export class OrderAppCustomerComponent extends AgGridBaseComponent
 
   GetDetailCustomer(data) {
 
+    this.loadingService.show()
     this.repo.GetCustomerlastGood(data.CustomerCode)
       .subscribe(e => {
         this.records_Customer_detail = e;

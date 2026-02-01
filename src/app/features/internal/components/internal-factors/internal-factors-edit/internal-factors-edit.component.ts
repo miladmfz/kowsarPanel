@@ -32,12 +32,12 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
 
 
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   private readonly repo = inject(SupportFactorWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
   private readonly sharedService = inject(SharedService);
   private readonly notificationService = inject(NotificationService);
-  private readonly loadingService = inject(LoadingService);
 
 
 
@@ -143,11 +143,14 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
       ObjectRef: this.EditForm_Factor_Header.value.CustomerCode,
     });
 
+    this.loadingService.show()
     this.repo.GetCentralUser().subscribe(e => {
       this.users = e;
     });
 
+    this.loadingService.show()
     this.repo.GetCustomerById(this.EditForm_search.value).subscribe((data: any) => {
+      this.loadingService.hide()
       this.EditForm_LetterToEmployer.patchValue({
         DescriptionText: "",
         LetterDate: this.ToDayDate,
@@ -162,8 +165,10 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
         OwnCentralRef: "0",
       });
 
+      this.loadingService.show()
       this.repo.GetAutLetterList(this.EditForm_autletter.value).subscribe((data: any) => {
         this.loadingService.hide()
+
 
         this.records_letterfromowner = data?.AutLetters ?? [];
         this.updateGridData(5, this.records_letterfromowner);
@@ -218,6 +223,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
 
 
 
+    this.loadingService.show()
     this.repo.LetterInsert(this.EditForm_LetterInsert.value).subscribe(e => {
       const intValue = parseInt(e[0].LetterCode, 10);
       this.loadingService.hide()
@@ -244,6 +250,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
       ExecuterCentral: this.EditForm_LetterToEmployer.value.ExecuterCentral,
     });
 
+    this.loadingService.show()
     this.repo.AutLetterRowInsert(this.EditForm_AutLetterRowInsert.value).subscribe(e => {
       const intValue = parseInt(e[0].LetterRef, 10);
       this.loadingService.hide()
@@ -598,12 +605,14 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
       starttime: timeString,
     });
 
+    this.loadingService.show()
     this.repo.Support_StartFactorTime(this.EditForm_supportfactor_property.value).subscribe(() => {
       this.EditForm_Attendance.patchValue({
         CentralRef: sessionStorage.getItem("CentralRef"),
         Status: "2" //busy
       });
 
+      this.loadingService.show()
       this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe(() => {
         this.notificationService.succeded();
         this.router.navigate(['/internal/internal-factors-edit', this.FactorCode()]);
@@ -645,6 +654,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
         this.EditForm_supportfactor_property.patchValue({ worktime: "0" });
       }
 
+      this.loadingService.show()
       this.repo.Support_EndFactorTime(this.EditForm_supportfactor_property.value).subscribe(() => {
         this.EditForm_SupportData.patchValue({
           DateTarget: "",
@@ -652,7 +662,9 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
           Flag: "2"
         });
 
+        this.loadingService.show()
         this.repo.GetSupportPanel(this.EditForm_SupportData.value).subscribe((data: any) => {
+          this.loadingService.hide()
           if (data.SupportDatas[0].EmptyEndTimeCount > 0) {
             this.notificationService.succeded();
             this.loadingService.hide()
@@ -665,6 +677,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
               Status: "1" //hozor
             });
 
+            this.loadingService.show()
             this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe(() => {
               this.notificationService.succeded();
               this.loadingService.hide()
@@ -680,6 +693,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   }
 
   Set_ExplianFactorTime() {
+    this.loadingService.show()
     this.loadingService.show()
     this.repo.Support_ExplainFactor(this.EditForm_supportfactor_property.value).subscribe(() => {
       this.notificationService.succeded();
@@ -698,7 +712,9 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
 
     this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.WebFactorInsertRow(this.EditForm_Factor_Row.value).subscribe((data: any) => {
+      this.loadingService.hide()
       const factor = data.Factors[0];
       const rowCode = Number(factor.RowCode);
 
@@ -780,8 +796,10 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   Factor_Customer_Property(CustomerCode: any) {
 
 
+    this.loadingService.show()
     this.repo.GetCustomerFactor(CustomerCode).subscribe({
       next: (data: any) => {
+        this.loadingService.hide()
         this.records_factor = data?.Factors ?? [];
         this.loading = false;
         this.updateGridData(4, this.records_factor);
@@ -806,7 +824,9 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
       BrokerRef: sessionStorage.getItem("BrokerCode")
     });
 
+    this.loadingService.show()
     this.repo.WebSupportFactorInsert(this.EditForm_Factor_Header.value).subscribe((data: any) => {
+      this.loadingService.hide()
       this.FactorCode.set(data.Factors[0].FactorCode)
       this.notificationService.succeded();
 
@@ -894,6 +914,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
       if (result.isConfirmed) {
         this.loadingService.show()
 
+        this.loadingService.show()
         this.repo.DeleteWebFactorRowsSupport(id).subscribe(() => {
           this.loadingService.hide()
 
@@ -909,12 +930,14 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   deletefactorRecord() {
     this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.DeleteWebFactorSupport(this.FactorCode()).subscribe(() => {
       this.EditForm_Attendance.patchValue({
         CentralRef: sessionStorage.getItem("CentralRef"),
         Status: "1" //hozor
       });
 
+      this.loadingService.show()
       this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe(() => {
         this.loadingService.hide()
 
@@ -952,7 +975,9 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
       ObjectRef: this.FactorCode(),
     });
 
+    this.loadingService.show()
     this.repo.GetWebFactorSupport(this.FactorCode()).subscribe((data: any) => {
+      this.loadingService.hide()
       this.selectedfactor = data.Factors[0]
       this.loadingService.hide()
       this.FactorCode.set(data.Factors[0].FactorCode);
@@ -988,6 +1013,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   GetFactorrows() {
     this.loadingService.show()
 
+    this.loadingService.show()
     this.repo.GetWebFactorRowsSupport(this.FactorCode()).subscribe((data: any) => {
       this.loadingService.hide()
 
@@ -997,7 +1023,9 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   }
 
   getdate() {
+    this.loadingService.show()
     this.repo.GetTodeyFromServer().subscribe((data: any) => {
+      this.loadingService.hide()
       this.EditForm_Factor_Header.patchValue({
         FactorDate: data.Text,
       });
@@ -1005,7 +1033,9 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   }
 
   GetGood() {
+    this.loadingService.show()
     this.repo.GetGoodListSupport(this.Searchtarget_Good).subscribe((data: any) => {
+      this.loadingService.hide()
       this.records_support_good = data?.Goods ?? [];;
       this.updateGridData(1, this.records_support_good);
 
@@ -1033,6 +1063,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     });
 
 
+    this.loadingService.show()
     this.repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe((data: any) => {
       this.loadingService.hide()
 

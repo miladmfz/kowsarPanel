@@ -43,10 +43,10 @@ export class LeaverequestEditComponent extends AgGridBaseComponent implements On
     // ---------------------------------------------------------------
 
     private readonly router = inject(Router);
+    private readonly loadingService = inject(LoadingService);
     private readonly repo = inject(LeaveRequestWebApiService);
     private readonly route = inject(ActivatedRoute);
     private readonly notificationService = inject(NotificationService);
-    private readonly loadingService = inject(LoadingService);
 
     private readonly client = inject(HttpClient);
 
@@ -142,7 +142,9 @@ export class LeaverequestEditComponent extends AgGridBaseComponent implements On
         });
 
         // دریافت تاریخ امروز از سرور
+        this.loadingService.show()
         this.repo.GetTodeyFromServer().subscribe((data: any) => {
+            this.loadingService.hide()
             this.ToDayDate = data.Text;
             this.EditForm_LeaveRequest.patchValue({ LeaveRequestDate: this.ToDayDate });
         });
@@ -185,8 +187,10 @@ export class LeaverequestEditComponent extends AgGridBaseComponent implements On
     //   دریافت جزئیات درخواست مرخصی
     // ---------------------------------------------------------------
     getDetail(): void {
+        this.loadingService.show()
         this.repo.GetLeaveRequestById(this.LeaveRequestCode).subscribe({
             next: (data: any) => {
+                this.loadingService.hide()
                 const req = data?.LeaveRequests?.[0];
                 if (!req) return;
 
@@ -287,17 +291,20 @@ export class LeaverequestEditComponent extends AgGridBaseComponent implements On
             return;
         }
 
-        this.loadingService.show();
+        this.loadingService.show()
 
         const form = this.EditForm_LeaveRequest.value;
         const obs =
             this.LeaveRequestCode.length > 0
-                ? this.repo.LeaveRequest_Update(form)
-                : this.repo.LeaveRequest_Insert(form);
+                ?
+                this.repo.LeaveRequest_Update(form)
+                :
+                this.repo.LeaveRequest_Insert(form);
 
         obs.subscribe({
             next: (data: any) => {
-                this.loadingService.hide();
+                this.loadingService.hide()
+                this.loadingService.hide()
                 const success = data?.LeaveRequests?.[0]?.LeaveRequestCode?.length > 0;
                 if (success) {
                     this.notificationService.success('  اطلاعات با موفقیت ثبت شد');
@@ -307,7 +314,7 @@ export class LeaverequestEditComponent extends AgGridBaseComponent implements On
                 }
             },
             error: () => {
-                this.loadingService.hide();
+                this.loadingService.hide()
                 this.notificationService.error('❌ خطای ارتباط با سرور');
             },
         });
