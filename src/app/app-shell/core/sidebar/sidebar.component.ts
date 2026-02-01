@@ -96,9 +96,17 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // ⏳ تأخیر کوتاه برای آماده‌شدن sessionStorage
 
+    const UserName = sessionStorage.getItem('UserName') || '';
+
+
     const centralRef = sessionStorage.getItem('CentralRef') ?? '';
-    if (['1139', '1843'].includes(centralRef)) {
+
+    if (['1139', '1843'].includes(centralRef) || ['admin'].includes(UserName)) {
       this.ShowHoghogh = true
+    }
+
+    if (['user'].includes(UserName)) {
+      this.ShowHoghogh = false
     }
 
     setTimeout(() => {

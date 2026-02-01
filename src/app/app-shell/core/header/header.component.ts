@@ -111,7 +111,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     const personRef = sessionStorage.getItem('PersonInfoRef');
     if (!personRef) return;
 
-    this.repo.GetNotification(personRef).subscribe({
+    this.repo.GetNotification().subscribe({
       next: (data: any) => {
         const u = data?.users?.[0];
         if (!u) return;

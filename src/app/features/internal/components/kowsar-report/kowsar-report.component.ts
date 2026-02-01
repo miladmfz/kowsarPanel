@@ -29,8 +29,8 @@ import { CellDateMinDate } from './cell-date-label-attendance-panel';
 import { ThemeService } from 'src/app/app-shell/framework-services/ui/theme.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
-import { DashboardWebApiService } from '../../../services/dashboard-web-api.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base/ag-grid-base.component';
+import { DashboardWebApiService } from '../../services/DashboardWebApi.service';
 
 //   پایه AG Grid (نسخه Standalone جدید)
 // یا اگر alias src کار نمی‌کند، بنویس:

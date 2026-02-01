@@ -33,7 +33,7 @@ export class ReportListComponent extends AgGridBaseComponent
   }
 
 
-  title = 'لیست خدمات';
+  title = '';
   records: any[] = [];
 
   EditForm_SearchTarget = new FormGroup({
@@ -155,6 +155,18 @@ export class ReportListComponent extends AgGridBaseComponent
   GetReports() {
     this.repo.GetReports(this.EditForm_SearchTarget.value)
       .subscribe((data: any) => {
+
+        const reports = data?.Reports ?? [];
+
+        if (!reports.length) {
+          this.title = 'گزارشی یافت نشد';
+        } else {
+          this.title = 'لیست گزارشات';
+
+        }
+
+
+
         this.records = data?.Reports ?? [];
         this.updateGridData(1, this.records);
       });

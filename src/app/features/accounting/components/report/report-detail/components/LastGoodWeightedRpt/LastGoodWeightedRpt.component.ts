@@ -9,6 +9,7 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { ReportWebApiService } from 'src/app/features/accounting/services/ReportWebApi.service';
+import { KowsarNumberService } from 'src/app/app-shell/framework-services/kowsar-number.service';
 
 @Component({
   standalone: true,
@@ -28,6 +29,7 @@ export class LastGoodWeightedRptComponent extends AgGridBaseComponent implements
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
   private readonly loadingservice = inject(LoadingService);
+  private readonly kowsarNumber = inject(KowsarNumberService);
 
   constructor() {
     super();
@@ -89,22 +91,6 @@ export class LastGoodWeightedRptComponent extends AgGridBaseComponent implements
 
 
 
-  customNumberFormatter(params: any) {
-    if (params.value === null || params.value === undefined) return '';
-    const value = parseFloat(params.value);
-    if (isNaN(value)) return params.value;
-
-    let formatted = value.toLocaleString('en-US', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 20
-    });
-
-    // حذف صفرهای اعشار اضافی
-    if (formatted.includes('.')) {
-      formatted = formatted.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
-    return formatted;
-  }
   private initColumns(): void {
 
     this.loadingservice.show()
@@ -117,35 +103,46 @@ export class LastGoodWeightedRptComponent extends AgGridBaseComponent implements
         })
       )
       .subscribe((data: any) => {
-        if (data?.GridSchemas?.length > 0) {
-          this.columnDefs1 = data.GridSchemas
-            .filter((schema: any) => schema.Visible === 'True')
-            .map((schema: any) => ({
+        this.columnDefs1 = data.GridSchemas
+          .filter((schema: any) => schema.Visible === 'True')
+          .map((schema: any) => {
+
+            // ستون عددی؟ (بر اساس Separator)
+            const isNumeric =
+              schema.Separator === 'True' ||
+              schema.Separator === 'true' ||
+              schema.Separator === '1' ||
+              schema.Separator === 1 ||
+              schema.Separator === true;
+
+            const col: any = {
               field: schema.FieldName,
               headerName: schema.Caption,
               cellClass: 'text-center',
-              filter: 'agSetColumnFilter',
               sortable: true,
               resizable: true,
               minWidth: parseInt(schema.Width, 10),
-              valueFormatter: schema.Separator === '1' ? this.customNumberFormatter : undefined
-            }));
+              filter: isNumeric ? 'agNumberColumnFilter' : 'agSetColumnFilter',
+            };
 
-          // ستون عملیات
-          // this.columnDefs1.unshift({
-          //   field: 'عملیات',
-          //   pinned: 'left',
-          //   cellRenderer: CellActionFactorList,
-          //   minWidth: 150,
-          //   sortable: false,
-          //   filter: false
-          // });
-        }
+            if (isNumeric) {
+              // ۱) نمایش عددی (۳ رقمی + فارسی) — فقط اگر واقعاً عدد باشد
+              col.valueFormatter = (p: any) =>
+                this.kowsarNumber.formatKowsarNumber(p.value);
+
+              // ۲) سورت عددی واقعی، نه رشته‌ای
+              col.comparator = (valueA: any, valueB: any) =>
+                this.kowsarNumber.compareKowsarValues(valueA, valueB);
+            }
+
+            return col;
+          });
+
         this.loadingservice.hide()
 
 
 
-        this.loadList()
+        //this.loadList()
 
       });
 

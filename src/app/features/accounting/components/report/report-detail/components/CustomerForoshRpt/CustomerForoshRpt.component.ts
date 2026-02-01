@@ -9,6 +9,7 @@ import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-g
 import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { ReportWebApiService } from 'src/app/features/accounting/services/ReportWebApi.service';
+import { KowsarNumberService } from 'src/app/app-shell/framework-services/kowsar-number.service';
 
 @Component({
   standalone: true,
@@ -28,6 +29,7 @@ export class CustomerForoshRptComponent extends AgGridBaseComponent implements O
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
   private readonly loadingservice = inject(LoadingService);
+  private readonly kowsarNumber = inject(KowsarNumberService);
 
   constructor() {
     super();
@@ -149,7 +151,7 @@ export class CustomerForoshRptComponent extends AgGridBaseComponent implements O
 
 
 
-        this.loadList()
+        //this.loadList()
 
       });
 

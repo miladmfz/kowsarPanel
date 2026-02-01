@@ -116,6 +116,7 @@ import { SamaneGoodInputOutputDetailRptComponent } from './components/SamaneGood
 import { PersonInfoSummaryRptComponent } from './components/PersonInfoSummaryRpt/PersonInfoSummaryRpt.component';
 import { PersonEtebarReceiveRptComponent } from './components/PersonEtebarReceiveRpt/PersonEtebarReceiveRpt.component';
 import { PersonGoodRptComponent } from './components/PersonGoodRpt/PersonGoodRpt.component';
+import { KowsarNumberService } from 'src/app/app-shell/framework-services/kowsar-number.service';
 
 @Component({
   standalone: true,
@@ -272,7 +273,7 @@ export class ReportDetailComponent extends AgGridBaseComponent implements OnInit
 
 
   modal_title = '';
-  title = 'لیست تیکت‌های ارسالی';
+  title = '';
   dateValue = new FormControl();
   StartTime = new FormControl();
   EndTime = new FormControl();
@@ -292,6 +293,7 @@ export class ReportDetailComponent extends AgGridBaseComponent implements OnInit
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
   private readonly loadingservice = inject(LoadingService);
+  private readonly kowsarNumber = inject(KowsarNumberService);
 
   constructor() {
     super();
@@ -306,8 +308,6 @@ export class ReportDetailComponent extends AgGridBaseComponent implements OnInit
       this.ReportCode = id ?? '';
 
     });
-
-
 
 
     this.initColumns();
@@ -343,8 +343,6 @@ export class ReportDetailComponent extends AgGridBaseComponent implements OnInit
 
     ];
 
-
-
   }
 
 
@@ -368,7 +366,7 @@ export class ReportDetailComponent extends AgGridBaseComponent implements OnInit
   }
 
 
-
+  noData: boolean = false;
   loadList(): void {
     this.records = []
     this.loadingservice.show();
@@ -383,8 +381,14 @@ export class ReportDetailComponent extends AgGridBaseComponent implements OnInit
 
     this.repo.GetReportsByCode(this.ReportCode).subscribe({
       next: (data: any) => {
+
+        const reports = data?.Reports ?? [];
+
+        if (!reports.length) {
+          this.title = 'گزارشی یافت نشد';
+        }
+
         this.ReportData = data?.Reports[0]
-        this.title = data?.Reports[0].ReportTitle ?? "گزارشی یافت نشد"
         this.loadingservice.hide();
 
       },

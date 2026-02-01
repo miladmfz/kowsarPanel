@@ -55,7 +55,20 @@ export abstract class AgGridBaseComponent extends AgGridCoreComponent {
             }
         }
     }
+    protected syncSortedData(
+        index: number,
+        targetSetter: (data: any[]) => void
+    ): void {
+        const api = (this as any)[`gridApi${index}`];
+        if (!api) return;
 
+        const ordered: any[] = [];
+        api.forEachNodeAfterFilterAndSort((node: any) => {
+            ordered.push(node.data);
+        });
+
+        targetSetter(ordered);
+    }
 
     // --------------------------------------------------------
     // 📜 منوی راست‌کلیک فارسی و ایمن

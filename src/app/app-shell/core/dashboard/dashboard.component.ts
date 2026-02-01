@@ -21,15 +21,14 @@ import { Component, OnInit, Renderer2, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 //   Subcomponents
-import { AttendancePanelComponent } from './components/attendance-panel/attendance-panel.component';
 // import { KowsarReportComponent } from './components/kowsar-report/kowsar-report.component';
-import { SupportPanelComponent } from './components/support-panel/support-panel.component';
 
 //   Services
 import { DashboardWebApiService } from '../services/dashboard-web-api.service';
 import { SharedService } from '../../framework-services/shared.service';
 import { NotificationService } from '../../framework-services/ui/notification.service';
-import { KowsarReportComponent } from './components/kowsar-report/kowsar-report.component';
+import { AttendancePanelComponent } from 'src/app/features/internal/components/attendance-panel/attendance-panel.component';
+import { KowsarReportComponent } from 'src/app/features/internal/components/kowsar-report/kowsar-report.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -73,6 +72,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // ===============================================================
   ngOnInit(): void {
     this.initDashboard();
+
   }
 
   ngOnDestroy(): void {
@@ -118,6 +118,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const brokerCode = sessionStorage.getItem('BrokerCode');
     const jobPersonRef = sessionStorage.getItem('JobPersonRef');
     const userRole = sessionStorage.getItem('UserType'); // نوع کاربر (admin / customer / ...)
+
 
     // تعیین BrokerRef
     this.BrokerRef = phAddress3 === '100' ? '' : brokerCode ?? '';

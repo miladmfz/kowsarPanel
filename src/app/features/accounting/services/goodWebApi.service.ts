@@ -24,7 +24,9 @@ export class GoodWebApiService {
     this.headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('Access-Control-Allow-Origin', '*')
-      .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') ?? '');
+      .set('PIC', sessionStorage.getItem('PersonInfoRef') ?? '')
+      .set('SessionId', sessionStorage.getItem('SessionId') ?? '')
+      .set('UserName', encodeURIComponent(sessionStorage.getItem('UserName') ?? ''));
   }
 
 
@@ -139,14 +141,18 @@ export class GoodWebApiService {
   }
 
 
-  GetStacks(): Observable<any[]> {
-    return this.client.get<any[]>(this.baseUrl + "GetStacks", { headers: this.headers })
+
+
+  GetStacks(command): Observable<any[]> {
+
+    return this.client.post<any[]>(this.baseUrl + "GetStacks", command, { headers: this.headers })
+
   }
 
+  GetGoodsGrp(command): Observable<any[]> {
 
+    return this.client.post<any[]>(this.baseUrl + "GetGoodsGrp", command, { headers: this.headers })
 
-  GetGoodsGrp(): Observable<any[]> {
-    return this.client.get<any[]>(this.baseUrl + "GetGoodsGrp", { headers: this.headers })
   }
 
 

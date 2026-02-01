@@ -35,8 +35,8 @@ import { CustomerListModalComponent } from './components/customer-list-modal/cus
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { ThemeService } from 'src/app/app-shell/framework-services/ui/theme.service';
-import { DashboardWebApiService } from '../../../services/dashboard-web-api.service';
 import { AppConfigService } from 'src/app/app-config.service';
+import { DashboardWebApiService } from '../../services/DashboardWebApi.service';
 
 @Component({
     selector: 'app-attendance-panel',

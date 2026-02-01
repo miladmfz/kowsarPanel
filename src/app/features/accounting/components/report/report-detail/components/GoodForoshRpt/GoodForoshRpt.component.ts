@@ -12,6 +12,7 @@ import { KowsarChartColumnComponent } from 'src/app/app-shell/framework-componen
 import { KowsarChartDonutComponent } from 'src/app/app-shell/framework-components/kowsar/kowsar-chart-donut/kowsar-chart-donut.component';
 import { KowsarChartLineComponent } from 'src/app/app-shell/framework-components/kowsar/kowsar-chart-line/kowsar-chart-line.component';
 import { KowsarChartPieComponent } from 'src/app/app-shell/framework-components/kowsar/kowsar-chart-pie/kowsar-chart-pie.component';
+import { KowsarNumberService } from 'src/app/app-shell/framework-services/kowsar-number.service';
 import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { ReportWebApiService } from 'src/app/features/accounting/services/ReportWebApi.service';
@@ -25,11 +26,12 @@ import { ReportWebApiService } from 'src/app/features/accounting/services/Report
     AgGridModule,
     NgPersianDatepickerModule,
     KowsarChartColumnComponent,
-    KowsarChartLineComponent,
-    KowsarChartAreaComponent,
-    KowsarChartBarComponent,
-    KowsarChartDonutComponent,
-    KowsarChartPieComponent,
+
+    // KowsarChartLineComponent,
+    // KowsarChartAreaComponent,
+    // KowsarChartBarComponent,
+    // KowsarChartDonutComponent,
+    // KowsarChartPieComponent,
   ],
   selector: 'app-GoodForoshRpt',
   templateUrl: './GoodForoshRpt.component.html',
@@ -40,6 +42,8 @@ export class GoodForoshRptComponent extends AgGridBaseComponent implements OnIni
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
   private readonly loadingservice = inject(LoadingService);
+  private readonly kowsarNumber = inject(KowsarNumberService);
+
   private readonly renderer = inject(Renderer2);
 
   constructor() {
@@ -120,6 +124,55 @@ export class GoodForoshRptComponent extends AgGridBaseComponent implements OnIni
     if (this.show_report_list) {
       this.show_report_list = false
       this.lable_report_view = 'نمایش به صورت لیستی'
+      this.columnChartData = []
+      this.columnChartCategories = []
+
+      this.columnChartData = [
+        {
+          name: 'تعداد',
+          data: this.records.map(item => parseInt(item.Amount, 10)).slice(0, 10)
+        },
+        {
+          name: 'خالص',
+          data: this.records.map(item => parseInt(item.Price, 10)).slice(0, 10)
+        },
+        {
+          name: 'نا خالص',
+          data: this.records.map(item => parseInt(item.nPrice, 10)).slice(0, 10)
+        },
+        {
+          name: 'مبلغ تخفیف',
+          data: this.records.map(item => parseInt(item.MablaghTakhfif, 10)).slice(0, 10)
+        },
+
+        {
+          name: 'تعداد مرجوعی',
+          data: this.records.map(item => parseInt(item.RAmount, 10)).slice(0, 10)
+        },
+        {
+          name: 'خالص مرجوعی',
+          data: this.records.map(item => parseInt(item.RPrice, 10)).slice(0, 10)
+        },
+        {
+          name: 'موجودی انبار',
+          data: this.records.map(item => parseInt(item.TotalAvailable, 10)).slice(0, 10)
+        },
+
+
+
+      ];
+
+
+      if (this.EditForm_SearchTarget.value.withGroupBy == "0") {
+        this.columnChartCategories = this.records.map(item => item.GoodName).slice(0, 10);;
+
+      } else {
+        const fieldName = this.EditForm_SearchTarget.value.GroupByField;
+
+        this.columnChartCategories = this.records.map(item => item[fieldName]).slice(0, 10);
+
+      }
+
 
     } else {
       this.show_report_list = true
@@ -226,22 +279,99 @@ export class GoodForoshRptComponent extends AgGridBaseComponent implements OnIni
     return pathstack;
   };
 
-  customNumberFormatter(params: any) {
+  customNumberFormatter1(params: any) {
     if (params.value === null || params.value === undefined) return '';
-    const value = parseFloat(params.value);
-    if (isNaN(value)) return params.value;
 
-    let formatted = value.toLocaleString('en-US', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 20
+    // ۱) تبدیل به رشته
+    const raw = String(params.value).trim();
+    if (!raw) return '';
+
+    // ۲) تبدیل ارقام فارسی/عربی به لاتین
+    const normalizeDigits = (s: string) =>
+      s
+        // فارسی ۰-۹
+        .replace(/[۰-۹]/g, d => '0123456789'['۰۱۲۳۴۵۶۷۸۹'.indexOf(d)])
+        // عربی ٠-٩
+        .replace(/[٠-٩]/g, d => '0123456789'['٠١٢٣٤٥٦٧٨٩'.indexOf(d)]);
+
+    const normalized = normalizeDigits(raw);
+
+    // ۳) حذف هرچیزی غیر از عدد، نقطه، منفی ( / , فاصله و ... )
+    // مثال: "550000/000" → "550000000"
+    const cleaned = normalized.replace(/[^0-9.-]/g, '');
+
+    if (!cleaned) return raw;
+
+    const num = Number(cleaned);
+    if (isNaN(num)) return raw;
+
+    // ۴) جداکردن بخش صحیح و اعشار
+    const parts = num.toString().split('.');
+    const intPart = parts[0];
+    let decPart = parts[1] || '';
+
+    // ۵) جداکننده سه‌رقمی (فعلاً با کامای انگلیسی)
+    const intWithSep = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    // ۶) حذف صفرهای اضافی اعشار
+    if (decPart) {
+      decPart = decPart.replace(/0+$/, '');
+    }
+
+    // ۷) تبدیل رقم‌های لاتین به فارسی
+    const toPersianDigits = (s: string) =>
+      s.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[Number(d)]);
+
+    let result: string;
+
+    if (!decPart) {
+      result = toPersianDigits(intWithSep); // فقط صحیح
+    } else {
+      // ممیز فارسی (٫)
+      result = toPersianDigits(intWithSep) + '٫' + toPersianDigits(decPart);
+    }
+
+
+    return result;
+  }
+
+  onSortChanged(index: number) {
+    const api = (this as any)[`gridApi${index}`];
+    if (!api) return;
+
+    const ordered: any[] = [];
+    api.forEachNodeAfterFilterAndSort((node: any) => ordered.push(node.data));
+
+    if (index === 1) {
+      this.records = ordered;
+    } else if (index === 5) {
+      this.records_Stack = ordered;
+    }
+
+    this.updateGridData(index, ordered);
+  }
+
+  onSortChangedForMainGrid() {
+    const api = (this as any).gridApi1;
+    if (!api) return;
+
+    const ordered: any[] = [];
+
+    api.forEachNodeAfterFilterAndSort((node: any) => {
+      ordered.push(node.data);
     });
 
-    // حذف صفرهای اعشار اضافی
-    if (formatted.includes('.')) {
-      formatted = formatted.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
-    return formatted;
+    // آرایه‌ای که خودت استفاده می‌کنی
+    this.records = ordered;
+
+    // اگر لازم باشه خود گرید رو هم با همون داده آپدیت کنی:
+    this.updateGridData(1, this.records);
+
   }
+
+
+
+
   private initColumns(): void {
 
     this.loadingservice.show()
@@ -256,34 +386,50 @@ export class GoodForoshRptComponent extends AgGridBaseComponent implements OnIni
       .subscribe((data: any) => {
 
         if (data?.GridSchemas?.length > 0) {
+
           this.columnDefs1 = data.GridSchemas
             .filter((schema: any) => schema.Visible === 'True')
-            .map((schema: any) => ({
-              field: schema.FieldName,
-              headerName: schema.Caption,
-              cellClass: 'text-center',
-              filter: 'agSetColumnFilter',
-              sortable: true,
-              resizable: true,
-              minWidth: parseInt(schema.Width, 10),
-              valueFormatter: schema.Separator === '1' ? this.customNumberFormatter : undefined
-            }));
+            .map((schema: any) => {
 
-          // ستون عملیات
-          // this.columnDefs1.unshift({
-          //   field: 'عملیات',
-          //   pinned: 'left',
-          //   cellRenderer: CellActionFactorList,
-          //   minWidth: 150,
-          //   sortable: false,
-          //   filter: false
-          // });
+              // ستون عددی؟ (بر اساس Separator)
+              const isNumeric =
+                schema.Separator === 'True' ||
+                schema.Separator === 'true' ||
+                schema.Separator === '1' ||
+                schema.Separator === 1 ||
+                schema.Separator === true;
+
+              const col: any = {
+                field: schema.FieldName,
+                headerName: schema.Caption,
+                cellClass: 'text-center',
+                sortable: true,
+                resizable: true,
+                minWidth: parseInt(schema.Width, 10),
+                filter: isNumeric ? 'agNumberColumnFilter' : 'agSetColumnFilter',
+              };
+
+              if (isNumeric) {
+                // ۱) نمایش عددی (۳ رقمی + فارسی) — فقط اگر واقعاً عدد باشد
+                col.valueFormatter = (p: any) =>
+                  this.kowsarNumber.formatKowsarNumber(p.value);
+
+                // ۲) سورت عددی واقعی، نه رشته‌ای
+                col.comparator = (valueA: any, valueB: any) =>
+                  this.kowsarNumber.compareKowsarValues(valueA, valueB);
+              }
+
+              return col;
+            });
+
         }
+
+
         this.loadingservice.hide()
 
 
 
-        this.loadList()
+        //this.loadList()
 
       });
 
@@ -341,53 +487,6 @@ export class GoodForoshRptComponent extends AgGridBaseComponent implements OnIni
         this.updateGridData(1, this.records);
         this.loadingservice.hide()
 
-
-        this.columnChartData = [
-          {
-            name: 'Amount',
-            data: this.records.map(item => parseInt(item.Amount, 10)).slice(0, 20)
-          },
-          {
-            name: 'Price',
-            data: this.records.map(item => parseInt(item.Price, 10)).slice(0, 20)
-          },
-          {
-            name: 'nPrice',
-            data: this.records.map(item => parseInt(item.nPrice, 10)).slice(0, 20)
-          },
-          {
-            name: 'MablaghTakhfif',
-            data: this.records.map(item => parseInt(item.MablaghTakhfif, 10)).slice(0, 20)
-          },
-          {
-            name: 'KAmount',
-            data: this.records.map(item => parseInt(item.KAmount, 10)).slice(0, 20)
-          },
-          {
-            name: 'RAmount',
-            data: this.records.map(item => parseInt(item.RAmount, 10)).slice(0, 20)
-          },
-          {
-            name: 'PAmount',
-            data: this.records.map(item => parseInt(item.PAmount, 10)).slice(0, 20)
-          },
-
-
-        ];
-
-
-        if (this.EditForm_SearchTarget.value.withGroupBy == "0") {
-          this.columnChartCategories = this.records.map(item => item.GoodName).slice(0, 20);;
-
-        } else {
-          const fieldName = this.EditForm_SearchTarget.value.GroupByField;
-
-          this.columnChartCategories = this.records.map(item => item[fieldName]).slice(0, 20);
-
-        }
-
-        console.log(this.columnChartData)
-        console.log(this.columnChartCategories)
 
 
       });

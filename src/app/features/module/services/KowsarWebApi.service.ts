@@ -25,7 +25,9 @@ export class KowsarWebApiService {
     this.headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('Access-Control-Allow-Origin', '*')
-      .set('PersonInfoRef', sessionStorage.getItem('PersonInfoRef') ?? '');
+      .set('PIC', sessionStorage.getItem('PersonInfoRef') ?? '')
+      .set('SessionId', sessionStorage.getItem('SessionId') ?? '')
+      .set('UserName', encodeURIComponent(sessionStorage.getItem('UserName') ?? ''));
   }
 
 

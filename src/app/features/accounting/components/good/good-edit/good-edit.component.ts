@@ -138,6 +138,10 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
 
 
 
+  SearchTarget_frm = new FormGroup({
+    SearchTarget: new FormControl(""),
+  });
+
 
 
   GoodToProperty = new FormGroup({
@@ -440,7 +444,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   LoadData_GetGoodsGrp() {
 
     // Initial data fetch
-    this.repo.GetGoodsGrp().subscribe((data: any) => {
+    this.repo.GetGoodsGrp(this.SearchTarget_frm.value).subscribe((data: any) => {
       this.base_Group_list = data.GoodsGrps
 
     });
@@ -450,7 +454,7 @@ export class GoodEditComponent extends AgGridBaseComponent implements OnInit {
   LoadData_GetStacks() {
 
     // Initial data fetch
-    this.repo.GetStacks().subscribe((data: any) => {
+    this.repo.GetStacks(this.SearchTarget_frm.value).subscribe((data: any) => {
 
       this.base_Stack_list = data.Stacks
     });

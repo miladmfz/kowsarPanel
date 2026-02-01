@@ -115,13 +115,16 @@
     <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
       <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" [gridOptions]="gridOptions"
         (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
-        class="w-100 h-100"></ag-grid-angular>
+        (sortChanged)="onSortChanged(1)" class="w-100 h-100"></ag-grid-angular>
     </div>
 
     } @else{
 
+    <app-kowsar-chart-column [title]="'نوع کالا'" [series]="columnChartData"
+      [categories]="columnChartCategories"></app-kowsar-chart-column>
 
-    <app-kowsar-chart-column [title]="'column'" [series]="columnChartData"
+
+    <!-- <app-kowsar-chart-column [title]="'column'" [series]="columnChartData"
       [categories]="columnChartCategories"></app-kowsar-chart-column>
 
 
@@ -142,7 +145,7 @@
 
 
     <app-kowsar-chart-pie [title]="'pie'" [series]="columnChartData"
-      [categories]="columnChartCategories"></app-kowsar-chart-pie>
+      [categories]="columnChartCategories"></app-kowsar-chart-pie> -->
 
 
     }
