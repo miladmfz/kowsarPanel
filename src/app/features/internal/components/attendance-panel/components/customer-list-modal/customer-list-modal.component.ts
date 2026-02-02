@@ -27,7 +27,7 @@ import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 export class CustomerListModalComponent implements OnInit, OnDestroy {
 
   // ===============================================================
-  // 🟦 ورودی‌ها
+  //    ورودی‌ها
   // ===============================================================
 
   @Input() visible = false;
@@ -35,7 +35,7 @@ export class CustomerListModalComponent implements OnInit, OnDestroy {
   @Input() records: any[] = [];
 
   // ===============================================================
-  // 🟨 خروجی‌ها
+  //   خروجی‌ها
   // ===============================================================
 
   @Output() close = new EventEmitter<void>();

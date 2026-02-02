@@ -32,7 +32,7 @@ import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.
 export class LeaveGridComponent extends AgGridBaseComponent implements OnInit {
 
     // ===============================================================
-    // 🟦 ورودی‌ها و وضعیت‌ها
+    //    ورودی‌ها و وضعیت‌ها
     // ===============================================================
 
     /** 📥 داده ارسال‌شده از Parent (اختیاری) */

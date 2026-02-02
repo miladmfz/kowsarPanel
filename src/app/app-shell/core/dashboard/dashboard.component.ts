@@ -83,7 +83,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   // ===============================================================
-  // 🟦 مقداردهی اولیه داشبورد
+  //    مقداردهی اولیه داشبورد
   // ===============================================================
   private initDashboard(): void {
     this.loadTodayDate();

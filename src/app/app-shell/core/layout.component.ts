@@ -23,7 +23,7 @@ export class LayoutComponent implements OnInit {
     this.setTheme(savedTheme);
   }
 
-  // 🔹 تغییر تم (روشن / تاریک)
+  //    تغییر تم (روشن / تاریک)
   setTheme(isDark: boolean): void {
     const lightBootstrap = document.getElementById('bs-default-stylesheet') as HTMLLinkElement;
     const lightApp = document.getElementById('app-default-stylesheet') as HTMLLinkElement;
@@ -33,7 +33,7 @@ export class LayoutComponent implements OnInit {
     if (!lightBootstrap || !darkBootstrap) return; // ایمنی
 
     if (isDark) {
-      // 🔹 حالت تاریک فعال شود
+      //    حالت تاریک فعال شود
       lightBootstrap.disabled = true;
       lightApp.disabled = true;
       darkBootstrap.disabled = false;
@@ -41,7 +41,7 @@ export class LayoutComponent implements OnInit {
       document.documentElement.setAttribute('data-bs-theme', 'dark');
       localStorage.setItem('theme', 'dark');
     } else {
-      // 🔹 حالت روشن فعال شود
+      //    حالت روشن فعال شود
       lightBootstrap.disabled = false;
       lightApp.disabled = false;
       darkBootstrap.disabled = true;

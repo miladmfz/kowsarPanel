@@ -7,7 +7,7 @@ import { inject, Injectable } from '@angular/core';
 export class LocalStorageService {
   private readonly hasWindow = typeof window !== 'undefined';
 
-  // 🔹 Session Storage -----------------------------------------------------
+  //    Session Storage -----------------------------------------------------
 
   /** دریافت مقدار از sessionStorage */
   getItem<T>(key: string): T | null {

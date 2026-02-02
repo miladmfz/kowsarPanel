@@ -16,7 +16,7 @@ export class ThemeService {
         app: 'assets/css/modern/app-dark-rtl.min.css'
     };
 
-    // 🔹 اضافه شد: BehaviorSubject برای اطلاع‌رسانی تغییر تم
+    //    اضافه شد: BehaviorSubject برای اطلاع‌رسانی تغییر تم
     private currentThemeSubject = new BehaviorSubject<'light' | 'dark'>(this.getInitialTheme());
     theme$ = this.currentThemeSubject.asObservable();
 
@@ -65,7 +65,7 @@ export class ThemeService {
         document.documentElement.setAttribute('data-bs-theme', mode);
         localStorage.setItem(this.THEME_KEY, mode);
 
-        // 🔹 ارسال نوتیف به تمام مشترکین
+        //    ارسال نوتیف به تمام مشترکین
         this.currentThemeSubject.next(mode);
 
         console.log(`🎨 Theme applied: ${mode}`);

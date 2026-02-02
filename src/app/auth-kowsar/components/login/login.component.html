@@ -1,9 +1,9 @@
-<!-- 🔹 صفحه ورود استاندارد Minton -->
+<!--    صفحه ورود استاندارد Minton -->
 <div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
   <div class="card shadow rounded-4 border-0" style="max-width: 420px; width: 100%;">
     <div class="card-body p-4">
 
-      <!-- 🟦 لوگو -->
+      <!--    لوگو -->
       <div class="text-center mb-4">
         <img src="assets/images/img_logo_kits_png.png" alt="لوگو" height="75" class="mb-2" />
         <p class="text-muted fs-6 mb-0">
@@ -11,10 +11,10 @@
         </p>
       </div>
 
-      <!-- 🟨 فرم ورود -->
+      <!--   فرم ورود -->
       <form [formGroup]="loginForm" (ngSubmit)="submit()" autocomplete="on" novalidate>
 
-        <!-- 🔹 نام کاربری -->
+        <!--    نام کاربری -->
         <div class="form-floating mb-3">
           <input type="text" id="UName" class="form-control" placeholder="نام کاربری" formControlName="UName"
             maxlength="100" autocomplete="username" [ngClass]="{
@@ -30,7 +30,7 @@
             }"></ng-container>
         </div>
 
-        <!-- 🔹 رمز عبور -->
+        <!--    رمز عبور -->
         <div class="form-floating mb-4 position-relative">
           <input [type]="showPassword() ? 'text' : 'password'" id="UPass" class="form-control" placeholder="رمز عبور"
             formControlName="UPass" maxlength="100" autocomplete="current-password" [ngClass]="{
@@ -39,7 +39,7 @@
             }" />
           <label for="UPass">رمز عبور</label>
 
-          <!-- 👁 آیکون چشم -->
+          <!--    آیکون چشم -->
           <span class="position-absolute top-50 end-0 translate-middle-y me-3 text-muted" style="cursor: pointer;"
             (click)="togglePassword()">
             <i [class]="showPassword() ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
@@ -52,7 +52,7 @@
             }"></ng-container>
         </div>
 
-        <!-- 🔘 دکمه ورود -->
+        <!--    دکمه ورود -->
         <div class="d-grid">
           <button type="submit" class="btn btn-primary btn-lg fw-semibold text-white" [disabled]="isLoading()">
             <span *ngIf="!isLoading()">ورود</span>
@@ -66,7 +66,7 @@
   </div>
 </div>
 
-<!-- 🔺 قالب خطاهای ورودی -->
+<!--    قالب خطاهای ورودی -->
 <ng-template #formError let-control="control" let-message="message" let-validation="validation">
   @if (control.hasError(validation) && (control.dirty || control.touched)) {
   <div class="invalid-feedback d-block mt-1">

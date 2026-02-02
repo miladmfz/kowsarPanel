@@ -42,7 +42,7 @@ import { ColDef } from 'ag-grid-community';
 })
 export class LetterModalComponent implements OnChanges {
   // ===============================================================
-  // 🟦 ورودی‌ها
+  //    ورودی‌ها
   // ===============================================================
   @Input() visible = false;
   @Input() darkMode = false;
@@ -50,14 +50,14 @@ export class LetterModalComponent implements OnChanges {
   @Input() person: any = null; // اطلاعات کارشناس از والد (selectedPerson)
 
   // ===============================================================
-  // 🟨 خروجی‌ها
+  //   خروجی‌ها
   // ===============================================================
   @Output() close = new EventEmitter<void>();
   @Output() submitLetter = new EventEmitter<any>();
   @Output() requestSelectCustomer = new EventEmitter<void>(); // باز کردن مودال مشتری‌ها
 
   // ===============================================================
-  // 🔹 وضعیت داخلی
+  //    وضعیت داخلی
   // ===============================================================
   isNewLetter = signal(false);
   selectedLetter = signal<any | null>(null);

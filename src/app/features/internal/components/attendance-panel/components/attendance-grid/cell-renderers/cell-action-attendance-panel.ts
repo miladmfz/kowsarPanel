@@ -51,7 +51,7 @@ export class CellActionAttendancePanel implements ICellRendererAngularComp {
   showHistoryButton: boolean = false;
 
   // ===============================================================
-  // 🔹 متدهای AgGrid
+  //    متدهای AgGrid
   // ===============================================================
   agInit(params: any): void {
     this.params = params;
@@ -76,7 +76,7 @@ export class CellActionAttendancePanel implements ICellRendererAngularComp {
   }
 
   // ===============================================================
-  // 🔹 اکشن‌ها
+  //    اکشن‌ها
   // ===============================================================
   setLetterConfig(): void {
     this.params?.context?.componentParent?.SetLetter_config?.(this.data);

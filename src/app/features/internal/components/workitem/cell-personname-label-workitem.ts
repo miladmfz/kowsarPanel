@@ -32,7 +32,7 @@ export class CellNameWorkItem implements ICellRendererAngularComp {
   fullName: string = '';
 
   // ===============================================================
-  // 🔹 مقداردهی اولیه AgGrid
+  //    مقداردهی اولیه AgGrid
   // ===============================================================
   agInit(params: any): void {
     this.params = params;
@@ -43,7 +43,7 @@ export class CellNameWorkItem implements ICellRendererAngularComp {
   }
 
   // ===============================================================
-  // 🔹 جلوگیری از رندر مجدد غیرضروری
+  //    جلوگیری از رندر مجدد غیرضروری
   // ===============================================================
   refresh(): boolean {
     return false;

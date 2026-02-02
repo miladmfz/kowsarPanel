@@ -14,7 +14,7 @@
 @if (!loadingService_person) {
 <div class="card p-3 mb-3 shadow-sm">
 
-  <!-- 🟦 Header -->
+  <!--    Header -->
   <div class="card-header d-flex justify-content-between align-items-center bg-body-secondary rounded">
     <h5 class="card-title mb-0"> گزارش ارجاعات کارشناسان</h5>
 
@@ -26,7 +26,7 @@
     </div>
   </div>
 
-  <!-- 🟨 Body -->
+  <!--   Body -->
   <div class="card-body">
     @if (records_person.length === 0) {
     <!-- ⏳ حالت بدون داده -->
@@ -58,7 +58,7 @@
 @if (!loadingService_letterrowstate) {
 <div class="card p-3 mb-3 shadow-sm">
 
-  <!-- 🟦 Header -->
+  <!--    Header -->
   <div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center bg-body-secondary rounded">
     <h5 class="card-title mb-0">📋 گزارش وضعیت ارجاعات</h5>
 
@@ -80,7 +80,7 @@
     </form>
   </div>
 
-  <!-- 🟨 Body -->
+  <!--   Body -->
   <div class="card-body">
     @if (records_letterrowstate.length === 0) {
     <!-- ⏳ حالت بدون داده -->
@@ -108,7 +108,7 @@
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content bg-body text-body shadow-lg rounded-3">
 
-      <!-- 🟦 Header -->
+      <!--    Header -->
       <div class="modal-header bg-secondary-subtle text-body fw-bold">
         <h5 class="modal-title">
           <i class="fas fa-envelope-open-text me-2"></i>{{ BrokerHistroyName }}
@@ -116,7 +116,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="personletter_dialog_close()"></button>
       </div>
 
-      <!-- 🟨 Body -->
+      <!--   Body -->
       <div class="modal-body">
         @if (records_personletterrow.length === 0) {
         <!-- ⏳ حالت بدون داده -->

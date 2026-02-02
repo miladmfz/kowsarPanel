@@ -1,5 +1,5 @@
 {
-    "AppVersion": "14.11.01",
+    "AppVersion": "14.11.02",
     "production": true,
     "api_Url": "http://192.168.1.25:60006/api/",
     "info": [

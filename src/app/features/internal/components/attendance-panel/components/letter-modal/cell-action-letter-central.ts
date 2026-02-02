@@ -34,7 +34,7 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 })
 export class CellActionLetterCentral implements ICellRendererAngularComp {
   // ===============================================================
-  // 🔹 متغیرها و مقداردهی اولیه
+  //    متغیرها و مقداردهی اولیه
   // ===============================================================
   private params: any;
 

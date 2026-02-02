@@ -48,11 +48,11 @@ export class LoginComponent implements OnInit {
 
   private autoLogin(): void {
 
-    ///this.loginForm.setValue({ UName: 'mfz', UPass: '123456' });
+    this.loginForm.setValue({ UName: 'mfz', UPass: '123456' });
 
     //this.loginForm.setValue({ UName: 'بختیاری', UPass: '123456' });
 
-    this.loginForm.setValue({ UName: 'خسروی', UPass: '123456' });
+    //this.loginForm.setValue({ UName: 'خسروی', UPass: '123456' });
 
     // this.loginForm.setValue({ UName: 'سیروس', UPass: '123456' });
 

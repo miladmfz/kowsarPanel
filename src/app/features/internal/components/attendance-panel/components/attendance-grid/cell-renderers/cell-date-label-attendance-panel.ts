@@ -32,7 +32,7 @@ export class CellDateAttendancePanel implements ICellRendererAngularComp {
   formattedDate: string = '—';
 
   // ===============================================================
-  // 🔹 مقداردهی اولیه AgGrid
+  //    مقداردهی اولیه AgGrid
   // ===============================================================
   agInit(params: any): void {
     this.params = params;
@@ -41,14 +41,14 @@ export class CellDateAttendancePanel implements ICellRendererAngularComp {
   }
 
   // ===============================================================
-  // 🔹 جلوگیری از Refresh غیرضروری
+  //    جلوگیری از Refresh غیرضروری
   // ===============================================================
   refresh(): boolean {
     return false;
   }
 
   // ===============================================================
-  // 🔹 تبدیل تاریخ میلادی به جلالی
+  //    تبدیل تاریخ میلادی به جلالی
   // ===============================================================
   private formatToJalali(date: string | null | undefined): string {
     if (!date || date === '0001-01-01T00:00:00') return '—';

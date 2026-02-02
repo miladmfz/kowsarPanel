@@ -30,7 +30,7 @@ export class CellDateMinDate implements ICellRendererAngularComp {
     MinCreationDate: any;
 
     // ===============================================================
-    // 🔹 مقداردهی اولیه سل‌ رندرر
+    //    مقداردهی اولیه سل‌ رندرر
     // ===============================================================
 
     agInit(params: any): void {

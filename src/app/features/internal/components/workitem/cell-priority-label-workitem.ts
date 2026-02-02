@@ -33,7 +33,7 @@ export class CellPriorityWorkItem implements ICellRendererAngularComp {
   badgeClass: string = 'bg-secondary text-white';
 
   // ===============================================================
-  // 🔹 مقداردهی اولیه AgGrid
+  //    مقداردهی اولیه AgGrid
   // ===============================================================
   agInit(params: any): void {
     this.params = params;
@@ -42,14 +42,14 @@ export class CellPriorityWorkItem implements ICellRendererAngularComp {
   }
 
   // ===============================================================
-  // 🔹 جلوگیری از Refresh غیرضروری
+  //    جلوگیری از Refresh غیرضروری
   // ===============================================================
   refresh(): boolean {
     return false;
   }
 
   // ===============================================================
-  // 🔹 تعیین وضعیت حضور و رنگ Badge مربوطه
+  //    تعیین وضعیت حضور و رنگ Badge مربوطه
   // ===============================================================
   private setStatus(priority: string | number | null): void {
     switch (String(priority)) {

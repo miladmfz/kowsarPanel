@@ -6,19 +6,19 @@ import { BehaviorSubject, Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class SharedService {
-  /** 🔹 وضعیت منوی کناری (باز/بسته) */
+  /**    وضعیت منوی کناری (باز/بسته) */
   private sidebarState = new BehaviorSubject<boolean>(false);
   sidebarState$ = this.sidebarState.asObservable();
 
-  /** 🔹 وضعیت تم (روشن/تیره) */
+  /**    وضعیت تم (روشن/تیره) */
   private themeMode = new BehaviorSubject<'light' | 'dark'>('light');
   themeMode$ = this.themeMode.asObservable();
 
-  /** 🔹 پیام‌های اشتراکی (برای هماهنگی بین کامپوننت‌ها) */
+  /**    پیام‌های اشتراکی (برای هماهنگی بین کامپوننت‌ها) */
   private messageSource = new BehaviorSubject<string>('');
   message$ = this.messageSource.asObservable();
 
-  /** 🔹 داده موقت برای انتقال بین صفحات */
+  /**    داده موقت برای انتقال بین صفحات */
   private tempData: any = null;
 
   /** 🔁 رویدادهای عمومی (مثل Refresh) بین بخش‌های مختلف برنامه */

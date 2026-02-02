@@ -14,7 +14,7 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
 @Component({
   selector: 'validation-state-cell-renderer',
   template: `
-    <!-- 🟦 دیده نشده -->
+    <!--    دیده نشده -->
     @if (WorkFlowStatus == '0') {
       <span class="badge bg-info text-white px-3 py-2">دیده نشده</span>
     }
@@ -29,7 +29,7 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
       <span class="badge bg-danger text-white px-3 py-2">رد شده</span>
     }
 
-    <!-- 🟨 بررسی مجدد -->
+    <!--   بررسی مجدد -->
     @if (WorkFlowStatus == '3') {
       <span class="badge bg-warning text-dark px-3 py-2">بررسی مجدد</span>
     }

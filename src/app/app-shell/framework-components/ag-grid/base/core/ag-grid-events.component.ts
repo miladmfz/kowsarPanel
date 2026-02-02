@@ -31,16 +31,16 @@ export abstract class AgGridEventsComponent extends AgGridApiComponent {
     // 🖱️ مدیریت کلیک و دوبار کلیک
     // =====================================================
 
-    /** 🟦 کلیک روی سلول */
+    /**    کلیک روی سلول */
     onCellClicked(event: CellClickedEvent): void {
         const clickedCellId = event.column.getId() + '_' + event.rowIndex;
 
-        // 🔹 گسترش یا بستن group در صورت وجود
+        //    گسترش یا بستن group در صورت وجود
         if (event.node && event.node.group) {
             event.node.setExpanded(!event.node.expanded);
         }
 
-        // 🔹 تشخیص دوبار کلیک (resize)
+        //    تشخیص دوبار کلیک (resize)
         if (clickedCellId === this.lastClickedCellId) {
             this.clickCount++;
         } else {
@@ -60,7 +60,7 @@ export abstract class AgGridEventsComponent extends AgGridApiComponent {
     /** 🟧 دوبار کلیک روی سلول */
     onCellDoubleClicked(event: CellDoubleClickedEvent): void {
         // جهت override در کامپوننت‌های فرزند
-        console.log('🟨 Double click:', event);
+        console.log('  Double click:', event);
     }
 
     // =====================================================

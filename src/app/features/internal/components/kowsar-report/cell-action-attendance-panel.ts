@@ -40,7 +40,7 @@ export class CellActionKowsarReport implements ICellRendererAngularComp {
     CentralRef: any;
 
     // ===============================================================
-    // 🔹 مقداردهی اولیه سل‌ رندرر
+    //    مقداردهی اولیه سل‌ رندرر
     // ===============================================================
     agInit(params: any): void {
         this.params = params;

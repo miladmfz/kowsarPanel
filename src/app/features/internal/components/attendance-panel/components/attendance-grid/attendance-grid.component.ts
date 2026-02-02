@@ -58,7 +58,7 @@ export class AttendanceGridComponent extends AgGridBaseComponent implements OnIn
     loading = signal(true);
 
     // ===============================================================
-    // 🔹 سازنده کلاس و مدیریت Signal‌ها
+    //    سازنده کلاس و مدیریت Signal‌ها
     // ===============================================================
     private readonly loadingService = inject(LoadingService);
     private readonly repo = inject(DashboardWebApiService);
@@ -75,7 +75,7 @@ export class AttendanceGridComponent extends AgGridBaseComponent implements OnIn
     }
 
     // ===============================================================
-    // 🔹 متد Lifecycle برای آماده‌سازی ستون‌ها و داده‌ها
+    //    متد Lifecycle برای آماده‌سازی ستون‌ها و داده‌ها
     // ===============================================================
     ngOnInit(): void {
 
