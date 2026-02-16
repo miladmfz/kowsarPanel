@@ -24,7 +24,7 @@ import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.ser
 export class OcrAppPanelComponent extends AgGridBaseComponent
   implements OnInit {
 
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(OcrWebApiService);
 
   constructor() {
@@ -182,7 +182,7 @@ export class OcrAppPanelComponent extends AgGridBaseComponent
       },
 
     ];
-    this.loadingService.show()
+
     this.repo.GetTodeyFromServer("-1")
       .subscribe(e => {
 
@@ -198,7 +198,7 @@ export class OcrAppPanelComponent extends AgGridBaseComponent
 
 
 
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
       .subscribe((data: any) => {
 
@@ -207,7 +207,7 @@ export class OcrAppPanelComponent extends AgGridBaseComponent
 
       });
 
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
       .subscribe((data: any) => {
 
@@ -215,7 +215,7 @@ export class OcrAppPanelComponent extends AgGridBaseComponent
         this.record_factor_headers = data;
 
       });
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
       .subscribe((data: any) => {
 
@@ -224,7 +224,7 @@ export class OcrAppPanelComponent extends AgGridBaseComponent
 
       });
 
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
       .subscribe((data: any) => {
 
@@ -234,7 +234,7 @@ export class OcrAppPanelComponent extends AgGridBaseComponent
 
       });
 
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
       .subscribe((data: any) => {
 
@@ -242,7 +242,7 @@ export class OcrAppPanelComponent extends AgGridBaseComponent
         this.radial_value_2 = 60;
         this.radial_value_22 = 6000;
       });
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6")
       .subscribe((data: any) => {
 

@@ -5,8 +5,8 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
 import { IDatepickerTheme, NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
+
 import { ReportWebApiService } from '../../../services/ReportWebApi.service';
 import { BazaryabKarkardRptComponent } from './components/BazaryabKarkardRpt/BazaryabKarkardRpt.component';
 import { CustomerCityRptComponent } from './components/CustomerCityRpt/CustomerCityRpt.component';
@@ -289,7 +289,7 @@ export class ReportDetailComponent extends AgGridBaseComponent implements OnInit
 
 
 
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(ReportWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
@@ -369,7 +369,7 @@ export class ReportDetailComponent extends AgGridBaseComponent implements OnInit
   noData: boolean = false;
   loadList(): void {
     this.records = []
-    this.loadingService.show()
+
 
     const CentralRef = sessionStorage.getItem('CentralRef') ?? '';
     const JobPersonRef = sessionStorage.getItem('JobPersonRef') ?? '';
@@ -379,10 +379,10 @@ export class ReportDetailComponent extends AgGridBaseComponent implements OnInit
 
     });
 
-    this.loadingService.show()
+
     this.repo.GetReportsByCode(this.ReportCode).subscribe({
       next: (data: any) => {
-        this.loadingService.hide()
+
 
         const reports = data?.Reports ?? [];
 
@@ -391,26 +391,26 @@ export class ReportDetailComponent extends AgGridBaseComponent implements OnInit
         }
 
         this.ReportData = data?.Reports[0]
-        this.loadingService.hide()
+
 
       },
       error: () => {
-        this.loadingService.hide()
+
         this.notificationService.error('❌ خطا در دریافت لیست نامه‌ها');
       },
     });
 
-    // this.loadingService.show()
-    //     this.loadingService.show()
+    //  
+    //      
     ///this.repo.GetAutLetterList(this.EditForm_autletter.value).subscribe({
     // next: (data: any) => {
-    //   this.loadingService.hide()
+    //    
     //     this.records = data?.AutLetters ?? [];
     //     this.updateGridData(1, this.records);
 
     //   },
     //   error: () => {
-    //     this.loadingService.hide()
+    //      
     //     this.notify.error('❌ خطا در دریافت لیست نامه‌ها');
     //   },
     // });

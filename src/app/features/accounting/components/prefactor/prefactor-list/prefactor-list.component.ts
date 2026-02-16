@@ -32,7 +32,7 @@ export class PrefactorListComponent extends AgGridBaseComponent
   implements OnInit, OnDestroy {
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(PreFactorWebApiService);
   private readonly notificationService = inject(NotificationService);
   private readonly renderer = inject(Renderer2);
@@ -133,12 +133,12 @@ export class PrefactorListComponent extends AgGridBaseComponent
   // Grid Schema + Data
   // ---------------------------
   getGridSchema() {
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.GetGridSchema('TPreFactor')
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         if (data?.GridSchemas?.length > 0) {
           this.columnDefs1 = data.GridSchemas
             .filter((schema: any) => schema.Visible === 'True')
@@ -173,7 +173,7 @@ export class PrefactorListComponent extends AgGridBaseComponent
         // لود داده‌ها
         this.loading = true;
 
-        this.loadingService.show()
+
         this.repo.GetWebFactor(this.EditForm_factor.value)
           .pipe(
             catchError((_error) => {
@@ -182,7 +182,7 @@ export class PrefactorListComponent extends AgGridBaseComponent
             })
           )
           .subscribe((data: any) => {
-            this.loadingService.hide()
+
             this.records = data?.Factors || [];
             this.loading = false;
             this.updateGridData(1, this.records);

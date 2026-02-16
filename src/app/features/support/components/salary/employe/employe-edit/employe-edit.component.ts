@@ -7,8 +7,8 @@ import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { debounceTime, Subject } from 'rxjs';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
+
 import { SalaryWebApiService } from 'src/app/features/support/services/SalaryWebApi.service';
 
 @Component({
@@ -28,7 +28,7 @@ export class EmployeEditComponent extends AgGridBaseComponent implements OnInit 
 
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(SalaryWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
@@ -168,17 +168,17 @@ export class EmployeEditComponent extends AgGridBaseComponent implements OnInit 
 
 
   GetSalary() {
-    // this.loadingService.show()
+    //  
 
 
 
   }
 
   getDetails() {
-    this.loadingService.show()
+
     this.repo.GetEmployeeByCode(this.EmployeeCode)
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         this.EditForm_Employee.patchValue(data?.Employees[0]);
 
       });
@@ -210,10 +210,10 @@ export class EmployeEditComponent extends AgGridBaseComponent implements OnInit 
     });
 
 
-    this.loadingService.show()
+
     this.repo.InUp_Employee(payload)
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
 
         this.router.navigate(['/support/employe-list']);
         this.notificationService.success('اطلاعات با موفقیت ذخیره شد');
@@ -229,10 +229,10 @@ export class EmployeEditComponent extends AgGridBaseComponent implements OnInit 
 
 
 
-    //   //     this.loadingService.show()
+    //   //      
     // this.repo.CustomerUpdate(this.EditForm_Customer.value)
     //   //   .subscribe((data: any) => {
-    // this.loadingService.hide()
+    //  
     //   //     if (data.Customers[0].CustomerCode.length > 0) {
     //   //       // this.router.navigate(['/internal/internal-customer-edit', data.Customers[0].CustomerCode]);
     //   //       this.router.navigate(['/internal/internal-customer-list']);

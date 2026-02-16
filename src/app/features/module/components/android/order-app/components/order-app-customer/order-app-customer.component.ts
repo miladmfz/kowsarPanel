@@ -26,7 +26,7 @@ export class OrderAppCustomerComponent extends AgGridBaseComponent
   implements OnInit {
 
   private readonly renderer = inject(Renderer2);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(OrderWebApiService);
 
 
@@ -66,7 +66,7 @@ export class OrderAppCustomerComponent extends AgGridBaseComponent
 
   GetCustomer() {
 
-    this.loadingService.show()
+
     this.repo.GetCustomerMandeh()
       .subscribe(e => {
         this.records_Customer = e;
@@ -76,7 +76,7 @@ export class OrderAppCustomerComponent extends AgGridBaseComponent
 
   GetDetailCustomer(data) {
 
-    this.loadingService.show()
+
     this.repo.GetCustomerlastGood(data.CustomerCode)
       .subscribe(e => {
         this.records_Customer_detail = e;

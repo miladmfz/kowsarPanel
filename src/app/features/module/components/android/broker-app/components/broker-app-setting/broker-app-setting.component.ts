@@ -26,7 +26,7 @@ import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.
 export class BrokerAppSettingComponent extends AgGridBaseComponent
   implements OnInit {
 
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(BrokerWebApiService);
   private readonly sharedService = inject(SharedService);
   private readonly notificationService = inject(NotificationService);
@@ -228,12 +228,12 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
 
 
   Get_Base_data() {
-    this.loadingService.show()
+
     this.repo.Web_GetDbsetupObject("BrokerKowsar").subscribe(e => {
       this.items = e;
 
     });
-    this.loadingService.show()
+
     this.repo.GetAppPrinter(this.Apptype).subscribe(e => {
       this.Printers = e;
 
@@ -256,7 +256,7 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
   }
 
   UpdateDbSetup() {
-    this.loadingService.show()
+
     this.repo.UpdateDbSetup(this.selected_value, this.selected_Key).subscribe(e => {
       this.notificationService.succeded();
 
@@ -286,7 +286,7 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
 
     const command = this.EditForm_printer.value
     if (this.EditForm_printer.value.PrinterName !== "") {
-      this.loadingService.show()
+
       this.repo.UpdatePrinter(command).subscribe(e => {
         this.notificationService.succeded();
 
@@ -308,7 +308,7 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
 
   CreateAppBasketColumn() {
 
-    this.loadingService.show()
+
     this.repo.CreateBasketColumn(this.Apptype).subscribe(e => {
 
       this.AppBasketColumn_Status = "AppBasketColumn created";
@@ -318,7 +318,7 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
 
   BrokerCustomerRefresh() {
 
-    this.loadingService.show()
+
     this.repo.BrokerCustomerRefresh().subscribe(e => {
       this.BrokerCustomer_Status = "AppBasketColumn created";
     });
@@ -328,7 +328,7 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
 
   GetBasketColumnList() {
 
-    this.loadingService.show()
+
     this.repo.GetBasketColumnList(this.Apptype).subscribe(e => {
       this.BasketColumns = e;
 

@@ -24,7 +24,7 @@ export class InternalCustomerEditComponent extends AgGridBaseComponent implement
 
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(CustomerWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
@@ -144,16 +144,16 @@ export class InternalCustomerEditComponent extends AgGridBaseComponent implement
   }
 
   GetCity() {
-    this.loadingService.show()
+
 
     this.EditForm_SearchTarget.patchValue({
       SearchTarget: this.Searchtarget_city,
     });
 
-    this.loadingService.show()
+
     this.repo.GetCity(this.EditForm_SearchTarget.value)
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
 
 
         this.records_city = data?.Citys ?? [];;
@@ -164,10 +164,10 @@ export class InternalCustomerEditComponent extends AgGridBaseComponent implement
   }
 
   getDetails() {
-    this.loadingService.show()
+
     this.repo.GetCustomerByCode(this.CustomerCode)
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         this.EditForm_Customer.patchValue({
           CustomerCode: data?.Customers[0].CustomerCode,
           FName: data?.Customers[0].FName,
@@ -199,10 +199,10 @@ export class InternalCustomerEditComponent extends AgGridBaseComponent implement
 
 
 
-      this.loadingService.show()
+
       this.repo.CustomerCrud(this.EditForm_Customer.value)
         .subscribe((data: any) => {
-          this.loadingService.hide()
+
           if (data.Customers[0].CustomerCode.length > 0) {
             // this.router.navigate(['/internal/internal-customer-edit', data.Customers[0].CustomerCode]);
             this.router.navigate(['/internal/internal-customer-list']);
@@ -218,10 +218,10 @@ export class InternalCustomerEditComponent extends AgGridBaseComponent implement
 
       });
 
-      this.loadingService.show()
+
       this.repo.CustomerCrud(this.EditForm_Customer.value)
         .subscribe((data: any) => {
-          this.loadingService.hide()
+
           if (data.Customers[0].CustomerCode.length > 0) {
             // this.router.navigate(['/internal/internal-customer-edit', data.Customers[0].CustomerCode]);
             this.router.navigate(['/internal/internal-customer-list']);

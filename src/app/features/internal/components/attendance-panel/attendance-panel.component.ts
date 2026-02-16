@@ -97,7 +97,7 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
     private refreshSub?: Subscription;
 
 
-    private readonly loadingService = inject(LoadingService);
+
     private readonly repo = inject(DashboardWebApiService);
     private readonly sharedService = inject(SharedService);
     private readonly notificationService = inject(NotificationService);
@@ -154,13 +154,16 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
         this.Attendance_history_Show_Modal.set(true);
         this.Attendance_history_records.set([]);
 
-        this.loadingService.show()
+
         this.repo.AttendanceHistory(item?.CentralRef).subscribe({
             next: (data: any) => {
-                this.loadingService.hide()
+
                 this.Attendance_history_records.set(data?.Attendances ?? []);
             },
-            error: () => this.notificationService.error('❌ خطا در دریافت تاریخچه حضور'),
+            error: () => {
+
+                this.notificationService.error('❌ خطا در دریافت تاریخچه حضور')
+            },
         });
     }
 
@@ -191,14 +194,15 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
 
         this.notificationService.info(`📨 در حال دریافت تیکت‌های ${item.FullName}...`);
 
-        this.loadingService.show()
+
         this.repo.GetAutLetterListByPerson(filter).subscribe({
             next: (data: any) => {
-                this.loadingService.hide()
+
                 this.Letter_records.set(data.AutLetters ?? []);
                 this.notificationService.success('  لیست تیکت‌ها با موفقیت بارگذاری شد.');
             },
             error: () => {
+
                 this.notificationService.error('❌ خطا در دریافت لیست تیکت‌ها');
                 this.showLetterModal.set(false);
             },
@@ -253,10 +257,10 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
             OwnerPersonInfoRef: sessionStorage.getItem('PersonInfoRef'),
         };
 
-        this.loadingService.show()
+
         this.repo.LetterInsert(payload).subscribe({
             next: (data: any) => {
-                this.loadingService.hide()
+
                 const intValue = parseInt(data?.AutLetters[0]?.LetterCode ?? 0, 10);
 
                 if (!isNaN(intValue) && intValue > 0) {
@@ -268,6 +272,7 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
                 }
             },
             error: () => {
+
                 this.notificationService.error('❌ خطا در فراخوانی LetterInsert');
             },
         });
@@ -287,10 +292,10 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
             ExecuterCentral: formData.ExecuterCentral ?? this.selectedPerson()?.CentralRef,
         };
 
-        this.loadingService.show()
+
         this.repo.AutLetterRowInsert(payload).subscribe({
             next: (data: any) => {
-                this.loadingService.hide()
+
                 const intValue = parseInt(data?.AutLetterRows[0]?.LetterRef ?? 0, 10);
 
                 if (!isNaN(intValue) && intValue > 0) {
@@ -301,17 +306,21 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
                             CONTACTS: formData.ExecuterName,
                             NumberPhone: formData.NumberPhone,
                         };
-                        this.loadingService.show()
+
                         this.repo.SendSmsAutLetter(smsPayload).subscribe();
                     }
 
                     this.showLetterModal.set(false);
                     this.reloadLetterList();
                 } else {
+
                     this.notificationService.error('❌ درج پیام در تیکت انجام نشد');
                 }
             },
-            error: () => this.notificationService.error('❌ خطا در AutLetterRowInsert'),
+            error: () => {
+
+                this.notificationService.error('❌ خطا در AutLetterRowInsert')
+            },
         });
     }
 
@@ -325,9 +334,12 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
             Flag: '1',
         };
 
-        this.loadingService.show()
+
         this.repo.GetAutLetterListByPerson(filter).subscribe({
-            next: (data: any) => this.Letter_records.set(data ?? []),
+            next: (data: any) => {
+
+                this.Letter_records.set(data ?? [])
+            },
         });
     }
     convertFaToEn(value: string): string {
@@ -357,14 +369,18 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
 
 
 
-        this.loadingService.show()
+
+
         this.repo.GetKowsarCustomer(filter).subscribe({
             next: (data: any) => {
-                this.loadingService.hide()
+
                 this.Customer_records.set(data?.Customers ?? []);
                 this.notificationService.success('  لیست مشتریان با موفقیت دریافت شد.');
             },
-            error: () => this.notificationService.error('❌ خطا در دریافت لیست مشتریان'),
+            error: () => {
+
+                this.notificationService.error('❌ خطا در دریافت لیست مشتریان')
+            },
         });
     }
 

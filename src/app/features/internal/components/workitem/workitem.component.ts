@@ -102,7 +102,7 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
   //   سازنده
   // ===============================================================
 
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(WorkItemWebApiService);
   private readonly notify = inject(NotificationService);
 
@@ -144,7 +144,7 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
 
     this.repo.AttendanceDashboard().subscribe({
       next: (data: any) => {
-        this.loadingService.hide()
+
         this.records_Persons = data?.Attendances ?? [];
         this.updateGridData(1, this.records_Persons);
       },
@@ -186,17 +186,17 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
 
 
 
-    this.loadingService.show();
+    ;
     this.repo.WorkItem_Get(this.EditForm_SearchTarget.value).subscribe({
       next: (data: any) => {
 
-        this.loadingService.hide();
+        ;
         this.records = data?.WorkItems ?? [];
         this.show_grid = this.records.length > 0;
         this.updateGridData(1, this.records)
       },
       error: () => {
-        this.loadingService.hide();
+        ;
         this.notify.error('❌ خطا در دریافت گزارش کارشناسان');
         this.show_grid = false;
       },
@@ -224,18 +224,21 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
           buttonsStyling: false,
         }).then(result => {
           if (result.isConfirmed) {
-            this.loadingService.show()
+
             this.EditForm_WorkItem.patchValue({
               WorkItemCode: data.WorkItemCode,
             });
 
             this.repo.WorkItem_Delete(this.EditForm_WorkItem.value).subscribe({
               next: () => {
-                this.loadingService.hide()
+
                 this.notify.success('  شرح کار با موفقیت حذف شد');
                 setTimeout(() => this.getList(), 400);
               },
-              error: () => this.notify.error('❌ خطا در حذف رکورد'),
+              error: () => {
+
+                this.notify.error('❌ خطا در حذف رکورد')
+              },
             });
 
 
@@ -297,22 +300,28 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
     if (this.EditForm_WorkItem.value.WorkItemCode.length > 0) {
       this.repo.WorkItem_Update(this.EditForm_WorkItem.value).subscribe({
         next: (data: any) => {
-          this.loadingService.hide()
+
           this.editworkitem_dialog_close()
 
           this.getList()
         },
-        error: () => (this.loadingService.hide()),
+        error: (err) => {
+          console.error(err);
+        },
+
       });
     } else {
       this.repo.WorkItem_Insert(this.EditForm_WorkItem.value).subscribe({
         next: (data: any) => {
-          this.loadingService.hide()
+
           this.workitem_dialog_close()
 
           this.getList()
         },
-        error: () => (this.loadingService.hide()),
+        error: (err) => {
+          console.error(err);
+        },
+
       });
     }
 

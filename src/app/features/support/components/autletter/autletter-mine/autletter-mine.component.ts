@@ -128,7 +128,7 @@ export class AutLetterMineComponent extends AgGridBaseComponent implements OnIni
   // ===============================================================
   // 🧠 Injected Services
   // ===============================================================
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(AutletterWebApiService);
   private readonly router = inject(Router);
   private readonly notify = inject(NotificationService);
@@ -248,7 +248,7 @@ export class AutLetterMineComponent extends AgGridBaseComponent implements OnIni
 
 
   loadMyTickets(): void {
-    this.loadingService.show()
+
 
     const PersonInfoCode = sessionStorage.getItem('PersonInfoRef') ?? '';
     const CentralRef = sessionStorage.getItem('CentralRef') ?? '';
@@ -260,16 +260,16 @@ export class AutLetterMineComponent extends AgGridBaseComponent implements OnIni
     });
 
     // 🚀 دریافت داده از سرور (API اختصاصی تیکت‌های من)
-    this.loadingService.show()
+
     this.repo.GetAutLetterListByPerson(this.EditForm_autletter.value).subscribe({
       next: (data: any) => {
-        this.loadingService.hide()
+
 
         this.records = data?.AutLetters ?? [];
         this.updateGridData(1, this.records);
       },
       error: () => {
-        this.loadingService.hide()
+
         this.notify.error('❌ خطا در دریافت لیست تیکت‌های من');
       },
     });
@@ -318,7 +318,7 @@ export class AutLetterMineComponent extends AgGridBaseComponent implements OnIni
       return;
     }
 
-    this.loadingService.show()
+
     import('sweetalert2').then(Swal => {
       Swal.default
         .fire({
@@ -336,7 +336,7 @@ export class AutLetterMineComponent extends AgGridBaseComponent implements OnIni
         })
         .then(result => {
           if (result.isConfirmed) {
-            this.loadingService.show()
+
             this.repo.DeleteAutLetter(data.LetterCode).subscribe({
               next: () => {
                 this.notify.success('  تیکت با موفقیت حذف شد');
@@ -346,7 +346,7 @@ export class AutLetterMineComponent extends AgGridBaseComponent implements OnIni
             });
           } else {
             this.notify.info('عملیات حذف لغو شد');
-            this.loadingService.hide()
+
           }
         });
     });

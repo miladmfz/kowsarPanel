@@ -21,7 +21,7 @@ export class KowsarWeblogComponent extends AgGridBaseComponent
   records: any;
   loading = false;
 
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(KowsarBaseWebApi);
 
 
@@ -75,12 +75,12 @@ export class KowsarWeblogComponent extends AgGridBaseComponent
   getList(): void {
 
 
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.GetWebLog()
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         this.records = data?.WebLogs ?? [];
         this.updateGridData(1, this.records);
 

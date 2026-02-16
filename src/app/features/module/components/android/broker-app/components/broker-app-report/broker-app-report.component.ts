@@ -25,7 +25,7 @@ import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.
 export class BrokerAppReportComponent extends AgGridBaseComponent
   implements OnInit {
 
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(BrokerWebApiService);
   private readonly route = inject(ActivatedRoute);
 
@@ -186,7 +186,7 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
     //  4-
 
 
-    this.loadingService.show()
+
     this.repo.GetBrokerDetail(this.BrokerCode).subscribe(e => {
       this.BrokerDetails = e;
       this.fetchImageData();
@@ -206,7 +206,7 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
     });
 
 
-    this.loadingService.show()
+
     this.repo.GetAppBrokerReport(this.EditForm_BrokerReport.value).subscribe(e => {
       this.DPreFactorDates = e;
 
@@ -220,7 +220,7 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
 
     });
 
-    this.loadingService.show()
+
     this.repo.GetAppBrokerReport(this.EditForm_BrokerReport.value).subscribe(e => {
       this.CDCustNames = e;
       this.CDCustNames_amount = this.CDCustNames.map(item => String(parseFloat(item.SumAmount).toString()));
@@ -256,7 +256,7 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
       Flag: "3",
 
     });
-    this.loadingService.show()
+
     this.repo.GetAppBrokerReport(this.EditForm_BrokerReport.value).subscribe(e => {
       this.Broker_Prefactors = e;
     });
@@ -289,7 +289,7 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
       image: imageData
     };
 
-    this.loadingService.show()
+
     this.repo.SendImageToServer(data).subscribe((response) => {
       this.fetchImageData();
     });
@@ -299,9 +299,9 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
 
   fetchImageData() {
 
-    this.loadingService.show()
+
     this.repo.GetImageFromServer(this.BrokerDetails[0].CentralRef).subscribe((data: any) => {
-      this.loadingService.hide()
+
 
       this.Imageitem = `data:${Image};base64,${data.Text}`;
 

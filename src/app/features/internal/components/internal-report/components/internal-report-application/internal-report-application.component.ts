@@ -26,7 +26,7 @@ import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.
 })
 export class InternalReportApplicationComponent extends AgGridBaseComponent
   implements OnInit {
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(InternalAppsWebApiService);
 
   constructor() {
@@ -170,10 +170,10 @@ export class InternalReportApplicationComponent extends AgGridBaseComponent
 
     this.loading = true;
 
-    this.loadingService.show()
+
     this.repo.GetAppLogReport(this.EditForm_AppLog.value)
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
 
         this.selectedFlag = this.EditForm_AppLog.value.Flag!;
 

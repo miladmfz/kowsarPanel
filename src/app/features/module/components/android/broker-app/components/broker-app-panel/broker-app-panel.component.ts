@@ -14,7 +14,7 @@ import { BrokerWebApiService } from 'src/app/features/module/services/BrokerWebA
   ],
 })
 export class BrokerAppPanelComponent implements OnInit {
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(BrokerWebApiService);
   constructor() { }
 
@@ -42,7 +42,7 @@ export class BrokerAppPanelComponent implements OnInit {
 
   ListVisible_Card() {
 
-    this.loadingService.show()
+
     this.repo.BasketColumnCard("ListVisible", this.Apptype)
       .subscribe(e => {
         this.ListVisible_items = e;
@@ -52,7 +52,7 @@ export class BrokerAppPanelComponent implements OnInit {
   }
 
   DetailVisible_Card() {
-    this.loadingService.show()
+
     this.repo.BasketColumnCard("DetailVisible", this.Apptype)
       .subscribe(e => {
         this.DetailVisible_items = e;
@@ -62,7 +62,7 @@ export class BrokerAppPanelComponent implements OnInit {
   }
 
   SearchVisible_Card() {
-    this.loadingService.show()
+
     this.repo.BasketColumnCard("SearchVisible", this.Apptype)
       .subscribe(e => {
         this.SearchVisible_items = e;

@@ -25,7 +25,7 @@ import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi
 })
 export class OrderAppReportComponent extends AgGridBaseComponent
   implements OnInit {
-  private readonly loadingService = inject(LoadingService);
+
 
   private readonly repo = inject(OrderWebApiService);
 
@@ -116,17 +116,17 @@ export class OrderAppReportComponent extends AgGridBaseComponent
 
   getList() {
 
-    //     this.loadingService.show()
+    //      
     this.repo.GetOrderPanel(this.StartDate.value, this.EndDate.value, "4").subscribe((data: any) => {
       //   this.records = e;
 
       // });
 
 
-      this.loadingService.show()
+
       this.repo.GetOrderPanel(this.EditForm_Complete.value.StartDate, this.EditForm_Complete.value.EndDate, this.EditForm_Complete.value.Filter).subscribe(e => {
         this.records = data;
-        this.loadingService.hide()
+
 
       });
 

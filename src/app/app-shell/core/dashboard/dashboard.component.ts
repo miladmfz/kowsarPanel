@@ -62,7 +62,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // ===============================================================
   //   سازنده
   // ===============================================================
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(DashboardWebApiService);
   private readonly notificationService = inject(NotificationService);
 
@@ -95,10 +95,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // ===============================================================
   private loadTodayDate(): void {
 
-    this.loadingService.show()
+
     this.repo.GetTodeyFromServer().subscribe({
       next: (data: any) => {
-        this.loadingService.hide()
+
         this.ToDayDate = data[0]?.TodeyFromServer ?? '';
 
         // بررسی تغییر تاریخ نسبت به sessionStorage

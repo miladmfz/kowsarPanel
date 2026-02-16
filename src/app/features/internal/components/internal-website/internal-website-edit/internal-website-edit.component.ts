@@ -86,7 +86,7 @@ export class InternalWebsiteEditComponent implements OnInit {
   ]
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(WebSiteWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
@@ -105,10 +105,10 @@ export class InternalWebsiteEditComponent implements OnInit {
   }
 
   loadDetails() {
-    this.loadingService.show()
+
     this.repo.GetWebSiteActivationById(this.WebsiteId)
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         this.EditForm_WebSite.patchValue(data.WebSites[0]);
       });
   }
@@ -124,7 +124,7 @@ export class InternalWebsiteEditComponent implements OnInit {
 
     const payload = this.EditForm_WebSite.value;
     const id = Number(this.WebsiteId); // تبدیل صحیح
-    this.loadingService.show()
+
     const request$ = id > 0
       ?
       this.repo.WebSiteUpdate(payload)
@@ -137,7 +137,7 @@ export class InternalWebsiteEditComponent implements OnInit {
         return of(null);
       })
     ).subscribe((data: any) => {
-      this.loadingService.hide()
+
       if (!data.WebSites || !data.WebSites[0]) return;
 
       const newId = Number(data.WebSites[0].WebSiteActivationCode);

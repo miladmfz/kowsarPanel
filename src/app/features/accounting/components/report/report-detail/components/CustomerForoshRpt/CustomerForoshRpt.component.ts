@@ -6,8 +6,8 @@ import { AgGridModule } from 'ag-grid-angular';
 import { IDatepickerTheme, NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { catchError, of } from 'rxjs';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
+
 import { ReportWebApiService } from 'src/app/features/accounting/services/ReportWebApi.service';
 import { KowsarNumberService } from 'src/app/app-shell/framework-services/kowsar-number.service';
 
@@ -25,7 +25,7 @@ import { KowsarNumberService } from 'src/app/app-shell/framework-services/kowsar
 })
 export class CustomerForoshRptComponent extends AgGridBaseComponent implements OnInit, OnDestroy {
 
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(ReportWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
@@ -113,18 +113,18 @@ export class CustomerForoshRptComponent extends AgGridBaseComponent implements O
 
   private initColumns(): void {
 
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.GetGridSchema('T' + this.ReportData.ReportForm)
       .pipe(
         catchError((_error) => {
-          this.loadingService.hide()
+
           return of(null);
         })
       )
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         if (data?.GridSchemas?.length > 0) {
           this.columnDefs1 = data.GridSchemas
             .filter((schema: any) => schema.Visible === 'True')
@@ -149,7 +149,7 @@ export class CustomerForoshRptComponent extends AgGridBaseComponent implements O
           //   filter: false
           // });
         }
-        this.loadingService.hide()
+
 
 
 
@@ -183,17 +183,17 @@ export class CustomerForoshRptComponent extends AgGridBaseComponent implements O
 
 
   loadList(): void {
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.CustomerForoshRpt(this.EditForm_SearchTarget.value)
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
 
         this.records = data?.Reports || [];
 
         this.updateGridData(1, this.records);
-        this.loadingService.hide()
+
 
 
 

@@ -89,9 +89,9 @@ export class InternalTaskEditComponent implements OnInit {
       Flag: "1"
     });
 
-    this.loadingService.show()
+
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.Parent_lvl1 = data.KowsarTasks;
     });
   }
@@ -111,9 +111,9 @@ export class InternalTaskEditComponent implements OnInit {
       TaskRef: this.EditForm_task.value.ParentCode1,
     });
 
-    this.loadingService.show()
+
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.Parent_lvl2 = data.KowsarTasks;
     });
   }
@@ -132,9 +132,9 @@ export class InternalTaskEditComponent implements OnInit {
 
     });
 
-    this.loadingService.show()
+
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
 
       this.Parent_lvl3 = data.KowsarTasks;
     });
@@ -154,9 +154,9 @@ export class InternalTaskEditComponent implements OnInit {
 
     });
 
-    this.loadingService.show()
+
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
 
       this.Parent_lvl4 = data.KowsarTasks;
     });
@@ -173,9 +173,9 @@ export class InternalTaskEditComponent implements OnInit {
       TaskRef: this.EditForm_task.value.ParentCode4,
 
     });
-    this.loadingService.show()
+
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
 
       this.Parent_lvl5 = data.KowsarTasks;
     });
@@ -191,9 +191,9 @@ export class InternalTaskEditComponent implements OnInit {
       TaskRef: this.EditForm_task.value.ParentCode5,
 
     });
-    this.loadingService.show()
+
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
 
       this.Parent_lvl6 = data.KowsarTasks;
     });
@@ -208,9 +208,9 @@ export class InternalTaskEditComponent implements OnInit {
       TaskRef: this.EditForm_task.value.ParentCode6,
 
     });
-    this.loadingService.show()
+
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
 
       this.Parent_lvl7 = data.KowsarTasks;
     });
@@ -223,9 +223,9 @@ export class InternalTaskEditComponent implements OnInit {
       TaskRef: this.EditForm_task.value.ParentCode7,
 
     });
-    this.loadingService.show()
+
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
 
       this.Parent_lvl8 = data.KowsarTasks;
     });
@@ -236,9 +236,9 @@ export class InternalTaskEditComponent implements OnInit {
       TaskRef: this.EditForm_task.value.ParentCode8,
 
     });
-    this.loadingService.show()
+
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
 
       this.Parent_lvl9 = data.KowsarTasks;
     });
@@ -246,12 +246,12 @@ export class InternalTaskEditComponent implements OnInit {
 
   // حالت ویرایش
   LoadForEdit() {
-    this.loadingService.show()
+
     this.repo.GetTasks({
       TaskCode: this.Code,
       Flag: 'get_one'
     }).subscribe((data: any) => {
-      this.loadingService.hide()
+
       const rec = data.Task[0];
       this.EditForm_task.patchValue(rec);
 
@@ -276,11 +276,11 @@ export class InternalTaskEditComponent implements OnInit {
     const isEdit = (this.Code?.length ?? 0) > 0; // اگر Code داری یعنی ویرایش
 
     this.isSubmitting = true;
-    this.loadingService.show()
+
 
     if (isEdit) {
       // ------------------ UPDATE ------------------
-      this.loadingService.show()
+
       this.repo.UpdateTask(this.EditForm_task.value).subscribe({
         next: (res: any) => this.handleApiResponse(res, action),
         error: (err) => this.handleApiError(err),
@@ -288,7 +288,7 @@ export class InternalTaskEditComponent implements OnInit {
       });
     } else {
       // ------------------ INSERT ------------------
-      this.loadingService.show()
+
       this.repo.InsertTask(this.EditForm_task.value).subscribe({
         next: (res: any) => this.handleApiResponse(res, action),
         error: (err) => this.handleApiError(err),
@@ -339,7 +339,7 @@ export class InternalTaskEditComponent implements OnInit {
   }
 
   private finalizeSubmit(): void {
-    this.loadingService.hide()
+
     this.isSubmitting = false;
   }
 

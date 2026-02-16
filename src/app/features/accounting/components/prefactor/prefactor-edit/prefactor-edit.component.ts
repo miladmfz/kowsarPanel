@@ -32,7 +32,7 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
 
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(PreFactorWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
@@ -479,13 +479,13 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
 
   onPFStateChange() {
 
-    this.loadingService.show()
-    this.loadingService.show()
+
+
     this.repo.UpdatePreFactorPFState(this.EditForm_Factor_Header.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.PreFactorCode = data.Factors[0].PreFactorCode
       this.notificationService.succeded();
-      this.loadingService.hide()
+
       location.reload()
     });
 
@@ -498,7 +498,7 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
 
   Autletterfromcustomer() {
     this.Autletter_dialog_show()
-    this.loadingService.show()
+
 
     this.loading_letterowener = true
     this.letterexplain_modal_title = " تیکت ارتباط با " + this.EditForm_Factor_Header.value.CustName
@@ -507,14 +507,14 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
       ObjectRef: this.EditForm_Factor_Header.value.CustomerCode,
     });
 
-    this.loadingService.show()
+
     this.repo.GetCentralUser().subscribe(e => {
       this.users = e;
     });
 
-    this.loadingService.show()
+
     this.repo.GetCustomerById(this.EditForm_search.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.EditForm_LetterToEmployer.patchValue({
         DescriptionText: "",
         LetterDate: this.ToDayDate,
@@ -529,9 +529,9 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
         OwnCentralRef: "0",
       });
 
-      this.loadingService.show()
+
       this.repo.GetAutLetterList(this.EditForm_autletter.value).subscribe((data: any) => {
-        this.loadingService.hide()
+
 
 
         this.records_letterfromowner = data?.AutLetters ?? [];
@@ -572,7 +572,7 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
     this.EditForm_LetterToEmployer.markAllAsTouched();
     if (!this.EditForm_LetterToEmployer.valid) return;
 
-    this.loadingService.show()
+
 
     this.EditForm_LetterInsert.patchValue({
       LetterDate: this.ToDayDate,
@@ -588,10 +588,10 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
 
 
 
-    this.loadingService.show()
+
     this.repo.LetterInsert(this.EditForm_LetterInsert.value).subscribe(e => {
       const intValue = parseInt(e[0].LetterCode, 10);
-      this.loadingService.hide()
+
 
       if (!isNaN(intValue) && intValue > 0) {
         this.LetterCode = e[0].LetterCode
@@ -603,7 +603,7 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
   }
 
   SendLetterRow() {
-    this.loadingService.show()
+
 
     this.EditForm_AutLetterRowInsert.patchValue({
       LetterRef: this.LetterCode,
@@ -615,10 +615,10 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
       ExecuterCentral: this.EditForm_LetterToEmployer.value.ExecuterCentral,
     });
 
-    this.loadingService.show()
+
     this.repo.AutLetterRowInsert(this.EditForm_AutLetterRowInsert.value).subscribe(e => {
       const intValue = parseInt(e[0].LetterRef, 10);
-      this.loadingService.hide()
+
 
       if (!isNaN(intValue) && intValue > 0) {
         this.notificationService.succeded();
@@ -665,11 +665,11 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
       takhfif: this.EditForm_Factor_Row.value.takhfif + "",
     });
 
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.WebFactorInsertRow(this.EditForm_Factor_Row.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       const factor = data.Factors[0];
       const rowCode = Number(factor.RowCode);
 
@@ -681,7 +681,7 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
       }
 
       this.boxbuy_dialog_close()
-      this.loadingService.hide()
+
     });
   }
 
@@ -763,13 +763,13 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
       Amount: this.EditForm_UpdateRow.value.Amount + "",
       Price: this.EditForm_UpdateRow.value.Price + "",
     });
-    this.loadingService.show()
-    this.loadingService.show()
+
+
     this.repo.WebFactorUpdateRow(this.EditForm_UpdateRow.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.notificationService.succeded();
       this.updaterow_dialog_close()
-      this.loadingService.hide()
+
       this.GetFactor()
     });
   }
@@ -783,13 +783,13 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
   }
 
   Factor_Customer_Property(CustomerCode: any) {
-    this.loadingService.show()
 
 
-    this.loadingService.show()
+
+
     this.repo.GetCustomerFactor(CustomerCode).subscribe({
       next: (data: any) => {
-        this.loadingService.hide()
+
         this.records_factor = data?.Factors ?? [];
         this.loading = false;
         this.updateGridData(4, this.records_factor);
@@ -808,18 +808,18 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
   Factor_Header_insert() {
     this.EditForm_Factor_Header.markAllAsTouched();
     if (!this.EditForm_Factor_Header.valid) return;
-    this.loadingService.show()
+
 
     this.EditForm_Factor_Header.patchValue({
       BrokerRef: sessionStorage.getItem("BrokerCode")
     });
 
-    this.loadingService.show()
+
     this.repo.WebFactorInsert(this.EditForm_Factor_Header.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.PreFactorCode.set(data.Factors[0].FactorCode)
       this.notificationService.succeded();
-      this.loadingService.hide()
+
     });
   }
   taggelShowGoodList() {
@@ -902,11 +902,11 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
     } else {
       this.fireDeleteSwal1().then((result) => {
         if (result.isConfirmed) {
-          this.loadingService.show()
 
-          this.loadingService.show()
+
+
           this.repo.DeleteWebPreFactorRows(id).subscribe((data: any) => {
-            this.loadingService.hide()
+
             this.GetFactorrows()
             this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
           });
@@ -925,11 +925,11 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
   }
 
   deletefactorRecord() {
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.DeleteWebPreFactor(this.PreFactorCode()).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
       this.location.back();
     });
@@ -956,16 +956,16 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
   // #region Get_Data
 
   GetFactor() {
-    this.loadingService.show()
+
     this.EditForm_factor.patchValue({
       ClassName: "PreFactor",
       ObjectRef: this.PreFactorCode(),
       isShopFactor: "0",
     });
 
-    this.loadingService.show()
+
     this.repo.GetWebFactor(this.EditForm_factor.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.selectedfactor = data.Factors[0]
       this.PreFactorCode.set(data.Factors[0].PreFactorCode);
       this.HasPreFactorCode.set(true)
@@ -1001,7 +1001,7 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
           this.CanEdit_PFState = true
         }
       }
-      this.loadingService.hide()
+
 
 
 
@@ -1012,11 +1012,11 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
   }
 
   GetFactorrows() {
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.GetWebFactorRows(this.EditForm_factor.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
 
       this.records_factorrows = data?.Factors ?? [];
       this.updateGridData(2, this.records_factorrows);
@@ -1024,9 +1024,9 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
   }
 
   getdate() {
-    this.loadingService.show()
+
     this.repo.GetTodeyFromServer().subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.EditForm_Factor_Header.patchValue({
         FactorDate: data.Text,
       });
@@ -1034,11 +1034,11 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
   }
 
   GetGood() {
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.GetGoodListSupport(this.Searchtarget_Good).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.records_good = data?.Goods ?? [];;
       this.updateGridData(1, this.records_good);
 
@@ -1059,19 +1059,19 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
       takhfif: this.EditForm_Factor_Row.value.takhfif + "",
     });
 
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.WebFactorInsertRow(this.EditForm_Factor_Row.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.notificationService.succeded();
       this.boxbuy_dialog_close()
-      this.loadingService.hide()
+
       this.GetFactor()
     });
   }
   GetCustomer() {
-    this.loadingService.show()
+
 
 
 
@@ -1080,9 +1080,9 @@ export class PrefactorEditComponent extends AgGridBaseComponent implements OnIni
       BrokerRef: sessionStorage.getItem("BrokerCode"),
     });
 
-    this.loadingService.show()
+
     this.repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
 
       this.customer_dialog_show()
       this.records_customer = data?.Customers ?? [];;

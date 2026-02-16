@@ -18,7 +18,7 @@ import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi
 })
 export class BrokerAppColumnListComponent implements OnInit {
 
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(BrokerWebApiService);
 
   constructor() { }
@@ -31,7 +31,7 @@ export class BrokerAppColumnListComponent implements OnInit {
   }
 
   GetBasketColumnList() {
-    this.loadingService.show()
+
     this.repo.GetBasketColumnList(this.Apptype)
       .subscribe(e => {
         this.BasketColumns = e;

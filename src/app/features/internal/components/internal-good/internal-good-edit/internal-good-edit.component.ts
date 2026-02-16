@@ -2,8 +2,8 @@ import { Component, inject, OnInit, Renderer2 } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { Base_Lookup, GoodType_lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
+
 import Swal from 'sweetalert2';
 import { SupportFactorWebApiService } from '../../../services/SupportFactorWebApi.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -23,7 +23,7 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
 
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(SupportFactorWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
@@ -193,7 +193,7 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
   // #region Load_data
 
   getDetails() {
-    this.loadingService.show()
+
     this.changedValues = {};
     this.EditForm_Base.reset();
 
@@ -214,9 +214,9 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
 
 
 
-    this.loadingService.show()
+
     this.repo.GetGood_base(this.Code).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.SellPriceType_Str = data.Goods[0].SellPriceType
 
       this.EditForm_Base.patchValue({
@@ -288,17 +288,17 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
 
 
   GetLastGoodData() {
-    this.loadingService.show()
+
     this.repo.GetLastGoodData().subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.router.navigateByUrl('/internal/internal-good-edit', data.Goods[0].GoodCode);
     });
   }
 
   GetObjectTypeFromDbSetup() {
-    this.loadingService.show()
+
     this.repo.GetObjectTypeFromDbSetup("GoodType").subscribe((data: any) => {
-      this.loadingService.hide()
+
 
       this.GoodType_lookup = data.ObjectTypes
       data.ObjectTypes.forEach((item: GoodType_lookup) => {
@@ -314,9 +314,9 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
   EditForm_Base_reset() {
     this.GetLastGoodData()
 
-    this.loadingService.show()
+
     this.repo.GetObjectTypeFromDbSetup("GoodType").subscribe((data: any) => {
-      this.loadingService.hide()
+
 
       data.ObjectTypes.forEach((item: GoodType_lookup) => {
         if (item.IsDefault == "True") {
@@ -515,15 +515,15 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
           JsonData: JSON.stringify(this.KowsarTemplate.value)
         });
 
-        this.loadingService.show()
 
 
 
 
-        this.loadingService.show()
+
+
         this.repo.GoodCrudService(this.JsonForm.value).subscribe((data: any) => {
-          this.loadingService.hide()
-          this.loadingService.hide()
+
+
           const result = JSON.parse(data.Goods[0].Result);
 
           if (result.Goods && result.Goods[0].ErrMessage === "") {
@@ -599,10 +599,10 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
   fetchSuggestions(query: string) {
     // Replace the URL below with your actual API endpoint
 
-    this.loadingService.show()
+
     this.repo.GetSimilarGood(query).subscribe(
       (data: any) => {
-        this.loadingService.hide()
+
         this.simillar_good = data.Goods.slice(0, 5); // Limit to top 5 results
         console.log(this.simillar_good);
       },

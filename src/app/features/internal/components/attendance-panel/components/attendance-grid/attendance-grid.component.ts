@@ -60,7 +60,7 @@ export class AttendanceGridComponent extends AgGridBaseComponent implements OnIn
     // ===============================================================
     //    سازنده کلاس و مدیریت Signal‌ها
     // ===============================================================
-    private readonly loadingService = inject(LoadingService);
+
     private readonly repo = inject(DashboardWebApiService);
 
     constructor() {
@@ -113,10 +113,10 @@ export class AttendanceGridComponent extends AgGridBaseComponent implements OnIn
     // ===============================================================
     refresh(): void {
         this.loading.set(true);
-        this.loadingService.show()
+
         this.repo.AttendanceDashboard().subscribe({
             next: (data: any) => {
-                this.loadingService.hide()
+
                 this.records.set(data?.Attendances ?? []);
                 this.loading.set(false);
                 this.updateGridData(1, this.records());

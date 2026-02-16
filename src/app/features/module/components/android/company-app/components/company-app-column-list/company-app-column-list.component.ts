@@ -19,7 +19,7 @@ import { CompanyWebApiService } from 'src/app/features/module/services/CompanyWe
 export class CompanyAppColumnListComponent implements OnInit {
 
 
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(CompanyWebApiService);
 
 
@@ -46,7 +46,7 @@ export class CompanyAppColumnListComponent implements OnInit {
 
   GetBasketColumnList() {
 
-    this.loadingService.show()
+
     this.repo.GetBasketColumnList(this.Apptype)
       .subscribe(e => {
         this.BasketColumns = e;

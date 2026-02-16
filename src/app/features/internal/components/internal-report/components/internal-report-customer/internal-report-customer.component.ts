@@ -31,7 +31,7 @@ export class InternalReportCustomerComponent
   extends AgGridBaseComponent
   implements OnInit, OnDestroy {
 
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(SupportFactorWebApiService);
 
   constructor() {
@@ -112,15 +112,15 @@ export class InternalReportCustomerComponent
   // -----------------------------------------
 
   getlist() {
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.GetCustomerReport(this.EditForm_reportCustomer.value)
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         this.records_report_customer = data.KowsarReports ?? [];
         this.updateGridData(1, this.records_report_customer);
-        this.loadingService.hide()
+
       });
   }
   override onGridReady(params: any, index: number) {
@@ -145,7 +145,7 @@ export class InternalReportCustomerComponent
   // -----------------------------------------
 
   getlist_report_customer_bydate(item: any) {
-    this.loadingService.show()
+
 
     this.EditForm_reportCustomer_temp.patchValue({
       StartDateTarget: this.EditForm_reportCustomer.value.StartDateTarget,
@@ -154,14 +154,14 @@ export class InternalReportCustomerComponent
       Flag: '2'
     });
 
-    this.loadingService.show()
+
     this.repo.GetCustomerReport(this.EditForm_reportCustomer_temp.value)
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         this.Customer_temp = data.KowsarReports?.[0]?.CustomerName ?? '';
         this.records_report_customer_bydate = data.KowsarReports ?? [];
         this.updateGridData(2, this.records_report_customer_bydate);
-        this.loadingService.hide()
+
         this.customerreportbydate_dialog_show();
       });
   }
@@ -171,7 +171,7 @@ export class InternalReportCustomerComponent
   // -----------------------------------------
 
   getlist_report_customer_byrow(item: any) {
-    this.loadingService.show()
+
 
     this.EditForm_reportCustomer_temp.patchValue({
       StartDateTarget: this.EditForm_reportCustomer.value.StartDateTarget,
@@ -180,13 +180,13 @@ export class InternalReportCustomerComponent
       Flag: '3'
     });
 
-    this.loadingService.show()
+
     this.repo.GetCustomerReport(this.EditForm_reportCustomer_temp.value)
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         this.records_report_customer_byrow = data.KowsarReports ?? [];
         this.updateGridData(3, this.records_report_customer_byrow);
-        this.loadingService.hide()
+
         this.customerreportbyrow_dialog_show();
       });
   }

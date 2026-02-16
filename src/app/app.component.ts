@@ -23,8 +23,6 @@ export class AppComponent {
       this.router.navigate(['/auth/login']);
     }
 
-    // اگر می‌خوای لودینگ اولیه داشته باشی
-    this.loadingService.show()
     setTimeout(() => this.loadingService.hide(), 1500);
   }
 }

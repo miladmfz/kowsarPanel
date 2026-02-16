@@ -26,7 +26,7 @@ import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.
 export class OcrAppSettingComponent extends AgGridBaseComponent
   implements OnInit {
 
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(OcrWebApiService);
   private readonly sharedService = inject(SharedService);
   private readonly renderer = inject(Renderer2);
@@ -195,12 +195,12 @@ export class OcrAppSettingComponent extends AgGridBaseComponent
 
 
   Get_Base_data() {
-    this.loadingService.show()
+
     this.repo.Web_GetDbsetupObject("Ocrkowsar").subscribe(e => {
       this.items = e;
 
     });
-    this.loadingService.show()
+
     this.repo.GetAppPrinter(this.Apptype).subscribe(e => {
       this.Printers = e;
 
@@ -211,7 +211,7 @@ export class OcrAppSettingComponent extends AgGridBaseComponent
 
   CreateAppBasketColumn() {
 
-    this.loadingService.show()
+
     this.repo.CreateBasketColumn(this.Apptype).subscribe(e => {
       this.AppBasketColumn_Status = "AppBasketColumn created";
     });
@@ -227,7 +227,7 @@ export class OcrAppSettingComponent extends AgGridBaseComponent
 
 
   UpdateDbSetup() {
-    this.loadingService.show()
+
     this.repo.UpdateDbSetup(this.selected_value, this.selected_Key).subscribe(e => {
       this.sharedService.triggerActionAll('refresh');
       this.ocrbsetup_Modal_Response_close()
@@ -256,7 +256,7 @@ export class OcrAppSettingComponent extends AgGridBaseComponent
 
     const command = this.EditForm_printer.value
     if (this.EditForm_printer.value.PrinterName !== "") {
-      this.loadingService.show()
+
       this.repo.UpdatePrinter(command).subscribe(e => {
         this.printerModal_Modal_Response_close()
 
@@ -272,7 +272,7 @@ export class OcrAppSettingComponent extends AgGridBaseComponent
 
   GetBasketColumnList() {
 
-    this.loadingService.show()
+
     this.repo.GetBasketColumnList(this.Apptype).subscribe(e => {
       this.BasketColumns = e;
 

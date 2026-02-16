@@ -18,8 +18,8 @@ import moment from 'jalali-moment';
 
 //   اجزای خارجی
 import { IDatepickerTheme, NgPersianDatepickerModule } from 'ng-persian-datepicker';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
+
 import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { KowsarAttachComponent } from 'src/app/app-shell/framework-components/kowsar/kowsar-attach/kowsar-attach.component';
@@ -43,7 +43,7 @@ export class LeaverequestEditComponent extends AgGridBaseComponent implements On
     // ---------------------------------------------------------------
 
     private readonly router = inject(Router);
-    private readonly loadingService = inject(LoadingService);
+
     private readonly repo = inject(LeaveRequestWebApiService);
     private readonly route = inject(ActivatedRoute);
     private readonly notificationService = inject(NotificationService);
@@ -142,9 +142,9 @@ export class LeaverequestEditComponent extends AgGridBaseComponent implements On
         });
 
         // دریافت تاریخ امروز از سرور
-        this.loadingService.show()
+
         this.repo.GetTodeyFromServer().subscribe((data: any) => {
-            this.loadingService.hide()
+
             this.ToDayDate = data.Text;
             this.EditForm_LeaveRequest.patchValue({ LeaveRequestDate: this.ToDayDate });
         });
@@ -187,10 +187,10 @@ export class LeaverequestEditComponent extends AgGridBaseComponent implements On
     //   دریافت جزئیات درخواست مرخصی
     // ---------------------------------------------------------------
     getDetail(): void {
-        this.loadingService.show()
+
         this.repo.GetLeaveRequestById(this.LeaveRequestCode).subscribe({
             next: (data: any) => {
-                this.loadingService.hide()
+
                 const req = data?.LeaveRequests?.[0];
                 if (!req) return;
 
@@ -291,7 +291,7 @@ export class LeaverequestEditComponent extends AgGridBaseComponent implements On
             return;
         }
 
-        this.loadingService.show()
+
 
         const form = this.EditForm_LeaveRequest.value;
         const obs =
@@ -303,8 +303,8 @@ export class LeaverequestEditComponent extends AgGridBaseComponent implements On
 
         obs.subscribe({
             next: (data: any) => {
-                this.loadingService.hide()
-                this.loadingService.hide()
+
+
                 const success = data?.LeaveRequests?.[0]?.LeaveRequestCode?.length > 0;
                 if (success) {
                     this.notificationService.success('  اطلاعات با موفقیت ثبت شد');
@@ -314,7 +314,7 @@ export class LeaverequestEditComponent extends AgGridBaseComponent implements On
                 }
             },
             error: () => {
-                this.loadingService.hide()
+
                 this.notificationService.error('❌ خطای ارتباط با سرور');
             },
         });

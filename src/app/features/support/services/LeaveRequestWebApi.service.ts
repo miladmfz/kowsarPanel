@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { finalize, Observable, tap } from 'rxjs';
 import { AppConfigService } from 'src/app/app-config.service';
+import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +14,14 @@ export class LeaveRequestWebApiService {
   baseUrl_Attach: string;
   headers: HttpHeaders;
 
-
   private readonly client = inject(HttpClient);
   private readonly config = inject(AppConfigService);
+  private readonly AutoloadingService = inject(LoadingService);
+
+  private withLoading<T>(obs$: Observable<T>): Observable<T> {
+    this.AutoloadingService.show();
+    return obs$.pipe(finalize(() => this.AutoloadingService.hide()));
+  }
 
   constructor() {
     this.baseUrl = this.config.apiUrl + 'KowsarWeb/';
@@ -33,29 +39,29 @@ export class LeaveRequestWebApiService {
 
   /*
     GetKowsarCustomer(SearchTarget: string): Observable<any[]> {
-      return this.client.post<any[]>(this.baseUrl + "GetKowsarCustomer", { SearchTarget }, { headers: this.headers })
+      return this.withLoading(this.client.post<any[]>(this.baseUrl + "GetKowsarCustomer", { SearchTarget }, { headers: this.headers })
     }
   
     DeleteTaskAll(command): Observable<any[]> {
-      return this.client.post<any[]>(this.baseUrl + "DeleteTaskAll", command, { headers: this.headers })
+      return this.withLoading(this.client.post<any[]>(this.baseUrl + "DeleteTaskAll", command, { headers: this.headers }))
     }
   */
 
 
 
   AttachFile_Insert(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl_Attach + "AttachFile_Insert", command, { headers: this.headers })
+    return this.withLoading(this.client.post<any[]>(this.baseUrl_Attach + "AttachFile_Insert", command, { headers: this.headers }))
   }
 
   GetAttachFileList(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl_Attach + "GetAttachFileList", command, { headers: this.headers })
+    return this.withLoading(this.client.post<any[]>(this.baseUrl_Attach + "GetAttachFileList", command, { headers: this.headers }))
   }
 
   downloadFile(code: string, classname: string, objectRef: string): Observable<any> {
     const url = `${this.baseUrl_Attach}GetAttachFileNew`;
     const params = { AttachedFileCode: code, ClassName: classname, ObjectRef: objectRef };
 
-    return this.client.get<any>(url, { params });
+    return this.withLoading(this.client.get<any>(url, { params }))
   }
 
 
@@ -65,24 +71,24 @@ export class LeaveRequestWebApiService {
 
 
   GetTodeyFromServer(): Observable<any[]> {
-    return this.client.get<any[]>(this.baseUrl + "GetTodeyFromServer", { headers: this.headers })
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetTodeyFromServer", { headers: this.headers }))
   }
 
 
 
   DeleteLeaveRequest(LeaveRequestCode: string): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "DeleteLeaveRequest", { LeaveRequestCode }, { headers: this.headers })
+    return this.withLoading(this.client.post<any[]>(this.baseUrl + "DeleteLeaveRequest", { LeaveRequestCode }, { headers: this.headers }))
   }
 
 
   GetLeaveRequest(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "GetLeaveRequest", command, { headers: this.headers })
+    return this.withLoading(this.client.post<any[]>(this.baseUrl + "GetLeaveRequest", command, { headers: this.headers }))
   }
 
 
   GetLeaveRequestById(LeaveRequestCode: string): Observable<any[]> {
     const params = new HttpParams().append('LeaveRequestCode', LeaveRequestCode)
-    return this.client.get<any[]>(this.baseUrl + "GetLeaveRequestById", { headers: this.headers, params: params })
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetLeaveRequestById", { headers: this.headers, params: params }))
 
   }
 
@@ -90,17 +96,17 @@ export class LeaveRequestWebApiService {
 
 
   LeaveRequest_Insert(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "LeaveRequest_Insert", command, { headers: this.headers })
+    return this.withLoading(this.client.post<any[]>(this.baseUrl + "LeaveRequest_Insert", command, { headers: this.headers }))
   }
 
 
   LeaveRequest_Update(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "LeaveRequest_Update", command, { headers: this.headers })
+    return this.withLoading(this.client.post<any[]>(this.baseUrl + "LeaveRequest_Update", command, { headers: this.headers }))
   }
 
 
   LeaveRequest_WorkFlow(command): Observable<any[]> {
-    return this.client.post<any[]>(this.baseUrl + "LeaveRequest_WorkFlow", command, { headers: this.headers })
+    return this.withLoading(this.client.post<any[]>(this.baseUrl + "LeaveRequest_WorkFlow", command, { headers: this.headers }))
   }
 
 
@@ -108,22 +114,22 @@ export class LeaveRequestWebApiService {
 
   // GetProperty(Where: string): Observable<any[]> {
   //   const params = new HttpParams().append('Where', Where)
-  //   return this.client.get<any[]>(this.baseUrl + "GetProperty", { headers: this.headers, params: params })
+  //   return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetProperty", { headers: this.headers, params: params }))
   // }
 
 
   // Good_Insert(command): Observable<any[]> {
-  //   return this.client.post<any[]>(this.baseUrl + "GoodInsert", command, { headers: this.headers })
+  //   return this.withLoading(this.client.post<any[]>(this.baseUrl + "GoodInsert", command, { headers: this.headers }))
   // }
 
 
   // GetProperty(Where: string): Observable<any[]> {
   //   const params = new HttpParams().append('Where', Where)
-  //   return this.client.get<any[]>(this.baseUrl + "GetProperty", { headers: this.headers, params: params })
+  //   return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetProperty", { headers: this.headers, params: params }))
   // }
   DeleteAttachFile(AttachedFileCode: string, ClassName: string, ObjectRef: string,): Observable<any[]> {
     const params = new HttpParams().append('AttachedFileCode', AttachedFileCode).append('ClassName', ClassName).append('ObjectRef', ObjectRef)
-    return this.client.get<any[]>(this.baseUrl + "DeleteAttachFile", { headers: this.headers, params: params })
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "DeleteAttachFile", { headers: this.headers, params: params }))
   }
 
 }

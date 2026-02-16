@@ -26,7 +26,7 @@ export class BrokerAppSellbrokerListComponent extends AgGridBaseComponent
   implements OnInit {
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(BrokerWebApiService);
 
   constructor() {
@@ -100,7 +100,7 @@ export class BrokerAppSellbrokerListComponent extends AgGridBaseComponent
 
 
 
-    this.loadingService.show()
+
     this.repo.GetBrokers()
       .subscribe(e => {
         this.records = e;

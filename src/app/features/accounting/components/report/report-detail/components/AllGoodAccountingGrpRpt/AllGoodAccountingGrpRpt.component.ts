@@ -6,8 +6,8 @@ import { AgGridModule } from 'ag-grid-angular';
 import { IDatepickerTheme, NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { catchError, of } from 'rxjs';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
+
 import { ReportWebApiService } from 'src/app/features/accounting/services/ReportWebApi.service';
 import { KowsarNumberService } from 'src/app/app-shell/framework-services/kowsar-number.service';
 
@@ -25,7 +25,7 @@ import { KowsarNumberService } from 'src/app/app-shell/framework-services/kowsar
 })
 export class AllGoodAccountingGrpRptComponent extends AgGridBaseComponent implements OnInit, OnDestroy {
 
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(ReportWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
@@ -93,18 +93,18 @@ export class AllGoodAccountingGrpRptComponent extends AgGridBaseComponent implem
 
   private initColumns(): void {
 
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.GetGridSchema('T' + this.ReportData.ReportForm)
       .pipe(
         catchError((_error) => {
-          this.loadingService.hide()
+
           return of(null);
         })
       )
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         this.columnDefs1 = data.GridSchemas
           .filter((schema: any) => schema.Visible === 'True')
           .map((schema: any) => {
@@ -140,7 +140,7 @@ export class AllGoodAccountingGrpRptComponent extends AgGridBaseComponent implem
             return col;
           });
 
-        this.loadingService.hide()
+
 
 
 

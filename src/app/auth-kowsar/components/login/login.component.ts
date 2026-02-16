@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
 
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(AuthKowsarWebApiService);
   private readonly config = inject(AppConfigService);
   private readonly swal = inject(SwalService);
@@ -48,11 +48,11 @@ export class LoginComponent implements OnInit {
 
   private autoLogin(): void {
 
-    this.loginForm.setValue({ UName: 'mfz', UPass: '123456' });
+    ///this.loginForm.setValue({ UName: 'mfz', UPass: '123456' });
 
     //this.loginForm.setValue({ UName: 'بختیاری', UPass: '123456' });
 
-    //this.loginForm.setValue({ UName: 'خسروی', UPass: '123456' });
+    this.loginForm.setValue({ UName: 'خسروی', UPass: '123456' });
 
     // this.loginForm.setValue({ UName: 'سیروس', UPass: '123456' });
 
@@ -78,11 +78,11 @@ export class LoginComponent implements OnInit {
 
     this.isLoading.set(true);
 
-    this.loadingService.show()
+
     this.repo.IsUser(this.loginForm.value).subscribe({
       next: (data: any) => {
         this.handleLoginSuccess(data)
-        this.loadingService.hide()
+
       },
       error: err => this.handleLoginError(err),
     });

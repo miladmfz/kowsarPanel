@@ -22,7 +22,7 @@ import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.
 })
 export class OrderAppGoodListComponent extends AgGridBaseComponent
   implements OnInit {
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(OrderWebApiService);
 
   constructor() {
@@ -106,7 +106,7 @@ export class OrderAppGoodListComponent extends AgGridBaseComponent
   getList() {
 
 
-    this.loadingService.show()
+
     this.repo.GetOrderGoodList("50", this.Searchtarget, "0")
       .subscribe((data: any) => {
         this.records = data;

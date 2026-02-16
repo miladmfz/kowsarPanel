@@ -22,7 +22,7 @@ import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.
 export class DbsetupListComponent extends AgGridBaseComponent
   implements OnInit, OnDestroy {
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(DbSetupWebApiService);
   private readonly renderer = inject(Renderer2);
 
@@ -153,12 +153,12 @@ export class DbsetupListComponent extends AgGridBaseComponent
 
 
   GetDbSetup() {
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.GetDbSetup(this.EditForm_Search.value)
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         this.records = data.DbSetups;
         this.updateGridData(1, this.records);
 
@@ -171,12 +171,12 @@ export class DbsetupListComponent extends AgGridBaseComponent
 
 
   UpdateDbSetup() {
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.UpdateDbSetup(this.EditForm_DbSetup.value)
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         this.orderdbsetup_Modal_Response_close()
         this.GetDbSetup()
 

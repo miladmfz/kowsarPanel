@@ -41,7 +41,7 @@ export class InternalAppsListComponent
   loading = false;
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(InternalAppsWebApiService);
   private readonly notificationService = inject(NotificationService);
 
@@ -136,9 +136,9 @@ export class InternalAppsListComponent
     }, 50);
   }
   getList(): void {
-    this.loadingService.show()
+
     this.repo.GetAppActivation().subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.records = data?.AppActivations ?? [];
       this.updateGridData(1, this.records);
     });
@@ -157,7 +157,7 @@ export class InternalAppsListComponent
 
     import('sweetalert2').then(Swal => {
       Swal.default.fire({
-        title: 'حذف تیکت؟',
+        title: 'حذف رکورئ',
         text: 'در صورت حذف، قابل بازیابی نخواهد بود.',
         icon: 'warning',
         showCancelButton: true,
@@ -172,13 +172,16 @@ export class InternalAppsListComponent
         if (result.isConfirmed) {
 
 
-          this.loadingService.show()
+
           this.repo.DeleteAppActivation(data.AppActivationCode).subscribe({
             next: () => {
               this.notificationService.succeded()
               setTimeout(() => this.getList(), 10);
             },
-            error: () => this.notificationService.error('❌ خطا در حذف رکورد'),
+            error: () => {
+
+              this.notificationService.error('❌ خطا در حذف رکورد')
+            },
           });
 
 
@@ -197,7 +200,7 @@ export class InternalAppsListComponent
   //   const ip = data.ServerURL.match(/\/\/(.*?):/)[1];
   //   const port = data.ServerURL.match(/:(\d+)\//)[1];
 
-  //       this.loadingService.show()
+  //        
   // this.repo.CheckPort(ip, port).subscribe((e: any) => {
   //     this.loading = false;
 

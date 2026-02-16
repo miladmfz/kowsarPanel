@@ -156,7 +156,7 @@ export class EmployeListComponent extends AgGridBaseComponent
   });
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(SalaryWebApiService);
 
   constructor() {
@@ -274,11 +274,11 @@ export class EmployeListComponent extends AgGridBaseComponent
   // Load Data
   // ---------------------------
   getList() {
-    this.loadingService.show()
-    this.loadingService.show()
+
+
     this.repo.GetEmployee(this.EditForm_SearchTarget.value).subscribe({
       next: (data: any) => {
-        this.loadingService.hide()
+
 
 
         this.records = data?.Employees ?? [];
@@ -290,7 +290,10 @@ export class EmployeListComponent extends AgGridBaseComponent
           this.gridApi1.sizeColumnsToFit();
         }
       },
-      error: () => (this.loadingService.hide()),
+      error: (err) => {
+        console.error(err);
+      },
+
     });
   }
 
@@ -307,11 +310,11 @@ export class EmployeListComponent extends AgGridBaseComponent
       EmployeCode: EmployeCode
     });
 
-    this.loadingService.show()
-    this.loadingService.show()
+
+
     this.repo.GetSalarySummary(this.EditForm_EmploySalary.value).subscribe({
       next: (data: any) => {
-        this.loadingService.hide()
+
 
 
         this.records_salary = data?.SalarySummarys ?? [];
@@ -324,7 +327,10 @@ export class EmployeListComponent extends AgGridBaseComponent
         }
         this.Employeesalary_dialog_show()
       },
-      error: () => (this.loadingService.hide()),
+      error: (err) => {
+        console.error(err);
+      },
+
     });
   }
 

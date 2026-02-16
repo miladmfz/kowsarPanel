@@ -22,7 +22,7 @@ export class InternalGoodListComponent extends AgGridBaseComponent
   implements OnInit {
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(SupportFactorWebApiService);
 
 
@@ -108,10 +108,10 @@ export class InternalGoodListComponent extends AgGridBaseComponent
 
 
   GetGood() {
-    this.loadingService.show()
+
     this.repo.GetGoodListSupport(this.Searchtarget)
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         this.records = data.Goods;
         this.updateGridData(1, this.records);
 

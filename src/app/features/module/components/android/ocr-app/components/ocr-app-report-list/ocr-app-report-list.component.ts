@@ -28,7 +28,7 @@ import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.ser
 })
 export class OcrAppReportListComponent extends AgGridBaseComponent
   implements OnInit {
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(OcrWebApiService);
 
   constructor() {
@@ -187,9 +187,9 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
 
   }
   getList() {
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6").subscribe((data: any) => {
-      this.loadingService.hide()
+
 
       this.Report_State = this.GetOcrPanel_frm.value.State
       this.loading = false
@@ -202,9 +202,9 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
 
   LoadList_state_0() {
     this.loading = true
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "6").subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.loading = false
       this.records = data;
 
@@ -220,9 +220,9 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
     this.loading7 = true
 
 
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "1").subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.loading1 = false
       if (data.length > 0) {
 
@@ -250,9 +250,9 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
     });
 
 
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "2").subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.loading2 = false
       if (data.length > 0) {
 
@@ -270,9 +270,9 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
     });
 
 
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "5").subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.loading5 = false
       if (data.length > 0) {
 
@@ -299,12 +299,12 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
     });
 
 
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "3").subscribe((data: any) => {
-      this.loadingService.hide()
-      this.loadingService.show()
+
+
       this.repo.GetOcrPanel("1402/07/08", "1402/07/11", "3").subscribe((data: any) => {
-        this.loadingService.hide()
+
 
         this.loading6 = false
         if (data.length > 0) {
@@ -331,9 +331,9 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
       });
 
 
-      this.loadingService.show()
+
       this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "4").subscribe((data: any) => {
-        this.loadingService.hide()
+
 
         this.loading7 = false
         if (data.length > 0) {

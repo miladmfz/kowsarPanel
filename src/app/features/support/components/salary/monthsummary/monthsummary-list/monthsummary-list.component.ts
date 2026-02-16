@@ -72,7 +72,7 @@ export class MonthsummaryListComponent extends AgGridBaseComponent
 
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(SalaryWebApiService);
 
   constructor() {
@@ -167,11 +167,11 @@ export class MonthsummaryListComponent extends AgGridBaseComponent
       });
     }
 
-    this.loadingService.show()
-    this.loadingService.show()
+
+
     this.repo.GetMonthSummary(this.EditForm_SearchTarget.value).subscribe({
       next: (data: any) => {
-        this.loadingService.hide()
+
 
 
         this.records = data?.MonthSummarys ?? [];
@@ -183,7 +183,10 @@ export class MonthsummaryListComponent extends AgGridBaseComponent
           this.gridApi1.sizeColumnsToFit();
         }
       },
-      error: () => (this.loadingService.hide()),
+      error: (err) => {
+        console.error(err);
+      },
+
     });
   }
 

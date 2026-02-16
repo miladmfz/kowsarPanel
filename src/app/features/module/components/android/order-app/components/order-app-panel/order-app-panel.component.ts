@@ -12,7 +12,7 @@ import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi
   ],
 })
 export class OrderAppPanelComponent implements OnInit {
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(OrderWebApiService);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   constructor() { }
@@ -37,7 +37,7 @@ export class OrderAppPanelComponent implements OnInit {
 
   ngOnInit() {
 
-    this.loadingService.show()
+
     this.repo.GetTodeyFromServer("-1")
       .subscribe(e => {
 
@@ -54,7 +54,7 @@ export class OrderAppPanelComponent implements OnInit {
 
   Getemptymiz() {
 
-    this.loadingService.show()
+
     this.repo.OrderMizList("3", "روف")
       .subscribe(e => {
         this.items1 = e;
@@ -62,7 +62,7 @@ export class OrderAppPanelComponent implements OnInit {
       });
 
 
-    this.loadingService.show()
+
     this.repo.OrderMizList("3", "حیاط")
       .subscribe(e => {
         this.items2 = e;
@@ -70,7 +70,7 @@ export class OrderAppPanelComponent implements OnInit {
       });
 
 
-    this.loadingService.show()
+
     this.repo.OrderMizList("3", "همایش")
       .subscribe(e => {
         this.items3 = e;
@@ -78,7 +78,7 @@ export class OrderAppPanelComponent implements OnInit {
       });
 
 
-    this.loadingService.show()
+
     this.repo.OrderMizList("3", "تراس")
       .subscribe(e => {
         this.items4 = e;
@@ -93,7 +93,7 @@ export class OrderAppPanelComponent implements OnInit {
 
   GetAmountItem() {
 
-    this.loadingService.show()
+
     this.repo.GetAmountItem(this.ToDayDate, "1")
       .subscribe(e => {
         this.itemsAmount1 = e;
@@ -101,7 +101,7 @@ export class OrderAppPanelComponent implements OnInit {
       });
 
 
-    this.loadingService.show()
+
     this.repo.GetAmountItem(this.ToDayDate, "2")
       .subscribe(e => {
         this.itemsAmount2 = e;
@@ -109,7 +109,7 @@ export class OrderAppPanelComponent implements OnInit {
       });
 
 
-    this.loadingService.show()
+
     this.repo.GetAmountItem(this.ToDayDate, "3")
       .subscribe(e => {
         this.itemsAmount3 = e;
@@ -117,7 +117,7 @@ export class OrderAppPanelComponent implements OnInit {
       });
 
 
-    this.loadingService.show()
+
     this.repo.GetAmountItem(this.ToDayDate, "4")
       .subscribe(e => {
         this.itemsAmount4 = e;
@@ -130,7 +130,7 @@ export class OrderAppPanelComponent implements OnInit {
 
   GetOrderPanel() {
 
-    this.loadingService.show()
+
     this.repo.GetOrderPanel(this.ToDayDate, this.ToDayDate, "1")
       .subscribe(e => {
         this.ItemsMax = e;
@@ -138,7 +138,7 @@ export class OrderAppPanelComponent implements OnInit {
       });
 
 
-    this.loadingService.show()
+
     this.repo.GetOrderPanel(this.ToDayDate, this.ToDayDate, "2")
       .subscribe(e => {
         this.ItemsMin = e;

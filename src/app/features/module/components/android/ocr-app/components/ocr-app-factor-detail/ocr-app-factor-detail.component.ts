@@ -20,7 +20,7 @@ import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.ser
 export class OcrAppFactorDetailComponent implements OnInit {
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(OcrWebApiService);
   private readonly route = inject(ActivatedRoute);
 
@@ -67,7 +67,7 @@ export class OcrAppFactorDetailComponent implements OnInit {
 
 
     // Fetch and update the data from your API
-    this.loadingService.show()
+
     this.repo.ocrGetFactorDetail(this.id)
       .subscribe((e: any) => {
         this.EditForm_Base.patchValue({
@@ -102,13 +102,13 @@ export class OcrAppFactorDetailComponent implements OnInit {
   }
 
   ExitDelivery() {
-    this.loadingService.show()
+
     this.repo.ExitDelivery(this.id)
       .subscribe(e => {
         // Perform the navigation here
       });
 
-    this.loadingService.show()
+
     this.repo.ExitDelivery(this.id)
       .subscribe(e => {
         this.router.navigate(['/application/ocr-list']);

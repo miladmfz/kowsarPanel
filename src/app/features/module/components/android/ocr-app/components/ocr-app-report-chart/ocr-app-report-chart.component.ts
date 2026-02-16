@@ -23,7 +23,7 @@ import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.ser
 })
 export class OcrAppReportChartComponent implements OnInit {
 
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(OcrWebApiService);
 
   constructor() { }
@@ -91,7 +91,7 @@ export class OcrAppReportChartComponent implements OnInit {
     this.loading6 = true
     this.loading7 = true
 
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "1")
       .subscribe((data: any) => {
         this.loading1 = false
@@ -121,7 +121,7 @@ export class OcrAppReportChartComponent implements OnInit {
       });
 
 
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "2")
       .subscribe((data: any) => {
         this.loading2 = false
@@ -141,7 +141,7 @@ export class OcrAppReportChartComponent implements OnInit {
       });
 
 
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "3")
       .subscribe((data: any) => {
         this.loading3 = false
@@ -165,7 +165,7 @@ export class OcrAppReportChartComponent implements OnInit {
       });
 
 
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "4")
       .subscribe((data: any) => {
         this.loading4 = false
@@ -185,7 +185,7 @@ export class OcrAppReportChartComponent implements OnInit {
       });
 
 
-    this.loadingService.show()
+
     this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "5")
       .subscribe((data: any) => {
         this.loading5 = false
@@ -214,7 +214,7 @@ export class OcrAppReportChartComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.loadingService.show()
+
     this.repo.GetTodeyFromServer("0")
       .subscribe(e => {
 

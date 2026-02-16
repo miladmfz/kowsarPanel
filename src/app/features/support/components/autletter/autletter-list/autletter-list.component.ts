@@ -132,7 +132,7 @@ export class AutLetterListComponent extends AgGridBaseComponent implements OnIni
     // ===============================================================
     // 🧠 Injected Services
     // ===============================================================
-    private readonly loadingService = inject(LoadingService);
+
     private readonly repo = inject(AutletterWebApiService);
     private readonly router = inject(Router);
     private readonly notify = inject(NotificationService);
@@ -262,7 +262,7 @@ export class AutLetterListComponent extends AgGridBaseComponent implements OnIni
 
     loadList(): void {
         this.records = []
-        this.loadingService.show()
+
 
         const CentralRef = sessionStorage.getItem('CentralRef') ?? '';
         const JobPersonRef = sessionStorage.getItem('JobPersonRef') ?? '';
@@ -282,17 +282,17 @@ export class AutLetterListComponent extends AgGridBaseComponent implements OnIni
         this.EditForm_autletter.patchValue({ CentralRef: this.CentralRef });
 
         // 🚀 دریافت داده از سرور
-        this.loadingService.show()
+
         this.repo.GetAutLetterList(this.EditForm_autletter.value).subscribe({
             next: (data: any) => {
-                this.loadingService.hide()
-                this.loadingService.hide()
+
+
                 this.records = data?.AutLetters ?? [];
                 this.updateGridData(1, this.records);
 
             },
             error: () => {
-                this.loadingService.hide()
+
                 this.notify.error('❌ خطا در دریافت لیست نامه‌ها');
             },
         });
@@ -341,7 +341,7 @@ export class AutLetterListComponent extends AgGridBaseComponent implements OnIni
             return;
         }
 
-        this.loadingService.show()
+
         import('sweetalert2').then(Swal => {
             Swal.default.fire({
                 title: 'حذف تیکت؟',
@@ -357,7 +357,7 @@ export class AutLetterListComponent extends AgGridBaseComponent implements OnIni
                 buttonsStyling: false,
             }).then(result => {
                 if (result.isConfirmed) {
-                    this.loadingService.show()
+
                     this.repo.DeleteAutLetter(data.LetterCode).subscribe({
                         next: () => {
                             this.notify.success('  تیکت با موفقیت حذف شد');

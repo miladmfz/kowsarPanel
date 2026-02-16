@@ -37,7 +37,7 @@ export class InternalWebsiteListComponent
   });
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(WebSiteWebApiService);
   private readonly notificationService = inject(NotificationService);
 
@@ -82,10 +82,10 @@ export class InternalWebsiteListComponent
   getList(): void {
     this.loading = true;
 
-    this.loadingService.show()
+
     this.repo.GetWebSiteActivation(this.EditForm.value)
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         this.records = data?.WebSites ?? [];
         this.loading = false;
         this.updateGridData(1, this.records);
@@ -122,7 +122,7 @@ export class InternalWebsiteListComponent
 
     import('sweetalert2').then(Swal => {
       Swal.default.fire({
-        title: 'حذف تیکت؟',
+        title: 'حذف رکورد؟',
         text: 'در صورت حذف، قابل بازیابی نخواهد بود.',
         icon: 'warning',
         showCancelButton: true,
@@ -137,13 +137,17 @@ export class InternalWebsiteListComponent
         if (result.isConfirmed) {
 
 
-          this.loadingService.show()
+
           this.repo.DeleteWebSiteActivation(data.WebSiteActivationCode).subscribe({
             next: () => {
-              this.notificationService.success('  تیکت با موفقیت حذف شد');
+
+              this.notificationService.success('  رکورد با موفقیت حذف شد');
               setTimeout(() => this.getList(), 10);
             },
-            error: () => this.notificationService.error('❌ خطا در حذف رکورد'),
+            error: () => {
+
+              this.notificationService.error('❌ خطا در حذف رکورد')
+            },
           });
 
 

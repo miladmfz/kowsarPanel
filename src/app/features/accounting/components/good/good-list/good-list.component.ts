@@ -23,7 +23,7 @@ export class GoodListComponent extends AgGridBaseComponent
   implements OnInit, OnDestroy {
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(GoodWebApiService);
 
   constructor() {
@@ -59,11 +59,11 @@ export class GoodListComponent extends AgGridBaseComponent
   }
 
   getGridSchema() {
-    this.loadingService.show()
-    this.loadingService.show()
+
+
     this.repo.GetGridSchema('TGood')
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         if (data && data.GridSchemas && data.GridSchemas.length > 0) {
           this.columnDefs1 = data.GridSchemas.filter(schema => schema.Visible === "True").map(schema => ({
             field: schema.FieldName,
@@ -123,11 +123,11 @@ export class GoodListComponent extends AgGridBaseComponent
 
   GetGood() {
 
-    this.loadingService.show()
-    this.loadingService.show()
+
+
     this.repo.GetGoodList()
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         this.records = data.Goods;
         this.updateGridData(1, this.records);
 

@@ -35,6 +35,8 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   loading_factor = false;
 
   // جستجو
+  PhAddress3 = '';
+
   Searchtarget = '';
   private searchSubject = new Subject<string>();
 
@@ -92,7 +94,7 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   });
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(CustomerWebApiService);
 
   constructor() {
@@ -103,6 +105,9 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   // Lifecycle
   // ---------------------------
   ngOnInit(): void {
+
+    this.PhAddress3 = sessionStorage.getItem('PhAddress3') || '';
+
 
     // --- ستون‌های گرید اصلی مشتریان ---
     this.columnDefs1 = [
@@ -201,11 +206,11 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   // Load Data
   // ---------------------------
   getList() {
-    this.loadingService.show()
-    this.loadingService.show()
+
+
     this.repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe({
       next: (data: any) => {
-        this.loadingService.hide()
+
 
 
         this.records = data?.Customers ?? [];
@@ -255,7 +260,7 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
 
 
   Set_Customer_Property_Explain() {
-    this.loadingService.show()
+
     this.repo.EditCustomerProperty(this.EditForm_property.value).subscribe(() => {
       this.Edit_property_dialog_close();
       this.getList();
@@ -290,9 +295,9 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   // ---------------------------
   Factor_Customer_Property(CustomerCode: any) {
     this.loading_factor = true;
-    this.loadingService.show()
+
     this.repo.GetCustomerFactor(CustomerCode).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.records_factor = data?.Factors ?? [];
       this.loading_factor = false;
       this.CustomerFactor_dialog_show();
@@ -302,9 +307,9 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   }
 
   GetFactorrows(FactorCode: any) {
-    this.loadingService.show()
+
     this.repo.GetWebFactorRowsSupport(FactorCode).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.records_support_factorrows = data?.Factors ?? [];
       this.CustomerFactorRow_dialog_show();
       this.updateGridData(3, this.records_support_factorrows);

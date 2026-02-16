@@ -32,7 +32,7 @@ import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-t
 export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(FactorWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
@@ -476,13 +476,13 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
 
   onInvoiceStateChange() {
 
-    this.loadingService.show()
-    this.loadingService.show()
+
+
     this.repo.UpdateFactorInvoiceState(this.EditForm_Factor_Header.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.FactorCode = data.Factors[0].FactorCode
       this.notificationService.succeded();
-      this.loadingService.hide()
+
       location.reload()
     });
 
@@ -495,7 +495,7 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
 
   Autletterfromcustomer() {
     this.Autletter_dialog_show()
-    this.loadingService.show()
+
 
     this.loading_letterowener = true
     this.letterexplain_modal_title = " تیکت ارتباط با " + this.EditForm_Factor_Header.value.CustName
@@ -504,14 +504,14 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
       ObjectRef: this.EditForm_Factor_Header.value.CustomerCode,
     });
 
-    this.loadingService.show()
+
     this.repo.GetCentralUser().subscribe(e => {
       this.users = e;
     });
 
-    this.loadingService.show()
+
     this.repo.GetCustomerById(this.EditForm_search.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.EditForm_LetterToEmployer.patchValue({
         DescriptionText: "",
         LetterDate: this.ToDayDate,
@@ -526,9 +526,9 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
         OwnCentralRef: "0",
       });
 
-      this.loadingService.show()
+
       this.repo.GetAutLetterList(this.EditForm_autletter.value).subscribe((data: any) => {
-        this.loadingService.hide()
+
 
 
         this.records_letterfromowner = data?.AutLetters ?? [];
@@ -583,12 +583,12 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
     });
 
 
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.LetterInsert(this.EditForm_LetterInsert.value).subscribe(e => {
       const intValue = parseInt(e[0].LetterCode, 10);
-      this.loadingService.hide()
+
 
       if (!isNaN(intValue) && intValue > 0) {
         this.LetterCode = e[0].LetterCode
@@ -600,7 +600,7 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
   SendLetterRow() {
-    this.loadingService.show()
+
 
     this.EditForm_AutLetterRowInsert.patchValue({
       LetterRef: this.LetterCode,
@@ -612,10 +612,10 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
       ExecuterCentral: this.EditForm_LetterToEmployer.value.ExecuterCentral,
     });
 
-    this.loadingService.show()
+
     this.repo.AutLetterRowInsert(this.EditForm_AutLetterRowInsert.value).subscribe(e => {
       const intValue = parseInt(e[0].LetterRef, 10);
-      this.loadingService.hide()
+
 
       if (!isNaN(intValue) && intValue > 0) {
         this.notificationService.succeded();
@@ -661,11 +661,11 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
       takhfif: this.EditForm_Factor_Row.value.takhfif + "",
     });
 
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.WebFactorInsertRow(this.EditForm_Factor_Row.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       const factor = data.Factors[0];
       const rowCode = Number(factor.RowCode);
 
@@ -677,7 +677,7 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
       }
 
       this.boxbuy_dialog_close()
-      this.loadingService.hide()
+
     });
   }
 
@@ -759,13 +759,13 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
       Amount: this.EditForm_UpdateRow.value.Amount + "",
       Price: this.EditForm_UpdateRow.value.Price + "",
     });
-    this.loadingService.show()
-    this.loadingService.show()
+
+
     this.repo.WebFactorUpdateRow(this.EditForm_UpdateRow.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.notificationService.succeded();
       this.updaterow_dialog_close()
-      this.loadingService.hide()
+
       this.GetFactor()
     });
   }
@@ -787,14 +787,14 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
     this.EditForm_Factor_Header.patchValue({
       BrokerRef: sessionStorage.getItem("BrokerCode")
     });
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.WebFactorInsert(this.EditForm_Factor_Header.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.FactorCode.set(data.Factors[0].FactorCode)
       this.notificationService.succeded();
-      this.loadingService.hide()
+
     });
   }
   taggelShowGoodList() {
@@ -877,11 +877,11 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
     } else {
       this.fireDeleteSwal1().then((result) => {
         if (result.isConfirmed) {
-          this.loadingService.show()
 
-          this.loadingService.show()
+
+
           this.repo.DeleteWebFactorRows(id).subscribe((data: any) => {
-            this.loadingService.hide()
+
             this.GetFactorrows()
             this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
           });
@@ -900,11 +900,11 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
   deletefactorRecord() {
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.DeleteWebFactor(this.FactorCode()).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.notificationService.succeded('ردیف فوق با موفقیت حذف شد.');
       this.location.back();
     });
@@ -931,16 +931,16 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
   // #region Get_Data
 
   GetFactor() {
-    this.loadingService.show()
+
     this.EditForm_factor.patchValue({
       ClassName: "Factor",
       ObjectRef: this.FactorCode(),
       isShopFactor: "0",
     });
 
-    this.loadingService.show()
+
     this.repo.GetWebFactor(this.EditForm_factor.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.selectedfactor = data.Factors[0]
       this.FactorCode.set(data.Factors[0].FactorCode);
       this.HasFactorCode.set(true)
@@ -972,7 +972,7 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
           this.CanEdit_InvoiceState = true
         }
       }
-      this.loadingService.hide()
+
 
 
     });
@@ -982,11 +982,11 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
   GetFactorrows() {
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.GetWebFactorRows(this.EditForm_factor.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
 
       this.records_factorrows = data?.Factors ?? [];
       this.updateGridData(2, this.records_factorrows);
@@ -994,9 +994,9 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
   getdate() {
-    this.loadingService.show()
+
     this.repo.GetTodeyFromServer().subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.EditForm_Factor_Header.patchValue({
         FactorDate: data.Text,
       });
@@ -1004,11 +1004,11 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
   }
 
   GetGood() {
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.GetGoodListSupport(this.Searchtarget_Good).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.records_good = data?.Goods ?? [];;
       this.updateGridData(1, this.records_good);
 
@@ -1029,14 +1029,14 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
       takhfif: this.EditForm_Factor_Row.value.takhfif + "",
     });
 
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.WebFactorInsertRow(this.EditForm_Factor_Row.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.notificationService.succeded();
       this.boxbuy_dialog_close()
-      this.loadingService.hide()
+
       this.GetFactor()
     });
   }
@@ -1052,11 +1052,11 @@ export class FactorEditComponent extends AgGridBaseComponent implements OnInit {
       BrokerRef: "0",
     });
 
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.customer_dialog_show()
       this.records_customer = data?.Customers ?? [];;
       this.updateGridData(3, this.records_customer);

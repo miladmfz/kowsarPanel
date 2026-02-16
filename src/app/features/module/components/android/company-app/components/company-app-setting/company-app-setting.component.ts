@@ -19,7 +19,7 @@ import { CompanyWebApiService } from 'src/app/features/module/services/CompanyWe
 })
 export class CompanyAppSettingComponent implements OnInit {
 
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(CompanyWebApiService);
   private readonly sharedService = inject(SharedService);
 
@@ -71,12 +71,12 @@ export class CompanyAppSettingComponent implements OnInit {
 
 
   Get_Base_data() {
-    this.loadingService.show()
+
     this.repo.Web_GetDbsetupObject("Company").subscribe(e => {
       this.items = e;
 
     });
-    this.loadingService.show()
+
     this.repo.GetAppPrinter(this.Apptype).subscribe(e => {
       this.Printers = e;
 
@@ -89,7 +89,7 @@ export class CompanyAppSettingComponent implements OnInit {
 
   CreateAppBasketColumn() {
 
-    this.loadingService.show()
+
     this.repo.CreateBasketColumn(this.Apptype).subscribe(e => {
       this.AppBasketColumn_Status = "AppBasketColumn created";
     });
@@ -124,7 +124,7 @@ export class CompanyAppSettingComponent implements OnInit {
 
     const command = this.EditForm_printer.value
     if (this.EditForm_printer.value.PrinterName !== "") {
-      this.loadingService.show()
+
       this.repo.UpdatePrinter(command).subscribe(e => {
         this.sharedService.triggerActionAll('refresh');
       });
@@ -138,7 +138,7 @@ export class CompanyAppSettingComponent implements OnInit {
 
 
   UpdateDbSetup() {
-    this.loadingService.show()
+
     this.repo.UpdateDbSetup(this.selected_value, this.selected_Key).subscribe(e => {
       this.sharedService.triggerActionAll('refresh');
     });
@@ -149,7 +149,7 @@ export class CompanyAppSettingComponent implements OnInit {
 
   GetBasketColumnList() {
 
-    this.loadingService.show()
+
     this.repo.GetBasketColumnList(this.Apptype).subscribe(e => {
       this.BasketColumns = e;
 

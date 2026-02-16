@@ -24,7 +24,7 @@ export class OcrAppFactorListComponent extends AgGridBaseComponent
   implements OnInit {
 
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(OcrWebApiService);
 
   constructor() {
@@ -137,10 +137,10 @@ export class OcrAppFactorListComponent extends AgGridBaseComponent
   }
   getList() {
 
-    this.loadingService.show()
+
     this.repo.OcrFactorList(this.EditForm_ocr.value.Searchtarget, this.EditForm_ocr.value.SourceFlag + "")
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
         this.records = data;
 
       });

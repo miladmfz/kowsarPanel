@@ -13,8 +13,8 @@ import { KowsarChartDonutComponent } from 'src/app/app-shell/framework-component
 import { KowsarChartLineComponent } from 'src/app/app-shell/framework-components/kowsar/kowsar-chart-line/kowsar-chart-line.component';
 import { KowsarChartPieComponent } from 'src/app/app-shell/framework-components/kowsar/kowsar-chart-pie/kowsar-chart-pie.component';
 import { KowsarNumberService } from 'src/app/app-shell/framework-services/kowsar-number.service';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
+
 import { ReportWebApiService } from 'src/app/features/accounting/services/ReportWebApi.service';
 
 @Component({
@@ -38,7 +38,7 @@ import { ReportWebApiService } from 'src/app/features/accounting/services/Report
 })
 export class GoodForoshRptComponent extends AgGridBaseComponent implements OnInit, OnDestroy {
 
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(ReportWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
@@ -227,9 +227,9 @@ export class GoodForoshRptComponent extends AgGridBaseComponent implements OnIni
   LoadData_GetStacks() {
 
     // Initial data fetch
-    this.loadingService.show()
+
     this.repo.GetStacks().subscribe((data: any) => {
-      this.loadingService.hide()
+
 
       this.records_Stack = data.Stacks
       this.updateGridData(5, this.records_Stack);
@@ -376,18 +376,18 @@ export class GoodForoshRptComponent extends AgGridBaseComponent implements OnIni
 
   private initColumns(): void {
 
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.GetGridSchema('T' + this.ReportData.ReportForm)
       .pipe(
         catchError((_error) => {
-          this.loadingService.hide()
+
           return of(null);
         })
       )
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
 
         if (data?.GridSchemas?.length > 0) {
 
@@ -429,7 +429,7 @@ export class GoodForoshRptComponent extends AgGridBaseComponent implements OnIni
         }
 
 
-        this.loadingService.hide()
+
 
 
 
@@ -438,16 +438,16 @@ export class GoodForoshRptComponent extends AgGridBaseComponent implements OnIni
       });
 
 
-    this.loadingService.show()
+
     this.repo.GetGridSchemaAll('TGood')
       .pipe(
         catchError((_error) => {
-          this.loadingService.hide()
+
           return of(null);
         })
       )
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
 
         this.records_GridSchema = data?.GridSchemas ?? [];
 
@@ -483,17 +483,17 @@ export class GoodForoshRptComponent extends AgGridBaseComponent implements OnIni
 
   loadList(): void {
 
-    this.loadingService.show()
 
-    this.loadingService.show()
+
+
     this.repo.GoodForoshRpt(this.EditForm_SearchTarget.value)
       .subscribe((data: any) => {
-        this.loadingService.hide()
+
 
         this.records = data?.Reports || [];
 
         this.updateGridData(1, this.records);
-        this.loadingService.hide()
+
 
 
 

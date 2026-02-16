@@ -7,8 +7,8 @@ import { Subscription } from 'rxjs';
 import { AgGridAngular } from 'ag-grid-angular';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { DbSetup_lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
+
 import { AutletterWebApiService } from 'src/app/features/support/services/AutletterWebApi.service';
 import { CellActionAutletterRowList } from './cell-action-autletterrow-list';
 
@@ -86,7 +86,7 @@ export class AutletterItemComponent
 
   // =============== Constructor ===============
   private readonly router = inject(Router);
-  private readonly loadingService = inject(LoadingService);
+
   private readonly repo = inject(AutletterWebApiService);
   private readonly notificationService = inject(NotificationService);
   private readonly renderer = inject(Renderer2);
@@ -144,30 +144,30 @@ export class AutletterItemComponent
   // ============================================================
 
   private loadInitData() {
-    this.loadingService.show()
+
     this.repo.GetTodeyFromServer().subscribe((data: any) => this.ToDayDate = data.Text);
 
-    this.loadingService.show()
+
     this.repo.GetObjectTypeFromDbSetup('AutomationLetterState')
       .subscribe((data: any) => this.LetterState_lookup = data.ObjectTypes);
 
-    this.loadingService.show()
+
     this.repo.GetObjectTypeFromDbSetup('AutomationLetterPriority')
       .subscribe((data: any) => this.LetterPriority_lookup = data.ObjectTypes);
 
-    this.loadingService.show()
+
     this.repo.GetCentralUser().subscribe((data: any) => this.users = data?.Centrals ?? []);
   }
 
   private loadRows() {
-    this.loadingService.show()
-    this.loadingService.show()
+
+
     this.repo.GetLetterRowList(this.ObjectRef).subscribe((data: any) => {
-      this.loadingService.hide()
+
       this.records = data?.AutLetters ?? [];
       console.log(this.records)
       this.updateGridData(1, this.records);
-      this.loadingService.hide()
+
     });
   }
 
@@ -204,12 +204,12 @@ export class AutletterItemComponent
     const r = await this.confirmDelete();
     if (!r.isConfirmed) return;
 
-    this.loadingService.show()
-    this.loadingService.show()
+
+
     this.repo.DeleteAutLetterRows(code).subscribe(() => {
       this.notificationService.success("حذف انجام شد");
       this.loadRows();
-      this.loadingService.hide()
+
     });
   }
 
@@ -251,7 +251,7 @@ export class AutletterItemComponent
 
     if (!this.EditForm_Item_Insert.valid) return;
 
-    this.loadingService.show()
+
 
 
 
@@ -264,9 +264,9 @@ export class AutletterItemComponent
     });
 
 
-    this.loadingService.show()
+
     this.repo.AutLetterRowInsert(this.EditForm_Item_Insert.value).subscribe((data: any) => {
-      this.loadingService.hide()
+
 
       const id = parseInt(data.AutLetterRows[0].LetterRef, 10);
       if (id > 0) {
@@ -294,13 +294,13 @@ export class AutletterItemComponent
     this.EditForm_explain.markAllAsTouched();
     if (!this.EditForm_explain.valid) return;
 
-    this.loadingService.show()
-    this.loadingService.show()
+
+
     this.repo.Update_AutletterRow(this.EditForm_explain.value).subscribe(() => {
       this.notificationService.success("با موفقیت ثبت شد");
       this.loadRows();
       this.closeModal();
-      this.loadingService.hide()
+
     });
   }
 
