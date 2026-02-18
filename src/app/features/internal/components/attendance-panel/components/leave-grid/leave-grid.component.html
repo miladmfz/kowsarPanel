@@ -13,12 +13,21 @@
 <!-- =============================================================== -->
 
 @if (records.length > 0) {
-<div class="ag-container" style="height: 250px; border-radius: 8px; overflow: hidden;">
 
+<div class="card shadow-sm border-0">
 
-  <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" (gridReady)="onGridReady($event, 1)"
-    [gridOptions]="gridOptions" class="w-100 h-100" (firstDataRendered)="gridApi1?.sizeColumnsToFit()">
-  </ag-grid-angular>
+  <!-- Header -->
+  <div class="card-header bg-white fw-bold text-primary">
+    لیست مرخصی کارشناسان
+  </div>
+
+  <!-- Grid Container -->
+  <div class="ag-container" style="height: 450px; border-radius: 0 0 8px 8px; overflow: hidden;">
+    <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" (gridReady)="onGridReady($event, 1)"
+      [gridOptions]="gridOptions" class="w-100 h-100" (firstDataRendered)="gridApi1?.sizeColumnsToFit()">
+    </ag-grid-angular>
+  </div>
 
 </div>
+
 }

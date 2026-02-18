@@ -55,3 +55,98 @@
   font-family: "IRANSans_Bold", sans-serif !important;
   direction: rtl;
 }
+
+/* Royal Blue & Metallic Gold theme (Kowsar) */
+
+.kws-card {
+  border-top: 3px solid #0b3d91;
+  /* Royal Blue */
+  position: relative;
+}
+
+.kws-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #d4af37, #b8921f, #d4af37);
+  /* Metallic Gold */
+}
+
+.kws-title {
+  color: #0b3d91;
+  /* Royal Blue */
+  letter-spacing: 0.2px;
+}
+
+.kws-label {
+  color: #0b3d91;
+  /* Royal Blue */
+}
+
+/* user type buttons */
+.kws-userType {
+  border: 1px solid rgba(11, 61, 145, 0.25);
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.kws-userType:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+}
+
+/* active state: Royal Blue + Gold outline glow */
+.kws-userType-active {
+  background: linear-gradient(145deg, #0b3d91, #123f9c);
+  color: #fff;
+  border-color: #d4af37;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.18);
+}
+
+/* submit button variants */
+.kws-submit {
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.kws-submit-kowsar {
+  background: linear-gradient(145deg, #0b3d91, #123f9c);
+  /* Royal Blue */
+}
+
+.kws-submit-customer {
+  background: linear-gradient(145deg, #d4af37, #b8921f);
+  /* Metallic Gold */
+  color: #1b1b1b !important;
+}
+
+.kws-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.10);
+}
+
+.kws-submit:disabled {
+  opacity: 0.75;
+  transform: none;
+  box-shadow: none;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: .5rem;
+}
+
+.kcal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: .5rem;
+}
+
+.kcal-cell {
+  height: 46px;
+  /* جمع‌وجور و داشبوردی */
+}

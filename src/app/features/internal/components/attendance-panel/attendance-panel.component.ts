@@ -27,7 +27,6 @@ import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { AttendanceGridComponent } from './components/attendance-grid/attendance-grid.component';
-import { LeaveGridComponent } from './components/leave-grid/leave-grid.component';
 import { AttendanceHistoryModalComponent } from './components/attendance-history-modal/attendance-history-modal.component';
 import { LetterModalComponent } from './components/letter-modal/letter-modal.component';
 import { CustomerListModalComponent } from './components/customer-list-modal/customer-list-modal.component';
@@ -45,7 +44,6 @@ import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.
     imports: [
         CommonModule,
         AttendanceGridComponent,
-        LeaveGridComponent,
         AttendanceHistoryModalComponent,
         LetterModalComponent,
         CustomerListModalComponent,
@@ -57,7 +55,6 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
     //   گریدها و ویوها
     // ===============================================================
     @ViewChild('attendanceGrid') attendanceGrid?: AttendanceGridComponent;
-    @ViewChild('leaveGrid') leaveGrid?: LeaveGridComponent;
     @ViewChild('customerModal') customerModal?: CustomerListModalComponent;
     @ViewChild(LetterModalComponent) letterModal?: LetterModalComponent;
 
@@ -142,7 +139,7 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
     // ===============================================================
     refreshData(): void {
         this.attendanceGrid?.refresh();
-        this.leaveGrid?.refresh();
+        // this.leaveGrid?.refresh();
         this.notificationService.info('  داده‌ها در حال بروزرسانی هستند...');
     }
 

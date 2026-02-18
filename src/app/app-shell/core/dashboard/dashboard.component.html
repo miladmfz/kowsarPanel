@@ -17,14 +17,34 @@
     <div class="flex-grow-1 overflow-auto p-3">
 
 
-      <app-workitem></app-workitem>
+      <div class="row g-3 align-items-stretch">
+        <div class="col-6">
+          @if (JobPersonRef.length > 0) {
+          <app-leave-grid></app-leave-grid>
+          }
+        </div>
 
-      <!--   نمایش پنل مخصوص ادمین / کارشناسان -->
+        <div class="col-6">
+          <app-kowsar-calendar></app-kowsar-calendar>
+        </div>
+      </div>
+
+      <!-- بخش‌های پایین صفحه -->
+      <div class="mt-2">
+        <app-workitem></app-workitem>
+
+      </div>
+
+
+
+
       @if (JobPersonRef.length > 0) {
       <app-attendance-panel></app-attendance-panel>
       <app-kowsar-report></app-kowsar-report>
-      <!-- <app-support-panel></app-support-panel> -->
+
       }
+
+
 
       <!--   نمایش پنل مخصوص مشتری -->
       @if (userType === 'customer') {

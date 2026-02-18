@@ -4,48 +4,47 @@
 
     <form [formGroup]="EditForm_SearchTarget" id="submitForm">
 
-      <div class="card shadow-sm border-0">
-        <div class="card-body row g-3">
+      <div class="card shadow-sm border-0 mb-3">
+        <div class="card-body py-3">
+          <div class="row g-3 align-items-end">
 
+            <!-- جستجو -->
+            <div class="col-12 col-md-4">
+              <label class="form-label fw-semibold mb-1">جستجو</label>
+              <input type="text" class="form-control rounded-pill" placeholder="جستجو" formControlName="SearchTarget"
+                (input)="getList()" />
+            </div>
 
-          <div class="col-md-6">
-            <label class="form-label fw-semibold">جستجو</label>
+            <!-- وضعیت -->
+            <div class="col-12 col-md-3">
+              <label class="form-label fw-semibold mb-1">وضعیت</label>
+              <select class="form-select rounded-pill" formControlName="Status">
+                <option value="">همه کارها</option>
+                @for (item of StateSearch_Lookup; track item) {
+                <option [value]="item.id">{{ item.name }}</option>
+                }
+              </select>
+            </div>
 
-            <input type="text" class="form-control rounded-pill" placeholder="جستجو" formControlName="SearchTarget"
-              (input)="getList()" />
-          </div>
+            <!-- دکمه‌ها -->
+            <div class="col-12 col-md-5">
+              <div class="d-flex flex-wrap gap-2 justify-content-md-end">
+                <button type="button" class="btn btn-primary rounded-pill px-4" (click)="getList()">
+                  <i class="fas fa-rotate me-1"></i>
+                  بازخوانی
+                </button>
 
+                <button type="button" class="btn btn-success rounded-pill px-4" (click)="Create_New_Workitem()">
+                  <i class="fas fa-plus me-1"></i>
+                  شرح کار جدید
+                </button>
+              </div>
+            </div>
 
-
-          <div class="form-group col-md-3">
-            <label class="form-label fw-semibold">وضعیت</label>
-            <select id="Status" class="form-control" formControlName="Status" [ngClass]="{
-                   'is-invalid': EditForm_SearchTarget.controls['Status'].invalid && EditForm_SearchTarget.controls['Status'].touched,
-                   'is-valid': EditForm_SearchTarget.controls['Status'].valid && EditForm_SearchTarget.controls['Status'].touched
-                 }">
-              <option value="">لطفاً انتخاب کنید</option>
-              @for (item of StateSearch_Lookup; track item) {
-              <option [value]="item.id">{{ item.name }}</option>
-              }
-            </select>
-          </div>
-
-
-          <div class="col-md-6 text-start">
-
-            @if (show_grid){
-            <button class="btn btn-primary me-1" (click)="getList()">
-              <i class="fas fa-sync"></i> بازخوانی
-            </button>
-            }
-
-
-            <button class="btn btn-success me-1" (click)="Create_New_Workitem()">
-              <i class="fas fa-sync"></i> شرح کار جدید
-            </button>
           </div>
         </div>
       </div>
+
     </form>
 
 

@@ -18,7 +18,7 @@ import { ReportWebApiService } from '../../../services/ReportWebApi.service';
     CommonModule,
     ReactiveFormsModule,
     AgGridAngular,
-    RouterLink
+
 
   ]
 })
@@ -128,7 +128,7 @@ export class ReportListComponent extends AgGridBaseComponent
       {
         headerName: 'عملیات',
         pinned: 'left',
-        minWidth: 100,
+        width: 70,
         cellRenderer: CellActionReportList,
         cellRendererParams: {
           editUrl: '/accounting/report-detail'

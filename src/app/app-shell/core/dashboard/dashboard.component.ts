@@ -30,6 +30,8 @@ import { AttendancePanelComponent } from 'src/app/features/internal/components/a
 import { KowsarReportComponent } from 'src/app/features/internal/components/kowsar-report/kowsar-report.component';
 import { LoadingService } from '../../framework-services/ui/loading.service';
 import { WorkitemComponent } from 'src/app/features/internal/components/workitem/workitem.component';
+import { KowsarCalendarComponent } from '../../framework-components/kowsar/kowsar-calendar/kowsar-calendar.component';
+import { LeaveGridComponent } from 'src/app/features/internal/components/attendance-panel/components/leave-grid/leave-grid.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -39,6 +41,8 @@ import { WorkitemComponent } from 'src/app/features/internal/components/workitem
     AttendancePanelComponent,
     KowsarReportComponent,
     WorkitemComponent,
+    KowsarCalendarComponent,
+    LeaveGridComponent
     // SupportPanelComponent,
   ],
   templateUrl: './dashboard.component.html',

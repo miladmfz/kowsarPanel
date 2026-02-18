@@ -107,4 +107,13 @@ export class DashboardWebApiService {
         return this.withLoading(this.client.post<any[]>(this.baseUrl + "GetKowsarReport", command, { headers: this.headers }))
 
     }
+
+    ChangeXUserPassword(command): Observable<any[]> {
+
+        return this.withLoading(this.client.post<any[]>(this.baseUrl + "ChangeXUserPassword", command, { headers: this.headers }))
+
+    }
+
+
+
 }

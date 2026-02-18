@@ -10,21 +10,25 @@
    3️⃣ پشتیبانی از حالت تیره و روشن با ذخیره‌سازی در localStorage
    4️⃣ مدیریت خروج از سیستم و پاک‌سازی session
    5️⃣ کنترل باز/بسته شدن سایدبار در حالت دسکتاپ و موبایل
+   6️⃣ نمایش مودال تغییر رمز عبور از داخل Topbar
    =============================================================== */
 
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, AfterViewInit, NgZone, inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, NgZone, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl, ValidationErrors, FormGroup } from '@angular/forms';
 import { DashboardWebApiService } from '../services/dashboard-web-api.service';
-import { LoadingService } from '../../framework-services/ui/loading.service';
+import { NotificationService } from '../../framework-services/ui/notification.service';
+
+declare const bootstrap: any;
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule],
   templateUrl: './header.component.html',
 })
-export class HeaderComponent implements OnInit, AfterViewInit {
+export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   // ===============================================================
   //   وضعیت‌ها و متغیرهای اعلان
   // ===============================================================
@@ -39,17 +43,29 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   // ===============================================================
   Imageitem = '';
   PhFullName = '';
+  UserName = '';
+  UserType = '';
+
   JobPersonRef = '';
   currentStatus = '';
   ActiveSession_str = '';
 
+  // ===============================================================
+  // 🔐 Change Password (Modal + Form)
+  // ===============================================================
+  isSavingChangePass = false;
+  private changePassModal: any;
+
+  // ✅ مهم: اینجا فقط تعریف می‌کنیم، مقداردهی داخل ngOnInit
+  changePassForm!: FormGroup;
 
   // ===============================================================
-  //   سازنده
+  //   سازنده و Inject ها
   // ===============================================================
   private readonly zone = inject(NgZone);
   private readonly repo = inject(DashboardWebApiService);
-
+  private readonly fb = inject(FormBuilder);
+  private readonly notificationService = inject(NotificationService);
 
   constructor() { }
 
@@ -57,12 +73,20 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   // 🚀 Lifecycle Hooks
   // ===============================================================
   ngOnInit(): void {
+    // ✅ ساخت فرم تغییر رمز (بعد از inject شدن fb)
+    this.initChangePasswordForm();
+
     // 🌓 مقداردهی اولیه تم
     const savedTheme = (localStorage.getItem('theme') as 'light' | 'dark') || 'light';
     this.isDarkMode = savedTheme === 'dark';
 
     // 👤 اطلاعات پایه کاربر
     this.PhFullName = sessionStorage.getItem('PhFullName') || '';
+    this.UserName = sessionStorage.getItem('UserName') || '';
+    this.UserType = sessionStorage.getItem('UserType') || '';
+
+
+
     this.JobPersonRef = sessionStorage.getItem('JobPersonRef') || '';
     this.ActiveSession_str = sessionStorage.getItem('ActiveSession') || '';
 
@@ -83,6 +107,25 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     });
   }
 
+  ngOnDestroy(): void {
+    if (this.attendanceInterval) clearInterval(this.attendanceInterval);
+  }
+
+  // ===============================================================
+  // 🔐 ساخت فرم تغییر رمز
+  // ===============================================================
+  private initChangePasswordForm(): void {
+    this.changePassForm = this.fb.group(
+      {
+        UName: [''],
+        UPass: ['', [Validators.required, Validators.minLength(4)]],
+        UNewPass: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', [Validators.required]],
+      },
+      { validators: [this.passwordMatchValidator] }
+    );
+  }
+
   // ===============================================================
   // 🖼️ دریافت عکس کاربر از سرور
   // ===============================================================
@@ -92,7 +135,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
 
     this.repo.GetImageFromServer(centralRef).subscribe({
       next: (data: any) => {
-        if (data?.Text && data?.Text !== "Nophoto") {
+        if (data?.Text && data?.Text !== 'Nophoto') {
           this.zone.run(() => {
             this.Imageitem = `data:image/png;base64,${data.Text}`;
           });
@@ -101,8 +144,6 @@ export class HeaderComponent implements OnInit, AfterViewInit {
             this.Imageitem = 'assets/images/KowsarSupport.png';
           });
         }
-
-
       },
       error: () => console.warn('❌ خطا در دریافت تصویر کاربر'),
     });
@@ -127,15 +168,17 @@ export class HeaderComponent implements OnInit, AfterViewInit {
           // فقط برای ادمین‌ها (PhAddress3=100)
           if (sessionStorage.getItem('PhAddress3') === '100') {
             this.AlarmActtive_LeaveRequest = Number(u.AlarmActtive_LeaveRequest) || 0;
+          } else {
+            this.AlarmActtive_LeaveRequest = 0;
           }
 
-          //   ذخیره در session برای سایر بخش‌ها
+          // ذخیره در session برای سایر بخش‌ها
           sessionStorage.setItem('AlarmActive_Row', this.AlarmActive_Row.toString());
           sessionStorage.setItem('AlarmActtive_Conversation', this.AlarmActtive_Conversation.toString());
           sessionStorage.setItem('AlarmActtive_LeaveRequest', this.AlarmActtive_LeaveRequest.toString());
         });
       },
-      error: () => console.warn('  خطا در دریافت اعلان‌ها از سرور'),
+      error: () => console.warn('❌ خطا در دریافت اعلان‌ها از سرور'),
     });
   }
 
@@ -194,6 +237,101 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       body.setAttribute('data-sidebar-size', isCondensed ? 'default' : 'condensed');
     } else {
       body.classList.toggle('sidebar-enable');
+    }
+  }
+
+  // ===============================================================
+  // 🔐 Change Password Modal Methods
+  // ===============================================================
+  openChangePasswordModal(): void {
+    // اگر dropdown پروفایل باز باشد، ببند (برای UX بهتر)
+    this.closeAnyOpenDropdowns();
+
+    const el = document.getElementById('changePasswordModal');
+    if (!el) return;
+
+    // ریست فرم هر بار باز شدن
+    this.changePassForm.reset();
+    this.changePassForm.markAsPristine();
+    this.changePassForm.markAsUntouched();
+    this.isSavingChangePass = false;
+
+    this.changePassModal = bootstrap.Modal.getOrCreateInstance(el, {
+      backdrop: 'static',
+      keyboard: false,
+    });
+
+    this.changePassModal.show();
+  }
+
+  submitChangePassword(): void {
+    if (this.changePassForm.invalid) {
+      this.changePassForm.markAllAsTouched();
+      return;
+    }
+
+    this.isSavingChangePass = true;
+
+    const payload = {
+      UName: this.UserName,
+      UPass: this.changePassForm.value.UPass,
+      UNewPass: this.changePassForm.value.UNewPass,
+    };
+
+
+    this.repo.ChangeXUserPassword(payload).subscribe({
+      next: (data: any) => {
+        this.zone.run(() => {
+          if (data.users[0].ErrDesc.length > 0) {
+
+            this.notificationService.error(data.users[0].ErrDesc);
+          } else {
+            this.notificationService.succeded();
+
+          }
+
+
+
+          this.isSavingChangePass = false;
+          this.changePassModal?.hide();
+        });
+      },
+      error: () => {
+        this.zone.run(() => (this.isSavingChangePass = false));
+      },
+    });
+
+    // 🧪 تست UI (حذف کن)
+    setTimeout(() => {
+      this.zone.run(() => {
+        this.isSavingChangePass = false;
+        this.changePassModal?.hide();
+      });
+    }, 600);
+  }
+
+  isInvalid(controlName: 'UPass' | 'UNewPass' | 'confirmPassword'): boolean {
+    const c = this.changePassForm.get(controlName);
+    return !!(c && c.invalid && (c.touched || c.dirty));
+  }
+
+  private passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const newPass = group.get('UNewPass')?.value;
+    const confirm = group.get('confirmPassword')?.value;
+    if (!newPass || !confirm) return null;
+    return newPass === confirm ? null : { passwordMismatch: true };
+  }
+
+  private closeAnyOpenDropdowns(): void {
+    try {
+      // بستن همه dropdown های باز (بدون حساسیت به ساختار دقیق DOM)
+      const openedMenus = document.querySelectorAll('.dropdown-menu.show');
+      openedMenus.forEach((m) => m.classList.remove('show'));
+
+      const openedToggles = document.querySelectorAll('[aria-expanded="true"]');
+      openedToggles.forEach((t) => t.setAttribute('aria-expanded', 'false'));
+    } catch {
+      // silent
     }
   }
 }

@@ -1,20 +1,60 @@
-<!--    صفحه ورود استاندارد Minton -->
+<!-- صفحه ورود استاندارد Minton -->
 <div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
-  <div class="card shadow rounded-4 border-0" style="max-width: 420px; width: 100%;">
+  <div class="card shadow rounded-4 border-0 kws-card" style="max-width: 420px; width: 100%;">
     <div class="card-body p-4">
 
-      <!--    لوگو -->
+      <!-- لوگو + عنوان متفاوت -->
       <div class="text-center mb-4">
         <img src="assets/images/img_logo_kits_png.png" alt="لوگو" height="75" class="mb-2" />
+
+        <div class="fw-bold mb-1 kws-title">
+          {{ isKowsar ? 'ورود کاربران کوثر' : 'ورود مشتریان' }}
+        </div>
+
         <p class="text-muted fs-6 mb-0">
-          لطفاً نام کاربری و رمز عبور خود را وارد کنید
+          لطفاً نوع کاربر، نام کاربری و رمز عبور خود را وارد کنید
         </p>
       </div>
 
-      <!--   فرم ورود -->
+      <!-- فرم ورود -->
       <form [formGroup]="loginForm" (ngSubmit)="submit()" autocomplete="on" novalidate>
 
-        <!--    نام کاربری -->
+        <!-- نوع کاربر -->
+        <div class="mb-3">
+          <label class="form-label mb-2 fw-semibold kws-label">نوع کاربر</label>
+
+          <div class="row g-2">
+            <!-- <div class="col-6">
+              <input class="btn-check" type="radio" id="ut_kowsar" value="KOWSAR" formControlName="UserType"
+                autocomplete="off" />
+              <label
+                class="btn w-100 d-flex align-items-center justify-content-center gap-2 rounded-3 py-2 kws-userType"
+                for="ut_kowsar" [class.kws-userType-active]="loginForm.value.UserType === 'KOWSAR'">
+                <i class="fa fa-building"></i>
+                <span>کاربر کوثر</span>
+              </label>
+            </div> -->
+
+            <div class="col-6">
+              <input class="btn-check" type="radio" id="ut_customer" value="CUSTOMER" formControlName="UserType"
+                autocomplete="off" />
+              <label
+                class="btn w-100 d-flex align-items-center justify-content-center gap-2 rounded-3 py-2 kws-userType"
+                for="ut_customer" [class.kws-userType-active]="loginForm.value.UserType === 'CUSTOMER'">
+                <i class="fa fa-user"></i>
+                <span>کاربر پنل</span>
+              </label>
+            </div>
+          </div>
+
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+              validation: 'required',
+              message: 'انتخاب نوع کاربر الزامی است',
+              control: loginForm.controls['UserType']
+            }"></ng-container>
+        </div>
+
+        <!-- نام کاربری -->
         <div class="form-floating mb-3">
           <input type="text" id="UName" class="form-control" placeholder="نام کاربری" formControlName="UName"
             maxlength="100" autocomplete="username" [ngClass]="{
@@ -30,7 +70,7 @@
             }"></ng-container>
         </div>
 
-        <!--    رمز عبور -->
+        <!-- رمز عبور -->
         <div class="form-floating mb-4 position-relative">
           <input [type]="showPassword() ? 'text' : 'password'" id="UPass" class="form-control" placeholder="رمز عبور"
             formControlName="UPass" maxlength="100" autocomplete="current-password" [ngClass]="{
@@ -39,7 +79,7 @@
             }" />
           <label for="UPass">رمز عبور</label>
 
-          <!--    آیکون چشم -->
+          <!-- آیکون چشم -->
           <span class="position-absolute top-50 end-0 translate-middle-y me-3 text-muted" style="cursor: pointer;"
             (click)="togglePassword()">
             <i [class]="showPassword() ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
@@ -52,21 +92,24 @@
             }"></ng-container>
         </div>
 
-        <!--    دکمه ورود -->
+        <!-- دکمه ورود (Royal Blue / Gold) -->
         <div class="d-grid">
-          <button type="submit" class="btn btn-primary btn-lg fw-semibold text-white" [disabled]="isLoading()">
+          <button type="submit" class="btn btn-lg fw-semibold text-white kws-submit"
+            [class.kws-submit-kowsar]="isKowsar" [class.kws-submit-customer]="!isKowsar" [disabled]="isLoading()">
             <span *ngIf="!isLoading()">ورود</span>
             <span *ngIf="isLoading()">
-              <i class="fa fa-spinner fa-spin me-2"></i> در حال ورود...
+              <i class="fa fa-spinner fa-spin me-2"></i>
+              در حال ورود...
             </span>
           </button>
         </div>
+
       </form>
     </div>
   </div>
 </div>
 
-<!--    قالب خطاهای ورودی -->
+<!-- قالب خطاهای ورودی -->
 <ng-template #formError let-control="control" let-message="message" let-validation="validation">
   @if (control.hasError(validation) && (control.dirty || control.touched)) {
   <div class="invalid-feedback d-block mt-1">

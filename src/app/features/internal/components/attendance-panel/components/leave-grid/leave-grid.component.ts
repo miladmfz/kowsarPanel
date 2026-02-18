@@ -69,11 +69,10 @@ export class LeaveGridComponent extends AgGridBaseComponent implements OnInit {
         // 📋 تعریف ستون‌ها
         this.columnDefs1 = [
             { field: 'CentralName', headerName: 'کارشناس', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 120 },
-            { field: 'LeaveRequestType', headerName: 'نوع مرخصی', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 120 },
-            { field: 'LeaveStartDate', headerName: 'تاریخ شروع', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 120 },
-            { field: 'LeaveEndDate', headerName: 'تاریخ پایان', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 120 },
-            { field: 'LeaveStartTime', headerName: 'ساعت شروع', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 120 },
-            { field: 'LeaveEndTime', headerName: 'ساعت پایان', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 120 },
+            { field: 'LeaveStartDate', headerName: 'تاریخ شروع', filter: 'agSetColumnFilter', cellClass: 'text-center', width: 100 },
+            { field: 'LeaveEndDate', headerName: 'تاریخ پایان', filter: 'agSetColumnFilter', cellClass: 'text-center', width: 100 },
+            { field: 'LeaveStartTime', headerName: 'ساعت شروع', filter: 'agSetColumnFilter', cellClass: 'text-center', width: 70 },
+            { field: 'LeaveEndTime', headerName: 'ساعت پایان', filter: 'agSetColumnFilter', cellClass: 'text-center', width: 70 },
         ];
 
         // 🟢 بررسی ورودی Parent یا بارگذاری از سرور

@@ -1,0 +1,271 @@
+<div class="card shadow-sm border-0 h-100 kcal-card">
+  <div class="card-body p-3 d-flex flex-column h-100">
+
+    <!-- Header -->
+    <div class="d-flex align-items-center justify-content-between mb-3 kcal-header">
+      <button type="button" class="btn btn-sm btn-outline-secondary kcal-nav" (click)="prevMonth()">
+        <i class="fe-chevron-right me-1"></i>
+        ماه قبل
+      </button>
+
+      <div class="text-center kcal-title-wrap">
+        <div class="kcal-title">
+          <span class="kcal-chip">{{ headerJalali }}</span>
+        </div>
+        <div class="small kcal-subtitle">{{ headerGregorian }}</div>
+      </div>
+
+      <button type="button" class="btn btn-sm btn-outline-secondary kcal-nav" (click)="nextMonth()">
+        ماه بعد
+        <i class="fe-chevron-left ms-1"></i>
+      </button>
+    </div>
+
+    <!-- Week Days -->
+    <div class="kcal-weekbar mb-3">
+      <div class="kcal-weekday" *ngFor="let w of weekDays">{{ w }}</div>
+    </div>
+
+    <!-- Days -->
+    <div class="kcal-grid flex-grow-1">
+      <button type="button" class="btn p-0 text-center position-relative kcal-cell kcal-day" *ngFor="let d of days"
+        (mouseenter)="onDayHover($event, d)" (mouseleave)="onDayLeave()" (click)="onDayClick($event, d)"
+        [class.kcal-outside]="!d.isCurrentMonth" [class.kcal-today]="d.isToday"
+        [class.kcal-holiday]="d.isHoliday && !d.isToday"
+        [class.kcal-friday]="(d.isFriday && !d.isHoliday) && !d.isToday">
+        <!-- نشان تعطیل رسمی -->
+        <span *ngIf="d.isHoliday && !d.isToday"
+          class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger"
+          style="width: 8px; height: 8px; padding: 0;"></span>
+
+        <!-- نشان امروز -->
+        <span *ngIf="d.isToday" class="position-absolute top-0 end-0 translate-middle badge rounded-pill bg-info"
+          style="width: 8px; height: 8px; padding: 0;"></span>
+
+        <!-- نشان وجود رویداد -->
+        <span *ngIf="d.eventsCount > 0"
+          class="position-absolute bottom-0 start-50 translate-middle-x badge rounded-pill bg-secondary"
+          style="height: 10px; min-width: 10px; padding: 0; opacity: .85;"></span>
+
+        <div class="fw-bold pt-2 kcal-j">{{ d.jDay }}</div>
+        <div class="small pb-2 kcal-g">{{ d.gDay }}</div>
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <button type="button" class="btn btn-info w-100 mt-3 kcal-today-btn" (click)="goToToday()">
+      برو به امروز
+    </button>
+
+  </div>
+</div>
+
+<!-- Tooltip -->
+<div *ngIf="tooltipOpen" class="kcal-tooltip shadow" [style.left.px]="tooltipX" [style.top.px]="tooltipY"
+  (click)="$event.stopPropagation()">
+  <div class="d-flex align-items-center justify-content-between mb-2">
+    <div class="fw-bold">
+      {{ tooltipDateKey }}
+      <span *ngIf="tooltipIsHoliday" class="badge bg-danger ms-2">تعطیل</span>
+    </div>
+
+    <button type="button" class="btn-close btn-close-white kcal-tip-close" aria-label="Close"
+      (click)="closeTooltip()"></button>
+  </div>
+
+  <div *ngIf="tooltipEvents.length === 0" class="small opacity-75">
+    رویدادی ثبت نشده است
+  </div>
+
+  <div *ngFor="let e of tooltipEvents" class="kcal-tip-item">
+    <div class="d-flex align-items-start gap-2">
+      <span class="badge" [class.bg-danger]="e.is_holiday" [class.bg-secondary]="!e.is_holiday"
+        [class.bg-purple]="e.is_religious">
+        {{ e.is_holiday ? 'تعطیل' : (e.is_religious ? 'مذهبی' : 'مناسبت') }}
+      </span>
+
+      <div>
+        <div class="kcal-tip-title">{{ e.description }}</div>
+        <div *ngIf="e.additional_description" class="kcal-tip-sub">
+          {{ e.additional_description }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="small opacity-75 mt-2">
+    <span *ngIf="tooltipPinned">📌 با کلیک پین شد — کلیک بیرون = بستن</span>
+    <span *ngIf="!tooltipPinned">Hover = نمایش سریع • Click = ثابت</span>
+  </div>
+</div>
+
+<style>
+  /* ---------- Layout ---------- */
+  .kcal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: .6rem;
+  }
+
+  .kcal-cell {
+    height: 54px;
+    border-radius: 14px;
+    transition: transform .10s ease, box-shadow .10s ease, background-color .10s ease, border-color .10s ease;
+    outline: none;
+  }
+
+  .kcal-cell:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 .35rem .95rem rgba(0, 0, 0, .12);
+  }
+
+  .kcal-cell:focus {
+    box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .25);
+  }
+
+  .kcal-card {
+    border-radius: 18px;
+  }
+
+  /* Header */
+  .kcal-header .kcal-nav {
+    border-radius: 12px;
+  }
+
+  .kcal-title .kcal-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .25rem .7rem;
+    border-radius: 999px;
+    font-weight: 800;
+    border: 1px solid rgba(13, 110, 253, .25);
+    background: rgba(13, 110, 253, .08);
+    color: #0d6efd;
+  }
+
+  .kcal-subtitle {
+    color: rgba(108, 117, 125, 1);
+  }
+
+  /* Week Bar */
+  .kcal-weekbar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: .5rem;
+    padding: .6rem;
+    border-radius: 14px;
+    background: #0d6efd;
+    color: #fff;
+  }
+
+  .kcal-weekday {
+    text-align: center;
+    font-weight: 700;
+    font-size: .85rem;
+  }
+
+  /* Day base */
+  .kcal-day {
+    border: 1px solid rgba(108, 117, 125, .35);
+    background: #fff;
+  }
+
+  .kcal-j {
+    font-size: 1rem;
+  }
+
+  .kcal-g {
+    font-size: .78rem;
+    opacity: .65;
+  }
+
+  .kcal-outside {
+    opacity: .45;
+  }
+
+  .kcal-today {
+    border: 2px solid #0dcaf0 !important;
+    background: rgba(13, 202, 240, .12) !important;
+    color: #0dcaf0;
+  }
+
+  .kcal-holiday {
+    background: rgba(220, 53, 69, .10) !important;
+    color: #dc3545;
+    border-color: rgba(220, 53, 69, .35) !important;
+  }
+
+  .kcal-friday {
+    color: #dc3545;
+  }
+
+  .kcal-today-btn {
+    border-radius: 14px;
+    padding: .8rem 1rem;
+    font-weight: 700;
+  }
+
+  /* Tooltip */
+  .kcal-tooltip {
+    position: fixed;
+    z-index: 9999;
+    width: 340px;
+    max-width: calc(100vw - 24px);
+    padding: 12px;
+    border-radius: 14px;
+    background: rgba(33, 37, 41, .96);
+    color: #fff;
+    backdrop-filter: blur(6px);
+  }
+
+  .kcal-tip-item {
+    padding: 8px 6px;
+    border-radius: 10px;
+  }
+
+  .kcal-tip-item:hover {
+    background: rgba(255, 255, 255, .06);
+  }
+
+  .kcal-tip-title {
+    font-size: .92rem;
+    font-weight: 700;
+  }
+
+  .kcal-tip-sub {
+    font-size: .8rem;
+    opacity: .8;
+  }
+
+  .kcal-tip-close {
+    filter: invert(1);
+    opacity: .8;
+  }
+
+  /* Badge religious (بدون وابستگی) */
+  .bg-purple {
+    background: #6f42c1 !important;
+  }
+
+  /* Dark mode support */
+  [data-bs-theme="dark"] .kcal-day {
+    background: #1f2228;
+    border-color: rgba(255, 255, 255, .12);
+    color: rgba(255, 255, 255, .85);
+  }
+
+  [data-bs-theme="dark"] .kcal-subtitle {
+    color: rgba(255, 255, 255, .65);
+  }
+
+  [data-bs-theme="dark"] .kcal-title .kcal-chip {
+    border-color: rgba(13, 110, 253, .35);
+    background: rgba(13, 110, 253, .14);
+    color: #66b2ff;
+  }
+
+  [data-bs-theme="dark"] .kcal-weekbar {
+    background: #0b5ed7;
+  }
+</style>
