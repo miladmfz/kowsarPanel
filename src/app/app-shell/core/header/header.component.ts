@@ -69,6 +69,18 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor() { }
 
+  requestNotificationPermission(): void {
+    if (!('Notification' in window)) {
+      console.warn('Notification API توسط این مرورگر پشتیبانی نمی‌شود.');
+      return;
+    }
+
+    Notification.requestPermission().then(permission => {
+      console.log('Notification permission:', permission);
+      // permission می‌تونه 'granted'، 'denied' یا 'default' باشه
+    });
+  }
+
   // ===============================================================
   // 🚀 Lifecycle Hooks
   // ===============================================================
@@ -89,7 +101,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.JobPersonRef = sessionStorage.getItem('JobPersonRef') || '';
     this.ActiveSession_str = sessionStorage.getItem('ActiveSession') || '';
-
+    this.requestNotificationPermission();
     // 🔔 بروزرسانی اعلان‌ها هر ۱۵ ثانیه
     this.attendanceInterval = setInterval(() => this.Get_Notification(), 15000);
     this.Get_Notification();
@@ -176,12 +188,48 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
           sessionStorage.setItem('AlarmActive_Row', this.AlarmActive_Row.toString());
           sessionStorage.setItem('AlarmActtive_Conversation', this.AlarmActtive_Conversation.toString());
           sessionStorage.setItem('AlarmActtive_LeaveRequest', this.AlarmActtive_LeaveRequest.toString());
+
+          // ✅ اینجا نوتیفیکیشن سیستم رو بفرست
+          this.showSystemNotifications();
         });
       },
       error: () => console.warn('❌ خطا در دریافت اعلان‌ها از سرور'),
     });
   }
 
+  private showSystemNotifications(): void {
+    if (!('Notification' in window)) {
+      console.warn('Notification API پشتیبانی نمی‌شود.');
+      return;
+    }
+
+    if (Notification.permission !== 'granted') {
+      // اجازه داده نشده، کار خاصی نمی‌کنیم
+      return;
+    }
+
+    // مثال‌ها: هر کدوم رو خواستی شرط بذار
+    if (this.AlarmActtive_Conversation > 0) {
+      new Notification('پیام جدید', {
+        body: `شما ${this.AlarmActtive_Conversation} مکالمه خوانده‌نشده دارید.`,
+        icon: '/assets/icons/chat.png', // اگر آیکون داری
+      });
+    }
+
+    if (this.AlarmActtive_LeaveRequest > 0) {
+      new Notification('درخواست مرخصی جدید', {
+        body: `شما ${this.AlarmActtive_LeaveRequest} درخواست مرخصی جدید دارید.`,
+        icon: '/assets/icons/leave.png',
+      });
+    }
+
+    if (this.AlarmActive_Row > 0) {
+      new Notification('ارجاع جدید', {
+        body: `تعداد ارجاع جدید: ${this.AlarmActive_Row}`,
+        icon: '/assets/icons/alarm.png',
+      });
+    }
+  }
   // ===============================================================
   // 🌗 تغییر تم سیستم (Dark / Light)
   // ===============================================================
