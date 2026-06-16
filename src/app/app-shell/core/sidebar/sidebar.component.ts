@@ -12,18 +12,18 @@
    5️⃣ پشتیبانی از حالت تیره و روشن  
    =============================================================== */
 
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-//   سرویس‌ها
 import { AppConfigService } from '../../../app-config.service';
-import { ThemeService } from '../../framework-services/ui/theme.service';
-import { DashboardWebApiService } from '../services/dashboard-web-api.service';
 import { SharedService } from '../../framework-services/shared.service';
-import { LoadingService } from '../../framework-services/ui/loading.service';
+import { NotificationService } from '../../framework-services/ui/notification.service';
+import { SessionStorageService } from '../../framework-services/storage/session.storage.service';
+import { PermissionService } from '../../framework-services/storage/PermissionService';
+import { KowsarBaseWebApi } from '../../framework-services/base/KowsarBaseWebApi.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -35,39 +35,38 @@ export class SidebarComponent implements OnInit, OnDestroy {
   // ===============================================================
   // 🌗 وضعیت تم
   // ===============================================================
-  isDarkMode = false;
+  isDarkMode = signal(false)
   private themeSub?: Subscription;
 
   // ===============================================================
   // 👤 اطلاعات کاربر
   // ===============================================================
-  PhFullName = '';
-  JobPersonRef = '';
-  CustName_Small = '';
-  Explain = '';
-  CentralRef = '';
-  BrokerRef = '';
-  PhAddress3 = '';
-  Imageitem = '';
-  IsCustomerBuild = false;
-  ShowHoghogh = false;
+  PhFullName = signal('')
+  LoginType = signal('')
+  CustName_Small = signal('')
+  Explain = signal('')
+  CentralRef = signal('')
+  Imageitem = signal('')
+  IsCustomerBuild = signal(false)
+  IsKowsarSupportBuild = signal(false)
+  ShowHoghogh = signal(false)
 
-  currentStatus = '';
+  currentStatus = signal('')
 
   // ===============================================================
   // 🔔 اعلان‌ها
   // ===============================================================
-  AlarmActive_Row = 0;
-  AlarmActtive_Conversation = 0;
-  AlarmActtive_LeaveRequest = 0;
+  AlarmActive_Row = signal(0)
+  AlarmActtive_Conversation = signal(0)
+  AlarmActtive_LeaveRequest = signal(0)
 
   // ===============================================================
   // 📱 اپلیکیشن‌ها
   // ===============================================================
-  apporder = '';
-  appbroker = '';
-  appocr = '';
-  array_applications: any[] = [];
+  apporder = signal('')
+  appbroker = signal('')
+  appocr = signal('')
+  array_applications = signal<any[]>([])
 
   // ===============================================================
   // 🗓️ فرم وضعیت حضور
@@ -83,12 +82,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
   // ===============================================================
   //   سازنده
   // ===============================================================
-  private readonly config = inject(AppConfigService);
-  private readonly themeService = inject(ThemeService);
-
-  private readonly repo = inject(DashboardWebApiService);
+  private readonly base_repo = inject(KowsarBaseWebApi);
   private readonly sharedService = inject(SharedService);
+  private readonly config = inject(AppConfigService);
   private readonly router = inject(Router);
+  protected readonly session = inject(SessionStorageService);
+  private readonly notificationService = inject(NotificationService);
+  protected readonly permissionService = inject(PermissionService);
+
 
   constructor() { }
 
@@ -96,20 +97,15 @@ export class SidebarComponent implements OnInit, OnDestroy {
   // 🚀 Lifecycle Hooks
   // ===============================================================
   ngOnInit(): void {
-    // ⏳ تأخیر کوتاه برای آماده‌شدن sessionStorage
-
-    const UserName = sessionStorage.getItem('UserName') || '';
 
 
-    const centralRef = sessionStorage.getItem('CentralRef') ?? '';
 
-    if (['1139', '1843'].includes(centralRef) || ['admin'].includes(UserName)) {
-      this.ShowHoghogh = true
+    if (this.permissionService.canManageRole) {
+      this.ShowHoghogh.set(true)
+    } else {
+      this.ShowHoghogh.set(false)
     }
 
-    if (['user'].includes(UserName)) {
-      this.ShowHoghogh = false
-    }
 
     setTimeout(() => {
       this.loadSessionData();
@@ -128,24 +124,21 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   }
 
+  ToDevelop(): void {
+    this.notificationService.develop()
+  }
+
   // ===============================================================
   //   بارگذاری داده‌های sessionStorage
   // ===============================================================
   private LoadAttendance(): void {
-
-
-    this.repo.AttendanceDashboard().subscribe({
+    this.base_repo.AttendanceDashboard().subscribe({
       next: (data: any) => {
-
-        const matched = data?.Attendances?.find(x => x.CentralRef === sessionStorage.getItem('CentralRef'));
-        console.log(matched)
-
+        const matched = data?.Attendances?.find(x => x.CentralRef === this.session.centralRef);
         this.EditForm_Attendance.patchValue({
           Status: matched?.Status ?? null
         });
-        this.currentStatus = matched?.Status;
-
-
+        this.currentStatus.set(matched?.Status)
       },
       error: (err) => {
 
@@ -154,35 +147,37 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   private loadSessionData(): void {
-    const newPhFullName = sessionStorage.getItem('PhFullName') || '';
-    const newCentralRef = sessionStorage.getItem('CentralRef') || '';
+    const newPhFullName = this.session.phFullName;
+    const newCentralRef = this.session.centralRef || '';
 
     //   فقط در صورت تغییر، بروزرسانی انجام شود
-    if (newPhFullName !== this.PhFullName) this.PhFullName = newPhFullName;
-    if (newCentralRef !== this.CentralRef) {
-      this.CentralRef = newCentralRef;
+    if (newPhFullName !== this.PhFullName())
+      this.PhFullName.set(newPhFullName)
+    if (newCentralRef !== this.CentralRef()) {
+      this.CentralRef.set(newCentralRef)
       this.loadProfileImage(); // کاربر جدید → تصویر جدید
     }
 
-    this.JobPersonRef = sessionStorage.getItem('JobPersonRef') || '';
-    this.CustName_Small = sessionStorage.getItem('CustName_Small') || '';
-    this.Explain = sessionStorage.getItem('Explain') || '';
-    this.PhAddress3 = sessionStorage.getItem('PhAddress3') || '';
-    this.BrokerRef =
-      this.PhAddress3 === '100'
-        ? ''
-        : sessionStorage.getItem('BrokerCode') || '';
+    this.LoginType.set(this.session.loginType)
+    this.CustName_Small.set(this.session.getString('CustName_Small') || '')
+    this.Explain.set(this.session.getString('Explain') || '')
 
-    // 🎯 تشخیص نوع کاربر (ادمین یا مشتری)
+
     const apiUrl_temp = this.config.apiUrl;
-    this.IsCustomerBuild = !(
-      ///apiUrl_temp === 'http://192.168.1.25:60006/api/' ||
-      apiUrl_temp === 'http://itmali.ir/webapi/' ||
+    this.IsCustomerBuild.set(!(
+      ///apiUrl_temp === 'http://192.168.1.27:60006/api/' ||
+      apiUrl_temp === 'https://itmali.ir/webapi/' ||
       apiUrl_temp === 'http://5.160.152.173:60005/api/'
-    );
+    ))
+
+    this.IsKowsarSupportBuild.set((
+      apiUrl_temp === 'http://192.168.1.27:60006/api/' ||
+      apiUrl_temp === 'https://itmali.ir/webapi/' ||
+      apiUrl_temp === 'http://5.160.152.173:60005/api/'
+    ))
 
     // 🧾 مقداردهی فرم حضور
-    this.EditForm_Attendance.patchValue({ CentralRef: this.CentralRef });
+    this.EditForm_Attendance.patchValue({ CentralRef: this.CentralRef() });
   }
 
   // ===============================================================
@@ -192,18 +187,18 @@ export class SidebarComponent implements OnInit, OnDestroy {
     if (!this.CentralRef) return;
 
 
-    this.repo.GetImageFromServer(this.CentralRef).subscribe({
+    this.base_repo.GetImageFromServer(this.CentralRef()).subscribe({
       next: (data: any) => {
 
         if (data?.Text && data?.Text !== "Nophoto") {
-          this.Imageitem = `data:image/png;base64,${data.Text}`;
+          this.Imageitem.set(`data:image/png;base64,${data.Text}`)
         } else {
-          this.Imageitem = 'assets/images/KowsarSupport.png';
+          this.Imageitem.set('assets/images/KowsarSupport.png')
         }
       },
       error: () => {
         console.warn('  خطا در دریافت تصویر کاربر');
-        this.Imageitem = 'assets/images/KowsarSupport.png';
+        this.Imageitem.set('assets/images/KowsarSupport.png')
       },
     });
   }
@@ -214,14 +209,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
   setStatus(status: string): void {
     // ۱️⃣ بروزرسانی فرم
     this.EditForm_Attendance.patchValue({ Status: status });
-    this.currentStatus = status;
+    this.currentStatus.set(status)
 
 
     // ۲️⃣ ارسال به API
 
-    this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe({
+    this.base_repo.ManualAttendance(this.EditForm_Attendance.value).subscribe({
       next: (response: any) => {
-        console.log('  ManualAttendance success:', response);
+
         // ۳️⃣ اطلاع‌رسانی به سایر بخش‌ها برای رفرش
         this.sharedService.triggerRefresh('refresh');
       },
@@ -244,7 +239,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
   // ===============================================================
   logout(): void {
     sessionStorage.clear();
-    localStorage.removeItem('theme');
     this.router.navigate(['/auth/login']);
   }
 }

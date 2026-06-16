@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, inject, Input, OnChanges, signal, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AgGridAngular } from 'ag-grid-angular';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
@@ -16,10 +16,10 @@ import { CellActionKowsarAttach } from './cell-action-kowsar-attach';
 })
 export class KowsarAttachComponent extends AgGridBaseComponent implements OnChanges {
 
-  @Input() ObjectRef = '';
-  @Input() ClassName = '';
+  @Input() ObjectRef = ""
+  @Input() ClassName = ""
 
-  records: any[] = [];
+  records = signal<any[]>([])
 
   EditForm = new FormGroup({
     Title: new FormControl(''),
@@ -32,9 +32,9 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
     Data: new FormControl(''),
   });
 
-  selectedFileName = '';
-  selectedFileSize = 0;
-  selectedFileType = '';
+  selectedFileName = signal('')
+  selectedFileSize = signal(0)
+  selectedFileType = signal('')
 
 
   private readonly repo = inject(KowsarBaseWebApi);
@@ -82,8 +82,8 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
     this.repo.GetAttachFileList(this.EditForm.value).subscribe({
       next: (data: any) => {
 
-        this.records = data.AttachedFiles ?? [];
-        this.updateGridData(6, this.records);
+        this.records.set(data.AttachedFiles ?? [])
+        this.updateGridData(6, this.records());
       },
       error: () => this.notify.error('خطا در دریافت فایل‌ها'),
     });
@@ -123,7 +123,7 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
 
     if (!compressedFormats.includes(ext || '')) {
       this.notify.warning('فقط فایل‌های فشرده (ZIP, RAR, 7Z, TAR...) قابل بارگذاری هستند');
-      (event.target as HTMLInputElement).value = '';
+      (event.target as HTMLInputElement).value = ""
       this.EditForm.patchValue({ FileName: '', FileType: '', Data: '' });
       return;
     }
@@ -133,13 +133,13 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
     reader.onload = (e: any) => {
       const base64 = e.target.result.split(',')[1];
 
-      this.selectedFileName = file.name.replace(/\s/g, '').split('.')[0];
-      this.selectedFileSize = Math.round(file.size / 1024);
-      this.selectedFileType = ext;
+      this.selectedFileName.set(file.name.replace(/\s/g, '').split('.')[0])
+      this.selectedFileSize.set(Math.round(file.size / 1024))
+      this.selectedFileType.set(ext)
 
       this.EditForm.patchValue({
-        FileName: this.selectedFileName,
-        FileType: this.selectedFileType,
+        FileName: this.selectedFileName(),
+        FileType: this.selectedFileType(),
         Data: base64,
       });
     };
@@ -157,11 +157,14 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
       return;
     }
 
-    if (this.selectedFileSize > 10240) {
-      this.notify.warning('حجم فایل بیش از ۱۰MB است');
+    if (this.selectedFileSize() > (20 * 1024 * 1024)) {
+
+      this.notify.warning(
+        'حداکثر حجم مجاز فایل 20 مگابایت می‌باشد'
+      );
+
       return;
     }
-
     this.loading.show();
 
 
@@ -181,7 +184,7 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
   }
 
   Reset_Form() {
-
+    this.selectedFileName.set("")
     this.EditForm.patchValue({
       Title: "",
       FileName: "",
@@ -260,6 +263,7 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
   // =============================
   // MIME TYPE
   // =============================
+
   getMimeType(ext: string): string {
     if (!ext) return 'application/octet-stream';
 

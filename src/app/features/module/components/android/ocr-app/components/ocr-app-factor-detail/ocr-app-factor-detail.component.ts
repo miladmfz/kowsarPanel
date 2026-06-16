@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.service';
 
 @Component({
@@ -20,7 +19,6 @@ import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.ser
 export class OcrAppFactorDetailComponent implements OnInit {
 
   private readonly router = inject(Router);
-
   private readonly repo = inject(OcrWebApiService);
   private readonly route = inject(ActivatedRoute);
 
@@ -57,7 +55,7 @@ export class OcrAppFactorDetailComponent implements OnInit {
     customercode: new FormControl(''),
   });
 
-  items: any[] = [];
+  items = signal<any[]>([])
   id!: string;
 
 
@@ -65,8 +63,6 @@ export class OcrAppFactorDetailComponent implements OnInit {
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
 
-
-    // Fetch and update the data from your API
 
     this.repo.ocrGetFactorDetail(this.id)
       .subscribe((e: any) => {

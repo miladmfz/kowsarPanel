@@ -1,7 +1,7 @@
-import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, Renderer2, signal, ViewChild, } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { debounceTime, Subject } from 'rxjs';
+import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { IDatepickerTheme } from 'ng-persian-datepicker';
 import { CellActionSupportGoodEdit } from './cell-action-support-good-edit';
 import { CellActionSupportFactorRowsEdit } from './cell-action-support-factorrows-edit';
@@ -14,8 +14,11 @@ import { CellActionSupportAutletterFactorList } from './cell-action-support-autl
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { SupportFactorWebApiService } from '../../../services/SupportFactorWebApi.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { AgGridAngular } from 'ag-grid-angular';
+import { KowsarBaseWebApi } from 'src/app/app-shell/framework-services/base/KowsarBaseWebApi.service';
+import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
+import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
+import { AutletterWebApiService } from 'src/app/features/automation/services/AutletterWebApi.service';
 
 @Component({
   selector: 'app-internal-factors-edit',
@@ -28,68 +31,107 @@ import { AgGridAngular } from 'ag-grid-angular';
     AgGridAngular
   ]
 })
-export class InternalFactorsEditComponent extends AgGridBaseComponent implements OnInit {
+export class InternalFactorsEditComponent extends AgGridBaseComponent implements OnInit, OnDestroy {
 
 
   private readonly router = inject(Router);
 
   private readonly repo = inject(SupportFactorWebApiService);
+  private readonly aut_repo = inject(AutletterWebApiService);
+  private readonly base_repo = inject(KowsarBaseWebApi);
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
   private readonly sharedService = inject(SharedService);
   private readonly notificationService = inject(NotificationService);
-
+  private readonly renderer = inject(Renderer2);
+  protected readonly session = inject(SessionStorageService);
 
 
   constructor() {
     super();
   }
 
-  changeStatus(status: string) {
-    this.sharedService.triggerRefresh('refresh');
-  }
 
+
+
+
+
+
+  // #region Declare
+  @ViewChild('modalsearch') modalsearch!: ElementRef;
+  @ViewChild('customerlist', { static: false }) customerlist!: ElementRef<HTMLDivElement>;
+  @ViewChild('factorcustomerproperty', { static: false }) factorcustomerproperty!: ElementRef<HTMLDivElement>;
+  @ViewChild('factorproperty', { static: false }) factorproperty!: ElementRef<HTMLDivElement>;
+  @ViewChild('boxbuymodal', { static: false }) boxbuymodal!: ElementRef<HTMLDivElement>;
+  @ViewChild('autlettercustomer', { static: false }) autlettercustomer!: ElementRef<HTMLDivElement>;
+
+
+  title = signal('فاکتور پشتیبانی')
+
+  FactorCode = signal('')
+  CentralRef = signal('')
+  LoginType = signal('')
+  Searchtarget_customer = signal('')
+  Searchtarget_Good = signal('')
+  LetterCode = signal('')
+  ExecuterCentral = signal('')
+  letterexplain_modal_title = signal('')
+  ToDayDate = signal('')
+
+  HasFactorCode = signal(false);
+  ShowGoodList = signal(false)
+  loading_letterowener = signal(true)
+  show_newletter = signal(false)
+  loading = signal(false)
+
+  users = signal<any[]>([])
+  selectedRows = signal<any[]>([])
+  reportData = signal<any[]>([])
+  records_factor = signal<any[]>([])
+  records_letterfromowner = signal<any[]>([])
+  records_support_good = signal<any[]>([])
+  records_support_factorrows = signal<any[]>([])
+  records_support_customer = signal<any[]>([])
+
+
+  time: Date = new Date();
+
+  myForm: FormGroup;
+  selectedfactor: any
+  attendanceInterval: any;
+
+
+
+  private searchSubject_customer: Subject<string> = new Subject();
+  private searchSubject_Good: Subject<string> = new Subject();
   priceInput = new Subject<void>();
   discountInput = new Subject<void>();
 
+  private readonly destroy$ = new Subject<void>();
+
+
+
+
+  EditForm_factor = new FormGroup({
+    ClassName: new FormControl(''),
+    ObjectRef: new FormControl(''),
+  });
+
+  Active_Lookup: Base_Lookup[] = [
+
+    { id: "4", name: "همه" },
+    { id: "0", name: "فعال" },
+    { id: "1", name: "نيمه فعال" },
+    { id: "2", name: "غير فعال" },
+  ]
+
+  // فرم‌های صفحه
   EditForm_SearchTarget = new FormGroup({
     SearchTarget: new FormControl(''),
+    Active: new FormControl('0'),
     BrokerRef: new FormControl(''),
   });
 
-  ngOnInit(): void {
-
-
-    this.themeSub = this.themeService.theme$.subscribe(mode => {
-      this.isDarkMode = (mode === 'dark');
-    });
-
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      var idtemp = params.get('id');
-
-      if (idtemp != null) {
-        this.FactorCode.set(idtemp);
-        this.HasFactorCode.set(true);
-        this.JobPersonRef = sessionStorage.getItem("JobPersonRef");
-        this.CentralRef = sessionStorage.getItem("CentralRef");
-
-        this.GetFactor();
-      } else {
-        this.getdate();
-      }
-    });
-
-    this.Config_Declare();
-    this.pipe_function();
-
-    this.priceInput.pipe(debounceTime(1000)).subscribe(() => {
-      this.cal_takhfif_from_price();
-    });
-
-    this.discountInput.pipe(debounceTime(1000)).subscribe(() => {
-      this.cal_price_from_takhfif();
-    });
-  }
 
 
 
@@ -108,7 +150,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     ObjectRef: new FormControl(''),
   });
 
-  users: any[] = [];
+
 
   EditForm_LetterInsert = new FormGroup({
     LetterDate: new FormControl(''),
@@ -120,7 +162,13 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     InOutFlag: new FormControl(''),
     CreatorCentral: new FormControl(''),
     OwnerCentral: new FormControl(''),
+    IsPrivate: new FormControl('0'),
   });
+  IsPrivate_Lookup: Base_Lookup[] = [
+
+    { id: "0", name: "عمومی" },
+    { id: "1", name: "محرمانه" },
+  ]
 
   EditForm_AutLetterRowInsert = new FormGroup({
     LetterRef: new FormControl(''),
@@ -132,158 +180,6 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     ExecuterCentral: new FormControl(''),
   });
 
-  Autletterfromcustomer() {
-    this.Autletter_dialog_show()
-
-
-    this.loading_letterowener = true
-    this.letterexplain_modal_title = " تیکت ارتباط با " + this.EditForm_Factor_Header.value.CustName
-
-    this.EditForm_search.patchValue({
-      ObjectRef: this.EditForm_Factor_Header.value.CustomerCode,
-    });
-
-
-    this.repo.GetCentralUser().subscribe(e => {
-      this.users = e;
-    });
-
-
-    this.repo.GetCustomerById(this.EditForm_search.value).subscribe((data: any) => {
-
-      this.EditForm_LetterToEmployer.patchValue({
-        DescriptionText: "",
-        LetterDate: this.ToDayDate,
-        ExecuterCentral: "",
-        CreatorCentral: sessionStorage.getItem("CentralRef"),
-        OwnerCentral: data.Customers[0].CentralRef,
-        OwnerName: data.Customers[0].CustName_Small,
-      });
-
-      this.EditForm_autletter.patchValue({
-        CentralRef: data.Customers[0].CentralRef,
-        OwnCentralRef: "0",
-      });
-
-
-      this.repo.GetAutLetterList(this.EditForm_autletter.value).subscribe((data: any) => {
-
-
-
-        this.records_letterfromowner = data?.AutLetters ?? [];
-        this.updateGridData(5, this.records_letterfromowner);
-        this.loading_letterowener = false
-      });
-    });
-  }
-  override onGridReady(params: any, index: number) {
-    super.onGridReady(params, index);
-
-    // ذخیره API درست
-    if (index >= 1 && index <= 6) {
-      (this as any)[`gridApi${index}`] = params.api;
-    }
-
-    // فیت کردن ستون‌ها با تأخیر کوتاه
-    setTimeout(() => {
-      try {
-        if (params.api && !params.api.isDestroyed?.()) {
-          params.api.sizeColumnsToFit();
-        }
-      } catch { }
-    }, 50);
-  }
-  toggel_show_newletter() {
-    if (this.show_newletter) {
-      this.EditForm_LetterToEmployer.patchValue({
-        DescriptionText: "",
-        ExecuterCentral: "",
-      });
-    }
-    this.show_newletter = !this.show_newletter
-  }
-
-  SendLetter() {
-    this.EditForm_LetterToEmployer.markAllAsTouched();
-    if (!this.EditForm_LetterToEmployer.valid) return;
-
-
-
-    this.EditForm_LetterInsert.patchValue({
-      LetterDate: this.ToDayDate,
-      title: "ارتباط با همکاران",
-      Description: this.EditForm_LetterToEmployer.value.DescriptionText,
-      LetterState: "",
-      LetterPriority: "عادی",
-      CentralRef: sessionStorage.getItem("CentralRef"),
-      InOutFlag: "2",
-      CreatorCentral: this.EditForm_LetterToEmployer.value.CreatorCentral,
-      OwnerCentral: this.EditForm_LetterToEmployer.value.OwnerCentral,
-    });
-
-
-
-
-    this.repo.LetterInsert(this.EditForm_LetterInsert.value).subscribe(e => {
-      const intValue = parseInt(e[0].LetterCode, 10);
-
-
-      if (!isNaN(intValue) && intValue > 0) {
-        this.LetterCode = e[0].LetterCode
-        this.SendLetterRow()
-      } else {
-        //Todo notification erroor
-      }
-    });
-  }
-
-  SendLetterRow() {
-
-
-    this.EditForm_AutLetterRowInsert.patchValue({
-      LetterRef: this.LetterCode,
-      LetterDate: this.ToDayDate,
-      Description: this.EditForm_LetterToEmployer.value.DescriptionText,
-      LetterState: "",
-      LetterPriority: "عادی",
-      CreatorCentral: sessionStorage.getItem("CentralRef"),
-      ExecuterCentral: this.EditForm_LetterToEmployer.value.ExecuterCentral,
-    });
-
-
-    this.repo.AutLetterRowInsert(this.EditForm_AutLetterRowInsert.value).subscribe(e => {
-      const intValue = parseInt(e[0].LetterRef, 10);
-
-
-      if (!isNaN(intValue) && intValue > 0) {
-        this.notificationService.succeded();
-        this.LetterCode = ''
-        this.toggel_show_newletter()
-        this.Autletter_dialog_close()
-      } else {
-        //Todo notification erroor
-      }
-    });
-  }
-
-  // #region Declare
-
-  EditForm_factor = new FormGroup({
-    ClassName: new FormControl(''),
-    ObjectRef: new FormControl(''),
-  });
-
-  loading_letterowener: boolean = true;
-  show_newletter: boolean = false;
-  loading: boolean = false;
-
-  BrokerRef: string = '';
-  LetterCode: string = '';
-  ExecuterCentral: string = '';
-  letterexplain_modal_title: string = '';
-  ToDayDate: any;
-  reportData: any[] = [];
-  attendanceInterval: any;
 
   EditForm_LetterToEmployer = new FormGroup({
     DescriptionText: new FormControl('', [Validators.required, Validators.minLength(10)]),
@@ -297,38 +193,11 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     SendSms: new FormControl('0'),
   });
 
-  title = 'فاکتور پشتیبانی';
 
-  FactorCode = signal('');
-  HasFactorCode = signal(false);
 
-  CentralRef: string = '';
-  JobPersonRef: string = '';
-  Searchtarget_customer: string = '';
-  Searchtarget_Good: string = '';
-
-  @ViewChild('modalsearch') modalsearch: ElementRef;
-
-  records_factor: any;
-  records_letterfromowner: any;
-
-  time: Date = new Date();
-
-  myForm: FormGroup;
-  selectedfactor: any
-
-  ShowGoodList: boolean = false;
-
-  records_support_good: any;
-  records_support_factorrows: any;
-  records_support_customer: any;
-
-  private searchSubject_customer: Subject<string> = new Subject();
-  private searchSubject_Good: Subject<string> = new Subject();
 
   EditForm_SupportData = new FormGroup({
     DateTarget: new FormControl(''),
-    BrokerCode: new FormControl('1'),
     Flag: new FormControl('1'),
   });
 
@@ -356,11 +225,13 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     CustName: new FormControl(''),
     CustomerCode: new FormControl('', Validators.required),
     Explain: new FormControl(''),
-    BrokerName: new FormControl(''),
-    BrokerRef: new FormControl('0'),
+    Owner: new FormControl(''),
+    OwnerName: new FormControl(''),
     ClassName: new FormControl('Factor'),
     StackRef: new FormControl('1'),
-    isShopFactor: new FormControl('0'),
+    IsShopFactor: new FormControl('0'),
+    Active: new FormControl('0'),
+
   });
 
   EditForm_Factor_Row = new FormGroup({
@@ -404,20 +275,23 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     this.EditForm_LetterToEmployer.get('DescriptionText')?.setValue(value, { emitEvent: false });
   }
 
+  onActiveChange() {
+    this.GetCustomer()
+  }
   Config_Declare() {
-    this.columnDefs1 = [
+    this.column_name_1 = [
       {
         field: 'عملیات',
         pinned: 'left',
         cellRenderer: CellActionSupportGoodEdit,
-        cellRendererParams: { editUrl: '/support/letter-panel' },
-        minWidth: 100,
+        cellRendererParams: { editUrl: '/automation/letter-panel' },
+        width: 80,
 
       },
       {
         field: 'GoodName',
         headerName: 'نام آیتم',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 
@@ -429,13 +303,13 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
         field: 'عملیات',
         pinned: 'left',
         cellRenderer: CellActionSupportFactorRowsEdit,
-        cellRendererParams: { editUrl: '/support/letter-panel' },
-        minWidth: 100,
+        cellRendererParams: { editUrl: '/automation/letter-panel' },
+        width: 80,
       },
       {
         field: 'GoodName',
         headerName: ' نام آیتم',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
       },
@@ -446,29 +320,38 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
         field: 'عملیات',
         pinned: 'left',
         cellRenderer: CellActionSupportFactorCustomerEdit,
-        cellRendererParams: { editUrl: '/support/letter-panel' },
-        minWidth: 80,
+        cellRendererParams: { editUrl: '/automation/letter-panel' },
+        width: 80,
       },
+
       {
         field: 'CustName_Small',
         headerName: 'نام مشتری  ',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
-        minWidth: 150,
+        width: 150,
       },
+
       {
         field: 'Manager',
         headerName: 'مدیریت',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
-        minWidth: 150
+        width: 100
+      },
+      {
+        field: 'ActiveStr',
+        headerName: 'وضعیت',
+
+        cellClass: 'text-center',
+        width: 70
       },
       {
         field: 'Explain',
         headerName: 'پشتیبانی',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
-        minWidth: 150
+        width: 100
       },
     ];
 
@@ -476,39 +359,63 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
       {
         field: 'FactorDate',
         headerName: 'تاریخ',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
-        width: 80,
+        width: 120,
+        maxWidth: 120,
+
         cellStyle: (params) => {
-          if (params.value === this.EditForm_Factor_Header.value.FactorDate) {
-            return { backgroundColor: '#ffcccc', color: 'black' };
+
+          const isSelected =
+            params.value === this.EditForm_Factor_Header.value.FactorDate;
+
+          if (!isSelected) {
+            return null;
           }
-          return null;
+
+          const isDark =
+            document.documentElement.getAttribute('data-bs-theme') === 'dark';
+
+          return isDark
+            ? {
+              background: 'rgba(255, 204, 51, .14)',
+              color: '#ffd666',
+              fontWeight: '700',
+              border: '1px solid rgba(255, 204, 51, .18)'
+            }
+            : {
+              background: 'rgba(255, 204, 51, .18)',
+              color: '#b45309',
+              fontWeight: '700',
+              border: '1px solid rgba(217, 119, 6, .12)'
+            };
         }
       },
       {
-        field: 'Barbary',
-        headerName: 'شرح',
-        filter: 'agSetColumnFilter',
-        cellClass: 'text-center',
-        width: 250,
-        minWidth: 200,
-        maxWidth: 500
-      },
-      {
-        field: 'BrokerNameWithoutType',
+        field: 'OwnerName',
         headerName: 'نام پشتیبان',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         width: 80,
+        maxWidth: 200
       },
       {
         field: 'starttime',
         headerName: 'شروع',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
-        width: 80
+        width: 120,
+        maxWidth: 120,
       },
+      {
+        field: 'Barbary',
+        headerName: 'شرح',
+
+        cellClass: 'text-center',
+        width: 250,
+        minWidth: 200,
+      },
+
     ];
 
     this.columnDefs5 = [
@@ -516,48 +423,48 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
         field: 'عملیات',
         pinned: 'left',
         cellRenderer: CellActionSupportAutletterFactorList,
-        cellRendererParams: { editUrl: '/support/letter-panel' },
+        cellRendererParams: { editUrl: '/automation/letter-panel' },
         minWidth: 80,
       },
       {
         field: 'RowLetterDate',
         headerName: 'تاریخ ارجاع ',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
       },
       {
         field: 'LetterDescription',
         headerName: 'شرح ارجاع',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'CreatorName',
         headerName: 'ایجاد کننده',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'RowExecutorName',
         headerName: 'انجام دهنده',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'RowLetterState',
         headerName: 'وضعیت',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'AutLetterRow_PropDescription1',
         headerName: 'شرح کار',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
@@ -566,13 +473,15 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
 
   pipe_function() {
     this.searchSubject_customer.pipe(
-      debounceTime(1000)
+      debounceTime(1000),
+      takeUntil(this.destroy$)
     ).subscribe(() => {
       this.GetCustomer();
     });
 
     this.searchSubject_Good.pipe(
-      debounceTime(1000)
+      debounceTime(1000),
+      takeUntil(this.destroy$)
     ).subscribe(() => {
       this.GetGood();
     });
@@ -581,6 +490,188 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   // #endregion
 
   // #region Func
+
+
+
+
+
+  changeStatus(status: string) {
+    this.sharedService.triggerRefresh('refresh');
+  }
+
+
+  ngOnInit(): void {
+
+
+    this.themeSub = this.themeService.theme$.pipe(takeUntil(this.destroy$)).subscribe(mode => {
+      this.isDarkMode = (mode === 'dark');
+    });
+
+    this.route.paramMap.pipe(takeUntil(this.destroy$)).subscribe((params: ParamMap) => {
+      var idtemp = params.get('id');
+
+      if (idtemp != null) {
+        this.FactorCode.set(idtemp);
+        this.HasFactorCode.set(true);
+        this.LoginType.set(this.session.getString("LoginType") ?? '')
+        this.CentralRef.set(this.session.getString("CentralRef") ?? '')
+
+        this.GetFactor();
+      } else {
+        this.getdate();
+      }
+    });
+
+    this.Config_Declare();
+    this.pipe_function();
+
+    this.priceInput.pipe(debounceTime(1000), takeUntil(this.destroy$)).subscribe(() => {
+      this.cal_takhfif_from_price();
+    });
+
+    this.discountInput.pipe(debounceTime(1000), takeUntil(this.destroy$)).subscribe(() => {
+      this.cal_price_from_takhfif();
+    });
+  }
+
+
+  Autletterfromcustomer() {
+    this.Autletter_dialog_show()
+
+
+    this.loading_letterowener.set(true)
+    this.letterexplain_modal_title.set(" تیکت ارتباط با " + this.EditForm_Factor_Header.value.CustName)
+
+    this.EditForm_search.patchValue({
+      ObjectRef: this.EditForm_Factor_Header.value.CustomerCode,
+    });
+
+
+    this.aut_repo.GetCentralUser().subscribe(e => {
+      this.users.set(e)
+    });
+
+
+    this.repo.GetCustomerById(this.EditForm_search.value).subscribe((data: any) => {
+
+      this.EditForm_LetterToEmployer.patchValue({
+        DescriptionText: "",
+        LetterDate: this.ToDayDate(),
+        ExecuterCentral: "",
+        CreatorCentral: this.session.getString("CentralRef"),
+        OwnerCentral: data.Customers[0].CentralRef,
+        OwnerName: data.Customers[0].CustName_Small,
+      });
+
+      this.EditForm_autletter.patchValue({
+        CentralRef: data.Customers[0].CentralRef,
+        OwnCentralRef: "0",
+      });
+
+
+      this.repo.GetAutLetterList(this.EditForm_autletter.value).subscribe((data: any) => {
+
+
+
+        this.records_letterfromowner.set(data?.AutLetters ?? [])
+        this.updateGridData(5, this.records_letterfromowner());
+        this.loading_letterowener.set(false)
+      });
+    });
+  }
+
+  override onGridReady(params: any, index: number) {
+    super.onGridReady(params, index);
+
+    // ذخیره API درست
+    if (index >= 1 && index <= 6) {
+      (this as any)[`gridApi${index}`] = params.api;
+    }
+
+    // فیت کردن ستون‌ها با تأخیر کوتاه
+    setTimeout(() => {
+      try {
+        if (params.api && !params.api.isDestroyed?.()) {
+          params.api.sizeColumnsToFit();
+        }
+      } catch { }
+    }, 50);
+  }
+
+  toggel_show_newletter() {
+    if (this.show_newletter()) {
+      this.EditForm_LetterToEmployer.patchValue({
+        DescriptionText: "",
+        ExecuterCentral: "",
+      });
+    }
+    this.show_newletter.set(!this.show_newletter())
+  }
+
+  SendLetter() {
+    this.EditForm_LetterToEmployer.markAllAsTouched();
+    if (!this.EditForm_LetterToEmployer.valid) return;
+
+
+
+    this.EditForm_LetterInsert.patchValue({
+      LetterDate: this.ToDayDate(),
+      title: "ارتباط با همکاران",
+      Description: this.EditForm_LetterToEmployer.value.DescriptionText,
+      LetterState: "",
+      LetterPriority: "عادی",
+      CentralRef: this.session.getString("CentralRef"),
+      InOutFlag: "2",
+      CreatorCentral: this.EditForm_LetterToEmployer.value.CreatorCentral,
+      OwnerCentral: this.EditForm_LetterToEmployer.value.OwnerCentral,
+    });
+
+
+
+
+    this.aut_repo.LetterInsert(this.EditForm_LetterInsert.value).subscribe(e => {
+      const intValue = parseInt(e[0].LetterCode, 10);
+
+
+      if (!isNaN(intValue) && intValue > 0) {
+        this.LetterCode.set(e[0].LetterCode);
+        this.SendLetterRow()
+      } else {
+        //Todo notification erroor
+      }
+    });
+  }
+
+  SendLetterRow() {
+
+
+    this.EditForm_AutLetterRowInsert.patchValue({
+      LetterRef: this.LetterCode(),
+      LetterDate: this.ToDayDate(),
+      Description: this.EditForm_LetterToEmployer.value.DescriptionText,
+      LetterState: "",
+      LetterPriority: "عادی",
+      CreatorCentral: this.session.getString("CentralRef"),
+      ExecuterCentral: this.EditForm_LetterToEmployer.value.ExecuterCentral,
+    });
+
+
+    this.aut_repo.AutLetterRowInsert(this.EditForm_AutLetterRowInsert.value).subscribe(e => {
+      const intValue = parseInt(e[0].LetterRef, 10);
+
+
+      if (!isNaN(intValue) && intValue > 0) {
+        this.notificationService.succeded();
+        this.LetterCode.set('')
+        this.toggel_show_newletter()
+        this.Autletter_dialog_close()
+      } else {
+        //Todo notification erroor
+      }
+    });
+  }
+
+
 
   NewFactor() {
     this.router.navigate(['/internal/internal-factors-edit']);
@@ -608,12 +699,12 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
 
     this.repo.Support_StartFactorTime(this.EditForm_supportfactor_property.value).subscribe(() => {
       this.EditForm_Attendance.patchValue({
-        CentralRef: sessionStorage.getItem("CentralRef"),
+        CentralRef: this.session.getString("CentralRef"),
         Status: "2" //busy
       });
 
 
-      this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe(() => {
+      this.base_repo.ManualAttendance(this.EditForm_Attendance.value).subscribe(() => {
         this.notificationService.succeded();
         this.router.navigate(['/internal/internal-factors-edit', this.FactorCode()]);
 
@@ -630,7 +721,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   }
 
   Set_EndFactorTime() {
-    if (this.records_support_factorrows && this.records_support_factorrows.length > 0) {
+    if (this.records_support_factorrows() && this.records_support_factorrows().length > 0) {
 
 
       const currentTime = new Date();
@@ -656,9 +747,9 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
 
 
       this.repo.Support_EndFactorTime(this.EditForm_supportfactor_property.value).subscribe(() => {
+
         this.EditForm_SupportData.patchValue({
           DateTarget: "",
-          BrokerCode: sessionStorage.getItem("BrokerCode"),
           Flag: "2"
         });
 
@@ -673,12 +764,12 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
             this.sharedService.triggerActionAll('refresh');
           } else {
             this.EditForm_Attendance.patchValue({
-              CentralRef: sessionStorage.getItem("CentralRef"),
+              CentralRef: this.session.getString("CentralRef"),
               Status: "1" //hozor
             });
 
 
-            this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe(() => {
+            this.base_repo.ManualAttendance(this.EditForm_Attendance.value).subscribe(() => {
               this.notificationService.succeded();
 
               this.GetFactor()
@@ -755,12 +846,12 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   }
 
   cal_totalprice() {
-    let Amount_temp = parseFloat(this.EditForm_Factor_Row.value.Amount);
-    let Price_temp = parseFloat(this.EditForm_Factor_Row.value.Price);
-    let DefaultRatioValue_temp = parseFloat(this.EditForm_Factor_Row.value.DefaultRatioValue);
-    let DefaultUnitValue_temp = parseFloat(this.EditForm_Factor_Row.value.DefaultUnitValue);
+    const Amount_temp = parseFloat(this.EditForm_Factor_Row.value.Amount) || 0;
+    const Price_temp = parseFloat(this.EditForm_Factor_Row.value.Price) || 0;
+    const DefaultRatioValue_temp = parseFloat(this.EditForm_Factor_Row.value.DefaultRatioValue) || 1;
+    const DefaultUnitValue_temp = parseFloat(this.EditForm_Factor_Row.value.DefaultUnitValue) || 1;
 
-    let totalPrice_temp = Amount_temp * Price_temp * DefaultRatioValue_temp * DefaultUnitValue_temp
+    const totalPrice_temp = Amount_temp * Price_temp * DefaultRatioValue_temp * DefaultUnitValue_temp;
 
     this.EditForm_Factor_Row.patchValue({ totalprice: "" + totalPrice_temp });
   }
@@ -786,11 +877,11 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
 
 
   onInputChange_Customer() {
-    this.searchSubject_customer.next(this.Searchtarget_customer);
+    this.searchSubject_customer.next(this.Searchtarget_customer());
   }
 
   onInputChange_Good() {
-    this.searchSubject_Good.next(this.Searchtarget_Good);
+    this.searchSubject_Good.next(this.Searchtarget_Good());
   }
 
   Factor_Customer_Property(CustomerCode: any) {
@@ -800,14 +891,14 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     this.repo.GetCustomerFactor(CustomerCode).subscribe({
       next: (data: any) => {
 
-        this.records_factor = data?.Factors ?? [];
-        this.loading = false;
-        this.updateGridData(4, this.records_factor);
+        this.records_factor.set(data?.Factors ?? [])
+        this.loading.set(false)
+        this.updateGridData(4, this.records_factor());
 
       },
       error: () => {
-        this.records_factor = [];
-        this.loading = false;
+        this.records_factor.set([])
+        this.loading.set(false)
       },
     });
 
@@ -820,43 +911,84 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     if (!this.EditForm_Factor_Header.valid) return;
 
 
-    this.EditForm_Factor_Header.patchValue({
-      BrokerRef: sessionStorage.getItem("BrokerCode")
-    });
+
+    if (this.EditForm_Factor_Header.value.Active == "2") {
+      this.notificationService.error("مشتری غیر فعال می باشد");
+      return
+    } else if (this.EditForm_Factor_Header.value.Active == "1") {
+      this.notificationService.warning("مشتری نیمه فعال می باشد");
 
 
+      this.SwalAlarm_InsertFactor().then((result) => {
+        if (result.isConfirmed) {
+          this.Factor_Header_insert_request()
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          this.notificationService.warning('مشتری دیگری انتخاب کنید');
+        }
+      });
+
+    } else {
+      this.Factor_Header_insert_request()
+    }
+
+
+
+
+
+  }
+
+  Factor_Header_insert_request() {
     this.repo.WebSupportFactorInsert(this.EditForm_Factor_Header.value).subscribe((data: any) => {
 
-      this.FactorCode.set(data.Factors[0].FactorCode)
+      const factor = data?.Factors?.[0];
+
+      if (!factor) {
+        this.notificationService.error('فاکتور ایجاد نشد');
+        return;
+      }
+
+      this.FactorCode.set(factor.FactorCode ?? '');
+
       this.notificationService.succeded();
 
       this.EditForm_supportfactor_property.patchValue({
-        starttime: data.Factors[0].starttime,
-        Endtime: data.Factors[0].Endtime,
-        worktime: data.Factors[0].worktime,
-        Barbary: data.Factors[0].Barbary,
-        ObjectRef: data.Factors[0].FactorCode,
+        starttime: factor.starttime ?? '',
+        Endtime: factor.Endtime ?? '',
+        worktime: factor.worktime ?? '',
+        Barbary: factor.Barbary ?? '',
+        ObjectRef: factor.FactorCode ?? '',
       });
-      this.Set_StartFactorTime()
+
+      this.Set_StartFactorTime();
     });
   }
+
+
   taggelShowGoodList() {
-    this.ShowGoodList = !this.ShowGoodList
+    this.ShowGoodList.set(!this.ShowGoodList())
   }
 
-  selectedRows: any[] = [];
   onSelectionChanged(event: any) {
-    this.selectedRows = event.api.getSelectedRows();
+    this.selectedRows.set(event.api.getSelectedRows())
   }
 
   Set_Customer() {
+    const selectedCustomer = this.selectedRows()?.[0];
+
+    if (!selectedCustomer) {
+      this.notificationService.warning('لطفاً یک مشتری انتخاب کنید');
+      return;
+    }
+
     this.EditForm_Factor_Header.patchValue({
-      CustName: this.selectedRows[0].CustName_Small,
-      CustomerCode: this.selectedRows[0].CustomerCode,
-      BrokerName: sessionStorage.getItem("BrokerName")
+      CustName: selectedCustomer.CustName_Small,
+      CustomerCode: selectedCustomer.CustomerCode,
+      OwnerName: this.session.phFullName,
+      Active: selectedCustomer.Active,
     });
-    this.selectedRows = []
-    this.customer_dialog_close()
+
+    this.selectedRows.set([]);
+    this.customer_dialog_close();
   }
 
   GoBack() {
@@ -864,7 +996,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   }
 
   deleteFactor() {
-    if (this.records_support_factorrows && this.records_support_factorrows.length > 0) {
+    if (this.records_support_factorrows() && this.records_support_factorrows().length > 0) {
       this.notificationService.error('این فاکتور دارای اقلام می باشد', "خطا");
     } else {
       this.fireDeleteFactor().then((result) => {
@@ -909,6 +1041,22 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     });
   }
 
+  SwalAlarm_InsertFactor() {
+    return Swal.fire({
+      title: 'مشتری نیمه فعال',
+      text: 'این مشتری نیمه فعال است مایل به ایجاد فاکتور می باشید ؟',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'بله',
+      cancelButtonText: 'خیر',
+      customClass: {
+        confirmButton: 'btn btn-success mx-2',
+        cancelButton: 'btn btn-danger',
+      },
+      buttonsStyling: false,
+    });
+  }
+
   delete(id: any) {
     this.fireDeleteSwal1().then((result) => {
       if (result.isConfirmed) {
@@ -933,12 +1081,12 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
 
     this.repo.DeleteWebFactorSupport(this.FactorCode()).subscribe(() => {
       this.EditForm_Attendance.patchValue({
-        CentralRef: sessionStorage.getItem("CentralRef"),
+        CentralRef: this.session.getString("CentralRef"),
         Status: "1" //hozor
       });
 
 
-      this.repo.ManualAttendance(this.EditForm_Attendance.value).subscribe(() => {
+      this.base_repo.ManualAttendance(this.EditForm_Attendance.value).subscribe(() => {
 
 
         this.notificationService.succeded();
@@ -950,7 +1098,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
 
   Show_Customer_Property(CustomerCode: any) {
     this.property_dialog_show()
-    this.records_support_customer.forEach((customer: any) => {
+    this.records_support_customer().forEach((customer: any) => {
       if (customer.CustomerCode == CustomerCode) {
         this.Customer_property.patchValue({
           AppNumber: customer.AppNumber,
@@ -978,6 +1126,13 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
 
     this.repo.GetWebFactorSupport(this.FactorCode()).subscribe((data: any) => {
 
+      if (!data?.Factors || data.Factors.length === 0) {
+        this.notificationService.error("رکوردی برای نمایش وجود ندارد");
+
+        history.back();
+
+      }
+
       this.selectedfactor = data.Factors[0]
 
       this.FactorCode.set(data.Factors[0].FactorCode);
@@ -988,8 +1143,8 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
         CustName: data.Factors[0].CustName,
         CustomerCode: data.Factors[0].CustomerCode,
         Explain: data.Factors[0].Explain,
-        BrokerName: data.Factors[0].BrokerName,
-        BrokerRef: data.Factors[0].BrokerRef,
+        OwnerName: data.Factors[0].OwnerName,
+        Owner: data.Factors[0].Owner,
       });
 
       this.EditForm_supportfactor_property.patchValue({
@@ -1017,27 +1172,33 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     this.repo.GetWebFactorRowsSupport(this.FactorCode()).subscribe((data: any) => {
 
 
-      this.records_support_factorrows = data?.Factors ?? [];
-      this.updateGridData(2, this.records_support_factorrows);
+      this.records_support_factorrows.set(data?.Factors ?? [])
+      this.updateGridData(2, this.records_support_factorrows());
     });
   }
 
   getdate() {
 
-    this.repo.GetTodeyFromServer().subscribe((data: any) => {
+    this.base_repo.GetTodeyFromServer()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: any) => {
 
-      this.EditForm_Factor_Header.patchValue({
-        FactorDate: data.Text,
+        const today = data?.Text ?? '';
+
+        this.ToDayDate.set(today);
+
+        this.EditForm_Factor_Header.patchValue({
+          FactorDate: today,
+        });
       });
-    });
   }
 
   GetGood() {
 
-    this.repo.GetGoodListSupport(this.Searchtarget_Good).subscribe((data: any) => {
+    this.repo.GetGoodListSupport(this.Searchtarget_Good()).subscribe((data: any) => {
 
-      this.records_support_good = data?.Goods ?? [];;
-      this.updateGridData(1, this.records_support_good);
+      this.records_support_good.set(data?.Goods ?? [])
+      this.updateGridData(1, this.records_support_good());
 
     });
   }
@@ -1052,90 +1213,80 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   GetCustomer() {
 
 
-    // this.EditForm_SearchTarget.patchValue({
-    //   SearchTarget: this.Searchtarget_customer,
-    //   BrokerRef: sessionStorage.getItem("BrokerCode"),
-    // });
-
     this.EditForm_SearchTarget.patchValue({
-      SearchTarget: this.Searchtarget_customer,
+      SearchTarget: this.Searchtarget_customer(),
       BrokerRef: "0",
     });
 
 
 
-    this.repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe((data: any) => {
+    this.base_repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe((data: any) => {
 
 
-      this.records_support_customer = data?.Customers ?? [];;
-      this.updateGridData(3, this.records_support_customer);
+      this.records_support_customer.set(data?.Customers ?? [])
+      this.updateGridData(3, this.records_support_customer());
 
     });
   }
 
   // #endregion
 
+  override ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.cleanupAllModals();
+  }
+
+  cleanupAllModals(): void {
+
+    document
+      .querySelectorAll('.modal-backdrop')
+      .forEach((item) => item.remove());
+
+    document
+      .querySelectorAll('.modal.show')
+      .forEach((modal) => {
+
+        const element = modal as HTMLElement;
+
+        element.classList.remove('show');
+
+        element.style.display = 'none';
+
+        element.setAttribute('aria-hidden', 'true');
+
+      });
+
+    document.body.classList.remove('modal-open');
+
+    document.body.style.overflow = '';
+
+    document.body.style.paddingRight = '';
+  }
+
   // #region Modal
 
-  customer_dialog_show() { this.toggleModal('#customerlist', true); }
-  customer_dialog_close() { this.toggleModal('#customerlist', false); }
-
-  property_dialog_show() { this.toggleModal('#factorcustomerproperty', true); }
-  property_dialog_close() { this.toggleModal('#factorcustomerproperty', false); }
-
-  factor_property_dialog_show() { this.toggleModal('#factorproperty', true); }
-  factor_property_dialog_close() { this.toggleModal('#factorproperty', false); }
-
-  boxbuy_dialog_show() { this.toggleModal('#boxbuymodal', true); }
-  boxbuy_dialog_close() { this.toggleModal('#boxbuymodal', false); }
-
-  Autletter_dialog_show() { this.toggleModal('#autlettercustomer', true); }
-  Autletter_dialog_close() { this.toggleModal('#autlettercustomer', false); }
 
 
 
 
-  toggleModal(selector: string, show: boolean) {
-    const modal: any = document.querySelector(selector);
+
+  property_dialog_show(): void {
+    const modal = this.factorcustomerproperty?.nativeElement;
     if (!modal) return;
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
 
-    if (show) {
-      // BACKDROP بساز
-      const backdrop = document.createElement('div');
-      backdrop.className = 'modal-backdrop fade';
-      backdrop.id = selector.replace('#', '') + '-backdrop';
-      document.body.appendChild(backdrop);
-
-      // کمی تاخیر برای fade
-      setTimeout(() => backdrop.classList.add('show'), 10);
-
-      // مودال را باز کن
-      modal.classList.add('show', 'd-block');
-      modal.removeAttribute('aria-hidden');
-      modal.setAttribute('aria-modal', 'true');
-      modal.style.display = 'block';
-
-      // بستن با کلیک روی بک‌دراپ
-      backdrop.addEventListener('click', () => this.toggleModal(selector, false));
-    }
-    else {
-      // مودال را ببند
-      modal.classList.remove('show');
-      setTimeout(() => {
-        modal.classList.remove('d-block');
-        modal.style.display = 'none';
-      }, 150);
-
-      modal.setAttribute('aria-hidden', 'true');
-      modal.removeAttribute('aria-modal');
-
-      // بک‌دراپ را حذف کن
-      const backdrop = document.getElementById(selector.replace('#', '') + '-backdrop');
-      if (backdrop) {
-        backdrop.classList.remove('show');
-        setTimeout(() => backdrop.remove(), 150);
-      }
-    }
+  property_dialog_close(): void {
+    const modal = this.factorcustomerproperty?.nativeElement;
+    if (!modal) return;
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
   }
 
 
@@ -1147,6 +1298,104 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
 
 
 
+
+
+
+  factor_property_dialog_show(): void {
+    const modal = this.factorproperty?.nativeElement;
+    if (!modal) return;
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+
+  factor_property_dialog_close(): void {
+    const modal = this.factorproperty?.nativeElement;
+    if (!modal) return;
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+  boxbuy_dialog_show(): void {
+    const modal = this.boxbuymodal?.nativeElement;
+    if (!modal) return;
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+
+  boxbuy_dialog_close(): void {
+    const modal = this.boxbuymodal?.nativeElement;
+    if (!modal) return;
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
+
+
+
+  Autletter_dialog_show(): void {
+    const modal = this.autlettercustomer?.nativeElement;
+    if (!modal) return;
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+
+  Autletter_dialog_close(): void {
+    const modal = this.autlettercustomer?.nativeElement;
+    if (!modal) return;
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
+
+
+
+
+
+
+
+
+  customer_dialog_show(): void {
+    const modal = this.customerlist?.nativeElement;
+    if (!modal) return;
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+
+  customer_dialog_close(): void {
+    const modal = this.customerlist?.nativeElement;
+    if (!modal) return;
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
 
 
 

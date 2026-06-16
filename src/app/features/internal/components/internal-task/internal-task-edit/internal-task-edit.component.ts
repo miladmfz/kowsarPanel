@@ -1,11 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { TaskWebApiService } from '../../../services/TaskWebApi.service';
 
 @Component({
@@ -23,22 +22,21 @@ export class InternalTaskEditComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private repo = inject(TaskWebApiService);
   private notificationService = inject(NotificationService);
-  private loadingService = inject(LoadingService);
   private location = inject(Location);
 
-  title = 'تعریف / ویرایش خدمت';
-  Code: string = '';
+  title = signal('تعریف / ویرایش خدمت')
+  TaskCode = signal('')
 
   // لیست سطوح والد
-  Parent_lvl1: any[] = [];
-  Parent_lvl2: any[] = [];
-  Parent_lvl3: any[] = [];
-  Parent_lvl4: any[] = [];
-  Parent_lvl5: any[] = [];
-  Parent_lvl6: any[] = [];
-  Parent_lvl7: any[] = [];
-  Parent_lvl8: any[] = [];
-  Parent_lvl9: any[] = [];
+  Parent_lvl1 = signal<any[]>([])
+  Parent_lvl2 = signal<any[]>([])
+  Parent_lvl3 = signal<any[]>([])
+  Parent_lvl4 = signal<any[]>([])
+  Parent_lvl5 = signal<any[]>([])
+  Parent_lvl6 = signal<any[]>([])
+  Parent_lvl7 = signal<any[]>([])
+  Parent_lvl8 = signal<any[]>([])
+  Parent_lvl9 = signal<any[]>([])
 
   EditForm_task = new FormGroup({
     TaskCode: new FormControl("0"),
@@ -70,15 +68,31 @@ export class InternalTaskEditComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.Code = this.route.snapshot.queryParamMap.get('Code') ?? '';
 
-    if (this.Code.length > 0) {
-      this.title = 'ویرایش خدمت';
-      this.LoadForEdit();
-    } else {
-      this.title = 'تعریف خدمت';
-      this.GetParent_lvl1();
-    }
+
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      const idStr = params.get('id');       // رشته
+      this.TaskCode.set(idStr)
+      const idNum = Number(idStr);          // فقط برای مقایسه
+
+      if (!idStr || idNum === 0) {
+        // حالت ایجاد
+        this.TaskCode.set("0")
+        this.title.set('تعریف خدمت')
+        this.GetParent_lvl1();
+
+      } else {
+        // حالت اصلاح
+        this.TaskCode.set(idStr)
+        this.title.set('ویرایش خدمت')
+        this.LoadForEdit();
+      }
+    });
+
+
+
+
+
   }
 
   // دریافت والدهای سطح 1 (در حالت ایجاد جدید)
@@ -92,20 +106,20 @@ export class InternalTaskEditComponent implements OnInit {
 
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
 
-      this.Parent_lvl1 = data.KowsarTasks;
+      this.Parent_lvl1.set(data.KowsarTasks)
     });
   }
 
   // سلسله‌مراتب والدها
   GetParent_lvl2() {
 
-    this.Parent_lvl3 = [];
-    this.Parent_lvl4 = [];
-    this.Parent_lvl5 = [];
-    this.Parent_lvl6 = [];
-    this.Parent_lvl7 = [];
-    this.Parent_lvl8 = [];
-    this.Parent_lvl9 = [];
+    this.Parent_lvl3.set([])
+    this.Parent_lvl4.set([])
+    this.Parent_lvl5.set([])
+    this.Parent_lvl6.set([])
+    this.Parent_lvl7.set([])
+    this.Parent_lvl8.set([])
+    this.Parent_lvl9.set([])
 
     this.EditForm_task.patchValue({
       TaskRef: this.EditForm_task.value.ParentCode1,
@@ -114,18 +128,18 @@ export class InternalTaskEditComponent implements OnInit {
 
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
 
-      this.Parent_lvl2 = data.KowsarTasks;
+      this.Parent_lvl2.set(data.KowsarTasks)
     });
   }
 
   GetParent_lvl3() {
 
-    this.Parent_lvl4 = [];
-    this.Parent_lvl5 = [];
-    this.Parent_lvl6 = [];
-    this.Parent_lvl7 = [];
-    this.Parent_lvl8 = [];
-    this.Parent_lvl9 = [];
+    this.Parent_lvl4.set([])
+    this.Parent_lvl5.set([])
+    this.Parent_lvl6.set([])
+    this.Parent_lvl7.set([])
+    this.Parent_lvl8.set([])
+    this.Parent_lvl9.set([])
 
     this.EditForm_task.patchValue({
       TaskRef: this.EditForm_task.value.ParentCode2,
@@ -136,18 +150,18 @@ export class InternalTaskEditComponent implements OnInit {
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
 
 
-      this.Parent_lvl3 = data.KowsarTasks;
+      this.Parent_lvl3.set(data.KowsarTasks)
     });
   }
 
   GetParent_lvl4() {
 
 
-    this.Parent_lvl5 = [];
-    this.Parent_lvl6 = [];
-    this.Parent_lvl7 = [];
-    this.Parent_lvl8 = [];
-    this.Parent_lvl9 = [];
+    this.Parent_lvl5.set([])
+    this.Parent_lvl6.set([])
+    this.Parent_lvl7.set([])
+    this.Parent_lvl8.set([])
+    this.Parent_lvl9.set([])
 
     this.EditForm_task.patchValue({
       TaskRef: this.EditForm_task.value.ParentCode3
@@ -158,16 +172,16 @@ export class InternalTaskEditComponent implements OnInit {
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
 
 
-      this.Parent_lvl4 = data.KowsarTasks;
+      this.Parent_lvl4.set(data.KowsarTasks)
     });
   }
 
   GetParent_lvl5() {
 
-    this.Parent_lvl6 = [];
-    this.Parent_lvl7 = [];
-    this.Parent_lvl8 = [];
-    this.Parent_lvl9 = [];
+    this.Parent_lvl6.set([])
+    this.Parent_lvl7.set([])
+    this.Parent_lvl8.set([])
+    this.Parent_lvl9.set([])
 
     this.EditForm_task.patchValue({
       TaskRef: this.EditForm_task.value.ParentCode4,
@@ -177,15 +191,15 @@ export class InternalTaskEditComponent implements OnInit {
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
 
 
-      this.Parent_lvl5 = data.KowsarTasks;
+      this.Parent_lvl5.set(data.KowsarTasks)
     });
   }
 
   GetParent_lvl6() {
 
-    this.Parent_lvl7 = [];
-    this.Parent_lvl8 = [];
-    this.Parent_lvl9 = [];
+    this.Parent_lvl7.set([])
+    this.Parent_lvl8.set([])
+    this.Parent_lvl9.set([])
 
     this.EditForm_task.patchValue({
       TaskRef: this.EditForm_task.value.ParentCode5,
@@ -195,14 +209,14 @@ export class InternalTaskEditComponent implements OnInit {
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
 
 
-      this.Parent_lvl6 = data.KowsarTasks;
+      this.Parent_lvl6.set(data.KowsarTasks)
     });
   }
 
   GetParent_lvl7() {
 
-    this.Parent_lvl8 = [];
-    this.Parent_lvl9 = [];
+    this.Parent_lvl8.set([])
+    this.Parent_lvl9.set([])
 
     this.EditForm_task.patchValue({
       TaskRef: this.EditForm_task.value.ParentCode6,
@@ -212,13 +226,13 @@ export class InternalTaskEditComponent implements OnInit {
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
 
 
-      this.Parent_lvl7 = data.KowsarTasks;
+      this.Parent_lvl7.set(data.KowsarTasks)
     });
   }
 
   GetParent_lvl8() {
 
-    this.Parent_lvl9 = [];
+    this.Parent_lvl9.set([])
     this.EditForm_task.patchValue({
       TaskRef: this.EditForm_task.value.ParentCode7,
 
@@ -227,7 +241,7 @@ export class InternalTaskEditComponent implements OnInit {
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
 
 
-      this.Parent_lvl8 = data.KowsarTasks;
+      this.Parent_lvl8.set(data.KowsarTasks)
     });
   }
 
@@ -240,7 +254,7 @@ export class InternalTaskEditComponent implements OnInit {
     this.repo.GetTasks(this.EditForm_task.value).subscribe((data: any) => {
 
 
-      this.Parent_lvl9 = data.KowsarTasks;
+      this.Parent_lvl9.set(data.KowsarTasks)
     });
   }
 
@@ -248,14 +262,14 @@ export class InternalTaskEditComponent implements OnInit {
   LoadForEdit() {
 
     this.repo.GetTasks({
-      TaskCode: this.Code,
-      Flag: 'get_one'
+      TaskCode: this.TaskCode(),
+      Flag: '1'
     }).subscribe((data: any) => {
 
-      const rec = data.Task[0];
+      const rec = data.KowsarTasks[0];
       this.EditForm_task.patchValue(rec);
 
-      this.Parent_lvl1 = data.Parent_lvl1;
+      this.Parent_lvl1.set(data.Parent_lvl1)
     });
   }
 
@@ -273,7 +287,7 @@ export class InternalTaskEditComponent implements OnInit {
     // فرم نامعتبر؟ جلوتر نرو
     if (!this.EditForm_task.valid || this.isSubmitting) return;
 
-    const isEdit = (this.Code?.length ?? 0) > 0; // اگر Code داری یعنی ویرایش
+    const isEdit = (this.TaskCode()?.length ?? 0) > 0; // اگر Code داری یعنی ویرایش
 
     this.isSubmitting = true;
 
@@ -322,8 +336,8 @@ export class InternalTaskEditComponent implements OnInit {
         this.reset();
         // اگر insert_new بود می‌خوای Code خالی بشه تا فرم در حالت ایجاد بمونه
         if (action === 'insert_new') {
-          this.Code = '';
-          this.title = 'تعریف خدمت';
+          this.TaskCode.set("")
+          this.title.set('تعریف خدمت')
         }
         break;
 

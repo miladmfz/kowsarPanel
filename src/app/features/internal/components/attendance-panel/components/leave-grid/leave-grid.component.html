@@ -12,7 +12,7 @@
 <!-- 🌀 حالت در حال بارگذاری -->
 <!-- =============================================================== -->
 
-@if (records.length > 0) {
+@if (records().length > 0) {
 
 <div class="card shadow-sm border-0">
 
@@ -22,9 +22,14 @@
   </div>
 
   <!-- Grid Container -->
-  <div class="ag-container" style="height: 450px; border-radius: 0 0 8px 8px; overflow: hidden;">
-    <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" (gridReady)="onGridReady($event, 1)"
-      [gridOptions]="gridOptions" class="w-100 h-100" (firstDataRendered)="gridApi1?.sizeColumnsToFit()">
+  <div class="ag-container rounded-3 border shadow-sm overflow-hidden"
+    style="height: 200px; border-radius: 0 0 8px 8px; overflow: hidden;">
+    <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+      [columnDefs]="column_name_1" [rowData]="records()" (gridReady)="onGridReady($event, 1)"
+      [gridOptions]="gridOptions" [class]="themeClass + ' w-100 h-100'"
+      (firstDataRendered)="gridApi1?.sizeColumnsToFit()" [pagination]="false" [defaultColDef]="defaultColDef"
+      [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+      (cellClicked)="onCellClicked($event)">
     </ag-grid-angular>
   </div>
 

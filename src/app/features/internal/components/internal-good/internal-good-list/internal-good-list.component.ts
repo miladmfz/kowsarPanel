@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { SupportFactorWebApiService } from '../../../services/SupportFactorWebApi.service';
 import { CellActionInternalGoodList } from './cell-action-internal-good-list';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-internal-good-list',
@@ -31,11 +30,11 @@ export class InternalGoodListComponent extends AgGridBaseComponent
   }
 
 
-  title = 'لیست خدمات';
-  records: any[] = [];
+  title = signal('لیست کالاهای پشتیبانی کوثر')
+  records = signal<any[]>([])
   dateValue = new FormControl();
 
-  Searchtarget: string = '';
+  Searchtarget = signal('')
 
 
 
@@ -50,11 +49,11 @@ export class InternalGoodListComponent extends AgGridBaseComponent
   }
 
   getGridSchema() {
-    this.columnDefs1 = [
+    this.column_name_1 = [
       {
         headerName: 'عملیات',
         pinned: 'left',
-        minWidth: 80,
+        width: 80,
         cellRenderer: CellActionInternalGoodList,
         cellRendererParams: {
           editUrl: '/internal/internal-good-edit'
@@ -63,7 +62,7 @@ export class InternalGoodListComponent extends AgGridBaseComponent
       {
         field: 'GoodCode',
         headerName: 'ک کالا',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         headerClass: 'text-center',
         minWidth: 200
@@ -71,7 +70,7 @@ export class InternalGoodListComponent extends AgGridBaseComponent
       {
         field: 'GoodName',
         headerName: 'نام کالا',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         headerClass: 'text-center',
         minWidth: 200
@@ -109,39 +108,16 @@ export class InternalGoodListComponent extends AgGridBaseComponent
 
   GetGood() {
 
-    this.repo.GetGoodListSupport(this.Searchtarget)
+    this.repo.GetGoodListSupport(this.Searchtarget())
       .subscribe((data: any) => {
 
-        this.records = data.Goods;
-        this.updateGridData(1, this.records);
+        this.records.set(data.Goods)
+        this.updateGridData(1, this.records());
 
       });
   }
 
 
-  customNumberFormatter(params) {
-    if (params.value === null || params.value === undefined) {
-      return ''; // اگر مقدار خالی است، چیزی نمایش نده.
-    }
 
-    // اطمینان حاصل کن که مقدار یک عدد است
-    let value = parseFloat(params.value);
-    if (isNaN(value)) {
-      return params.value; // اگر مقدار عددی نیست، همان مقدار اولیه را برگردان.
-    }
-
-    // فرمت اعداد با کاما برای جداسازی هر سه رقم و حذف صفرهای اضافی در اعشار
-    let formattedValue = value.toLocaleString('en-US', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 20 // حداکثر تعداد رقم‌های اعشار را بزرگ بگیر تا هنگام حذف، دقیق باشد.
-    });
-
-    // حذف صفرهای اضافی اعشاری اگر لازم باشد
-    if (formattedValue.indexOf('.') > -1) {
-      formattedValue = formattedValue.replace(/\.?0+$/, '');
-    }
-
-    return formattedValue;
-  }
 
 }

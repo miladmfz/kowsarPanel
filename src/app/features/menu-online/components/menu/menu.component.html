@@ -1,0 +1,524 @@
+<div class="kmenu-page container-fluid d-flex flex-column p-2" style="height: calc(100vh - 10px); overflow: hidden;">
+
+  <div class="flex-shrink-0">
+
+    <div id="basketButton" class="mb-2" [style.transform]="basketPulse() ? 'scale(1.03)' : 'scale(1)'"
+      [style.transition]="'all .25s ease'">
+
+      <app-home-header [TitleName]="mizname()" [basketamount]="FormatNumber(basketTotalPrice())"
+        [basketCount]="basketTotalAmount()" (basketClicked)="OpenBasket()">
+      </app-home-header>
+
+    </div>
+
+    @if (config.menuConfig.ShowQuickGroups) {
+
+    <div class="kmenu-card mb-2">
+
+      <div class="kmenu-card-body py-2">
+
+        @if (Groups().length <= 0 && !loading()) { <div class="text-center kmenu-muted py-3">
+          گروهی یافت نشد
+      </div>
+
+      }
+
+      <div #groupScrollContainer class="d-flex overflow-auto pb-1">
+
+        @for (group of Groups(); track group.GroupCode) {
+
+        <div class="me-2 flex-shrink-0" [id]="'menu-group-' + group.GroupCode">
+
+          <app-single-group [item]="group" [selectedGroupCode]="selectedGroupCode()"
+            (Group_Selected)="ScrollToGroup($event)">
+          </app-single-group>
+
+        </div>
+
+        }
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+  @if (config.menuConfig.EnableSearch) {
+
+  <div class="kmenu-card mb-2">
+
+    <div class="kmenu-card-body py-2">
+
+      <div class="row align-items-center">
+
+        <div class="col-lg-6 mb-2 mb-lg-0">
+
+          <h5 class="kmenu-title mb-1">
+            منوی سفارش
+          </h5>
+
+          <p class="kmenu-muted mb-0">
+            تعداد کالاها:
+            {{ filteredGoods().length }}
+          </p>
+
+        </div>
+
+        <div class="col-lg-6">
+
+          <input type="text" class="kmenu-input" placeholder="جستجوی کالا..." [ngModel]="searchTerm()"
+            (ngModelChange)="searchTerm.set($event)">
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+</div>
+
+<div #productScrollContainer class="flex-grow-1 overflow-auto pe-1" style="min-height: 0;" (scroll)="OnProductScroll()">
+
+  @if (loading()) {
+
+  <div class="kmenu-card">
+
+    <div class="kmenu-card-body text-center py-3">
+
+      <div class="kmenu-spinner">
+      </div>
+
+      <p class="kmenu-muted mt-3 mb-0">
+        در حال دریافت اطلاعات...
+      </p>
+
+    </div>
+
+  </div>
+
+  }
+
+  @else if (Groups().length <= 0) { <div class="kmenu-card">
+
+    <div class="kmenu-card-body text-center py-3">
+
+      <i class="mdi mdi-folder-alert-outline font-24 d-block mb-2"></i>
+
+      <h5 class="kmenu-title mb-1">
+        گروهی یافت نشد
+      </h5>
+
+      <p class="kmenu-muted mb-0">
+        هیچ دسته‌بندی‌ای برای این منو ثبت نشده است.
+      </p>
+
+    </div>
+
+</div>
+
+}
+
+@else if (filteredGoodsWithGroup().length <= 0) { <div class="kmenu-card">
+
+  <div class="kmenu-card-body text-center py-3">
+
+    <i class="mdi mdi-food-off-outline font-24 d-block mb-2"></i>
+
+    <h5 class="kmenu-title mb-1">
+      کالایی یافت نشد
+    </h5>
+
+    <p class="kmenu-muted mb-0">
+      برای این دسته‌بندی یا عبارت جستجو، کالایی وجود ندارد.
+    </p>
+
+  </div>
+
+  </div>
+
+  }
+
+  @else {
+
+  <div class="row">
+
+    @for (row of filteredGoodsWithGroup(); track row.item.GoodCode) {
+
+    @if (row.showGroupTitle && row.groupTitle) {
+
+    <div class="col-12" [id]="'group-' + row.groupCode" [attr.data-group-code]="row.groupCode">
+
+      <div class="kmenu-section-alert">
+
+        <strong>
+          {{ row.groupTitle }}
+        </strong>
+
+      </div>
+
+    </div>
+
+    }
+
+    <div class="col-12 col-sm-6 col-lg-4 col-xl-3 mb-1">
+
+      <app-single-item [item]="row.item" [menuConfig]="config.menuConfig" (itemSelected)="OpenItem($event)"
+        (itemAdded)="AddToBasket($event)">
+      </app-single-item>
+
+    </div>
+
+    }
+
+  </div>
+
+  }
+
+  </div>
+
+  @if (basketOpen()) {
+
+  <div class="kmenu-modal-backdrop">
+
+    <div class="kmenu-basket-modal-container">
+
+      <div class="kmenu-basket-modal">
+
+        <div class="kmenu-basket-modal-header">
+
+          <h5 class="kmenu-basket-modal-title">
+            سبد سفارش
+          </h5>
+
+          <button type="button" class="kmenu-modal-close" (click)="CloseBasket()">
+
+            <i class="mdi mdi-close"></i>
+
+          </button>
+
+        </div>
+
+        <div class="kmenu-basket-modal-body">
+
+          @if (BasketGoods().length <= 0) { <div class="text-center kmenu-muted py-4">
+
+            <i class="mdi mdi-cart-outline font-24 d-block mb-2"></i>
+
+            سبد سفارش خالی است
+
+        </div>
+
+        }
+
+        @else {
+
+        @for (item of BasketGoods(); track item.RowCode) {
+
+        <div class="kmenu-basket-item">
+
+          <div class="d-flex align-items-center">
+
+            <img [src]="GetImageSrc(item)" class="kmenu-basket-image me-2" alt="Basket Item">
+
+            <div class="flex-grow-1">
+
+              <h5 class="kmenu-basket-title mb-1">
+                {{ item.GoodName }}
+              </h5>
+
+              @if (item.Explain) {
+
+              <p class="kmenu-basket-explain mb-0">
+                توضیحات سفارش:
+                {{ item.Explain }}
+              </p>
+
+              }
+
+            </div>
+
+            <div class="text-end d-flex flex-column align-items-end">
+
+              <h5 class="kmenu-basket-price mb-2">
+
+                {{ FormatNumber(convert_toman(item.Price)) }}
+
+                <small>
+                  تومان
+                </small>
+
+              </h5>
+
+              <div class="d-flex align-items-center gap-2">
+
+                <button type="button" class="kmenu-circle-btn" (click)="DecreaseBasketItem(item)">
+
+                  <i class="mdi mdi-minus"></i>
+
+                </button>
+
+                <div class="kmenu-amount-badge">
+                  {{ item.Amount }}
+                </div>
+
+                <button type="button" class="kmenu-circle-btn" (click)="IncreaseBasketItem(item)">
+
+                  <i class="mdi mdi-plus"></i>
+
+                </button>
+
+                <div class="mx-3"></div>
+
+                <button type="button" class="kmenu-circle-btn kmenu-circle-btn-danger" (click)="RemoveBasketItem(item)">
+
+                  <i class="mdi mdi-trash-can-outline font-16"></i>
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        }
+
+        }
+
+      </div>
+
+      <div class="kmenu-basket-modal-footer">
+
+        <div class="kmenu-basket-summary mb-3">
+
+          <div class="row align-items-center text-center">
+
+            <div class="col-6 border-end">
+
+              <small class="kmenu-muted d-block mb-1">
+                تعداد آیتم‌ها
+              </small>
+
+              <h3 class="kmenu-summary-number mb-0">
+                {{ basketTotalAmount() }}
+              </h3>
+
+            </div>
+
+            <div class="col-6">
+
+              <small class="kmenu-muted d-block mb-1">
+                مبلغ کل سفارش
+              </small>
+
+              <h3 class="kmenu-summary-price mb-0">
+                {{ FormatNumber(basketTotalPrice()) }}
+              </h3>
+
+              <small class="kmenu-muted">
+                تومان
+              </small>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="row g-2 mt-1">
+
+          <div class="col-12 col-md-4">
+
+            <button type="button"
+              class="kmenu-btn kmenu-btn-danger w-100 d-flex align-items-center justify-content-center py-2"
+              (click)="ClearBasket()">
+
+              <i class="mdi mdi-delete-sweep-outline font-18 me-2"></i>
+
+              <span class="fw-semibold">
+                حذف کل سبد
+              </span>
+
+            </button>
+
+          </div>
+
+          <div class="col-12 col-md-4">
+
+            <button type="button"
+              class="kmenu-btn kmenu-btn-success w-100 d-flex align-items-center justify-content-center py-2"
+              (click)="OrderToFactor()">
+
+              <i class="mdi mdi-check-circle-outline font-18 me-2"></i>
+
+              <span class="fw-bold">
+                نهایی کردن سفارش
+              </span>
+
+            </button>
+
+          </div>
+
+          <div class="col-12 col-md-4">
+
+            <button type="button"
+              class="kmenu-btn kmenu-btn-light w-100 d-flex align-items-center justify-content-center py-2"
+              (click)="CloseBasket()">
+
+              <i class="mdi mdi-close-circle-outline font-18 me-2"></i>
+
+              <span class="fw-semibold">
+                بستن
+              </span>
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  </div>
+
+  }
+
+  @if (showRemoveConfirm()) {
+
+  <div class="kmenu-modal-backdrop">
+
+    <div class="kmenu-confirm-modal">
+
+      <div class="kmenu-confirm-icon">
+
+        <i class="mdi mdi-trash-can-outline font-28"></i>
+
+      </div>
+
+      <h4 class="kmenu-title mb-2">
+        حذف آیتم
+      </h4>
+
+      <p class="kmenu-muted mb-4">
+
+        {{ showRemoveConfirm()?.GoodName }}
+
+        از سبد حذف شود؟
+
+      </p>
+
+      <div class="d-grid gap-2">
+
+        <button type="button" class="kmenu-btn kmenu-btn-danger" (click)="ConfirmRemoveBasketItem()">
+
+          حذف از سبد
+
+        </button>
+
+        <button type="button" class="kmenu-btn kmenu-btn-light" (click)="CancelRemoveBasketItem()">
+
+          انصراف
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+  @if (selectedItem()) {
+
+  <div class="kmenu-modal-backdrop">
+
+    <div class="kmenu-modal-container">
+
+      <div class="kmenu-item-modal">
+
+        <div class="kmenu-modal-header">
+
+          <h5 class="kmenu-modal-title">
+            {{ selectedItem().GoodName }}
+          </h5>
+
+          <button type="button" class="kmenu-modal-close" (click)="CloseItem()">
+
+            <i class="mdi mdi-close"></i>
+
+          </button>
+
+        </div>
+
+        <div class="kmenu-modal-body">
+
+          <img [src]="GetImageSrc(selectedItem())" class="kmenu-modal-image" alt="Product Image">
+
+          <p class="kmenu-modal-desc">
+            {{ selectedItem().GoodExplain2 }}
+          </p>
+
+          <div class="kmenu-modal-price">
+
+            {{ FormatNumber(convert_toman(selectedItem().MaxSellPrice)) }}
+
+            <small>
+              تومان
+            </small>
+
+          </div>
+
+        </div>
+
+        <div class="kmenu-modal-footer">
+
+          <button type="button" class="kmenu-modal-button" (click)="CloseItem()">
+
+            بستن
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+  @if (config.menuConfig.EnableAddToast && showToast()) {
+
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 2000;">
+
+    <div class="kmenu-toast">
+
+      <div class="kmenu-toast-body">
+
+        <i class="mdi mdi-check-circle-outline font-20 me-2"></i>
+
+        {{ toastMessage() }}
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+  </div>

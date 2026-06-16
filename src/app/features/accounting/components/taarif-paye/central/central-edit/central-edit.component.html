@@ -1,0 +1,641 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">{{ title() }}</h4>
+
+    <form [formGroup]="EditForm_Central" id="submitForm">
+
+      <div class="row">
+
+        <div class="row form-group m-1 col-md-12">
+          <div class="form-group col-md-3">
+            <label for="CentralCode">کد </label>
+            <input type="text" id="CentralCode" class="form-control" formControlName="CentralCode" [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['CentralCode'].invalid && EditForm_Central.controls['CentralCode'].touched,
+                   'is-valid': EditForm_Central.controls['CentralCode'].valid && EditForm_Central.controls['CentralCode'].touched
+                 }" readonly />
+            <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm_Central.controls['CentralCode']
+          }"></ng-container>
+          </div>
+
+
+          <div class="form-group col-md-3">
+            <label for="RecType">نوع اجزای پایه <span class="text-danger">*</span></label>
+            <select id="RecType" class="form-control" formControlName="RecType" [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['RecType'].invalid && EditForm_Central.controls['RecType'].touched,
+                   'is-valid': EditForm_Central.controls['RecType'].valid && EditForm_Central.controls['RecType'].touched
+                 }" (change)="onRecTypeChange()">
+              <option value="">لطفاً انتخاب کنید</option>
+              @for (item of records_CentralRecType(); track item) {
+              <option [value]="item.PrivateCode">{{ item.Value }}</option>
+              }
+            </select>
+          </div>
+
+          @if (CentralCode()!="0"){
+
+          <div class="form-group col-md-3">
+
+          </div>
+
+
+          <div class="form-group col-md-3">
+
+            <button class="btn btn-primary mx-2" (click)="Show_property()">
+              خصوصیت اضافه </button>
+            <button class="btn btn-primary mx-2" (click)="Show_relations()">
+              اجزائ مرتبط
+            </button>
+            <button class="btn btn-primary mx-2" (click)="Show_Addresss()">
+              آدرس ها
+            </button>
+          </div>
+
+          }
+
+
+
+        </div>
+
+
+        <!-- نام مشتری -->
+        <div class="form-group m-1 col-md-12">
+          <label for="Name">نام حساب <span class="text-danger">*</span></label>
+          <input type="text" id="Name" class="form-control" formControlName="Name" [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['Name'].invalid && EditForm_Central.controls['Name'].touched,
+                   'is-valid': EditForm_Central.controls['Name'].valid && EditForm_Central.controls['Name'].touched
+                 }" />
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm_Central.controls['Name']
+          }"></ng-container>
+        </div>
+
+        <div class="row form-group m-1 col-md-12">
+
+
+          @if (show_title()){
+          <div class="form-group col-md-3">
+            <label for="Title">عنوان </label>
+            <input type="text" id="Title" class="form-control" formControlName="Title" [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['Title'].invalid && EditForm_Central.controls['Title'].touched,
+                   'is-valid': EditForm_Central.controls['Title'].valid && EditForm_Central.controls['Title'].touched
+                 }" />
+            <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm_Central.controls['Title']
+          }"></ng-container>
+          </div>
+          }
+
+          @if (show_Fname()){
+          <div class="form-group col-md-3">
+            <label for="FName">نام </label>
+            <input type="text" id="FName" class="form-control" formControlName="FName" [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['FName'].invalid && EditForm_Central.controls['FName'].touched,
+                   'is-valid': EditForm_Central.controls['FName'].valid && EditForm_Central.controls['FName'].touched
+                 }" />
+            <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm_Central.controls['FName']
+          }"></ng-container>
+          </div>
+          }
+
+          @if (show_Manager()){
+          <div class="form-group col-md-3">
+            <label for="Manager">مدیر </label>
+            <input type="text" id="Manager" class="form-control" formControlName="Manager" [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['Manager'].invalid && EditForm_Central.controls['Manager'].touched,
+                   'is-valid': EditForm_Central.controls['Manager'].valid && EditForm_Central.controls['Manager'].touched
+                 }" />
+            <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm_Central.controls['Manager']
+          }"></ng-container>
+          </div>
+          }
+
+          @if (show_Delegacy()){
+          <div class="form-group col-md-3">
+            <label for="Delegacy">نمایینده </label>
+            <input type="text" id="Delegacy" class="form-control" formControlName="Delegacy" [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['Delegacy'].invalid && EditForm_Central.controls['Delegacy'].touched,
+                   'is-valid': EditForm_Central.controls['Delegacy'].valid && EditForm_Central.controls['Delegacy'].touched
+                 }" />
+            <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm_Central.controls['Delegacy']
+          }"></ng-container>
+          </div>
+          }
+
+
+        </div>
+
+
+
+        <div class="row form-group m-1 col-md-12">
+
+
+          <div class="form-group col-md-4">
+            <label for="D_RecType">نوع </label>
+            <select id="D_RecType" class="form-control" formControlName="D_RecType" [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['D_RecType'].invalid && EditForm_Central.controls['D_RecType'].touched,
+                   'is-valid': EditForm_Central.controls['D_RecType'].valid && EditForm_Central.controls['D_RecType'].touched
+                 }" (change)="DaraiiRecType_change()">
+              <option value="">لطفاً انتخاب کنید</option>
+              @for (item of records_DaraiiRecType(); track item) {
+              <option [value]="item.PrivateCode">{{ item.Value }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group col-md-4">
+            <label for="D_OstanCode">استان </label>
+            <select id="D_OstanCode" class="form-control" formControlName="D_OstanCode" [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['D_OstanCode'].invalid && EditForm_Central.controls['D_OstanCode'].touched,
+                   'is-valid': EditForm_Central.controls['D_OstanCode'].valid && EditForm_Central.controls['D_OstanCode'].touched
+                 }" (change)="GetZone_Shahr()">
+              <option value="">لطفاً انتخاب کنید</option>
+              @for (item of records_Zone_Ostan(); track item) {
+              <option [value]="item.OstanCode">{{ item.Ostan }}</option>
+              }
+            </select>
+          </div>
+
+
+          @if (records_Zone_Shahr().length>0){
+          <div class="form-group col-md-4">
+            <label for="D_ShahrCode">شهر </label>
+            <select id="D_ShahrCode" class="form-control" formControlName="D_ShahrCode" [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['D_ShahrCode'].invalid && EditForm_Central.controls['D_ShahrCode'].touched,
+                   'is-valid': EditForm_Central.controls['D_ShahrCode'].valid && EditForm_Central.controls['D_ShahrCode'].touched
+                 }" (change)="GetZone_Shahr()">
+              <option value="">لطفاً انتخاب کنید</option>
+              @for (item of records_Zone_Shahr(); track item) {
+              <option [value]="item.ShahrCode">{{ item.Shahr }}</option>
+              }
+            </select>
+          </div>
+          }
+
+
+        </div>
+
+        <div class="row form-group m-1 col-md-12">
+          <div class="form-group col-md-4">
+            <label for="D_CodeMelli">ک ملی </label>
+            <input type="text" id="D_CodeMelli" class="form-control" formControlName="D_CodeMelli" [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['D_CodeMelli'].invalid && EditForm_Central.controls['D_CodeMelli'].touched,
+                   'is-valid': EditForm_Central.controls['D_CodeMelli'].valid && EditForm_Central.controls['D_CodeMelli'].touched
+                 }" />
+            <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm_Central.controls['D_CodeMelli']
+          }"></ng-container>
+          </div>
+
+          <div class="form-group col-md-4">
+            <label for="D_BranchCode">کد شعبه </label>
+            <input type="text" id="D_BranchCode" class="form-control" formControlName="D_BranchCode" [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['D_BranchCode'].invalid && EditForm_Central.controls['D_BranchCode'].touched,
+                   'is-valid': EditForm_Central.controls['D_BranchCode'].valid && EditForm_Central.controls['D_BranchCode'].touched
+                 }" />
+            <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm_Central.controls['D_BranchCode']
+          }"></ng-container>
+          </div>
+
+          <div class="form-group col-md-4">
+            <label for="EconomyCode">کد اقتصادی </label>
+            <input type="text" id="EconomyCode" class="form-control" formControlName="EconomyCode" [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['EconomyCode'].invalid && EditForm_Central.controls['EconomyCode'].touched,
+                   'is-valid': EditForm_Central.controls['EconomyCode'].valid && EditForm_Central.controls['EconomyCode'].touched
+                 }" />
+            <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm_Central.controls['EconomyCode']
+          }"></ng-container>
+          </div>
+
+        </div>
+
+
+        <!-- <div class="form-group col-md-6">
+          <label for="AddCode">AddCode </label>
+          <input type="text" id="AddCode" class="form-control" formControlName="AddCode" [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['AddCode'].invalid && EditForm_Central.controls['AddCode'].touched,
+                   'is-valid': EditForm_Central.controls['AddCode'].valid && EditForm_Central.controls['AddCode'].touched
+                 }" />
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm_Central.controls['AddCode']
+          }"></ng-container>
+        </div> -->
+
+
+        <div class="row form-group m-1 col-md-12">
+
+          @if (show_D_Customer()){
+
+          <div class="form-group col-md-4">
+            <label for="D_CustomerType">نوع مشتری </label>
+            <select id="D_CustomerType" class="form-control" formControlName="D_CustomerType" [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['D_CustomerType'].invalid && EditForm_Central.controls['D_CustomerType'].touched,
+                   'is-valid': EditForm_Central.controls['D_CustomerType'].valid && EditForm_Central.controls['D_CustomerType'].touched
+                 }">
+              <option value="">لطفاً انتخاب کنید</option>
+              @for (item of records_DaraiiCustomerType(); track item) {
+              <option [value]="item.PrivateCode">{{ item.Value }}</option>
+              }
+            </select>
+          </div>
+          }
+
+          @if (show_D_Vendor()){
+
+          <div class="form-group col-md-4">
+            <label for="D_VendorType">نوع فروشنده </label>
+            <select id="D_VendorType" class="form-control" formControlName="D_VendorType" [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['D_VendorType'].invalid && EditForm_Central.controls['D_VendorType'].touched,
+                   'is-valid': EditForm_Central.controls['D_VendorType'].valid && EditForm_Central.controls['D_VendorType'].touched
+                 }">
+              <option value="">لطفاً انتخاب کنید</option>
+              @for (item of records_DaraiiVendorType(); track item) {
+              <option [value]="item.PrivateCode">{{ item.Value }}</option>
+              }
+            </select>
+          </div>
+
+          }
+
+        </div>
+
+
+        <!-- <div class="col-md-12 d-flex align-items-center">
+          <label for="GoodName" class="col-form-label">لیست طبقه بندی</label>
+          <button class="btn btn-link mx-2 text-info" (click)="AddCentralGroup()">اضافه کردن طبقه بندی</button>
+        </div>
+
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden"  style="height: 250px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="column_name_1" [rowData]="records_CentralGroup()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()" [class]="themeClass + ' w-100 h-100'"   >
+          </ag-grid-angular>
+        </div> -->
+
+
+
+        <!--        
+        <div class="form-group col-md-6">
+          <label for="PriorCentralPrivateCode">PriorCentralPrivateCode </label>
+          <input type="text" id="PriorCentralPrivateCode" class="form-control" formControlName="PriorCentralPrivateCode"
+            [ngClass]="{
+                   'is-invalid': EditForm_Central.controls['PriorCentralPrivateCode'].invalid && EditForm_Central.controls['PriorCentralPrivateCode'].touched,
+                   'is-valid': EditForm_Central.controls['PriorCentralPrivateCode'].valid && EditForm_Central.controls['PriorCentralPrivateCode'].touched
+                 }" />
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm_Central.controls['PriorCentralPrivateCode']
+          }"></ng-container>
+        </div> -->
+
+
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+
+<!-- دکمه‌ها -->
+<div class="card mt-3">
+  <div class="card-body">
+    <button class="btn btn-success m-2" (click)="submit_Central()">
+      <i class="fas fa-check-double"></i> ثبت
+    </button>
+    <button class="btn btn-light m-2" (click)="onCancel()">انصراف</button>
+  </div>
+</div>
+
+
+<!-- <app-kowsar-attach [ObjectRef]="WebsiteId()" [ClassName]="'website'"></app-kowsar-attach> -->
+
+
+<!-- TEMPLATE ERROR -->
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  @if (control.hasError(validation) && (control.dirty || control.touched)) {
+  <div class="invalid-feedback d-block">{{ message }}</div>
+  }
+</ng-template>
+
+
+
+
+
+
+
+
+
+
+<div class="modal fade" id="addressmodal" tabindex="-1" aria-labelledby="addressmodalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addressmodalLabel">{{address_modal_title()}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="addressmodal_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 250px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="columnDefs2" [rowData]="records_address()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+            [class]="themeClass + ' w-100 h-100'">
+          </ag-grid-angular>
+        </div>
+        @if(show_address_form()){
+        <form [formGroup]="EditForm_Address" id="submitForm">
+
+
+          <div class="row form-group col-md-12 m-2">
+
+            <div class="form-group col-md-3">
+              <label for="AddressTitle">عنوان<span class="text-danger">*</span></label>
+              <input type="text" id="AddressTitle" class="form-control" formControlName="AddressTitle" [ngClass]="{
+                      'is-invalid': EditForm_Address.controls['AddressTitle'].invalid && EditForm_Address.controls['AddressTitle'].touched,
+                      'is-valid': EditForm_Address.controls['AddressTitle'].valid && EditForm_Address.controls['AddressTitle'].touched
+                    }" />
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                validation: 'required',
+                message: 'اجباری است',
+                control: EditForm_Address.controls['AddressTitle']
+              }"></ng-container>
+            </div>
+
+
+            <div class="form-group col-md-2">
+              <label for="CityCode">کد سیستمی شهر<span class="text-danger">*</span></label>
+              <input type="text" id="CityCode" class="form-control" formControlName="CityCode" readonly
+                (click)="city_modal()" [ngClass]="{
+                      'is-invalid': EditForm_Address.controls['CityCode'].invalid && EditForm_Address.controls['CityCode'].touched,
+                      'is-valid': EditForm_Address.controls['CityCode'].valid && EditForm_Address.controls['CityCode'].touched
+                    }" />
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                validation: 'required',
+                message: 'اجباری است',
+                control: EditForm_Address.controls['CityCode']
+              }"></ng-container>
+            </div>
+
+
+            <div class="form-group col-md-2">
+              <label for="CityName">نام شهر</label>
+              <input type="text" id="CityName" class="form-control" formControlName="CityName" readonly
+                (click)="city_modal()" [ngClass]="{
+                      'is-invalid': EditForm_Address.controls['CityName'].invalid && EditForm_Address.controls['CityName'].touched,
+                      'is-valid': EditForm_Address.controls['CityName'].valid && EditForm_Address.controls['CityName'].touched
+                    }" />
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                validation: 'required',
+                message: 'اجباری است',
+                control: EditForm_Address.controls['CityName']
+              }"></ng-container>
+            </div>
+
+
+
+
+            <div class="form-group col-md-12">
+              <label for="Address">آدرس<span class="text-danger">*</span></label>
+              <input type="text" id="Address" class="form-control" formControlName="Address" [ngClass]="{
+                      'is-invalid': EditForm_Address.controls['Address'].invalid && EditForm_Address.controls['Address'].touched,
+                      'is-valid': EditForm_Address.controls['Address'].valid && EditForm_Address.controls['Address'].touched
+                    }" />
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                validation: 'required',
+                message: 'اجباری است',
+                control: EditForm_Address.controls['Address']
+              }"></ng-container>
+            </div>
+
+            <div class="form-group col-md-3">
+              <label for="Mobile">موبایل</label>
+              <input type="text" id="Mobile" class="form-control" formControlName="Mobile" />
+
+            </div>
+
+
+            <div class="form-group col-md-3">
+              <label for="Email">ایمیل</label>
+              <input type="text" id="Email" class="form-control" formControlName="Email" />
+
+            </div>
+
+
+            <div class="form-group col-md-3">
+              <label for="MobileName">موبایل نام</label>
+              <input type="text" id="MobileName" class="form-control" formControlName="MobileName" />
+
+            </div>
+
+
+            <div class="form-group col-md-3">
+              <label for="ZipCode">ZipCode</label>
+              <input type="text" id="ZipCode" class="form-control" formControlName="ZipCode" />
+
+            </div>
+
+
+            <div class="form-group col-md-3">
+              <label for="PostCode">کد پستی</label>
+              <input type="text" id="PostCode" class="form-control" formControlName="PostCode" />
+
+            </div>
+
+
+            <div class="form-group col-md-3">
+              <label for="Phone">تلفن</label>
+              <input type="text" id="Phone" class="form-control" formControlName="Phone" />
+
+            </div>
+
+
+            <div class="form-group col-md-3">
+              <label for="Fax">فکس</label>
+              <input type="text" id="Fax" class="form-control" formControlName="Fax" />
+
+            </div>
+          </div>
+        </form>
+        }
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="addressmodal_dialog_close()">بستن</button>
+        @if(show_address_form()){
+        <button type="button" class="btn btn-primary" (click)="Setaddress()">ثبت</button>
+
+        }
+        @if(!show_address_form()){
+        <button type="button" class="btn btn-success" (click)=" Newaddress()">رکورد جدید</button>
+
+        }
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="citylist" tabindex="-1" aria-labelledby="citylistLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="citylistLabel">لیست انبار ها</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="city_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 350px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="columnDefs5" [rowData]="base_city_list()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 5)" (firstDataRendered)="gridApi5?.sizeColumnsToFit()"
+            [class]="themeClass + ' w-100 h-100'" [rowSelection]="{ mode: 'singleRow' ,enableClickSelection: true}"
+            (selectionChanged)="onSelectionChanged_Row($event)" [treeData]="true" [getDataPath]="getDataPath_city">
+          </ag-grid-angular>
+        </div>
+
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="city_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="SetCity()">انتخاب</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="property" tabindex="-1" aria-labelledby="propertyLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="propertyLabel">خصوصیت اضافه</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="property_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+
+
+        @if(show_Property()){
+        <app-kowsar-property [ObjectType]="''" [ObjectRef]="CentralCode()"
+          [ClassName]="'Central'"></app-kowsar-property>
+        }
+
+
+
+
+
+
+      </div>
+      <div class=" modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="property_dialog_close()">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="relation" tabindex="-1" aria-labelledby="relationLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="relationLabel">تعریف اجزای مرتبط</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="relation_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+
+
+
+
+
+
+
+        <form [formGroup]="relationForm">
+
+          <div class="form-group col-md-12">
+            <label for="newtype_Lookup">تعریف با </label>
+            <select id="newtype_Lookup" class="form-control" formControlName="newtype_Lookup">
+              <option value="">لطفاً انتخاب کنید</option>
+              @for (item of newtype_Lookup; track item) {
+              <option [value]="item.id">{{ item.name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-check" *ngFor="let item of options">
+            <input class="form-check-input" type="checkbox" [formControlName]="item.key" [id]="item.key" />
+            <label class="form-check-label" [for]="item.key">
+              {{ item.label }}
+            </label>
+          </div>
+
+          @if(show_tafzilybox_relation()){
+          <div class="form-group col-md-12">
+            <label for="moein">معین</label>
+            <select id="moein" class="form-control" formControlName="moein">
+              <option value="">لطفاً انتخاب کنید</option>
+              @for (item of moein; track item) {
+              <option [value]="item.id">{{ item.name }}</option>
+              }
+            </select>
+          </div>
+          }
+
+
+
+        </form>
+
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="SetRelation()">ثبت</button>
+
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="relation_dialog_close()">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>

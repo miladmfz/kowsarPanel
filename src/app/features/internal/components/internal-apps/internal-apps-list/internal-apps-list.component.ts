@@ -1,24 +1,13 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-
-
-// 🔵 AG Grid
 import { AgGridModule } from 'ag-grid-angular';
-
-// 🔵 Renderer های سفارشی
 import { CellActionApplicationList } from './cell_action_application_list';
 import { LableAppTypeAppActivation } from './lable-apptype-appactivation';
-
-// 🔵 Library
-import Swal from 'sweetalert2';
-import { Subscription } from 'rxjs';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { LableIsActiveAppActivation } from './lable-isactive-appactivation copy';
 import { InternalAppsWebApiService } from '../../../services/InternalAppsWebApi.service';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-application-list',
@@ -36,9 +25,9 @@ export class InternalAppsListComponent
   extends AgGridBaseComponent
   implements OnInit, OnDestroy {
 
-  records: any;
-  title = 'لیست مشتریان سامانه';
-  loading = false;
+  records = signal<any[]>([])
+  title = signal('لیست مشتریان سامانه')
+  loading = signal(false)
 
   private readonly router = inject(Router);
 
@@ -54,7 +43,7 @@ export class InternalAppsListComponent
 
 
 
-    this.columnDefs1 = [
+    this.column_name_1 = [
       {
         field: 'عملیات',
         pinned: 'left',
@@ -67,49 +56,49 @@ export class InternalAppsListComponent
       {
         field: 'ActivationCode',
         headerName: 'کد فعال سازی',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'PersianCompanyName',
         headerName: 'نام فارسی',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'ServerIp',
         headerName: 'آدرس',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'ServerPort',
         headerName: 'پورت',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'ServerPathApi',
         headerName: 'نام پوشه',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'AppType',
         headerName: 'نوع نرم افزار',
-        filter: 'agSetColumnFilter',
+
         cellRenderer: LableAppTypeAppActivation,
         cellClass: 'text-center',
       },
       {
         field: 'IsActive',
         headerName: 'وضعیت',
-        filter: 'agSetColumnFilter',
+
         cellRenderer: LableIsActiveAppActivation,
         cellClass: 'text-center',
       }
@@ -139,8 +128,8 @@ export class InternalAppsListComponent
 
     this.repo.GetAppActivation().subscribe((data: any) => {
 
-      this.records = data?.AppActivations ?? [];
-      this.updateGridData(1, this.records);
+      this.records.set(data?.AppActivations ?? [])
+      this.updateGridData(1, this.records());
     });
   }
 
@@ -195,14 +184,14 @@ export class InternalAppsListComponent
 
 
   // CheckPort(data: any): void {
-  //   this.loading = true;
+  //   this.loading.set(true)
 
   //   const ip = data.ServerURL.match(/\/\/(.*?):/)[1];
   //   const port = data.ServerURL.match(/:(\d+)\//)[1];
 
   //        
   // this.repo.CheckPort(ip, port).subscribe((e: any) => {
-  //     this.loading = false;
+  //     this.loading.set(false)
 
   //     if (e.status === "open") {
   //       Swal.fire({

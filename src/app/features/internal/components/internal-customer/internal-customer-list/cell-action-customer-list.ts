@@ -1,33 +1,58 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
+import { PermissionService } from 'src/app/app-shell/framework-services/storage/PermissionService';
 declare var $: any;
 
 @Component({
     selector: 'edit-delete-cell-renderer',
     template: ` 
-      <span   (click)="NavigateToEdit()" class="btn btn-sm btn-outline-primary  " data-toggle="tooltip" title="اصلاح مشتری">
-  <a >
-    <i class="fas fa-user-edit"></i>
-  </a>
-  </span>
-      <span   (click)="Factor_Customer()" class="btn btn-sm btn-outline-primary mx-1" data-toggle="tooltip" title="لیست فاکتور">
-  <a >
-    <i class="fas fa-file-invoice"></i>
-  </a>
-  </span>
+<!-- اصلاح مشتری -->
+
+@if(permissionService.canManageRole){
+<span
+  (click)="NavigateToEdit()"
+  class="btn btn-sm btn-outline-primary d-inline-flex align-items-center justify-content-center"
+  data-toggle="tooltip"
+  title="اصلاح مشتری">
+
+  <i class="fas fa-user-edit"></i>
+
+</span>
+}
 
 
-  <span   (click)="Edit_Customer_Property_Explain()" class="btn btn-sm btn-outline-primary mx-1 " data-toggle="tooltip" title=" ویرایش اطلاعات کوثر ">
-  <a >
-    <i class="fas fa-file-alt"></i>
-  </a>
-  </span>
+<!-- لیست فاکتور -->
+<span
+  (click)="Factor_Customer()"
+  class="btn btn-sm btn-outline-primary mx-1 d-inline-flex align-items-center justify-content-center"
+  data-toggle="tooltip"
+  title="لیست فاکتور">
 
-    <span   (click)="Show_Customer_Property()" class="btn btn-sm btn-outline-primary mx-1 " data-toggle="tooltip" title="خصوصیت اضافه ">
-  <a >
-    <i class="fas fa-file-alt"></i>
-  </a>
-  </span>
+  <i class="fas fa-file-invoice"></i>
+
+</span>
+
+<!-- ویرایش اطلاعات کوثر -->
+<span
+  (click)="Edit_Customer_Property_Explain()"
+  class="btn btn-sm btn-outline-primary mx-1 d-inline-flex align-items-center justify-content-center"
+  data-toggle="tooltip"
+  title="ویرایش اطلاعات کوثر">
+
+  <i class="fas fa-file-signature"></i>
+
+</span>
+
+<!-- خصوصیت اضافه -->
+<span
+  (click)="Show_Customer_Property()"
+  class="btn btn-sm btn-outline-primary mx-1 d-inline-flex align-items-center justify-content-center"
+  data-toggle="tooltip"
+  title="خصوصیت اضافه">
+
+  <i class="fas fa-tags"></i>
+
+</span>
   `,
     standalone: false
 })
@@ -38,12 +63,14 @@ export class CellActionCustomerList implements ICellRendererAngularComp {
     canDelete: true;
     canView: true;
     id: 0;
+    protected readonly permissionService = inject(PermissionService);
 
     refresh(params: any): boolean {
         return true;
     }
 
     agInit(params: any): void {
+
         this.params = params;
         if (params.canEdit) {
             this.canEdit = params.canEdit;

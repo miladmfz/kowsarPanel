@@ -1,4 +1,3 @@
-// src/app/auth-kowsar/auth-kowsar.routes.ts
 import { Routes } from '@angular/router';
 
 export const authKowsarRoutes: Routes = [
@@ -22,6 +21,19 @@ export const authKowsarRoutes: Routes = [
                 loadComponent: () =>
                     import('./components/register/register.component').then(m => m.RegisterComponent),
             },
+            {
+                path: 'change-password',
+                loadComponent: () =>
+                    import('./components/auth-change/auth-change.component').then(m => m.AuthChangeComponent),
+            },
+
+
+
+
+
+
+
+
         ],
     },
 ];

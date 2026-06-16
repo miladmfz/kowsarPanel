@@ -1,8 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Renderer2 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { OcrWebApiService } from '../../../services/OcrWebApi.service';
-import { AppConfigService } from 'src/app/app-config.service';
+import { Component, OnInit, Renderer2, signal } from '@angular/core';
 import { OcrAppColumnListComponent } from './components/ocr-app-column-list/ocr-app-column-list.component';
 import { OcrAppColumnEditComponent } from './components/ocr-app-column-edit/ocr-app-column-edit.component';
 import { OcrAppFactorDetailComponent } from './components/ocr-app-factor-detail/ocr-app-factor-detail.component';
@@ -31,12 +28,12 @@ import { OcrAppSettingComponent } from './components/ocr-app-setting/ocr-app-set
 })
 export class OcrAppComponent implements OnInit {
 
-  ObjectRef = '';
-  activeTab = 'panel';
+  ObjectRef = signal('')
+  activeTab = signal('panel')
 
 
   id!: string;
-  JobPersonRef: string = '';
+  LoginType = signal('')
 
 
   tabs = [

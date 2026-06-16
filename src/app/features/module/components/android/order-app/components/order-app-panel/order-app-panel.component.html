@@ -6,7 +6,7 @@
           <div class="avatar-lg rounded-circle bg-icon-success"><i
               class="font-24 avatar-title mdi-lg mdi mdi-home-roof"></i></div>
           <div class="flex-1 text-end  align-self-center">
-            <h3 class="mt-0"><span><span>میز خالی = {{items1.length}}</span></span></h3>
+            <h3 class="mt-0"><span><span>میز خالی = {{items1().length}}</span></span></h3>
             <h4 class="text-muted mb-0"><span>روف</span></h4>
           </div>
         </div>
@@ -22,7 +22,7 @@
           </div>
 
           <div class="flex-1 text-end align-self-center">
-            <h3 class="mt-0"><span><span>میز خالی = {{items2.length}}</span></span></h3>
+            <h3 class="mt-0"><span><span>میز خالی = {{items2().length}}</span></span></h3>
             <h4 class="text-muted mb-0">حیاط</h4>
           </div>
         </div>
@@ -36,7 +36,7 @@
           <div class="avatar-lg rounded-circle bg-icon-danger"><i class="font-24 avatar-title mdi mdi-bookshelf"></i>
           </div>
           <div class="flex-1 text-end align-self-center">
-            <h3 class="mt-0"><span><span>میز خالی = {{items3.length}}</span></span></h3>
+            <h3 class="mt-0"><span><span>میز خالی = {{items3().length}}</span></span></h3>
             <h4 class="text-muted mb-0">همایش</h4>
           </div>
         </div>
@@ -50,7 +50,7 @@
           <div class="avatar-lg rounded-circle bg-icon-purple"><i class="font-24 avatar-title mdi mdi-table-chair"></i>
           </div>
           <div class="flex-1 text-end align-self-center">
-            <h3 class="mt-0"><span><span>میز خالی = {{items4.length}}</span></span></h3>
+            <h3 class="mt-0"><span><span>میز خالی = {{items4().length}}</span></span></h3>
             <h4 class="text-muted mb-0">تراس</h4>
           </div>
         </div>
@@ -106,7 +106,7 @@
                   <th class="min-w-20px">تعداد</th>
                 </tr>
               </thead>
-              @for (item of ItemsMax; track item) {
+              @for (item of ItemsMax(); track item) {
               <tbody>
                 <tr>
                   <td>{{ item.GoodName }}</td>
@@ -129,7 +129,7 @@
                   <th class="min-w-20px">تعداد</th>
                 </tr>
               </thead>
-              @for (item of ItemsMin; track item) {
+              @for (item of ItemsMin(); track item) {
               <tbody>
                 <tr>
                   <td>{{ item.GoodName }}</td>

@@ -12,13 +12,14 @@
    - تشخیص BrokerRef و CentralRef از sessionStorage
    =============================================================== */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
+import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
 declare var $: any;
 
 @Component({
-    selector: 'edit-delete-cell-renderer',
-    template: `
+  selector: 'edit-delete-cell-renderer',
+  template: `
     <span
       (click)="getpaneldata_report2()"
       class="btn btn-sm btn-outline-primary"
@@ -30,49 +31,46 @@ declare var $: any;
       </a>
     </span>
   `,
-    standalone: false,
+  standalone: false,
 })
 export class CellActionKowsarReport implements ICellRendererAngularComp {
-    params: any;
-    data: any;
-    BrokerRef: any;
-    AttendanceCentralRef: any;
-    CentralRef: any;
+  protected readonly session = inject(SessionStorageService);
 
-    // ===============================================================
-    //    مقداردهی اولیه سل‌ رندرر
-    // ===============================================================
-    agInit(params: any): void {
-        this.params = params;
-        this.data = params.data;
+  params: any;
+  data: any;
+  AttendanceCentralRef: any;
+  CentralRef: any;
 
-        this.CentralRef = sessionStorage.getItem('CentralRef');
+  // ===============================================================
+  //    مقداردهی اولیه سل‌ رندرر
+  // ===============================================================
+  agInit(params: any): void {
+    this.params = params;
+    this.data = params.data;
 
-        if (sessionStorage.getItem('PhAddress3') == '100') {
-            this.BrokerRef = '';
-        } else {
-            this.BrokerRef = sessionStorage.getItem('BrokerCode');
-        }
+    this.CentralRef = this.session.centralRef;
 
-        if (params.data.CentralRef) {
-            this.AttendanceCentralRef = params.data.CentralRef;
-        }
+
+
+    if (params.data.CentralRef) {
+      this.AttendanceCentralRef = params.data.CentralRef;
     }
+  }
 
-    // ===============================================================
-    // 🔁 جلوگیری از render غیرضروری
-    // ===============================================================
-    refresh(params: any): boolean {
-        return true;
-    }
+  // ===============================================================
+  // 🔁 جلوگیری از render غیرضروری
+  // ===============================================================
+  refresh(params: any): boolean {
+    return true;
+  }
 
-    // ===============================================================
-    //   فراخوانی متد والد جهت نمایش فاکتورها
-    // ===============================================================
-    getpaneldata_report2(): void {
-        this.params.context.componentParent.getpaneldata_report2(
-            this.params.data.CentralRef,
-            this.params.data.LetterRowCode
-        );
-    }
+  // ===============================================================
+  //   فراخوانی متد والد جهت نمایش فاکتورها
+  // ===============================================================
+  getpaneldata_report2(): void {
+    this.params.context.componentParent.getpaneldata_report2(
+      this.params.data.CentralRef,
+      this.params.data.LetterRowCode
+    );
+  }
 }

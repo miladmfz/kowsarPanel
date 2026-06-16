@@ -1,13 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
-import { ActivatedRoute, ParamMap, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, ParamMap, RouterModule } from '@angular/router';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi.service';
 import { Location } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-order-app-good-edit',
@@ -37,29 +35,29 @@ export class OrderAppGoodEditComponent implements OnInit {
   private cache: { [key: string]: any } = {}; // Basic caching object
 
 
-  SingleItems: any[] = [];
+  SingleItems = signal<any[]>([])
 
-  ActiveFlag: string = "";
+  ActiveFlag = signal('')
 
   formValues: any = {};
   id: string = "0";
-  TagName: string = "";
-  ActiveState: string = "";
+  TagName = signal('')
+  ActiveState = signal('')
 
-  items: any[] = [];
-  Imageitem: string = '';
-  Broker_Prefactors: any[] = [];
-  CDCustNames: any[] = [];
+  items = signal<any[]>([])
+  Imageitem = signal('')
+  Broker_Prefactors = signal<any[]>([])
+  CDCustNames = signal<any[]>([])
 
-  items_Grp: any[] = [];
+  items_Grp = signal<any[]>([])
 
 
   @ViewChild('imagePreview') imagePreview: ElementRef | undefined;
 
 
-  imageData: string = ''; // Variable to hold the image data
+  imageData = signal('') // Variable to hold the image data
 
-  showUploadText: boolean = false;
+  showUploadText = signal(false)
 
 
   btnRadioGroup2 = this.formBuilder.group({
@@ -99,7 +97,7 @@ export class OrderAppGoodEditComponent implements OnInit {
 
     if (parseInt(this.id) > 0) {
 
-      this.TagName = "Update Good";
+      this.TagName.set("Update Good");
 
 
 
@@ -157,7 +155,7 @@ export class OrderAppGoodEditComponent implements OnInit {
       this.repo.GetGoodEdit(this.id).subscribe(e => {
 
 
-        this.SingleItems = e
+        this.SingleItems.set(e)
         this.LoadDataSet();
 
 
@@ -167,12 +165,12 @@ export class OrderAppGoodEditComponent implements OnInit {
           if (e[0].ActiveStack == "True") {
             this.btnRadioGroup2.setValue({ activestack: "Active" });
 
-            this.ActiveState = "Active"
+            this.ActiveState.set("Active")
 
           } else {
 
             this.btnRadioGroup2.setValue({ activestack: "NotActive" });
-            this.ActiveState = "NotActive"
+            this.ActiveState.set("NotActive")
 
           }
 
@@ -181,7 +179,7 @@ export class OrderAppGoodEditComponent implements OnInit {
 
 
     } else {
-      this.TagName = "Create Good";
+      this.TagName.set("Create Good")
     }
 
   }
@@ -208,7 +206,7 @@ export class OrderAppGoodEditComponent implements OnInit {
     this.repo.GetGroupFromGood(this.id).subscribe(e => {
 
 
-      this.items_Grp = e
+      this.items_Grp.set(e)
 
 
     });
@@ -269,9 +267,9 @@ export class OrderAppGoodEditComponent implements OnInit {
     };
 
 
-    this.repo.SendImageToServer(data).subscribe((response) => {
-      this.sharedService.triggerActionAll('refresh');
-    });
+    // this.repo.SendImageToServer(data).subscribe((response) => {
+    //   this.sharedService.triggerActionAll('refresh');
+    // });
 
   }
 
@@ -281,30 +279,30 @@ export class OrderAppGoodEditComponent implements OnInit {
   fetchImageData() {
 
 
-    this.repo.GetImageFromServer(this.SingleItems[0].GoodCode).subscribe((data: any) => {
+    // this.repo.GetImageFromServer(this.SingleItems[0].GoodCode).subscribe((data: any) => {
 
 
-      this.Imageitem = `data:${Image};base64,${data.Text}`;
+    //   this.Imageitem.set(`data:${Image};base64,${data.Text}`)
 
-    });
+    // });
   }
 
   setRadioValue(value: string): void {
 
-    if (this.ActiveState != value) {
+    if (this.ActiveState() != value) {
 
-      this.ActiveState = value
+      this.ActiveState.set(value)
       if (value == "Active") {
 
-        this.ActiveFlag = "1"
+        this.ActiveFlag.set("1")
 
       } else {
 
-        this.ActiveFlag = "0"
+        this.ActiveFlag.set("0")
 
       }
 
-      this.repo.ChangeGoodActive(this.SingleItems[0].GoodCode, this.ActiveFlag).subscribe(e => {
+      this.repo.ChangeGoodActive(this.SingleItems[0].GoodCode, this.ActiveFlag()).subscribe(e => {
         this.sharedService.triggerActionAll('refresh');
       });
 

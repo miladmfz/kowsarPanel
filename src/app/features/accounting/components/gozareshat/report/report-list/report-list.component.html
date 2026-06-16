@@ -1,0 +1,28 @@
+<div class="card">
+  <div class="card-body">
+
+    <h4 class="card-title">{{ title() }}</h4>
+
+    <div class="d-flex flex-wrap mb-3 gap-2">
+
+      <button class="btn btn-light m-1" (click)="GetData()">
+        <span class="btn-label"><i class="fas fa-sync me-1"></i></span>
+        بازخوانی
+      </button>
+
+
+
+    </div>
+
+
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 1200px;">
+      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+        [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+        [class]="themeClass + ' w-100 h-100'" [treeData]="true" [getDataPath]="getDataPath_report">
+      </ag-grid-angular>
+    </div>
+
+
+  </div>
+</div>

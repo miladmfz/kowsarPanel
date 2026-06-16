@@ -4,20 +4,17 @@
 
     <form [formGroup]="EditForm_SearchTarget" id="submitForm">
 
-      <div class="card shadow-sm border-0 mb-3">
-        <div class="card-body py-3">
-          <div class="row g-3 align-items-end">
+      <div class="card shadow-sm border-0 mb-1">
+        <div class="card-body py-1">
+          <div class="row g-1 align-items-end">
 
-            <!-- جستجو -->
             <div class="col-12 col-md-4">
-              <label class="form-label fw-semibold mb-1">جستجو</label>
               <input type="text" class="form-control rounded-pill" placeholder="جستجو" formControlName="SearchTarget"
                 (input)="getList()" />
             </div>
 
             <!-- وضعیت -->
             <div class="col-12 col-md-3">
-              <label class="form-label fw-semibold mb-1">وضعیت</label>
               <select class="form-select rounded-pill" formControlName="Status">
                 <option value="">همه کارها</option>
                 @for (item of StateSearch_Lookup; track item) {
@@ -30,7 +27,7 @@
             <div class="col-12 col-md-5">
               <div class="d-flex flex-wrap gap-2 justify-content-md-end">
                 <button type="button" class="btn btn-primary rounded-pill px-4" (click)="getList()">
-                  <i class="fas fa-rotate me-1"></i>
+                  <i class="fas fa-sync me-1"></i>
                   بازخوانی
                 </button>
 
@@ -49,9 +46,11 @@
 
 
     @if (show_grid){
-    <div class="ag-container rounded-3 overflow-hidden" style="height: 300px;">
-      <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" [gridOptions]="gridOptions"
-        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()" class="w-100 h-100">
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 300px;">
+      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+        [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+        [class]="themeClass + ' w-100 h-100'">
       </ag-grid-angular>
     </div>
     } @else{
@@ -83,23 +82,16 @@
 
 
 
-
-
-
-
-
-<div id="workitemmodal" class="modal fade" tabindex="-1">
-  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade" #workitemmodal tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
-
-
       <div class="modal-header">
-        <h5 class="modal-title">{{title_workitem_modal}}</h5>
-        <button type="button" class="btn-close" (click)="workitem_dialog_close()"></button>
+        <h5 class="modal-title">{{title_workitem_modal()}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="workitem_dialog_close()"></button>
       </div>
-
-      <form [formGroup]="EditForm_WorkItem">
-        <div class="modal-body">
+      <div class="modal-body">
+        <form [formGroup]="EditForm_WorkItem">
           <div class="row g-2">
 
 
@@ -116,7 +108,7 @@
 
                 <option value="">لطفاً انتخاب کنید</option>
 
-                @for (user of records_Persons; track user.CentralRef) {
+                @for (user of records_Persons(); track user.CentralRef) {
                 <option [value]="user.CentralRef">{{ user.FullName }}</option>
                 }
               </select>
@@ -211,19 +203,18 @@
 
 
           </div>
-        </div>
+        </form>
 
-        <div class="modal-footer">
-          <button class="btn btn-light" type="button" (click)="workitem_dialog_close()">
-            بستن
-          </button>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-light" type="button" (click)="workitem_dialog_close()">
+          بستن
+        </button>
 
-          <button class="btn btn-primary" type="button" (click)="Submit()">
-            ذخیره
-          </button>
-        </div>
-      </form>
-
+        <button class="btn btn-primary" type="button" (click)="Submit()">
+          ذخیره
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -232,13 +223,20 @@
 
 
 
-<div id="editworkitemmodal" class="modal fade" tabindex="-1">
+
+
+
+<div class="modal fade" #editworkitemmodal tabindex="-1" aria-hidden="true">
+
+
+
+
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
 
 
       <div class="modal-header">
-        <h5 class="modal-title">{{title_workitem_modal}}</h5>
+        <h5 class="modal-title">{{title_workitem_modal()}}</h5>
         <button type="button" class="btn-close" (click)="editworkitem_dialog_close()"></button>
       </div>
 
@@ -260,7 +258,7 @@
 
                 <option value="">لطفاً انتخاب کنید</option>
 
-                @for (user of records_Persons; track user.CentralRef) {
+                @for (user of records_Persons(); track user.CentralRef) {
                 <option [value]="user.CentralRef">{{ user.FullName }}</option>
                 }
               </select>

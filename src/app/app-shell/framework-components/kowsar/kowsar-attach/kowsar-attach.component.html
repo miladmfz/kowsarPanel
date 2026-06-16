@@ -1,30 +1,68 @@
-<div class="card shadow-sm mt-3">
+<div class="card mt-3">
   <div class="card-body">
 
-    <h5 class="header-title mb-4">
-      <i class="fas fa-paperclip me-2 text-primary"></i>
-      پیوست‌های مرتبط
-    </h5>
+    <!-- Header -->
+    <div class="d-flex align-items-center mb-4">
 
-    <form class="row align-items-center g-2 mb-3" (submit)="submit(); $event.preventDefault()">
-      <div class="col-md-6">
-        <input type="file" class="form-control" (change)="onFileSelected($event)" />
+      <div class="avatar-sm bg-soft-primary rounded me-2 d-flex align-items-center justify-content-center">
+        <i class="fas fa-paperclip text-primary"></i>
       </div>
 
+      <h5 class="mb-0">
+        پیوست‌های مرتبط
+      </h5>
+
+    </div>
+
+    <!-- Upload Form -->
+    <form class="row align-items-end g-3 mb-3" (submit)="submit(); $event.preventDefault()">
+
+      <!-- File Picker -->
+      <div class="col-md-9">
+
+        <label class="form-label">
+          انتخاب فایل
+        </label>
+
+        <div class="input-group">
+
+          <button type="button" class="btn btn-light border" (click)="fileInput.click()">
+
+            <i class="fas fa-paperclip me-1"></i>
+
+            انتخاب فایل
+
+          </button>
+
+          <input type="text" class="form-control" [value]="selectedFileName() || 'فایلی انتخاب نشده'" readonly />
+
+          <input #fileInput type="file" class="d-none" (change)="onFileSelected($event)" />
+
+        </div>
+
+      </div>
+
+      <!-- Submit -->
       <div class="col-md-3">
-        <button type="submit" class="btn btn-success w-100">
-          <i class="fas fa-upload me-2"></i>
-          بارگذاری فایل
+
+        <button type="submit" class="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2">
+
+          <i class="fas fa-upload"></i>
+
+          <span>بارگذاری فایل</span>
+
         </button>
+
       </div>
+
     </form>
+    <!-- Grid -->
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px; width: 100%ک">
 
-    <hr />
+      <ag-grid-angular [class]="themeClass + ' w-100 h-100'" [enableBrowserTooltips]="true" [tooltipShowDelay]="200"
+        [tooltipHideDelay]="800" [columnDefs]="columnDefs6" [rowData]="records()" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 6)" (firstDataRendered)="gridApi6?.sizeColumnsToFit()">
 
-    <div class="ag-container" style="height: 600px; border-radius: 8px; overflow: hidden;">
-
-      <ag-grid-angular [columnDefs]="columnDefs6" [rowData]="records" [gridOptions]="gridOptions"
-        (gridReady)="onGridReady($event, 6)" (firstDataRendered)="gridApi6?.sizeColumnsToFit()" class="w-100 h-100">
       </ag-grid-angular>
 
     </div>

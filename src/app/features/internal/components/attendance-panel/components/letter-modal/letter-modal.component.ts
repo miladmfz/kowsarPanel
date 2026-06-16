@@ -46,7 +46,7 @@ export class LetterModalComponent implements OnChanges {
   // ===============================================================
   @Input() visible = false;
   @Input() darkMode = false;
-  @Input() records: any[] = [];
+  @Input() records: any
   @Input() person: any = null; // اطلاعات کارشناس از والد (selectedPerson)
 
   // ===============================================================
@@ -62,11 +62,11 @@ export class LetterModalComponent implements OnChanges {
   isNewLetter = signal(false);
   selectedLetter = signal<any | null>(null);
   form: FormGroup;
-
+  themeClass = 'ag-theme-quartz kowsar-ag-grid';
   // ===============================================================
   //   تنظیمات گرید
   // ===============================================================
-  columnDefs: ColDef[] = [
+  column_name_1: ColDef[] = [
     { field: 'LetterDate', headerName: 'تاریخ', width: 130, cellClass: 'text-center' },
     { field: 'RowLetterDescription', headerName: 'شرح تیکت', flex: 1 },
     { field: 'OwnerName', headerName: 'مشتری', width: 160, cellClass: 'text-center' },
@@ -95,12 +95,16 @@ export class LetterModalComponent implements OnChanges {
       LetterDescriptionText: [''],
       DescriptionText: ['', [Validators.required, Validators.minLength(10)]],
     });
+
+
   }
 
   // ===============================================================
   // 🧠 تغییر ورودی person
   // ===============================================================
   ngOnChanges(changes: SimpleChanges): void {
+
+
     if (changes['person'] && this.person) this.fillFromPerson(this.person);
   }
 
@@ -112,7 +116,6 @@ export class LetterModalComponent implements OnChanges {
       ExecuterName: p?.FullName ?? '',
       NumberPhone: p?.PhMobile1 ?? '',
     });
-    console.log(`📋 فرم از person پر شد → ${p.FullName} (${p.CentralRef})`);
   }
 
   // ===============================================================
@@ -194,7 +197,6 @@ export class LetterModalComponent implements OnChanges {
       OwnerName: ownerName,
     });
 
-    console.log(`  مشتری انتخاب شد → ${ownerName} (${ownerCentral})`);
   }
 
   // ===============================================================

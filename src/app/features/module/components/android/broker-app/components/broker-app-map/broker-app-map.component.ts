@@ -1,14 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, inject, Input, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, inject, Input, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import moment from 'jalali-moment';
 import { IDatepickerTheme, NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { BrokerWebApiService } from 'src/app/features/module/services/BrokerWebApi.service';
 import * as L from 'leaflet';
 import { toGregorian } from 'jalaali-js';
 import 'leaflet.markercluster';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-broker-app-map',
@@ -24,10 +23,10 @@ import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.
 })
 export class BrokerAppMapComponent implements AfterViewInit {
   map: L.Map | undefined;
-  hasData: boolean = false;
-  noDataMessage: string = ''; // پیام خطا برای عدم وجود داده
+  hasData = signal(false)
+  noDataMessage = signal('') // پیام خطا برای عدم وجود داده
 
-  @Input() BrokerCodeData: string = '';
+  @Input() BrokerCodeData = ""
 
   customTheme: Partial<IDatepickerTheme> = {
     selectedBackground: '#D68E3A',
@@ -36,8 +35,8 @@ export class BrokerAppMapComponent implements AfterViewInit {
 
   startDate_form = new FormControl();
   endDate_form = new FormControl();
-  apiData: any[] = []; // مقدار پیش‌فرض داده‌ها
-  stopDurations: any[] = []; // مقدار پیش‌فرض داده‌ها
+  apiData = signal<any[]>([]) // مقدار پیش‌فرض داده‌ها
+  stopDurations = signal<any[]>([]) // مقدار پیش‌فرض داده‌ها
 
   filterForm!: FormGroup;
   ngOnInit(): void {
@@ -124,7 +123,6 @@ export class BrokerAppMapComponent implements AfterViewInit {
         this.addMarkers();
         this.drawPolyline();
       } else {
-        console.log('No data available to display on map');
       }
     });
 
@@ -195,7 +193,7 @@ export class BrokerAppMapComponent implements AfterViewInit {
   updateCustomerProximity(): void {
     if (!this.map || !this.apiData?.length) return;
 
-    const routePoints = this.apiData
+    const routePoints = this.apiData()
       .map(p => L.latLng(parseFloat(p.Latitude), parseFloat(p.Longitude)))
       .filter(ll => !isNaN(ll.lat) && !isNaN(ll.lng));
 
@@ -315,7 +313,7 @@ export class BrokerAppMapComponent implements AfterViewInit {
           this.clearMap();
 
           if (this.apiData && this.apiData.length > 0) {
-            this.hasData = true;
+            this.hasData.set(true)
 
             const first = this.apiData[0];
             if (first && first.Latitude && first.Longitude && this.map) {
@@ -328,16 +326,16 @@ export class BrokerAppMapComponent implements AfterViewInit {
             const stops = this.calculateStopDurations();
             this.addStopMarkers(stops);
 
-            this.noDataMessage = '';
+            this.noDataMessage.set("")
           } else {
-            this.hasData = false;
-            this.noDataMessage = 'موردی یافت نشد';
+            this.hasData.set(false)
+            this.noDataMessage.set('موردی یافت نشد')
           }
         });
 
     } catch (error) {
       console.error('Error loading tracker data', error);
-      this.noDataMessage = 'خطا در بارگذاری داده‌ها';
+      this.noDataMessage.set('خطا در بارگذاری داده‌ها')
     }
 
   }
@@ -372,7 +370,7 @@ export class BrokerAppMapComponent implements AfterViewInit {
 
     const markers = L.markerClusterGroup();
 
-    this.apiData.forEach((location, index) => {
+    this.apiData().forEach((location, index) => {
       const lat = parseFloat(location.Latitude);
       const lng = parseFloat(location.Longitude);
 

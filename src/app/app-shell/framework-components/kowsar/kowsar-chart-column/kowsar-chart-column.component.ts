@@ -1,82 +1,193 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, OnChanges, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnChanges,
+  Input,
+  OnDestroy,
+  SimpleChanges
+} from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 
-declare var ApexCharts: any;
+/* =========================================================
+   ApexCharts Global Loader
+   فقط یک بار در کل پروژه لود می‌شود
+   ========================================================= */
+
+let apexChartsLoader: Promise<void> | null = null;
+
 @Component({
   selector: 'app-kowsar-chart-column',
   templateUrl: './kowsar-chart-column.component.html',
   standalone: true,
   imports: [CommonModule]
 })
-export class KowsarChartColumnComponent implements OnInit, AfterViewInit, OnChanges {
-  @ViewChild('chart') chartElement: ElementRef;
-  @Input() series: any[] = [];
-  @Input() categories: string[] = [];
-  @Input() title: string = ''; // ورودی برای عنوان نمودار
-  chart: any;
+export class KowsarChartColumnComponent
+  implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
-  constructor() { }
+  @ViewChild('chart') chartElement!: ElementRef;
+
+  @Input() series: any = [];
+  @Input() categories: string[] = [];
+  @Input() title: string = '';
+  @Input() height: number = 350;
+
+  private chart: any;
 
   ngOnInit(): void { }
 
-  ngAfterViewInit(): void {
+  async ngAfterViewInit(): Promise<void> {
+    await this.loadApexCharts();
     this.initChart();
   }
 
-  ngOnChanges(): void {
-    if (this.chart) {
-      this.chart.updateOptions({
-        series: this.series,
-        xaxis: { categories: this.categories },
-        title: {
-          text: this.title, // استفاده از عنوان ورودی
-        },
-      });
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (!this.chart) {
+      return;
     }
+
+    this.chart.updateOptions({
+      series: this.series ?? [],
+      xaxis: {
+        categories: this.categories ?? []
+      },
+      title: {
+        text: this.title
+      }
+    });
+
   }
 
-  initChart(): void {
-    if (!this.chartElement) return;
+  private loadApexCharts(): Promise<void> {
+
+    if ((window as any).ApexCharts) {
+      return Promise.resolve();
+    }
+
+    if (apexChartsLoader) {
+      return apexChartsLoader;
+    }
+
+    apexChartsLoader = new Promise((resolve, reject) => {
+
+      const script = document.createElement('script');
+
+      script.src = 'assets/libs/apexcharts/apexcharts.min.js';
+      script.async = true;
+
+      script.onload = () => resolve();
+
+      script.onerror = () =>
+        reject('ApexCharts failed to load');
+
+      document.body.appendChild(script);
+
+    });
+
+    return apexChartsLoader;
+  }
+
+  private initChart(): void {
+
+    if (!this.chartElement) {
+      return;
+    }
+
+    const ApexCharts = (window as any).ApexCharts;
+
+    const isDark =
+      document.documentElement.getAttribute('data-bs-theme') === 'dark';
 
     const options = {
       chart: {
         type: 'bar',
-        height: 350,
+        height: this.height,
+        toolbar: {
+          show: false
+        },
+        fontFamily: 'IRANSans, Vazir, Tahoma, Arial, sans-serif'
       },
-      series: this.series,
+
+      series: this.series ?? [],
+
       xaxis: {
-        categories: this.categories, // دسته‌بندی‌ها از ورودی گرفته می‌شود
-
+        categories: this.categories ?? [],
         labels: {
-          rotate: 90, // چرخش برچسب‌ها (اگر نیاز دارید)
-
+          rotate: 90,
+          style: {
+            colors: isDark ? '#cbd5e1' : '#64748b'
+          }
         }
-
       },
+
+      yaxis: {
+        labels: {
+          style: {
+            colors: isDark ? '#cbd5e1' : '#64748b'
+          }
+        }
+      },
+
       title: {
-        text: this.title, // استفاده از عنوان ورودی
+        text: this.title,
         align: 'center',
-
+        style: {
+          color: isDark ? '#f1f5f9' : '#0f172a',
+          fontSize: '16px',
+          fontWeight: '700'
+        }
       },
+
       plotOptions: {
         bar: {
           horizontal: false,
           columnWidth: '55%',
-          endingShape: 'rounded',
-        },
+          borderRadius: 6
+        }
       },
-      tooltip: {
-        style: {
-          fontFamily: 'Vazir, Tahoma, Arial', // فونت فارسی برای توضیحات
-        },
+
+      dataLabels: {
+        enabled: false
       },
+
       grid: {
-        show: true, // نمایش خطوط شبکه
-        borderColor: '#e7e7e7', // رنگ مرزهای خطوط شبکه
+        show: true,
+        borderColor: isDark
+          ? 'rgba(255,255,255,.08)'
+          : 'rgba(15,23,42,.08)'
       },
+
+      tooltip: {
+        theme: isDark ? 'dark' : 'light',
+        style: {
+          fontFamily: 'IRANSans, Vazir, Tahoma, Arial, sans-serif'
+        }
+      },
+
+      theme: {
+        mode: isDark ? 'dark' : 'light'
+      },
+
+      legend: {
+        labels: {
+          colors: isDark ? '#e2e8f0' : '#334155'
+        }
+      }
     };
 
-    this.chart = new ApexCharts(this.chartElement.nativeElement, options);
+    this.chart = new ApexCharts(
+      this.chartElement.nativeElement,
+      options
+    );
+
     this.chart.render();
+  }
+
+  ngOnDestroy(): void {
+    this.chart?.destroy();
   }
 }

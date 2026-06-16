@@ -32,7 +32,7 @@ export abstract class AgGridCoreComponent implements OnDestroy {
     protected themeSub?: Subscription;
 
     /** 🎨 کلاس تم برای AG Grid */
-    themeClass = 'ag-theme-balham';
+    themeClass = 'ag-theme-quartz kowsar-ag-grid';
     isDarkMode = false;
 
     /**   ترجمه فارسی پیش‌فرض */
@@ -58,7 +58,7 @@ export abstract class AgGridCoreComponent implements OnDestroy {
     // ===============================================================
     // 🧱 تعریف ستون‌ها برای چند گرید (۱ تا ۶)
     // ===============================================================
-    columnDefs1: ColDef[] = [];
+    column_name_1: ColDef[] = [];
     columnDefs2: ColDef[] = [];
     columnDefs3: ColDef[] = [];
     columnDefs4: ColDef[] = [];
@@ -81,6 +81,7 @@ export abstract class AgGridCoreComponent implements OnDestroy {
     // [rowSelection]="{ mode: 'singleRow' ,enableClickSelection: false}"
 
     gridOptions: GridOptions = {
+
         context: { componentParent: this },
         enableRtl: true,
         animateRows: true,
@@ -92,8 +93,8 @@ export abstract class AgGridCoreComponent implements OnDestroy {
         //     enableClickSelection: false, // جایگزینsuppressRowClickSelection
         // },
 
-        rowHeight: 40,
-        headerHeight: 42,
+        rowHeight: 35,
+        headerHeight: 36,
         tooltipShowDelay: 200,
         tooltipHideDelay: 800,
         enableBrowserTooltips: true,
@@ -112,7 +113,8 @@ export abstract class AgGridCoreComponent implements OnDestroy {
             flex: 1,
             sortable: true,
             resizable: true,
-            filter: 'agTextColumnFilter',
+            filter: 'agSetColumnFilter',  ///  agTextColumnFilter
+
             floatingFilter: true,
             suppressHeaderMenuButton: false,
             tooltipValueGetter: (params: any) => params.value,
@@ -182,7 +184,7 @@ export abstract class AgGridCoreComponent implements OnDestroy {
 
     // ===============================================================
     // 🔧 سایر تنظیمات عمومی
-    // ===============================================================
+    // ============================================d===================
     /**   تعریف Componentهای سفارشی (Renderer, Editor و غیره) */
     frameworkComponents: Record<string, any> = {};
 
@@ -194,10 +196,11 @@ export abstract class AgGridCoreComponent implements OnDestroy {
     // ===============================================================
     constructor() {
         this.themeSub = this.themeService.theme$.subscribe((theme) => {
+
             this.isDarkMode = theme === 'dark';
-            this.themeClass = this.isDarkMode
-                ? 'ag-theme-balham-dark'
-                : 'ag-theme-balham';
+
+            this.themeClass = 'ag-theme-quartz kowsar-ag-grid';
+
         });
     }
 
@@ -260,4 +263,22 @@ export abstract class AgGridCoreComponent implements OnDestroy {
     ngOnDestroy(): void {
         this.themeSub?.unsubscribe();
     }
+
+
+    customNumberFormatter(params: any) {
+        if (params.value === null || params.value === undefined) return '';
+        const value = parseFloat(params.value);
+        if (isNaN(value)) return params.value;
+
+        let formatted = value.toLocaleString('en-US', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 20
+        });
+
+        if (formatted.includes('.')) {
+            formatted = formatted.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+        return formatted;
+    }
+
 }

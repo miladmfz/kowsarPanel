@@ -1,12 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { BrokerWebApiService } from 'src/app/features/module/services/BrokerWebApi.service';
 import { Location } from '@angular/common';
-import { AgGridModule } from 'ag-grid-angular';
-import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-broker-app-column-edit',
@@ -17,7 +14,6 @@ import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.
     ReactiveFormsModule,
     RouterModule,
     FormsModule
-
   ],
 })
 export class BrokerAppColumnEditComponent implements OnInit {
@@ -29,13 +25,13 @@ export class BrokerAppColumnEditComponent implements OnInit {
   constructor() { }
 
 
-  AppType: string = "1";
-  ColumnType: string = "0";
-  Goodtypes: any[] = [];
-  Goodtypes_str: string = "";
-  TagName: string = "";
+  AppType = signal('1');
+  ColumnType = signal('0');
+  Goodtypes = signal<any[]>([])
+  Goodtypes_str = signal('')
+  TagName = signal('')
 
-  Propertys: any[] = [];
+  Propertys = signal<any[]>([])
   item: any;
 
   Lookup_item: any[] = [
@@ -71,7 +67,7 @@ export class BrokerAppColumnEditComponent implements OnInit {
 
 
   ngOnInit() {
-    this.TagName = "تعریف تنظیم جدول جدید"
+    this.TagName.set("تعریف تنظیم جدول جدید")
     this.GetGoodType()
   }
 
@@ -81,8 +77,8 @@ export class BrokerAppColumnEditComponent implements OnInit {
   GetGoodType() {
 
     this.repo.GetGoodType().subscribe(e => {
-      this.Goodtypes = e;
-      this.Goodtypes.unshift({ GoodType: "همه", IsDefault: -1 });
+      this.Goodtypes.set(e)
+      this.Goodtypes().unshift({ GoodType: "همه", IsDefault: -1 });
     });
   }
 
@@ -100,27 +96,27 @@ export class BrokerAppColumnEditComponent implements OnInit {
   GetProperty() {
 
     this.repo.GetProperty(this.selected_GoodType).subscribe(e => {
-      this.Propertys = e;
+      this.Propertys.set(e)
     });
   }
 
 
   selectproperty() {
-    this.selected_obj_Property = this.Propertys.find(prop => prop.PropertyName === this.selected_PropertyName);
+    this.selected_obj_Property = this.Propertys().find(prop => prop.PropertyName === this.selected_PropertyName);
     const subString = this.selected_obj_Property.PropertyValueMap.substring(0, 3);
     if (subString == "Tex") {
 
-      this.ColumnType = "0"
+      this.ColumnType.set("0")
     } else if (subString == "Dat") {
-      this.ColumnType = "0"
+      this.ColumnType.set("0")
     } else if (subString == "Flo") {
-      this.ColumnType = "2"
+      this.ColumnType.set("2")
     } else if (subString == "Int") {
-      this.ColumnType = "1"
+      this.ColumnType.set("1")
     } else if (subString == "Nva") {
-      this.ColumnType = "0"
+      this.ColumnType.set("0")
     } else if (subString == "Bit") {
-      this.ColumnType = "1"
+      this.ColumnType.set("1")
     }
 
 
@@ -145,7 +141,7 @@ export class BrokerAppColumnEditComponent implements OnInit {
 
 
   checkPropertyValueMap(textvalue: string) {
-    for (const property of this.Propertys) {
+    for (const property of this.Propertys()) {
       if (property.PropertyValueMap === textvalue) {
         return true; // اگر مقدار PropertyValueMap برابر با "Nvarchar6" باشد، true را برمی‌گرداند
       }
@@ -171,8 +167,8 @@ export class BrokerAppColumnEditComponent implements OnInit {
       , this.selected_obj_Detail.value
       , this.selected_obj_Detail.value
       , this.selected_obj_Detail.value
-      , this.ColumnType
-      , this.AppType
+      , this.ColumnType()
+      , this.AppType()
     ).subscribe(e => {
       this.location.back();
     });

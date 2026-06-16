@@ -4,13 +4,13 @@
     <div class="card-body">
       <h5 class="card-title">ایجاد فیلد های مورد نیاز برای نمایش در نرم افزار های قابل استفاده</h5>
 
-      @if (BasketColumns.length<1) { <h5 class="card-text">{{AppBasketColumn_Status}}</h5>
+      @if (BasketColumns().length<1) { <h5 class="card-text">{{AppBasketColumn_Status()}}</h5>
         }
-        @if (BasketColumns.length>0) {
+        @if (BasketColumns().length>0) {
         <a [routerLink]="['/application/broker-column']" class="btn btn-primary">اصلاح تنظیم جدول</a>
         }
 
-        @if (BasketColumns.length<1) { <a (click)="CreateAppBasketColumn()" class="btn btn-primary">ایجاد تنظیم
+        @if (BasketColumns().length<1) { <a (click)="CreateAppBasketColumn()" class="btn btn-primary">ایجاد تنظیم
           جدول</a>
           }
     </div>
@@ -43,7 +43,7 @@
           <th class="min-w-50px">فعالیت</th>
         </tr>
       </thead>
-      @for (item of items; track item; let i = $index) {
+      @for (item of items(); track item; let i = $index) {
       <tbody>
         <tr>
           <td>{{ i+1 }}</td>
@@ -120,7 +120,7 @@
 
         </tr>
       </thead>
-      @for (item of Printers; track item; let i = $index) {
+      @for (item of Printers(); track item; let i = $index) {
       <tbody>
         <tr>
           <td>{{i}}</td>
@@ -130,12 +130,12 @@
           <td>{{ item.WhereClause }}</td>
           <td>{{ item.PrintCount }}</td>
           <td>
-            @if (item.PrinterActive == 'True') {
+            @if (item.PrinterActive === 'True') {
             <span>
               <span class="bg-soft-success text-success" style="padding: 3px">فعال</span>
             </span>
             }
-            @if (item.PrinterActive == 'False') {
+            @if (item.PrinterActive === 'False') {
             <span>
               <span class="bg-soft-danger text-danger" style="padding: 3px">غیرفعال</span>
             </span>
@@ -171,13 +171,13 @@
         <div class="mb-3 row">
           <label for="staticEmail" class="col-sm-2 col-form-label">شرح</label>
           <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ selected_des }}">
+            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ selected_des() }}">
           </div>
         </div>
         <div class="mb-3 row">
           <label for="inputPassword" class="col-sm-2 col-form-label">مقدار</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="inputPassword" placeholder="{{ selected_value }}"
+            <input type="text" class="form-control" id="inputPassword" placeholder="{{ selected_value() }}"
               [(ngModel)]="selected_value">
           </div>
         </div>

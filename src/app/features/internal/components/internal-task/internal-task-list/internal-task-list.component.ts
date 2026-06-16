@@ -1,14 +1,14 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import Swal from 'sweetalert2';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CellActionTaskList } from './cell-action-task-list';
 import { CommonModule } from '@angular/common';
 import { AgGridAngular } from 'ag-grid-angular';
 import { SupportFactorWebApiService } from '../../../services/SupportFactorWebApi.service';
+import { TaskWebApiService } from '../../../services/TaskWebApi.service';
 
 @Component({
   selector: 'app-internal-task-list',
@@ -28,16 +28,17 @@ export class InternalTaskListComponent
 
 
 
-  private readonly repo = inject(SupportFactorWebApiService);
+  private readonly repo = inject(TaskWebApiService);
   private readonly notificationService = inject(NotificationService);
+  private readonly router = inject(Router);
 
   constructor() {
     super();
   }
 
 
-  title = 'لیست خدمات';
-  records: any[] = [];
+  title = signal('لیست خدمات')
+  records = signal<any[]>([])
 
   EditForm_task = new FormGroup({
     TaskCode: new FormControl("0"),
@@ -56,7 +57,7 @@ export class InternalTaskListComponent
     while (current) {
       path.unshift(current.Title);
       if (current.TaskRef === 0) break;
-      current = this.records.find(t => t.TaskCode === current.TaskRef);
+      current = this.records().find(t => t.TaskCode === current.TaskRef);
     }
 
     return path;
@@ -64,16 +65,16 @@ export class InternalTaskListComponent
 
   ngOnInit(): void {
 
-    this.themeSub = this.themeService.theme$.subscribe(mode => {
-      this.isDarkMode = mode === 'dark';
-    });
+
 
     this.getGridSchema();
     this.GetTasks();
   }
-
+  navigatetoedit(data: any) {
+    this.router.navigate(['/internal/internal-task-edit', data.TaskCode]);
+  }
   getGridSchema() {
-    this.columnDefs1 = [
+    this.column_name_1 = [
       {
         headerName: 'شرح وظیفه',
         field: 'Explain',
@@ -113,8 +114,8 @@ export class InternalTaskListComponent
     this.repo.GetTasks(this.EditForm_task.value)
       .subscribe((data: any) => {
 
-        this.records = data?.KowsarTasks ?? [];
-        this.updateGridData(1, this.records);
+        this.records.set(data?.KowsarTasks ?? [])
+        this.updateGridData(1, this.records());
       });
   }
 

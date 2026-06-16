@@ -12,71 +12,131 @@
   <div class="logo-box text-center">
     <a routerLink="/" class="logo logo-dark">
       <span class="logo-sm">
-        <img src="assets/images/logo-sm-dark.png" alt="Logo" height="24" />
+        <img src="./assets/images/logo-sm-dark.png" alt="Logo" height="24" />
       </span>
       <span class="logo-lg">
-        <img src="assets/images/logo-dark.png" alt="Logo" height="20" />
+        <img src="./assets/images/logo-dark.png" alt="Logo" height="20" />
       </span>
     </a>
 
     <a routerLink="/" class="logo logo-light">
       <span class="logo-sm">
-        <img src="assets/images/logo-sm.png" alt="Logo" height="24" />
+        <img src="./assets/images/logo-sm.png" alt="Logo" height="24" />
       </span>
       <span class="logo-lg">
-        <img src="assets/images/logo-light.png" alt="Logo" height="20" />
+        <img src="./assets/images/logo-light.png" alt="Logo" height="20" />
       </span>
     </a>
   </div>
 
   <!--    محتوای داخلی منو -->
   <div class="h-100" data-simplebar>
-    <div class="user-box text-center border-bottom pb-3">
+    <div class="text-center border-bottom pb-3">
 
-      <!-- 👤 تصویر کاربر -->
       <div class="avatar-lg mx-auto mb-2 position-relative">
-        @if (Imageitem && Imageitem.startsWith('data:image')) {
-        <img [src]="Imageitem" alt="user-image" class="img-thumbnail rounded-circle shadow-sm" />
+        @if (Imageitem() && Imageitem().startsWith('data:image')) {
+        <img [src]="Imageitem()" alt="user-image" class="img-thumbnail rounded-circle shadow-sm" />
         } @else {
-        <img src="assets/images/KowsarSupport.png" alt="user-image" class="img-thumbnail rounded-circle shadow-sm" />
+        <img src="./assets/images/KowsarSupport.png" alt="user-image" class="img-thumbnail rounded-circle shadow-sm" />
         }
+
       </div>
 
-      <!-- 👤 نام کاربر -->
-      <h1 class="text-muted small mb-0">{{ PhFullName || '---' }}</h1>
+      <h1 class="text-muted small mb-0">{{ PhFullName() || '---' }}</h1>
 
-      <!-- 🟩 وضعیت حضور -->
-      @if (JobPersonRef?.length > 0) {
+
+
+      @if (LoginType() === 'KOWSAR') {
+
       <div class="mt-3 border-top pt-3">
-        <button class="btn btn-sm btn-outline-info dropdown-toggle w-100" id="statusDropdown" data-bs-toggle="dropdown">
-          انتخاب وضعیت
-        </button>
-        <ul class="dropdown-menu w-100 text-center" aria-labelledby="statusDropdown">
-          <li><a class="dropdown-item" (click)="setStatus('1')">آزاد</a></li>
-          <li><a class="dropdown-item" (click)="setStatus('0')">عدم حضور</a></li>
-          <li><a class="dropdown-item" (click)="setStatus('3')">ناهار و نماز</a></li>
-        </ul>
 
-        <div class="mt-2">
-          @if (currentStatus === '1') {
-          <span class="badge bg-success fs-6 px-3 py-2">آزاد</span>
-          } @else if (currentStatus === '0') {
-          <span class="badge bg-danger fs-6 px-3 py-2">عدم حضور</span>
-          } @else if (currentStatus === '2') {
-          <span class="badge bg-warning text-dark fs-6 px-3 py-2">در حال کار</span>
+        <div class="dropdown kws-status-dropdown">
 
-          } @else if (currentStatus === '3') {
-          <span class="badge bg-info text-dark fs-6 px-3 py-2">ناهار و نماز</span>
-          }
+          <button class="btn kws-status-btn dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
+
+            @if (currentStatus() === '1') {
+            <span class="text-success">
+              <i class="mdi mdi-circle fs-6"></i>
+              آزاد
+            </span>
+            }
+
+            @else if (currentStatus() === '0') {
+            <span class="text-danger">
+              <i class="mdi mdi-circle fs-6"></i>
+              عدم حضور
+            </span>
+            }
+
+            @else if (currentStatus() === '3') {
+            <span class="text-info">
+              <i class="mdi mdi-circle fs-6"></i>
+              ناهار و نماز
+            </span>
+            }
+            @else if (currentStatus() === '2') {
+            <span class="text-warning">
+              <i class="mdi mdi-circle fs-6"></i>
+              در حال کار
+            </span>
+            }
+
+            @else {
+            <span>
+              انتخاب وضعیت
+            </span>
+            }
+
+          </button>
+
+          <ul class="dropdown-menu kws-status-menu w-100">
+
+            <li>
+              <button type="button" class="dropdown-item kws-status-item" (click)="setStatus('1')">
+
+                <i class="mdi mdi-circle text-success"></i>
+
+                <span class="text-success">
+                  آزاد
+                </span>
+              </button>
+            </li>
+
+            <li>
+              <button type="button" class="dropdown-item kws-status-item" (click)="setStatus('0')">
+
+                <i class="mdi mdi-circle text-danger"></i>
+
+                <span class="text-danger">
+                  عدم حضور
+                </span>
+              </button>
+            </li>
+
+            <li>
+              <button type="button" class="dropdown-item kws-status-item" (click)="setStatus('3')">
+
+                <i class="mdi mdi-circle text-info"></i>
+
+                <span class="text-info">
+                  ناهار و نماز
+                </span>
+              </button>
+            </li>
+
+          </ul>
+
         </div>
+
       </div>
+
       }
 
-      <!-- 🧾 اطلاعات مشتری -->
-      @if (CustName_Small?.length > 0) {
+
+      @if (CustName_Small()?.length > 0) {
       <div class="mt-3 border-top pt-2 small text-muted">
-        <div>نام مجموعه: <span class="text-danger fw-semibold">{{ CustName_Small }}</span></div>
-        <div>پشتیبانی: <span class="text-primary fw-semibold">{{ Explain }}</span></div>
+        <div>نام مجموعه: <span class="text-danger fw-semibold">{{ CustName_Small() }}</span></div>
+        <div>پشتیبانی: <span class="text-primary fw-semibold">{{ Explain() }}</span></div>
       </div>
       }
     </div>
@@ -97,88 +157,363 @@
         </li>
 
         <!-- 💰 فروش (فقط برای مشتریان) -->
-        @if (JobPersonRef?.length > 0) {
-        @if (IsCustomerBuild) {
+        @if (IsCustomerBuild()) {
+
+        @if (LoginType() === 'KOWSAR') {
+
         <li>
-          <a href="#factor" data-bs-toggle="collapse" aria-expanded="false" aria-controls="factor">
+          <a href="#base" data-bs-toggle="collapse" aria-expanded="false" aria-controls="base">
             <i class="fas fa-cash-register"></i>
+            <span>تعاریف پایه</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="base" data-bs-parent="#side-menu">
+            <ul class="nav-second-level">
+              <li><a [routerLink]="['/accounting/taarif-paye/central-list']" routerLinkActive="active">اجزای پایه</a>
+              </li>
+
+              <li><a [routerLink]="['/accounting/taarif-paye/city-list']" routerLinkActive="active">شهرها</a></li>
+              <!-- <li><a [routerLink]="['/accounting/taarif-paye/centralgrp-list']" routerLinkActive="active">طبقه بندی
+                  اجزای پایه</a>
+              </li> -->
+              <li><a [routerLink]="['/accounting/taarif-paye/job-list']" routerLinkActive="active">سمت ها</a></li>
+              <li><a [routerLink]="['/accounting/taarif-paye/jobperson-list']" routerLinkActive="active">سمت های
+                  اشخاص</a></li>
+              <li><a [routerLink]="['/accounting/taarif-paye/currencyexchange-list']" routerLinkActive="active">ارز های
+                  خارجی</a>
+              </li>
+
+
+
+            </ul>
+          </div>
+        </li>
+
+
+
+        <li>
+          <a href="#forosh" data-bs-toggle="collapse" aria-expanded="false" aria-controls="forosh">
+            <i class="mdi mdi-point-of-sale"></i>
             <span>فروش</span>
             <span class="menu-arrow"></span>
           </a>
-          <div class="collapse" id="factor" data-bs-parent="#side-menu">
+          <div class="collapse" id="forosh" data-bs-parent="#side-menu">
             <ul class="nav-second-level">
-              <li><a [routerLink]="['/accounting/factor-list']">لیست فاکتور</a></li>
-              <li><a [routerLink]="['/accounting/prefactor-list']">لیست پیش‌فاکتور</a></li>
+              <li><a [routerLink]="['/accounting/forosh/factor-list']">فاکتور فروش</a></li>
+              <li><a [routerLink]="['/accounting/forosh/return-factor-list']">مرجوع از فروش</a></li>
+              <li class="divider"></li>
+              <li><a [routerLink]="['/accounting/forosh/prefactor-list']"> پیش‌فاکتور فروش</a></li>
+              <li class="divider"></li>
+
+              <li><a [routerLink]="['/accounting/forosh/shopfactor-list']">فاکتور
+                  فروشگاهی</a></li>
+              <li><a [routerLink]="['/accounting/forosh/return-shopfactor-list']">فاکتور مرجوعی
+                  فروشگاهی</a></li>
+              <li><a [routerLink]="['/accounting/forosh/daily-action-control-list']">کنترل فروش
+                  روزانه</a></li>
+              <li class="divider"></li>
+              <li><a [routerLink]="['/accounting/forosh/cafe-resturant-factor-list']">فاکتور کافه و رستوران</a>
+              </li>
+              <li class="divider"></li>
+
+              <li><a [routerLink]="['/accounting/forosh/sell-dariaft-list']">دریافت</a></li>
+              <li><a [routerLink]="['/accounting/forosh/sell-payment-list']">پرداخت</a></li>
+              <li><a [routerLink]="['/accounting/forosh/customer-mandeh-list']">مرور حساب مشترین</a></li>
+              <li class="divider"></li>
+              <li><a [routerLink]="['/accounting/forosh/decincrement-list']">اضافات و کسورات</a></li>
+
+              <li class="divider"></li>
+
+              <li><a [routerLink]="['/accounting/forosh/customer-list']">مشتریان</a></li>
+              <li><a [routerLink]="['/accounting/forosh/customer-group-list']">گروه مشتریان</a></li>
+
+
+
+              <li>
+                <a href="#forosh_crm" data-bs-toggle="collapse" aria-expanded="false" aria-controls="forosh_crm">
+
+                  <span>CRM (باشگاه مشتریان)</span>
+                  <span class="menu-arrow"></span>
+                </a>
+                <div class="collapse" id="forosh_crm" data-bs-parent="#forosh">
+                  <ul class="nav-thrid-level">
+                    <li><a [routerLink]="['/accounting/forosh/personinfo-list']">مدیریت مشترکین</a></li>
+                    <li><a [routerLink]="['/accounting/forosh/personetebar-list']">اعتباردهی به
+                        مشترکین</a></li>
+                    <li><a (click)="ToDevelop()">نوع کالاها</a></li>
+                    <li><a (click)="ToDevelop()">امتیاز دهی</a></li>
+                    <li><a (click)="ToDevelop()">سطح بندی مشترکین</a></li>
+
+                  </ul>
+                </div>
+
+              </li>
+
+
+              <li class="divider"></li>
+
+              <li><a [routerLink]="['/accounting/forosh/sellbroker-list']">مدیریت بازاریاب های
+                  فروش</a></li>
+              <li><a [routerLink]="['/accounting/forosh/brokerpath-list']">مسیر بازاریاب</a></li>
+              <li><a (click)="ToDevelop()">گروه مسیر</a></li>
+              <li><a [routerLink]="['/accounting/forosh/goodvalueinpathgroup-list']">قیمت
+                  گذاری کالاها در گروه مسیر</a>
+              </li>
+
+            </ul>
+          </div>
+        </li>
+
+
+
+
+
+        <li>
+          <a href="#kharid" data-bs-toggle="collapse" aria-expanded="false" aria-controls="kharid">
+            <i class="mdi mdi-cart-arrow-down"></i>
+            <span>خرید</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="kharid" data-bs-parent="#side-menu">
+            <ul class="nav-second-level">
+              <li><a [routerLink]="['/accounting/kharid/purchase-list']">فاکتور خرید</a></li>
+              <li><a [routerLink]="['/accounting/kharid/return-purchase-list']">مرجوع از خرید</a></li>
+
+              <li class="divider"></li>
+              <li>
+                <a href="#kharid_sefaresh_kharid" data-bs-toggle="collapse" aria-expanded="false"
+                  aria-controls="kharid_sefaresh_kharid">
+
+                  <span>سفارش خرید</span>
+                  <span class="menu-arrow"></span>
+                </a>
+                <div class="collapse" id="kharid_sefaresh_kharid" data-bs-parent="#kharid">
+                  <ul class="nav-thrid-level">
+                    <li><a [routerLink]="['/accounting/kharid/good-request-list']">درخواست نیاز کالا</a>
+                    </li>
+                    <li><a [routerLink]="['/accounting/kharid/purchase-order-list']">سفارش خرید</a></li>
+                    <li><a [routerLink]="['/accounting/kharid/request-order-list']">مدیریت
+                        درخواست نیاز و تامین کالا</a>
+                    </li>
+                    <li><a [routerLink]="['/accounting/kharid/auto-request-row-list']">معرفی
+                        کالاهای سفارش اتوماتیک</a></li>
+
+                  </ul>
+                </div>
+
+              </li>
+
+
+
+              <li class="divider"></li>
+
+              <li><a [routerLink]="['/accounting/kharid/purchase-payment-list']">پرداخت </a></li>
+              <li><a [routerLink]="['/accounting/kharid/vendor-mandeh-list']">حساب فروشندگان</a></li>
+              <li class="divider"></li>
+
+              <li><a [routerLink]="['/accounting/kharid/vendor-list']">فروشندگان</a></li>
+
+              <li class="divider"></li>
+              <li>
+                <a href="#kharid_kala" data-bs-toggle="collapse" aria-expanded="false" aria-controls="kharid_kala">
+
+                  <span>کالا</span>
+                  <span class="menu-arrow"></span>
+                </a>
+                <div class="collapse" id="kharid_kala" data-bs-parent="#kharid">
+                  <ul class="nav-thrid-level">
+                    <li><a [routerLink]="['/accounting/kharid/good-list']">کالاها</a></li>
+                    <li><a [routerLink]="['/accounting/kharid/goodsgrp-list']">گروه های کالاها</a></li>
+                    <li><a (click)="ToDevelop()">واحد سنجش</a></li>
+                    <li><a [routerLink]="['/accounting/kharid/good-analysis-list']">تجزیه و ترکیب
+                        کالا</a></li>
+                    <li><a [routerLink]="['/accounting/kharid/location-list']">جانمایی در انبار</a></li>
+                    <li><a (click)="ToDevelop()">تنظیمات جستجوی کالا</a></li>
+                    <li><a [routerLink]="['/accounting/kharid/reploglink-list']">کالا های سایت</a></li>
+                    <li><a [routerLink]="['/accounting/kharid/samane-good-list']">کالاهای سامانه
+                        جامع انبار</a></li>
+                    <li><a [routerLink]="['/accounting/kharid/personjob-list']">مدیریت
+                        ارتباط اشخاص و کالاها</a></li>
+
+
+
+
+                  </ul>
+                </div>
+
+              </li>
+              <li class="divider"></li>
+
+
+              <li><a [routerLink]="['/accounting/kharid/good-serial-frame-list']">موجودی اول دوره</a></li>
+              <li><a [routerLink]="['/accounting/kharid/close-acc-senario-list']">انتقال ارزش ریالی
+                  انبار</a></li>
+              <li><a [routerLink]="['/accounting/kharid/stack-transfer-list']">لنتقال انبار به
+                  انبار</a></li>
+              <li><a [routerLink]="['/accounting/kharid/stack-enumeration-list']">انبارگردانی</a></li>
+              <li><a [routerLink]="['/accounting/kharid/stack-list']">انبارها</a></li>
+              <li><a [routerLink]="['/accounting/kharid/good-receipt-list']">رسید انبار</a></li>
+              <li><a [routerLink]="['/accounting/kharid/good-issue-list']">حواله انبار</a></li>
+              <li><a [routerLink]="['/accounting/kharid/good-exchange-list']">مبادله</a></li>
+              <li><a [routerLink]="['/accounting/kharid/good-adjustment-list']">تسویه مبادله</a></li>
+
+              <li class="divider"></li>
+
+              <li><a (click)="ToDevelop()">محاسبه قیمت تمام شده</a></li>
+
+              <li class="divider"></li>
+
+              <li><a [routerLink]="['/accounting/kharid/extended-barcode-rpt-list']">ایجاد بارکد</a></li>
+            </ul>
+          </div>
+        </li>
+
+
+        <li>
+          <a href="#khazane" data-bs-toggle="collapse" aria-expanded="false" aria-controls="khazane">
+            <i class="mdi mdi-bank-outline"></i>
+            <span>خزانه داری</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="khazane" data-bs-parent="#side-menu">
+            <ul class="nav-second-level">
+              <li><a [routerLink]="['/accounting/khazane/khazane-receive-list']">دریافت</a></li>
+              <li><a [routerLink]="['/accounting/khazane/khazane-payment-list']">پرداخت</a></li>
+              <li><a [routerLink]="['/accounting/khazane/received-chk-inf-list']">اعلامیه وصول چک</a></li>
+              <li><a [routerLink]="['/accounting/khazane/check-passes-inf-list']">اعلامیه پاس شدن چک</a>
+              </li>
+              <li><a [routerLink]="['/accounting/khazane/return-checks-list']">برگشت چک</a></li>
+              <li><a [routerLink]="['/accounting/khazane/check-cansel-list']">ابطال چک</a></li>
+              <li class="divider"></li>
+
+              <li><a [routerLink]="['/accounting/khazane/cash-list']">صندوق ها</a></li>
+              <li><a [routerLink]="['/accounting/khazane/bank-list']">بانک ها</a></li>
+              <li class="divider"></li>
+              <li><a (click)="ToDevelop()">چک های پرداختی و سررسید آنها</a></li>
+
+            </ul>
+          </div>
+        </li>
+
+
+
+
+
+        <li>
+          <a href="#hesabdari" data-bs-toggle="collapse" aria-expanded="false" aria-controls="hesabdari">
+            <i class="mdi mdi-calculator-variant-outline"></i>
+            <span>حسابداری</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="hesabdari" data-bs-parent="#side-menu">
+            <ul class="nav-second-level">
+              <li><a [routerLink]="['/accounting/hesabdari/acc-group-list']">معرفی گروه حسابها</a></li>
+              <li><a [routerLink]="['/accounting/hesabdari/acc-kol-list']">معرفی حسابهای کل</a></li>
+              <li><a [routerLink]="['/accounting/hesabdari/acc-moeen-list']">معرفی حسابهای معین</a></li>
+              <li><a [routerLink]="['/accounting/hesabdari/acc-tafzily-list']">معرفی حسابهای تفضیلی</a>
+              </li>
+              <li><a [routerLink]="['/accounting/hesabdari/factor-account-list']">طرف حساب های
+                  اتوماتیک</a></li>
+              <li><a [routerLink]="['/accounting/hesabdari/acc-level-list']">معرفی سطوح حساب</a></li>
+              <li><a [routerLink]="['/accounting/hesabdari/acc-accounts-list']">جابجایی حساب</a></li>
+
+              <li class="divider"></li>
+
+              <li><a [routerLink]="['/accounting/hesabdari/acc-sanad-type-list']">صدور سند</a></li>
+              <li><a [routerLink]="['/accounting/hesabdari/close-acc-senario-list']">فرآیند انتقال حساب</a>
+              </li>
+              <li><a (click)="ToDevelop()">صدور سند اختتامیه</a></li>
+              <li><a (click)="ToDevelop()">صدور سند افتتاحیه</a></li>
+              <li><a [routerLink]="['/accounting/hesabdari/acc-snd-explain-list']">شرح اسناد</a></li>
+              <li class="divider"></li>
+              <li><a [routerLink]="['/accounting/hesabdari/acc-sanad-browse-list']">مرور حسابها</a></li>
+              <li><a [routerLink]="['/accounting/hesabdari/vwcentral-browse-list']">مرور حساب اشخاص
+                  و شرکتها</a></li>
+              <li><a (click)="ToDevelop()">تراز آزمایشی</a></li>
+              <li><a (click)="ToDevelop()">ترازنامه</a></li>
+              <li><a (click)="ToDevelop()">ترازآزمایشی تحلیلی</a></li>
+            </ul>
+          </div>
+        </li>
+
+        @if (ShowHoghogh()) {
+        <li>
+          <a href="#salary" data-bs-toggle="collapse" aria-expanded="false" aria-controls="salary">
+
+            <i class="mdi mdi-account-cash-outline"></i>
+
+            <span>حقوق دستمزد</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="salary" data-bs-parent="#side-menu">
+            <ul class="nav-second-level">
+
+              <li><a [routerLink]="['/automation/employe-list']">کارمندان</a></li>
+              <li><a [routerLink]="['/automation/monthsummary-list']">لیست ماه ها</a></li>
+              <li><a [routerLink]="['/automation/salarysummary-list']">لیست حقوق</a></li>
+
             </ul>
           </div>
         </li>
         }
-        @if (JobPersonRef?.length > 0) {
+
+
+
         <li>
           <a href="#report" data-bs-toggle="collapse" aria-expanded="false" aria-controls="report">
-            <i class="mdi mdi-chart-line"></i>
+            <i class="mdi mdi-chart-box-outline"></i>
             <span>گزارشات</span>
             <span class="menu-arrow"></span>
           </a>
           <div class="collapse" id="report" data-bs-parent="#side-menu">
             <ul class="nav-second-level">
-              <li><a [routerLink]="['/accounting/report-list']">لیست گزارشات</a></li>
+              <li><a [routerLink]="['/accounting/gozareshat/report-list']">لیست گزارشات</a></li>
+
+
             </ul>
 
             <!-- <ul class="nav-second-level">
 
-              <li><a [routerLink]="['/accounting/report-chart']">لیست چارتی</a></li>
+              <li><a [routerLink]="['/accounting/gozareshat/report-chart']">لیست چارتی</a></li>
             </ul> -->
           </div>
         </li>
-        }
 
 
-        @if (JobPersonRef?.length > 0) {
+
+
         <li>
           <a href="#setting" data-bs-toggle="collapse" aria-expanded="false" aria-controls="setting">
 
-            <i class="fas fa-user-cog"></i>
+            <i class="mdi mdi-cog-outline"></i>
 
             <span>تنظیمات</span>
             <span class="menu-arrow"></span>
           </a>
           <div class="collapse" id="setting" data-bs-parent="#side-menu">
             <ul class="nav-second-level">
-              <li><a [routerLink]="['/accounting/dbsetup']">لیست تنظیمات کوثر</a></li>
+              <li><a [routerLink]="['/accounting/tanzimat/dbsetup']">لیست تنظیمات کوثر</a></li>
+              <li><a [routerLink]="['/accounting/tanzimat/fiscal-period-list']">ایجاد دوره مالی</a></li>
+              <li><a [routerLink]="['/accounting/tanzimat/fiscal-period-list']">تغییر دوره مالی</a></li>
             </ul>
           </div>
         </li>
-        }
+
+
 
         }
 
-
-        @if (JobPersonRef?.length > 0) {
-        <li>
-          <a href="#accounting" data-bs-toggle="collapse" aria-expanded="false" aria-controls="accounting">
-
-            <i class="fas fa-project-diagram"></i>
-
-            <span>بازرگانی کوثر</span>
-            <span class="menu-arrow"></span>
-          </a>
-          <div class="collapse" id="accounting" data-bs-parent="#side-menu">
-            <ul class="nav-second-level">
-              <li><a [routerLink]="['/accounting/good-list']" routerLinkActive="active">مدیریت کالا</a></li>
-              <li><a [routerLink]="['/accounting/goodsgrp-list']" routerLinkActive="active">گروه کالایی</a></li>
-            </ul>
-          </div>
-        </li>
         }
+
+
 
 
         <!--   نرم‌افزارهای جانبی -->
 
-        <!-- @if (array_applications.length>0 && JobPersonRef?.length > 0) {
+        @if (array_applications.length>0 && LoginType() === 'KOWSAR') {
         <li>
           <a href="#application" data-bs-toggle="collapse" aria-expanded="false" aria-controls="application">
-            <i class="ri-apps-line"></i>
+            <i class="mdi mdi-puzzle-outline"></i>
             <span>نرم‌افزارهای جانبی</span>
             <span class="menu-arrow"></span>
           </a>
@@ -200,9 +535,11 @@
             </ul>
           </div>
         </li>
-        } -->
+        }
 
         <!-- 🧰 پشتیبانی -->
+
+        @if (IsKowsarSupportBuild()) {
 
 
         <li>
@@ -214,12 +551,12 @@
           <div class="collapse" id="support" data-bs-parent="#side-menu">
             <ul class="nav-second-level">
 
-              @if (JobPersonRef?.length > 0) {
+              @if (LoginType() === 'KOWSAR') {
               <li><a [routerLink]="['/internal/internal-factors-edit']">فاکتور پشتیبانی</a></li>
               <li><a [routerLink]="['/internal/internal-factors-list']">لیست فاکتور پشتیبانی</a></li>
-              <li><a [routerLink]="['/support/leaverequest-list']">لیست مرخصی</a></li>
+              <li><a [routerLink]="['/automation/leaverequest-list']">لیست مرخصی</a></li>
 
-              @if (PhAddress3 === '100') {
+              @if (permissionService.canManageRole) {
               <li><a [routerLink]="['/internal/internal-task-list']">لیست خدمات</a></li>
               <li><a [routerLink]="['/internal/internal-good-list']">لیست کالاها</a></li>
               }
@@ -229,58 +566,84 @@
 
               }
 
-              <li><a [routerLink]="['/support/letter-insert']">ایجاد تیکت جدید</a></li>
-              <li><a [routerLink]="['/support/letter-list']">لیست تمامی تیکت‌ها</a></li>
+              <li><a [routerLink]="['/automation/insert-letter']">ایجاد تیکت جدید</a></li>
 
-              @if (JobPersonRef?.length > 0) {
-              <li><a [routerLink]="['/support/letter-mine']">وضعیت تیکت‌های من</a></li>
+              @if (LoginType() === 'CUSTOMER') {
+              <li><a [routerLink]="['/automation/letter-customer']">وضعیت تیکت‌های من</a></li>
+              }
+
+              @if (LoginType() === 'KOWSAR') {
+              <li><a [routerLink]="['/automation/letter-user']">لیست تمامی تیکت‌ها</a></li>
+              <li><a [routerLink]="['/automation/letter-mine']">وضعیت تیکت‌های من</a></li>
               }
             </ul>
           </div>
         </li>
 
-        @if (ShowHoghogh) {
+
+
+        }
+
+
+        @if (!IsKowsarSupportBuild()) {
+
+
         <li>
-          <a href="#salary" data-bs-toggle="collapse" aria-expanded="false" aria-controls="salary">
-
-            <i class="mdi mdi-account-cash-outline"></i>
-
-            <span>حقوق دستمزد</span>
+          <a href="#support" data-bs-toggle="collapse" aria-expanded="false" aria-controls="support">
+            <i class="ri-customer-service-2-line"></i>
+            <span>پشتیبانی</span>
             <span class="menu-arrow"></span>
           </a>
-          <div class="collapse" id="salary" data-bs-parent="#side-menu">
+          <div class="collapse" id="support" data-bs-parent="#side-menu">
             <ul class="nav-second-level">
 
-              <li><a [routerLink]="['/support/employe-list']">کارمندان</a></li>
-              <li><a [routerLink]="['/support/monthsummary-list']">لیست ماه ها</a></li>
-              <li><a [routerLink]="['/support/salarysummary-list']">لیست حقوق</a></li>
+              <li><a [routerLink]="['/automation/insert-letter']">ایجاد تیکت جدید</a></li>
+
+              @if (LoginType() === 'CUSTOMER') {
+              <li><a [routerLink]="['/automation/letter-customer']">لیست تمامی تیکت‌ها</a></li>
+
+              }
+
+              @if (LoginType() === 'KOWSAR') {
+              <li><a [routerLink]="['/automation/leaverequest-list']">لیست مرخصی</a></li>
+              <li><a [routerLink]="['/automation/letter-user']">لیست تمامی تیکت‌ها</a></li>
+              <li><a [routerLink]="['/automation/letter-mine']">وضعیت تیکت‌های من</a></li>
+              }
 
             </ul>
           </div>
         </li>
+
+
+
         }
 
-
-
-
-
-        <!-- 👨‍💻 توسعه نرم‌افزار -->
-        @if (JobPersonRef?.length > 0) {
+        @if (IsKowsarSupportBuild()) {
+        @if (LoginType() === 'KOWSAR') {
         <li>
           <a href="#manager" data-bs-toggle="collapse" aria-expanded="false" aria-controls="manager">
-            <i class="ri-code-box-line"></i>
+            <i class="mdi mdi-code-braces"></i>
             <span>توسعه نرم‌افزار</span>
             <span class="menu-arrow"></span>
           </a>
           <div class="collapse" id="manager" data-bs-parent="#side-menu">
             <ul class="nav-second-level">
+
+
               <li><a [routerLink]="['/internal/internal-apps-list']">ماژول‌های جانبی</a></li>
               <li><a [routerLink]="['/internal/internal-website-list']">وب‌سایت‌ها</a></li>
+              <li><a [routerLink]="['/internal/module-config-list']">پیش فرض های سیستم</a></li>
+              <li><a [routerLink]="['/internal/news-rss']">خبر ها</a></li>
+
               <li><a [routerLink]="['/internal/weblog']">لاگ سرور</a></li>
+              <li><a [routerLink]="['/system-info']">مستندات سیستم</a></li>
             </ul>
           </div>
         </li>
         }
+        }
+        <!-- 👨‍💻 توسعه نرم‌افزار -->
+
 
         <!-- 📚 مستندات -->
         <!-- <li>

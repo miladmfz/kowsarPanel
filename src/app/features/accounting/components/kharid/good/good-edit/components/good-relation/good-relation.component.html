@@ -1,0 +1,232 @@
+<div class="row col-md-12">
+
+
+  <div class="form-group col-md-3">
+    <label for="GoodCode" class="col-form-label">کد کالا </label>
+    <input type="text" class="form-control" placeholder="{{GoodCode_str()}}" [readOnly]="true" />
+  </div>
+
+  <!-- <div class="form-group col-md-3">
+                                                                                                                                                                <label for="GoodSubCode" class="col-form-label">کد زیر مجموعه </label>
+                                                                                                                                                                <input type="text" class="form-control" placeholder="{{GoodSubCode_str}}" [readOnly]="true" />
+                                                                                                                                                              </div> -->
+
+  <div class="form-group col-md-9">
+    <label for="GoodName" class="col-form-label">نام کالا </label>
+    <input type="text" class="form-control" placeholder="{{GoodName_str()}}" [readOnly]="true" />
+  </div>
+</div>
+
+
+
+<div class="row col-md-12">
+
+
+  <div class="col-md-12">
+
+
+    <div class="col-md-12 d-flex align-items-center">
+      <label for="GoodName" class="col-form-label">لیست انبار </label>
+      <button class="btn btn-link mx-2 text-info" (click)="AddStack()">اضافه کردن انبار</button>
+    </div>
+
+
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 350px;">
+      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+        [columnDefs]="column_name_1" [rowData]="Stack_list()" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+        [class]="themeClass + ' w-100 h-100'" (selectionChanged)="onSelectionChanged_Row($event)">
+      </ag-grid-angular>
+    </div>
+
+  </div>
+
+
+  <div class="col-md-12">
+    <div class="col-md-12 d-flex align-items-center">
+      <label for="GoodName" class="col-form-label">لیست گروه</label>
+      <button class="btn btn-link mx-2 text-info" (click)="AddGroup()">اضافه کردن گروه</button>
+    </div>
+
+
+
+
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 350px;">
+      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+        [columnDefs]="columnDefs2" [rowData]="Group_list()" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()"
+        [class]="themeClass + ' w-100 h-100'" (selectionChanged)="onSelectionChanged_Row($event)">
+      </ag-grid-angular>
+    </div>
+  </div>
+
+
+
+
+  <div class="col-md-12">
+
+
+
+    <div class="col-md-12 d-flex align-items-center">
+      <label for="imagelist" class="col-form-label">لیست عکس </label>
+
+      <button class="btn btn-link mx-2 text-info" (click)="fileInput.click()">اضافه کردن عکس</button>
+      <input type="file" (change)="onFileSelected($event)" id="fileInput" #fileInput style="display: none;"
+        (click)="$event.stopPropagation()">
+    </div>
+
+
+
+
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 350px;">
+      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+        [columnDefs]="columnDefs3" [rowData]="Image_list()" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 3)" (firstDataRendered)="gridApi3?.sizeColumnsToFit()"
+        [class]="themeClass + ' w-100 h-100'" (selectionChanged)="onSelectionChanged_Row($event)">
+      </ag-grid-angular>
+    </div>
+
+
+
+
+  </div>
+
+
+
+
+
+</div>
+
+
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  @if (control.hasError(validation) && (control.dirty || control.touched)) {
+  <div class="fv-plugins-message-container invalid-feedback">
+    <span role="alert">
+      {{ message }}
+    </span>
+  </div>
+  }
+</ng-template>
+
+
+
+
+<div class="modal fade" id="stacklist" tabindex="-1" aria-labelledby="stacklistLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class=" modal-title" id="stacklistLabel">لیست انبار ها</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="stack_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 350px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="columnDefs5" [rowData]="base_Stack_list()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 5)" (firstDataRendered)="gridApi5?.sizeColumnsToFit()"
+            [class]="themeClass + ' w-100 h-100'" [rowSelection]="{ mode: 'singleRow' ,enableClickSelection: true}"
+            (selectionChanged)="onSelectionChanged_Row($event)" [treeData]="true" [getDataPath]="getDataPath_stack">
+          </ag-grid-angular>
+        </div>
+
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="stack_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="SetStack()">انتخاب</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<div class="modal fade" id="grouplist" tabindex="-1" aria-labelledby="grouplistLabel" aria-hidden="true">
+  <div class="modal-dialog modal-s modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class=" modal-title" id="grouplistLabel">لیست گروه ها</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="group_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+
+
+
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 350px;">
+
+          <ag-grid-angular [class]="themeClass + ' w-100 h-100'" [columnDefs]="columnDefs6"
+            [rowData]="base_Group_list()" (gridReady)="onGridReady($event, 6)"
+            (firstDataRendered)="gridApi6?.sizeColumnsToFit()" [treeData]="true" [getDataPath]="getDataPath_group"
+            [rowSelection]="{
+    mode: 'multiRow',
+    groupSelects: 'filteredDescendants',
+    checkboxes: true,
+    headerCheckbox: true,
+    checkboxLocation: 'autoGroupColumn'
+  }" [animateRows]="true" (rowSelected)="onRowSelected($event)">
+
+          </ag-grid-angular>
+
+        </div>
+
+
+        <!-- 
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden"  style="height: 350px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="columnDefs6" [rowData]="base_Group_list()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 6)" (firstDataRendered)="gridApi6?.sizeColumnsToFit()" [class]="themeClass + ' w-100 h-100'"   
+            [rowSelection]="{ mode: 'singleRow' ,enableClickSelection: true}"
+            (selectionChanged)="onSelectionChanged_Row($event)" [treeData]="true" [getDataPath]="getDataPath_group">
+          </ag-grid-angular>
+        </div> -->
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="group_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="SetGroup()">انتخاب</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<div class="modal fade" id="showimagemodal" tabindex="-1" aria-labelledby="showimagemodalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class=" modal-title" id="showimagemodalLabel">لیست عکس ها</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="showimage_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+
+        <img [src]="Imageitem()" alt="No Photo">
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="showimage_dialog_close()">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>

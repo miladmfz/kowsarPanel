@@ -1,8 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { BrokerWebApiService } from 'src/app/features/module/services/BrokerWebApi.service';
 
 @Component({
@@ -19,10 +16,10 @@ export class BrokerAppPanelComponent implements OnInit {
   constructor() { }
 
 
-  ListVisible_items: any[] = [];
-  DetailVisible_items: any[] = [];
-  SearchVisible_items: any[] = [];
-  Apptype: string = "1";
+  ListVisible_items = signal<any[]>([])
+  DetailVisible_items = signal<any[]>([])
+  SearchVisible_items = signal<any[]>([])
+  Apptype = signal('1');
 
   ngOnInit() {
 
@@ -43,9 +40,9 @@ export class BrokerAppPanelComponent implements OnInit {
   ListVisible_Card() {
 
 
-    this.repo.BasketColumnCard("ListVisible", this.Apptype)
+    this.repo.BasketColumnCard("ListVisible", this.Apptype())
       .subscribe(e => {
-        this.ListVisible_items = e;
+        this.ListVisible_items.set(e)
 
       });
 
@@ -53,9 +50,9 @@ export class BrokerAppPanelComponent implements OnInit {
 
   DetailVisible_Card() {
 
-    this.repo.BasketColumnCard("DetailVisible", this.Apptype)
+    this.repo.BasketColumnCard("DetailVisible", this.Apptype())
       .subscribe(e => {
-        this.DetailVisible_items = e;
+        this.DetailVisible_items.set(e)
 
       });
 
@@ -63,9 +60,9 @@ export class BrokerAppPanelComponent implements OnInit {
 
   SearchVisible_Card() {
 
-    this.repo.BasketColumnCard("SearchVisible", this.Apptype)
+    this.repo.BasketColumnCard("SearchVisible", this.Apptype())
       .subscribe(e => {
-        this.SearchVisible_items = e;
+        this.SearchVisible_items.set(e)
 
       });
 

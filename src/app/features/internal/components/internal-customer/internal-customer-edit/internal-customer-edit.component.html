@@ -1,142 +1,172 @@
-<div class="row mb-3">
-  <div class="col-12">
-    <div class="page-title-box d-flex justify-content-between align-items-center">
-      <h4 class="page-title text-primary fw-semibold">
-        {{ title }}
-      </h4>
-    </div>
+<div class="card">
+  <div class="card-title"></div>
+
+  <h4 class="page-title">
+    {{ title() }}
+  </h4>
+
+
+  <div class="card-body">
+
+    <form [formGroup]="EditForm_Customer" (ngSubmit)="submit('')" id="submitForm">
+
+      <div class="card">
+        <div class="card-body">
+
+          <div class="row">
+
+            <div class="col-md-3 mb-3">
+              <label class="form-label">نام</label>
+              <input type="text" formControlName="FName" class="form-control" [ngClass]="{
+                  'is-invalid':
+                    EditForm_Customer.controls['FName'].invalid &&
+                    EditForm_Customer.controls['FName'].touched,
+                  'is-valid':
+                    EditForm_Customer.controls['FName'].valid &&
+                    EditForm_Customer.controls['FName'].touched
+                }" />
+
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                  validation: 'required',
+                  message: 'اجباری است',
+                  control: EditForm_Customer.controls['FName']
+                }">
+              </ng-container>
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <label class="form-label">نام خانوادگی</label>
+              <input type="text" class="form-control" formControlName="LName" autocomplete="off" [ngClass]="{
+                  'is-invalid':
+                    EditForm_Customer.controls['LName'].invalid &&
+                    EditForm_Customer.controls['LName'].touched,
+                  'is-valid':
+                    EditForm_Customer.controls['LName'].valid &&
+                    EditForm_Customer.controls['LName'].touched
+                }" />
+
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                  validation: 'required',
+                  message: 'اجباری است',
+                  control: EditForm_Customer.controls['LName']
+                }">
+              </ng-container>
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <label for="CityName" class="form-label">
+                شهر
+                <span class="text-primary">(انتخابی)</span>
+              </label>
+
+              <input type="text" class="form-control" id="CityName" placeholder="نمایش شهرها" formControlName="CityName"
+                maxlength="100" autocomplete="off" readonly (click)="CallCity()" [ngClass]="{
+                  'is-invalid':
+                    EditForm_Customer.controls['CityName'].invalid &&
+                    EditForm_Customer.controls['CityName'].touched,
+                  'is-valid':
+                    EditForm_Customer.controls['CityName'].valid &&
+                    EditForm_Customer.controls['CityName'].touched
+                }" />
+
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                  validation: 'required',
+                  message: 'اجباری است',
+                  control: EditForm_Customer.controls['CityName']
+                }">
+              </ng-container>
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <label class="form-label">تلفن</label>
+              <input type="text" class="form-control" formControlName="Phone" autocomplete="off" [ngClass]="{
+                  'is-invalid':
+                    EditForm_Customer.controls['Phone'].invalid &&
+                    EditForm_Customer.controls['Phone'].touched,
+                  'is-valid':
+                    EditForm_Customer.controls['Phone'].valid &&
+                    EditForm_Customer.controls['Phone'].touched
+                }" />
+
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                  validation: 'required',
+                  message: 'اجباری است',
+                  control: EditForm_Customer.controls['Phone']
+                }">
+              </ng-container>
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <label class="form-label">موبایل</label>
+              <input type="text" class="form-control" formControlName="Mobile" autocomplete="off" [ngClass]="{
+                  'is-invalid':
+                    EditForm_Customer.controls['Mobile'].invalid &&
+                    EditForm_Customer.controls['Mobile'].touched,
+                  'is-valid':
+                    EditForm_Customer.controls['Mobile'].valid &&
+                    EditForm_Customer.controls['Mobile'].touched
+                }" />
+
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                  validation: 'required',
+                  message: 'اجباری است',
+                  control: EditForm_Customer.controls['Mobile']
+                }">
+              </ng-container>
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <label class="form-label">ایمیل</label>
+              <input type="text" class="form-control" formControlName="Email" autocomplete="off" />
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <label class="form-label">توضیحات</label>
+              <input type="text" class="form-control" formControlName="Explain" autocomplete="off" />
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <label class="form-label">کد پستی</label>
+              <input type="text" class="form-control" formControlName="ZipCode" autocomplete="off" />
+            </div>
+
+            <div class="col-md-12 mb-3">
+              <label class="form-label">آدرس</label>
+              <input type="text" class="form-control" formControlName="Address" autocomplete="off" />
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+
+          <div class="d-flex gap-2">
+
+            @if (permissionService.canManageRole) {
+            <button class="btn btn-success" type="button" (click)="submit('exit')">
+              <i class="fas fa-check-double me-1"></i>
+              ذخیره
+            </button>
+            }
+
+            <button class="btn btn-secondary" type="button" (click)="onBtnCancelClick()">
+              <i class="fas fa-times me-1"></i>
+              انصراف
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+
+    </form>
   </div>
+
 </div>
 
-<form [formGroup]="EditForm_Customer" (ngSubmit)="submit('')" id="submitForm">
-
-  <div class="card shadow-sm border-0">
-    <div class="card-body row g-3">
-
-      <!-- Activation Code -->
-      <div class="col-md-3">
-        <label class="form-label fw-semibold">نام</label>
-        <input type="text" formControlName="FName" class="form-control" [ngClass]="{
-                              'is-invalid':
-                              EditForm_Customer.controls['FName'].invalid &&
-                              EditForm_Customer.controls['FName'].touched,
-                              'is-valid':
-                              EditForm_Customer.controls['FName'].valid &&
-                              EditForm_Customer.controls['FName'].touched
-                            }" />
-        <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                              validation: 'required',
-                              message: 'اجباری است',
-                              control: EditForm_Customer.controls['FName']
-                            }"></ng-container>
-      </div>
-
-      <div class="col-md-3">
-        <label class="form-label fw-semibold">نام خانوادگی</label>
-        <input type="text" class="form-control" formControlName="LName" autocomplete="off" [ngClass]="{
-                              'is-invalid':
-                              EditForm_Customer.controls['LName'].invalid &&
-                              EditForm_Customer.controls['LName'].touched,
-                              'is-valid':
-                              EditForm_Customer.controls['LName'].valid &&
-                              EditForm_Customer.controls['LName'].touched
-                            }" />
-        <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                              validation: 'required',
-                              message: 'اجباری است',
-                              control: EditForm_Customer.controls['LName']
-                            }"></ng-container>
-      </div>
-
-      <div class=" form-group col-md-3">
-        <label for="CustomerCode" class="col-form-label">شهر</label>
-
-        <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
-        <input type="text" class="form-control" id="CityName" (click)="CallCity()" placeholder="نمایش شهر ها"
-          formControlName="CityName" maxlength="100" autocomplete="off" readonly [ngClass]="{
-                              'is-invalid':
-                              EditForm_Customer.controls['CityName'].invalid &&
-                              EditForm_Customer.controls['CityName'].touched,
-                              'is-valid':
-                              EditForm_Customer.controls['CityName'].valid &&
-                              EditForm_Customer.controls['CityName'].touched
-                            }" />
-        <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                              validation: 'required',
-                              message: 'اجباری است',
-                              control: EditForm_Customer.controls['CityName']
-                            }"></ng-container>
-      </div>
-      <div class="col-md-3">
-        <label class="form-label fw-semibold">تلفن </label>
-        <input type="text" class="form-control" formControlName="Phone" autocomplete="off" [ngClass]="{
-                              'is-invalid':
-                              EditForm_Customer.controls['Phone'].invalid &&
-                              EditForm_Customer.controls['Phone'].touched,
-                              'is-valid':
-                              EditForm_Customer.controls['Phone'].valid &&
-                              EditForm_Customer.controls['Phone'].touched
-                            }" />
-        <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                              validation: 'required',
-                              message: 'اجباری است',
-                              control: EditForm_Customer.controls['Phone']
-                            }"></ng-container>
-      </div>
-
-      <div class="col-md-3">
-        <label class="form-label fw-semibold">موبایل </label>
-        <input type="text" class="form-control" formControlName="Mobile" autocomplete="off" [ngClass]="{
-                              'is-invalid':
-                              EditForm_Customer.controls['Mobile'].invalid &&
-                              EditForm_Customer.controls['Mobile'].touched,
-                              'is-valid':
-                              EditForm_Customer.controls['Mobile'].valid &&
-                              EditForm_Customer.controls['Mobile'].touched
-                            }" />
-        <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                              validation: 'required',
-                              message: 'اجباری است',
-                              control: EditForm_Customer.controls['Mobile']
-                            }"></ng-container>
-      </div>
-
-      <div class="col-md-3">
-        <label class="form-label fw-semibold">ایمیل </label>
-        <input type="text" class="form-control" formControlName="Email" autocomplete="off" />
-      </div>
-      <div class="col-md-3">
-        <label class="form-label fw-semibold">توضیحات </label>
-        <input type="text" class="form-control" formControlName="Explain" autocomplete="off" />
-      </div>
-      <div class="col-md-3">
-        <label class="form-label fw-semibold">کد پستی </label>
-        <input type="text" class="form-control" formControlName="ZipCode" autocomplete="off" />
-      </div>
-
-      <div class="col-md-12">
-        <label class="form-label fw-semibold">آدرس </label>
-        <input type="text" class="form-control" formControlName="Address" autocomplete="off" />
-      </div>
-    </div>
-  </div>
-</form>
-
-<div class="card shadow-sm border-0 mt-3">
-  <div class="card-body d-flex gap-2">
-
-    <button class="btn btn-success px-4" type="button" (click)="submit('exit')">
-      <i class="fas fa-check-double me-1"></i>
-      ذخیره
-    </button>
-
-    <button class="btn btn-light px-4" type="button" (click)="onBtnCancelClick()">
-      <i class="fas fa-times me-1"></i>
-      انصراف
-    </button>
-
-  </div>
-</div>
 
 <ng-template #formError let-control="control" let-message="message" let-validation="validation">
   @if (control.hasError(validation) && (control.dirty || control.touched)) {
@@ -146,40 +176,51 @@
   }
 </ng-template>
 
-<div class="modal fade" id="citylist" tabindex="-1" aria-labelledby="citylistLabel" aria-hidden="true">
+<div class="modal fade" #citylist tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content" style="background-color: #d1dce7;">
-      <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="citylistLabel">لیست مشتریان</h5>
+    <div class="modal-content border-0">
+
+      <div class="modal-header bg-light">
+        <h5 class="modal-title" id="citylistLabel">
+          لیست شهرها
+        </h5>
+
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-          (click)="city_dialog_close()"></button>
+          (click)="city_dialog_close()">
+        </button>
       </div>
+
       <div class="modal-body">
+
         <div class="row mb-2">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <input #modalsearch type="text" class="form-control" placeholder="جستجو..."
-                [(ngModel)]="Searchtarget_city" (ngModelChange)="onInputChange_City()"
-                [ngModelOptions]="{ standalone: true }" />
-            </div>
+          <div class="col-12">
+            <input #modalsearch type="text" class="form-control" placeholder="جستجو..." [(ngModel)]="Searchtarget_city"
+              (ngModelChange)="onInputChange_City()" [ngModelOptions]="{ standalone: true }" />
           </div>
         </div>
 
-
-        <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
-          <ag-grid-angular [columnDefs]="columnDefs3" [rowData]="records_city" [gridOptions]="gridOptions"
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="columnDefs3" [rowData]="records_city()" [gridOptions]="gridOptions"
             [rowSelection]="{ mode: 'singleRow' ,enableClickSelection: true}" (gridReady)="onGridReady($event, 3)"
-            (firstDataRendered)="gridApi3?.sizeColumnsToFit()" class="w-100 h-100"
+            (firstDataRendered)="gridApi3?.sizeColumnsToFit()" [class]="themeClass + ' w-100 h-100'"
             (selectionChanged)="onSelectionChanged($event)">
           </ag-grid-angular>
         </div>
 
+
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-          (click)="city_dialog_close()">بستن</button>
-        <button type="button" class="btn btn-primary" (click)="Set_City()">انتخاب</button>
+
+      <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="city_dialog_close()">
+          بستن
+        </button>
+
+        <button type="button" class="btn btn-primary" [disabled]="selectedRows().length === 0" (click)="Set_City()">
+          انتخاب
+        </button>
       </div>
+
     </div>
   </div>
 </div>

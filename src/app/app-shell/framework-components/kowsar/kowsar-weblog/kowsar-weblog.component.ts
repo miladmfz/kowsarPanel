@@ -1,9 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { KowsarBaseWebApi } from '../../../framework-services/base/KowsarBaseWebApi.service';
 import { AgGridBaseComponent } from '../../ag-grid/base';
 import { AgGridModule } from 'ag-grid-angular';
 import { CommonModule } from '@angular/common';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-kowsar-weblog',
@@ -17,9 +16,9 @@ import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.
 export class KowsarWeblogComponent extends AgGridBaseComponent
   implements OnInit {
 
-  title = 'لیست وب‌سایت‌های داخلی کوثر';
-  records: any;
-  loading = false;
+  title = signal('لیست لاگ های سیستم')
+  records = signal<any[]>([])
+  loading = signal(false)
 
 
   private readonly repo = inject(KowsarBaseWebApi);
@@ -31,38 +30,34 @@ export class KowsarWeblogComponent extends AgGridBaseComponent
 
   ngOnInit(): void {
 
-    this.columnDefs1 = [
+    this.column_name_1 = [
 
-      {
-        field: 'WebLogCode',
-        headerName: 'WebLogCode',
-        filter: 'agSetColumnFilter',
-      },
+
       {
         field: 'ClassName',
         headerName: 'ClassName ',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'CreationDate',
         headerName: 'CreationDate',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'LogValue',
         headerName: 'LogValue',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
-        field: 'TagName',
-        headerName: 'TagName  ',
-        filter: 'agSetColumnFilter',
+        field: 'UserName',
+        headerName: 'UserName',
+
         cellClass: 'text-center',
       },
     ];
@@ -81,8 +76,8 @@ export class KowsarWeblogComponent extends AgGridBaseComponent
     this.repo.GetWebLog()
       .subscribe((data: any) => {
 
-        this.records = data?.WebLogs ?? [];
-        this.updateGridData(1, this.records);
+        this.records.set(data?.WebLogs ?? [])
+        this.updateGridData(1, this.records());
 
       });
   }

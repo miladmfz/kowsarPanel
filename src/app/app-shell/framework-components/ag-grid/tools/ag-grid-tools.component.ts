@@ -1,6 +1,6 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { AgGridStateService } from '../ag-grid-base/agGridState.service';
+import { Component, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AgGridStateService } from '../services/agGridState.service';
 
 @Component({
   selector: 'ag-grid-tools',
@@ -16,8 +16,8 @@ export class AgGridToolsComponent implements OnInit, OnChanges {
   @Input() exportPermission?: string;
 
   hasSavedState = false;
-
-  constructor(private readonly agGridStateService: AgGridStateService) { }
+  private readonly agGridStateService = inject(AgGridStateService);
+  constructor() { }
 
   ngOnInit(): void {
     if (this.name && this.gridApi && this.gridColumnApi)

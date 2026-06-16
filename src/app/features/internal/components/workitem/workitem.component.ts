@@ -1,25 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, Renderer2, OnInit, ElementRef, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AgGridAngular } from 'ag-grid-angular';
-import { ColDef } from 'ag-grid-community';
-import { Subscription } from 'rxjs';
-
-
-
 //   سرویس‌ها
-import { ThemeService } from 'src/app/app-shell/framework-services/ui/theme.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base/ag-grid-base.component';
-import { DashboardWebApiService } from '../../services/DashboardWebApi.service';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
-import { Base_Lookup, Base_Lookup_icon } from 'src/app/app-shell/framework-services/model/lookup-type';
+import { Base_Lookup_icon } from 'src/app/app-shell/framework-services/model/lookup-type';
 import { CellActionWorkItemList } from './cell-action-task-list';
 import { CellPriorityWorkItem } from './cell-priority-label-workitem';
 import { CellStatusWorkItem } from './cell-status-label-workitem';
 import { WorkItemWebApiService } from '../../services/WorkItemWebApi.service';
 import { CellNameWorkItem } from './cell-personname-label-workitem';
 import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
+import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
+import { KowsarWebApiService } from 'src/app/features/module/services/KowsarWebApi.service';
+import { KowsarBaseWebApi } from 'src/app/app-shell/framework-services/base/KowsarBaseWebApi.service';
 
 @Component({
   selector: 'app-workitem',
@@ -36,13 +31,13 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
   // ===============================================================
   // 🧾 داده‌ها و وضعیت‌ها
   // ===============================================================
-  records: any[] = [];
-  records_Persons: any[] = [];
+  records = signal<any[]>([])
+  records_Persons = signal<any[]>([])
   show_person = false;
   show_grid = false;
   CanEdit = false;
 
-  title_workitem_modal = '';
+  title_workitem_modal = signal('')
 
 
 
@@ -104,8 +99,10 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
 
 
   private readonly repo = inject(WorkItemWebApiService);
-  private readonly notify = inject(NotificationService);
+  private readonly base_repo = inject(KowsarBaseWebApi);
 
+  private readonly notify = inject(NotificationService);
+  protected readonly session = inject(SessionStorageService);
 
   constructor() {
     super();
@@ -124,8 +121,8 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
   // ===============================================================
 
   private initColumns(): void {
-    this.columnDefs1 = [
-      { field: 'عملیات', pinned: 'left', cellRenderer: CellActionWorkItemList, minWidth: 100 },
+    this.column_name_1 = [
+      { field: 'عملیات', pinned: 'left', cellRenderer: CellActionWorkItemList, width: 140 },
 
       { field: 'CentralName', headerName: 'کاربر', width: 120 },
 
@@ -142,11 +139,11 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
     ];
 
 
-    this.repo.AttendanceDashboard().subscribe({
+    this.base_repo.AttendanceDashboard().subscribe({
       next: (data: any) => {
 
-        this.records_Persons = data?.Attendances ?? [];
-        this.updateGridData(1, this.records_Persons);
+        this.records_Persons.set(data?.Attendances ?? [])
+        this.updateGridData(1, this.records_Persons());
       },
       error: (err) => {
 
@@ -159,7 +156,7 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
   public getList(): void {
 
 
-    const centralRef = sessionStorage.getItem('CentralRef') ?? '';
+    const centralRef = this.session.centralRef;
     if (['1274', '1139', '1843'].includes(centralRef)) {
 
       this.show_person = true
@@ -172,13 +169,13 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
       this.show_person = false
 
       this.EditForm_WorkItem.patchValue({
-        OwnerRef: sessionStorage.getItem('CentralRef') || '',
-        OwnerName: sessionStorage.getItem('PhFullName') || ''
+        OwnerRef: this.session.centralRef || '',
+        OwnerName: this.session.phFullName
 
       });
 
       this.EditForm_SearchTarget.patchValue({
-        CentralRef: sessionStorage.getItem('CentralRef') || '',
+        CentralRef: this.session.centralRef || '',
 
       });
     }
@@ -186,17 +183,17 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
 
 
 
-    ;
+
     this.repo.WorkItem_Get(this.EditForm_SearchTarget.value).subscribe({
       next: (data: any) => {
 
-        ;
-        this.records = data?.WorkItems ?? [];
-        this.show_grid = this.records.length > 0;
-        this.updateGridData(1, this.records)
+
+        this.records.set(data?.WorkItems ?? [])
+        this.show_grid = this.records().length > 0;
+        this.updateGridData(1, this.records())
       },
       error: () => {
-        ;
+
         this.notify.error('❌ خطا در دریافت گزارش کارشناسان');
         this.show_grid = false;
       },
@@ -206,7 +203,7 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
   delete(data: any) {
 
 
-    if (data.CreatorRef === sessionStorage.getItem('CentralRef')) {
+    if (data.CreatorRef === this.session.centralRef) {
 
 
       import('sweetalert2').then(Swal => {
@@ -249,7 +246,7 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
       });
 
     } else {
-      this.notify.error('❌ شما ممجاز به حذف این رکورد نیستید');
+      this.notify.error('❌ شما مجاز به حذف این رکورد نیستید');
 
     }
 
@@ -259,7 +256,7 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
 
   edit(data: any) {
 
-    if (data.CreatorRef === sessionStorage.getItem('CentralRef')) {
+    if (data.CreatorRef === this.session.centralRef) {
 
       this.CanEdit = true
     } else {
@@ -329,7 +326,7 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
 
   Create_New_Workitem() {
 
-    this.title_workitem_modal = "شرح کار جدید"
+    this.title_workitem_modal.set("شرح کار جدید")
 
     this.EditForm_WorkItem.patchValue({
       WorkItemCode: "",
@@ -342,15 +339,15 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
       ObjectRef: "0",
       OwnerRef: "",
       OwnerName: "",
-      OriginalDate: sessionStorage.getItem('ActiveSession') || '',
-      TargetDate: sessionStorage.getItem('ActiveSession') || '',
-      ChangeStateDate: sessionStorage.getItem('ActiveSession') || '',
+      OriginalDate: this.session.getString('ActiveDate') || '',
+      TargetDate: this.session.getString('ActiveDate') || '',
+      ChangeStateDate: this.session.getString('ActiveDate') || '',
 
-      CreatorRef: sessionStorage.getItem('CentralRef') || '',
+      CreatorRef: this.session.centralRef || '',
     });
 
 
-    const centralRef = sessionStorage.getItem('CentralRef') ?? '';
+    const centralRef = this.session.centralRef;
     if (['1274', '1139', '1843'].includes(centralRef)) {
 
       this.show_person = true
@@ -358,8 +355,8 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
       this.show_person = false
 
       this.EditForm_WorkItem.patchValue({
-        OwnerRef: sessionStorage.getItem('CentralRef') || '',
-        OwnerName: sessionStorage.getItem('PhFullName') || ''
+        OwnerRef: this.session.centralRef || '',
+        OwnerName: this.session.phFullName
 
       });
     }
@@ -369,58 +366,50 @@ export class WorkitemComponent extends AgGridBaseComponent implements OnInit {
   }
 
 
-  workitem_dialog_show() { this.toggleModal('#workitemmodal', true); }
-  workitem_dialog_close() { this.toggleModal('#workitemmodal', false); }
+  private readonly renderer = inject(Renderer2);
 
 
-  editworkitem_dialog_show() { this.toggleModal('#editworkitemmodal', true); }
-  editworkitem_dialog_close() { this.toggleModal('#editworkitemmodal', false); }
-
+  @ViewChild('workitemmodal', { static: false }) workitemmodal!: ElementRef<HTMLDivElement>;
+  @ViewChild('editworkitemmodal', { static: false }) editworkitemmodal!: ElementRef<HTMLDivElement>;
 
 
 
-  toggleModal(selector: string, show: boolean) {
-    const modal: any = document.querySelector(selector);
+  workitem_dialog_show(): void {
+    const modal = this.workitemmodal?.nativeElement;
     if (!modal) return;
-
-    if (show) {
-      // BACKDROP بساز
-      const backdrop = document.createElement('div');
-      backdrop.className = 'modal-backdrop fade';
-      backdrop.id = selector.replace('#', '') + '-backdrop';
-      document.body.appendChild(backdrop);
-
-      // کمی تاخیر برای fade
-      setTimeout(() => backdrop.classList.add('show'), 10);
-
-      // مودال را باز کن
-      modal.classList.add('show', 'd-block');
-      modal.removeAttribute('aria-hidden');
-      modal.setAttribute('aria-modal', 'true');
-      modal.style.display = 'block';
-
-      // بستن با کلیک روی بک‌دراپ
-      backdrop.addEventListener('click', () => this.toggleModal(selector, false));
-    }
-    else {
-      // مودال را ببند
-      modal.classList.remove('show');
-      setTimeout(() => {
-        modal.classList.remove('d-block');
-        modal.style.display = 'none';
-      }, 150);
-
-      modal.setAttribute('aria-hidden', 'true');
-      modal.removeAttribute('aria-modal');
-
-      // بک‌دراپ را حذف کن
-      const backdrop = document.getElementById(selector.replace('#', '') + '-backdrop');
-      if (backdrop) {
-        backdrop.classList.remove('show');
-        setTimeout(() => backdrop.remove(), 150);
-      }
-    }
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
   }
+
+  workitem_dialog_close(): void {
+    const modal = this.workitemmodal?.nativeElement;
+    if (!modal) return;
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+  editworkitem_dialog_show(): void {
+    const modal = this.editworkitemmodal?.nativeElement;
+    if (!modal) return;
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+
+  editworkitem_dialog_close(): void {
+    const modal = this.editworkitemmodal?.nativeElement;
+    if (!modal) return;
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
 
 
 

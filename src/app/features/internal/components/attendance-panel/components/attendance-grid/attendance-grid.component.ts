@@ -22,7 +22,6 @@ import {
     inject,
 } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
-import { ThemeService } from 'src/app/app-shell/framework-services/ui/theme.service';
 
 // ===============================================================
 //   Cell Renderers
@@ -35,9 +34,8 @@ import { CellStatusAttendancePanel } from './cell-renderers/cell-status-label-at
 // ===============================================================
 //   Services
 // ===============================================================
-import { DashboardWebApiService } from 'src/app/app-shell/core/services/dashboard-web-api.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
+import { KowsarBaseWebApi } from 'src/app/app-shell/framework-services/base/KowsarBaseWebApi.service';
 
 @Component({
     selector: 'app-attendance-grid',
@@ -54,14 +52,14 @@ export class AttendanceGridComponent extends AgGridBaseComponent implements OnIn
     @Output() openHistory = new EventEmitter<any>();
 
     /**   داده‌ها و وضعیت بارگذاری (Reactive Signals) */
-    records = signal<any[]>([]);
+    records = signal<any[]>([])
     loading = signal(true);
 
     // ===============================================================
     //    سازنده کلاس و مدیریت Signal‌ها
     // ===============================================================
 
-    private readonly repo = inject(DashboardWebApiService);
+    private readonly base_repo = inject(KowsarBaseWebApi);
 
     constructor() {
         super();
@@ -80,11 +78,11 @@ export class AttendanceGridComponent extends AgGridBaseComponent implements OnIn
     ngOnInit(): void {
 
         // 🧱 تعریف ستون‌های گرید حضور کارشناسان
-        this.columnDefs1 = [
-            { field: 'عملیات', pinned: 'left', cellRenderer: CellActionAttendancePanel, minWidth: 180 },
-            { field: 'کارشناس', cellRenderer: CellNameAttendancePanel, cellClass: 'text-center', minWidth: 120 },
-            { field: 'وضعیت حضور', cellRenderer: CellStatusAttendancePanel, cellClass: 'text-center', minWidth: 120 },
-            { field: 'تاریخ', cellRenderer: CellDateAttendancePanel, cellClass: 'text-center', minWidth: 120 },
+        this.column_name_1 = [
+            { field: 'عملیات', pinned: 'left', cellRenderer: CellActionAttendancePanel, width: 100 },
+            { field: 'کارشناس', cellRenderer: CellNameAttendancePanel, cellClass: 'text-center', width: 120 },
+            { field: 'وضعیت حضور', cellRenderer: CellStatusAttendancePanel, cellClass: 'text-center', width: 80 },
+            { field: 'تاریخ', cellRenderer: CellDateAttendancePanel, cellClass: 'text-center', width: 80 },
             { field: 'CustNames', headerName: 'مشتری', cellClass: 'text-center', minWidth: 120 },
         ];
 
@@ -114,7 +112,7 @@ export class AttendanceGridComponent extends AgGridBaseComponent implements OnIn
     refresh(): void {
         this.loading.set(true);
 
-        this.repo.AttendanceDashboard().subscribe({
+        this.base_repo.AttendanceDashboard().subscribe({
             next: (data: any) => {
 
                 this.records.set(data?.Attendances ?? []);

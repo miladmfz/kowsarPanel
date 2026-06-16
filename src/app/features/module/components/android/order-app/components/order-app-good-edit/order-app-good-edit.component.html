@@ -78,14 +78,16 @@
         <div class="d-flex justify-content-center align-items-center position-relative">
           <label for="fileInput" class="position-relative">
 
-            @if (Imageitem.length>100) {
-            <img [src]="Imageitem" alt="No Photo"
+            @if (Imageitem().length>100) {
+            <img [src]="Imageitem()" alt="No Photo"
               style="width: 150px; height: 150px; border-radius: 5%; cursor: pointer;"
-              (mouseover)="showUploadText = true" (mouseleave)="showUploadText = false" (click)="fileInput.click()">
+              (mouseover)="showUploadText.set(true)" (mouseleave)="showUploadText.set(false)"
+              (click)="fileInput.click()">
             }
-            @if (Imageitem.length<100) { <img src="../assets/images/logo-sm.png" alt="No Photo"
+            @if (Imageitem().length<100) { <img src="../assets/images/logo-sm.png" alt="No Photo"
               style="width: 150px; height: 150px; border-radius: 5%; cursor: pointer;"
-              (mouseover)="showUploadText = true" (mouseleave)="showUploadText = false" (click)="fileInput.click()">
+              (mouseover)="showUploadText.set(true)" (mouseleave)="showUploadText.set(false)"
+              (click)="fileInput.click()">
               }
 
 
@@ -122,13 +124,6 @@
           </div>
 
 
-
-
-
-
-
-
-
         </form>
 
 
@@ -146,7 +141,7 @@
 
                 </tr>
               </thead>
-              @for (item of items_Grp; track item) {
+              @for (item of items_Grp(); track item) {
               <tbody>
                 <tr>
                   <td>{{ item.Name }}</td>

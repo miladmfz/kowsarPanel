@@ -1,0 +1,318 @@
+.kiosk-page {
+  z-index: 5000;
+  background:
+    radial-gradient(circle at top right, rgba(255, 204, 51, .20), transparent 28%),
+    radial-gradient(circle at bottom left, rgba(13, 110, 253, .20), transparent 32%),
+    linear-gradient(180deg,
+      rgba(7, 15, 30, .98),
+      rgba(15, 30, 60, .98));
+  backdrop-filter: blur(12px);
+  padding:
+    max(40px, env(safe-area-inset-top)) 24px max(40px, env(safe-area-inset-bottom));
+}
+
+.kiosk-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.kiosk-glow-top {
+  width: 380px;
+  height: 380px;
+  top: -120px;
+  right: -120px;
+  background: rgba(255, 204, 51, .14);
+  animation: kioskFloatSlow 6s ease-in-out infinite;
+}
+
+.kiosk-glow-bottom {
+  width: 300px;
+  height: 300px;
+  bottom: -100px;
+  left: -100px;
+  background: rgba(255, 255, 255, .05);
+  animation: kioskFloatSlow 8s ease-in-out infinite reverse;
+}
+
+.kiosk-content {
+  max-width: 900px;
+  animation: kioskEnter 1s ease-out both;
+}
+
+.kiosk-icon-box {
+  width: 240px;
+  height: 240px;
+  background: rgba(255, 204, 51, .14);
+  border: 3px solid rgba(255, 204, 51, .42);
+  box-shadow:
+    0 0 60px rgba(255, 204, 51, .20),
+    inset 0 0 30px rgba(255, 204, 51, .10);
+  animation: kioskPulse 2.8s ease-in-out infinite;
+}
+
+.kiosk-icon-ring {
+  inset: 12px;
+  border: 2px dashed rgba(255, 255, 255, .10);
+  animation: kioskRotate 18s linear infinite;
+}
+
+.kiosk-main-icon {
+  font-size: 140px;
+  filter:
+    drop-shadow(0 0 18px rgba(255, 204, 51, .50));
+}
+
+.kiosk-title {
+  font-size: clamp(52px, 5vw, 88px);
+  line-height: 1.25;
+  text-shadow:
+    0 10px 35px rgba(0, 0, 0, .45);
+}
+
+.kiosk-subtitle-box {
+  max-width: 760px;
+}
+
+.kiosk-subtitle {
+  font-size: clamp(24px, 2vw, 38px);
+  opacity: .88;
+  line-height: 1.9;
+}
+
+.kiosk-button-box {
+  margin-top: 8vh;
+}
+
+.kiosk-start-button {
+  width: 92%;
+  max-width: 850px;
+  height: 130px;
+  border-radius: 999px;
+  font-size: clamp(34px, 4vw, 52px);
+  font-weight: 900;
+  color: #10203a;
+  background:
+    linear-gradient(135deg,
+      #FFE082,
+      #FFCC33,
+      #F5B800);
+  box-shadow:
+    0 18px 55px rgba(255, 204, 51, .38),
+    inset 0 2px 0 rgba(255, 255, 255, .55),
+    inset 0 -6px 16px rgba(120, 80, 0, .18);
+  animation: kioskButtonGlow 2.8s ease-in-out infinite;
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease;
+  isolation: isolate;
+  cursor: pointer;
+}
+
+.kiosk-start-button:hover {
+  transform: scale(1.02);
+  box-shadow:
+    0 28px 80px rgba(255, 204, 51, .48),
+    inset 0 2px 0 rgba(255, 255, 255, .65),
+    inset 0 -6px 16px rgba(120, 80, 0, .16);
+}
+
+.hover-glow {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle,
+      rgba(255, 255, 255, .62),
+      rgba(255, 255, 255, .25) 28%,
+      transparent 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: .9;
+  filter: blur(18px);
+  z-index: 0;
+}
+
+.hover-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .82);
+  box-shadow:
+    0 0 10px rgba(255, 255, 255, .55);
+  pointer-events: none;
+  z-index: 1;
+  animation: particleFloat 1.2s ease-out forwards;
+}
+
+.btn-shine {
+  position: absolute;
+  top: 0;
+  left: -160px;
+  width: 140px;
+  height: 100%;
+  background:
+    linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, .75),
+      transparent);
+  transform: skewX(-20deg);
+  animation: kioskShine 3s ease-in-out infinite;
+  z-index: 1;
+}
+
+.kiosk-button-content {
+  letter-spacing: .5px;
+  text-shadow:
+    0 2px 6px rgba(255, 255, 255, .35);
+  z-index: 2;
+}
+
+.kiosk-icon-soft-pulse {
+  width: 78px;
+  height: 78px;
+  background: rgba(255, 255, 255, .16);
+  filter: blur(2px);
+  animation: kioskIconPulse 2.2s ease-in-out infinite;
+}
+
+.kiosk-button-icon {
+  font-size: 1.15em;
+  color: #10203a;
+  filter:
+    drop-shadow(0 2px 4px rgba(255, 255, 255, .35));
+  animation: kioskTap 1.8s ease-in-out infinite;
+}
+
+.kiosk-button-text {
+  font-weight: 900;
+  color: #10203a;
+}
+
+@keyframes kioskEnter {
+  from {
+    opacity: 0;
+    transform:
+      translateY(45px) scale(.96);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translateY(0) scale(1);
+  }
+}
+
+@keyframes kioskPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 60px rgba(255, 204, 51, .20),
+      inset 0 0 30px rgba(255, 204, 51, .10);
+  }
+
+  50% {
+    transform: scale(1.05);
+    box-shadow:
+      0 0 90px rgba(255, 204, 51, .34),
+      inset 0 0 40px rgba(255, 204, 51, .14);
+  }
+}
+
+@keyframes kioskButtonGlow {
+
+  0%,
+  100% {
+    box-shadow:
+      0 18px 55px rgba(255, 204, 51, .38),
+      inset 0 2px 0 rgba(255, 255, 255, .55),
+      inset 0 -6px 16px rgba(120, 80, 0, .18);
+  }
+
+  50% {
+    box-shadow:
+      0 26px 80px rgba(255, 204, 51, .48),
+      inset 0 2px 0 rgba(255, 255, 255, .65),
+      inset 0 -6px 16px rgba(120, 80, 0, .16);
+  }
+}
+
+@keyframes kioskShine {
+  0% {
+    left: -180px;
+  }
+
+  45%,
+  100% {
+    left: 120%;
+  }
+}
+
+@keyframes kioskFloatSlow {
+
+  0%,
+  100% {
+    transform:
+      translateY(0) translateX(0);
+  }
+
+  50% {
+    transform:
+      translateY(24px) translateX(12px);
+  }
+}
+
+@keyframes kioskRotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes kioskTap {
+
+  0%,
+  100% {
+    transform:
+      scale(1) translateY(0);
+  }
+
+  50% {
+    transform:
+      scale(1.12) translateY(-2px);
+  }
+}
+
+@keyframes kioskIconPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: .35;
+  }
+
+  50% {
+    transform: scale(1.18);
+    opacity: .6;
+  }
+}
+
+@keyframes particleFloat {
+  from {
+    opacity: 1;
+    transform:
+      translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform:
+      translateY(-36px) scale(0);
+  }
+}

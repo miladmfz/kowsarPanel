@@ -9,14 +9,14 @@
    3️⃣ تنظیم جهت متن و فونت برای هماهنگی با زبان فارسی
    =============================================================== */
 
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 
 @Component({
   selector: 'cell-name-attendance-panel',
   template: `
     <span class="text-nowrap">
-      {{ fullName || '—' }}
+      {{ fullName() || '—' }}
     </span>
   `,
   styles: [`
@@ -29,7 +29,7 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 })
 export class CellNameAttendancePanel implements ICellRendererAngularComp {
   private params: any;
-  fullName: string = '';
+  fullName = signal('')
 
   // ===============================================================
   //    مقداردهی اولیه AgGrid
@@ -39,7 +39,7 @@ export class CellNameAttendancePanel implements ICellRendererAngularComp {
     const data = params?.data ?? {};
     const first = data.PhFirstName?.trim() ?? '';
     const last = data.PhLastName?.trim() ?? '';
-    this.fullName = (first + ' ' + last).trim() || '';
+    this.fullName.set((first + ' ' + last).trim() || '')
   }
 
   // ===============================================================

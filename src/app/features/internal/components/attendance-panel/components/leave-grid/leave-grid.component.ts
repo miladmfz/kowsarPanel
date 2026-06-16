@@ -15,13 +15,12 @@
    =============================================================== */
 
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
-import { ColDef } from 'ag-grid-community';
-import { DashboardWebApiService } from 'src/app/app-shell/core/services/dashboard-web-api.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
+import { KowsarBaseWebApi } from 'src/app/app-shell/framework-services/base/KowsarBaseWebApi.service';
 import { DateSyncService } from 'src/app/app-shell/framework-services/date-sync.service';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
+import { LeaveRequestWebApiService } from 'src/app/features/automation/services/LeaveRequestWebApi.service';
 
 @Component({
     selector: 'app-leave-grid',
@@ -42,21 +41,20 @@ export class LeaveGridComponent extends AgGridBaseComponent implements OnInit {
     @Input() darkMode = false;
 
     /**   داده اصلی جدول */
-    records: any[] = [];
+    records = signal<any[]>([])
 
     /**   وضعیت بارگذاری */
-    loading = true;
+    loading = signal(true)
 
     /** 📅 تاریخ روز جاری */
-    ToDayDate = '';
+    ToDayDate = signal('')
 
     // ===============================================================
     // 🧱 سازنده
     // ===============================================================
 
-    private readonly repo = inject(DashboardWebApiService);
-    private readonly dateSyncService = inject(DateSyncService);
-
+    private readonly base_repo = inject(KowsarBaseWebApi);
+    private readonly leave_repo = inject(LeaveRequestWebApiService);
     constructor() {
         super();
     }
@@ -67,12 +65,12 @@ export class LeaveGridComponent extends AgGridBaseComponent implements OnInit {
     ngOnInit(): void {
 
         // 📋 تعریف ستون‌ها
-        this.columnDefs1 = [
-            { field: 'CentralName', headerName: 'کارشناس', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 120 },
-            { field: 'LeaveStartDate', headerName: 'تاریخ شروع', filter: 'agSetColumnFilter', cellClass: 'text-center', width: 100 },
-            { field: 'LeaveEndDate', headerName: 'تاریخ پایان', filter: 'agSetColumnFilter', cellClass: 'text-center', width: 100 },
-            { field: 'LeaveStartTime', headerName: 'ساعت شروع', filter: 'agSetColumnFilter', cellClass: 'text-center', width: 70 },
-            { field: 'LeaveEndTime', headerName: 'ساعت پایان', filter: 'agSetColumnFilter', cellClass: 'text-center', width: 70 },
+        this.column_name_1 = [
+            { field: 'CentralName', headerName: 'کارشناس', cellClass: 'text-center', minWidth: 120 },
+            { field: 'LeaveStartDate', headerName: 'تاریخ شروع', cellClass: 'text-center', width: 100 },
+            { field: 'LeaveEndDate', headerName: 'تاریخ پایان', cellClass: 'text-center', width: 100 },
+            { field: 'LeaveStartTime', headerName: 'ساعت شروع', cellClass: 'text-center', width: 70 },
+            { field: 'LeaveEndTime', headerName: 'ساعت پایان', cellClass: 'text-center', width: 70 },
         ];
 
         // 🟢 بررسی ورودی Parent یا بارگذاری از سرور
@@ -84,21 +82,21 @@ export class LeaveGridComponent extends AgGridBaseComponent implements OnInit {
     // ===============================================================
     private loadFromServer(): void {
 
-        this.repo.GetTodeyFromServer().subscribe((data: any) => {
+        this.base_repo.GetTodeyFromServer().subscribe((data: any) => {
 
-            this.ToDayDate = data.Text
+            this.ToDayDate.set(data.Text)
 
-            this.repo.GetLeaveRequestPerson(this.ToDayDate).subscribe({
+            this.leave_repo.GetLeaveRequestPerson(this.ToDayDate()).subscribe({
                 next: (data: any) => {
 
-                    this.records = data?.LeaveRequests ?? [];
-                    this.loading = false;
-                    this.updateGridData(1, this.records);
+                    this.records.set(data?.LeaveRequests ?? [])
+                    this.loading.set(false)
+                    this.updateGridData(1, this.records());
                 },
                 error: (err) => {
                     console.error('❌ خطا در دریافت مرخصی‌ها:', err);
-                    this.records = [];
-                    this.loading = false;
+                    this.records.set([])
+                    this.loading.set(false)
                 },
             });
         });

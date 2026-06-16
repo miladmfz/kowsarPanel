@@ -1,0 +1,41 @@
+<button type="button" class="kmenu-group-button" (click)="SelectGroup(item)">
+
+  <div class="kmenu-group-card" [ngClass]="
+      isSelected(item)
+        ? 'kmenu-group-card-active'
+        : 'kmenu-group-card-normal'
+    ">
+
+    @if (
+    config.menuConfig.ShowGroupImage &&
+    item.Imageitem &&
+    item.Imageitem.length > 100
+    ) {
+
+    <img [src]="item.Imageitem" class="kmenu-group-image" [ngClass]="
+          isSelected(item)
+            ? 'kmenu-group-image-active'
+            : 'kmenu-group-image-normal'
+        " alt="Category Image" loading="lazy">
+
+    }
+
+    @else if (config.menuConfig.ShowGroupImage) {
+
+    <img src="./assets/images/logo_color.png" class="kmenu-group-image" [ngClass]="
+          isSelected(item)
+            ? 'kmenu-group-image-active'
+            : 'kmenu-group-image-normal'
+        " alt="No Image" loading="lazy">
+
+    }
+
+    <div class="kmenu-group-title" [title]="item.Name">
+
+      {{ item.Name }}
+
+    </div>
+
+  </div>
+
+</button>

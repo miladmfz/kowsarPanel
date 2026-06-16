@@ -1,0 +1,180 @@
+<div class="row">
+  <div class="col-12">
+    <div class="page-title-box d-flex justify-content-between align-items-center">
+      <h4 class="page-title">{{title()}}</h4>
+      <button class="btn btn-danger" (click)="onBtnCancelClick()">بازگشت</button>
+
+    </div>
+  </div>
+</div>
+
+
+<div class="card-body">
+  <div class="form-group row col-md-12">
+
+    <div class="form-group col-md-3">
+      <h4 class="header-title mb-4"> ویرایش کالا</h4>
+
+    </div>
+    <div class="form-group col-md-6">
+
+    </div>
+    <div class="form-group col-md-3">
+      <button class="btn btn-primary " (click)=" Show_property()">خصوصیت اضافه</button>
+
+    </div>
+  </div>
+
+  <ul class="nav nav-pills navtab-bg nav-justified">
+    <li class="nav-item">
+      <a href="#GoodBase" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
+        <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+        <span class="d-none d-sm-inline-block">اطلاعات کالا</span>
+      </a>
+    </li>
+    @if (GoodCode_int()>0) {
+    <li class="nav-item">
+      <a href="#GoodExplains" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+        <span class="d-inline-block d-sm-none"><i class="mdi mdi-email-variant"></i></span>
+        <span class="d-none d-sm-inline-block">توضیحات کالا </span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#GoodComplete" data-bs-toggle="tab" aria-expanded="true" class="nav-link">
+        <span class="d-inline-block d-sm-none"><i class="mdi mdi-account"></i></span>
+        <span class="d-none d-sm-inline-block">اطلاعات تکمیلی</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#GoodProperty" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+        <span class="d-inline-block d-sm-none"><i class="mdi mdi-cog"></i></span>
+        <span class="d-none d-sm-inline-block">خصوصیت اضافه</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#GoodRelations" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+        <span class="d-inline-block d-sm-none"><i class="mdi mdi-cog"></i></span>
+        <span class="d-none d-sm-inline-block">ارتباطات کالا</span>
+      </a>
+    </li>
+    }
+
+
+
+  </ul>
+
+
+
+
+  <div class="tab-content">
+
+
+
+    <div class="tab-pane active" id="GoodBase">
+
+
+      <app-good-base [GoodCode]="GoodCode()"></app-good-base>
+
+
+    </div>
+
+    @if (GoodCode_int()>0) {
+
+    <div class="tab-pane" id="GoodExplains">
+
+
+      <app-good-explain [GoodCode]="GoodCode()"></app-good-explain>
+
+
+
+    </div>
+
+
+
+
+    <div class="tab-pane " id="GoodComplete">
+
+
+      <app-good-complete [GoodCode]="GoodCode()"></app-good-complete>
+
+
+    </div>
+
+    <div class="tab-pane" id="GoodProperty">
+
+
+      <app-good-property [GoodCode]="GoodCode()"></app-good-property>
+
+
+    </div>
+
+
+
+
+
+    <div class="tab-pane" id="GoodRelations">
+
+      <app-good-relation [GoodCode]="GoodCode()"></app-good-relation>
+
+    </div>
+    }
+
+
+
+
+  </div>
+
+
+  <ng-template #formError let-control="control" let-message="message" let-validation="validation">
+    @if (control.hasError(validation) && (control.dirty || control.touched)) {
+    <div class="fv-plugins-message-container invalid-feedback">
+      <span role="alert">
+        {{ message }}
+      </span>
+    </div>
+    }
+  </ng-template>
+
+
+  <div class="modal fade" id="property" tabindex="-1" aria-labelledby="propertyLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class=" modal-title" id="propertyLabel">خصوصیت اضافه</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="property_dialog_close()"></button>
+        </div>
+        <div class="modal-body">
+
+
+
+          <div class="row col-md-12">
+
+            <div class="form-group col-md-3 m-2">
+              <label for="GoodCode" class="col-form-label">کد </label>
+              <input class="form-control" type="text" readonly [value]="GoodCode()" />
+            </div>
+
+            <!-- <div class="form-group col-md-9">
+              <label for="GoodName" class="col-form-label">نام </label>
+              <input type="text" [readOnly]="true" [value]="GoodName()" />
+
+            </div> -->
+
+          </div>
+
+
+          @if(show_Property()){
+          <app-kowsar-property [ObjectType]="'کتاب'" [ObjectRef]="GoodCode()"
+            [ClassName]="'Good'"></app-kowsar-property>
+          }
+
+
+        </div>
+        <div class=" modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            (click)="property_dialog_close()">بستن</button>
+        </div>
+      </div>
+    </div>
+  </div>

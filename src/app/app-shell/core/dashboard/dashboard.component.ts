@@ -1,37 +1,19 @@
 /* ===============================================================
    📘 DashboardComponent
-   توضیحات کلی:
-   این کامپوننت نمای اصلی داشبورد است و به‌عنوان ورودی مرکزی 
-   برای نمایش بخش‌های مختلف سیستم عمل می‌کند.
-   شامل:
-   1️⃣ نمایش پنل حضور کارشناسان
-   2️⃣ نمایش گزارش کوثر
-   3️⃣ شناسایی نوع کاربر (ادمین / مشتری)
-   4️⃣ واکشی تاریخ جاری از سرور
-   5️⃣ هماهنگی بین اجزای مختلف داشبورد
-   
-   ویژگی‌ها:
-   - تعیین نوع کاربر از sessionStorage
-   - ذخیره تاریخ فعال سیستم در sessionStorage
-   - استفاده از سرویس Notification برای اطلاع‌رسانی
-   - ساختار کاملاً Standalone و ماژولار
+   نمای اصلی داشبورد سیستم
    =============================================================== */
 
-import { Component, OnInit, Renderer2, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-//   Subcomponents
-// import { KowsarReportComponent } from './components/kowsar-report/kowsar-report.component';
-
-//   Services
-import { DashboardWebApiService } from '../services/dashboard-web-api.service';
 import { NotificationService } from '../../framework-services/ui/notification.service';
 import { AttendancePanelComponent } from 'src/app/features/internal/components/attendance-panel/attendance-panel.component';
 import { KowsarReportComponent } from 'src/app/features/internal/components/kowsar-report/kowsar-report.component';
-import { LoadingService } from '../../framework-services/ui/loading.service';
-import { WorkitemComponent } from 'src/app/features/internal/components/workitem/workitem.component';
 import { KowsarCalendarComponent } from '../../framework-components/kowsar/kowsar-calendar/kowsar-calendar.component';
 import { LeaveGridComponent } from 'src/app/features/internal/components/attendance-panel/components/leave-grid/leave-grid.component';
+import { AutletterChartComponent } from 'src/app/features/internal/components/autletter-chart/autletter-chart.component';
+import { KowsarBaseWebApi } from '../../framework-services/base/KowsarBaseWebApi.service';
+import { PermissionService } from '../../framework-services/storage/PermissionService';
+import { SessionStorageService } from '../../framework-services/storage/session.storage.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -40,10 +22,9 @@ import { LeaveGridComponent } from 'src/app/features/internal/components/attenda
     CommonModule,
     AttendancePanelComponent,
     KowsarReportComponent,
-    WorkitemComponent,
     KowsarCalendarComponent,
-    LeaveGridComponent
-    // SupportPanelComponent,
+    LeaveGridComponent,
+    AutletterChartComponent
   ],
   templateUrl: './dashboard.component.html',
 })
@@ -51,25 +32,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // ===============================================================
   //   وضعیت‌ها و داده‌های اصلی
   // ===============================================================
-  BrokerRef = '';
-  JobPersonRef = '';
-  userType = '';
 
 
+  LoginType = signal('')
 
-
-  ToDayDate: string = '';
-  reportData: any[] = [];
-  Attendance_Data: any[] = [];
+  ToDayDate = signal('')
   attendanceInterval!: ReturnType<typeof setInterval>;
 
   // ===============================================================
   //   سازنده
   // ===============================================================
 
-  private readonly repo = inject(DashboardWebApiService);
+  private readonly base_repo = inject(KowsarBaseWebApi);
   private readonly notificationService = inject(NotificationService);
-
+  protected readonly permissionService = inject(PermissionService);
+  protected readonly session = inject(SessionStorageService);
   constructor() { }
 
   // ===============================================================
@@ -98,17 +75,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // 📅 دریافت تاریخ امروز از سرور
   // ===============================================================
   private loadTodayDate(): void {
-
-
-    this.repo.GetTodeyFromServer().subscribe({
+    this.base_repo.GetTodeyFromServer().subscribe({
       next: (data: any) => {
+        const today = data.Text ?? '';
 
-        this.ToDayDate = data[0]?.TodeyFromServer ?? '';
+        this.ToDayDate.set(today);
 
-        // بررسی تغییر تاریخ نسبت به sessionStorage
-        const activeDate = sessionStorage.getItem('ActiveDate');
-        if (this.ToDayDate !== activeDate) {
-          sessionStorage.setItem('ActiveDate', this.ToDayDate);
+        const activeDate = this.session.getString('ActiveDate');
+
+        if (today !== activeDate) {
+          this.session.setItem('ActiveDate', today);
           this.notificationService.info('📆 تاریخ جدید از سرور بروزرسانی شد.');
         }
       },
@@ -121,31 +97,44 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // ===============================================================
   // 👤 شناسایی نوع کاربر و مقداردهی اطلاعات پایه
   // ===============================================================
+
+
+
   private detectUserInfo(): void {
-    const phAddress3 = sessionStorage.getItem('PhAddress3');
-    const brokerCode = sessionStorage.getItem('BrokerCode');
-    const jobPersonRef = sessionStorage.getItem('JobPersonRef');
-    const userRole = sessionStorage.getItem('UserType'); // نوع کاربر (admin / customer / ...)
 
+    this.LoginType.set(this.session.loginType)
 
-    // تعیین BrokerRef
-    this.BrokerRef = phAddress3 === '100' ? '' : brokerCode ?? '';
-
-    // تعیین JobPersonRef
-    this.JobPersonRef = jobPersonRef ?? '';
-
-    // تعیین نوع کاربر
-    if (userRole) {
-      this.userType = userRole.toLowerCase();
-    } else if (this.JobPersonRef) {
-      this.userType = 'admin'; // اگر شناسه دارد، ادمین یا پشتیبان است
-    } else {
-      this.userType = 'customer'; // در غیر این صورت مشتری
-    }
-
-    // هشدار در صورت عدم وجود JobPersonRef
-    if (!this.JobPersonRef && this.userType === 'admin') {
+    if (this.LoginType() !== 'KOWSAR' && this.LoginType() !== 'CUSTOMER') {
       this.notificationService.warning('شناسه کاربر یافت نشد.');
     }
+
+
+    // console.log('dashborddddddddddd');
+
+    // if (this.permissionService.hasPermission('ROLE_MANAGE')) {
+    //   console.log('has ROLE_MANAGE');
+    // } else {
+    //   console.log('no ROLE_MANAGE');
+    // }
+
+    // if (
+    //   this.permissionService.hasAnyPermission([
+    //     'ROLE_MANAGE',
+    //     'USER_EDIT',
+    //     'USER_INSERT'
+    //   ])
+    // ) {
+    //   console.log('majmoeshono shamel beshe');
+    // } else {
+    //   console.log('nadare');
+    // }
+
+    // if (this.permissionService.hasRole('ADMIN')) {
+    //   console.log('ADMIN rolesh has');
+    // } else {
+    //   console.log('ADMIN rolesh nis');
+    // }
+
+
   }
 }

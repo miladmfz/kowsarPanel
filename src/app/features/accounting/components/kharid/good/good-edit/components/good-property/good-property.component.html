@@ -1,0 +1,710 @@
+<form [formGroup]="EditForm_Property" (ngSubmit)="submit('')" id="submitForm">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body row">
+
+
+
+          <div class="row col-md-12">
+
+
+            <div class="form-group col-md-3">
+              <label for="GoodCode" class="col-form-label">کد کالا </label>
+              <input type="text" class="form-control" id="GoodCode" formControlName="GoodCode" maxlength="100"
+                autocomplete="off" [readOnly]="true" />
+            </div>
+
+            <!-- <div class="form-group col-md-3">
+                                                                              <label for="GoodSubCode" class="col-form-label">کد زیر مجموعه </label>
+                                                                              <input type="text" class="form-control" id="GoodSubCode" formControlName="GoodSubCode"
+                                                                                maxlength="100" autocomplete="off" [readOnly]="true" />
+                                                                              </div> -->
+
+            <div class="form-group col-md-3">
+              <label for="GoodType" class="col-form-label">نوع کالا </label>
+              <input type="text" class="form-control" id="GoodType" formControlName="GoodType" maxlength="100"
+                autocomplete="off" [readOnly]="true" />
+            </div>
+
+
+
+          </div>
+
+
+
+
+
+          <div class="form-group col-md-12">
+            <label for="GoodName" class="col-form-label">نام کالا </label>
+            <input type="text" class="form-control" id="GoodName" formControlName="GoodName" maxlength="400"
+              autocomplete="off" [readOnly]="true" />
+          </div>
+
+
+          <div class="row col-md-12">
+
+
+
+            @if (checkPropertyValueMap('Nvarchar1')) {
+            <div class="form-group col-md-3">
+              <label for="Nvarchar1" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar1') }}</label>
+              @if (PropertyHasCHOICES('Nvarchar1')) {
+              <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+              <select formControlName="Nvarchar1" id="Nvarchar1" class="form-control custom-select"
+                data-toggle="select2">
+                @for (item of GetChoicesArray('Nvarchar1'); track item) {
+                <option [value]="item._text">{{
+                  item._text }}</option>
+                }
+              </select>
+              } @else {
+              <input type="text" class="form-control" id="Nvarchar1" formControlName="Nvarchar1" maxlength="100"
+                autocomplete="off" />
+              }
+            </div>
+            }
+
+            @if (checkPropertyValueMap('Nvarchar2')) {
+            <div class="form-group col-md-3">
+              <label for="Nvarchar2" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar2') }}</label>
+              @if (PropertyHasCHOICES('Nvarchar2')) {
+              <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+              <select formControlName="Nvarchar2" id="Nvarchar2" class="form-control custom-select"
+                data-toggle="select2">
+                @for (item of GetChoicesArray('Nvarchar2'); track item) {
+                <option [value]="item._text">{{
+                  item._text }}</option>
+                }
+              </select>
+              } @else {
+              <input type="text" class="form-control" id="Nvarchar2" formControlName="Nvarchar2" maxlength="100"
+                autocomplete="off" />
+              }
+            </div>
+            }
+
+            @if (checkPropertyValueMap('Nvarchar3')) {
+            <div class="form-group col-md-3">
+              <label for="Nvarchar3" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar3') }}</label>
+              @if (PropertyHasCHOICES('Nvarchar3')) {
+              <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+              <select formControlName="Nvarchar3" id="Nvarchar3" class="form-control custom-select"
+                data-toggle="select2">
+                @for (item of GetChoicesArray('Nvarchar3'); track item) {
+                <option [value]="item._text">{{
+                  item._text }}</option>
+                }
+              </select>
+              } @else {
+              <input type="text" class="form-control" id="Nvarchar3" formControlName="Nvarchar3" maxlength="100"
+                autocomplete="off" />
+              }
+            </div>
+            }
+
+            @if (checkPropertyValueMap('Nvarchar4')) {
+            <div class="form-group col-md-3">
+              <label for="Nvarchar4" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar4') }}</label>
+              @if (PropertyHasCHOICES('Nvarchar4')) {
+              <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+              <select formControlName="Nvarchar4" id="Nvarchar4" class="form-control custom-select"
+                data-toggle="select2">
+                @for (item of GetChoicesArray('Nvarchar4'); track item) {
+                <option [value]="item._text">{{
+                  item._text }}</option>
+                }
+              </select>
+              } @else {
+              <input type="text" class="form-control" id="Nvarchar4" formControlName="Nvarchar4" maxlength="100"
+                autocomplete="off" />
+              }
+            </div>
+            }
+
+
+          </div>
+
+          <div class="row col-md-12">
+
+
+            @if (checkPropertyValueMap('Nvarchar5')) {
+            <div class="form-group col-md-3">
+              <label for="Nvarchar5" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar5') }}</label>
+              @if (PropertyHasCHOICES('Nvarchar5')) {
+              <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+              <select formControlName="Nvarchar5" id="Nvarchar5" class="form-control custom-select"
+                data-toggle="select2">
+                @for (item of GetChoicesArray('Nvarchar5'); track item) {
+                <option [value]="item._text">{{
+                  item._text }}</option>
+                }
+              </select>
+              } @else {
+              <input type="text" class="form-control" id="Nvarchar5" formControlName="Nvarchar5" maxlength="100"
+                autocomplete="off" />
+              }
+            </div>
+            }
+
+            @if (checkPropertyValueMap('Nvarchar6')) {
+            <div class="form-group col-md-3">
+              <label for="Nvarchar6" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar6') }}</label>
+              @if (PropertyHasCHOICES('Nvarchar6')) {
+              <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+              <select formControlName="Nvarchar6" id="Nvarchar6" class="form-control custom-select"
+                data-toggle="select2">
+                @for (item of GetChoicesArray('Nvarchar6'); track item) {
+                <option [value]="item._text">{{
+                  item._text }}</option>
+                }
+              </select>
+              } @else {
+              <input type="text" class="form-control" id="Nvarchar6" formControlName="Nvarchar6" maxlength="100"
+                autocomplete="off" />
+              }
+            </div>
+            }
+
+            @if (checkPropertyValueMap('Nvarchar7')) {
+            <div class="form-group col-md-3">
+              <label for="Nvarchar7" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar7') }}</label>
+              @if (PropertyHasCHOICES('Nvarchar7')) {
+              <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+              <select formControlName="Nvarchar7" id="Nvarchar7" class="form-control custom-select"
+                data-toggle="select2">
+                @for (item of GetChoicesArray('Nvarchar7'); track item) {
+                <option [value]="item._text">{{
+                  item._text }}</option>
+                }
+              </select>
+              } @else {
+              <input type="text" class="form-control" id="Nvarchar7" formControlName="Nvarchar7" maxlength="100"
+                autocomplete="off" />
+              }
+            </div>
+            }
+
+            @if (checkPropertyValueMap('Nvarchar8')) {
+            <div class="form-group col-md-3">
+              <label for="Nvarchar8" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar8') }}</label>
+              @if (PropertyHasCHOICES('Nvarchar8')) {
+              <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+              <select formControlName="Nvarchar8" id="Nvarchar8" class="form-control custom-select"
+                data-toggle="select2">
+                @for (item of GetChoicesArray('Nvarchar8'); track item) {
+                <option [value]="item._text">{{
+                  item._text }}</option>
+                }
+              </select>
+              } @else {
+              <input type="text" class="form-control" id="Nvarchar8" formControlName="Nvarchar8" maxlength="100"
+                autocomplete="off" />
+              }
+            </div>
+            }
+
+
+            <div class="row col-md-12">
+
+
+              @if (checkPropertyValueMap('Nvarchar9')) {
+              <div class="form-group col-md-3">
+                <label for="Nvarchar9" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar9') }}</label>
+                @if (PropertyHasCHOICES('Nvarchar9')) {
+                <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                <select formControlName="Nvarchar9" id="Nvarchar9" class="form-control custom-select"
+                  data-toggle="select2">
+                  @for (item of GetChoicesArray('Nvarchar9'); track item) {
+                  <option [value]="item._text">{{
+                    item._text }}</option>
+                  }
+                </select>
+                } @else {
+                <input type="text" class="form-control" id="Nvarchar9" formControlName="Nvarchar9" maxlength="100"
+                  autocomplete="off" />
+                }
+              </div>
+              }
+
+              @if (checkPropertyValueMap('Nvarchar10')) {
+              <div class="form-group col-md-3">
+                <label for="Nvarchar10" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar10') }}</label>
+                @if (PropertyHasCHOICES('Nvarchar10')) {
+                <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                <select formControlName="Nvarchar10" id="Nvarchar10" class="form-control custom-select"
+                  data-toggle="select2">
+                  @for (item of GetChoicesArray('Nvarchar10'); track item) {
+                  <option [value]="item._text">{{
+                    item._text }}</option>
+                  }
+                </select>
+                } @else {
+                <input type="text" class="form-control" id="Nvarchar10" formControlName="Nvarchar10" maxlength="100"
+                  autocomplete="off" />
+                }
+              </div>
+              }
+
+              @if (checkPropertyValueMap('Nvarchar11')) {
+              <div class="form-group col-md-3">
+                <label for="Nvarchar11" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar11') }}</label>
+                @if (PropertyHasCHOICES('Nvarchar11')) {
+                <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                <select formControlName="Nvarchar11" id="Nvarchar11" class="form-control custom-select"
+                  data-toggle="select2">
+                  @for (item of GetChoicesArray('Nvarchar11'); track item) {
+                  <option [value]="item._text">{{
+                    item._text }}</option>
+                  }
+                </select>
+                } @else {
+                <input type="text" class="form-control" id="Nvarchar11" formControlName="Nvarchar11" maxlength="100"
+                  autocomplete="off" />
+                }
+              </div>
+              }
+
+              @if (checkPropertyValueMap('Nvarchar12')) {
+              <div class="form-group col-md-3">
+                <label for="Nvarchar12" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar12') }}</label>
+                @if (PropertyHasCHOICES('Nvarchar12')) {
+                <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                <select formControlName="Nvarchar12" id="Nvarchar12" class="form-control custom-select"
+                  data-toggle="select2">
+                  @for (item of GetChoicesArray('Nvarchar12'); track item) {
+                  <option [value]="item._text">{{
+                    item._text }}</option>
+                  }
+                </select>
+                } @else {
+                <input type="text" class="form-control" id="Nvarchar12" formControlName="Nvarchar12" maxlength="100"
+                  autocomplete="off" />
+                }
+              </div>
+              }
+
+
+            </div>
+
+            <div class="row col-md-12">
+
+              @if (checkPropertyValueMap('Nvarchar13')) {
+              <div class="form-group col-md-3">
+                <label for="Nvarchar13" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar13') }}</label>
+                @if (PropertyHasCHOICES('Nvarchar13')) {
+                <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                <select formControlName="Nvarchar13" id="Nvarchar13" class="form-control custom-select"
+                  data-toggle="select2">
+                  @for (item of GetChoicesArray('Nvarchar13'); track item) {
+                  <option [value]="item._text">{{
+                    item._text }}</option>
+                  }
+                </select>
+                } @else {
+                <input type="text" class="form-control" id="Nvarchar13" formControlName="Nvarchar13" maxlength="100"
+                  autocomplete="off" />
+                }
+              </div>
+              }
+
+              @if (checkPropertyValueMap('Nvarchar14')) {
+              <div class="form-group col-md-3">
+                <label for="Nvarchar14" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar14') }}</label>
+                @if (PropertyHasCHOICES('Nvarchar14')) {
+                <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                <select formControlName="Nvarchar14" id="Nvarchar14" class="form-control custom-select"
+                  data-toggle="select2">
+                  @for (item of GetChoicesArray('Nvarchar14'); track item) {
+                  <option [value]="item._text">{{
+                    item._text }}</option>
+                  }
+                </select>
+                } @else {
+                <input type="text" class="form-control" id="Nvarchar14" formControlName="Nvarchar14" maxlength="100"
+                  autocomplete="off" />
+                }
+              </div>
+              }
+
+              @if (checkPropertyValueMap('Nvarchar15')) {
+              <div class="form-group col-md-3">
+                <label for="Nvarchar15" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar15') }}</label>
+                @if (PropertyHasCHOICES('Nvarchar15')) {
+                <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                <select formControlName="Nvarchar15" id="Nvarchar15" class="form-control custom-select"
+                  data-toggle="select2">
+                  @for (item of GetChoicesArray('Nvarchar15'); track item) {
+                  <option [value]="item._text">{{
+                    item._text }}</option>
+                  }
+                </select>
+                } @else {
+                <input type="text" class="form-control" id="Nvarchar15" formControlName="Nvarchar15" maxlength="100"
+                  autocomplete="off" />
+                }
+              </div>
+              }
+
+              @if (checkPropertyValueMap('Nvarchar16')) {
+              <div class="form-group col-md-3">
+                <label for="Nvarchar16" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar16') }}</label>
+                @if (PropertyHasCHOICES('Nvarchar16')) {
+                <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                <select formControlName="Nvarchar16" id="Nvarchar16" class="form-control custom-select"
+                  data-toggle="select2">
+                  @for (item of GetChoicesArray('Nvarchar16'); track item) {
+                  <option [value]="item._text">{{
+                    item._text }}</option>
+                  }
+                </select>
+                } @else {
+                <input type="text" class="form-control" id="Nvarchar16" formControlName="Nvarchar16" maxlength="100"
+                  autocomplete="off" />
+                }
+              </div>
+              }
+
+
+            </div>
+
+            <div class="row col-md-12">
+
+
+              @if (checkPropertyValueMap('Nvarchar17')) {
+              <div class="form-group col-md-3">
+                <label for="Nvarchar17" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar17') }}</label>
+                @if (PropertyHasCHOICES('Nvarchar17')) {
+                <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                <select formControlName="Nvarchar17" id="Nvarchar17" class="form-control custom-select"
+                  data-toggle="select2">
+                  @for (item of GetChoicesArray('Nvarchar17'); track item) {
+                  <option [value]="item._text">{{
+                    item._text }}</option>
+                  }
+                </select>
+                } @else {
+                <input type="text" class="form-control" id="Nvarchar17" formControlName="Nvarchar17" maxlength="100"
+                  autocomplete="off" />
+                }
+              </div>
+              }
+
+              @if (checkPropertyValueMap('Nvarchar18')) {
+              <div class="form-group col-md-3">
+                <label for="Nvarchar18" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar18') }}</label>
+                @if (PropertyHasCHOICES('Nvarchar18')) {
+                <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                <select formControlName="Nvarchar18" id="Nvarchar18" class="form-control custom-select"
+                  data-toggle="select2">
+                  @for (item of GetChoicesArray('Nvarchar18'); track item) {
+                  <option [value]="item._text">{{
+                    item._text }}</option>
+                  }
+                </select>
+                } @else {
+                <input type="text" class="form-control" id="Nvarchar18" formControlName="Nvarchar18" maxlength="100"
+                  autocomplete="off" />
+                }
+              </div>
+              }
+
+              @if (checkPropertyValueMap('Nvarchar19')) {
+              <div class="form-group col-md-3">
+                <label for="Nvarchar19" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar19') }}</label>
+                @if (PropertyHasCHOICES('Nvarchar19')) {
+                <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                <select formControlName="Nvarchar19" id="Nvarchar19" class="form-control custom-select"
+                  data-toggle="select2">
+                  @for (item of GetChoicesArray('Nvarchar19'); track item) {
+                  <option [value]="item._text">{{
+                    item._text }}</option>
+                  }
+                </select>
+                } @else {
+                <input type="text" class="form-control" id="Nvarchar19" formControlName="Nvarchar19" maxlength="100"
+                  autocomplete="off" />
+                }
+              </div>
+              }
+
+
+
+
+
+
+              @if (checkPropertyValueMap('Nvarchar20')) {
+              <div class="form-group col-md-3">
+                <label for="Nvarchar20" class="col-form-label">{{ getDisplayNamesdsd('Nvarchar20') }}</label>
+                @if (PropertyHasCHOICES('Nvarchar20')) {
+                <label for="Nvarchar20" class="col-form-label " style="color: #767de0;"> (انتخابی) </label>
+                <select formControlName="Nvarchar20" id="Nvarchar20" class="form-control custom-select"
+                  data-toggle="select2">
+                  @for (item of GetChoicesArray('Nvarchar20'); track item) {
+                  <option [value]="item._text">{{
+                    item._text }}</option>
+                  }
+                </select>
+                } @else {
+                <input type="text" class="form-control" id="Nvarchar20" formControlName="Nvarchar20" maxlength="100"
+                  autocomplete="off" />
+                }
+              </div>
+              }
+
+
+
+
+            </div>
+
+
+
+
+            <div class="row col-md-12">
+
+              @if (checkPropertyValueMap('Int1')) {
+              <div class="form-group col-md-2">
+                <label for="Int1" class="col-form-label">{{getDisplayNamesdsd('Int1')}}</label>
+                <input type="number" class="form-control" id="Int1" formControlName="Int1" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Int2')) {
+              <div class="form-group col-md-2">
+                <label for="Int2" class="col-form-label">{{getDisplayNamesdsd('Int2')}}</label>
+                <input type="number" class="form-control" id="Int2" formControlName="Int2" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Int3')) {
+              <div class="form-group col-md-2">
+                <label for="Int3" class="col-form-label">{{getDisplayNamesdsd('Int3')}}</label>
+                <input type="number" class="form-control" id="Int3" formControlName="Int3" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Int4')) {
+              <div class="form-group col-md-2">
+                <label for="Int4" class="col-form-label">{{getDisplayNamesdsd('Int4')}}</label>
+                <input type="number" class="form-control" id="Int4" formControlName="Int4" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Int5')) {
+              <div class="form-group col-md-2">
+                <label for="Int5" class="col-form-label">{{getDisplayNamesdsd('Int5')}}</label>
+                <input type="number" class="form-control" id="Int5" formControlName="Int5" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+            </div>
+
+
+
+
+            <div class="row col-md-12">
+
+
+              @if (checkPropertyValueMap('Int6')) {
+              <div class="form-group col-md-2">
+                <label for="Int6" class="col-form-label">{{getDisplayNamesdsd('Int6')}}</label>
+                <input type="number" class="form-control" id="Int6" formControlName="Int6" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Int7')) {
+              <div class="form-group col-md-2">
+                <label for="Int7" class="col-form-label">{{getDisplayNamesdsd('Int7')}}</label>
+                <input type="number" class="form-control" id="Int7" formControlName="Int7" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Int8')) {
+              <div class="form-group col-md-2">
+                <label for="Int8" class="col-form-label">{{getDisplayNamesdsd('Int8')}}</label>
+                <input type="number" class="form-control" id="Int8" formControlName="Int8" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Int9')) {
+              <div class="form-group col-md-2">
+                <label for="Int9" class="col-form-label">{{getDisplayNamesdsd('Int9')}}</label>
+                <input type="number" class="form-control" id="Int9" formControlName="Int9" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Int10')) {
+              <div class="form-group col-md-2">
+                <label for="Int10" class="col-form-label">{{getDisplayNamesdsd('Int10')}}</label>
+                <input type="number" class="form-control" id="Int10" formControlName="Int10" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+            </div>
+
+
+            <div class="row col-md-12">
+
+              @if (checkPropertyValueMap('Float1')) {
+              <div class="form-group col-md-2">
+                <label for="Float1" class="col-form-label">{{getDisplayNamesdsd('Float1')}}</label>
+                <input type="number" class="form-control" id="Float1" formControlName="Float1" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Float2')) {
+              <div class="form-group col-md-2">
+                <label for="Float2" class="col-form-label">{{getDisplayNamesdsd('Float2')}}</label>
+                <input type="number" class="form-control" id="Float2" formControlName="Float2" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Float3')) {
+              <div class="form-group col-md-2">
+                <label for="Float3" class="col-form-label">{{getDisplayNamesdsd('Float3')}}</label>
+                <input type="number" class="form-control" id="Float3" formControlName="Float3" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Float4')) {
+              <div class="form-group col-md-2">
+                <label for="Float4" class="col-form-label">{{getDisplayNamesdsd('Float4')}}</label>
+                <input type="number" class="form-control" id="Float4" formControlName="Float4" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Float5')) {
+              <div class="form-group col-md-2">
+                <label for="Float5" class="col-form-label">{{getDisplayNamesdsd('Float5')}}</label>
+                <input type="number" class="form-control" id="Float5" formControlName="Float5" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+
+            </div>
+
+
+            <div class="row col-md-12">
+
+
+              @if (checkPropertyValueMap('Float6')) {
+              <div class="form-group col-md-2">
+                <label for="Float6" class="col-form-label">{{getDisplayNamesdsd('Float6')}}</label>
+                <input type="number" class="form-control" id="Float6" formControlName="Float6" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Float7')) {
+              <div class="form-group col-md-2">
+                <label for="Float7" class="col-form-label">{{getDisplayNamesdsd('Float7')}}</label>
+                <input type="number" class="form-control" id="Float7" formControlName="Float7" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Float8')) {
+              <div class="form-group col-md-2">
+                <label for="Float8" class="col-form-label">{{getDisplayNamesdsd('Float8')}}</label>
+                <input type="number" class="form-control" id="Float8" formControlName="Float8" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Float9')) {
+              <div class="form-group col-md-2">
+                <label for="Float9" class="col-form-label">{{getDisplayNamesdsd('Float9')}}</label>
+                <input type="number" class="form-control" id="Float9" formControlName="Float9" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Float10')) {
+              <div class="form-group col-md-2">
+                <label for="Float10" class="col-form-label">{{getDisplayNamesdsd('Float10')}}</label>
+                <input type="number" class="form-control" id="Float10" formControlName="Float10" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+
+            </div>
+
+
+            <div class="row col-md-12">
+
+              @if (checkPropertyValueMap('Text1')) {
+              <div class="form-group col-md-12">
+                <label for="Text1" class="col-form-label">{{getDisplayNamesdsd('Text1')}}</label>
+                <input type="text" class="form-control" id="Text1" formControlName="Text1" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Text2')) {
+              <div class="form-group col-md-12">
+                <label for="Text2" class="col-form-label">{{getDisplayNamesdsd('Text2')}}</label>
+                <input type="text" class="form-control" id="Text2" formControlName="Text2" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Text3')) {
+              <div class="form-group col-md-12">
+                <label for="Text3" class="col-form-label">{{getDisplayNamesdsd('Text3')}}</label>
+                <input type="text" class="form-control" id="Text3" formControlName="Text3" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Text4')) {
+              <div class="form-group col-md-12">
+                <label for="Text4" class="col-form-label">{{getDisplayNamesdsd('Text4')}}</label>
+                <input type="text" class="form-control" id="Text4" formControlName="Text4" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+              @if (checkPropertyValueMap('Text5')) {
+              <div class="form-group col-md-12">
+                <label for="Text5" class="col-form-label">{{getDisplayNamesdsd('Text5')}}</label>
+                <input type="text" class="form-control" id="Text5" formControlName="Text5" maxlength="100"
+                  autocomplete="off" />
+              </div>
+              }
+
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+
+@if (changedValues_show()) {
+<div class="card">
+  <div class="card-body">
+    <div class="col-sm-12">
+      <!-- <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mx-1"
+                 (click)="submit('property_exit')">
+                 <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره و خروج
+               </a> -->
+      <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mx-1"
+        (click)="submit('property')">
+        <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره
+      </a>
+      <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mx-1"
+        (click)="changedValues_cansel_property()">
+        <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
+      </a>
+    </div>
+  </div>
+</div>
+}
+
+
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  @if (control.hasError(validation) && (control.dirty || control.touched)) {
+  <div class="fv-plugins-message-container invalid-feedback">
+    <span role="alert">
+      {{ message }}
+    </span>
+  </div>
+  }
+</ng-template>

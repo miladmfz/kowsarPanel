@@ -7,7 +7,7 @@
       <div class="card-body">
         <!-- List Content -->
         <ul>
-          @for (item of ListVisible_items; track item) {
+          @for (item of ListVisible_items(); track item) {
           @if (item.ListVisible > 0) {
           <li>{{ item.ColumnDesc }}</li>
           }
@@ -24,7 +24,7 @@
         <!-- List Content -->
         <ul>
 
-          @for (item of DetailVisible_items; track item) {
+          @for (item of DetailVisible_items(); track item) {
           @if (item.DetailVisible > 0) {
           <li>{{ item.ColumnDesc }}</li>
           }
@@ -41,7 +41,7 @@
         <!-- List Content -->
         <ul>
 
-          @for (item of SearchVisible_items; track item) {
+          @for (item of SearchVisible_items(); track item) {
           @if (item.SearchVisible > 0) {
           <li>{{ item.ColumnDesc }}</li>
           }

@@ -2,20 +2,15 @@
    📘 AttendanceHistoryModalComponent
    توضیحات کلی:
    این کامپوننت برای نمایش تاریخچه حضور کارشناسان در قالب مودال طراحی شده است.
-   شامل گرید داده‌ها، مدیریت حالت نمایش، فرمت‌دهی وضعیت و تاریخ، 
+   شامل گرید داده‌ها، مدیریت حالت نمایش، فرمت‌دهی وضعیت و تاریخ،
    و قابلیت محاسبه تعداد رکوردها می‌باشد.
-
-   ویژگی‌ها:
-   1️⃣ ورودی داده‌ها و وضعیت نمایش مودال از Parent
-   2️⃣ خروجی برای بستن مودال
-   3️⃣ استفاده از سیگنال‌ها (Signals) برای داده‌های واکنشی
-   4️⃣ فرمت اختصاصی برای تاریخ و وضعیت حضور
    =============================================================== */
 
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, signal, computed } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
+import { CellStatusAttendanceHistoryPanel } from './cell-status-history-attendance-panel';
 
 @Component({
   selector: 'app-attendance-history-modal',
@@ -24,11 +19,12 @@ import { ColDef } from 'ag-grid-community';
   templateUrl: './attendance-history-modal.component.html',
 })
 export class AttendanceHistoryModalComponent {
+
   // ===============================================================
   //    وضعیت نمایش مودال
   // ===============================================================
   private _visible = signal(false);
-
+  themeClass = 'ag-theme-quartz kowsar-ag-grid';
   @Input() set visible(v: boolean) {
     this._visible.set(v);
   }
@@ -38,7 +34,7 @@ export class AttendanceHistoryModalComponent {
   }
 
   // ===============================================================
-  //   داده‌های تاریخچه
+  //    داده‌های تاریخچه
   // ===============================================================
   private _records = signal<any[]>([]);
 
@@ -51,23 +47,23 @@ export class AttendanceHistoryModalComponent {
   }
 
   // ===============================================================
-  //   سایر ورودی‌ها
+  //    سایر ورودی‌ها
   // ===============================================================
   @Input() title = 'تاریخچه حضور';
   @Input() darkMode = false;
 
   // ===============================================================
-  //   خروجی‌ها
+  //    خروجی‌ها
   // ===============================================================
   @Output() close = new EventEmitter<void>();
 
   // ===============================================================
-  // 🧮 محاسبه تعداد کل رکوردها
+  //    محاسبه تعداد کل رکوردها
   // ===============================================================
   totalRecords = computed(() => this._records().length);
 
   // ===============================================================
-  // 📋 تنظیمات گرید
+  //    تنظیمات گرید
   // ===============================================================
   columnDefs: ColDef[] = [
     {
@@ -75,13 +71,18 @@ export class AttendanceHistoryModalComponent {
       headerName: 'تاریخ و ساعت حضور',
       valueFormatter: this.formatDate,
     },
+
+
+    { field: 'وضعیت حضور', cellRenderer: CellStatusAttendanceHistoryPanel, cellClass: 'text-center', width: 80 },
+
     {
-      field: 'Status',
-      headerName: 'وضعیت',
-      valueFormatter: this.statusFormatter,
+      field: 'PhFirstName',
+      headerName: 'نام',
     },
-    { field: 'PhFirstName', headerName: 'نام' },
-    { field: 'PhLastName', headerName: 'نام خانوادگی' },
+    {
+      field: 'PhLastName',
+      headerName: 'نام خانوادگی',
+    },
   ];
 
   defaultColDef: ColDef = {
@@ -104,36 +105,124 @@ export class AttendanceHistoryModalComponent {
   }
 
   // ===============================================================
-  // 📅 فرمت تاریخ به فارسی
+  //    فرمت تاریخ به فارسی
   // ===============================================================
   formatDate(params: any): string {
-    if (!params.value) return '';
-    const d = new Date(params.value);
-    return d.toLocaleString('fa-IR', {
+
+    if (!params.value) {
+      return '';
+    }
+
+    const date = new Date(params.value);
+
+    return date.toLocaleString('fa-IR', {
       dateStyle: 'short',
       timeStyle: 'short',
     });
   }
 
   // ===============================================================
-  // 🟡 فرمت وضعیت حضور
+  //    ساخت Badge وضعیت حضور
   // ===============================================================
-  statusFormatter(params: any): string {
-    switch (String(params.value ?? '')) {
+  styles: [`
+
+    .kws-attendance-wrapper {
+
+        width: 100%;
+
+        height: 100%;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+    }
+
+    .kws-attendance-badge {
+
+        padding: 4px 10px;
+
+        border-radius: 20px;
+
+        font-size: 11px;
+
+        font-weight: 700;
+
+        line-height: 1.2;
+
+        white-space: nowrap;
+
+        min-width: 90px;
+
+        text-align: center;
+
+        box-shadow: 0 1px 2px rgba(0,0,0,.08);
+    }
+
+`]
+  private statusBadgeRenderer(params: any): string {
+
+    const status = this.getStatusInfo(params.value);
+
+    return `
+        <div class="kws-attendance-wrapper">
+
+            <span class="kws-attendance-badge ${status.className}">
+                ${status.label}
+            </span>
+
+        </div>
+    `;
+  }
+  // ===============================================================
+  //    تعیین متن و رنگ وضعیت حضور
+  // ===============================================================
+  private getStatusInfo(status: string | number | null): { label: string; className: string } {
+
+    switch (String(status ?? '')) {
+
       case '0':
-        return '❌ عدم حضور';
+        return {
+          label: 'عدم حضور',
+          className: 'bg-danger text-white',
+        };
+
       case '1':
-        return '  آزاد';
+        return {
+          label: 'آزاد',
+          className: 'bg-success text-white',
+        };
+
       case '2':
-        return '🟡 در حال کار';
+        return {
+          label: 'در حال کار',
+          className: 'bg-warning text-dark',
+        };
+
       case '3':
-        return '🕓 ناهار و نماز';
+        return {
+          label: 'ناهار و نماز',
+          className: 'bg-info text-white',
+        };
+
       case '4':
-        return '🏖️ مرخصی اداری';
+        return {
+          label: 'مرخصی اداری',
+          className: 'bg-primary text-white',
+        };
+
       case '5':
-        return '⚡ قطع برق و اینترنت';
+        return {
+          label: 'قطع برق و اینترنت',
+          className: 'bg-secondary text-white',
+        };
+
       default:
-        return '—';
+        return {
+          label: '—',
+          className: 'bg-light text-dark',
+        };
     }
   }
 }

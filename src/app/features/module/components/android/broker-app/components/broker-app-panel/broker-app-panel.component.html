@@ -6,7 +6,7 @@
       <div class="card-header fw-bold bg-light">🗂️ آیتم‌های نمایشی در لیست</div>
       <div class="card-body">
         <ul class="list-group list-group-flush">
-          @for (item of ListVisible_items; track item) {
+          @for (item of ListVisible_items(); track item) {
           @if (item.ListVisible > 0) {
           <li class="list-group-item">{{ item.ColumnDesc }}</li>
           }
@@ -22,7 +22,7 @@
       <div class="card-header fw-bold bg-light">📋 آیتم‌های نمایشی در جزییات</div>
       <div class="card-body">
         <ul class="list-group list-group-flush">
-          @for (item of DetailVisible_items; track item) {
+          @for (item of DetailVisible_items(); track item) {
           @if (item.DetailVisible > 0) {
           <li class="list-group-item">{{ item.ColumnDesc }}</li>
           }
@@ -38,7 +38,7 @@
       <div class="card-header fw-bold bg-light"> آیتم‌های نمایشی در جستجوی پیشرفته</div>
       <div class="card-body">
         <ul class="list-group list-group-flush">
-          @for (item of SearchVisible_items; track item) {
+          @for (item of SearchVisible_items(); track item) {
           @if (item.SearchVisible > 0) {
           <li class="list-group-item">{{ item.ColumnDesc }}</li>
           }

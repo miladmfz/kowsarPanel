@@ -5,10 +5,11 @@
 
 
 
-    <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
-      <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="items" [gridOptions]="gridOptions"
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+        [columnDefs]="column_name_1" [rowData]="items()" [gridOptions]="gridOptions"
         (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
-        class="w-100 h-100"></ag-grid-angular>
+        [class]="themeClass + ' w-100 h-100'"></ag-grid-angular>
     </div>
 
 
@@ -30,10 +31,11 @@
 
 
 
-    <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
-      <ag-grid-angular [columnDefs]="columnDefs2" [rowData]="Printers" [gridOptions]="gridOptions"
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+        [columnDefs]="columnDefs2" [rowData]="Printers()" [gridOptions]="gridOptions"
         (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()"
-        class="w-100 h-100"></ag-grid-angular>
+        [class]="themeClass + ' w-100 h-100'"></ag-grid-angular>
     </div>
 
 
@@ -44,9 +46,9 @@
 
 <div class="modal fade" id="ocrbsetup" tabindex="-1" aria-labelledby="ocrbsetupLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="background-color: #d1dce7;">
-      <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="ocrbsetupLabel">تنظیمات پایه</h5>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class=" modal-title" id="ocrbsetupLabel">تنظیمات پایه</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
           (click)="ocrbsetup_Modal_Response_close()"></button>
       </div>
@@ -54,13 +56,13 @@
         <div class="mb-3 row">
           <label for="staticEmail" class="col-sm-2 col-form-label mx-1">شرح</label>
           <div class="col-sm-9">
-            <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="selected_des">
+            <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="selected_des()">
           </div>
         </div>
         <div class="mb-3 row">
           <label for="inputPassword" class="col-sm-2 col-form-label">مقدار</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="inputPassword" placeholder="{{selected_value}}"
+            <input type="text" class="form-control" id="inputPassword" placeholder="{{selected_value()}}"
               [(ngModel)]="selected_value" [ngModelOptions]="{ standalone: true }">
           </div>
         </div>
@@ -78,9 +80,9 @@
 <div class="modal fade" #printerModal id="printerModal" tabindex="-1" aria-labelledby="printerModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="background-color: #d1dce7;">
-      <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="printerModalLabel">جزییات پرینتر</h5>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class=" modal-title" id="printerModalLabel">جزییات پرینتر</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
           (click)="printerModal_Modal_Response_close()"></button>
       </div>

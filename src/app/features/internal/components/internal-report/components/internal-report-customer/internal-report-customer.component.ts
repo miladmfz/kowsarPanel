@@ -1,16 +1,15 @@
-import { Component, OnInit, OnDestroy, Renderer2, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, Renderer2, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, Subject, Subscription } from 'rxjs';
+import { debounceTime, Subject } from 'rxjs';
 
 import { AgGridModule } from 'ag-grid-angular';
 import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
-import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { CellActionReportCustomer } from './cell-action-report-customer-list';
 import { SupportFactorWebApiService } from 'src/app/features/internal/services/SupportFactorWebApi.service';
+import { CustomerWebApiService } from 'src/app/features/internal/services/CustomerWebApi.service';
 
 
 
@@ -32,7 +31,7 @@ export class InternalReportCustomerComponent
   implements OnInit, OnDestroy {
 
 
-  private readonly repo = inject(SupportFactorWebApiService);
+  private readonly repo = inject(CustomerWebApiService);
 
   constructor() {
     super();
@@ -43,12 +42,12 @@ export class InternalReportCustomerComponent
   private searchSubject = new Subject<string>();
 
   // Data models
-  records_report_customer: any[] = [];
-  records_report_customer_bydate: any[] = [];
-  records_report_customer_byrow: any[] = [];
+  records_report_customer = signal<any[]>([])
+  records_report_customer_bydate = signal<any[]>([])
+  records_report_customer_byrow = signal<any[]>([])
 
-  Customer_temp = '';
-  loading = false;
+  Customer_temp = signal('')
+  loading = signal(false)
 
   customTheme: any = {
     selectedBackground: '#D68E3A',
@@ -118,8 +117,8 @@ export class InternalReportCustomerComponent
     this.repo.GetCustomerReport(this.EditForm_reportCustomer.value)
       .subscribe((data: any) => {
 
-        this.records_report_customer = data.KowsarReports ?? [];
-        this.updateGridData(1, this.records_report_customer);
+        this.records_report_customer.set(data.KowsarReports ?? [])
+        this.updateGridData(1, this.records_report_customer());
 
       });
   }
@@ -158,9 +157,9 @@ export class InternalReportCustomerComponent
     this.repo.GetCustomerReport(this.EditForm_reportCustomer_temp.value)
       .subscribe((data: any) => {
 
-        this.Customer_temp = data.KowsarReports?.[0]?.CustomerName ?? '';
-        this.records_report_customer_bydate = data.KowsarReports ?? [];
-        this.updateGridData(2, this.records_report_customer_bydate);
+        this.Customer_temp.set(data.KowsarReports?.[0]?.CustomerName ?? '')
+        this.records_report_customer_bydate.set(data.KowsarReports ?? [])
+        this.updateGridData(2, this.records_report_customer_bydate());
 
         this.customerreportbydate_dialog_show();
       });
@@ -184,8 +183,8 @@ export class InternalReportCustomerComponent
     this.repo.GetCustomerReport(this.EditForm_reportCustomer_temp.value)
       .subscribe((data: any) => {
 
-        this.records_report_customer_byrow = data.KowsarReports ?? [];
-        this.updateGridData(3, this.records_report_customer_byrow);
+        this.records_report_customer_byrow.set(data.KowsarReports ?? [])
+        this.updateGridData(3, this.records_report_customer_byrow());
 
         this.customerreportbyrow_dialog_show();
       });
@@ -215,11 +214,11 @@ export class InternalReportCustomerComponent
     });
 
     // Column definitions
-    this.columnDefs1 = [
+    this.column_name_1 = [
       {
         field: 'عملیات',
         pinned: 'left',
-        minWidth: 250,
+        width: 100,
         cellRenderer: CellActionReportCustomer
       },
       { field: 'CustomerName', headerName: 'نام مشتری', cellClass: 'text-center', minWidth: 150 },
@@ -246,47 +245,51 @@ export class InternalReportCustomerComponent
   // Modal Controls
   // -----------------------------------------
 
-  customerreportbydate_dialog_show() { this.toggleModal('#customerreportbydate', true); }
-  customerreportbydate_dialog_close() { this.toggleModal('#customerreportbydate', false); }
 
-  customerreportbyrow_dialog_show() { this.toggleModal('#customerreportbyrow', true); }
-  customerreportbyrow_dialog_close() { this.toggleModal('#customerreportbyrow', false); }
+  private readonly renderer = inject(Renderer2);
 
-  toggleModal(selector: string, show: boolean) {
-    const modal: any = document.querySelector(selector);
+
+  @ViewChild('customerreportbydate', { static: false }) customerreportbydate!: ElementRef<HTMLDivElement>;
+  @ViewChild('customerreportbyrow', { static: false }) customerreportbyrow!: ElementRef<HTMLDivElement>;
+
+
+
+  customerreportbydate_dialog_show(): void {
+    const modal = this.customerreportbydate?.nativeElement;
     if (!modal) return;
-
-    if (show) {
-      const backdrop = document.createElement('div');
-      backdrop.className = 'modal-backdrop fade';
-      backdrop.id = selector.replace('#', '') + '-backdrop';
-      document.body.appendChild(backdrop);
-
-      setTimeout(() => backdrop.classList.add('show'), 10);
-
-      modal.classList.add('show', 'd-block');
-      modal.removeAttribute('aria-hidden');
-      modal.setAttribute('aria-modal', 'true');
-      modal.style.display = 'block';
-
-      backdrop.addEventListener('click', () => this.toggleModal(selector, false));
-    } else {
-      modal.classList.remove('show');
-      setTimeout(() => {
-        modal.classList.remove('d-block');
-        modal.style.display = 'none';
-      }, 150);
-
-      modal.setAttribute('aria-hidden', 'true');
-      modal.removeAttribute('aria-modal');
-
-      const backdrop = document.getElementById(selector.replace('#', '') + '-backdrop');
-      if (backdrop) {
-        backdrop.classList.remove('show');
-        setTimeout(() => backdrop.remove(), 150);
-      }
-    }
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
   }
+
+  customerreportbydate_dialog_close(): void {
+    const modal = this.customerreportbydate?.nativeElement;
+    if (!modal) return;
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+  customerreportbyrow_dialog_show(): void {
+    const modal = this.customerreportbyrow?.nativeElement;
+    if (!modal) return;
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+
+  customerreportbyrow_dialog_close(): void {
+    const modal = this.customerreportbyrow?.nativeElement;
+    if (!modal) return;
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
 
 
 }

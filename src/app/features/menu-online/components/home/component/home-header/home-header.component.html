@@ -1,0 +1,70 @@
+<div class="menu-home-header">
+
+  <div class="header-title-box">
+
+    @if (config.menuConfig.ShowHeaderTitle) {
+
+    <h4 class="header-main-title">
+      {{ mizname }}
+    </h4>
+
+    }
+
+    @if (config.menuConfig.ShowHeaderSubTitle) {
+
+    <p class="header-sub-title">
+      {{ TitleName }}
+    </p>
+
+    }
+
+  </div>
+
+  <div class="header-basket-box">
+
+    @if (
+    config.menuConfig.ShowBasketAmount &&
+    basketamount
+    ) {
+
+    <div class="basket-amount-box">
+
+      <small class="basket-label">
+        تعداد سفارش
+      </small>
+
+      <h5 class="basket-amount">
+        {{ basketamount }}
+      </h5>
+
+    </div>
+
+    }
+
+    @if (config.menuConfig.ShowBasketButton) {
+
+    <button type="button" class="header-cart-button" [class.pulse-animation]="
+          config.menuConfig.EnableBasketPulse &&
+          basketCount > 0
+        " (click)="OpenBasket()">
+
+      <i class="mdi mdi-cart-outline font-18"></i>
+
+      @if (
+      config.menuConfig.ShowBasketCount &&
+      basketCount > 0
+      ) {
+
+      <span class="header-cart-count">
+        {{ basketCount }}
+      </span>
+
+      }
+
+    </button>
+
+    }
+
+  </div>
+
+</div>

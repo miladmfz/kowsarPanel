@@ -26,6 +26,11 @@ ModuleRegistry.registerModules([
   AllEnterpriseModule,
 ]);
 
+// import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+
+// ModuleRegistry.registerModules([
+//   AllCommunityModule,
+// ]);
 
 // 🌗 تم اولیه
 function applyInitialTheme() {
@@ -48,8 +53,11 @@ function applyInitialTheme() {
     lightCss.forEach(l => (l.disabled = true));
     darkCss.forEach(l => (l.disabled = false));
   }
-}
 
+  document.documentElement.setAttribute('data-bs-theme', mode);
+  document.documentElement.setAttribute('data-layout-color', mode);
+  document.body?.setAttribute('data-layout-color', mode);
+}
 
 // ⭐ لود تنظیمات برنامه + Bootstrap Angular
 fetch('./assets/config.json')

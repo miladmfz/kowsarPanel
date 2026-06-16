@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { CompanyWebApiService } from 'src/app/features/module/services/CompanyWebApi.service';
 
 @Component({
@@ -25,10 +24,10 @@ export class CompanyAppPanelComponent implements OnInit {
   constructor() { }
 
 
-  ListVisible_items: any[] = [];
-  DetailVisible_items: any[] = [];
-  SearchVisible_items: any[] = [];
-  Apptype: string = "0";
+  ListVisible_items = signal<any[]>([])
+  DetailVisible_items = signal<any[]>([])
+  SearchVisible_items = signal<any[]>([])
+  Apptype = signal('0')
 
   ngOnInit() {
 
@@ -49,9 +48,9 @@ export class CompanyAppPanelComponent implements OnInit {
   ListVisible_Card() {
 
 
-    this.repo.BasketColumnCard("ListVisible", this.Apptype)
+    this.repo.BasketColumnCard("ListVisible", this.Apptype())
       .subscribe(e => {
-        this.ListVisible_items = e;
+        this.ListVisible_items.set(e)
 
       });
 
@@ -59,9 +58,9 @@ export class CompanyAppPanelComponent implements OnInit {
 
   DetailVisible_Card() {
 
-    this.repo.BasketColumnCard("DetailVisible", this.Apptype)
+    this.repo.BasketColumnCard("DetailVisible", this.Apptype())
       .subscribe(e => {
-        this.DetailVisible_items = e;
+        this.DetailVisible_items.set(e)
 
       });
 
@@ -69,9 +68,9 @@ export class CompanyAppPanelComponent implements OnInit {
 
   SearchVisible_Card() {
 
-    this.repo.BasketColumnCard("SearchVisible", this.Apptype)
+    this.repo.BasketColumnCard("SearchVisible", this.Apptype())
       .subscribe(e => {
-        this.SearchVisible_items = e;
+        this.SearchVisible_items.set(e)
 
       });
 

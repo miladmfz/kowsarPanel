@@ -6,7 +6,8 @@ declare var $: any;
     selector: 'edit-delete-cell-renderer',
     template: ` 
 
-  <span (click)="NavigateToEdit()" class="btn btn-sm btn-outline-primary ">
+  <span (click)="NavigateToEdit()" class="btn btn-sm btn-outline-primary "data-toggle="tooltip"
+  title="ویرایش کالا" >
   <a >
     <i class="fas fa-edit"></i>
   </a>

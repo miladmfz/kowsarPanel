@@ -1,18 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject, Subscription, debounceTime } from 'rxjs';
+import { Subject, debounceTime } from 'rxjs';
 import { AgGridModule } from 'ag-grid-angular';
 
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { CellActionCustomerList } from './../internal-customer-list/cell-action-customer-list';
 import { CellActionCustomerFactor } from './../internal-customer-list/cell-action-customer-factor';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { CustomerWebApiService } from '../../../services/CustomerWebApi.service';
-// اگر rendererهای اختصاصی داری می‌تونی بعداً جایگزین کنی
-// import { CellActionCustomerList } from './cell-action-customer-list';
-// import { CellActionCustomerFactor } from './cell-action-customer-factor';
+import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
+import { PermissionService } from 'src/app/app-shell/framework-services/storage/PermissionService';
+import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
+import { KowsarBaseWebApi } from 'src/app/app-shell/framework-services/base/KowsarBaseWebApi.service';
+
 
 @Component({
   selector: 'app-internal-customer-list',
@@ -23,26 +24,34 @@ import { CustomerWebApiService } from '../../../services/CustomerWebApi.service'
 export class InternalCustomerListComponent extends AgGridBaseComponent
   implements OnInit, OnDestroy {
 
-  title = 'مشتریان داخلی کوثر';
-
+  title = signal('مشتریان داخلی کوثر')
   // دیتاها
-  records: any[] = [];
-  records_factor: any[] = [];
-  records_support_factorrows: any[] = [];
+  records = signal<any[]>([])
+  records_factor = signal<any[]>([])
+  records_support_factorrows = signal<any[]>([])
+  private readonly renderer = inject(Renderer2);
 
   // لودینگ‌ها
-  loading = false;
-  loading_factor = false;
+  loading = signal(false)
+  loading_factor = signal(false)
 
   // جستجو
-  PhAddress3 = '';
 
-  Searchtarget = '';
+  Searchtarget = signal('')
   private searchSubject = new Subject<string>();
+
+  Active_Lookup: Base_Lookup[] = [
+
+    { id: "4", name: "همه" },
+    { id: "0", name: "فعال" },
+    { id: "1", name: "نيمه فعال" },
+    { id: "2", name: "غير فعال" },
+  ]
 
   // فرم‌های صفحه
   EditForm_SearchTarget = new FormGroup({
     SearchTarget: new FormControl(''),
+    Active: new FormControl('4'),
     BrokerRef: new FormControl(''),
   });
 
@@ -94,8 +103,11 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   });
 
   private readonly router = inject(Router);
-
   private readonly repo = inject(CustomerWebApiService);
+  private readonly base_repo = inject(KowsarBaseWebApi);
+
+  protected readonly permissionService = inject(PermissionService);
+  protected readonly session = inject(SessionStorageService);
 
   constructor() {
     super();
@@ -106,11 +118,10 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   // ---------------------------
   ngOnInit(): void {
 
-    this.PhAddress3 = sessionStorage.getItem('PhAddress3') || '';
 
 
     // --- ستون‌های گرید اصلی مشتریان ---
-    this.columnDefs1 = [
+    this.column_name_1 = [
       {
         headerName: 'عملیات',
         pinned: 'left',
@@ -118,15 +129,15 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
         cellRenderer: CellActionCustomerList
       },
 
-      { field: 'CustomerCode', headerName: 'کد مشتری', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 130 },
-      { field: 'CustName_Small', headerName: 'نام مشتری', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 180 },
-      { field: 'Manager', headerName: 'مدیریت', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 140 },
-      { field: 'Explain', headerName: 'پشتیبانی', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 160 },
-      { field: 'AppNumber', headerName: 'نسخه نرم‌افزار', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 130 },
-      { field: 'DatabaseNumber', headerName: 'دیتابیس', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 110 },
-      { field: 'Delegacy', headerName: 'تعداد قفل', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 110 },
-      { field: 'Phone', headerName: 'شماره تماس', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 130 },
-      { field: 'Mobile', headerName: 'موبایل', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 130 },
+      { field: 'CustomerCode', headerName: 'کد مشتری', cellClass: 'text-center', minWidth: 130 },
+      { field: 'CustName_Small', headerName: 'نام مشتری', cellClass: 'text-center', minWidth: 180 },
+      { field: 'Manager', headerName: 'مدیریت', cellClass: 'text-center', minWidth: 140 },
+      { field: 'Explain', headerName: 'پشتیبانی', cellClass: 'text-center', minWidth: 160 },
+      { field: 'AppNumber', headerName: 'نسخه نرم‌افزار', cellClass: 'text-center', minWidth: 130 },
+      { field: 'DatabaseNumber', headerName: 'دیتابیس', cellClass: 'text-center', minWidth: 110 },
+      { field: 'Delegacy', headerName: 'تعداد قفل', cellClass: 'text-center', minWidth: 110 },
+      { field: 'Phone', headerName: 'شماره تماس', cellClass: 'text-center', minWidth: 130 },
+      { field: 'Mobile', headerName: 'موبایل', cellClass: 'text-center', minWidth: 130 },
     ];
 
 
@@ -139,19 +150,19 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
         minWidth: 150,
         cellRenderer: CellActionCustomerFactor
       },
-      { field: 'FactorDate', headerName: 'تاریخ فاکتور', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 130 },
-      { field: 'BrokerNameWithoutType', headerName: 'نام پشتیبان', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 140 },
-      { field: 'Barbary', headerName: 'توضیحات', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 160 },
-      { field: 'starttime', headerName: 'شروع', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 80 },
-      { field: 'Endtime', headerName: 'پایان', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 80 },
-      { field: 'worktime', headerName: 'زمان کار', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 90 },
+      { field: 'FactorDate', headerName: 'تاریخ فاکتور', cellClass: 'text-center', minWidth: 130 },
+      { field: 'BrokerNameWithoutType', headerName: 'نام پشتیبان', cellClass: 'text-center', minWidth: 140 },
+      { field: 'Barbary', headerName: 'توضیحات', cellClass: 'text-center', minWidth: 160 },
+      { field: 'starttime', headerName: 'شروع', cellClass: 'text-center', minWidth: 80 },
+      { field: 'Endtime', headerName: 'پایان', cellClass: 'text-center', minWidth: 80 },
+      { field: 'worktime', headerName: 'زمان کار', cellClass: 'text-center', minWidth: 90 },
     ];
 
 
 
     // --- ستون‌های ردیف‌های فاکتور ---
     this.columnDefs3 = [
-      { field: 'GoodName', headerName: 'نام آیتم', filter: 'agSetColumnFilter', cellClass: 'text-center', minWidth: 180 },
+      { field: 'GoodName', headerName: 'نام آیتم', cellClass: 'text-center', minWidth: 180 },
       { field: 'Qty', headerName: 'تعداد', cellClass: 'text-center', minWidth: 90 },
       { field: 'Price', headerName: 'فی', cellClass: 'text-center', minWidth: 120 },
       { field: 'SumPrice', headerName: 'مبلغ', cellClass: 'text-center', minWidth: 140 },
@@ -161,7 +172,7 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
 
     // --- دریافت مقدار اولیه بروکر ---
     this.EditForm_SearchTarget.patchValue({
-      BrokerRef: sessionStorage.getItem("BrokerCode"),
+      BrokerRef: this.session.getString("BrokerCode"),
       SearchTarget: ''
 
     });
@@ -172,6 +183,10 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
     this.searchSubject
       .pipe(debounceTime(1000))
       .subscribe(() => this.getList());
+  }
+
+  onActiveChange() {
+    this.getList()
   }
 
   onSearchChange() {
@@ -208,21 +223,21 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   getList() {
 
 
-    this.repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe({
+    this.base_repo.GetKowsarCustomer(this.EditForm_SearchTarget.value).subscribe({
       next: (data: any) => {
 
 
 
-        this.records = data?.Customers ?? [];
-        this.updateGridData(1, this.records);
+        this.records.set(data?.Customers ?? [])
+        this.updateGridData(1, this.records());
         this.gridApi1?.sizeColumnsToFit?.();
 
         if (this.gridApi1) {
-          this.updateGridData(1, this.records);
+          this.updateGridData(1, this.records());
           this.gridApi1.sizeColumnsToFit();
         }
       },
-      error: () => (this.loading = false),
+      error: () => (this.loading.set(false)),
     });
   }
 
@@ -238,7 +253,7 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
 
 
   Show_Customer_Property(CustomerCode: any) {
-    const c = this.records.find(r => r.CustomerCode === CustomerCode);
+    const c = this.records().find(r => r.CustomerCode === CustomerCode);
     if (!c) return;
     this.ShowForm_property.patchValue(this.pickCustomerFields(c));
     this.property_dialog_show();
@@ -246,8 +261,7 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
 
   Edit_Customer_Property_Explain(CustomerCode: any) {
 
-    console.log(CustomerCode)
-    const c = this.records.find(r => r.CustomerCode === CustomerCode);
+    const c = this.records().find(r => r.CustomerCode === CustomerCode);
     if (!c) return;
 
     this.EditForm_property.patchValue(this.pickCustomerFields(c));
@@ -294,14 +308,14 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   // Factors / Support
   // ---------------------------
   Factor_Customer_Property(CustomerCode: any) {
-    this.loading_factor = true;
+    this.loading_factor.set(true)
 
     this.repo.GetCustomerFactor(CustomerCode).subscribe((data: any) => {
 
-      this.records_factor = data?.Factors ?? [];
-      this.loading_factor = false;
+      this.records_factor.set(data?.Factors ?? [])
+      this.loading_factor.set(false)
       this.CustomerFactor_dialog_show();
-      this.updateGridData(2, this.records_factor);
+      this.updateGridData(2, this.records_factor());
       this.gridApi2?.sizeColumnsToFit?.();
     });
   }
@@ -310,9 +324,9 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
 
     this.repo.GetWebFactorRowsSupport(FactorCode).subscribe((data: any) => {
 
-      this.records_support_factorrows = data?.Factors ?? [];
+      this.records_support_factorrows.set(data?.Factors ?? [])
       this.CustomerFactorRow_dialog_show();
-      this.updateGridData(3, this.records_support_factorrows);
+      this.updateGridData(3, this.records_support_factorrows());
       this.gridApi3?.sizeColumnsToFit?.();
     });
   }
@@ -320,62 +334,95 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   // ---------------------------
   // Modals (نمایش/بستن)
   // ---------------------------
-
-  property_dialog_show() { this.toggleModal('#customerproperty', true); }
-  property_dialog_close() { this.toggleModal('#customerproperty', false); }
-
-  Edit_property_dialog_show() { this.toggleModal('#editcustomerproperty', true); }
-  Edit_property_dialog_close() { this.toggleModal('#editcustomerproperty', false); }
-
-  CustomerFactor_dialog_show() { this.toggleModal('#customerfactor', true); }
-  CustomerFactor_dialog_close() { this.toggleModal('#customerfactor', false); }
-
-  CustomerFactorRow_dialog_show() { this.toggleModal('#customerfactorrow', true); }
-  CustomerFactorRow_dialog_close() { this.toggleModal('#customerfactorrow', false); }
+  @ViewChild('customerproperty', { static: false }) customerproperty!: ElementRef<HTMLDivElement>;
+  @ViewChild('editcustomerproperty', { static: false }) editcustomerproperty!: ElementRef<HTMLDivElement>;
+  @ViewChild('customerfactor', { static: false }) customerfactor!: ElementRef<HTMLDivElement>;
+  @ViewChild('customerfactorrow', { static: false }) customerfactorrow!: ElementRef<HTMLDivElement>;
 
 
-  toggleModal(selector: string, show: boolean) {
-    const modal: any = document.querySelector(selector);
+  property_dialog_show(): void {
+    const modal = this.customerproperty?.nativeElement;
     if (!modal) return;
-
-    if (show) {
-      // BACKDROP بساز
-      const backdrop = document.createElement('div');
-      backdrop.className = 'modal-backdrop fade';
-      backdrop.id = selector.replace('#', '') + '-backdrop';
-      document.body.appendChild(backdrop);
-
-      // کمی تاخیر برای fade
-      setTimeout(() => backdrop.classList.add('show'), 10);
-
-      // مودال را باز کن
-      modal.classList.add('show', 'd-block');
-      modal.removeAttribute('aria-hidden');
-      modal.setAttribute('aria-modal', 'true');
-      modal.style.display = 'block';
-
-      // بستن با کلیک روی بک‌دراپ
-      backdrop.addEventListener('click', () => this.toggleModal(selector, false));
-    }
-    else {
-      // مودال را ببند
-      modal.classList.remove('show');
-      setTimeout(() => {
-        modal.classList.remove('d-block');
-        modal.style.display = 'none';
-      }, 150);
-
-      modal.setAttribute('aria-hidden', 'true');
-      modal.removeAttribute('aria-modal');
-
-      // بک‌دراپ را حذف کن
-      const backdrop = document.getElementById(selector.replace('#', '') + '-backdrop');
-      if (backdrop) {
-        backdrop.classList.remove('show');
-        setTimeout(() => backdrop.remove(), 150);
-      }
-    }
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
   }
+
+  property_dialog_close(): void {
+    const modal = this.customerproperty?.nativeElement;
+    if (!modal) return;
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
+
+
+  Edit_property_dialog_show(): void {
+    const modal = this.editcustomerproperty?.nativeElement;
+    if (!modal) return;
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+
+  Edit_property_dialog_close(): void {
+    const modal = this.editcustomerproperty?.nativeElement;
+    if (!modal) return;
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
+
+
+
+  CustomerFactor_dialog_show(): void {
+    const modal = this.customerfactor?.nativeElement;
+    if (!modal) return;
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+
+  CustomerFactor_dialog_close(): void {
+    const modal = this.customerfactor?.nativeElement;
+    if (!modal) return;
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
+
+  CustomerFactorRow_dialog_show(): void {
+    const modal = this.customerfactorrow?.nativeElement;
+    if (!modal) return;
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+
+  CustomerFactorRow_dialog_close(): void {
+    const modal = this.customerfactorrow?.nativeElement;
+    if (!modal) return;
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
+
 
 
 }

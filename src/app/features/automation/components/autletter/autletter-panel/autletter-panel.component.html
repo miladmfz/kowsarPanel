@@ -1,0 +1,242 @@
+<div class="card border-0 shadow-sm rounded-4 kws-letter-page">
+
+  <div class="card-body">
+
+    <form [formGroup]="Autletter_data">
+
+      <div class="kws-info-panel mb-3">
+
+        <div class="kws-section-header mb-3">
+
+          <div class="d-flex align-items-center gap-2">
+
+            <div class="kws-section-icon">
+              <i class="fe-send"></i>
+            </div>
+
+            <div>
+              <h5 class="mb-0">اطلاعات تیکت</h5>
+              <small class="text-muted">مشخصات اصلی درخواست ارسالی</small>
+            </div>
+
+          </div>
+
+          <button type="button" class="btn btn-soft-danger kws-back-btn" (click)="onBtnCancelClick()">
+
+            <i class="fas fa-arrow-right"></i>
+            <span>بازگشت</span>
+
+          </button>
+
+        </div>
+
+        <div class="row g-3">
+
+          <div class="col-12 col-md-2">
+            <label for="LetterDate" class="form-label">تاریخ</label>
+            <input type="text" class="form-control kws-readonly" id="LetterDate" formControlName="LetterDate"
+              readonly />
+          </div>
+
+          <div class="col-12 col-md-2">
+            <label for="LetterState" class="form-label">وضعیت</label>
+            <input type="text" class="form-control kws-readonly" id="LetterState" formControlName="LetterState"
+              readonly />
+          </div>
+
+          <div class="col-12 col-md-3">
+            <label for="OwnerName" class="form-label">مالکیت</label>
+            <input type="text" class="form-control kws-readonly" id="OwnerName" formControlName="OwnerName" readonly />
+          </div>
+
+          <div class="col-12 col-md-3">
+            <label for="CreatorName" class="form-label">ایجاد کننده</label>
+            <input type="text" class="form-control kws-readonly" id="CreatorName" formControlName="CreatorName"
+              readonly />
+          </div>
+
+          <div class="col-12 col-md-2">
+            <label for="LetterPriority" class="form-label">اولویت</label>
+            <input type="text" class="form-control kws-readonly" id="LetterPriority" formControlName="LetterPriority"
+              readonly />
+          </div>
+
+          <div class="col-12 col-md-3">
+            <label for="LetterTitle" class="form-label">عنوان</label>
+            <input type="text" class="form-control kws-readonly" id="LetterTitle" formControlName="LetterTitle"
+              readonly />
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="LetterDescription" class="form-label">شرح</label>
+            <input type="text" class="form-control kws-readonly" id="LetterDescription"
+              formControlName="LetterDescription" readonly />
+          </div>
+
+
+          @if (LoginType()=="KOWSAR"){
+          <div class="col-12 col-md-3 d-flex align-items-end">
+            <button type="button" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
+              (click)="owner_factor_prefactor()">
+              <i class="fas fa-file-alt"></i>
+              <span>فاکتور مشتری</span>
+            </button>
+          </div>
+
+          }
+
+        </div>
+
+      </div>
+
+    </form>
+
+    <ul class="nav nav-pills navtab-bg nav-justified kws-tabs mb-0">
+
+      @for (tab of tabs; track tab.id) {
+      <li class="nav-item">
+        <button type="button" class="nav-link kws-tab-link w-100" [class.active]="activeTab() === tab.id"
+          (click)="activeTab.set(tab.id)">
+          {{ tab.title }}
+        </button>
+      </li>
+      }
+
+    </ul>
+
+  </div>
+
+  <div class="card-body pt-0">
+
+    <div class="kws-tab-content">
+
+      @switch (activeTab()) {
+
+      @case ('detail') {
+      @if (LetterState_str()) {
+      <app-autletter-item [ObjectRef]="LetterRef()" [LetterState]="LetterState_str()"
+        (RefreshState)="onRefreshState($event)">
+      </app-autletter-item>
+      }
+      }
+
+      @case ('chat') {
+      <app-autletter-chat [ObjectRef]="LetterRef()" [LetterState]="LetterState_str()">
+      </app-autletter-chat>
+      }
+
+      @case ('attach') {
+      <app-kowsar-attach [ObjectRef]="LetterRef()" [ClassName]="'AutLetter'">
+      </app-kowsar-attach>
+      }
+
+      }
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="modal fade" id="ownerfactorlist" tabindex="-1" aria-labelledby="ownerfactorlistLabel" aria-hidden="true">
+
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+
+      <div class="modal-header kws-modal-header border-0">
+
+        <div>
+          <h5 class="modal-title fw-bold mb-1" id="ownerfactorlistLabel">
+            لیست فاکتورهای {{ OwnerName() }}
+          </h5>
+          <small class="text-muted">فاکتور و پیش‌فاکتورهای ثبت‌شده برای مشتری</small>
+        </div>
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="ownerfactorlist_dialog_close()">
+        </button>
+
+      </div>
+
+      <div class="modal-body p-4">
+
+        @if (!CustomerCode() || +CustomerCode() === 0) {
+        <div class="kws-empty-state text-center py-5">
+          <i class="fe-alert-circle"></i>
+          <h5 class="mt-3 mb-1">این شخص به عنوان مشتری تعریف نشده است</h5>
+          <p class="text-muted mb-0">برای مشاهده فاکتور، ابتدا باید مشتری معتبر انتخاب شده باشد.</p>
+        </div>
+        }
+
+        @if (+CustomerCode() > 0) {
+
+        <div class="kws-grid-section mb-4">
+
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+            <h5 class="mb-0">فاکتور</h5>
+
+            @if (!loading_cust_factor() && records_ownerfactorlist()?.length) {
+            <span class="badge bg-primary-subtle text-primary">
+              {{ records_ownerfactorlist().length }} مورد
+            </span>
+            }
+          </div>
+
+          <div class="ag-container rounded-3 border shadow-sm overflow-hidden kws-owner-grid">
+            <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+              [columnDefs]="columnDefs2" [rowData]="records_ownerfactorlist()" [gridOptions]="gridOptions"
+              (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()"
+              [class]="themeClass + ' w-100 h-100'">
+            </ag-grid-angular>
+          </div>
+
+          @if (!loading_cust_factor() && (!records_ownerfactorlist() || records_ownerfactorlist().length === 0)) {
+          <div class="kws-empty-mini mt-2">فاکتوری ندارد</div>
+          }
+
+        </div>
+
+        <div class="kws-grid-section">
+
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+            <h5 class="mb-0">پیش فاکتور</h5>
+
+            @if (!loading_cust_prefactor() && records_ownerprefactorlist()?.length) {
+            <span class="badge bg-info-subtle text-info">
+              {{ records_ownerprefactorlist().length }} مورد
+            </span>
+            }
+          </div>
+
+          <div class="ag-container rounded-3 border shadow-sm overflow-hidden kws-owner-grid">
+            <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+              [columnDefs]="columnDefs3" [rowData]="records_ownerprefactorlist()" [gridOptions]="gridOptions"
+              (gridReady)="onGridReady($event, 3)" (firstDataRendered)="gridApi3?.sizeColumnsToFit()"
+              [class]="themeClass + ' w-100 h-100'">
+            </ag-grid-angular>
+          </div>
+
+          @if (!loading_cust_prefactor() && (!records_ownerprefactorlist() || records_ownerprefactorlist().length ===
+          0)) {
+          <div class="kws-empty-mini mt-2">پیش فاکتوری ندارد</div>
+          }
+
+        </div>
+
+        }
+
+      </div>
+
+      <div class="modal-footer border-0 px-4 pb-4">
+        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal"
+          (click)="ownerfactorlist_dialog_close()">
+          بستن
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

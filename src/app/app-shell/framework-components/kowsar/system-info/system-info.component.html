@@ -1,0 +1,313 @@
+<div class="container-fluid system-info-page" dir="rtl">
+
+  <section class="developer-hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <i class="mdi mdi-code-braces"></i>
+        KowsarPanel Developer Hub
+      </div>
+
+      <h1>مستندات فنی پنل کوثر</h1>
+
+      <p>
+        نمای کامل معماری، Routeها، Config Runtime، Build Profiles، سرویس‌ها و ابزارهای توسعه پروژه.
+      </p>
+
+      <div class="hero-tags">
+        <span>Angular 20</span>
+        <span>Standalone</span>
+        <span>Lazy Routes</span>
+        <span>Minton RTL</span>
+        <span>AG Grid</span>
+      </div>
+
+      <div class="hero-actions">
+        <a class="btn btn-light" href="/showtree">
+          <i class="mdi mdi-file-tree-outline me-1"></i>
+          مشاهده Project Tree
+        </a>
+
+        <a class="btn btn-outline-light" href="#routes-section">
+          <i class="mdi mdi-routes me-1"></i>
+          مسیرهای سیستم
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-panel">
+      <div class="panel-row">
+        <span>Entry Point</span>
+        <code>src/main.ts</code>
+      </div>
+      <div class="panel-row">
+        <span>Main Routes</span>
+        <code>src/app/app.routes.ts</code>
+      </div>
+      <div class="panel-row">
+        <span>Runtime Config</span>
+        <code>assets/config.json</code>
+      </div>
+      <div class="panel-row active">
+        <span>App Version</span>
+        <code>{{ appVersion }}</code>
+      </div>
+    </div>
+  </section>
+
+  <section class="metric-grid">
+    <div class="metric-card">
+      <i class="mdi mdi-routes"></i>
+      <strong>{{ routes.length }}</strong>
+      <span>Route اصلی</span>
+    </div>
+
+    <div class="metric-card">
+      <i class="mdi mdi-view-module-outline"></i>
+      <strong>{{ modules.length }}</strong>
+      <span>ماژول فعال</span>
+    </div>
+
+    <div class="metric-card">
+      <i class="mdi mdi-cog-transfer-outline"></i>
+      <strong>{{ services.length }}</strong>
+      <span>سرویس زیرساختی</span>
+    </div>
+
+    <div class="metric-card">
+      <i class="mdi mdi-package-variant-closed"></i>
+      <strong>{{ buildProfiles.length }}</strong>
+      <span>Build Profile</span>
+    </div>
+  </section>
+
+  <section class="section-card architecture-section">
+    <div class="section-title">
+      <div>
+        <h3>معماری اصلی پروژه</h3>
+        <p>نمای فنی از لایه‌های اصلی KowsarPanel</p>
+      </div>
+      <span class="section-chip">Architecture</span>
+    </div>
+
+    <div class="architecture-map">
+      <div class="architecture-root">
+        <i class="mdi mdi-monitor-dashboard"></i>
+        <strong>KowsarPanel</strong>
+        <span>Angular Application</span>
+      </div>
+
+      <div class="architecture-line"></div>
+
+      <div class="architecture-grid">
+        @for (item of architecture; track item.title) {
+        <div class="architecture-box">
+          <div class="architecture-icon">
+            <i [class]="item.icon"></i>
+          </div>
+          <h4>{{ item.title }}</h4>
+          <p>{{ item.description }}</p>
+        </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <div class="row mt-3">
+
+    <div class="col-xl-6">
+      <section class="section-card">
+        <div class="section-title">
+          <div>
+            <h3>ماژول‌های اصلی</h3>
+            <p>Featureهای اصلی پروژه و محدوده عملکرد هر بخش</p>
+          </div>
+          <span class="section-chip">Features</span>
+        </div>
+
+        <div class="feature-grid">
+          @for (module of modules; track module.title) {
+          <div class="feature-card" [class]="module.color">
+            <div class="feature-icon">
+              <i [class]="module.icon"></i>
+            </div>
+            <div>
+              <h4>{{ module.title }}</h4>
+              <p>{{ module.description }}</p>
+            </div>
+          </div>
+          }
+        </div>
+      </section>
+    </div>
+
+    <div class="col-xl-6">
+      <section class="section-card">
+        <div class="section-title">
+          <div>
+            <h3>مشخصات پروژه</h3>
+            <p>فایل‌ها و مشخصات پایه Application</p>
+          </div>
+          <span class="section-chip">Project</span>
+        </div>
+
+        <div class="technical-list">
+          @for (item of projectInfo; track item.key) {
+          <div class="technical-item">
+            <span>{{ item.key }}</span>
+            <code>{{ item.value }}</code>
+          </div>
+          }
+        </div>
+      </section>
+    </div>
+
+  </div>
+
+  <section class="section-card mt-3" id="routes-section">
+    <div class="section-title">
+      <div>
+        <h3>Route Explorer</h3>
+        <p>مسیرهای اصلی، نوع Lazy Load و توضیح هر Route</p>
+      </div>
+      <span class="section-chip">Routing</span>
+    </div>
+
+    <div class="routes-explorer">
+      @for (route of routes; track route.path) {
+      <div class="route-card">
+        <div>
+          <code>{{ route.path }}</code>
+          <h4>{{ route.module }}</h4>
+          <p>{{ route.description }}</p>
+        </div>
+
+        <span class="lazy-badge" [class.component]="route.lazy === 'loadComponent'"
+          [class.children]="route.lazy === 'loadChildren'">
+          {{ route.lazy }}
+        </span>
+      </div>
+      }
+    </div>
+  </section>
+
+
+  <div class="row mt-3">
+
+    <div class="col-xl-4">
+      <section class="section-card">
+        <div class="section-title">
+          <div>
+            <h3>فایل‌های مهم</h3>
+            <p>فایل‌های کلیدی در ساختار پروژه</p>
+          </div>
+        </div>
+
+        <div class="file-list">
+          @for (file of importantFiles; track file.key) {
+          <div class="file-item">
+            <i class="mdi mdi-file-code-outline"></i>
+            <div>
+              <code>{{ file.key }}</code>
+              <span>{{ file.value }}</span>
+            </div>
+          </div>
+          }
+        </div>
+      </section>
+    </div>
+
+    <div class="col-xl-4">
+      <section class="section-card">
+        <div class="section-title">
+          <div>
+            <h3>زیرساخت و سرویس‌ها</h3>
+            <p>سرویس‌های مشترک و Interceptorها</p>
+          </div>
+        </div>
+
+        <div class="service-stack">
+          @for (service of services; track service.title) {
+          <div class="service-card">
+            <i [class]="service.icon"></i>
+            <div>
+              <h4>{{ service.title }}</h4>
+              <p>{{ service.description }}</p>
+            </div>
+          </div>
+          }
+        </div>
+      </section>
+    </div>
+
+    <div class="col-xl-4">
+      <section class="section-card">
+        <div class="section-title">
+          <div>
+            <h3>وابستگی‌های مهم</h3>
+            <p>پکیج‌های اصلی استفاده‌شده در پروژه</p>
+          </div>
+        </div>
+
+        <div class="dependency-cloud">
+          @for (dep of dependencies; track dep.key) {
+          <div class="dependency-chip">
+            <strong>{{ dep.key }}</strong>
+            <span>{{ dep.value }}</span>
+          </div>
+          }
+        </div>
+      </section>
+    </div>
+
+  </div>
+
+  <div class="row mt-3">
+
+    <div class="col-xl-8">
+      <section class="section-card notes-section">
+        <div class="section-title">
+          <div>
+            <h3>نکات توسعه</h3>
+            <p>موارد مهم برای توسعه و نگهداری پروژه</p>
+          </div>
+          <span class="section-chip">Developer Notes</span>
+        </div>
+
+        <ul>
+          @for (note of developmentNotes; track note) {
+          <li>{{ note }}</li>
+          }
+        </ul>
+      </section>
+    </div>
+
+    <div class="col-xl-4">
+      <section class="section-card dev-tools">
+        <div class="section-title">
+          <div>
+            <h3>Developer Tools</h3>
+            <p>ابزارهای داخلی مستندات و بررسی پروژه</p>
+          </div>
+        </div>
+
+        <a href="/showtree" class="tool-card">
+          <i class="mdi mdi-file-tree-outline"></i>
+          <div>
+            <strong>Project Tree</strong>
+            <span>نمایش ساختار کامل فایل‌ها و پوشه‌ها</span>
+          </div>
+        </a>
+
+        <a href="/system-info" class="tool-card">
+          <i class="mdi mdi-book-open-page-variant-outline"></i>
+          <div>
+            <strong>System Info</strong>
+            <span>مستندات فنی و معماری پروژه</span>
+          </div>
+        </a>
+      </section>
+    </div>
+
+  </div>
+
+</div>

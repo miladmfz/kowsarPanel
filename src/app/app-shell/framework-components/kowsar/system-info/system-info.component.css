@@ -1,0 +1,601 @@
+:host {
+    display: block;
+}
+
+.system-info-page {
+    padding-bottom: 32px;
+}
+
+.developer-hero {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 28px;
+    padding: 34px;
+    margin-bottom: 22px;
+    border-radius: 28px;
+    background:
+        radial-gradient(circle at top left, rgba(96, 165, 250, 0.35), transparent 34%),
+        linear-gradient(135deg, #0f172a 0%, #1e3a8a 52%, #2563eb 100%);
+    color: #fff;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.22);
+}
+
+.developer-hero::after {
+    content: "";
+    position: absolute;
+    inset: auto -80px -120px auto;
+    width: 300px;
+    height: 300px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-badge {
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 13px;
+    margin-bottom: 18px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.13);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    font-size: 13px;
+}
+
+.developer-hero h1 {
+    margin: 0 0 12px;
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+}
+
+.developer-hero p {
+    max-width: 680px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 14px;
+    line-height: 2;
+}
+
+.hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 22px 0;
+}
+
+.hero-tags span {
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.hero-panel {
+    position: relative;
+    z-index: 1;
+    align-self: center;
+    padding: 18px;
+    border-radius: 22px;
+    background: rgba(15, 23, 42, 0.32);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+}
+
+.panel-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.panel-row:last-child {
+    border-bottom: 0;
+}
+
+.panel-row span {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 12px;
+}
+
+.panel-row code {
+    color: #dbeafe;
+    direction: ltr;
+    text-align: left;
+}
+
+.panel-row.active {
+    background: rgba(255, 255, 255, 0.09);
+    border-radius: 14px;
+}
+
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.metric-card {
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+    border: 1px solid #e5eaf2;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+}
+
+.metric-card i {
+    position: absolute;
+    left: 18px;
+    top: 16px;
+    color: #dbeafe;
+    font-size: 46px;
+}
+
+.metric-card strong {
+    display: block;
+    color: #0f172a;
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.metric-card span {
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.section-card {
+    height: 100%;
+    padding: 22px;
+    border: 1px solid #e5eaf2;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.section-title h3 {
+    margin: 0 0 6px;
+    color: #0f172a;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.section-title p {
+    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.section-chip {
+    padding: 6px 11px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.architecture-section {
+    background:
+        linear-gradient(#fff, #fff) padding-box,
+        linear-gradient(135deg, #bfdbfe, #ddd6fe) border-box;
+    border: 1px solid transparent;
+}
+
+.architecture-map {
+    text-align: center;
+}
+
+.architecture-root {
+    width: 230px;
+    margin: 0 auto;
+    padding: 18px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #eff6ff, #eef2ff);
+    border: 1px solid #bfdbfe;
+}
+
+.architecture-root i {
+    display: block;
+    color: #2563eb;
+    font-size: 34px;
+    margin-bottom: 8px;
+}
+
+.architecture-root strong {
+    display: block;
+    color: #0f172a;
+    font-size: 17px;
+    font-weight: 900;
+}
+
+.architecture-root span {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.architecture-line {
+    width: 1px;
+    height: 34px;
+    margin: 0 auto;
+    background: #cbd5e1;
+}
+
+.architecture-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+.architecture-box {
+    position: relative;
+    padding: 18px;
+    border: 1px solid #eef2f7;
+    border-radius: 18px;
+    background: #f8fafc;
+    text-align: center;
+}
+
+.architecture-icon {
+    width: 44px;
+    height: 44px;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 22px;
+}
+
+.architecture-box h4,
+.feature-card h4,
+.service-card h4 {
+    margin: 0 0 7px;
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.architecture-box p,
+.feature-card p,
+.service-card p {
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+.feature-card {
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    padding: 14px;
+    border-radius: 18px;
+    background: #f8fafc;
+    border: 1px solid #eef2f7;
+}
+
+.feature-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    color: #fff;
+    font-size: 24px;
+}
+
+.feature-card.blue .feature-icon {
+    background: #2563eb;
+}
+
+.feature-card.green .feature-icon {
+    background: #16a34a;
+}
+
+.feature-card.purple .feature-icon {
+    background: #7c3aed;
+}
+
+.feature-card.orange .feature-icon {
+    background: #f97316;
+}
+
+.feature-card.pink .feature-icon {
+    background: #e11d48;
+}
+
+.feature-card.dark .feature-icon {
+    background: #334155;
+}
+
+.technical-list,
+.file-list,
+.service-stack,
+.config-panel,
+.dependency-cloud {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.technical-item,
+.config-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 12px;
+    border-radius: 14px;
+    background: #f8fafc;
+    border: 1px solid #eef2f7;
+}
+
+.technical-item span,
+.config-line span {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.technical-item code,
+.config-line code {
+    color: #2563eb;
+    background: #eff6ff;
+    padding: 5px 8px;
+    border-radius: 9px;
+    direction: ltr;
+    text-align: left;
+    max-width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.routes-explorer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.route-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 16px;
+    border: 1px solid #eef2f7;
+    border-radius: 18px;
+    background: #f8fafc;
+}
+
+.route-card code {
+    display: inline-block;
+    margin-bottom: 9px;
+    color: #2563eb;
+    background: #eff6ff;
+    padding: 5px 9px;
+    border-radius: 9px;
+    direction: ltr;
+}
+
+.route-card h4 {
+    margin: 0 0 6px;
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.route-card p {
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.lazy-badge {
+    height: fit-content;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.lazy-badge.component {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.lazy-badge.children {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.build-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.build-card {
+    padding: 16px;
+    border: 1px solid #eef2f7;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #f8fafc, #ffffff);
+}
+
+.build-card strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #0f172a;
+    font-weight: 900;
+}
+
+.build-card span {
+    color: #64748b;
+    font-size: 12px;
+    direction: ltr;
+    text-align: left;
+    display: block;
+}
+
+.file-item,
+.service-card,
+.tool-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px;
+    border-radius: 16px;
+    background: #f8fafc;
+    border: 1px solid #eef2f7;
+}
+
+.file-item i,
+.service-card i,
+.tool-card i {
+    color: #2563eb;
+    font-size: 24px;
+}
+
+.file-item code {
+    display: block;
+    color: #2563eb;
+    direction: ltr;
+    text-align: left;
+    margin-bottom: 4px;
+}
+
+.file-item span {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.dependency-chip {
+    padding: 11px;
+    border-radius: 15px;
+    background: #f8fafc;
+    border: 1px solid #eef2f7;
+}
+
+.dependency-chip strong {
+    display: block;
+    color: #0f172a;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.dependency-chip span {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.notes-section ul {
+    margin: 0;
+    padding-right: 20px;
+}
+
+.notes-section li {
+    margin-bottom: 11px;
+    color: #475569;
+    font-size: 13px;
+}
+
+.dev-tools {
+    display: flex;
+    flex-direction: column;
+}
+
+.tool-card {
+    text-decoration: none;
+    margin-bottom: 12px;
+}
+
+.tool-card:hover {
+    background: #eff6ff;
+}
+
+.tool-card strong {
+    display: block;
+    color: #0f172a;
+}
+
+.tool-card span {
+    color: #64748b;
+    font-size: 12px;
+}
+
+@media (max-width: 1200px) {
+    .developer-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .architecture-grid,
+    .routes-explorer,
+    .metric-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .developer-hero {
+        padding: 24px;
+    }
+
+    .developer-hero h1 {
+        font-size: 26px;
+    }
+
+    .metric-grid,
+    .architecture-grid,
+    .routes-explorer,
+    .build-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .technical-item,
+    .config-line {
+        flex-direction: column;
+    }
+
+    .technical-item code,
+    .config-line code {
+        max-width: 100%;
+    }
+}

@@ -52,7 +52,7 @@
     </div>
 
     <!-- Loader -->
-    @if (loading) {
+    @if (loading()) {
     <div class="text-center my-4">
       <span class="loader"></span>
     </div>
@@ -61,8 +61,10 @@
     <!-- Grid Section -->
     <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
 
-      <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records_report_customer" [gridOptions]="gridOptions"
-        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()" class="w-100 h-100">
+      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+        [columnDefs]="column_name_1" [rowData]="records_report_customer()" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+        [class]="themeClass + ' w-100 h-100'">
       </ag-grid-angular>
 
     </div>
@@ -72,13 +74,12 @@
 
 
 
-<!-- ---------------------- MODAL : BY DATE ---------------------- -->
-<div class="modal fade" id="customerreportbydate" tabindex="-1" aria-labelledby="customerreportbydateLabel"
-  aria-hidden="true">
+<div class="modal fade" #customerreportbydate tabindex="-1" aria-hidden="true">
+
   <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content" style="background-color: #d1dce7;">
-      <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="customerreportbydateLabel">{{ Customer_temp }} به تفکیک تاریخ</h5>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class=" modal-title" id="customerreportbydateLabel">{{ Customer_temp() }} به تفکیک تاریخ</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
           (click)="customerreportbydate_dialog_close()"></button>
       </div>
@@ -87,10 +88,11 @@
 
 
 
-        <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
-          <ag-grid-angular [columnDefs]="columnDefs2" [rowData]="records_report_customer_bydate"
-            [gridOptions]="gridOptions" (gridReady)="onGridReady($event, 2)"
-            (firstDataRendered)="gridApi2?.sizeColumnsToFit()" class="w-100 h-100">
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="columnDefs2" [rowData]="records_report_customer_bydate()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()"
+            [class]="themeClass + ' w-100 h-100'">
           </ag-grid-angular>
         </div>
 
@@ -104,17 +106,15 @@
   </div>
 </div>
 
-
-<div class="modal fade" id="customerreportbyrow" tabindex="-1" aria-labelledby="customerreportbyrowLabel"
-  aria-hidden="true">
+<div class="modal fade" #customerreportbyrow tabindex="-1" aria-hidden="true">
 
   <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content" style="background-color: #d1dce7;">
+    <div class="modal-content">
 
       <!-- Header -->
-      <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="customerreportbyrowLabel">
-          {{ Customer_temp }} به تفکیک خدمات
+      <div class="modal-header">
+        <h5 class=" modal-title" id="customerreportbyrowLabel">
+          {{ Customer_temp() }} به تفکیک خدمات
         </h5>
 
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
@@ -126,10 +126,11 @@
       <div class="modal-body">
 
 
-        <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
-          <ag-grid-angular [columnDefs]="columnDefs3" [rowData]="records_report_customer_byrow"
-            [gridOptions]="gridOptions" (gridReady)="onGridReady($event, 3)"
-            (firstDataRendered)="gridApi3?.sizeColumnsToFit()" class="w-100 h-100">
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="columnDefs3" [rowData]="records_report_customer_byrow()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 3)" (firstDataRendered)="gridApi3?.sizeColumnsToFit()"
+            [class]="themeClass + ' w-100 h-100'">
           </ag-grid-angular>
         </div>
 

@@ -11,7 +11,7 @@
 @if (loading()) {
 <div class="d-flex justify-content-center align-items-center text-muted" style="height: 500px;">
   <div class="text-center">
-    <i class="fas fa-hourglass-half fa-spin fa-2x mb-3 text-primary"></i>
+    <i class="fas fa-spinner fa-spin" style="font-size: 18px;color: #0d47a1;"> </i>
     <div>در حال بارگذاری اطلاعات حضور...</div>
   </div>
 </div>
@@ -19,11 +19,14 @@
 <!-- =============================================================== -->
 <!--   گرید حضور کارشناسان -->
 <!-- =============================================================== -->
-} @else {
-<div class="ag-container" style="height: 600px; border-radius: 8px; overflow: hidden;">
 
-  <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records()" (gridReady)="onGridReady($event, 1)"
-    [gridOptions]="gridOptions" class="w-100 h-100" (firstDataRendered)="gridApi1?.sizeColumnsToFit()">
+} @else {
+<div class="ag-container rounded-3 border shadow-sm overflow-hidden"
+  style="height: 500px; border-radius: 4px; overflow: hidden;">
+
+  <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+    [columnDefs]="column_name_1" [rowData]="records()" (gridReady)="onGridReady($event, 1)" [gridOptions]="gridOptions"
+    [class]="themeClass + ' w-100 h-100'" (firstDataRendered)="gridApi1?.sizeColumnsToFit()">
   </ag-grid-angular>
 </div>
 }

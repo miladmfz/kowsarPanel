@@ -9,8 +9,10 @@
    =============================================================== */
 
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
+import { PermissionService } from 'src/app/app-shell/framework-services/storage/PermissionService';
+import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
 
 @Component({
   selector: 'cell-action-attendance-panel',
@@ -42,13 +44,15 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 export class CellActionAttendancePanel implements ICellRendererAngularComp {
   private params: any;
   private data: any;
+  protected readonly session = inject(SessionStorageService);
+  protected readonly permissionService = inject(PermissionService);
 
-  brokerRef: string = '';
-  attendanceCentralRef: string = '';
-  centralRef: string = '';
+
+  attendanceCentralRef = signal('')
+  CentralRef = signal('')
 
   /** وضعیت دکمه تاریخچه */
-  showHistoryButton: boolean = false;
+  showHistoryButton = signal(false)
 
   // ===============================================================
   //    متدهای AgGrid
@@ -57,18 +61,15 @@ export class CellActionAttendancePanel implements ICellRendererAngularComp {
     this.params = params;
     this.data = params.data ?? {};
 
-    this.centralRef = sessionStorage.getItem('CentralRef') ?? '';
-    this.brokerRef =
-      sessionStorage.getItem('PhAddress3') === '100'
-        ? ''
-        : sessionStorage.getItem('BrokerCode') ?? '';
+    this.CentralRef.set(this.session.centralRef)
 
-    this.attendanceCentralRef = this.data?.CentralRef ?? '';
+
+    this.attendanceCentralRef.set(this.data?.CentralRef ?? '')
 
     // 🎯 تعیین نمایش یا عدم نمایش دکمه تاریخچه
-    this.showHistoryButton =
-      !this.brokerRef ||
-      (this.brokerRef && this.centralRef === this.attendanceCentralRef);
+    this.showHistoryButton.set(
+      this.permissionService.canManageRole ||
+      (this.CentralRef === this.attendanceCentralRef))
   }
 
   refresh(): boolean {

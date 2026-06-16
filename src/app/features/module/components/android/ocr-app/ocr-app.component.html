@@ -6,7 +6,7 @@
 
       @for (tab of tabs; track tab.id) {
       <li class="nav-item">
-        <a class="nav-link" [class.active]="activeTab === tab.id" (click)="activeTab = tab.id">
+        <a class="nav-link" [class.active]="activeTab() === tab.id" (click)="activeTab.set(tab.id)">
           {{ tab.title }}
         </a>
       </li>
@@ -19,7 +19,7 @@
   <!-- Tabs Content -->
   <div class="card-body">
 
-    @switch (activeTab) {
+    @switch (activeTab()) {
 
     @case ('panel') {
     <app-ocr-app-panel></app-ocr-app-panel>

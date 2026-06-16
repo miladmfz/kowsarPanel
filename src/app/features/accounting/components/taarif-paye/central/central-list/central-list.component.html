@@ -1,0 +1,52 @@
+<div class="card shadow-sm border-0">
+
+  <div class="card-body">
+
+    <form [formGroup]="EditForm">
+
+      <!-- Header / Toolbar -->
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+
+        <div>
+          <h4 class="card-title mb-1">
+            {{ title() }}
+          </h4>
+        </div>
+
+        <button type="button" class="btn btn-success" [routerLink]="['/accounting/taarif-paye/central-edit', 0]">
+
+          <i class="fas fa-plus me-1"></i>
+          جدید
+
+        </button>
+
+      </div>
+
+      <!-- Search -->
+      <div class="row g-2 align-items-center mb-3">
+
+        <div class="col-lg-4 col-md-6 col-12">
+
+          <input type="text" class="form-control rounded-pill" placeholder="جستجو..." formControlName="SearchTarget"
+            (input)="onSearchChange()" />
+
+        </div>
+
+      </div>
+
+    </form>
+
+    <!-- Grid -->
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+
+      <ag-grid-angular [class]="themeClass + ' w-100 h-100'" [gridOptions]="gridOptions" [columnDefs]="column_name_1"
+        [rowData]="records()" (gridReady)="onGridReady($event, 1)" (firstDataRendered)="onFirstDataRendered($event)"
+        (stateChanged)="onGridStateChanged()" (filterChanged)="onGridStateChanged()"
+        (sortChanged)="onGridStateChanged()" (columnMoved)="onGridStateChanged()">
+      </ag-grid-angular>
+
+    </div>
+
+  </div>
+
+</div>

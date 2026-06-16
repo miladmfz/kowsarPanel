@@ -2,17 +2,25 @@
   <div class="card-body">
 
     <form [formGroup]="EditForm_SearchTarget">
-      <div class="row g-2 mb-3">
+      <div class="form-group row g-2 mb-3">
         <div class="col-md-6">
           <input type="text" class="form-control rounded-pill" placeholder="جستجو (نام/کد/مدیر/تلفن)"
             formControlName="SearchTarget" (input)="onSearchChange()" />
         </div>
 
-        <div class="col-md-6 text-start">
+
+        <div class="form-group col-md-2">
+          <select formControlName="Active" id="Active" class="form-control " (change)="onActiveChange()">
+            @for (item of Active_Lookup; track item) {
+            <option [value]="item.id">{{item.name}}</option>
+            }
+          </select>
+        </div>
+        <div class="form-group col-md-4 text-start">
           <button class="btn btn-success me-1" (click)="getList()">
             <i class="fas fa-sync"></i> بازخوانی
           </button>
-          @if(PhAddress3.length>0){
+          @if(permissionService.canManageRole){
           <button class="btn btn-success me-1" (click)="NavigateToEdit(0)">
             مشتری جدید
           </button>
@@ -24,9 +32,11 @@
 
 
     <!-- گرید اصلی -->
-    <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
-      <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" [gridOptions]="gridOptions"
-        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()" class="w-100 h-100">
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+        [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+        [class]="themeClass + ' w-100 h-100'">
       </ag-grid-angular>
     </div>
   </div>
@@ -36,7 +46,8 @@
 
 
 <!-- نمایش مشخصات -->
-<div id="customerproperty" class="modal fade" tabindex="-1">
+
+<div class="modal fade" #customerproperty tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
@@ -115,14 +126,14 @@
   </div>
 </div>
 
-<div id="editcustomerproperty" class="modal fade" tabindex="-1" aria-hidden="true">
 
+<div class="modal fade" #editcustomerproperty tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="background-color: #d1dce7;">
+    <div class="modal-content">
 
       <!-- Header -->
-      <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title">جزئیات</h5>
+      <div class="modal-header">
+        <h5 class=" modal-title">جزئیات</h5>
         <button type="button" class="btn-close" (click)="Edit_property_dialog_close()"></button>
       </div>
 
@@ -182,7 +193,8 @@
 </div>
 
 <!-- فهرست سوابق/فاکتور -->
-<div id="customerfactor" class="modal fade" tabindex="-1">
+<div class="modal fade" #customerfactor tabindex="-1" aria-hidden="true">
+
   <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
@@ -190,25 +202,21 @@
         <button type="button" class="btn-close" (click)="CustomerFactor_dialog_close()"></button>
       </div>
       <div class="modal-body">
-        <div class="ag-container rounded-3 overflow-hidden" style="height: 380px;">
-          <ag-grid-angular [columnDefs]="columnDefs2" [rowData]="records_factor" [gridOptions]="gridOptions"
-            (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()" class="w-100 h-100">
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 380px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="columnDefs2" [rowData]="records_factor()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()"
+            [class]="themeClass + ' w-100 h-100'">
           </ag-grid-angular>
         </div>
 
-        <div class="text-start mt-2">
-          <button class="btn btn-outline-primary btn-sm"
-            (click)="records_factor?.[0]?.FactorCode && GetFactorrows(records_factor[0].FactorCode)">
-            نمایش ردیف‌های فاکتور انتخابی
-          </button>
-        </div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Modal: ردیف‌های فاکتور -->
-<div id="customerfactorrow" class="modal fade" tabindex="-1" aria-hidden="true">
+<div class="modal fade" #customerfactorrow tabindex="-1" aria-hidden="true">
 
   <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
 
@@ -227,9 +235,9 @@
       <div class="modal-body">
 
         <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 350px;">
-          <ag-grid-angular class="w-100 h-100" [columnDefs]="columnDefs3" [rowData]="records_support_factorrows"
-            [gridOptions]="gridOptions" (gridReady)="onGridReady($event, 3)"
-            (firstDataRendered)="gridApi3?.sizeColumnsToFit()">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800" class="w-100
+          h-100" [columnDefs]="columnDefs3" [rowData]="records_support_factorrows()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 3)" (firstDataRendered)="gridApi3?.sizeColumnsToFit()">
           </ag-grid-angular>
         </div>
 

@@ -1,0 +1,114 @@
+<div class="card">
+  <div class="card-body">
+
+    <h4 class="card-title">{{ title() + " "+ ConfigFCaption() }}</h4>
+
+    <div class="row mb-2">
+      <div class="col-sm-12">
+
+        <a type="button" class="btn btn-success waves-effect waves-light m-1" (click)="AddNew()">
+          <span class="btn-label"><i class="fas fa-plus"></i></span>
+          جدید
+        </a>
+
+
+
+      </div>
+    </div>
+
+    <!-- لودر -->
+    @if (loading()) {
+    <div class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    }
+
+    <!-- گرید -->
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+        [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+        [class]="themeClass + ' w-100 h-100'">
+      </ag-grid-angular>
+    </div>
+
+  </div>
+</div>
+
+
+
+<div class="modal fade" #modulevalue tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class=" modal-title" id="modulevalueLabel">آیتم جدید برای {{ConfigFCaption()}} </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="modulevalue_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="EditForm_ModuleConfig" id="submitForm">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body row">
+
+
+
+                  <div class="form-group col-md-3">
+                    <label for="ConfigName" class="col-form-label">ConfigName</label>
+                    <input type="text" class="form-control" id="ConfigName" formControlName="ConfigName" maxlength="100"
+                      autocomplete="off" readonly />
+                  </div>
+
+
+
+
+                  <div class="form-group col-md-3">
+                    <label for="ConfigFCaption" class="col-form-label">ConfigFCaption</label>
+                    <input type="text" class="form-control" id="ConfigFCaption" formControlName="ConfigFCaption"
+                      maxlength="100" autocomplete="off" readonly />
+                  </div>
+
+
+                  <div class="form-group col-md-12 row">
+                    <div class="form-group col-md-4">
+                      <label for="ValueName" class="col-form-label">ValueName</label>
+                      <input type="text" class="form-control" id="ValueName" formControlName="ValueName" maxlength="100"
+                        autocomplete="off" />
+                    </div>
+
+
+
+                    <div class="form-group col-md-4">
+                      <label for="ValueFCaption" class="col-form-label">ValueFCaption</label>
+                      <input type="text" class="form-control" id="ValueFCaption" formControlName="ValueFCaption"
+                        maxlength="100" autocomplete="off" />
+                    </div>
+
+
+
+                    <div class="form-group col-md-4">
+                      <label for="Sort" class="col-form-label">Sort</label>
+                      <input type="number" class="form-control" id="Sort" formControlName="Sort" maxlength="100"
+                        autocomplete="off" />
+                    </div>
+                  </div>
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="modulevalue_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="modulevalue_Insert()">بروزرسانی</button>
+      </div>
+    </div>
+  </div>
+</div>

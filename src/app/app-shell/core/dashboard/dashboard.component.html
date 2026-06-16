@@ -1,61 +1,45 @@
-<!-- =============================================================== -->
-<!-- 📘 داشبورد اصلی سیستم -->
-<!-- توضیحات کلی:
-     این قالب نمای کلی داشبورد را نمایش می‌دهد که بر اساس نوع کاربر
-     (کارشناس، ادمین یا مشتری) محتوای متفاوتی را نشان می‌دهد.
-     ساختار شامل پس‌زمینه گرافیکی، بخش محتوای اسکرول‌پذیر و نمایش
-     ماژول‌های مختلف مانند حضور، گزارش کوثر و سایر پنل‌ها است.
--->
-<!-- =============================================================== -->
+<div class="card dashboard-card">
 
-<div class="card dashboard-card"
-  style="background: url('./assets/images/Dashboard.jpg') no-repeat center center; background-size: cover; height: 100vh;">
+  <div class="card-body">
 
-  <div class="card-body d-flex flex-column h-100">
+    <div class="dashboard-scroll-area">
 
-    <!--    محتوای اصلی داشبورد -->
-    <div class="flex-grow-1 overflow-auto p-3">
+      @if (LoginType() === 'KOWSAR') {
 
+      <div class="row g-3 align-items-stretch dashboard-section">
 
-      <div class="row g-3 align-items-stretch">
-        <div class="col-8">
-          @if (JobPersonRef.length > 0) {
-          <app-leave-grid></app-leave-grid>
-          }
+        <div class="col-lg-8 col-12">
+          <app-attendance-panel></app-attendance-panel>
         </div>
 
-        <div class="col-4">
+        <div class="col-lg-4 col-12">
           <app-kowsar-calendar></app-kowsar-calendar>
         </div>
-      </div>
-
-      <!-- بخش‌های پایین صفحه -->
-      <div class="mt-2">
-        <app-workitem></app-workitem>
 
       </div>
 
+      <div class="dashboard-section">
+        <app-leave-grid></app-leave-grid>
+      </div>
 
+      @if (permissionService.canManageRole) {
+      <div class="dashboard-section">
+        <app-autletter-chart [CentralRef]="'0'"></app-autletter-chart>
+      </div>
+      }
 
-
-      @if (JobPersonRef.length > 0) {
-      <app-attendance-panel></app-attendance-panel>
-      <app-kowsar-report></app-kowsar-report>
+      <div class="dashboard-section">
+        <app-kowsar-report></app-kowsar-report>
+      </div>
 
       }
 
-
-
-      <!--   نمایش پنل مخصوص مشتری -->
-      @if (userType === 'customer') {
-      <!-- <app-customer-panel></app-customer-panel> -->
+      @if (LoginType() === 'CUSTOMER') {
       }
 
-      <!--   اگر کاربر شناسایی نشد -->
-      @if (JobPersonRef.length === 0) {
-
-      }
 
     </div>
+
   </div>
+
 </div>

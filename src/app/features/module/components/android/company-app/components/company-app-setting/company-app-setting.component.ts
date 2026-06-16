@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { CompanyWebApiService } from 'src/app/features/module/services/CompanyWebApi.service';
 
 @Component({
@@ -28,14 +27,14 @@ export class CompanyAppSettingComponent implements OnInit {
 
 
 
-  items: any = [];
-  Printers: any = [];
-  BasketColumns: any = [];
-  AppBasketColumn_Status: string = '';
-  Apptype: string = '0';
-  selected_des: string = "";
-  selected_value: string = "";
-  selected_Key: string = "";
+  items = signal<any[]>([])
+  Printers = signal<any[]>([])
+  BasketColumns = signal<any[]>([])
+  AppBasketColumn_Status = signal('')
+  Apptype = signal('0')
+  selected_des = signal('')
+  selected_value = signal('')
+  selected_Key = signal('')
 
 
   EditForm_printer = new FormGroup({
@@ -73,12 +72,12 @@ export class CompanyAppSettingComponent implements OnInit {
   Get_Base_data() {
 
     this.repo.Web_GetDbsetupObject("Company").subscribe(e => {
-      this.items = e;
+      this.items.set(e)
 
     });
 
-    this.repo.GetAppPrinter(this.Apptype).subscribe(e => {
-      this.Printers = e;
+    this.repo.GetAppPrinter(this.Apptype()).subscribe(e => {
+      this.Printers.set(e)
 
     });
     this.GetBasketColumnList();
@@ -90,8 +89,8 @@ export class CompanyAppSettingComponent implements OnInit {
   CreateAppBasketColumn() {
 
 
-    this.repo.CreateBasketColumn(this.Apptype).subscribe(e => {
-      this.AppBasketColumn_Status = "AppBasketColumn created";
+    this.repo.CreateBasketColumn(this.Apptype()).subscribe(e => {
+      this.AppBasketColumn_Status.set("AppBasketColumn created")
     });
 
   }
@@ -139,7 +138,7 @@ export class CompanyAppSettingComponent implements OnInit {
 
   UpdateDbSetup() {
 
-    this.repo.UpdateDbSetup(this.selected_value, this.selected_Key).subscribe(e => {
+    this.repo.UpdateDbSetup(this.selected_value(), this.selected_Key()).subscribe(e => {
       this.sharedService.triggerActionAll('refresh');
     });
 
@@ -150,8 +149,8 @@ export class CompanyAppSettingComponent implements OnInit {
   GetBasketColumnList() {
 
 
-    this.repo.GetBasketColumnList(this.Apptype).subscribe(e => {
-      this.BasketColumns = e;
+    this.repo.GetBasketColumnList(this.Apptype()).subscribe(e => {
+      this.BasketColumns.set(e)
 
 
     });

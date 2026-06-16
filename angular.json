@@ -1,16 +1,9 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "newProjectRoot": "projects",
   "projects": {
     "KowsarPanel": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss",
-          "changeDetection": "OnPush"
-        }
-      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -28,61 +21,36 @@
                 "input": "src/assets",
                 "output": "assets"
               },
-              "src/favicon.ico",
-              "src/.htaccess"
+              "src/favicon.ico"
             ],
             "styles": [
               "src/assets/css/modern/bootstrap-rtl.min.css",
               "src/assets/css/modern/app-rtl.min.css",
               "src/assets/css/icons.min.css",
-              "src/assets/libs/select2/css/select2.min.css",
               "src/assets/libs/sweetalert2/sweetalert2.min.css",
-              "src/assets/libs/jquery-toast-plugin/jquery.toast.min.css",
-              "node_modules/leaflet/dist/leaflet.css",
-              "node_modules/leaflet.markercluster/dist/MarkerCluster.css",
-              "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
               "src/assets/libs/simplebar/simplebar.min.css",
-              "src/assets/css/icons.min.css",
               "src/styles.scss",
               "src/assets/css/theme-fix.css"
             ],
             "scripts": [
               "src/assets/libs/jquery/jquery.min.js",
               "src/assets/libs/bootstrap/js/bootstrap.bundle.min.js",
-              "src/assets/libs/select2/js/select2.min.js",
               "src/assets/libs/sweetalert2/sweetalert2.min.js",
-              "src/assets/libs/jquery-toast-plugin/jquery.toast.min.js",
-              "src/assets/libs/jstree/jstree.min.js",
-              "src/assets/libs/apexcharts/apexcharts.min.js",
-              "src/assets/libs/simplebar/simplebar.min.js",
-              "src/assets/js/pages/toastr.init.js"
+              "src/assets/libs/simplebar/simplebar.min.js"
             ],
-            "outputPath": "dist/KowsarPanel"
+            "outputPath": "dist/build"
           },
           "configurations": {
             "production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
-                }
-              ],
-              "outputHashing": "all",
               "optimization": true,
-              "extractLicenses": true,
+              "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
+              "extractLicenses": true,
               "aot": true
             },
             "development": {
               "optimization": false,
-              "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
             }
@@ -100,51 +68,6 @@
             }
           },
           "defaultConfiguration": "development"
-        },
-        "extract-i18n": {
-          "builder": "@angular/build:extract-i18n"
-        },
-        "test": {
-          "builder": "@angular/build:karma",
-          "options": {
-            "browser": "src/main.ts",
-            "tsConfig": "tsconfig.app.json",
-            "polyfills": [],
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "src/assets",
-                "output": "assets"
-              },
-              "src/favicon.ico"
-            ],
-            "styles": [
-              "src/assets/css/modern/bootstrap-rtl.min.css",
-              "src/assets/css/modern/app-rtl.min.css",
-              "src/assets/css/icons.min.css",
-              "src/assets/libs/select2/css/select2.min.css",
-              "src/assets/libs/sweetalert2/sweetalert2.min.css",
-              "src/assets/libs/jquery-toast-plugin/jquery.toast.min.css",
-              "node_modules/leaflet/dist/leaflet.css",
-              "node_modules/leaflet.markercluster/dist/MarkerCluster.css",
-              "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
-              "src/assets/libs/simplebar/simplebar.min.css",
-              "src/assets/css/icons.min.css",
-              "src/styles.scss",
-              "src/assets/css/theme-fix.css"
-            ],
-            "scripts": [
-              "src/assets/libs/jquery/jquery.min.js",
-              "src/assets/libs/bootstrap/js/bootstrap.bundle.min.js",
-              "src/assets/libs/select2/js/select2.min.js",
-              "src/assets/libs/sweetalert2/sweetalert2.min.js",
-              "src/assets/libs/jquery-toast-plugin/jquery.toast.min.js",
-              "src/assets/libs/jstree/jstree.min.js",
-              "src/assets/libs/apexcharts/apexcharts.min.js",
-              "src/assets/libs/simplebar/simplebar.min.js",
-              "src/assets/js/pages/toastr.init.js"
-            ]
-          }
         }
       }
     }

@@ -1,0 +1,72 @@
+<div
+  class="kiosk-page position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center overflow-hidden">
+
+  <div class="kiosk-glow kiosk-glow-top"></div>
+
+  <div class="kiosk-glow kiosk-glow-bottom"></div>
+
+  <div class="text-center w-100 kiosk-content">
+
+    <div class="mb-5">
+
+      <div
+        class="kiosk-icon-box d-inline-flex align-items-center justify-content-center rounded-circle position-relative">
+
+        <div class="kiosk-icon-ring position-absolute rounded-circle"></div>
+
+        <i class="mdi mdi-food-fork-drink text-warning kiosk-main-icon"></i>
+
+      </div>
+
+    </div>
+
+    <h1 class="text-white fw-bold mb-4 kiosk-title">
+      به منوی سفارش خوش آمدید
+    </h1>
+
+    <div class="mx-auto mb-5 kiosk-subtitle-box">
+
+      <p class="text-light mb-0 kiosk-subtitle">
+        لطفاً سفارش خود را انتخاب کنید
+      </p>
+
+    </div>
+
+    <div class="kiosk-button-box">
+
+      <button type="button" class="kiosk-start-button position-relative overflow-hidden border-0"
+        (pointermove)="onStartButtonPointerMove($event)" (pointerleave)="onStartButtonPointerLeave()"
+        (click)="openDialog_fa()">
+
+        <span class="hover-glow" [style.left.px]="glowX" [style.top.px]="glowY">
+        </span>
+
+        @for (p of particles; track p.id) {
+
+        <span class="hover-particle" [style.left.px]="p.x" [style.top.px]="p.y" [style.width.px]="p.size"
+          [style.height.px]="p.size" [style.animation-delay.s]="p.delay">
+        </span>
+
+        }
+
+        <span class="btn-shine"></span>
+
+        <span class="position-relative d-flex align-items-center justify-content-center kiosk-button-content">
+
+          <span class="kiosk-icon-soft-pulse position-absolute rounded-circle"></span>
+
+          <i class="mdi mdi-touch-app me-4 position-relative kiosk-button-icon"></i>
+
+          <span class="position-relative kiosk-button-text">
+            شروع سفارش
+          </span>
+
+        </span>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

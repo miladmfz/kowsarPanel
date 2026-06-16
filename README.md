@@ -1,30 +1,224 @@
-# KitsPanel
+# KowsarPanel
 
+پنل تحت وب کوثر برای مدیریت ماژول‌های حسابداری، اتوماسیون، اپلیکیشن‌های اندرویدی، ابزارهای داخلی شرکت و منوی آنلاین.
 
-# News Project
+---
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.0.
+## Tech Stack
 
-## Development server
+- Angular 20
+- TypeScript 5.8
+- Standalone Components
+- Lazy Loading Routes
+- Bootstrap + Minton RTL
+- AG Grid Enterprise
+- D3 / D3 Org Chart
+- Socket.IO
+- Jalali Calendar Libraries
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+---
 
-## Code scaffolding
+## Run Project
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run development server:
+
+```bash
+npm start
+```
+
+or
+
+```bash
+ng serve
+```
+
+Default URL:
+
+```txt
+http://localhost:4200
+```
+
+---
+
+## Architecture
+
+```txt
+src/
+├── app/
+│   ├── app-shell/
+│   ├── auth-kowsar/
+│   └── features/
+├── assets/
+├── environment/
+└── main.ts
+```
+
+### Core Layers
+
+- App Shell
+- Framework Components
+- Framework Services
+- Features
+- Runtime Config
+
+---
+
+## Main Modules
+
+### Accounting
+Accounting, Sales, Purchase, Treasury, Reports, Payroll
+
+### Automation
+Letters, Leave Requests, Employees, Payroll
+
+### Module
+Broker App, OCR App, Order App
+
+### Internal
+Internal Tools, Reports, Websites, WorkItems
+
+### Menu Online
+Online Menu, Basket, Orders, Customer Interface
+
+### Authentication
+Login, Register, Change Password
+
+---
+
+## Routing
+
+Main routing file:
+
+```txt
+src/app/app.routes.ts
+```
+
+Main routes:
+
+```txt
+/auth
+/menu
+/dashboard
+/accounting
+/automation
+/module
+/internal
+```
+
+---
+
+## Runtime Configuration
+
+Configuration is loaded from:
+
+```txt
+src/assets/config.json
+```
+
+Environment profiles:
+
+```txt
+src/assets/configs/
+```
+
+Important settings:
+
+- apiUrl
+- MenuapiUrl
+- appVersion
+- baseHref
+- menuConfig
+- menuTheme
+
+---
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Build application:
 
-## Running unit tests
+```bash
+npm run build
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Available profiles:
 
-## Running end-to-end tests
+```bash
+npm run build:local
+npm run build:itmali
+npm run build:itmaliIp
+npm run build:qoqnooscoffee
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Build all profiles:
 
-## Further help
+```bash
+npm run all
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+---
+
+## Developer Tools
+
+After running the project:
+
+### Project Structure
+
+```txt
+/showtree
+```
+
+Interactive tree view of files and folders.
+
+### System Documentation
+
+```txt
+/system-info
+```
+
+Technical documentation, architecture, routes, services, configuration and development information.
+
+---
+
+## Important Files
+
+```txt
+src/main.ts
+src/app/app.routes.ts
+src/assets/config.json
+build.js
+build.profiles.json
+build-holidays.mjs
+```
+
+---
+
+## Development Notes
+
+- Project uses Standalone Architecture.
+- Routing is managed through `app.routes.ts`.
+- Most pages are Lazy Loaded.
+- Runtime configuration is loaded from `config.json`.
+- Prefer existing Minton components and styles.
+- Avoid unnecessary third-party dependencies.
+- New features should follow:
+
+```txt
+features/
+└── feature-name/
+    ├── components/
+    ├── services/
+    ├── models/
+    └── feature.routes.ts
+```
+
+---
+
+## Company
+
+KowsarPanel is developed and maintained as part of the Kowsar Software Ecosystem.

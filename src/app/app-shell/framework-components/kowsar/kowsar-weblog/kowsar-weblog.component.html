@@ -1,12 +1,12 @@
 <div class="card">
   <div class="card-body">
-    <h4 class="card-title">{{ title }}</h4>
+    <h4 class="card-title">{{ title() }}</h4>
     <div class="row mb-2">
       <div class="col-sm-12">
         <div class="row mb-2">
           <div class="col-sm-12">
             <a type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
-              <span class="btn-label"><i class="fas fa-recycle"></i></span>بازخوانی
+              <span class="btn-label"><i class="fas fa-sync me-1"></i></span>بازخوانی
             </a>
 
           </div>
@@ -14,9 +14,11 @@
       </div>
     </div>
 
-    <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
-      <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" [gridOptions]="gridOptions"
-        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()" class="w-100 h-100">
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+        [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+        [class]="themeClass + ' w-100 h-100'">
       </ag-grid-angular>
     </div>
   </div>

@@ -35,8 +35,9 @@ import { SharedService } from 'src/app/app-shell/framework-services/shared.servi
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { ThemeService } from 'src/app/app-shell/framework-services/ui/theme.service';
 import { AppConfigService } from 'src/app/app-config.service';
-import { DashboardWebApiService } from '../../services/DashboardWebApi.service';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
+import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
+import { AutletterWebApiService } from 'src/app/features/automation/services/AutletterWebApi.service';
+import { KowsarBaseWebApi } from 'src/app/app-shell/framework-services/base/KowsarBaseWebApi.service';
 
 @Component({
     selector: 'app-attendance-panel',
@@ -63,7 +64,7 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
     // ===============================================================
     isDarkMode = false;
     IsCustomerBuild = true;
-    LetterCode = '';
+    LetterCode = signal('')
     ToDayDate = new Date().toLocaleDateString('fa-IR');
 
     // ===============================================================
@@ -71,21 +72,21 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
     // ===============================================================
     Attendance_history_Show_Modal = signal(false);
     Attendance_history_selected = signal<any | null>(null);
-    Attendance_history_records = signal<any[]>([]);
+    Attendance_history_records = signal<any[]>([])
 
     // ===============================================================
     // 📬 تیکت‌ها
     // ===============================================================
     showLetterModal = signal(false);
     selectedPerson = signal<any | null>(null);
-    Letter_records = signal<any[]>([]);
+    Letter_records = signal<any[]>([])
 
     // ===============================================================
     //   مشتریان
     // ===============================================================
     Customer_Show_Modal = signal(false);
     Customer_selected = signal<any | null>(null);
-    Customer_records = signal<any[]>([]);
+    Customer_records = signal<any[]>([])
 
     // ===============================================================
     // 🔌 اشتراک‌ها
@@ -95,12 +96,15 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
 
 
 
-    private readonly repo = inject(DashboardWebApiService);
+    private readonly aut_repo = inject(AutletterWebApiService);
+    private readonly base_repo = inject(KowsarBaseWebApi);
+
+
     private readonly sharedService = inject(SharedService);
     private readonly notificationService = inject(NotificationService);
     private readonly themeService = inject(ThemeService);
     private readonly config = inject(AppConfigService);
-
+    protected readonly session = inject(SessionStorageService);
     constructor() { }
 
     // ===============================================================
@@ -118,8 +122,8 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
         const apiUrl_temp = this.config.apiUrl;
 
         this.IsCustomerBuild = !(
-            apiUrl_temp === 'http://192.168.1.25:60006/api/' ||
-            apiUrl_temp === 'http://itmali.ir/webapi/' ||
+            apiUrl_temp === 'http://192.168.1.27:60006/api/' ||
+            apiUrl_temp === 'https://itmali.ir/webapi/' ||
             apiUrl_temp === 'http://5.160.152.173:60005/api_book/' ||
             apiUrl_temp === 'http://5.160.152.173:60005/api/'
         );
@@ -140,7 +144,7 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
     refreshData(): void {
         this.attendanceGrid?.refresh();
         // this.leaveGrid?.refresh();
-        this.notificationService.info('  داده‌ها در حال بروزرسانی هستند...');
+        this.notificationService.info('بروز شد.');
     }
 
     // ===============================================================
@@ -152,7 +156,7 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
         this.Attendance_history_records.set([]);
 
 
-        this.repo.AttendanceHistory(item?.CentralRef).subscribe({
+        this.base_repo.AttendanceHistory(item?.CentralRef).subscribe({
             next: (data: any) => {
 
                 this.Attendance_history_records.set(data?.Attendances ?? []);
@@ -185,18 +189,19 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
 
         const filter = {
             SearchTarget: '',
-            PersonInfoCode: item.CentralRef,
+            CentralRef: item.CentralRef,
             Flag: '1',
         };
 
         this.notificationService.info(`📨 در حال دریافت تیکت‌های ${item.FullName}...`);
 
 
-        this.repo.GetAutLetterListByPerson(filter).subscribe({
+        this.aut_repo.GetAutLetterListByCentral(filter).subscribe({
             next: (data: any) => {
 
-                this.Letter_records.set(data.AutLetters ?? []);
+                this.Letter_records.set(data?.AutLetters ?? []);
                 this.notificationService.success('  لیست تیکت‌ها با موفقیت بارگذاری شد.');
+                console.log(this.Letter_records())
             },
             error: () => {
 
@@ -229,7 +234,6 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
     // 📤 ایجاد تیکت جدید (Header)
     // ===============================================================
     private SendLetterHeader(formData: any): void {
-        console.log(formData);
 
         const ownerCentral =
             formData?.CentralRef?.toString().trim() ||
@@ -247,15 +251,16 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
             Description: formData.DescriptionText,
             LetterState: '',
             LetterPriority: 'عادی',
-            CentralRef: sessionStorage.getItem('CentralRef'),
+            CentralRef: this.session.centralRef,
             InOutFlag: '2',
-            CreatorCentral: sessionStorage.getItem('CentralRef'),
+            CreatorCentral: this.session.centralRef,
             OwnerCentral: ownerCentral,
-            OwnerPersonInfoRef: sessionStorage.getItem('PersonInfoRef'),
+            OwnerPersonInfoRef: this.session.personInfoRef,
+            IsPrivate: '0',
         };
 
 
-        this.repo.LetterInsert(payload).subscribe({
+        this.aut_repo.LetterInsert(payload).subscribe({
             next: (data: any) => {
 
                 const intValue = parseInt(data?.AutLetters[0]?.LetterCode ?? 0, 10);
@@ -285,12 +290,12 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
             Description: formData.DescriptionText,
             LetterState: '',
             LetterPriority: 'عادی',
-            CreatorCentral: sessionStorage.getItem('CentralRef'),
+            CreatorCentral: this.session.centralRef,
             ExecuterCentral: formData.ExecuterCentral ?? this.selectedPerson()?.CentralRef,
         };
 
 
-        this.repo.AutLetterRowInsert(payload).subscribe({
+        this.aut_repo.AutLetterRowInsert(payload).subscribe({
             next: (data: any) => {
 
                 const intValue = parseInt(data?.AutLetterRows[0]?.LetterRef ?? 0, 10);
@@ -304,7 +309,7 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
                             NumberPhone: formData.NumberPhone,
                         };
 
-                        this.repo.SendSmsAutLetter(smsPayload).subscribe();
+                        this.aut_repo.SendSmsAutLetter(smsPayload).subscribe();
                     }
 
                     this.showLetterModal.set(false);
@@ -327,15 +332,16 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
 
         const filter = {
             SearchTarget: '',
-            PersonInfoCode: person.CentralRef,
+            CentralRef: person.CentralRef,
             Flag: '1',
         };
 
 
-        this.repo.GetAutLetterListByPerson(filter).subscribe({
+        this.aut_repo.GetAutLetterListByCentral(filter).subscribe({
             next: (data: any) => {
 
-                this.Letter_records.set(data ?? [])
+                this.Letter_records.set(data?.AutLetters ?? []);
+
             },
         });
     }
@@ -360,15 +366,16 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
         const filter: any = {
             SearchTarget: query,
             BrokerRef: this.IsCustomerBuild
-                ? sessionStorage.getItem('BrokerCode')
+                ? this.session.getString('BrokerCode')
                 : "0",
+            Active: "4",
         };
 
 
 
 
 
-        this.repo.GetKowsarCustomer(filter).subscribe({
+        this.base_repo.GetKowsarCustomer(filter).subscribe({
             next: (data: any) => {
 
                 this.Customer_records.set(data?.Customers ?? []);

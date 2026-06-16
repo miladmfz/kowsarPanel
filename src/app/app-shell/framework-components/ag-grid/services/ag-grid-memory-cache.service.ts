@@ -5,7 +5,7 @@
  * داده‌ها به ازای هر childName ذخیره می‌شوند.
  */
 
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 
 @Injectable({ providedIn: 'root' })

@@ -1,0 +1,489 @@
+<div class="card">
+  <div class="card-body">
+
+    <form [formGroup]="EditForm_PersonInfo" id="submitForm">
+      <div class="row">
+
+        <div class="row form-group m-1 col-md-12">
+
+
+          <div class="form-group col-md-3">
+            <label for="PersonInfoCode">کد</label>
+            <input type="text" id="PersonInfoCode" class="form-control" formControlName="PersonInfoCode" readonly />
+          </div>
+
+
+          @if (isVisible('PersonInfoPrivateCode')) {
+          <div class="form-group col-md-3">
+            <label for="PersonInfoPrivateCode">کد اشتراک</label>
+            <input type="text" id="PersonInfoPrivateCode" class="form-control"
+              formControlName="PersonInfoPrivateCode" />
+          </div>
+          }
+
+
+          @if (isVisible('PhCompanyName')) {
+
+          <div class="form-group col-md-2"> </div>
+          <div class="form-group col-md-4">
+            <label for="PhCompanyName">موسسه</label>
+            <input type="text" id="PhCompanyName" class="form-control" formControlName="PhCompanyName" />
+          </div>
+          }
+
+
+
+        </div>
+
+        <div class="row form-group m-1 col-md-12">
+
+          @if (isVisible('PhFirstName')) {
+          <div class="form-group col-md-4">
+            <label for="PhFirstName">نام</label>
+            <input type="text" id="PhFirstName" class="form-control" formControlName="PhFirstName" />
+          </div>
+          }
+
+          @if (isVisible('PhLastName')) {
+          <div class="form-group col-md-4">
+            <label for="PhLastName">نام خانوادگی</label>
+            <input type="text" id="PhLastName" class="form-control" formControlName="PhLastName" />
+          </div>
+          }
+
+          @if (isVisible('PhGender')) {
+          <div class="form-group col-md-2"> </div>
+
+          <div class="form-group col-md-2">
+            <label for="PhGender">جنسیت</label>
+            <input type="text" id="PhGender" class="form-control" formControlName="PhGender" />
+          </div>
+          }
+
+
+
+        </div>
+
+        <div class="row form-group m-1 col-md-12">
+
+          @if (isVisible('PhMelliCode')) {
+          <div class="form-group col-md-3">
+            <label for="PhMelliCode">کد ملی</label>
+            <input type="text" id="PhMelliCode" class="form-control" formControlName="PhMelliCode" />
+          </div>
+          }
+
+          @if (isVisible('PhBirthDate')) {
+          <div class="form-group col-md-3">
+            <label for="PhBirthDate">تاریخ تولد</label>
+            <input type="text" id="PhBirthDate" class="form-control" formControlName="PhBirthDate" />
+          </div>
+          }
+
+          @if (isVisible('PhEmail')) {
+          <div class="form-group col-md-3">
+            <label for="PhEmail">ایمیل</label>
+            <input type="text" id="PhEmail" class="form-control" formControlName="PhEmail" />
+          </div>
+          }
+          @if (isVisible('PhPersonType')) {
+          <div class="form-group col-md-3">
+            <label for="PhPersonType">نوع شخص</label>
+            <input type="text" id="PhPersonType" class="form-control" formControlName="PhPersonType" />
+          </div>
+          }
+
+        </div>
+
+        <div class="row form-group m-1 col-md-12">
+
+
+          @if (isVisible('CustomerRef')) {
+
+
+          <div class="form-group col-md-2">
+            <label for="CustomerRef" class="col-form-label"> مشتری</label>
+
+            <div class="input-group">
+              <input type="text" class="form-control" id="CustomerRef" placeholder="نمایش مشتریان"
+                formControlName="CustomerRef" maxlength="100" autocomplete="off" readonly />
+
+              <button class="btn btn-primary" type="button" (click)="Show_Customer_Modal()">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+
+          </div>
+
+          <div class="form-group col-md-4">
+            <label for="CustomerName">نام مشتری</label>
+            <input type="text" id="CustomerName" class="form-control" formControlName="CustomerName" readonly />
+          </div>
+          }
+
+          @if (isVisible('JobPersonRef')) {
+
+          <div class="form-group col-md-2">
+            <label for="JobPersonRef" class="col-form-label"> سمت شخص</label>
+
+            <div class="input-group">
+              <input type="text" class="form-control" id="JobPersonRef" placeholder="نمایش سممت اشخاص"
+                formControlName="JobPersonRef" maxlength="100" autocomplete="off" readonly />
+
+              <button class="btn btn-primary" type="button" (click)="Show_JobPerson_Modal()">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+
+          </div>
+          <div class="form-group col-md-4">
+            <label for="JobPersonName">نام سمت شغل</label>
+            <input type="text" id="JobPersonName" class="form-control" formControlName="JobPersonName" readonly />
+          </div>
+          }
+
+
+        </div>
+
+        <div class="row form-group m-1 col-md-12">
+
+          @if (isVisible('PhTel1')) {
+          <div class="form-group col-md-4">
+            <label for="PhTel1">تلفن ۱</label>
+            <input type="text" id="PhTel1" class="form-control" formControlName="PhTel1" />
+          </div>
+          }
+
+          @if (isVisible('PhTel2')) {
+          <div class="form-group col-md-4">
+            <label for="PhTel2">تلفن ۲</label>
+            <input type="text" id="PhTel2" class="form-control" formControlName="PhTel2" />
+          </div>
+          }
+
+          @if (isVisible('PhTel3')) {
+          <div class="form-group col-md-4">
+            <label for="PhTel3">تلفن ۳</label>
+            <input type="text" id="PhTel3" class="form-control" formControlName="PhTel3" />
+          </div>
+          }
+
+        </div>
+
+        <div class="row form-group m-1 col-md-12">
+
+          @if (isVisible('PhMobile1')) {
+          <div class="form-group col-md-4">
+            <label for="PhMobile1">موبایل ۱</label>
+            <input type="text" id="PhMobile1" class="form-control" formControlName="PhMobile1" />
+          </div>
+          }
+
+          @if (isVisible('PhMobile2')) {
+          <div class="form-group col-md-4">
+            <label for="PhMobile2">موبایل ۲</label>
+            <input type="text" id="PhMobile2" class="form-control" formControlName="PhMobile2" />
+          </div>
+          }
+
+          @if (isVisible('PhMobile3')) {
+          <div class="form-group col-md-4">
+            <label for="PhMobile3">موبایل ۳</label>
+            <input type="text" id="PhMobile3" class="form-control" formControlName="PhMobile3" />
+          </div>
+          }
+
+        </div>
+
+
+        <div class="row form-group m-1 col-md-12">
+
+          @if (isVisible('PhAddress1')) {
+          <div class="form-group col-md-12">
+            <label for="PhAddress1">آدرس ۱</label>
+            <textarea id="PhAddress1" class="form-control" formControlName="PhAddress1"></textarea>
+          </div>
+          }
+
+
+        </div>
+
+
+        <div class="row form-group m-1 col-md-12">
+
+
+
+          @if (isVisible('PhAddress2')) {
+          <div class="form-group col-md-12">
+            <label for="PhAddress2">آدرس ۲</label>
+            <textarea id="PhAddress2" class="form-control" formControlName="PhAddress2"></textarea>
+          </div>
+          }
+
+
+
+        </div>
+
+
+        <div class="row form-group m-1 col-md-12">
+
+
+
+          @if (isVisible('PhAddress3')) {
+          <div class="form-group col-md-12">
+            <label for="PhAddress3">آدرس ۳</label>
+            <textarea id="PhAddress3" class="form-control" formControlName="PhAddress3"></textarea>
+          </div>
+          }
+
+        </div>
+
+        <div class="row form-group m-1 col-md-12">
+
+
+          <!-- @if (isVisible('PhBonusPercent')) {
+          <div class="form-group col-md-2">
+            <label for="PhBonusPercent">درصد پورسانت</label>
+            <input type="text" id="PhBonusPercent" class="form-control" formControlName="PhBonusPercent" />
+          </div>
+          }
+
+          @if (isVisible('SumReward')) {
+          <div class="form-group col-md-2">
+            <label for="SumReward">جمع امتیاز</label>
+            <input type="text" id="SumReward" class="form-control" formControlName="SumReward" />
+          </div>
+          }
+          @if (isVisible('PhBrokerRef')) {
+          <div class="form-group col-md-2">
+            <label for="PhBrokerRef">معرف</label>
+            <input type="text" id="PhBrokerRef" class="form-control" formControlName="PhBrokerRef" />
+          </div>
+          }
+
+          @if (isVisible('PhBrokerRef_Leader')) {
+          <div class="form-group col-md-2">
+            <label for="PhBrokerRef_Leader">سرگروه معرف</label>
+            <input type="text" id="PhBrokerRef_Leader" class="form-control" formControlName="PhBrokerRef_Leader" />
+          </div>
+          }
+
+          @if (isVisible('PersonLevelRef')) {
+          <div class="form-group col-md-2">
+            <label for="PersonLevelRef">سطح شخص</label>
+            <input type="text" id="PersonLevelRef" class="form-control" formControlName="PersonLevelRef" />
+          </div>
+          }
+
+          @if (isVisible('PersonRewardRef')) {
+          <div class="form-group col-md-2">
+            <label for="PersonRewardRef">گروه امتیاز</label>
+            <input type="text" id="PersonRewardRef" class="form-control" formControlName="PersonRewardRef" />
+          </div>
+          } -->
+
+        </div>
+
+
+        <div class="row form-group m-1 col-md-12">
+
+          @if (isVisible('PhDate1')) {
+          <div class="form-group col-md-3">
+            <label for="PhDate1">تاریخ ۱</label>
+            <input type="text" id="PhDate1" class="form-control" formControlName="PhDate1" />
+          </div>
+          }
+
+          @if (isVisible('PhDate2')) {
+          <div class="form-group col-md-3">
+            <label for="PhDate2">تاریخ ۲</label>
+            <input type="text" id="PhDate2" class="form-control" formControlName="PhDate2" />
+          </div>
+          }
+
+          @if (isVisible('PhDate3')) {
+          <div class="form-group col-md-3">
+            <label for="PhDate3">تاریخ ۳</label>
+            <input type="text" id="PhDate3" class="form-control" formControlName="PhDate3" />
+          </div>
+          }
+
+          @if (isVisible('PhDate4')) {
+          <div class="form-group col-md-3">
+            <label for="PhDate4">تاریخ ۴</label>
+            <input type="text" id="PhDate4" class="form-control" formControlName="PhDate4" />
+          </div>
+          }
+
+        </div>
+
+
+
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- دکمه‌ها -->
+<div class="card mt-3">
+  <div class="card-body">
+    <button class="btn btn-success m-2" (click)="submit_PersonInfo()">
+      <i class="fas fa-check-double"></i> ثبت
+    </button>
+    <button class="btn btn-light m-2" (click)="onCancel()">انصراف</button>
+  </div>
+</div>
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  @if (control.hasError(validation) && (control.dirty || control.touched)) {
+  <div class="invalid-feedback d-block">{{ message }}</div>
+  }
+</ng-template>
+
+
+
+
+<div class="modal fade" #customerlist tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="customerlistLabel">
+          لیست مشتریان
+        </h5>
+
+        <button type="button" class="btn-close" aria-label="Close" (click)="customer_dialog_close()"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <form [formGroup]="EditForm_SearchTarget">
+          <div class="row g-2 align-items-end mb-3">
+
+            <div class="form-group col-lg-8 col-md-7 col-12">
+              <label class="col-form-label">جستجو</label>
+              <input #modalsearch type="text" class="form-control" placeholder="جستجو..."
+                [ngModel]="Searchtarget_customer()"
+                (ngModelChange)="Searchtarget_customer.set($event); onInputChange_Customer()"
+                [ngModelOptions]="{ standalone: true }" />
+            </div>
+
+            <div class="form-group col-lg-4 col-md-5 col-12">
+              <label for="Active" class="col-form-label">وضعیت</label>
+              <select formControlName="Active" id="Active" class="form-control" (change)="onActiveChange()">
+                @for (item of Active_Lookup; track item.id) {
+                <option [value]="item.id">
+                  {{ item.name }}
+                </option>
+                }
+              </select>
+            </div>
+
+          </div>
+        </form>
+
+        @if (loading()) {
+        <div class="text-center py-3">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        }
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 400px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="columnDefs2" [rowData]="records_customer()" [gridOptions]="gridOptions"
+            [rowSelection]="{ mode: 'singleRow', enableClickSelection: true }" (gridReady)="onGridReady($event, 2)"
+            (firstDataRendered)="gridApi2?.sizeColumnsToFit()" [class]="themeClass + ' w-100 h-100'"
+            (selectionChanged)="onSelectionChanged($event)">
+          </ag-grid-angular>
+
+
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="customer_dialog_close()">
+          بستن
+        </button>
+
+        <button type="button" class="btn btn-primary" (click)="Set_Customer()">
+          انتخاب
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" #jobpersonlist tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="jobpersonlistLabel">
+          لیست سمت اشخاص
+        </h5>
+
+        <button type="button" class="btn-close" aria-label="Close" (click)="jobperson_dialog_close()"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <form [formGroup]="EditForm_SearchTarget">
+          <div class="row g-2 align-items-end mb-3">
+
+            <div class="form-group col-lg-8 col-md-7 col-12">
+              <label class="col-form-label">جستجو</label>
+              <input #modalsearch type="text" class="form-control" placeholder="جستجو..."
+                [ngModel]="onInputChange_JobPerson()"
+                (ngModelChange)="Searchtarget_jobperson.set($event); onInputChange_JobPerson()"
+                [ngModelOptions]="{ standalone: true }" />
+            </div>
+
+
+          </div>
+        </form>
+
+        @if (loading()) {
+        <div class="text-center py-3">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        }
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 400px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="columnDefs3" [rowData]="records_jobperson()" [gridOptions]="gridOptions"
+            [rowSelection]="{ mode: 'singleRow', enableClickSelection: true }" (gridReady)="onGridReady($event, 3)"
+            (firstDataRendered)="gridApi3?.sizeColumnsToFit()" [class]="themeClass + ' w-100 h-100'"
+            (selectionChanged)="onSelectionChanged($event)">
+          </ag-grid-angular>
+
+
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="jobperson_dialog_close()">
+          بستن
+        </button>
+
+        <button type="button" class="btn btn-primary" (click)="Set_JobPerson()">
+          انتخاب
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

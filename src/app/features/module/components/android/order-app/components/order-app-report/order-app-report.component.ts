@@ -1,13 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
 import { IDatepickerTheme, NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
-import { ThemeService } from 'src/app/app-shell/framework-services/ui/theme.service';
 import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi.service';
 
 @Component({
@@ -53,16 +51,16 @@ export class OrderAppReportComponent extends AgGridBaseComponent
 
 
 
-  records;
-  title = 'لیست کالاها ';
+  records = signal<any[]>([])
+  title = signal('لیست کالاها');
   StartDate = new FormControl();
   EndDate = new FormControl();
 
-  Searchtarget: string = '';
+  Searchtarget = signal('')
 
   onInputChange() {
-    if (this.Searchtarget == "") {
-      this.Searchtarget = ""
+    if (this.Searchtarget() == "") {
+      this.Searchtarget.set("")
     }
     // this.getList()
   }
@@ -73,31 +71,31 @@ export class OrderAppReportComponent extends AgGridBaseComponent
       this.isDarkMode = (mode === 'dark');
     });
 
-    this.columnDefs1 = [
+    this.column_name_1 = [
 
 
       {
         field: 'GoodName',
         headerName: 'نام کالا  ',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
       },
       {
         field: 'Amount',
         headerName: 'تعداد',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
       },
       {
         field: 'FactorDate',
         headerName: 'تاریخ فاکتور',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
       },
       {
         field: 'GoodExplain1',
         headerName: 'گروه',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
       },
 
@@ -118,7 +116,7 @@ export class OrderAppReportComponent extends AgGridBaseComponent
 
     //      
     this.repo.GetOrderPanel(this.StartDate.value, this.EndDate.value, "4").subscribe((data: any) => {
-      //   this.records = e;
+      //   this.records.set(e)
 
       // });
 

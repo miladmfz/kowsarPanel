@@ -1,128 +1,110 @@
 import { Routes } from '@angular/router';
+import { NotFoundComponent } from 'src/app/app-shell/core/not-found/not-found.component';
 
 export const Accounting_ROUTES: Routes = [
     {
         path: '',
-        loadComponent: () =>
-            import('./accounting.component').then(m => m.AccountingComponent),
-    },
+        component: NotFoundComponent,
 
-    //Factor
-    {
-        path: 'factor-list',
-        title: 'لیست فاکتورهای کوثر',
-        loadComponent: () =>
-            import('./components/factor/factor-list/factor-list.component')
-                .then(m => m.FactorListComponent),
-    },
-    {
-        path: 'factor-edit',
-        title: 'فاکتور کوثر',
-        loadComponent: () =>
-            import('./components/factor/factor-edit/factor-edit.component')
-                .then(m => m.FactorEditComponent),
-    },
-    {
-        path: 'factor-edit/:id',
-        title: 'فاکتور کوثر',
-        loadComponent: () =>
-            import('./components/factor/factor-edit/factor-edit.component')
-                .then(m => m.FactorEditComponent),
-    },
 
-    //PreFactor
+    },
+    // 🚫 404
+    // {
+    //     path: '**',
+    //     component: NotFoundComponent,
+    // },
 
     {
-        path: 'prefactor-list',
-        title: 'لیست پیش فاکتورهای کوثر',
-        loadComponent: () =>
-            import('./components/prefactor/prefactor-list/prefactor-list.component')
-                .then(m => m.PrefactorListComponent),
-    },
-    {
-        path: 'prefactor-edit',
-        title: 'پیش فاکتور کوثر',
-        loadComponent: () =>
-            import('./components/prefactor/prefactor-edit/prefactor-edit.component')
-                .then(m => m.PrefactorEditComponent),
-    },
-    {
-        path: 'prefactor-edit/:id',
-        title: 'پیش فاکتور کوثر',
-        loadComponent: () =>
-            import('./components/prefactor/prefactor-edit/prefactor-edit.component')
-                .then(m => m.PrefactorEditComponent),
-    },
-
-    //good
-
-    {
-        path: 'good-list',
-        title: 'لیست کالای کوثر  ',
-        loadComponent: () =>
-            import('./components/good/good-list/good-list.component')
-                .then(m => m.GoodListComponent),
-    },
-    {
-        path: 'good-edit',
-        title: 'ایجاد کالا کوثر',
-        loadComponent: () =>
-            import('./components/good/good-edit/good-edit.component')
-                .then(m => m.GoodEditComponent),
-    },
-    {
-        path: 'good-edit/:id',
-        title: 'اصلاح کالا کوثر',
-        loadComponent: () =>
-            import('./components/good/good-edit/good-edit.component')
-                .then(m => m.GoodEditComponent),
+        path: 'forosh',
+        loadChildren: () =>
+            import('./components/forosh/forosh.routes')
+                .then(m => m.Forosh_ROUTES),
     },
 
 
-    //report
-
     {
-        path: 'report-list',
-        title: 'لیست گزارشات',
-        loadComponent: () =>
-            import('./components/report/report-list/report-list.component')
-                .then(m => m.ReportListComponent),
-    },
-    {
-        path: 'report-detail',
-        title: 'جزئیات گزارش',
-        loadComponent: () =>
-            import('./components/report/report-detail/report-detail.component')
-                .then(m => m.ReportDetailComponent),
-    },
-    {
-        path: 'report-detail/:id',
-        title: 'جزئیات گزارش',
-        loadComponent: () =>
-            import('./components/report/report-detail/report-detail.component')
-                .then(m => m.ReportDetailComponent),
+        path: 'tanzimat',
+        loadChildren: () =>
+            import('./components/tanzimat/tanzimat.routes')
+                .then(m => m.Tanzimat_ROUTES),
     },
 
 
-    //report
-
     {
-        path: 'dbsetup',
-        title: 'لیست تنظیمات کوثر',
-        loadComponent: () =>
-            import('./components/dbsetup/dbsetup-list/dbsetup-list.component')
-                .then(m => m.DbsetupListComponent),
+        path: 'taarif-paye',
+        loadChildren: () =>
+            import('./components/taarif-paye/taarif-paye.routes')
+                .then(m => m.TaarifPaye_ROUTES),
     },
 
 
-    //goodsgrp
+    {
+        path: 'khazane',
+        loadChildren: () =>
+            import('./components/khazane/khazane.routes')
+                .then(m => m.Khazane_ROUTES),
+    },
+
 
     {
-        path: 'goodsgrp-list',
-        title: 'لیست تنظیمات کوثر',
+        path: 'kharid',
+        loadChildren: () =>
+            import('./components/kharid/kharid.routes')
+                .then(m => m.Kharid_ROUTES),
+    },
+
+
+    {
+        path: 'hesabdari',
+        loadChildren: () =>
+            import('./components/hesabdari/hesabdari.routes')
+                .then(m => m.Hesabdari_ROUTES),
+    },
+
+
+    {
+        path: 'hoghogh-dastmozd',
+        loadChildren: () =>
+            import('./components/hoghogh-dastmozd/hoghogh-dastmozd.routes')
+                .then(m => m.HoghoghDastmozd_ROUTES),
+    },
+
+
+
+    {
+        path: 'gozareshat',
+        loadChildren: () =>
+            import('./components/gozareshat/gozareshat.routes')
+                .then(m => m.Gozareshat_ROUTES),
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+    //Sample
+
+    {
+        path: 'sample/:id/:id_str',
+        title: 'sample',
         loadComponent: () =>
-            import('./components/goodsgrp/goodsgrp-list/goodsgrp-list.component')
-                .then(m => m.GoodsgrpListComponent),
+            import('../../app-shell/framework-components/kowsar/kowsar-sample-view/kowsar-sample-view.component')
+                .then(m => m.KowsarSampleViewComponent),
+    },
+
+    {
+        path: 'sample/:id',
+        title: 'sample',
+        loadComponent: () =>
+            import('../../app-shell/framework-components/kowsar/kowsar-sample-view/kowsar-sample-view.component')
+                .then(m => m.KowsarSampleViewComponent),
     },
 
 

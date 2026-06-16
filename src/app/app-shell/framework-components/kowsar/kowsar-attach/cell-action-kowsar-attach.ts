@@ -43,7 +43,6 @@ export class CellActionKowsarAttach implements ICellRendererAngularComp {
   canDelete = true;
   canView = true;
   id = 0;
-  PhAddress3: string | null = null;
 
   // 🔁 اجرای مجدد رندر (در اینجا نیازی به تغییر محتوا نیست)
   refresh(params: any): boolean {

@@ -19,13 +19,35 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   template: `
     <span
-      class="badge"
-      [ngClass]="badgeClass"
-      style="padding: 3px;"
-    >
+      class="kws-attendance-badge"
+      [ngClass]="badgeClass">
       {{ statusLabel }}
     </span>
-  `
+  `,
+  styles: [`
+  .kws-attendance-badge {
+
+    padding: 2px 8px !important;
+
+    border-radius: 14px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    min-width: 70px;
+
+    line-height: 1.2;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    white-space: nowrap;
+  }
+`]
 })
 export class CellStatusAttendancePanel implements ICellRendererAngularComp {
   private params: any;

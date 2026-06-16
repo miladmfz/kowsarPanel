@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs';
 
@@ -68,7 +68,7 @@ export class ThemeService {
         //    ارسال نوتیف به تمام مشترکین
         this.currentThemeSubject.next(mode);
 
-        console.log(`🎨 Theme applied: ${mode}`);
+
     }
 
     /** 🌞 روشن کردن تم */

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { IDatepickerTheme, NgPersianDatepickerModule } from 'ng-persian-datepicker';
@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
 import { RouterModule } from '@angular/router';
 import { InternalAppsWebApiService } from 'src/app/features/internal/services/InternalAppsWebApi.service';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 
 @Component({
@@ -37,10 +36,10 @@ export class InternalReportApplicationComponent extends AgGridBaseComponent
     selectedText: '#ffffff',
   };
 
-  title = 'گزارش سامانه داخلی';
-  records: any[] = [];
-  loading = false;
-  selectedFlag: string = '1';
+  title = signal('گزارش سامانه داخلی')
+  records = signal<any[]>([])
+  loading = signal(false)
+  selectedFlag = signal('1');
 
   Title_Lookup: Base_Lookup[] = [
     { id: "1", name: "تعداد دستگاه‌های فعال برای هر مشتری" },
@@ -60,10 +59,10 @@ export class InternalReportApplicationComponent extends AgGridBaseComponent
     Flag: new FormControl('', Validators.required),
   });
 
-  appLogResult: any[] = [];
+  appLogResult = signal<any[]>([])
 
   ngOnInit(): void {
-    this.changeColumns(this.selectedFlag);
+    this.changeColumns(this.selectedFlag());
   }
 
   override onGridReady(params: any, index: number) {
@@ -91,21 +90,21 @@ export class InternalReportApplicationComponent extends AgGridBaseComponent
 
     switch (flag) {
       case "1":
-        this.columnDefs1 = [
+        this.column_name_1 = [
           { field: 'ServerName', headerName: 'مشتری' },
           { field: 'UniqueDeviceCount', headerName: 'تعداد دستگاه' }
         ];
         break;
 
       case "2":
-        this.columnDefs1 = [
+        this.column_name_1 = [
           { field: 'ServerName', headerName: 'مشتری' },
           { field: 'TotalLogCount', headerName: 'تعداد لاگ' }
         ];
         break;
 
       case "3":
-        this.columnDefs1 = [
+        this.column_name_1 = [
           { field: 'ServerName', headerName: 'مشتری' },
           { field: 'DeviceId', headerName: 'Device ID' },
           { field: 'LastSeenDate', headerName: 'آخرین اتصال' }
@@ -113,7 +112,7 @@ export class InternalReportApplicationComponent extends AgGridBaseComponent
         break;
 
       case "4":
-        this.columnDefs1 = [
+        this.column_name_1 = [
           { field: 'ServerName', headerName: 'مشتری' },
           { field: 'StrDate', headerName: 'تاریخ' },
           { field: 'LogCount', headerName: 'تعداد' }
@@ -121,7 +120,7 @@ export class InternalReportApplicationComponent extends AgGridBaseComponent
         break;
 
       case "5":
-        this.columnDefs1 = [
+        this.column_name_1 = [
           { field: 'ServerName', headerName: 'مشتری' },
           { field: 'DeviceId', headerName: 'Device ID' },
           { field: 'StrDate', headerName: 'تاریخ' },
@@ -132,7 +131,7 @@ export class InternalReportApplicationComponent extends AgGridBaseComponent
         break;
 
       case "6":
-        this.columnDefs1 = [
+        this.column_name_1 = [
           { field: 'ServerName', headerName: 'مشتری' },
           { field: 'BrokerRefsList', headerName: 'BrokerRefs' },
           { field: 'CountOfBrokerRefs', headerName: 'تعداد' },
@@ -140,7 +139,7 @@ export class InternalReportApplicationComponent extends AgGridBaseComponent
         break;
 
       case "7":
-        this.columnDefs1 = [
+        this.column_name_1 = [
           { field: 'DeviceId', headerName: 'Device ID' },
           { field: 'ServerName', headerName: 'مشتری' },
           { field: 'DistinctExplainCount', headerName: 'تعداد توضیح های متفاوت' },
@@ -149,7 +148,7 @@ export class InternalReportApplicationComponent extends AgGridBaseComponent
         break;
 
       case "8":
-        this.columnDefs1 = [
+        this.column_name_1 = [
           { field: 'ServerName', headerName: 'مشتری' },
           { field: 'Explain', headerName: 'Explain' },
           { field: 'CountByExplain', headerName: 'تعداد' }
@@ -168,25 +167,25 @@ export class InternalReportApplicationComponent extends AgGridBaseComponent
     this.EditForm_AppLog.markAllAsTouched();
     if (!this.EditForm_AppLog.valid) return;
 
-    this.loading = true;
+    this.loading.set(true)
 
 
     this.repo.GetAppLogReport(this.EditForm_AppLog.value)
       .subscribe((data: any) => {
 
 
-        this.selectedFlag = this.EditForm_AppLog.value.Flag!;
+        this.selectedFlag.set(this.EditForm_AppLog.value.Flag!)
 
         // ابتدا ستون‌ها را عوض می‌کنیم
-        this.changeColumns(this.selectedFlag);
+        this.changeColumns(this.selectedFlag());
 
         // سپس داده را رفرش می‌کنیم
-        this.records = data?.AppLogs ?? [];
-        this.appLogResult = data?.AppLogs ?? [];
+        this.records.set(data?.AppLogs ?? [])
+        this.appLogResult.set(data?.AppLogs ?? [])
 
-        this.updateGridData(1, this.records);
+        this.updateGridData(1, this.records());
 
-        this.loading = false;
+        this.loading.set(false)
       });
   }
 

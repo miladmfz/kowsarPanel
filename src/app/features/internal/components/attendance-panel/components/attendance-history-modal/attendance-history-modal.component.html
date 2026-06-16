@@ -32,15 +32,18 @@
         @if (recordsValue.length === 0) {
         <!-- ⏳ نمایش حالت بارگذاری یا نبود داده -->
         <div class="text-center py-5 text-muted">
-          <i class="fas fa-hourglass-half fa-spin mb-3"></i>
+          <i class="fas fa-spinner fa-spin" style="font-size: 18px;color: #0d47a1;"> </i>
           <div>در حال بارگذاری اطلاعات یا داده‌ای موجود نیست...</div>
         </div>
         } @else {
         <!--   جدول داده‌ها -->
-        <ag-grid-angular style="width: 100%; height: 450px;" [rowData]="recordsValue" [columnDefs]="columnDefs"
-          [defaultColDef]="defaultColDef" [localeText]="localeText" [enableRtl]="true" [pagination]="true"
-          [ngClass]="darkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'">
-        </ag-grid-angular>
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            style="width: 100%; height: 450px;" [rowData]="recordsValue" [columnDefs]="columnDefs"
+            [defaultColDef]="defaultColDef" [localeText]="localeText" [enableRtl]="true" [pagination]="true"
+            [class]="themeClass">
+          </ag-grid-angular>
+        </div>
         }
 
       </div>

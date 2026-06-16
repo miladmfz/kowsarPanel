@@ -3,17 +3,16 @@ import { FormGroup } from '@angular/forms';
 declare var $: any;
 
 @Component({
-    selector: 'app-app-shared-data',
-    templateUrl: './app-shared-data.component.html',
-    standalone: false
+  selector: 'app-app-shared-data',
+  templateUrl: './app-shared-data.component.html',
+  standalone: false
 })
 export class AppSharedDataComponent implements OnInit {
   currentDateYm;
   currentCompanyGuid;
   SomeGlobalSetting;
 
-  constructor() {
-  }
+  constructor() { }
 
   ngOnInit() { }
 

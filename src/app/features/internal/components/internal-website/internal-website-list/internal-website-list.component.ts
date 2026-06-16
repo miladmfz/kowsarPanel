@@ -1,5 +1,5 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { NavigationStart, Router, RouterModule } from '@angular/router';
 import { Subject, debounceTime } from 'rxjs';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -9,7 +9,7 @@ import { CellLableWebSite } from './cell-label-website';
 import { CellActionWebSiteList } from './cell_action_website_list';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { WebSiteWebApiService } from '../../../services/WebSiteWebApi.service';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
+import { AgGridMemoryService } from 'src/app/app-shell/framework-components/ag-grid/services/ag-grid-memory.service';
 
 @Component({
   selector: 'app-internal-website-list',
@@ -26,9 +26,9 @@ export class InternalWebsiteListComponent
   extends AgGridBaseComponent
   implements OnInit, OnDestroy {
 
-  title = 'لیست وب‌سایت‌های داخلی کوثر';
-  records: any;
-  loading = false;
+  title = signal('لیست وب‌سایت‌های داخلی کوثر')
+  records = signal<any[]>([])
+  loading = signal(false)
 
   private searchSubject = new Subject<string>();
 
@@ -40,6 +40,9 @@ export class InternalWebsiteListComponent
 
   private readonly repo = inject(WebSiteWebApiService);
   private readonly notificationService = inject(NotificationService);
+  private readonly gridMemory_service = inject(AgGridMemoryService);
+  gridMemory1 = new Map<string, any>();
+  gridKey = signal('');
 
   constructor() {
     super();
@@ -47,68 +50,146 @@ export class InternalWebsiteListComponent
 
   ngOnInit(): void {
 
-    this.columnDefs1 = [
-      {
-        field: 'عملیات',
-        minWidth: 150,
-        pinned: 'left',
-        cellRenderer: CellActionWebSiteList,
-        cellRendererParams: {
-          editUrl: '/manager/internal-website-edit'
-        }
-      },
-      { field: 'CompanyName', headerName: 'نام مشتری', minWidth: 150 },
-      { field: 'WebEmploy', headerName: 'مسئول', minWidth: 150 },
-      { field: 'Phone', headerName: 'شماره تماس', minWidth: 150 },
-      { field: 'Explain', headerName: 'توضیحات API', minWidth: 150 },
-      { field: 'Domain1', headerName: 'دامین', minWidth: 150 },
-      { field: 'Features', headerName: 'امکانات', minWidth: 150 },
-      { field: 'KCServerVersion', headerName: 'نسخه KCServer', minWidth: 150 },
-      { field: 'SiteType', cellRenderer: CellLableWebSite, headerName: 'نوع سایت', minWidth: 150 }
-    ];
 
-    this.getList();
+    this.gridKey.set(`${this.constructor.name}-grid`);
+
+    // پاک کردن memory در صورت برگشت از صفحات خارجی
+    this.router.events.subscribe(event => {
+
+      if (event instanceof NavigationStart) {
+
+        const comingFromExternal = !event.url.startsWith('/internal/internal-website');
+        if (comingFromExternal) this.gridMemory_service.remove(this.gridKey());
+      }
+
+    });
+
+    this.getGridSchema();
 
     this.EditForm.get("SearchTarget")?.valueChanges
       .pipe(debounceTime(400))
-      .subscribe(x => this.getList());
+      .subscribe(x => this.GetData());
+
+    const memory = this.gridMemory_service.get(this.gridKey());
+    if (memory?.rowData) {
+      this.records.set(memory.rowData);
+    } else {
+
+      this.GetData();
+    }
   }
+
+
+  getGridSchema() {
+
+
+
+    this.column_name_1 = [
+      {
+        headerName: 'عملیات',
+        pinned: 'left',
+        minWidth: 150,
+        cellRenderer: CellActionWebSiteList
+      },
+
+      { field: 'CompanyName', headerName: 'نام مشتری', cellClass: 'text-center', minWidth: 130 },
+      { field: 'WebEmploy', headerName: 'مسئول', cellClass: 'text-center', minWidth: 130 },
+      { field: 'Phone', headerName: 'شماره تماس', cellClass: 'text-center', minWidth: 130 },
+      { field: 'Explain', headerName: 'توضیحات API', cellClass: 'text-center', minWidth: 130 },
+      { field: 'Domain1', headerName: 'CustomerCode', cellClass: 'text-center', minWidth: 130 },
+      { field: 'Features', headerName: 'امکانات', cellClass: 'text-center', minWidth: 130 },
+      { field: 'KCServerVersion', headerName: 'نسخه KCServer', cellClass: 'text-center', minWidth: 130 },
+      { field: 'SiteType', cellRenderer: CellLableWebSite, headerName: 'نوع سایت', cellClass: 'text-center', minWidth: 130 },
+    ];
+
+
+
+    const memory = this.gridMemory_service.get(this.gridKey());
+    if (memory?.rowData) {
+      this.records.set(memory.rowData);
+    } else {
+      this.GetData();
+    }
+  }
+
+  GetData() {
+
+
+
+    this.loading.set(true)
+
+
+    this.repo.GetWebSiteActivation(this.EditForm.value)
+      .subscribe((data: any) => {
+
+        this.loading.set(false)
+
+        const rows = data?.WebSites || [];
+        this.records.set(rows);
+
+        this.gridMemory_service.save(this.gridKey(), {
+          rowData: rows,
+          columnDefs: this.column_name_1
+        });
+
+
+
+      });
+
+
+  }
+
 
   onSearchChange() {
     const value = this.EditForm.get('SearchTarget')?.value ?? '';
     this.searchSubject.next(value);
   }
 
-  getList(): void {
-    this.loading = true;
 
-
-    this.repo.GetWebSiteActivation(this.EditForm.value)
-      .subscribe((data: any) => {
-
-        this.records = data?.WebSites ?? [];
-        this.loading = false;
-        this.updateGridData(1, this.records);
-      });
-  }
 
   override onGridReady(params: any, index: number) {
     super.onGridReady(params, index);
 
-    // ذخیره API درست
     if (index >= 1 && index <= 6) {
       (this as any)[`gridApi${index}`] = params.api;
     }
 
-    // فیت کردن ستون‌ها با تأخیر کوتاه
     setTimeout(() => {
-      try {
-        if (params.api && !params.api.isDestroyed?.()) {
-          params.api.sizeColumnsToFit();
-        }
-      } catch { }
+      if (params.api && !params.api.isDestroyed?.()) {
+        params.api.sizeColumnsToFit();
+      }
     }, 50);
   }
+
+  override onFirstDataRendered(params: any) {
+    const memory = this.gridMemory_service.get(this.gridKey());
+    if (!params.api || params.api.isDestroyed?.()) return;
+
+    if (memory?.columnState) {
+      params.api.applyColumnState({ state: memory.columnState, applyOrder: true });
+    }
+
+    if (memory?.filterState) {
+      params.api.setFilterModel(memory.filterState);
+    }
+
+    if (memory?.rowData) {
+      this.records.set(memory.rowData);
+    } else {
+      this.GetData();
+    }
+  }
+
+  onGridStateChanged() {
+    const api = this.gridApi1;
+    if (!api) return;
+
+    this.gridMemory_service.save(this.gridKey(), {
+      columnState: api.getColumnState(),
+      filterState: api.getFilterModel()
+    });
+  }
+
 
   navigateToEdit(data: any) {
     this.router.navigate(['/internal/internal-website-edit', data.WebSiteActivationCode]);
@@ -142,7 +223,7 @@ export class InternalWebsiteListComponent
             next: () => {
 
               this.notificationService.success('  رکورد با موفقیت حذف شد');
-              setTimeout(() => this.getList(), 10);
+              setTimeout(() => this.GetData(), 10);
             },
             error: () => {
 

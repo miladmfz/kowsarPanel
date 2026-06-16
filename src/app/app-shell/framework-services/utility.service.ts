@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 
 @Injectable({
@@ -112,5 +112,22 @@ export class UtilityService {
     /** تأخیر (async delay) */
     delay(ms: number): Promise<void> {
         return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+
+    customNumberFormatter(params: any) {
+        if (params.value === null || params.value === undefined) return '';
+        const value = parseFloat(params.value);
+        if (isNaN(value)) return params.value;
+
+        let formatted = value.toLocaleString('en-US', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 20
+        });
+
+        if (formatted.includes('.')) {
+            formatted = formatted.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+        return formatted;
     }
 }

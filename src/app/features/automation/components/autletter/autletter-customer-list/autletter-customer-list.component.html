@@ -1,0 +1,28 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title mb-3">{{ title() }}</h4>
+    <form [formGroup]="EditForm_autletter" class="row mb-4 align-items-end">
+
+      <div class="row align-items-center mb-3">
+        <div class="col-md-10 mb-2 mb-md-0">
+          <input type="text" class="form-control" formControlName="SearchTarget" placeholder="عبارت مورد نظر..."
+            (input)="getList()" />
+        </div>
+
+        <div class="col-md-2 text-start">
+          <a class="btn btn-success" [routerLink]="['/automation/insert-letter']">
+            <i class="fas fa-plus me-1"></i> جدید
+          </a>
+        </div>
+      </div>
+
+    </form>
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [class]="themeClass + ' w-100 h-100'" [gridOptions]="gridOptions" [columnDefs]="column_name_1"
+        (firstDataRendered)="onFirstDataRendered($event)" [rowData]="records()" (gridReady)="onGridReady($event, 1)"
+        (stateChanged)="onGridStateChanged()" (filterChanged)="onGridStateChanged()"
+        (sortChanged)="onGridStateChanged()" (columnMoved)="onGridStateChanged()">
+      </ag-grid-angular>
+    </div>
+  </div>
+</div>

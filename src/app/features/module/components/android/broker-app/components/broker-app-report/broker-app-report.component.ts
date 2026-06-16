@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, ParamMap, RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
@@ -7,7 +7,6 @@ import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { BrokerWebApiService } from 'src/app/features/module/services/BrokerWebApi.service';
 import { BrokerAppMapComponent } from '../broker-app-map/broker-app-map.component';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-broker-app-report',
@@ -42,16 +41,16 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
 
 
   BrokerCode!: string;
-  BrokerDetails: any[] = [];
-  Imageitem: string = '';
-  Broker_Prefactors: any[] = [];
-  CDCustNames: any[] = [];
+  BrokerDetails = signal<any[]>([])
+  Imageitem = signal('')
+  Broker_Prefactors = signal<any[]>([])
+  CDCustNames = signal<any[]>([])
 
-  DPreFactorDates: any[] = [];
+  DPreFactorDates = signal<any[]>([])
   CDCustNames_amount: string[] = [];
   CDCustNames_price: string[] = [];
   CDCustNames_name: string[] = [];
-  selectedRadio: string = '';
+  selectedRadio = signal('')
   @ViewChild('imagePreview') imagePreview: ElementRef | undefined;
 
 
@@ -68,14 +67,14 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
   chartBarData: any;
 
 
-  imageData: string = ''; // Variable to hold the image data
+  imageData = signal('') // Variable to hold the image data
 
-  showUploadText: boolean = false;
+  showUploadText = signal(false)
 
 
   setRadioValue(value: string): void {
     this.formRadio1.setValue({ radio1: value });
-    this.selectedRadio = value;
+    this.selectedRadio.set(value)
   }
 
   EditForm_BrokerReport = new FormGroup({
@@ -110,12 +109,12 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
 
   Config_Declare() {
 
-    this.columnDefs1 = [ // bar asase moshtari
+    this.column_name_1 = [ // bar asase moshtari
 
       {
         field: 'CustName',
         headerName: 'نام مشتری',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
@@ -123,13 +122,13 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
       {
         field: 'SumAmount',
         headerName: 'جمع تعداد',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       }, {
         field: 'SumPrice',
         headerName: 'جمع مبلغ',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
@@ -141,20 +140,20 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
       {
         field: 'ReportDate',
         headerName: 'تاریخ',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'SumAmount',
         headerName: 'جمع تعداد',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       }, {
         field: 'SumPrice',
         headerName: 'جمع مبلغ',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
@@ -188,7 +187,7 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
 
 
     this.repo.GetBrokerDetail(this.BrokerCode).subscribe(e => {
-      this.BrokerDetails = e;
+      this.BrokerDetails.set(e)
       this.fetchImageData();
     });
 
@@ -208,7 +207,7 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
 
 
     this.repo.GetAppBrokerReport(this.EditForm_BrokerReport.value).subscribe(e => {
-      this.DPreFactorDates = e;
+      this.DPreFactorDates.set(e)
 
     });
 
@@ -222,10 +221,10 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
 
 
     this.repo.GetAppBrokerReport(this.EditForm_BrokerReport.value).subscribe(e => {
-      this.CDCustNames = e;
-      this.CDCustNames_amount = this.CDCustNames.map(item => String(parseFloat(item.SumAmount).toString()));
-      this.CDCustNames_price = this.CDCustNames.map(item => String(parseFloat(item.SumPrice).toString()));
-      this.CDCustNames_name = this.CDCustNames.map(item => String(item.CustName));
+      this.CDCustNames.set(e)
+      this.CDCustNames_amount = this.CDCustNames().map(item => String(parseFloat(item.SumAmount).toString()));
+      this.CDCustNames_price = this.CDCustNames().map(item => String(parseFloat(item.SumPrice).toString()));
+      this.CDCustNames_name = this.CDCustNames().map(item => String(item.CustName));
 
       this.chartBarData1 = {
         labels: this.CDCustNames_name,
@@ -258,7 +257,7 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
     });
 
     this.repo.GetAppBrokerReport(this.EditForm_BrokerReport.value).subscribe(e => {
-      this.Broker_Prefactors = e;
+      this.Broker_Prefactors.set(e)
     });
 
 
@@ -290,9 +289,9 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
     };
 
 
-    this.repo.SendImageToServer(data).subscribe((response) => {
-      this.fetchImageData();
-    });
+    // this.repo.SendImageToServer(data).subscribe((response) => {
+    //   this.fetchImageData();
+    // });
 
   }
 
@@ -300,12 +299,12 @@ export class BrokerAppReportComponent extends AgGridBaseComponent
   fetchImageData() {
 
 
-    this.repo.GetImageFromServer(this.BrokerDetails[0].CentralRef).subscribe((data: any) => {
+    // this.repo.GetImageFromServer(this.BrokerDetails[0].CentralRef).subscribe((data: any) => {
 
 
-      this.Imageitem = `data:${Image};base64,${data.Text}`;
+    //   this.Imageitem.set(`data:${Image};base64,${data.Text}`)
 
-    });
+    // });
   }
 
 

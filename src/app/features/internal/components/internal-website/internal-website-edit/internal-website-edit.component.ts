@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router, RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
@@ -8,7 +8,6 @@ import { catchError, of } from 'rxjs';
 import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
 import { WebSiteWebApiService } from '../../../services/WebSiteWebApi.service';
 import { KowsarAttachComponent } from 'src/app/app-shell/framework-components/kowsar/kowsar-attach/kowsar-attach.component';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-internal-website-edit',
@@ -24,8 +23,9 @@ import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.
 })
 export class InternalWebsiteEditComponent implements OnInit {
 
-  title = 'فرم ویرایش وب‌سایت داخلی';
-  WebsiteId = "";
+  title = signal('فرم ویرایش وب‌سایت داخلی')
+  WebsiteId = signal('')
+  ShowAttach = signal(false)
 
 
   EditForm_WebSite = new FormGroup({
@@ -54,7 +54,7 @@ export class InternalWebsiteEditComponent implements OnInit {
 
   });
 
-  SiteType_Lookup: Base_Lookup[] = [
+  SiteType_Lookup1: Base_Lookup[] = [
     { id: "0", name: "سایت کوثر" },
     { id: "1", name: "ورد پرس" },
     { id: "2", name: "الماتک" },
@@ -65,9 +65,10 @@ export class InternalWebsiteEditComponent implements OnInit {
   ]
 
 
-  KCServer_Lookup: Base_Lookup[] = [
+  KCServer_Lookup1: Base_Lookup[] = [
     { id: "KCServer_جدید", name: "KCServer_جدید" },
 
+    { id: "KCServer_3.04.12.05", name: "KCServer_3.04.12.05" },
     { id: "KCServer_3.04.09.27", name: "KCServer_3.04.09.27" },
     { id: "KCServer_3.04.05.23", name: "KCServer_3.04.05.23" },
     { id: "KCServer_3.04.04.20", name: "KCServer_3.04.04.20" },
@@ -76,7 +77,8 @@ export class InternalWebsiteEditComponent implements OnInit {
     { id: "KCServer_قدیمی", name: "KCServer_قدیمی" },
   ]
 
-
+  KCServer_Lookup = signal<any[]>([])
+  SiteType_Lookup = signal<any[]>([])
 
 
   TrueFalse_Lookup: Base_Lookup[] = [
@@ -98,7 +100,23 @@ export class InternalWebsiteEditComponent implements OnInit {
     this.route.paramMap.subscribe((p: ParamMap) => {
       const id = p.get('id');
       if (id) {
-        this.WebsiteId = id;
+        this.WebsiteId.set(id)
+        if (
+          this.WebsiteId() !== null &&
+          this.WebsiteId() !== undefined &&
+          this.WebsiteId() !== '' &&
+          Number(this.WebsiteId()) > 0
+        ) {
+
+          console.log("true")
+          this.ShowAttach.set(true);
+
+        } else {
+          console.log("false")
+
+          this.ShowAttach.set(false);
+
+        }
         this.loadDetails();
       }
     });
@@ -106,10 +124,25 @@ export class InternalWebsiteEditComponent implements OnInit {
 
   loadDetails() {
 
-    this.repo.GetWebSiteActivationById(this.WebsiteId)
+    this.repo.GetWebSiteActivationById(this.WebsiteId())
       .subscribe((data: any) => {
 
         this.EditForm_WebSite.patchValue(data.WebSites[0]);
+      });
+
+
+
+    this.repo.GetModuleValueByConfigName("KCServerVersion")
+      .subscribe((data: any) => {
+
+        this.KCServer_Lookup.set(data.ModuleConfigs)
+      });
+
+
+    this.repo.GetModuleValueByConfigName("SiteType")
+      .subscribe((data: any) => {
+        this.SiteType_Lookup.set(data.ModuleConfigs)
+
       });
   }
 
@@ -123,7 +156,7 @@ export class InternalWebsiteEditComponent implements OnInit {
     if (!this.EditForm_WebSite.valid) return;
 
     const payload = this.EditForm_WebSite.value;
-    const id = Number(this.WebsiteId); // تبدیل صحیح
+    const id = Number(this.WebsiteId()); // تبدیل صحیح
 
     const request$ = id > 0
       ?

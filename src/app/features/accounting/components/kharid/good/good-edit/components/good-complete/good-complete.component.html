@@ -1,0 +1,133 @@
+<form [formGroup]="EditForm_Complete" (ngSubmit)="submit('')" id="submitForm">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body row">
+
+
+
+          <div class="row col-md-12">
+
+
+            <div class="form-group col-md-3">
+              <label for="GoodCode" class="col-form-label">کد کالا </label>
+              <input type="text" class="form-control" id="GoodCode" formControlName="GoodCode" maxlength="100"
+                autocomplete="off" [readOnly]="true" />
+            </div>
+
+            <!-- <div class="form-group col-md-3">
+                                                            <label for="GoodSubCode" class="col-form-label">کد زیر مجموعه </label>
+                                                            <input type="text" class="form-control" id="GoodSubCode" formControlName="GoodSubCode"
+                                                              maxlength="100" autocomplete="off" [readOnly]="true" />
+                                                            </div> -->
+
+          </div>
+          <div class="form-group col-md-12">
+            <label for="GoodName" class="col-form-label">نام کالا </label>
+            <input type="text" class="form-control" id="GoodName" formControlName="GoodName" maxlength="400"
+              autocomplete="off" [readOnly]="true" />
+          </div>
+
+
+          <div class="row col-md-12">
+
+            <div class="form-group col-md-3">
+              <label for="MinAmount" class="col-form-label">حداقل تعداد </label>
+              <input type="number" class="form-control" id="MinAmount" formControlName="MinAmount" maxlength="100"
+                autocomplete="off" />
+            </div>
+
+            <div class="form-group col-md-3">
+              <label for="MaxAmount" class="col-form-label">حداکثر تعداد</label>
+              <input type="number" class="form-control" id="MaxAmount" formControlName="MaxAmount" maxlength="100"
+                autocomplete="off" />
+            </div>
+
+            <div class="form-group col-md-3">
+              <label for="SefareshPoint" class="col-form-label">نقطه سفارش </label>
+              <input type="number" class="form-control" id="SefareshPoint" formControlName="SefareshPoint"
+                maxlength="100" autocomplete="off" />
+            </div>
+            <div class="form-group col-md-3">
+              <label for="CriticalPoint" class="col-form-label">نقطه سفارش بحرانی</label>
+              <input type="number" class="form-control" id="CriticalPoint" formControlName="CriticalPoint"
+                maxlength="100" autocomplete="off" />
+            </div>
+
+
+          </div>
+
+
+
+
+
+
+          <div class="row col-md-12">
+
+
+            <div class="form-group col-md-3">
+              <label for="MinBuyPrice" class="col-form-label">آخرین مصوبه قیمت خرید </label>
+              <input type="number" class="form-control" id="MinBuyPrice" formControlName="MinBuyPrice" maxlength="100"
+                autocomplete="off" />
+            </div>
+
+
+            <div class="form-group col-md-3">
+              <label for="MaxBuyPrice" class="col-form-label">آخرین درصد خرید </label>
+              <input type="number" class="form-control" id="MaxBuyPrice" formControlName="MaxBuyPrice" maxlength="100"
+                autocomplete="off" />
+            </div>
+
+
+            <div class="form-group col-md-3">
+              <label for="Tax" class="col-form-label">ارزش افزوده </label>
+              <input type="number" class="form-control" id="Tax" formControlName="Tax" maxlength="100"
+                autocomplete="off" />
+            </div>
+            <div class="form-group col-md-3">
+              <label for="MayorTax" class="col-form-label">عوارض شهرداری </label>
+              <input type="number" class="form-control" id="MayorTax" formControlName="MayorTax" maxlength="100"
+                autocomplete="off" />
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+@if (changedValues_show()) {
+<div class="card">
+  <div class="card-body">
+    <div class="col-sm-12">
+      <!-- <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mx-1"
+                                                                          (click)="submit('complete_exit')">
+                                                                          <span class="btn-label"><i class="fas fa-check-double"></i></span>ذخیره و خروج
+                                                                        </a> -->
+      <a href="javascript:void(0)" type="button" class="btn btn-success waves-effect waves-light mx-1"
+        (click)="submit('complete')">
+        <span class="btn-label"><i class="fas fa-check"></i></span>ذخیره
+      </a>
+      <a href="javascript:void(0)" type="button" class="btn btn-light waves-effect waves-light mx-1"
+        (click)="changedValues_cansel_complete()">
+        <span class="btn-label"><i class="fas fa-times"></i></span>انصراف
+      </a>
+    </div>
+  </div>
+</div>
+}
+
+
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  @if (control.hasError(validation) && (control.dirty || control.touched)) {
+  <div class="fv-plugins-message-container invalid-feedback">
+    <span role="alert">
+      {{ message }}
+    </span>
+  </div>
+  }
+</ng-template>

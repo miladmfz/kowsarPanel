@@ -78,9 +78,9 @@
 
 
   <!-- نمایش پیام خطا در صورت وجود -->
-  @if (noDataMessage) {
+  @if (noDataMessage()) {
   <div class="alert alert-warning mt-3">
-    {{ noDataMessage }}
+    {{ noDataMessage() }}
   </div>
   }
 

@@ -1,0 +1,322 @@
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h4 class="card-title mb-3">{{ title() }}</h4>
+
+    <form [formGroup]="EditForm_Search">
+
+      <div class="row align-items-center mb-3">
+        <div class="col-md-9 mb-2 mb-md-0">
+          <input type="text" class="form-control rounded-pill" placeholder="جستجو..." formControlName="SearchTarget"
+            (input)="onSearchChange()" />
+        </div>
+
+        <div class="col-md-3 text-start">
+          <button class="btn btn-success me-1 mb-1" (click)="AddNew()">
+            <i class="fas fa-plus me-1"></i>
+            جدید
+          </button>
+        </div>
+      </div>
+
+    </form>
+
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [class]="themeClass + ' w-100 h-100'" [gridOptions]="gridOptions" [columnDefs]="column_name_1"
+        (firstDataRendered)="onFirstDataRendered($event)" [rowData]="records()" (gridReady)="onGridReady($event, 1)"
+        (stateChanged)="onGridStateChanged()" (filterChanged)="onGridStateChanged()"
+        (sortChanged)="onGridStateChanged()" (columnMoved)="onGridStateChanged()">
+      </ag-grid-angular>
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- =============================================================== -->
+<!-- 👤 User Management Modal -->
+<!-- =============================================================== -->
+<div class="modal fade kws-modal" id="userManageModal" tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+
+      <!-- Header -->
+      <div class="modal-header kws-modal-header border-0">
+
+        <div class="d-flex align-items-center gap-2">
+
+          <div class="kws-modal-icon">
+            <i class="fe-user-check"></i>
+          </div>
+
+          <div>
+            <h5 class="modal-title fw-bold mb-0">
+              مدیریت کاربر مشتری
+            </h5>
+
+            <small class="text-muted">
+              تغییر نام کاربری، رمز عبور، وضعیت و ورود پیامکی
+            </small>
+          </div>
+
+        </div>
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+      </div>
+
+      <form [formGroup]="userManageForm" (ngSubmit)="submitUserManage()">
+
+        <div class="modal-body p-4">
+
+          <!-- User Info -->
+          <div class="kws-user-card mb-4">
+
+            <div class="row g-3 align-items-end">
+
+              <div class="col-12 col-md-6">
+                <label class="form-label small text-muted mb-1">
+                  نام و نام خانوادگی
+                </label>
+
+                <input type="text" class="form-control kws-readonly-input" formControlName="PhFullName" readonly />
+              </div>
+
+              <div class="col-12 col-md-6">
+                <label class="form-label small text-muted mb-1">
+                  نام کاربری فعلی
+                </label>
+
+                <input type="text" class="form-control kws-readonly-input" formControlName="XUserName" readonly />
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Operation Type -->
+          <div class="kws-user-card mb-4">
+
+            <label class="form-label fw-semibold mb-3">
+              نوع عملیات
+            </label>
+
+            <div class="row g-2">
+
+              <div class="col-12 col-md-6">
+                <input type="radio" class="btn-check" id="actionChangeUserName" formControlName="actionType"
+                  value="changeUserName" autocomplete="off">
+
+                <label class="btn btn-outline-primary w-100 text-start" for="actionChangeUserName">
+                  <i class="fas fa-user-edit me-1"></i>
+                  تغییر نام کاربری
+                </label>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <input type="radio" class="btn-check" id="actionChangePassword" formControlName="actionType"
+                  value="changePassword" autocomplete="off">
+
+                <label class="btn btn-outline-primary w-100 text-start" for="actionChangePassword">
+                  <i class="fas fa-key me-1"></i>
+                  تغییر رمز عبور
+                </label>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <input type="radio" class="btn-check" id="actionChangeStatus" formControlName="actionType"
+                  value="changeStatus" autocomplete="off">
+
+                <label class="btn btn-outline-primary w-100 text-start" for="actionChangeStatus">
+                  <i class="fas fa-user-shield me-1"></i>
+                  تغییر وضعیت
+                </label>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <input type="radio" class="btn-check" id="actionSmsLogin" formControlName="actionType" value="smsLogin"
+                  autocomplete="off">
+
+                <label class="btn btn-outline-primary w-100 text-start" for="actionSmsLogin">
+                  <i class="fas fa-sms me-1"></i>
+                  ورود با پیامک
+                </label>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Change UserName -->
+          @if (userManageForm.value.actionType === 'changeUserName') {
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">
+              نام کاربری جدید
+            </label>
+
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="fe-user"></i>
+              </span>
+
+              <input type="text" class="form-control" formControlName="newUserName"
+                placeholder="نام کاربری جدید را وارد کنید" />
+            </div>
+
+            @if (isUserManageInvalid('newUserName')) {
+            <small class="text-danger mt-1 d-block">
+              نام کاربری جدید را وارد کنید
+            </small>
+            }
+          </div>
+
+          }
+
+          <!-- Change Password -->
+          @if (userManageForm.value.actionType === 'changePassword') {
+
+          <div class="row g-3">
+
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold">
+                رمز جدید
+              </label>
+
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="fe-lock"></i>
+                </span>
+
+                <input type="password" class="form-control" formControlName="newPassword" autocomplete="new-password"
+                  placeholder="رمز جدید" />
+              </div>
+
+              @if (isUserManageInvalid('newPassword')) {
+              <small class="text-danger mt-1 d-block">
+                رمز جدید را وارد کنید
+              </small>
+              }
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold">
+                تکرار رمز جدید
+              </label>
+
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="fe-check-circle"></i>
+                </span>
+
+                <input type="password" class="form-control" formControlName="confirmPassword"
+                  autocomplete="new-password" placeholder="تکرار رمز جدید" />
+              </div>
+
+              @if (userManageForm.errors?.['passwordMismatch']) {
+              <small class="text-danger mt-1 d-block">
+                رمز جدید و تکرار آن یکسان نیست
+              </small>
+              }
+            </div>
+
+          </div>
+
+          }
+
+          <!-- Change Status -->
+          @if (userManageForm.value.actionType === 'changeStatus') {
+
+          <div class="kws-user-card">
+
+            <label class="form-label fw-semibold mb-3">
+              وضعیت کاربر
+            </label>
+            <div class="form-check form-switch mb-0">
+
+              <input class="form-check-input" type="checkbox" id="userActiveSwitch" formControlName="isActive">
+
+              <label class="form-check-label fw-bold" for="userActiveSwitch">
+
+                {{ userManageForm.get('isActive')?.value ? 'کاربر فعال است' : 'کاربر غیرفعال است' }}
+
+              </label>
+
+            </div>
+
+          </div>
+
+          }
+
+          <!-- SMS Login -->
+          @if (userManageForm.value.actionType === 'smsLogin') {
+
+          <div class="kws-user-card">
+
+            <label class="form-label fw-semibold mb-3">
+              ورود با پیامک
+            </label>
+
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" formControlName="smsLoginEnabled" id="smsLoginSwitch" />
+
+              <label class="form-check-label fw-semibold" for="smsLoginSwitch">
+                @if (userManageForm.value.smsLoginEnabled) {
+                فعال
+                } @else {
+                غیرفعال
+                }
+              </label>
+            </div>
+
+            <label class="form-label small text-muted mb-1">
+              شماره موبایل
+            </label>
+
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="fe-smartphone"></i>
+              </span>
+
+              <input type="text" class="form-control" formControlName="mobile" placeholder="مثلا 09123456789" />
+            </div>
+
+          </div>
+
+          }
+
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer border-0 px-4 pb-4 pt-0">
+
+          <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">
+            انصراف
+          </button>
+
+          <button type="submit" class="btn btn-primary px-4 d-flex align-items-center gap-2"
+            [disabled]="userManageForm.invalid || isSavingUserManage()">
+
+            @if (!isSavingUserManage()) {
+            <i class="fe-save"></i>
+            <span>تایید</span>
+            }
+
+            @if (isSavingUserManage()) {
+            <span class="spinner-border spinner-border-sm"></span>
+            <span>در حال ارسال...</span>
+            }
+
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>

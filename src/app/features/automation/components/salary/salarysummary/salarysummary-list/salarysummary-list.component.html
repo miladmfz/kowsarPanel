@@ -1,0 +1,624 @@
+<div class="card">
+  <div class="card-body">
+
+
+    <form [formGroup]="EditForm_SearchTarget" id="submitForm">
+
+      <div class="card shadow-sm border-0">
+        <div class="card-body row g-3">
+
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">جستجو</label>
+
+            <input type="text" class="form-control rounded-pill" placeholder="جستجو (نام/کدملی)"
+              formControlName="SearchTarget" (input)="onSearchChange()" />
+          </div>
+          <div class="form-group col-md-3">
+            <label class="form-label fw-semibold">سال</label>
+            <select id="Sal" class="form-control" formControlName="Sal" [ngClass]="{
+                   'is-invalid': EditForm_SearchTarget.controls['Sal'].invalid && EditForm_SearchTarget.controls['Sal'].touched,
+                   'is-valid': EditForm_SearchTarget.controls['Sal'].valid && EditForm_SearchTarget.controls['Sal'].touched
+                 }">
+              <option value="">لطفاً انتخاب کنید</option>
+              @for (item of Sal_Lookup; track item) {
+              <option [value]="item.id">{{ item.name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group col-md-3">
+            <label class="form-label fw-semibold">ماه</label>
+            <select id="Mah" class="form-control" formControlName="Mah" [ngClass]="{
+                   'is-invalid': EditForm_SearchTarget.controls['Mah'].invalid && EditForm_SearchTarget.controls['Mah'].touched,
+                   'is-valid': EditForm_SearchTarget.controls['Mah'].valid && EditForm_SearchTarget.controls['Mah'].touched
+                 }">
+              <option value="">لطفاً انتخاب کنید</option>
+              @for (item of Mah_Lookup; track item) {
+              <option [value]="item.id">{{ item.name }}</option>
+              }
+            </select>
+
+          </div>
+
+
+          <div class="col-md-6 text-start">
+            <button class="btn btn-primary me-1" (click)="getList()">
+              <i class="fas fa-sync"></i> بازخوانی
+            </button>
+
+            <button class="btn btn-success me-1" (click)="ShowModalAddSalary()">
+              <i class="fas fa-sync"></i> ایجاد لیست حقوقی جدید
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+        [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+        [class]="themeClass + ' w-100 h-100'">
+      </ag-grid-angular>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" #salarymodal tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">خلاصه حقوق و مزایا</h5>
+        <button type="button" class="btn-close" (click)="salary_dialog_close()"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="row g-2">
+
+
+          <div class="row col-md-12">
+
+            <div class="col-md-3">
+              <label class="form-label">نام</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['FirstName']" />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">نام خانوادگی</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['LastName']" />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">کد ملی</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['CodeMeli']" />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">شغل</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['JobTitle']" />
+            </div>
+          </div>
+
+
+          <div class="row col-md-12">
+            <div class="col-md-2">
+              <label class="form-label">سال</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['Sal']" />
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">ماه</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['Mah']" />
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">کل روز ماه</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['TotalDays']" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">روز کاری</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['WorkingDays']" />
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">روز تعطیل</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['HolidayDays']" />
+            </div>
+
+
+            <div class="col-md-2">
+              <label class="form-label">ساعت موظفی</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['WorkingHoursInMonth']" />
+            </div>
+
+          </div>
+
+
+          <div class="row col-md-12">
+            <div class="col-md-2">
+              <label class="form-label">تعداد روز کارکرد</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['Rozkarkard']" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">تعداد روز مرخصی</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['LeaveDays']" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">کل مرخصی مصرف شده</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['TotalLeaveDays']" />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">ساعت کارکرد کارمند</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['WorkingHours']" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">مقدار اضافه کار (ساعت)</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['SaatEzafekarCal']" />
+            </div>
+
+          </div>
+
+          <div class="row col-md-12">
+            <div class="col-md-3">
+              <label class="form-label">نرخ اضافه کار</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['NerkhEzafekar']" />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">کل مبلغ اضافه کار</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['TotalEzafekar']" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">نرخ حقوق روزانه</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['NerkhHoghoghRozane']" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">کل مبلغ روزانه</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['TotalHoghoghRozane']" />
+            </div>
+          </div>
+
+
+          <div class="row col-md-12">
+            <div class="col-md-2">
+              <label class="form-label">نرخ روزانه سنوات</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['NerkhSanavat']" />
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">کل مبلغ سنوات</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['TotalSanavat']" />
+            </div>
+
+
+            <div class="col-md-2">
+              <label class="form-label">نرخ روزانه حق مسکن</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['NerkhMaskan']" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">کل مبلغ حق مسکن</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['TotalMaskan']" />
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">نرخ روزانه خواروبار</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['NerkhKharobar']" />
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">کل مبلغ خواروبار</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['TotalKharobar']" />
+            </div>
+          </div>
+
+
+          <div class="row col-md-12">
+            <div class="col-md-2">
+              <label class="form-label">حق تاهل</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['HaghTaahol']" />
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">تعداد فرزند</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['TedadOlad']" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">کل مبلغ حق اولاد</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['TotalOlad']" />
+            </div>
+          </div>
+
+
+          <div class="row col-md-12">
+
+
+
+            <div class="col-md-2">
+              <label class="form-label">نرخ پاداش</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['NerkhPadash']" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">تعدادپاداش</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['TedadPadash']" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">کل مبلغ پاداش</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['TotalPadash']" />
+            </div>
+
+
+          </div>
+
+
+          <div class="row col-md-12">
+
+            <div class="col-md-2">
+              <label class="form-label">نرخ اضافات کسورات 1</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['NerkhExtra1']" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">تعداد اضافات کسورات 1</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['TedadExtra1']" />
+            </div>
+
+
+            <div class="col-md-2">
+              <label class="form-label">کل مبلغ اضافات کسورات 1</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['TotalExtra1']" />
+            </div>
+
+
+
+          </div>
+          <div class="row col-md-12">
+
+
+
+            <div class="col-md-2">
+              <label class="form-label">نرخ اضافات کسورات 2</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['NerkhExtra2']" />
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">تعداد اضافات کسورات 2</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['TedadExtra2']" />
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">کل مبلغ اضافات کسورات 2</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['TotalExtra2']" />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">ضریب اضافات کسورات دیگر</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['ZaribExtra4']" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">مبلغ اضافات کسورات دیگر</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['Extra4']" />
+            </div>
+
+          </div>
+
+          <div class="row col-md-12">
+
+
+            <div class="col-md-3">
+              <label class="form-label">بیمه</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['BimePaye']" />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">بیمه تکمیلی</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['BimeTakmili']" />
+            </div>
+
+
+
+            <div class="col-md-3">
+              <label class="form-label">مانده از قبل</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['Extra3']" />
+            </div>
+
+
+
+          </div>
+
+
+          <div class="row col-md-12">
+
+            <div class="col-md-4">
+              <label class="form-label">کل مبلغ پایه حقوق</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['HoghoghAndExtra']" />
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">کل مبالغ اضافات و کسورات</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['AfterCalHoghogh']" />
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">کل حقوق پرداختی</label>
+              <input class="form-control" readonly [formControl]="ShowForm_salary.controls['TotalHoghogh']" />
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <label class="form-label">توضیحات</label>
+            <input class="form-control" readonly [formControl]="ShowForm_salary.controls['Explain']" />
+          </div>
+
+
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-light" (click)="salary_dialog_close()">بستن</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" #editWorkingEmployeemodal tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+
+
+      <div class="modal-header">
+        <h5 class="modal-title">ویرایش کارکرد و حقوق</h5>
+        <button type="button" class="btn-close" (click)="WorkingEmploye_dialog_close()"></button>
+      </div>
+
+      <form [formGroup]="EditForm_WorkingEmploye">
+        <div class="modal-body">
+          <div class="row g-2">
+
+            <div class="col-md-3">
+              <label class="form-label">نام</label>
+              <input class="form-control" readonly formControlName="FirstName">
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">نام خانوادگی</label>
+              <input class="form-control" readonly formControlName="LastName">
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">سال</label>
+              <input class="form-control" readonly formControlName="Sal">
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">ماه</label>
+              <input class="form-control" readonly formControlName="Mah">
+            </div>
+
+
+
+            <div class="row col-md-12">
+
+              <div class="form-group col-md-4">
+                <label class="form-label">ساعت کارکرد</label>
+                <input class="form-control" type="text" formControlName="WorkingHours">
+              </div>
+
+              <div class="form-group col-md-4">
+                <label class="form-label">روز مرخصی</label>
+                <input class="form-control" type="text" formControlName="LeaveDays">
+              </div>
+
+
+            </div>
+
+
+            <div class="row form-group col-md-12">
+
+              <div class="form-group col-md-3">
+                <label class="form-label fw-semibold">حقوق روزانه</label>
+                <input type="number" class="form-control" formControlName="NerkhHoghogh" autocomplete="off" />
+              </div>
+
+              <div class="form-group col-md-3">
+                <label class="form-label fw-semibold">سنوات روزانه</label>
+                <input type="number" class="form-control" formControlName="NerkhSanavat" autocomplete="off" />
+              </div>
+
+
+              <div class="form-group col-md-3">
+                <label class="form-label fw-semibold">نرخ اضافه کاری</label>
+                <input type="number" class="form-control" formControlName="NerkhEzafekar" autocomplete="off" />
+              </div>
+
+
+
+            </div>
+            <div class="row form-group col-md-12">
+              <div class="form-group col-md-3">
+                <label class="form-label fw-semibold">روز کارکرد</label>
+                <input type="number" class="form-control" formControlName="Rozkarkard" autocomplete="off" />
+              </div>
+              <div class="form-group col-md-3">
+                <label class="form-label fw-semibold">ساعت ناهار و نماز</label>
+                <input type="number" class="form-control" formControlName="SaatNaharNamaz" autocomplete="off" />
+              </div>
+              <div class="form-group col-md-3">
+                <label class="form-label fw-semibold">تعداد فرزند</label>
+                <input type="number" class="form-control" formControlName="TedadOlad" autocomplete="off" />
+              </div>
+            </div>
+
+
+            <div class="row form-group col-md-12">
+
+
+              <div class="form-group col-md-3">
+                <label class="form-label fw-semibold">نرخ پاداش</label>
+                <input type="number" class="form-control" formControlName="NerkhPadash" autocomplete="off" />
+              </div>
+
+              <div class="form-group col-md-3">
+                <label class="form-label fw-semibold">تعداد پاداش</label>
+                <input type="number" class="form-control" formControlName="TedadPadash" autocomplete="off" />
+              </div>
+            </div>
+
+
+            <div class="row form-group col-md-12">
+              <div class="form-group col-md-3">
+                <label class="form-label fw-semibold">نرخ اضافات کسورات 1</label>
+                <input type="number" class="form-control" formControlName="NerkhExtra1" autocomplete="off" />
+              </div>
+
+              <div class="form-group col-md-3">
+                <label class="form-label fw-semibold">تعداد اضافه کسورات 1</label>
+                <input type="number" class="form-control" formControlName="TedadExtra1" autocomplete="off" />
+              </div>
+
+            </div>
+
+
+            <div class="row form-group col-md-12">
+
+              <div class="form-group col-md-3">
+                <label class="form-label fw-semibold">نرخ اضافات کسورات 2</label>
+                <input type="number" class="form-control" formControlName="NerkhExtra2" autocomplete="off" />
+              </div>
+
+              <div class="form-group col-md-3">
+                <label class="form-label fw-semibold">تعداد اضافه کسورات 2</label>
+                <input type="number" class="form-control" formControlName="TedadExtra2" autocomplete="off" />
+              </div>
+            </div>
+
+
+            <div class="row form-group col-md-12">
+
+              <div class="form-group col-md-3">
+                <label class="form-label fw-semibold">بیمه</label>
+                <input type="number" class="form-control" formControlName="BimePaye" autocomplete="off" />
+              </div>
+
+              <div class="form-group col-md-3">
+                <label class="form-label fw-semibold">بیمه تکمیلی</label>
+                <input type="number" class="form-control" formControlName="BimeTakmili" autocomplete="off" />
+              </div>
+
+              <div class="form-group col-md-3">
+                <label class="form-label fw-semibold">مانده از قبل</label>
+                <input type="number" class="form-control" formControlName="Extra3" autocomplete="off" />
+              </div>
+
+              <div class="form-group col-md-3">
+                <label class="form-label fw-semibold">اضافه کسورات دیگر</label>
+                <input type="number" class="form-control" formControlName="Extra4" autocomplete="off" />
+              </div>
+
+            </div>
+
+
+            <div class="form-group col-md-12">
+              <label class="form-label fw-semibold">توضیحات</label>
+              <input type="text" class="form-control" formControlName="Explain" autocomplete="off" />
+            </div>
+
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-light" type="button" (click)="WorkingEmploye_dialog_close()">
+            بستن
+          </button>
+
+          <button class="btn btn-primary" type="button" (click)="Submit_updateWorkingEmploye()">
+            ذخیره
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" #addsalarymodal tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+
+
+
+
+      <div class="modal-header">
+        <h5 class="modal-title">ایجاد لیست حقوق جدید</h5>
+        <button type="button" class="btn-close" (click)="addsalary_dialog_close()"></button>
+      </div>
+
+      <form [formGroup]="EditForm_AddSalary">
+        <div class="modal-body">
+          <div class="row g-2">
+
+            <!-- <div class="form-group col-md-3">
+              <label class="form-label fw-semibold">سال</label>
+              <select id="Sal" class="form-control" formControlName="Sal" [ngClass]="{
+                   'is-invalid': EditForm_AddSalary.controls['Sal'].invalid && EditForm_AddSalary.controls['Sal'].touched,
+                   'is-valid': EditForm_AddSalary.controls['Sal'].valid && EditForm_AddSalary.controls['Sal'].touched
+                 }">
+                <option value="">لطفاً انتخاب کنید</option>
+                @for (item of Sal_Lookup; track item) {
+                <option [value]="item.id">{{ item.name }}</option>
+                }
+              </select>
+            </div>
+
+
+
+            <div class="form-group col-md-3">
+              <label class="form-label fw-semibold">ماه</label>
+              <select id="Mah" class="form-control" formControlName="Mah" [ngClass]="{
+                   'is-invalid': EditForm_AddSalary.controls['Mah'].invalid && EditForm_AddSalary.controls['Mah'].touched,
+                   'is-valid': EditForm_AddSalary.controls['Mah'].valid && EditForm_AddSalary.controls['Mah'].touched
+                 }">
+                <option value="">لطفاً انتخاب کنید</option>
+                @for (item of Mah_Lookup; track item) {
+                <option [value]="item.id">{{ item.name }}</option>
+                }
+              </select>
+            </div> -->
+
+          </div>
+        </div>
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 300px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="columnDefs2" [rowData]="records_MonthSummarys()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit() "
+            [rowSelection]="{ mode: 'singleRow' ,enableClickSelection: true}"
+            (selectionChanged)="onSelectionChanged($event)" [class]="themeClass + ' w-100 h-100'">
+          </ag-grid-angular>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-light" type="button" (click)="addsalary_dialog_close()">
+            بستن
+          </button>
+
+          <button class="btn btn-primary" type="button" (click)="CreateNewsalary()">
+            ذخیره
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

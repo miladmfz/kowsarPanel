@@ -1,0 +1,125 @@
+<div class="card kws-chat-card border-0 shadow-sm rounded-4 overflow-hidden">
+
+  <!-- HEADER -->
+  <div class="kws-chat-header">
+
+    <div class="d-flex align-items-center gap-3">
+
+      <div class="kws-chat-header-icon">
+        <i class="mdi mdi-message-processing-outline"></i>
+      </div>
+
+      <div>
+
+        <h5 class="mb-1 fw-bold">
+          گفتگوهای تیکت
+        </h5>
+
+        <div class="small text-muted">
+          مشاهده و ارسال پیام‌ها
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- BODY -->
+  <div #chatContainer class="kws-chat-body">
+
+    @for (msg of msgs(); track msg.Id; let i = $index) {
+
+    <div class="kws-chat-row" [class.kws-chat-row-mine]="msg.IsMine">
+
+      <!-- name -->
+      @if (!msg.IsMine) {
+      <div class="kws-chat-user">
+        {{ msg.Name }}
+      </div>
+      }
+
+      <!-- text -->
+      @if (msg.ClassName === 'Text') {
+
+      <div class="kws-message-box" [class.kws-message-mine]="msg.IsMine" [class.kws-message-other]="!msg.IsMine">
+
+        {{ msg.ConversationText }}
+
+      </div>
+
+      }
+
+      <!-- file -->
+      @if (msg.ClassName === 'File') {
+
+      <button class="btn kws-file-btn" [class.kws-message-mine]="msg.IsMine" [class.kws-message-other]="!msg.IsMine"
+        (click)="GetFileFromAttach(i, 'other')">
+
+        <i class="mdi mdi-paperclip"></i>
+
+        <span>
+          نمایش فایل
+        </span>
+
+      </button>
+
+      }
+
+      <!-- date -->
+      <div class="kws-chat-date">
+
+        {{ msg.CreationDate }}
+
+      </div>
+
+    </div>
+
+    }
+
+  </div>
+
+  <!-- INPUT -->
+  @if(State()!='تمام شده' || ShowInsertRow()) {
+
+  <div class="kws-chat-input-area" [formGroup]="MessageForm">
+
+    <div class="d-flex align-items-center gap-2">
+
+      <app-autletter-file-upload (fileReady)="onFileReadyForUpload($event)">
+      </app-autletter-file-upload>
+
+      <input type="text" class="form-control kws-chat-input" formControlName="Description" placeholder="متن پیام..."
+        (keydown.enter)="onEnterPress($event)" />
+
+      <button class="btn kws-send-btn" type="button" (click)="SendMessage()">
+
+        <i class="mdi mdi-send"></i>
+
+      </button>
+
+    </div>
+
+  </div>
+
+  } @else {
+
+  <div class="kws-chat-closed">
+
+    <div class="mb-2">
+      <i class="fas fa-check-circle"></i>
+    </div>
+
+    <h5>
+      وضعیت این تیکت: «تمام شده»
+    </h5>
+
+    <p>
+      امکان ثبت پیام جدید وجود ندارد.
+    </p>
+
+  </div>
+
+  }
+
+</div>

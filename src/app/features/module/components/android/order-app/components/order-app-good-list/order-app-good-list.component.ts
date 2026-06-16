@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi.service';
 import { OrderCellActionGoodList } from './order-cell-action-good-ist';
 import { AgGridModule } from 'ag-grid-angular';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-order-app-good-list',
@@ -37,16 +36,16 @@ export class OrderAppGoodListComponent extends AgGridBaseComponent
 
 
 
-  records;
-  title = 'لیست کالاها ';
+  records = signal<any[]>([])
+  title = signal('لیست کالاها ')
   StartDate = new FormControl();
   EndDate = new FormControl();
 
-  Searchtarget: string = '';
+  Searchtarget = signal('')
 
   onInputChange() {
-    if (this.Searchtarget == "") {
-      this.Searchtarget = ""
+    if (this.Searchtarget() == "") {
+      this.Searchtarget.set("")
     }
     this.getList()
   }
@@ -57,7 +56,7 @@ export class OrderAppGoodListComponent extends AgGridBaseComponent
       this.isDarkMode = (mode === 'dark');
     });
 
-    this.columnDefs1 = [
+    this.column_name_1 = [
 
       {
         field: 'عملیات',
@@ -73,7 +72,7 @@ export class OrderAppGoodListComponent extends AgGridBaseComponent
       {
         field: 'GoodName',
         headerName: 'نام کالا  ',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 
@@ -81,7 +80,7 @@ export class OrderAppGoodListComponent extends AgGridBaseComponent
       {
         field: 'MaxSellPrice',
         headerName: 'قیمت',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 
@@ -89,7 +88,7 @@ export class OrderAppGoodListComponent extends AgGridBaseComponent
       {
         field: 'GoodExplain1',
         headerName: 'گروه',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 
@@ -107,7 +106,7 @@ export class OrderAppGoodListComponent extends AgGridBaseComponent
 
 
 
-    this.repo.GetOrderGoodList("50", this.Searchtarget, "0")
+    this.repo.GetOrderGoodList("50", this.Searchtarget(), "0")
       .subscribe((data: any) => {
         this.records = data;
 

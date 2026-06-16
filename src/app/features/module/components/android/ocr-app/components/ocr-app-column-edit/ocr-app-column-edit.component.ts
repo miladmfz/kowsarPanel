@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.service';
 import { Location } from '@angular/common';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-ocr-app-column-edit',
@@ -26,13 +25,13 @@ export class OcrAppColumnEditComponent implements OnInit {
   constructor() { }
 
 
-  AppType: string = "2";
-  ColumnType: string = "0";
-  Goodtypes: any[] = [];
-  Goodtypes_str: string = "";
-  TagName: string = "";
+  AppType = signal('2');
+  ColumnType = signal('0');
+  Goodtypes = signal<any[]>([])
+  Goodtypes_str = signal('')
+  TagName = signal('')
 
-  Propertys: any[] = [];
+  Propertys = signal<any[]>([])
   item: any;
 
   Lookup_item: any[] = [
@@ -69,7 +68,7 @@ export class OcrAppColumnEditComponent implements OnInit {
 
   ngOnInit() {
 
-    this.TagName = "تعریف تنظیم جدول جدید"
+    this.TagName.set("تعریف تنظیم جدول جدید")
 
     this.GetGoodType()
 
@@ -85,8 +84,8 @@ export class OcrAppColumnEditComponent implements OnInit {
 
 
     this.repo.GetGoodType().subscribe(e => {
-      this.Goodtypes = e;
-      this.Goodtypes.unshift({ GoodType: "همه", IsDefault: -1 });
+      this.Goodtypes.set(e)
+      this.Goodtypes().unshift({ GoodType: "همه", IsDefault: -1 });
     });
 
   }
@@ -113,7 +112,7 @@ export class OcrAppColumnEditComponent implements OnInit {
 
 
     this.repo.GetProperty(this.selected_GoodType).subscribe(e => {
-      this.Propertys = e;
+      this.Propertys.set(e)
 
     });
 
@@ -122,7 +121,7 @@ export class OcrAppColumnEditComponent implements OnInit {
 
 
   selectproperty() {
-    this.selected_obj_Property = this.Propertys.find(prop => prop.PropertyName === this.selected_PropertyName);
+    this.selected_obj_Property = this.Propertys().find(prop => prop.PropertyName === this.selected_PropertyName);
 
     const subString = this.selected_obj_Property.PropertyValueMap.substring(0, 3);
 
@@ -130,17 +129,17 @@ export class OcrAppColumnEditComponent implements OnInit {
 
     if (subString == "Tex") {
 
-      this.ColumnType = "0"
+      this.ColumnType.set("0")
     } else if (subString == "Dat") {
-      this.ColumnType = "0"
+      this.ColumnType.set("0")
     } else if (subString == "Flo") {
-      this.ColumnType = "2"
+      this.ColumnType.set("2")
     } else if (subString == "Int") {
-      this.ColumnType = "1"
+      this.ColumnType.set("1")
     } else if (subString == "Nva") {
-      this.ColumnType = "0"
+      this.ColumnType.set("0")
     } else if (subString == "Bit") {
-      this.ColumnType = "1"
+      this.ColumnType.set("1")
     }
 
 
@@ -189,8 +188,8 @@ export class OcrAppColumnEditComponent implements OnInit {
       , this.selected_obj_Detail.value
       , this.selected_obj_Detail.value
       , this.selected_obj_Detail.value
-      , this.ColumnType
-      , this.AppType
+      , this.ColumnType()
+      , this.AppType()
     ).subscribe(e => {
       this.location.back();
     });

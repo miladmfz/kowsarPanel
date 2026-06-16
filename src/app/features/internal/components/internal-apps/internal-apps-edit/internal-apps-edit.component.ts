@@ -1,11 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
 import { CommonModule } from '@angular/common';
 import { InternalAppsWebApiService } from '../../../services/InternalAppsWebApi.service';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-application-form',
@@ -25,9 +24,9 @@ export class InternalAppsEditComponent implements OnInit {
 
   constructor() { }
 
-  title = 'فرم اطلاعات اپلیکیشن';
-  ActivationCode: string = '';
-  SingleItems: any[] = [];
+  title = signal('فرم اطلاعات اپلیکیشن')
+  ActivationCode = signal('')
+  SingleItems = signal<any[]>([])
 
   EditForm = new FormGroup({
     ActivationCode: new FormControl(''),
@@ -65,7 +64,7 @@ export class InternalAppsEditComponent implements OnInit {
     this.route.paramMap.subscribe((params: ParamMap) => {
       var id = params.get('id');
       if (id != null) {
-        this.ActivationCode = id;
+        this.ActivationCode.set(id)
         this.getDetails();
       }
     });
@@ -73,7 +72,7 @@ export class InternalAppsEditComponent implements OnInit {
 
   getDetails() {
 
-    this.repo.GetAppActivationByCode(this.ActivationCode)
+    this.repo.GetAppActivationByCode(this.ActivationCode())
       .subscribe((data: any) => {
 
         this.EditForm.patchValue({

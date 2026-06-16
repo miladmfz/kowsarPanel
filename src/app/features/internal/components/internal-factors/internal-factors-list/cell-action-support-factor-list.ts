@@ -50,8 +50,33 @@ export class CellActionSupportFactorList implements ICellRendererAngularComp {
     }
 
 
+    // NavigateToEdit() {
+    //     this.params.context.componentParent.navigateToEdit(this.params.data.FactorCode);
+    // }
+
     NavigateToEdit() {
-        this.params.context.componentParent.navigateToEdit(this.params.data.FactorCode);
+
+        const parent =
+            this.params?.context?.componentParent;
+
+        if (!parent) {
+
+            console.warn(
+                'componentParent not found',
+                this.params
+            );
+
+            return;
+
+        }
+
+        const id =
+            this.params?.data?.FactorCode;
+
+        if (!id) return;
+
+        parent.navigateToEdit(id);
+
     }
     Edit_Customer_Property() {
         this.params.context.componentParent.Edit_factor_Property(this.params.data.FactorCode);

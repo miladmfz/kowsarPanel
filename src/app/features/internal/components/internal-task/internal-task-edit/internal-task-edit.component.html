@@ -1,5 +1,5 @@
 <div class="card-body">
-  <h4 class="header-title mb-4">{{ title }}</h4>
+  <h4 class="header-title mb-4">{{ title() }}</h4>
 
   <div class="tab-content">
     <div class="tab-pane active" id="GoodBase">
@@ -12,110 +12,110 @@
               <div class="card-body row">
 
                 <!-- انتخاب سطوح (فقط هنگام ساخت رکورد جدید) -->
-                @if (Code.length == 0) {
+                @if (TaskCode().length === 0) {
                 <div class="row col-md-12">
 
-                  @if (Parent_lvl1.length > 0) {
+                  @if (Parent_lvl1().length > 0) {
                   <div class="form-group col-md-4">
                     <label class="col-form-label" for="ParentCode1">سطح 1</label>
                     <select class="form-control custom-select" id="ParentCode1" formControlName="ParentCode1"
                       (change)="GetParent_lvl2()">
-                      @for (item of Parent_lvl1; track item) {
+                      @for (item of Parent_lvl1(); track item) {
                       <option [value]="item.TaskCode">{{ item.Title }}</option>
                       }
                     </select>
                   </div>
                   }
 
-                  @if (Parent_lvl2.length > 0) {
+                  @if (Parent_lvl2().length > 0) {
                   <div class="form-group col-md-4">
                     <label class="col-form-label" for="ParentCode2">سطح 2</label>
                     <select class="form-control custom-select" id="ParentCode2" formControlName="ParentCode2"
                       (change)="GetParent_lvl3()">
-                      @for (item of Parent_lvl2; track item) {
+                      @for (item of Parent_lvl2(); track item) {
                       <option [value]="item.TaskCode">{{ item.Title }}</option>
                       }
                     </select>
                   </div>
                   }
 
-                  @if (Parent_lvl3.length > 0) {
+                  @if (Parent_lvl3().length > 0) {
                   <div class="form-group col-md-4">
                     <label class="col-form-label" for="ParentCode3">سطح 3</label>
                     <select class="form-control custom-select" id="ParentCode3" formControlName="ParentCode3"
                       (change)="GetParent_lvl4()">
-                      @for (item of Parent_lvl3; track item) {
+                      @for (item of Parent_lvl3(); track item) {
                       <option [value]="item.TaskCode">{{ item.Title }}</option>
                       }
                     </select>
                   </div>
                   }
 
-                  @if (Parent_lvl4.length > 0) {
+                  @if (Parent_lvl4().length > 0) {
                   <div class="form-group col-md-4">
                     <label class="col-form-label" for="ParentCode4">سطح 4</label>
                     <select class="form-control custom-select" id="ParentCode4" formControlName="ParentCode4"
                       (change)="GetParent_lvl5()">
-                      @for (item of Parent_lvl4; track item) {
+                      @for (item of Parent_lvl4(); track item) {
                       <option [value]="item.TaskCode">{{ item.Title }}</option>
                       }
                     </select>
                   </div>
                   }
 
-                  @if (Parent_lvl5.length > 0) {
+                  @if (Parent_lvl5().length > 0) {
                   <div class="form-group col-md-4">
                     <label class="col-form-label" for="ParentCode5">سطح 5</label>
                     <select class="form-control custom-select" id="ParentCode5" formControlName="ParentCode5"
                       (change)="GetParent_lvl6()">
-                      @for (item of Parent_lvl5; track item) {
+                      @for (item of Parent_lvl5(); track item) {
                       <option [value]="item.TaskCode">{{ item.Title }}</option>
                       }
                     </select>
                   </div>
                   }
 
-                  @if (Parent_lvl6.length > 0) {
+                  @if (Parent_lvl6().length > 0) {
                   <div class="form-group col-md-4">
                     <label class="col-form-label" for="ParentCode6">سطح 6</label>
                     <select class="form-control custom-select" id="ParentCode6" formControlName="ParentCode6"
                       (change)="GetParent_lvl7()">
-                      @for (item of Parent_lvl6; track item) {
+                      @for (item of Parent_lvl6(); track item) {
                       <option [value]="item.TaskCode">{{ item.Title }}</option>
                       }
                     </select>
                   </div>
                   }
 
-                  @if (Parent_lvl7.length > 0) {
+                  @if (Parent_lvl7().length > 0) {
                   <div class="form-group col-md-4">
                     <label class="col-form-label" for="ParentCode7">سطح 7</label>
                     <select class="form-control custom-select" id="ParentCode7" formControlName="ParentCode7"
                       (change)="GetParent_lvl8()">
-                      @for (item of Parent_lvl7; track item) {
+                      @for (item of Parent_lvl7(); track item) {
                       <option [value]="item.TaskCode">{{ item.Title }}</option>
                       }
                     </select>
                   </div>
                   }
 
-                  @if (Parent_lvl8.length > 0) {
+                  @if (Parent_lvl8().length > 0) {
                   <div class="form-group col-md-4">
                     <label class="col-form-label" for="ParentCode8">سطح 8</label>
                     <select class="form-control custom-select" id="ParentCode8" formControlName="ParentCode8"
                       (change)="GetParent_lvl9()">
-                      @for (item of Parent_lvl8; track item) {
+                      @for (item of Parent_lvl8(); track item) {
                       <option [value]="item.TaskCode">{{ item.Title }}</option>
                       }
                     </select>
                   </div>
                   }
 
-                  @if (Parent_lvl9.length > 0) {
+                  @if (Parent_lvl9().length > 0) {
                   <div class="form-group col-md-4">
                     <label class="col-form-label" for="ParentCode9">سطح 9</label>
                     <select class="form-control custom-select" id="ParentCode9" formControlName="ParentCode9">
-                      @for (item of Parent_lvl9; track item) {
+                      @for (item of Parent_lvl9(); track item) {
                       <option [value]="item.TaskCode">{{ item.Title }}</option>
                       }
                     </select>
@@ -126,7 +126,7 @@
                 }
 
                 <!-- سطح مرجع (فقط هنگام ویرایش) -->
-                @if (Code.length > 0) {
+                @if (TaskCode().length > 0) {
                 <div class="form-group col-md-4">
                   <label class="col-form-label" for="ParentName1">سطح مرجع</label>
                   <input type="text" class="form-control" formControlName="ParentName1" id="ParentName1" readonly />
@@ -170,7 +170,7 @@
         <div class="card-body">
           <div class="col-sm-12">
 
-            @if (Code.length == 0) {
+            @if (TaskCode().length === 0) {
             <a class="btn btn-warning mx-1" href="javascript:void(0)" (click)="reset()">
               <span class="btn-label"><i class="fas fa-check-double"></i></span>پاک کردن همه
             </a>
@@ -184,7 +184,7 @@
             </a>
             }
 
-            @if (Code.length > 0) {
+            @if (TaskCode().length > 0) {
             <a class="btn btn-success mx-1" href="javascript:void(0)" (click)="submit('edit_back')">
               <span class="btn-label"><i class="fas fa-check-double"></i></span>اصلاح و بازگشت
             </a>

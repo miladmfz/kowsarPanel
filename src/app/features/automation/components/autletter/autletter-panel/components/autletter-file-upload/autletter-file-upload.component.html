@@ -1,0 +1,73 @@
+<!-- File Upload -->
+<div class="d-inline-block">
+
+  <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" />
+
+  <button type="button" class="kws-attach-btn" (click)="fileInput.click()">
+
+    <i class="mdi mdi-paperclip"></i>
+
+  </button>
+
+</div>
+
+<style>
+  .kws-attach-btn {
+
+    width: 48px;
+
+    height: 48px;
+
+    border: none;
+
+    outline: none;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+      linear-gradient(135deg,
+        #ffffff,
+        #f3f6fb);
+
+    color:
+      #0d47a1;
+
+    cursor:
+      pointer;
+
+    transition:
+      .2s ease;
+
+    box-shadow:
+      0 6px 18px rgba(0, 0, 0, .06);
+
+    border:
+      1px solid rgba(255, 204, 51, .24);
+  }
+
+  .kws-attach-btn i {
+
+    font-size:
+      22px;
+  }
+
+  .kws-attach-btn:hover {
+
+    transform:
+      translateY(-2px);
+
+    background:
+      linear-gradient(135deg,
+        rgba(13, 110, 253, .08),
+        rgba(255, 204, 51, .14));
+
+    box-shadow:
+      0 10px 24px rgba(255, 204, 51, .16);
+  }
+</style>

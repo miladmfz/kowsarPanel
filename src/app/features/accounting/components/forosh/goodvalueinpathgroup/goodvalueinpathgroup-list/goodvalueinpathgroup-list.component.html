@@ -1,0 +1,32 @@
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h4 class="card-title mb-3">{{ title() }}</h4>
+
+    <form [formGroup]="EditForm_Search">
+
+      <div class="row align-items-center mb-3">
+        <div class="col-md-4 mb-2 mb-md-0">
+          <input type="text" class="form-control rounded-pill" placeholder="جستجو..." formControlName="SearchTarget"
+            (input)="onSearchChange()" />
+        </div>
+
+        <div class="col-md-8 text-start">
+          <button class="btn btn-success me-1 mb-1" (click)="AddNew()">
+            <i class="fas fa-plus me-1"></i>
+            جدید
+          </button>
+        </div>
+      </div>
+
+    </form>
+
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [class]="themeClass + ' w-100 h-100'" [gridOptions]="gridOptions" [columnDefs]="column_name_1"
+        (firstDataRendered)="onFirstDataRendered($event)" [rowData]="records()" (gridReady)="onGridReady($event, 1)"
+        (stateChanged)="onGridStateChanged()" (filterChanged)="onGridStateChanged()"
+        (sortChanged)="onGridStateChanged()" (columnMoved)="onGridStateChanged()">
+      </ag-grid-angular>
+    </div>
+
+  </div>
+</div>

@@ -25,7 +25,6 @@ export class CellActionSupportAutletterFactorList implements ICellRendererAngula
   canDelete: true;
   canView: true;
   id: 0;
-  PhAddress3: any;
 
   refresh(params: any): boolean {
     return true;
@@ -34,7 +33,6 @@ export class CellActionSupportAutletterFactorList implements ICellRendererAngula
   agInit(params: any): void {
     this.params = params;
 
-    this.PhAddress3 = sessionStorage.getItem("PhAddress3")
 
 
     if (params.canEdit) {

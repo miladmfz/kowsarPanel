@@ -1,10 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { BrokerWebApiService } from 'src/app/features/module/services/BrokerWebApi.service';
-import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi.service';
 
 @Component({
   selector: 'app-broker-app-column-list',
@@ -23,8 +21,8 @@ export class BrokerAppColumnListComponent implements OnInit {
 
   constructor() { }
 
-  Apptype: string = "1";
-  BasketColumns: any[] = [];
+  Apptype = signal('1');
+  BasketColumns = signal<any[]>([])
 
   ngOnInit() {
     this.GetBasketColumnList()
@@ -32,9 +30,9 @@ export class BrokerAppColumnListComponent implements OnInit {
 
   GetBasketColumnList() {
 
-    this.repo.GetBasketColumnList(this.Apptype)
+    this.repo.GetBasketColumnList(this.Apptype())
       .subscribe(e => {
-        this.BasketColumns = e;
+        this.BasketColumns.set(e)
       });
   }
 

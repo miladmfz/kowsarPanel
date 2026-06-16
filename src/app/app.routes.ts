@@ -15,6 +15,25 @@ export const routes: Routes = [
             import('./auth-kowsar/auth-kowsar-routing')
                 .then(m => m.authKowsarRoutes),
     },
+    {
+        path: 'menu',
+        loadChildren: () =>
+            import('./features/menu-online/menu-online.routes')
+                .then(m => m.MENU_ONLINE_ROUTES),
+    },
+    {
+        path: 'showtree',
+        loadComponent: () =>
+            import('./app-shell/framework-components/kowsar/project-tree/project-tree.component')
+                .then(m => m.ProjectTreeComponent),
+    },
+
+    {
+        path: 'system-info',
+        loadComponent: () =>
+            import('./app-shell/framework-components/kowsar/system-info/system-info.component')
+                .then(m => m.SystemInfoComponent),
+    },
 
     // 🏠 مسیر اصلی → داشبورد (بعد از لاگین)
     {
@@ -25,6 +44,7 @@ export const routes: Routes = [
                 .then(m => m.LayoutComponent),
 
         children: [
+
 
             {
                 path: '',
@@ -49,12 +69,12 @@ export const routes: Routes = [
                         .then(m => m.Accounting_ROUTES),
             },
 
-            // 💬 پشتیبانی
+            // 💬 اتوماسیون
             {
-                path: 'support',
+                path: 'automation',
                 loadChildren: () =>
-                    import('./features/support/support.routes')
-                        .then(m => m.SUPPORT_ROUTES),
+                    import('./features/automation/automation.routes')
+                        .then(m => m.AUTOMATION_ROUTES),
             },
 
             // 📱 ماژول‌ها

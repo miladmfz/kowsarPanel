@@ -32,7 +32,7 @@ export class CustomerListModalComponent implements OnInit, OnDestroy {
 
   @Input() visible = false;
   @Input() darkMode = false;
-  @Input() records: any[] = [];
+  @Input() records: any
 
   // ===============================================================
   //   خروجی‌ها
@@ -56,6 +56,7 @@ export class CustomerListModalComponent implements OnInit, OnDestroy {
   // ===============================================================
 
   selectedCustomer = signal<any | null>(null);
+  themeClass = 'ag-theme-quartz kowsar-ag-grid';
 
   // ===============================================================
   //   تنظیمات گرید

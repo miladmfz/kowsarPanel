@@ -169,4 +169,41 @@ export const INTERNAL_ROUTES: Routes = [
                 .then(m => m.InternalFactorsEditComponent),
     },
 
+
+
+
+    // 📌 INTERNAL APPS — اپلیکیشن‌های داخلی کوثر
+    {
+        path: 'module-config-list',
+        title: 'لیست پیش فرض های سیستم',
+        loadComponent: () =>
+            import('./components/module-config/module-config-list/module-config-list.component')
+                .then(m => m.ModuleConfigListComponent),
+    },
+    {
+        path: 'module-config-edit',
+        title: 'پیش فرض جدید',
+        loadComponent: () =>
+            import('./components/module-config/module-config-edit/module-config-edit.component')
+                .then(m => m.ModuleConfigEditComponent),
+    },
+    {
+        path: 'module-config-edit/:id',
+        title: 'ویرایش پیش فرض',
+        loadComponent: () =>
+            import('./components/module-config/module-config-edit/module-config-edit.component')
+                .then(m => m.ModuleConfigEditComponent),
+    },
+
+
+
+    {
+        path: 'news-rss',
+        title: 'خبر ها',
+        loadComponent: () =>
+            import('./components/internal-news/internal-news-rss/internal-news-rss.component')
+                .then(m => m.InternalNewsRssComponent),
+    },
+
+
 ];

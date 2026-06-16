@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, Renderer2 } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Component, inject, OnInit, Renderer2, signal } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
@@ -10,7 +10,6 @@ import { CellActionOrderDbsetup } from './cell-action-order-dbsetup';
 import { CellActionOrderPrinter } from './cell-action-order-printer';
 import { catchError, of } from 'rxjs';
 import { AgGridModule } from 'ag-grid-angular';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-order-app-setting',
@@ -45,16 +44,16 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
   }
 
 
-  items: any = [];
-  Printers: any = [];
-  BasketColumns: any = [];
+  items = signal<any[]>([])
+  Printers = signal<any[]>([])
+  BasketColumns = signal<any[]>([])
 
-  Apptype: string = '3';
+  Apptype = signal('3');
 
 
-  AppBroker_Status: string = '';
-  AppBasketColumn_Status: string = '';
-  BrokerCustomer_Status: string = '';
+  AppBroker_Status = signal('')
+  AppBasketColumn_Status = signal('')
+  BrokerCustomer_Status = signal('')
 
 
 
@@ -76,7 +75,7 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
 
   Config_Declare() {
 
-    this.columnDefs1 = [
+    this.column_name_1 = [
       {
         field: 'عملیات',
         pinned: 'left',
@@ -87,35 +86,35 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
       {
         field: 'KeyId',
         headerName: 'KeyId',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'KeyValue',
         headerName: 'KeyValue',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'DataValue',
         headerName: 'DataValue',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'Description',
         headerName: 'Description',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'SubSystem',
         headerName: 'SubSystem',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
@@ -133,7 +132,7 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
       {
         field: 'PrinterName',
         headerName: 'نام پرینتر',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 
@@ -141,7 +140,7 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
       {
         field: 'PrinterExplain',
         headerName: 'توضیحات',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 
@@ -149,7 +148,7 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
       {
         field: 'GoodGroups',
         headerName: 'گروه کالا',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 
@@ -157,7 +156,7 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
       {
         field: 'WhereClause',
         headerName: 'شروط',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 
@@ -165,7 +164,7 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
       {
         field: 'PrintCount',
         headerName: 'نعداد پرینت',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 
@@ -195,13 +194,13 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
 
     this.repo.Web_GetDbsetupObject("OrderKowsar")
       .subscribe(e => {
-        this.items = e;
+        this.items.set(e)
 
       });
 
-    this.repo.GetAppPrinter(this.Apptype)
+    this.repo.GetAppPrinter(this.Apptype())
       .subscribe(e => {
-        this.Printers = e;
+        this.Printers.set(e)
 
       });
     this.GetBasketColumnList();
@@ -211,9 +210,9 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
 
 
 
-  selected_des: string = "";
-  selected_value: string = "";
-  selected_Key: string = "";
+  selected_des = signal('')
+  selected_value = signal('')
+  selected_Key = signal('')
 
   SelectDbSetup(index) {
     this.selected_des = index.Description;
@@ -225,7 +224,7 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
 
   UpdateDbSetup() {
 
-    this.repo.UpdateDbSetup(this.selected_value, this.selected_Key)
+    this.repo.UpdateDbSetup(this.selected_value(), this.selected_Key())
       .subscribe(e => {
         this.orderdbsetup_Modal_Response_close()
         this.sharedService.triggerActionAll('refresh');
@@ -283,9 +282,9 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
   CreateAppBasketColumn() {
 
 
-    this.repo.CreateBasketColumn(this.Apptype)
+    this.repo.CreateBasketColumn(this.Apptype())
       .subscribe(e => {
-        this.AppBasketColumn_Status = "AppBasketColumn created";
+        this.AppBasketColumn_Status.set("AppBasketColumn created");
       });
 
   }
@@ -295,9 +294,9 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
   GetBasketColumnList() {
 
 
-    this.repo.GetBasketColumnList(this.Apptype)
+    this.repo.GetBasketColumnList(this.Apptype())
       .subscribe(e => {
-        this.BasketColumns = e;
+        this.BasketColumns.set(e)
 
 
       });

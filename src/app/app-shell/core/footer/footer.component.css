@@ -1,0 +1,64 @@
+/* =====================================================
+   FOOTER
+   ===================================================== */
+
+.kws-footer {
+    background: rgba(255, 255, 255, .82) !important;
+    border-top: 1px solid rgba(13, 71, 161, .08) !important;
+    padding: 14px 24px !important;
+    color: #10203a !important;
+}
+
+.kws-footer a {
+    color: var(--kws-blue) !important;
+}
+
+.kws-footer .text-muted {
+    color: #6b7280 !important;
+}
+
+.kws-footer .badge {
+    font-size: 12px;
+}
+
+/* DARK MODE */
+
+html[data-bs-theme='dark'] .kws-footer,
+body[data-bs-theme='dark'] .kws-footer,
+[data-bs-theme='dark'] .kws-footer {
+    background: #353e55 !important;
+    border-top: 1px solid rgba(255, 255, 255, .08) !important;
+    color: #e6ecf5 !important;
+}
+
+html[data-bs-theme='dark'] .kws-footer a,
+body[data-bs-theme='dark'] .kws-footer a,
+[data-bs-theme='dark'] .kws-footer a {
+    color: #8ec5ff !important;
+}
+
+html[data-bs-theme='dark'] .kws-footer .text-muted,
+body[data-bs-theme='dark'] .kws-footer .text-muted,
+[data-bs-theme='dark'] .kws-footer .text-muted {
+    color: #b8c2d9 !important;
+}
+
+html[data-bs-theme='dark'] .kws-footer .text-primary,
+body[data-bs-theme='dark'] .kws-footer .text-primary,
+[data-bs-theme='dark'] .kws-footer .text-primary {
+    color: #8ec5ff !important;
+}
+
+/* =====================================================
+   FOOTER CLICK FIX
+   ===================================================== */
+
+.kws-footer {
+    pointer-events: none;
+}
+
+.kws-footer a,
+.kws-footer button,
+.kws-footer .badge {
+    pointer-events: auto;
+}

@@ -16,9 +16,26 @@ export abstract class AgGridBaseComponent extends AgGridCoreComponent {
     // --------------------------------------------------------
     //   آماده‌سازی گرید و منوی راست‌کلیک
     // --------------------------------------------------------
+    private enterpriseReady = false;
 
-    private pendingData: Record<number, any[]> = {};
+    private async ensureEnterpriseReady(): Promise<void> {
+        if (this.enterpriseReady) return;
 
+        const { ModuleRegistry } = await import('ag-grid-community');
+
+        const {
+            AllEnterpriseModule,
+            LicenseManager,
+        } = await import('ag-grid-enterprise');
+
+        LicenseManager.setLicenseKey('MjAwMDAwMDAwMDAwMA==5a5ea3be8a8aaa9b54ce7186663066431');
+
+        ModuleRegistry.registerModules([
+            AllEnterpriseModule,
+        ]);
+
+        this.enterpriseReady = true;
+    }
     override onGridReady(params: any, index?: number): void {
         super.onGridReady(params, index);
 
@@ -32,7 +49,22 @@ export abstract class AgGridBaseComponent extends AgGridCoreComponent {
             if (Array.isArray(pending) && pending.length > 0) {
                 try {
                     this.updateGridData(index, pending);
-                    params.api.sizeColumnsToFit?.();
+                    setTimeout(() => {
+
+                        try {
+
+                            if (
+                                params.api &&
+                                params.api.getDisplayedRowCount() >= 0
+                            ) {
+
+                                params.api.sizeColumnsToFit?.();
+
+                            }
+
+                        } catch { }
+
+                    }, 100);
                 } catch { }
             }
         }
@@ -62,7 +94,7 @@ export abstract class AgGridBaseComponent extends AgGridCoreComponent {
         const api = (this as any)[`gridApi${index}`];
         if (!api) return;
 
-        const ordered: any[] = [];
+        const ordered: any = []
         api.forEachNodeAfterFilterAndSort((node: any) => {
             ordered.push(node.data);
         });
@@ -75,7 +107,7 @@ export abstract class AgGridBaseComponent extends AgGridCoreComponent {
     // --------------------------------------------------------
     getCustomContextMenuItems = (params: any): any[] => {
         const colId = params.column?.getId?.();
-        const menu: any[] = [];
+        const menu: any = []
 
         if (colId) {
             menu.push(
@@ -150,7 +182,7 @@ export abstract class AgGridBaseComponent extends AgGridCoreComponent {
             }
         );
 
-        return menu;
+        return menu();
     };
 
     // --------------------------------------------------------

@@ -34,13 +34,14 @@ export class CellDateAttendancePanel implements ICellRendererAngularComp {
   //  - اگر میلادی بود: به جلالی تبدیل کن
   // ===============================================================
   private formatSmart(input: any): string {
+
     if (input === null || input === undefined || input === '' || input === '0001-01-01T00:00:00') return '—';
 
     // اگر Date یا timestamp بود => میلادی فرض می‌کنیم و تبدیل می‌کنیم
     if (input instanceof Date || typeof input === 'number') {
       const m0 = moment(input);
       if (!m0?.isValid?.()) return 'نامعتبر';
-      return m0.locale('fa').format('jYYYY/jMM/jDD HH:mm');
+      return m0.locale('fa').format('jYYYY/jMM/jDD HH:mm:ss');
     }
 
     const s = String(input).trim();
@@ -65,13 +66,14 @@ export class CellDateAttendancePanel implements ICellRendererAngularComp {
         'MM/DD/YYYY HH:mm:ss',
         'M/D/YYYY h:mm:ss A',
         'M/D/YYYY',
+        'HH:mm:ss',
       ],
       true
     );
 
     if (!m?.isValid?.()) return 'نامعتبر';
 
-    return m.locale('fa').format('jYYYY/jMM/jDD HH:mm');
+    return m.locale('fa').format('HH:mm');
   }
 
   // ===============================================================

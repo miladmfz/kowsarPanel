@@ -1,0 +1,22 @@
+{
+    "AppVersion": "15.02.05",
+    "production": true,
+    "apiUrl": "http://192.168.1.27:60006/api/",
+    "info": [
+        "Build options for api_Url:",
+        "https://itmali.ir/webapi/",
+        "http://5.160.152.173:60005/api/",
+        "Development:",
+        "http://192.168.1.27:60006/api/",
+        "http://5.160.152.173:60005/api_general/",
+        "http://5.160.152.173:60005/api_book/",
+        "http://5.160.152.173:60005/api_kits/",
+        "http://172.16.1.12:60005/api/",
+        "Qoqnos_Coffee:",
+        "http://94.139.164.68:60005/api/",
+        "Qoqnos_panel:",
+        "http://178.252.165.114:60005/api/",
+        "Qoqnos_panel_local:",
+        "http://192.168.170.2:60005/api/"
+    ]
+}

@@ -77,9 +77,10 @@
 </div>
 
 <!-- گرید -->
-<div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
-  <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" [gridOptions]="gridOptions"
-    (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()" class="w-100 h-100">
+<div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+  <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+    [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions" (gridReady)="onGridReady($event, 1)"
+    (firstDataRendered)="gridApi1?.sizeColumnsToFit()" [class]="themeClass + ' w-100 h-100'">
   </ag-grid-angular>
 </div>
 

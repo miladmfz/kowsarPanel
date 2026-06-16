@@ -1,279 +1,537 @@
-<!-- =============================================================== -->
-<!-- 🔝 نوار بالای سیستم (Topbar Component) -->
-<!-- توضیحات کلی:
-     این بخش شامل مدیریت اعلان‌ها، پروفایل کاربر، تغییر حالت تیره/روشن،
-     و کنترل منو (Sidebar) است.
-     طراحی به‌صورت واکنش‌گرا و با استفاده از Bootstrap و آیکون‌های Feather.
--->
-<!-- =============================================================== -->
-
-<!-- 🔝 Topbar Start -->
 <div class="navbar-custom">
   <div class="container-fluid">
+
+    <!-- Right Menu -->
     <ul class="list-unstyled topnav-menu float-end mb-0">
 
+      <!-- Date -->
       <li class="d-flex align-items-center mx-auto fw-bold m-3 text-white">
         <i class="fe-calendar me-1"></i>
-        تاریخ روز : {{ ActiveSession_str || '1404/01/01' }}
+        تاریخ روز : {{ ActiveDate_str() || '1404/01/01' }}
       </li>
 
-      <!-- 🔔 اعلان‌ها -->
+      <!-- Notifications -->
       <li class="dropdown notification-list topbar-dropdown">
+
         <a class="nav-link dropdown-toggle waves-effect waves-light position-relative" data-bs-toggle="dropdown"
           href="#" role="button">
+
           <i class="fe-bell noti-icon text-primary fs-5"></i>
 
-          @if (AlarmActive_Row + AlarmActtive_Conversation + AlarmActtive_LeaveRequest > 0) {
-          <span class="badge bg-danger rounded-circle noti-icon-badge animate-pulse shadow"
-            style="font-size: 0.7rem; top: 5px; right: 5px;">
-            {{ AlarmActive_Row + AlarmActtive_Conversation + AlarmActtive_LeaveRequest }}
+          @if (AlarmActive_Row() + AlarmActive_New() + AlarmActive_Conversation() + AlarmActive_LeaveRequest() > 0) {
+          <span class="badge bg-danger rounded-circle noti-icon-badge animate-pulse shadow">
+            {{ AlarmActive_New() + AlarmActive_Row() + AlarmActive_Conversation() + AlarmActive_LeaveRequest() }}
           </span>
           }
+
         </a>
 
-        <!-- 📬 Dropdown box -->
-        <div class="dropdown-menu dropdown-menu-end dropdown-lg shadow-lg border-0 rounded-4 overflow-hidden"
-          style="min-width: 340px;">
+        <div
+          class="dropdown-menu dropdown-menu-end dropdown-lg shadow-lg border-0 rounded-4 overflow-hidden kws-noti-menu">
 
-          <!-- Header -->
-          <div class="dropdown-header noti-title bg-gradient-primary text-white text-center fw-bold py-2">
-            <i class="fe-bell me-2"></i> اعلان‌ها
+          <div class="dropdown-header noti-title kws-noti-header text-center fw-bold py-2">
+            <i class="fe-bell me-2"></i>
+            اعلان‌ها
           </div>
 
-          <!-- لیست اعلان‌ها -->
-          <div class="list-group list-group-flush">
+          <div class="list-group list-group-flush kws-noti-list">
 
-            <!-- ارجاع جدید -->
-            @if (AlarmActive_Row > 0) {
-            <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 hover-highlight"
-              routerLink="/support/letter-mine">
+            @if (AlarmActive_New() > 0) {
+            <a class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-2 kws-noti-item"
+              routerLink="/automation/letter-user">
+
               <div
-                class="notify-icon bg-info text-white rounded-circle d-flex align-items-center justify-content-center"
-                style="width: 40px; height: 40px;">
+                class="notify-icon bg-danger text-white rounded-circle d-flex align-items-center justify-content-center">
+                <i class="fe-message-square"></i>
+              </div>
+
+              <div>
+                <div class="fw-semibold kws-noti-title">تیکت جدید دارید</div>
+                <small class="kws-noti-subtitle">تعداد: {{ AlarmActive_New() }}</small>
+              </div>
+
+            </a>
+            }
+
+            @if (AlarmActive_Row() > 0) {
+            <a class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-2 kws-noti-item"
+              routerLink="/automation/letter-mine">
+
+              <div
+                class="notify-icon bg-info text-white rounded-circle d-flex align-items-center justify-content-center">
                 <i class="fe-briefcase"></i>
               </div>
+
               <div>
-                <div class="fw-semibold text-dark">ارجاع جدید دارید</div>
-                <small class="text-muted">تعداد: {{ AlarmActive_Row }}</small>
+                <div class="fw-semibold kws-noti-title">ارجاع جدید دارید</div>
+                <small class="kws-noti-subtitle">تعداد: {{ AlarmActive_Row() }}</small>
               </div>
+
             </a>
             }
 
-            <!-- پیام جدید -->
-            @if (AlarmActtive_Conversation > 0) {
-            <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 hover-highlight"
-              routerLink="/support/letter-mine">
+            @if (AlarmActive_Conversation() > 0) {
+            <a class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-2 kws-noti-item"
+              (click)="routeletter()">
+
               <div
-                class="notify-icon bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center"
-                style="width: 40px; height: 40px;">
+                class="notify-icon bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center">
                 <i class="fe-message-circle"></i>
               </div>
+
               <div>
-                <div class="fw-semibold text-dark">پیام جدید دارید</div>
-                <small class="text-muted">تعداد: {{ AlarmActtive_Conversation }}</small>
+                <div class="fw-semibold kws-noti-title">پیام جدید دارید</div>
+                <small class="kws-noti-subtitle">تعداد: {{ AlarmActive_Conversation() }}</small>
               </div>
+
             </a>
             }
 
-            <!-- 🟩 مرخصی جدید -->
-            @if (AlarmActtive_LeaveRequest > 0) {
-            <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 hover-highlight"
-              routerLink="/support/leaverequest-list">
+            @if (AlarmActive_LeaveRequest() > 0) {
+            <a class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-2 kws-noti-item"
+              routerLink="/automation/leaverequest-list">
+
               <div
-                class="notify-icon bg-success text-white rounded-circle d-flex align-items-center justify-content-center"
-                style="width: 40px; height: 40px;">
+                class="notify-icon bg-success text-white rounded-circle d-flex align-items-center justify-content-center">
                 <i class="fe-user-check"></i>
               </div>
+
               <div>
-                <div class="fw-semibold text-dark">درخواست مرخصی جدید</div>
-                <small class="text-muted">تعداد: {{ AlarmActtive_LeaveRequest }}</small>
+                <div class="fw-semibold kws-noti-title">درخواست مرخصی جدید</div>
+                <small class="kws-noti-subtitle">تعداد: {{ AlarmActive_LeaveRequest() }}</small>
               </div>
+
             </a>
             }
 
-            <!-- 🩶 بدون اعلان -->
-            @if (AlarmActive_Row + AlarmActtive_Conversation + AlarmActtive_LeaveRequest === 0) {
-            <div class="text-center text-muted py-4 small">
-              <i class="fe-check-circle me-1"></i> هیچ اعلان جدیدی ندارید
+            @if (AlarmActive_New() + AlarmActive_Row() + AlarmActive_Conversation() + AlarmActive_LeaveRequest() === 0)
+            {
+            <div class="text-center kws-noti-empty py-4 small">
+              <i class="fe-check-circle me-1"></i>
+              هیچ اعلان جدیدی ندارید
             </div>
             }
 
           </div>
 
-          <!-- Footer -->
-          <div class="text-center bg-light border-top small py-2 text-muted">
-            آخرین بروزرسانی: {{ currentStatus || 'چند لحظه پیش' }}
+          <div class="text-center kws-noti-footer border-top small py-2">
+            آخرین بروزرسانی: {{ currentStatus() || 'چند لحظه پیش' }}
           </div>
+
         </div>
+
       </li>
 
-      <!-- 👤 پروفایل کاربر -->
+      <!-- User Profile -->
       <li class="dropdown notification-list topbar-dropdown">
+
         <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light d-flex align-items-center"
           data-bs-toggle="dropdown" href="#" role="button">
 
-          @if (Imageitem && Imageitem.startsWith('data:image')) {
-          <img [src]="Imageitem" alt="user-image" class="rounded-circle user-avatar" />
+          @if (Imageitem() && Imageitem().startsWith('data:image')) {
+          <img [src]="Imageitem()" alt="user-image" class="rounded-circle user-avatar" />
           } @else {
           <img src="./assets/images/KowsarSupport.png" alt="user-image" class="rounded-circle user-avatar" />
           }
 
           <span class="pro-user-name ms-2 fw-semibold">
-            {{ PhFullName || 'کاربر سیستم' }}
-            <i class="mdi mdi-chevron-down ms-1"></i>
+            {{ PhFullName() || 'کاربر سیستم' }}
+            <i class="mdi mdi-chevron-down ms-1 kws-chevron-icon"></i>
           </span>
+
         </a>
 
-        <!-- 🩵 Dropdown User Menu -->
-        <div class="dropdown-menu dropdown-menu-end profile-dropdown shadow-lg border-0 rounded-3">
-          <div class="dropdown-divider my-2"></div>
+        <div
+          class="dropdown-menu dropdown-menu-end profile-dropdown kws-profile-dropdown shadow-lg border-0 rounded-4 overflow-hidden">
 
-          <!-- 🌗 تغییر تم -->
-          <div class="theme-switch-wrapper px-3 py-2 d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center gap-2">
-              <i class="fe-moon text-secondary"></i>
-              <span class="theme-label small">{{ isDarkMode ? 'حالت شب' : 'حالت روز' }}</span>
+          <!-- Theme Switch -->
+          <div class="theme-switch-wrapper px-3 py-3 d-flex align-items-center justify-content-between">
+
+            <div class="d-flex align-items-center gap-3">
+
+              <div class="kws-theme-badge">
+                <i class="fe-moon kws-chevron-icon"></i>
+              </div>
+
+              <div>
+
+                <div class="fw-semibold small">
+                  {{ isDarkMode() ? 'حالت شب' : 'حالت روز' }}
+                </div>
+
+
+              </div>
+
             </div>
+
             <label class="theme-switch mb-0">
-              <input type="checkbox" id="theme-toggle" (change)="toggleTheme($event)" [checked]="isDarkMode" />
+
+              <input type="checkbox" id="theme-toggle" (change)="toggleTheme($event)" [checked]="isDarkMode()" />
+
               <span class="slider round"></span>
+
             </label>
+
           </div>
 
-          <div class="dropdown-divider my-2"></div>
+          <div class="dropdown-divider my-0"></div>
 
+          <!-- Change Password -->
+          @if (session.loginType === "CUSTOMER") {
 
-          @if(UserType=="CUSTOMER"){
-          <a class="dropdown-item notify-item" href="javascript:void(0)" (click)="openChangePasswordModal()">
-            <i class="fe-user text-primary"></i>
-            <span>تغییر رمز عبور</span>
-          </a>
+          <button type="button" class="dropdown-item kws-profile-item" (click)="openChangePasswordModal()">
+
+            <div class="d-flex align-items-center gap-3">
+
+              <div class="kws-profile-icon bg-primary-subtle text-primary">
+                <i class="fe-lock kws-chevron-icon"></i>
+              </div>
+
+              <div>
+                <div class="fw-medium">
+                  تغییر رمز عبور
+                </div>
+
+              </div>
+
+            </div>
+
+          </button>
+
           }
 
+          <!-- Logout -->
+          <button type="button" class="dropdown-item kws-profile-item kws-logout-item" (click)="logout()">
 
-          <!-- 🚪 خروج -->
-          <a (click)="logout()" class="dropdown-item notify-item text-danger">
-            <i class="ri-logout-box-line"></i>
-            <span>خروج</span>
-          </a>
+            <div class="d-flex align-items-center gap-3">
+
+              <div class="kws-profile-icon bg-danger-subtle text-danger">
+                <i class="ri-logout-box-line kws-chevron-icon"></i>
+              </div>
+
+              <div>
+                <div class="fw-medium text-danger">
+                  خروج از حساب
+                </div>
+
+              </div>
+
+            </div>
+
+          </button>
+
         </div>
+
       </li>
 
     </ul>
 
-    <!-- لوگوی سیستم -->
+    <!-- Logo -->
     <div class="logo-box">
+
       <a href="/" class="logo logo-dark text-center">
-        <span class="logo-sm"><img src="assets/images/logo-sm-dark.png" alt="" height="24" /></span>
-        <span class="logo-lg"><img src="assets/images/logo-dark.png" alt="" height="20" /></span>
+        <span class="logo-sm">
+          <img src="assets/images/logo-sm-dark.png" alt="" height="24" />
+        </span>
+        <span class="logo-lg">
+          <img src="assets/images/logo-dark.png" alt="" height="20" />
+        </span>
       </a>
+
       <a href="/" class="logo logo-light text-center">
-        <span class="logo-sm"><img src="assets/images/logo-sm.png" alt="" height="24" /></span>
-        <span class="logo-lg"><img src="assets/images/logo-light.png" alt="" height="20" /></span>
+        <span class="logo-sm">
+          <img src="assets/images/logo-sm.png" alt="" height="24" />
+        </span>
+        <span class="logo-lg">
+          <img src="assets/images/logo-light.png" alt="" height="20" />
+        </span>
       </a>
+
     </div>
 
-    <!-- 📋 کنترل نوار سمت چپ -->
-    <ul class="list-unstyled topnav-menu topnav-menu-left m-0">
+    <!-- =============================================================== -->
+    <!-- ☰ Sidebar Toggle -->
+    <!-- =============================================================== -->
+
+    <ul class="list-unstyled topnav-menu topnav-menu-left m-0 d-flex align-items-center">
+
+      <!-- Desktop Sidebar Toggle -->
       <li>
-        <button class="button-menu-mobile waves-effect waves-light" (click)="toggleSidebar()" type="button">
-          <i class="fe-menu"></i>
+
+        <button type="button" class="button-menu-mobile waves-effect waves-light kws-menu-btn"
+          (click)="toggleSidebar()">
+
+          <i class="fe-menu kws-menu-icon"></i>
+
         </button>
+
       </li>
+
+      <!-- Mobile Menu Toggle -->
       <li>
-        <a class="navbar-toggle nav-link" data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
-          <div class="lines"><span></span><span></span><span></span></div>
+
+        <a class="navbar-toggle nav-link kws-mobile-toggle" data-bs-toggle="collapse"
+          data-bs-target="#topnav-menu-content">
+
+          <div class="lines">
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+          </div>
+
         </a>
+
       </li>
+
     </ul>
 
     <div class="clearfix"></div>
+
   </div>
 </div>
-<!-- 🔚 End Topbar -->
-
 
 <!-- =============================================================== -->
 <!-- 🔐 Change Password Modal -->
 <!-- =============================================================== -->
-<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content rounded-4 border-0 shadow-lg">
+<div class="modal fade kws-modal" id="changePasswordModal" tabindex="-1" aria-hidden="true">
 
-      <div class="modal-header bg-light border-0">
-        <h5 class="modal-title fw-bold">
-          <i class="fe-lock me-2"></i>
-          تغییر رمز عبور
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal-dialog modal-dialog-centered modal-md">
+
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+
+      <!-- Header -->
+      <div class="modal-header kws-modal-header border-0">
+
+        <div class="d-flex align-items-center gap-2">
+
+          <div class="kws-modal-icon">
+            <i class="fe-lock"></i>
+          </div>
+
+          <div>
+            <h5 class="modal-title fw-bold mb-0">
+              تغییر رمز عبور
+            </h5>
+
+            <small class="text-muted">
+              بروزرسانی اطلاعات امنیتی حساب
+            </small>
+          </div>
+
+        </div>
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+        </button>
+
       </div>
 
+      <!-- Form -->
       <form [formGroup]="changePassForm" (ngSubmit)="submitChangePassword()">
-        <div class="modal-body">
 
-          <!-- 👤 نمایش اطلاعات کاربر -->
-          <div class="p-3 rounded-3 bg-light border mb-3">
-            <div class="d-flex align-items-center gap-2 mb-2">
-              <i class="fe-user text-primary"></i>
-              <span class="fw-bold">اطلاعات کاربر</span>
-            </div>
+        <div class="modal-body p-4">
 
-            <div class="row g-2">
-              <div class="col-6">
-                <label class="form-label mb-1 small text-muted">نام و نام خانوادگی</label>
-                <input type="text" class="form-control" [value]="PhFullName || '-' " readonly />
+          <!-- User Info -->
+          <div class="kws-user-card mb-4">
+
+            <div class="d-flex align-items-center gap-2 mb-3">
+
+              <div class="kws-user-avatar">
+                <i class="fe-user"></i>
               </div>
 
-              <div class="col-6">
-                <label class="form-label mb-1 small text-muted">نام کاربری</label>
-                <input type="text" class="form-control" [value]="UserName || '-' " readonly />
+              <div>
+                <div class="fw-bold">
+                  اطلاعات کاربر
+                </div>
+
+                <small class="text-muted">
+                  مشخصات حساب فعلی
+                </small>
               </div>
+
             </div>
+
+            <div class="row g-3">
+
+              <div class="col-12 col-md-6">
+
+                <label class="form-label small text-muted mb-1">
+                  نام و نام خانوادگی
+                </label>
+
+                <input type="text" class="form-control kws-readonly-input" [value]="PhFullName() || '-'" readonly />
+
+              </div>
+
+              <div class="col-12 col-md-6">
+
+                <label class="form-label small text-muted mb-1">
+                  نام کاربری
+                </label>
+
+                <input type="text" class="form-control kws-readonly-input" [value]="session.userName || '-'" readonly />
+
+              </div>
+
+            </div>
+
           </div>
 
-          <!-- 🔑 فرم تغییر رمز -->
+          <!-- Current Password -->
           <div class="mb-3">
-            <label class="form-label">رمز فعلی</label>
-            <input type="password" class="form-control" formControlName="UPass" autocomplete="current-password" />
-            <small class="text-danger" *ngIf="isInvalid('UPass')">
+
+            <label class="form-label fw-semibold">
+              رمز فعلی
+            </label>
+
+            <div class="input-group">
+
+              <span class="input-group-text">
+                <i class="fe-shield"></i>
+              </span>
+
+              <input type="password" class="form-control" formControlName="UPass" autocomplete="current-password"
+                placeholder="رمز فعلی را وارد کنید" />
+
+            </div>
+
+            @if (isInvalid('UPass')) {
+            <small class="text-danger mt-1 d-block">
               رمز فعلی را وارد کنید
             </small>
+            }
+
           </div>
 
+          <!-- New Password -->
           <div class="mb-3">
-            <label class="form-label">رمز جدید</label>
-            <input type="password" class="form-control" formControlName="UNewPass" autocomplete="new-password" />
-            <small class="text-danger" *ngIf="isInvalid('UNewPass')">
-              رمز جدید معتبر وارد کنید (حداقل ۶ کاراکتر)
+            <label class="form-label fw-semibold">رمز جدید</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fe-lock"></i></span>
+              <input type="password" class="form-control" formControlName="UNewPass" autocomplete="new-password"
+                placeholder="رمز جدید را وارد کنید" />
+            </div>
+
+            <small class="mt-1 d-block">
+              رمز جدید معتبر باشد:
+              <ul class="mb-0 ps-3">
+                <li [class.text-success]="passwordValidations.minLength"
+                  [class.text-danger]="!passwordValidations.minLength">
+                  حداقل ۸ کاراکتر
+                </li>
+                <li [class.text-success]="passwordValidations.hasUpper"
+                  [class.text-danger]="!passwordValidations.hasUpper">
+                  یک حرف بزرگ انگلیسی
+                </li>
+                <li [class.text-success]="passwordValidations.hasLower"
+                  [class.text-danger]="!passwordValidations.hasLower">
+                  یک حرف کوچک انگلیسی
+                </li>
+                <li [class.text-success]="passwordValidations.hasNumber"
+                  [class.text-danger]="!passwordValidations.hasNumber">
+                  یک عدد
+                </li>
+                <li [class.text-success]="passwordValidations.hasSpecial"
+                  [class.text-danger]="!passwordValidations.hasSpecial">
+                  یک کاراکتر خاص مانند !@#$%
+                </li>
+              </ul>
             </small>
+
+            @if (changePassForm.errors?.['sameAsOldPassword'] && (changePassForm.touched || changePassForm.dirty))
+            {
+            <small class="text-danger mt-1 d-block">
+              رمز جدید نباید با رمز فعلی یکسان باشد
+            </small>
+            }
+
+            @if (changePassForm.errors?.['passwordMismatch'] && (changePassForm.touched || changePassForm.dirty))
+            {
+            <small class="text-danger mt-1 d-block">
+              رمز جدید و تکرار آن یکسان نیست
+            </small>
+            }
           </div>
 
+          <!-- Confirm -->
           <div class="mb-2">
-            <label class="form-label">تکرار رمز جدید</label>
-            <input type="password" class="form-control" formControlName="confirmPassword" autocomplete="new-password" />
 
-            <small class="text-danger"
-              *ngIf="changePassForm.errors?.['passwordMismatch'] && (changePassForm.touched || changePassForm.dirty)">
+            <label class="form-label fw-semibold">
+              تکرار رمز جدید
+            </label>
+
+            <div class="input-group">
+
+              <span class="input-group-text">
+                <i class="fe-check-circle"></i>
+              </span>
+
+              <input type="password" class="form-control" formControlName="confirmPassword" autocomplete="new-password"
+                placeholder="تکرار رمز جدید" />
+
+            </div>
+
+            @if (changePassForm.errors?.['passwordMismatch']
+            && (changePassForm.touched || changePassForm.dirty)) {
+
+            <small class="text-danger mt-1 d-block">
               رمز جدید و تکرار آن یکسان نیست
             </small>
 
-            <small class="text-danger" *ngIf="isInvalid('confirmPassword')">
+            }
+
+            @if (isInvalid('confirmPassword')) {
+
+            <small class="text-danger mt-1 d-block">
               تکرار رمز جدید را وارد کنید
             </small>
+
+            }
+
           </div>
 
         </div>
 
-        <div class="modal-footer border-0">
-          <button type="button" class="btn btn-light" data-bs-dismiss="modal">انصراف</button>
+        <!-- Footer -->
+        <div class="modal-footer border-0 px-4 pb-4 pt-0">
 
-          <button type="submit" class="btn btn-primary" [disabled]="changePassForm.invalid || isSavingChangePass">
-            <span *ngIf="!isSavingChangePass">ثبت تغییرات</span>
-            <span *ngIf="isSavingChangePass">در حال ارسال...</span>
+          <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">
+
+            انصراف
+
           </button>
+
+          <button type="submit" class="btn btn-primary px-4 d-flex align-items-center gap-2"
+            [disabled]="changePassForm.invalid || isSavingChangePass()">
+
+            @if (!isSavingChangePass()) {
+
+
+            <i class="fe-save"></i>
+            <span>ثبت تغییرات</span>
+
+
+            }
+
+            @if (isSavingChangePass()) {
+
+
+            <span class="spinner-border spinner-border-sm"></span>
+            <span>در حال ارسال...</span>
+
+
+            }
+
+          </button>
+
         </div>
+
       </form>
 
     </div>
+
   </div>
+
 </div>

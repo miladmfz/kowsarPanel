@@ -1,15 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, Renderer2 } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Component, inject, OnInit, Renderer2, signal } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
-import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
-import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi.service';
 import { CellActionOrderCustomer } from './cell-action-order-customer';
 import { AgGridModule } from 'ag-grid-angular';
-import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-order-app-customer',
@@ -42,15 +38,15 @@ export class OrderAppCustomerComponent extends AgGridBaseComponent
 
 
 
-  items: any = [];
-  Printers: any = [];
-  BasketColumns: any = [];
+  items = signal<any[]>([])
+  Printers = signal<any[]>([])
+  BasketColumns = signal<any[]>([])
 
 
-  id: string = "";
+  id = signal('')
 
-  records_Customer
-  records_Customer_detail
+  records_Customer = signal<any[]>([])
+  records_Customer_detail = signal<any[]>([])
 
 
   ngOnInit(): void {
@@ -69,7 +65,7 @@ export class OrderAppCustomerComponent extends AgGridBaseComponent
 
     this.repo.GetCustomerMandeh()
       .subscribe(e => {
-        this.records_Customer = e;
+        this.records_Customer.set(e)
       });
 
   }
@@ -79,7 +75,7 @@ export class OrderAppCustomerComponent extends AgGridBaseComponent
 
     this.repo.GetCustomerlastGood(data.CustomerCode)
       .subscribe(e => {
-        this.records_Customer_detail = e;
+        this.records_Customer_detail.set(e)
         this.ordercustomer_Modal_Response_show()
       });
 
@@ -87,7 +83,7 @@ export class OrderAppCustomerComponent extends AgGridBaseComponent
 
   Config_Declare() {
 
-    this.columnDefs1 = [
+    this.column_name_1 = [
       {
         field: 'عملیات',
         pinned: 'left',
@@ -97,14 +93,14 @@ export class OrderAppCustomerComponent extends AgGridBaseComponent
       {
         field: 'CustomerName',
         headerName: 'نام مشتری',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'CustomerBedehkarMandeh',
         headerName: 'مانده حساب',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
@@ -118,7 +114,7 @@ export class OrderAppCustomerComponent extends AgGridBaseComponent
       {
         field: 'GoodName',
         headerName: 'نام کالا',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 
@@ -126,7 +122,7 @@ export class OrderAppCustomerComponent extends AgGridBaseComponent
       {
         field: 'Price',
         headerName: 'قیمت',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 
@@ -134,7 +130,7 @@ export class OrderAppCustomerComponent extends AgGridBaseComponent
       {
         field: 'FactorDate',
         headerName: 'تاریخ فاکتور',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 

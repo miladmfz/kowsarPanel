@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { OrderWebApiService } from 'src/app/features/module/services/OrderWebApi.service';
 
 @Component({
@@ -23,8 +22,8 @@ export class OrderAppColumnListComponent implements OnInit {
 
   constructor() { }
 
-  Apptype: string = "3";
-  BasketColumns: any[] = [];
+  Apptype = signal('3');
+  BasketColumns = signal<any[]>([])
 
   ngOnInit() {
     this.GetBasketColumnList()
@@ -32,9 +31,9 @@ export class OrderAppColumnListComponent implements OnInit {
 
   GetBasketColumnList() {
 
-    this.repo.GetBasketColumnList(this.Apptype)
+    this.repo.GetBasketColumnList(this.Apptype())
       .subscribe(e => {
-        this.BasketColumns = e;
+        this.BasketColumns.set(e)
       });
   }
 }

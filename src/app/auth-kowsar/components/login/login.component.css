@@ -1,0 +1,659 @@
+/* ===============================================================
+   KOWSAR LOGIN PAGE
+   File: login.component.css
+   Notes:
+   - This CSS is component-scoped.
+   - Use :host-context(...) for dark mode because html/body selectors
+     do not work reliably inside Angular component styles.
+   =============================================================== */
+
+/* ===============================================================
+   HOST
+   =============================================================== */
+
+:host {
+    display: block;
+    min-height: 100dvh;
+    background: linear-gradient(180deg, #f8fafc, #eef2f7);
+}
+
+:host-context(html[data-bs-theme='dark']),
+:host-context(body[data-layout-color='dark']),
+:host-context(body[data-layout-mode='dark']) {
+    background: linear-gradient(180deg, #232a3a, #353e55);
+}
+
+/* ===============================================================
+   PAGE BACKGROUND
+   =============================================================== */
+
+.kws-login-page {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    min-height: 100vh !important;
+    padding: 40px 16px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    z-index: 1;
+
+    background:
+        radial-gradient(circle at top right, rgba(255, 204, 51, .16), transparent 24%),
+        radial-gradient(circle at bottom left, rgba(13, 110, 253, .14), transparent 30%),
+        linear-gradient(180deg, #f8fafc, #eef2f7) !important;
+
+    background-attachment: fixed !important;
+}
+
+:host-context(html[data-bs-theme='dark']) .kws-login-page,
+:host-context(body[data-layout-color='dark']) .kws-login-page,
+:host-context(body[data-layout-mode='dark']) .kws-login-page {
+    background:
+        radial-gradient(circle at top right, rgba(255, 204, 51, .10), transparent 24%),
+        radial-gradient(circle at bottom left, rgba(142, 197, 255, .12), transparent 30%),
+        linear-gradient(180deg, #232a3a, #353e55) !important;
+}
+
+/* ===============================================================
+   FLOATING GLOW
+   =============================================================== */
+
+.kws-page-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(22px);
+    pointer-events: none;
+}
+
+.kws-page-glow-top {
+    width: 320px;
+    height: 320px;
+    top: -100px;
+    right: -100px;
+    background: rgba(255, 204, 51, .16);
+    animation: kwsFloat 8s ease-in-out infinite;
+}
+
+.kws-page-glow-bottom {
+    width: 280px;
+    height: 280px;
+    bottom: -90px;
+    left: -90px;
+    background: rgba(13, 110, 253, .12);
+    animation: kwsFloat 10s ease-in-out infinite reverse;
+}
+
+:host-context(html[data-bs-theme='dark']) .kws-page-glow-top,
+:host-context(body[data-layout-color='dark']) .kws-page-glow-top,
+:host-context(body[data-layout-mode='dark']) .kws-page-glow-top {
+    background: rgba(255, 204, 51, .10);
+}
+
+:host-context(html[data-bs-theme='dark']) .kws-page-glow-bottom,
+:host-context(body[data-layout-color='dark']) .kws-page-glow-bottom,
+:host-context(body[data-layout-mode='dark']) .kws-page-glow-bottom {
+    background: rgba(142, 197, 255, .12);
+}
+
+/* ===============================================================
+   LOGIN CARD
+   =============================================================== */
+
+.kws-login-card {
+    width: 100%;
+    max-width: 460px;
+    border-radius: 34px;
+    backdrop-filter: blur(16px);
+
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, .94), rgba(255, 255, 255, .88)) !important;
+
+    border: 1px solid rgba(119, 155, 255, .65) !important;
+
+    box-shadow:
+        0 24px 70px rgba(0, 0, 0, .10),
+        inset 0 1px 0 rgba(255, 255, 255, .75) !important;
+
+    animation: kwsCardEnter .7s ease-out both;
+}
+
+:host-context(html[data-bs-theme='dark']) .kws-login-card,
+:host-context(body[data-layout-color='dark']) .kws-login-card,
+:host-context(body[data-layout-mode='dark']) .kws-login-card {
+    background:
+        linear-gradient(135deg, rgba(53, 62, 85, .94), rgba(66, 75, 99, .88)) !important;
+
+    border-color: rgba(255, 255, 255, .10) !important;
+
+    box-shadow:
+        0 24px 70px rgba(0, 0, 0, .35),
+        inset 0 1px 0 rgba(255, 255, 255, .08) !important;
+}
+
+.kws-top-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+
+    background:
+        linear-gradient(90deg, #0d6efd, #ffcc33, #0d6efd);
+
+    background-size: 200% 100%;
+    animation: kwsGradientMove 4s linear infinite;
+}
+
+/* ===============================================================
+   LOGO
+   =============================================================== */
+
+.kws-logo-circle {
+    width: 125px;
+    height: 125px;
+
+    background:
+        linear-gradient(135deg, rgba(255, 204, 51, .14), rgba(255, 255, 255, .95));
+
+    border: 2px solid rgba(255, 204, 51, .28);
+
+    box-shadow:
+        0 14px 44px rgba(255, 204, 51, .18),
+        inset 0 2px 0 rgba(255, 255, 255, .65);
+
+    animation: kwsLogoPulse 3s ease-in-out infinite;
+}
+
+:host-context(html[data-bs-theme='dark']) .kws-logo-circle,
+:host-context(body[data-layout-color='dark']) .kws-logo-circle,
+:host-context(body[data-layout-mode='dark']) .kws-logo-circle {
+    background:
+        linear-gradient(135deg, rgba(255, 204, 51, .10), rgba(255, 255, 255, .06));
+
+    border-color: rgba(255, 204, 51, .22);
+
+    box-shadow:
+        0 14px 44px rgba(0, 0, 0, .24),
+        inset 0 2px 0 rgba(255, 255, 255, .08);
+}
+
+.kws-logo-ring {
+    inset: 10px;
+    border: 2px dashed rgba(255, 204, 51, .35);
+    animation: kwsRotate 18s linear infinite;
+}
+
+:host-context(html[data-bs-theme='dark']) .kws-logo-ring,
+:host-context(body[data-layout-color='dark']) .kws-logo-ring,
+:host-context(body[data-layout-mode='dark']) .kws-logo-ring {
+    border-color: rgba(255, 204, 51, .28);
+}
+
+/* ===============================================================
+   TITLES
+   =============================================================== */
+
+.kws-login-title {
+    font-size: clamp(30px, 2vw, 40px);
+    color: #10203a;
+    letter-spacing: .3px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+}
+
+.kws-login-subtitle {
+    color: #6c757d;
+    line-height: 1.9;
+    font-size: 15px;
+}
+
+:host-context(html[data-bs-theme='dark']) .kws-login-title,
+:host-context(body[data-layout-color='dark']) .kws-login-title,
+:host-context(body[data-layout-mode='dark']) .kws-login-title {
+    color: #f2f6ff !important;
+}
+
+:host-context(html[data-bs-theme='dark']) .kws-login-subtitle,
+:host-context(html[data-bs-theme='dark']) .form-label,
+:host-context(body[data-layout-color='dark']) .kws-login-subtitle,
+:host-context(body[data-layout-color='dark']) .form-label,
+:host-context(body[data-layout-mode='dark']) .kws-login-subtitle,
+:host-context(body[data-layout-mode='dark']) .form-label {
+    color: rgba(255, 255, 255, .72) !important;
+}
+
+/* ===============================================================
+   USER TYPE
+   =============================================================== */
+
+.kws-user-type {
+    background:
+        linear-gradient(135deg, rgba(13, 110, 253, .05), rgba(255, 204, 51, .10));
+
+    border: 1.5px solid rgba(255, 204, 51, .22);
+    color: #10203a;
+    font-weight: 700;
+    transition: .25s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .04);
+}
+
+.kws-user-type:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 204, 51, .42);
+    box-shadow: 0 10px 24px rgba(255, 204, 51, .14);
+}
+
+.kws-userType-active {
+    background:
+        linear-gradient(135deg, #0d47a1, #1565c0, #1976d2) !important;
+
+    border: 1.5px solid rgba(13, 110, 253, .55) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 32px rgba(13, 110, 253, .28),
+        inset 0 2px 0 rgba(255, 255, 255, .12);
+
+    transition: .25s ease;
+}
+
+.kws-userType-active i {
+    color: #ffffff !important;
+}
+
+:host-context(html[data-bs-theme='dark']) .kws-user-type,
+:host-context(body[data-layout-color='dark']) .kws-user-type,
+:host-context(body[data-layout-mode='dark']) .kws-user-type {
+    background: rgba(255, 255, 255, .04) !important;
+    border-color: rgba(255, 255, 255, .10) !important;
+    color: #e6ecf5 !important;
+}
+
+:host-context(html[data-bs-theme='dark']) .kws-user-type:hover,
+:host-context(body[data-layout-color='dark']) .kws-user-type:hover,
+:host-context(body[data-layout-mode='dark']) .kws-user-type:hover {
+    border-color: rgba(142, 197, 255, .28) !important;
+    background: rgba(255, 255, 255, .06) !important;
+}
+
+:host-context(html[data-bs-theme='dark']) .kws-userType-active,
+:host-context(body[data-layout-color='dark']) .kws-userType-active,
+:host-context(body[data-layout-mode='dark']) .kws-userType-active {
+    background:
+        linear-gradient(135deg, #0d47a1, #1565c0, #1976d2) !important;
+
+    color: #ffffff !important;
+    border-color: rgba(142, 197, 255, .42) !important;
+}
+
+/* ===============================================================
+   INPUTS / FLOATING LABEL
+   =============================================================== */
+
+.form-floating>.form-control.kws-input {
+    height: 58px;
+    border-radius: 16px;
+    background: #ffffff !important;
+    border: 1px solid #e4e9f2 !important;
+    color: #10203a !important;
+    box-shadow: none !important;
+    padding: 1.6rem 1rem .55rem 1rem;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background-color .2s ease;
+}
+
+.form-floating>.form-control.kws-input:hover {
+    border-color: #cfd7e3 !important;
+}
+
+.form-floating>.form-control.kws-input:focus {
+    background: #ffffff !important;
+    border-color: #5b8def !important;
+    box-shadow: 0 0 0 .18rem rgba(91, 141, 239, .12) !important;
+}
+
+.form-floating>label.kws-floating-label {
+    right: 0;
+    left: auto;
+    padding: 1rem;
+    color: #6c757d;
+    background: transparent !important;
+    text-shadow: none !important;
+    transform-origin: right center;
+    pointer-events: none;
+    z-index: 3;
+
+    transition:
+        color .2s ease,
+        transform .2s ease,
+        background-color .2s ease;
+}
+
+.form-floating>.form-control:focus~label.kws-floating-label,
+.form-floating>.form-control:not(:placeholder-shown)~label.kws-floating-label {
+    transform: scale(.85) translateY(-.6rem) translateX(-.15rem);
+    color: var(--bs-primary);
+    background: transparent !important;
+}
+
+:host-context(html[data-bs-theme='dark']) .form-floating>.form-control.kws-input,
+:host-context(body[data-layout-color='dark']) .form-floating>.form-control.kws-input,
+:host-context(body[data-layout-mode='dark']) .form-floating>.form-control.kws-input {
+    background: rgba(255, 255, 255, .085) !important;
+    border-color: rgba(255, 255, 255, .16) !important;
+    color: #f8fafc !important;
+}
+
+:host-context(html[data-bs-theme='dark']) .form-floating>.form-control.kws-input:hover,
+:host-context(body[data-layout-color='dark']) .form-floating>.form-control.kws-input:hover,
+:host-context(body[data-layout-mode='dark']) .form-floating>.form-control.kws-input:hover {
+    border-color: rgba(142, 197, 255, .34) !important;
+}
+
+:host-context(html[data-bs-theme='dark']) .form-floating>.form-control.kws-input:focus,
+:host-context(body[data-layout-color='dark']) .form-floating>.form-control.kws-input:focus,
+:host-context(body[data-layout-mode='dark']) .form-floating>.form-control.kws-input:focus {
+    background: rgba(255, 255, 255, .11) !important;
+    border-color: rgba(142, 197, 255, .60) !important;
+    box-shadow: 0 0 0 .18rem rgba(142, 197, 255, .12) !important;
+}
+
+:host-context(html[data-bs-theme='dark']) .form-floating>label.kws-floating-label,
+:host-context(body[data-layout-color='dark']) .form-floating>label.kws-floating-label,
+:host-context(body[data-layout-mode='dark']) .form-floating>label.kws-floating-label {
+    color: rgba(255, 255, 255, .78) !important;
+    background: transparent !important;
+}
+
+:host-context(html[data-bs-theme='dark']) .form-floating>.form-control:focus~label.kws-floating-label,
+:host-context(html[data-bs-theme='dark']) .form-floating>.form-control:not(:placeholder-shown)~label.kws-floating-label,
+:host-context(body[data-layout-color='dark']) .form-floating>.form-control:focus~label.kws-floating-label,
+:host-context(body[data-layout-color='dark']) .form-floating>.form-control:not(:placeholder-shown)~label.kws-floating-label,
+:host-context(body[data-layout-mode='dark']) .form-floating>.form-control:focus~label.kws-floating-label,
+:host-context(body[data-layout-mode='dark']) .form-floating>.form-control:not(:placeholder-shown)~label.kws-floating-label {
+    color: #8ec5ff !important;
+    background: transparent !important;
+}
+
+/* ===============================================================
+   PASSWORD FIELD
+   =============================================================== */
+
+.kws-password-input {
+    padding-left: 3rem !important;
+    padding-right: 1rem !important;
+}
+
+.kws-password-eye {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    right: auto;
+    transform: translateY(-50%);
+    z-index: 5;
+    cursor: pointer;
+    color: #98a6ad;
+    transition: color .2s ease;
+}
+
+.kws-password-eye:hover {
+    color: var(--bs-primary);
+}
+
+:host-context(html[data-bs-theme='dark']) .kws-password-eye,
+:host-context(body[data-layout-color='dark']) .kws-password-eye,
+:host-context(body[data-layout-mode='dark']) .kws-password-eye {
+    color: rgba(255, 255, 255, .65);
+}
+
+:host-context(html[data-bs-theme='dark']) .kws-password-eye:hover,
+:host-context(body[data-layout-color='dark']) .kws-password-eye:hover,
+:host-context(body[data-layout-mode='dark']) .kws-password-eye:hover {
+    color: #8ec5ff;
+}
+
+/* ===============================================================
+   LOGIN BUTTON
+   =============================================================== */
+
+.kws-login-btn {
+    height: 64px;
+    border-radius: 20px;
+    font-size: 20px;
+    font-weight: 900;
+    color: #10203a;
+
+    background:
+        linear-gradient(135deg, #FFE082, #FFCC33, #F5B800);
+
+    box-shadow:
+        0 16px 45px rgba(255, 204, 51, .32),
+        inset 0 2px 0 rgba(255, 255, 255, .55),
+        inset 0 -5px 14px rgba(120, 80, 0, .18);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+
+    isolation: isolate;
+}
+
+.kws-login-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 22px 58px rgba(255, 204, 51, .42),
+        inset 0 2px 0 rgba(255, 255, 255, .65),
+        inset 0 -5px 14px rgba(120, 80, 0, .14);
+}
+
+.kws-login-btn:disabled {
+    opacity: .7;
+    cursor: not-allowed;
+}
+
+/* ===============================================================
+   BUTTON EFFECTS
+   =============================================================== */
+
+.kws-login-glow {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+
+    background:
+        radial-gradient(circle,
+            rgba(255, 255, 255, .58),
+            rgba(255, 255, 255, .18) 28%,
+            transparent 70%);
+
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    filter: blur(16px);
+    z-index: 0;
+}
+
+.kws-login-particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .82);
+    box-shadow: 0 0 10px rgba(255, 255, 255, .55);
+    pointer-events: none;
+    z-index: 1;
+    animation: loginParticleFloat 1.2s ease-out forwards;
+}
+
+.kws-login-shine {
+    position: absolute;
+    top: 0;
+    left: -140px;
+    width: 120px;
+    height: 100%;
+
+    background:
+        linear-gradient(90deg, transparent, rgba(255, 255, 255, .72), transparent);
+
+    transform: skewX(-20deg);
+    animation: loginShineMove 3s ease-in-out infinite;
+    z-index: 1;
+}
+
+/* ===============================================================
+   VALIDATION
+   =============================================================== */
+
+.invalid-feedback {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+:host-context(html[data-bs-theme='dark']) .invalid-feedback,
+:host-context(body[data-layout-color='dark']) .invalid-feedback,
+:host-context(body[data-layout-mode='dark']) .invalid-feedback {
+    color: #ff6b6b !important;
+}
+
+/* ===============================================================
+   AUTOFILL FIX
+   =============================================================== */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #10203a !important;
+    transition: background-color 9999s ease-in-out 0s;
+    box-shadow: 0 0 0 1000px #ffffff inset !important;
+}
+
+:host-context(html[data-bs-theme='dark']) input:-webkit-autofill,
+:host-context(html[data-bs-theme='dark']) input:-webkit-autofill:hover,
+:host-context(html[data-bs-theme='dark']) input:-webkit-autofill:focus,
+:host-context(body[data-layout-color='dark']) input:-webkit-autofill,
+:host-context(body[data-layout-color='dark']) input:-webkit-autofill:hover,
+:host-context(body[data-layout-color='dark']) input:-webkit-autofill:focus,
+:host-context(body[data-layout-mode='dark']) input:-webkit-autofill,
+:host-context(body[data-layout-mode='dark']) input:-webkit-autofill:hover,
+:host-context(body[data-layout-mode='dark']) input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #f8fafc !important;
+    box-shadow: 0 0 0 1000px #3d465c inset !important;
+}
+
+/* ===============================================================
+   MOBILE
+   =============================================================== */
+
+@media (max-width: 576px) {
+
+    .kws-login-page {
+        padding: 24px 12px !important;
+    }
+
+    .kws-login-card {
+        border-radius: 26px;
+    }
+
+    .kws-logo-circle {
+        width: 105px;
+        height: 105px;
+    }
+
+    .kws-login-title {
+        font-size: 26px;
+    }
+
+    .kws-login-subtitle {
+        font-size: 13px;
+    }
+
+    .kws-login-btn {
+        height: 58px;
+        font-size: 17px;
+    }
+}
+
+/* ===============================================================
+   ANIMATIONS
+   =============================================================== */
+
+@keyframes kwsCardEnter {
+    from {
+        opacity: 0;
+        transform: translateY(25px) scale(.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes kwsRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes kwsLogoPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.04);
+    }
+}
+
+@keyframes kwsGradientMove {
+    from {
+        background-position: 0% 50%;
+    }
+
+    to {
+        background-position: 200% 50%;
+    }
+}
+
+@keyframes kwsFloat {
+
+    0%,
+    100% {
+        transform: translateY(0) translateX(0);
+    }
+
+    50% {
+        transform: translateY(14px) translateX(10px);
+    }
+}
+
+@keyframes loginShineMove {
+    0% {
+        left: -140px;
+    }
+
+    45%,
+    100% {
+        left: 120%;
+    }
+}
+
+@keyframes loginParticleFloat {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-30px) scale(0);
+    }
+}

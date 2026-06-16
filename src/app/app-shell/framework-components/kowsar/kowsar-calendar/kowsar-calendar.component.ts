@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import * as jalaali from 'jalaali-js';
 
@@ -40,7 +40,7 @@ interface CalendarDay {
 @Component({
   selector: 'app-kowsar-calendar',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule],
   templateUrl: './kowsar-calendar.component.html',
 })
 export class KowsarCalendarComponent implements OnInit {
@@ -49,8 +49,8 @@ export class KowsarCalendarComponent implements OnInit {
   currentJYear!: number;
   currentJMonth!: number;
 
-  headerJalali = '';
-  headerGregorian = '';
+  headerJalali = signal('')
+  headerGregorian = signal('')
 
   days: CalendarDay[] = [];
 
@@ -74,11 +74,11 @@ export class KowsarCalendarComponent implements OnInit {
   tooltipPinned = false; // وقتی click کنیم pin می‌شود
   tooltipX = 0;
   tooltipY = 0;
-  tooltipDateKey = '';
+  tooltipDateKey = signal('')
   tooltipIsHoliday = false;
   tooltipEvents: DayEventItem[] = [];
-
-  constructor(private http: HttpClient) { }
+  private readonly http = inject(HttpClient);
+  constructor() { }
 
   ngOnInit(): void {
     const jToday = jalaali.toJalaali(this.today);
@@ -196,7 +196,7 @@ export class KowsarCalendarComponent implements OnInit {
   }
 
   private buildHeaders(): void {
-    this.headerJalali = `${this.jalaliMonthNames[this.currentJMonth - 1]} ${this.currentJYear}`;
+    this.headerJalali.set(`${this.jalaliMonthNames[this.currentJMonth - 1]} ${this.currentJYear}`)
 
     const gStart = jalaali.toGregorian(this.currentJYear, this.currentJMonth, 1);
     const lastJDay = jalaali.jalaaliMonthLength(this.currentJYear, this.currentJMonth);
@@ -205,8 +205,7 @@ export class KowsarCalendarComponent implements OnInit {
     const startName = this.gregMonthNames[gStart.gm - 1];
     const endName = this.gregMonthNames[gEnd.gm - 1];
 
-    this.headerGregorian =
-      startName === endName ? `${startName} ${gStart.gy}` : `${startName} - ${endName} ${gEnd.gy}`;
+    this.headerGregorian.set(startName === endName ? `${startName} ${gStart.gy}` : `${startName} - ${endName} ${gEnd.gy}`)
   }
 
   prevMonth(): void {
@@ -260,7 +259,7 @@ export class KowsarCalendarComponent implements OnInit {
     ev.stopPropagation();
     // اگر روی همون روز دوباره کلیک شد، toggle
     const key = this.makeJalaliKey(d.jYear, d.jMonth, d.jDay);
-    if (this.tooltipPinned && this.tooltipDateKey === key) {
+    if (this.tooltipPinned && this.tooltipDateKey() === key) {
       this.closeTooltip();
       return;
     }
@@ -271,9 +270,9 @@ export class KowsarCalendarComponent implements OnInit {
     const k = this.makeJalaliKey(d.jYear, d.jMonth, d.jDay);
     const info = this.getDayInfo(k, d.jYear);
 
-    this.tooltipDateKey = k;
+    this.tooltipDateKey.set(k)
     this.tooltipIsHoliday = !!info?.is_holiday;
-    this.tooltipEvents = info?.events ?? [];
+    this.tooltipEvents = info?.events ?? []
 
     // موقعیت نزدیک نشانگر (با کمی آفست)
     this.tooltipX = ev.clientX + 12;
@@ -286,7 +285,7 @@ export class KowsarCalendarComponent implements OnInit {
   closeTooltip(): void {
     this.tooltipOpen = false;
     this.tooltipPinned = false;
-    this.tooltipDateKey = '';
+    this.tooltipDateKey.set("")
     this.tooltipIsHoliday = false;
     this.tooltipEvents = [];
   }

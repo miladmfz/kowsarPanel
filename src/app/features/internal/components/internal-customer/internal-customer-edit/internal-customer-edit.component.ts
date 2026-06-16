@@ -1,13 +1,14 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { CommonModule } from '@angular/common';
 import { debounceTime, Subject } from 'rxjs';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CustomerWebApiService } from '../../../services/CustomerWebApi.service';
+import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
+import { PermissionService } from 'src/app/app-shell/framework-services/storage/PermissionService';
 
 @Component({
   selector: 'app-internal-customer-edit',
@@ -24,19 +25,21 @@ export class InternalCustomerEditComponent extends AgGridBaseComponent implement
 
 
   private readonly router = inject(Router);
-
+  protected readonly permissionService = inject(PermissionService);
   private readonly repo = inject(CustomerWebApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
+  private readonly renderer = inject(Renderer2);
 
   constructor() { super(); }
 
-  title = 'فرم اطلاعات اپلیکیشن';
-  SingleItems: any[] = [];
-  records_city: any;
-  CustomerCode: string = '';
+  title = signal('فرم اطلاعات اپلیکیشن')
+  SingleItems = signal<any[]>([])
+  records_city = signal<any[]>([])
+  CustomerCode = signal('')
+  // جستجو
+  City_array = signal<any[]>([])
 
-  City_array: any[] = [];
 
   // فرم‌های صفحه
   EditForm_SearchTarget = new FormGroup({
@@ -66,18 +69,18 @@ export class InternalCustomerEditComponent extends AgGridBaseComponent implement
   ngOnInit() {
     this.route.paramMap.subscribe((params: ParamMap) => {
       const idStr = params.get('id');       // رشته
-      this.CustomerCode = idStr
+      this.CustomerCode.set(idStr)
       const idNum = Number(idStr);          // فقط برای مقایسه
 
       if (!idStr || idNum === 0) {
         // حالت ایجاد
-        this.CustomerCode = "0"
-        this.title = "ایجاد مشتری جدید";
+        this.CustomerCode.set("0")
+        this.title.set("ایجاد مشتری جدید")
       } else {
         // حالت اصلاح
-        this.CustomerCode = idStr;        // رشته ذخیره می‌شود
+        this.CustomerCode.set(idStr)
         this.getDetails();
-        this.title = "اصلاح مشتری";
+        this.title.set("اصلاح مشتری")
       }
     });
 
@@ -98,14 +101,14 @@ export class InternalCustomerEditComponent extends AgGridBaseComponent implement
       {
         field: 'CityCode',
         headerName: 'نام مشتری  ',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
       },
       {
         field: 'Name',
         headerName: 'مدیریت',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
@@ -121,25 +124,25 @@ export class InternalCustomerEditComponent extends AgGridBaseComponent implement
 
   }
 
-  Searchtarget_city: string = '';
-  selectedRows: any[] = [];
+  Searchtarget_city = signal('')
+  selectedRows = signal<any[]>([])
 
 
   onInputChange_City() {
-    this.searchSubject.next(this.Searchtarget_city);
+    this.searchSubject.next(this.Searchtarget_city());
   }
 
   onSelectionChanged(event: any) {
-    this.selectedRows = event.api.getSelectedRows();
+    this.selectedRows.set(event.api.getSelectedRows())
   }
 
   Set_City() {
 
     this.EditForm_Customer.patchValue({
-      CityCode: this.selectedRows[0].CityCode,
-      CityName: this.selectedRows[0].Name,
+      CityCode: this.selectedRows()[0].CityCode,
+      CityName: this.selectedRows()[0].Name,
     });
-    this.selectedRows = []
+    this.selectedRows.set([])
     this.city_dialog_close()
   }
 
@@ -147,7 +150,7 @@ export class InternalCustomerEditComponent extends AgGridBaseComponent implement
 
 
     this.EditForm_SearchTarget.patchValue({
-      SearchTarget: this.Searchtarget_city,
+      SearchTarget: this.Searchtarget_city(),
     });
 
 
@@ -156,8 +159,8 @@ export class InternalCustomerEditComponent extends AgGridBaseComponent implement
 
 
 
-        this.records_city = data?.Citys ?? [];;
-        this.updateGridData(3, this.records_city);
+        this.records_city.set(data?.Citys ?? [])
+        this.updateGridData(3, this.records_city());
 
       });
 
@@ -165,7 +168,7 @@ export class InternalCustomerEditComponent extends AgGridBaseComponent implement
 
   getDetails() {
 
-    this.repo.GetCustomerByCode(this.CustomerCode)
+    this.repo.GetCustomerByCode(this.CustomerCode())
       .subscribe((data: any) => {
 
         this.EditForm_Customer.patchValue({
@@ -214,7 +217,7 @@ export class InternalCustomerEditComponent extends AgGridBaseComponent implement
     } else {
 
       this.EditForm_Customer.patchValue({
-        CustomerCode: this.CustomerCode,
+        CustomerCode: this.CustomerCode(),
 
       });
 
@@ -234,51 +237,31 @@ export class InternalCustomerEditComponent extends AgGridBaseComponent implement
   }
 
 
-  city_dialog_show() { this.toggleModal('#citylist', true); }
-  city_dialog_close() { this.toggleModal('#citylist', false); }
 
 
 
-  toggleModal(selector: string, show: boolean) {
-    const modal: any = document.querySelector(selector);
+
+  @ViewChild('citylist', { static: false }) citylist!: ElementRef<HTMLDivElement>;
+
+
+
+  city_dialog_show(): void {
+    const modal = this.citylist?.nativeElement;
     if (!modal) return;
-
-    if (show) {
-      // BACKDROP بساز
-      const backdrop = document.createElement('div');
-      backdrop.className = 'modal-backdrop fade';
-      backdrop.id = selector.replace('#', '') + '-backdrop';
-      document.body.appendChild(backdrop);
-
-      // کمی تاخیر برای fade
-      setTimeout(() => backdrop.classList.add('show'), 10);
-
-      // مودال را باز کن
-      modal.classList.add('show', 'd-block');
-      modal.removeAttribute('aria-hidden');
-      modal.setAttribute('aria-modal', 'true');
-      modal.style.display = 'block';
-
-      // بستن با کلیک روی بک‌دراپ
-      backdrop.addEventListener('click', () => this.toggleModal(selector, false));
-    }
-    else {
-      // مودال را ببند
-      modal.classList.remove('show');
-      setTimeout(() => {
-        modal.classList.remove('d-block');
-        modal.style.display = 'none';
-      }, 150);
-
-      modal.setAttribute('aria-hidden', 'true');
-      modal.removeAttribute('aria-modal');
-
-      // بک‌دراپ را حذف کن
-      const backdrop = document.getElementById(selector.replace('#', '') + '-backdrop');
-      if (backdrop) {
-        backdrop.classList.remove('show');
-        setTimeout(() => backdrop.remove(), 150);
-      }
-    }
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
   }
+
+  city_dialog_close(): void {
+    const modal = this.citylist?.nativeElement;
+    if (!modal) return;
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+
 }

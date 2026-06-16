@@ -8,8 +8,7 @@ declare var $: any;
 
   <span   (click)="Show_Customer_Property()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="خصوصیت اضافه ">
   <a >
-    <i class=" far fa-file-alt"></i>
-  </a>
+    <i class=" far fa-file-alt"></i>  </a>
   </span>
   `,
     standalone: false

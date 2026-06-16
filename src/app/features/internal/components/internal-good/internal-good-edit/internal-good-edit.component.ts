@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, Renderer2 } from '@angular/core';
+import { Component, inject, OnInit, Renderer2, signal } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { Base_Lookup, GoodType_lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import { SupportFactorWebApiService } from '../../../services/SupportFactorWebApi.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AgGridAngular } from 'ag-grid-angular';
+import { KowsarBaseWebApi } from 'src/app/app-shell/framework-services/base/KowsarBaseWebApi.service';
 
 @Component({
   selector: 'app-internal-good-edit',
@@ -25,6 +25,8 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
   private readonly router = inject(Router);
 
   private readonly repo = inject(SupportFactorWebApiService);
+  private readonly base_repo = inject(KowsarBaseWebApi);
+
   private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
 
@@ -40,10 +42,10 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
       var id = params.get('id');
       if (id != null) {
 
-        this.Code = id;
+        this.Code.set(id)
 
-        this.Code_int = parseInt(this.Code);
-        if (parseInt(this.Code) > 0) {
+        this.Code_int.set(parseInt(this.Code()))
+        if (parseInt(this.Code()) > 0) {
           this.getDetails();
         } else {
           this.EditForm_Base_reset()
@@ -63,14 +65,14 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
 
 
   // #region Declare
-  title = 'ایجاد نوع داده انتخابی';
-  Code: string = '';
-  Code_int: number = 0;
-  Imageitem: string = '';
-  GoodTypeStr: string = '';
-  SellPriceType_Str: string = '';
+  title = signal('ایجاد نوع داده انتخابی')
+  Code = signal('')
+  Code_int = signal(0)
+  Imageitem = signal('')
+  GoodTypeStr = signal('')
+  SellPriceType_Str = signal('')
 
-  Errormsg_property: string = '';
+  Errormsg_property = signal('')
 
 
 
@@ -84,13 +86,13 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
 
 
 
-  temp_str: string = "";
-  SingleItems: any[] = [];
-  Propertys: any[] = [];
-  GoodCode_str: string = "";
-  GoodSubCode_str: string = "";
-  GoodType_str: string = "";
-  GoodName_str: string = "";
+  temp_str = signal('')
+  SingleItems = signal<any[]>([])
+  Propertys = signal<any[]>([])
+  GoodCode_str = signal('')
+  GoodSubCode_str = signal('')
+  GoodType_str = signal('')
+  GoodName_str = signal('')
 
   KowsarTemplate = new FormGroup({
     Goods: new FormArray([])
@@ -100,8 +102,6 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
   JsonForm = new FormGroup({
     JsonData: new FormControl(""),
   });
-
-
 
 
 
@@ -215,9 +215,9 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
 
 
 
-    this.repo.GetGood_base(this.Code).subscribe((data: any) => {
+    this.repo.GetGood_base(this.Code()).subscribe((data: any) => {
 
-      this.SellPriceType_Str = data.Goods[0].SellPriceType
+      this.SellPriceType_Str.set(data.Goods[0].SellPriceType)
 
       this.EditForm_Base.patchValue({
         GoodCode: data.Goods[0].GoodCode,
@@ -297,7 +297,7 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
 
   GetObjectTypeFromDbSetup() {
 
-    this.repo.GetObjectTypeFromDbSetup("GoodType").subscribe((data: any) => {
+    this.base_repo.GetObjectTypeFromDbSetup("GoodType").subscribe((data: any) => {
 
 
       this.GoodType_lookup = data.ObjectTypes
@@ -315,7 +315,7 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
     this.GetLastGoodData()
 
 
-    this.repo.GetObjectTypeFromDbSetup("GoodType").subscribe((data: any) => {
+    this.base_repo.GetObjectTypeFromDbSetup("GoodType").subscribe((data: any) => {
 
 
       data.ObjectTypes.forEach((item: GoodType_lookup) => {
@@ -371,7 +371,7 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
 
   onSellPriceTypeChange() {
 
-    this.SellPriceType_Str = this.EditForm_Base.value.SellPriceType
+    this.SellPriceType_Str.set(this.EditForm_Base.value.SellPriceType)
     const maxSellPrice: number = this.EditForm_Base.value.MaxSellPrice;
     const sellPrice1: number = this.EditForm_Base.value.SellPrice1;
     const sellPrice2: number = this.EditForm_Base.value.SellPrice2;
@@ -578,7 +578,7 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
 
   onKeyUp(event: KeyboardEvent): void {
 
-    if (this.Code == "") {
+    if (this.Code() == "") {
       let query = this.EditForm_Base.value.GoodName;
 
       // Replace spaces with '%20'
@@ -588,7 +588,7 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
       if (query.length >= 3) {
         this.fetchSuggestions(query);
       } else {
-        this.simillar_good = [];
+        this.simillar_good.set([])
       }
     }
 
@@ -604,7 +604,6 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
       (data: any) => {
 
         this.simillar_good = data.Goods.slice(0, 5); // Limit to top 5 results
-        console.log(this.simillar_good);
       },
       (error) => {
         console.error('Error fetching suggestions', error);
@@ -649,12 +648,12 @@ export class InternalGoodEditComponent extends AgGridBaseComponent implements On
 
 
 
-    this.simillar_good = []
+    this.simillar_good.set([])
 
 
   }
 
-  simillar_good: any[] = [];
+  simillar_good = signal<any[]>([])
 
 
   IsbnToBarcode_frm = new FormGroup({

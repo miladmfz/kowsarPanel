@@ -1,31 +1,50 @@
-<!-- =============================================================== -->
-<!-- 📘 فوتر (Footer) اصلی سیستم -->
-<!-- توضیحات کلی:
-     این بخش فوتر عمومی داشبورد است که در تمام صفحات ثابت می‌ماند.
-     شامل نمایش سال جاری به‌صورت داینامیک و لینک به وب‌سایت رسمی
-     شرکت کوثر سامانه پرداز می‌باشد.
--->
-<!-- =============================================================== -->
+<footer class="footer kws-footer">
 
-<footer class="footer">
   <div class="container-fluid">
-    <div class="row">
 
-      <div class="col-md-6 text-end">
-        <script>
-          document.write(new Date().getFullYear());
-        </script>
-        کوثر سامانه پرداز &copy;
-        <a href="http://www.kits.ir/" target="_blank" rel="noopener noreferrer">kits.ir</a>
+    <div class="row align-items-center gy-2">
+
+      <div class="col-lg-6">
+
+        <div class="d-flex align-items-center justify-content-center justify-content-lg-end gap-2 flex-wrap">
+
+          <span class="text-muted small">
+            © {{ currentYear }}
+          </span>
+
+          <span class="fw-bold text-primary">
+            کوثر سامانه پرداز
+          </span>
+
+          <a href="http://www.kits.ir/" target="_blank" rel="noopener noreferrer"
+            class="fw-semibold text-decoration-none">
+
+            kits.ir
+
+          </a>
+
+        </div>
 
       </div>
-      <div class="col-md-6 text-start">
-        <p class="page-title  fw-semibold">
-          نسخه :{{ AppVersion }}
-        </p>
-      </div>
 
+      <div class="col-lg-6">
+
+        <div class="d-flex align-items-center justify-content-center justify-content-lg-start">
+
+          <span class="badge bg-soft-primary text-primary rounded-pill px-3 py-2">
+
+            <i class="fas fa-code-branch me-1"></i>
+
+            نسخه {{ AppVersion() }}
+
+          </span>
+
+        </div>
+
+      </div>
 
     </div>
+
   </div>
+
 </footer>

@@ -1,14 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
 import { IDatepickerTheme, NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { KowsarChartColumnComponent } from 'src/app/app-shell/framework-components/kowsar/kowsar-chart-column/kowsar-chart-column.component';
-import { KowsarChartPieComponent } from 'src/app/app-shell/framework-components/kowsar/kowsar-chart-pie/kowsar-chart-pie.component';
 import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.service';
 
 @Component({
@@ -23,7 +21,7 @@ import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.ser
     FormsModule,
     NgPersianDatepickerModule,
     KowsarChartColumnComponent,
-    KowsarChartPieComponent
+    // KowsarChartPieComponent
   ],
 })
 export class OcrAppReportListComponent extends AgGridBaseComponent
@@ -36,11 +34,11 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
   }
 
   ngOnInit(): void {
-    this.columnDefs1 = [
+    this.column_name_1 = [
       {
         field: 'dbname',
         headerName: 'نام دیتابیس',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
@@ -48,42 +46,42 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
       {
         field: 'CustName',
         headerName: 'نام مشتری',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 250
       },
       {
         field: 'FactorDate',
         headerName: 'تاریخ فاکتور',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'CustomerCode',
         headerName: 'کد مشتری',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'Explain',
         headerName: 'توضیحات',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'CustomerPath',
         headerName: 'منطقه',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'AppFactorState',
         headerName: 'وضعیت فاکتور',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
@@ -99,11 +97,11 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
 
 
 
-  records;
-  title = 'لیست کالاها ';
+  records = signal<any[]>([])
+  title = signal('لیست کالاها')
   dateValue = new FormControl('');
 
-  Searchtarget: string = '';
+  Searchtarget = signal('')
 
   ReportType_lookup: Base_Lookup[] = [
     { id: "0", name: "لیست" },
@@ -124,11 +122,11 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
     State: new FormControl("0"),
   });
 
-  ToDayDate: string = '';
+  ToDayDate = signal('')
 
-  loading: boolean = true;
+  loading = signal(true)
 
-  Report_State: string = '';
+  Report_State = signal('')
 
   customTheme: Partial<IDatepickerTheme> = {
     selectedBackground: '#D68E3A',
@@ -137,13 +135,13 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
 
   start_dateValue = new FormControl();
   End_dateValue = new FormControl();
-  loading1: boolean = true;
-  loading2: boolean = true;
-  loading3: boolean = true;
-  loading4: boolean = true;
-  loading5: boolean = true;
-  loading6: boolean = true;
-  loading7: boolean = true;
+  loading1 = signal(true)
+  loading2 = signal(true)
+  loading3 = signal(true)
+  loading4 = signal(true)
+  loading5 = signal(true)
+  loading6 = signal(true)
+  loading7 = signal(true)
 
 
   columnChartData_state1: any
@@ -163,22 +161,21 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
   labels_state2: any
 
 
-  data_state1: any = [];
-  data_state2: any = [];
-  data_state5: any = [];
-  data_state6: any = [];
-  data_state7: any = [];
+  data_state1 = signal<any[]>([])
+  data_state2 = signal<any[]>([])
+  data_state5 = signal<any[]>([])
+  data_state6 = signal<any[]>([])
+  data_state7 = signal<any[]>([])
 
 
   onInputChange() {
-    this.Report_State = this.GetOcrPanel_frm.value.State
-    console.log(this.Report_State)
+    this.Report_State.set(this.GetOcrPanel_frm.value.State)
 
   }
 
   LoadList() {
 
-    if (this.Report_State == "0") {
+    if (this.Report_State() == "0") {
       this.LoadList_state_0()
     } else {
       this.LoadList_state_1()
@@ -188,11 +185,11 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
   }
   getList() {
 
-    this.repo.GetOcrPanel(this.ToDayDate, this.ToDayDate, "6").subscribe((data: any) => {
+    this.repo.GetOcrPanel(this.ToDayDate(), this.ToDayDate(), "6").subscribe((data: any) => {
 
 
-      this.Report_State = this.GetOcrPanel_frm.value.State
-      this.loading = false
+      this.Report_State.set(this.GetOcrPanel_frm.value.State)
+      this.loading.set(false)
       this.records = data;
 
     });
@@ -201,11 +198,11 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
 
 
   LoadList_state_0() {
-    this.loading = true
+    this.loading.set(true)
 
     this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "6").subscribe((data: any) => {
 
-      this.loading = false
+      this.loading.set(false)
       this.records = data;
 
     });
@@ -213,17 +210,17 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
   }
   LoadList_state_1() {
 
-    this.loading1 = true
-    this.loading2 = true
-    this.loading5 = true
-    this.loading6 = true
-    this.loading7 = true
+    this.loading1.set(true)
+    this.loading2.set(true)
+    this.loading5.set(true)
+    this.loading6.set(true)
+    this.loading7.set(true)
 
 
 
     this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "1").subscribe((data: any) => {
 
-      this.loading1 = false
+      this.loading1.set(false)
       if (data.length > 0) {
 
         this.data_state1 = data
@@ -244,7 +241,7 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
 
         this.columnChartCategories_state1 = data.map(item => item.name);
       } else {
-        this.data_state1 = []
+        this.data_state1.set([])
       }
 
     });
@@ -253,19 +250,17 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
 
     this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "2").subscribe((data: any) => {
 
-      this.loading2 = false
+      this.loading2.set(false)
       if (data.length > 0) {
 
         this.data_state2 = data
 
         this.series_state2 = data.map(item => parseInt(item.FactorCount, 10));
-        console.log("this.series_state2")
 
-        console.log(this.series_state2)
         this.labels_state2 = data.map(item => item.AppFactorState || 'نامشخص');
 
       } else {
-        this.data_state2 = []
+        this.data_state2.set([])
       }
     });
 
@@ -273,7 +268,7 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
 
     this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "5").subscribe((data: any) => {
 
-      this.loading5 = false
+      this.loading5.set(false)
       if (data.length > 0) {
 
         this.data_state5 = data
@@ -294,7 +289,7 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
 
 
       } else {
-        this.data_state5 = []
+        this.data_state5.set([])
       }
     });
 
@@ -306,7 +301,7 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
       this.repo.GetOcrPanel("1402/07/08", "1402/07/11", "3").subscribe((data: any) => {
 
 
-        this.loading6 = false
+        this.loading6.set(false)
         if (data.length > 0) {
 
           this.data_state6 = data
@@ -326,7 +321,7 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
 
 
         } else {
-          this.data_state6 = []
+          this.data_state6.set([])
         }
       });
 
@@ -335,7 +330,7 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
       this.repo.GetOcrPanel(this.start_dateValue.value, this.End_dateValue.value, "4").subscribe((data: any) => {
 
 
-        this.loading7 = false
+        this.loading7.set(false)
         if (data.length > 0) {
 
           this.data_state7 = data
@@ -352,7 +347,7 @@ export class OcrAppReportListComponent extends AgGridBaseComponent
 
 
         } else {
-          this.data_state7 = []
+          this.data_state7.set([])
         }
       });
     });

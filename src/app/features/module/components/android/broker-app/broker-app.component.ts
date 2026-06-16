@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { BrokerAppColumnListComponent } from './components/broker-app-column-list/broker-app-column-list.component';
 import { BrokerAppColumnEditComponent } from './components/broker-app-column-edit/broker-app-column-edit.component';
 import { BrokerAppMapComponent } from './components/broker-app-map/broker-app-map.component';
@@ -7,9 +7,6 @@ import { BrokerAppPanelComponent } from './components/broker-app-panel/broker-ap
 import { BrokerAppReportComponent } from './components/broker-app-report/broker-app-report.component';
 import { BrokerAppSellbrokerListComponent } from './components/broker-app-sellbroker-list/broker-app-sellbroker-list.component';
 import { BrokerAppSettingComponent } from './components/broker-app-setting/broker-app-setting.component';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BrokerWebApiService } from '../../../services/BrokerWebApi.service';
-import { AppConfigService } from 'src/app/app-config.service';
 
 @Component({
   selector: 'app-broker-app',
@@ -32,12 +29,12 @@ import { AppConfigService } from 'src/app/app-config.service';
 })
 export class BrokerAppComponent implements OnInit {
 
-  ObjectRef = '';
-  activeTab = 'panel';
+  ObjectRef = signal('')
+  activeTab = signal('panel')
 
 
   id!: string;
-  JobPersonRef: string = '';
+  LoginType = signal('')
 
 
   tabs = [

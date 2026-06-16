@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, Renderer2 } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { BrokerWebApiService } from 'src/app/features/module/services/BrokerWebApi.service';
@@ -7,7 +7,6 @@ import { CellActionBrokerList } from './cell-action-broker-list';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular';
 import { NgPersianDatepickerModule } from 'ng-persian-datepicker';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-broker-app-sellbroker-list',
@@ -40,9 +39,8 @@ export class BrokerAppSellbrokerListComponent extends AgGridBaseComponent
   }
 
 
-  PhAddress3: string = '';
 
-  records;
+  records = signal<any[]>([])
 
 
 
@@ -50,48 +48,48 @@ export class BrokerAppSellbrokerListComponent extends AgGridBaseComponent
     this.themeSub = this.themeService.theme$.subscribe(mode => {
       this.isDarkMode = (mode === 'dark');
     });
-    this.columnDefs1 = [
+    this.column_name_1 = [
       {
         field: 'عملیات',
         pinned: 'left',
         cellRenderer: CellActionBrokerList,
         cellRendererParams: {
-          editUrl: '/support/letter-detail',
+          editUrl: '/automation/letter-detail',
         },
         minWidth: 80,
       },
       {
         field: 'BrokerNameWithoutType',
         headerName: ' نام بازاریاب',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'RelationType',
         headerName: 'نوع ارتباط',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'Explain',
         headerName: 'توضیحات ',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'BrokerCode',
         headerName: 'کد بازاریابی',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'CentralRef',
         headerName: 'کد اجزای پایه',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
@@ -103,7 +101,7 @@ export class BrokerAppSellbrokerListComponent extends AgGridBaseComponent
 
     this.repo.GetBrokers()
       .subscribe(e => {
-        this.records = e;
+        this.records.set(e)
 
       });
   }

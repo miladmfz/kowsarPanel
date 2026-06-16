@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, Renderer2 } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Component, inject, OnInit, Renderer2, signal } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
@@ -9,7 +9,6 @@ import { BrokerWebApiService } from 'src/app/features/module/services/BrokerWebA
 import { CellActionBrokerDbsetup } from './cell-action-broker-dbsetup';
 import { CellActionBrokerPrinter } from './cell-action-broker-printer';
 import { AgGridModule } from 'ag-grid-angular';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-broker-app-setting',
@@ -47,21 +46,21 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
 
 
 
-  items: any = [];
-  Printers: any = [];
+  items = signal<any[]>([])
+  Printers = signal<any[]>([])
 
-  BasketColumns: any = [];
+  BasketColumns = signal<any[]>([])
 
-  Apptype: string = '1';
-  isLoading: boolean = false;
-  KowsarDb_name: string = '';
-  KowsarImage_name: string = '';
-  AppBroker_Status: string = '';
-  AppBasketColumn_Status: string = '';
-  BrokerCustomer_Status: string = '';
-  selected_des: string = "";
-  selected_value: string = "";
-  selected_Key: string = "";
+  Apptype = signal('1')
+  isLoading = signal(true)
+  KowsarDb_name = signal('')
+  KowsarImage_name = signal('')
+  AppBroker_Status = signal('')
+  AppBasketColumn_Status = signal('')
+  BrokerCustomer_Status = signal('')
+  selected_des = signal('')
+  selected_value = signal('')
+  selected_Key = signal('')
 
   EditForm_printer = new FormGroup({
     AppPrinterCode: new FormControl(''),
@@ -101,7 +100,7 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
 
   Config_Declare() {
 
-    this.columnDefs1 = [
+    this.column_name_1 = [
       {
         field: 'عملیات',
         pinned: 'left',
@@ -112,42 +111,42 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
       {
         field: 'KeyId',
         headerName: 'KeyId',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'KeyValue',
         headerName: 'KeyValue',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'DataValue',
         headerName: 'DataValue',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'Description',
         headerName: 'Description',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'SubSystem',
         headerName: 'SubSystem',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
     ];
 
 
-    this.columnDefs1 = [
+    this.column_name_1 = [
       {
         field: 'عملیات',
         pinned: 'left',
@@ -158,7 +157,7 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
       {
         field: 'PrinterName',
         headerName: 'نام پرینتر',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 
@@ -166,7 +165,7 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
       {
         field: 'PrinterExplain',
         headerName: 'توضیحات',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 
@@ -174,7 +173,7 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
       {
         field: 'GoodGroups',
         headerName: 'گروه کالا',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 
@@ -182,7 +181,7 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
       {
         field: 'WhereClause',
         headerName: 'شروط',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 
@@ -190,7 +189,7 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
       {
         field: 'PrintCount',
         headerName: 'نعداد پرینت',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150,
 
@@ -200,23 +199,6 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
 
 
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -230,12 +212,12 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
   Get_Base_data() {
 
     this.repo.Web_GetDbsetupObject("BrokerKowsar").subscribe(e => {
-      this.items = e;
+      this.items.set(e)
 
     });
 
-    this.repo.GetAppPrinter(this.Apptype).subscribe(e => {
-      this.Printers = e;
+    this.repo.GetAppPrinter(this.Apptype()).subscribe(e => {
+      this.Printers.set(e)
 
     });
     this.GetBasketColumnList();
@@ -257,7 +239,7 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
 
   UpdateDbSetup() {
 
-    this.repo.UpdateDbSetup(this.selected_value, this.selected_Key).subscribe(e => {
+    this.repo.UpdateDbSetup(this.selected_value(), this.selected_Key()).subscribe(e => {
       this.notificationService.succeded();
 
       this.sharedService.triggerActionAll('refresh');
@@ -309,9 +291,9 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
   CreateAppBasketColumn() {
 
 
-    this.repo.CreateBasketColumn(this.Apptype).subscribe(e => {
+    this.repo.CreateBasketColumn(this.Apptype()).subscribe(e => {
 
-      this.AppBasketColumn_Status = "AppBasketColumn created";
+      this.AppBasketColumn_Status.set("AppBasketColumn created")
     });
 
   }
@@ -320,7 +302,7 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
 
 
     this.repo.BrokerCustomerRefresh().subscribe(e => {
-      this.BrokerCustomer_Status = "AppBasketColumn created";
+      this.BrokerCustomer_Status.set("AppBasketColumn created")
     });
 
   }
@@ -329,8 +311,8 @@ export class BrokerAppSettingComponent extends AgGridBaseComponent
   GetBasketColumnList() {
 
 
-    this.repo.GetBasketColumnList(this.Apptype).subscribe(e => {
-      this.BasketColumns = e;
+    this.repo.GetBasketColumnList(this.Apptype()).subscribe(e => {
+      this.BasketColumns.set(e)
 
 
     });

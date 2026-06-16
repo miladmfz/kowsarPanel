@@ -1,0 +1,200 @@
+
+forosh/
+        ├── brokerpath/
+        ├── cafe-resturant-factor/
+        ├── customer/
+        ├── customer-group/
+        ├── customer-mandeh/
+        ├── daily-action-control/
+        ├── decincrement/
+        ├── factor/
+        ├── goodvalueinpathgroup/
+        ├── personetebar/
+        ├── personinfo/ **  spPersonInfo_AddNew
+        ├── prefactor/
+        ├── return-factor/     
+        ├── return-shopfactor/    
+        ├── sell-dariaft/     
+        ├── sell-payment/   
+        ├── sellbroker/
+        └── shopfactor/
+hesabdari/
+        ├── acc-accounts/      
+        ├── acc-group/  **  spAccGroup_AddNew   
+        ├── acc-kol/    **  spAccKol_AddNew   
+        ├── acc-level/  **  spAccLevel_AddNew
+        ├── acc-moeen/  **  spAccMoeen_AddNew
+        ├── acc-sanad-brows/
+        ├── acc-sanad-type/ **  spAccSanadType_AddNew
+        ├── acc-snd-explain/    **  spAccSndExplain_AddNew
+        ├── acc-tafzily/    **   spAccTafzily_AddNew 
+        ├── close-acc-senario/
+        ├── factor-account/
+        └── vwcentral-brows/
+kharid/
+        ├── auto-request-row/
+        ├── close-acc-senario/
+        ├── extended-barcode-rpt/
+        ├── good/       **  spGood_AddNew
+        ├── good-adjustment/   
+        ├── good-analysis/   
+        ├── good-exchange/   
+        ├── good-issue/   
+        ├── good-receipt/   
+        ├── good-request/   
+        ├── good-serial-frame/
+        ├── goodsgrp/   **  spGoodsGrp_AddNew
+        ├── location/   **  spLocation_AddNew
+        ├── personjob/  **
+        ├── purchase/
+        ├── purchase-order/   
+        ├── purchase-payment/   
+        ├── reploglink/
+        ├── request-order/   
+        ├── return-purchase/   
+        ├── samane-good/   
+        ├── stack/  **  spStacks_AddNew
+        ├── stack-enumeration/   
+        ├── stack-transfer/   
+        ├── unit/ 
+        ├── vendor/ 
+        └── vendor-mandeh/   
+khazane/
+        ├── bank/   **  spBank_AddNew
+        ├── cash/   **  spCash_AddNew
+        ├── check-cansel/   
+        ├── check-passes-inf/
+        ├── khazane-payment/    **  spKhazanehPayment_AddNew
+        ├── khazane-receive/    **  spKhazanehReceive_AddNew
+        ├── received-chk-inf/   **  spReceivedChkInf_AddNew
+        └── return-checks/      **  spReturnChecks_AddNew
+taarif-paye/
+        ├── central/    **  spAddress_AddNew    spCentral_AddNew
+        ├── centralgrp/
+        ├── city/       **  spCity_AddNew
+        ├── currencyexchange/
+        ├── job/    **  spJob_AddNew
+        └── jobperson/  **  spJobPerson_AddNew
+tanzimat/
+        ├── dbsetup/
+        ├── PropertyValue/  **  spPropertyValue_AddNew
+        └── fiscal-period/
+
+
+
+
+
+
+
+
+
+hoghogh-dastmozd/
+        └── hoghogh-dastmozd.routes.ts
+Gozareshat/
+        ├── AccSanadBrowseRpt/
+        ├── AllGoodAccountingGrpRpt/
+        ├── AllGoodsRpt/
+        ├── BankPaymentCheckRpt/
+        ├── BazaryabKarkardRpt/
+        ├── BrokerKarkardDetailRpt/
+        ├── BrokerKarkardRpt/
+        ├── BulletinCitySellRpt/
+        ├── BulletinGroupNameSellRpt/
+        ├── BuyStyleMonthlyGoodSellStateRpt/
+        ├── CashPaymentRpt/
+        ├── CashReceiveCheckRpt/
+        ├── CashReceiveRpt/
+        ├── CheckHistoryRpt/
+        ├── CustomerActionTypeRpt/
+        ├── CustomerCityRpt/
+        ├── CustomerDebitStateRpt/
+        ├── CustomerFactorEtebarRpt/
+        ├── CustomerFactorRpt/
+        ├── CustomerFactor_SanadTypeRpt/
+        ├── CustomerForoshCityRpt/
+        ├── CustomerForoshRpt/
+        ├── CustomerGoodRpt/
+        ├── CustomerGroupRpt/
+        ├── CustomerIdentificationEtebarRpt/
+        ├── CustomerIdentificationRpt/
+        ├── CustomerMandehRpt/
+        ├── CustomerPaymentCityRpt/
+        ├── CustomerPaymentGroupRpt/
+        ├── CustomerPaymentRpt/
+        ├── CustomerPreFactorRpt/
+        ├── CustomerReceiveCityRpt/
+        ├── CustomerReceiveGroupRpt/
+        ├── CustomerReceiveMablaghRpt/
+        ├── CustomerReceiveRpt/
+        ├── CustomerReturnFactorRpt/
+        ├── CustomerSponsorRpt/
+        ├── CustomerVasigheRpt/
+        ├── CustomerWithoutGoodRpt/
+        ├── DailyWorkRpt/
+        ├── FactorRowsRpt/
+        ├── FactorSellDariaftRpt/
+        ├── FactorTypeMonthlyGoodSellStateRpt/
+        ├── FactorsSanadStackRpt/
+        ├── GoodBulletinGroupSellRpt/
+        ├── GoodCustomerRpt/
+        ├── GoodCycleRpt/
+        ├── GoodCycleWithStackRpt/
+        ├── GoodFactorRowsRpt/
+        ├── GoodFactorRpt/
+        ├── GoodForoshRpt/
+        ├── GoodGroupRpt/
+        ├── GoodHistoryRpt/
+        ├── GoodInStackRpt/
+        ├── GoodInStackVerticalRpt/
+        ├── GoodIssueRowsRpt/
+        ├── GoodIssueRpt/
+        ├── GoodKardexRpt/
+        ├── GoodReceiptRowsRpt/
+        ├── GoodReceiptRpt/
+        ├── GoodRevisionRpt/
+        ├── GoodSefareshPointRpt/
+        ├── GoodSellSerialsRpt/
+        ├── GoodSerialAmountControlRpt/
+        ├── GoodSerialHistoryRpt/
+        ├── GoodSerialsRpt/
+        ├── HesabPeriodicForCustomerAndVendorRpt/
+        ├── KardexRialyRpt/
+        ├── LastGoodSubCodeHistoryInStackRpt/
+        ├── LastGoodSubCodeHistoryRpt/
+        ├── LastGoodWeightedAutomaticRpt/
+        ├── LastGoodWeightedRpt/
+        ├── LogHistoryByFieldRpt/
+        ├── LogHistoryByFilterRpt/
+        ├── MonthlyGoodSellStateRpt/
+        ├── PeriodicCustomerDailyPurchaseCashRpt/
+        ├── PeriodicCustomerDailyPurchaseRpt/
+        ├── PeriodicCustomerPurchaseRpt/
+        ├── PeriodicCustomerPurchaseSeparateRpt/
+        ├── PeriodicGoodSellRpt/
+        ├── PeriodicInOutGoodStateRpt/
+        ├── PeriodicSellRpt/
+        ├── PersonEtebarReceiveRpt/
+        ├── PersonGoodRpt/
+        ├── PersonInfoSummaryRpt/
+        ├── PreFactorRowsRpt/
+        ├── PrefactorShortageRpt/
+        ├── ReminderRpt/
+        ├── ReturnFactorRowsRpt/
+        ├── SamaneGoodInputOutputDetailRpt/
+        ├── SamaneGoodInputOutputRpt/
+        ├── SellReceivedFactorRpt/
+        ├── SellReportRpt/
+        ├── SellStackGroupingRpt/
+        ├── SellUnPriceTipRpt/
+        ├── ShopfactorByPriceRpt/
+        ├── StackSellRpt/
+        ├── StackSellWithGoodGroupingRpt/
+        ├── StackTransferRowRpt/
+        ├── StackTransferRpt/
+        ├── SumofPeriodicGoodSellRpt/
+        ├── TcPrintFactorAttachedRpt/
+        ├── TcPrintFactorRpt/
+        ├── TcPrintReturnFactorAttachedRpt/
+        ├── TcPrintReturnFactorRpt/
+        ├── TcPrintReturnPurchaseAttachedRpt/
+        └── TcPrintReturnPurchaseRpt/

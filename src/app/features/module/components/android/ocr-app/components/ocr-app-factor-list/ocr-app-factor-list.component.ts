@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
@@ -7,7 +7,6 @@ import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-t
 import { OcrWebApiService } from 'src/app/features/module/services/OcrWebApi.service';
 import { CellActionOcrList } from './cell-action-ocr-list';
 import { AgGridModule } from 'ag-grid-angular';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 
 @Component({
   selector: 'app-ocr-app-factor-list',
@@ -39,11 +38,11 @@ export class OcrAppFactorListComponent extends AgGridBaseComponent
 
 
 
-  records;
-  title = 'لیست کالاها ';
+  records = signal<any[]>([])
+  title = signal('لیست کالاها')
   dateValue = new FormControl('');
 
-  Searchtarget: string = '';
+  Searchtarget = signal('')
 
   SourceFlag_lookup: Base_Lookup[] = [
     { id: "0", name: "هر دو دیتابیس" },
@@ -68,7 +67,7 @@ export class OcrAppFactorListComponent extends AgGridBaseComponent
     this.themeSub = this.themeService.theme$.subscribe(mode => {
       this.isDarkMode = (mode === 'dark');
     });
-    this.columnDefs1 = [
+    this.column_name_1 = [
       {
         field: 'عملیات',
         pinned: 'left',
@@ -83,7 +82,7 @@ export class OcrAppFactorListComponent extends AgGridBaseComponent
       {
         field: 'dbname',
         headerName: 'نام دیتابیس',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
@@ -91,42 +90,42 @@ export class OcrAppFactorListComponent extends AgGridBaseComponent
       {
         field: 'CustName',
         headerName: 'نام مشتری',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 250
       },
       {
         field: 'FactorDate',
         headerName: 'تاریخ فاکتور',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'CustomerCode',
         headerName: 'کد مشتری',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'Explain',
         headerName: 'توضیحات',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'CustomerPath',
         headerName: 'منطقه',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },
       {
         field: 'AppFactorState',
         headerName: 'وضعیت فاکتور',
-        filter: 'agSetColumnFilter',
+
         cellClass: 'text-center',
         minWidth: 150
       },

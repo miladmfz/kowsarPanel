@@ -54,22 +54,44 @@ export class CellDateMinDate implements ICellRendererAngularComp {
 
     formatToJalali(date: string | null | undefined): string {
         if (!date || date === '0001-01-01T00:00:00') return '—';
+
         let m;
-        // 📅 تشخیص نوع فرمت ورودی
-        if (date.includes('/')) {
-            // حالت مثل "10/9/2025 10:48:44 AM"
-            m = moment(date, 'M/D/YYYY h:mm:ss A', true);
-        } else if (date.includes('T')) {
-            // حالت استاندارد ISO
-            m = moment(date, moment.ISO_8601);
-        } else {
-            // حالت fallback برای اطمینان
-            m = moment(date, 'YYYY-MM-DD HH:mm:ss', true);
+
+        // 📅 اگر تاریخ فارسی (شمسی) بود
+        if (date.includes('ب.ظ') || date.includes('ق.ظ')) {
+
+            // تبدیل PM/AM فارسی به انگلیسی
+            date = date
+                .replace('ب.ظ', 'PM')
+                .replace('ق.ظ', 'AM');
+
+            // پارس تاریخ شمسی
+            m = moment(date, 'jDD/jMM/jYYYY hh:mm:ss A', true);
+
         }
-        // ❌ تاریخ نامعتبر
+        // 📅 اگر تاریخ میلادی با / بود
+        else if (date.includes('/')) {
+
+            m = moment(date, 'M/D/YYYY h:mm:ss A', true);
+
+        }
+        // 📅 ISO
+        else if (date.includes('T')) {
+
+            m = moment(date, moment.ISO_8601);
+
+        }
+        // fallback
+        else {
+
+            m = moment(date, 'YYYY-MM-DD HH:mm:ss', true);
+
+        }
+
+        // ❌ نامعتبر
         if (!m.isValid()) return 'نامعتبر';
 
-        //   فرمت نهایی شمسی
+        // 📅 خروجی شمسی
         return m.locale('fa').format('jYYYY/jMM/jDD HH:mm');
     }
 }

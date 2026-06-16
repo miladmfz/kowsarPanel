@@ -12,7 +12,7 @@
           <c-row class="justify-content-between">
             <c-col xs="4">
               <h3 class="card-title align-items-start flex-column">
-                <span class="card-label ">{{TagName}} </span>
+                <span class="card-label ">{{TagName()}} </span>
               </h3>
             </c-col>
             <c-col xs="2">
@@ -25,7 +25,7 @@
     <div class="row justify-content-between">
       <div class="col-4">
         <h3 class="card-title align-items-start flex-column">
-          <span class="card-label">{{ TagName }}</span>
+          <span class="card-label">{{ TagName() }}</span>
         </h3>
       </div>
       <div class="col-2"></div>
@@ -67,7 +67,7 @@
       </div>
       <div class="col-md-10">
         <select class="form-control" [(ngModel)]="selected_GoodType" (change)="selectGoodType()">
-          @for (item of Goodtypes; track item) {
+          @for (item of Goodtypes(); track item) {
           <option [ngValue]="item.GoodType">
             {{ item.GoodType }}
           </option>
@@ -108,7 +108,7 @@
       </div>
       <div class="col-md-10">
         <select class="form-control" [(ngModel)]="selected_PropertyName" (change)="selectproperty()">
-          @for (item of Propertys; track item) {
+          @for (item of Propertys(); track item) {
           <option [ngValue]="item.PropertyName">
             {{ getDisplayName(item.PropertySchema) }}
           </option>

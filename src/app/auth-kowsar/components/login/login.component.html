@@ -1,119 +1,267 @@
-<!-- صفحه ورود استاندارد Minton -->
-<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
-  <div class="card shadow rounded-4 border-0 kws-card" style="max-width: 420px; width: 100%;">
-    <div class="card-body p-4">
+<!-- ===============================================================
+     KOWSAR LOGIN PAGE
+     =============================================================== -->
 
-      <!-- لوگو + عنوان متفاوت -->
-      <div class="text-center mb-4">
-        <img src="assets/images/img_logo_kits_png.png" alt="لوگو" height="75" class="mb-2" />
+<div class="kws-login-page d-flex align-items-center justify-content-center position-relative overflow-hidden">
 
-        <div class="fw-bold mb-1 kws-title">
-          {{ isKowsar ? 'ورود کاربران کوثر' : 'ورود مشتریان' }}
+  <!-- Floating Glow -->
+  <div class="kws-page-glow kws-page-glow-top"></div>
+  <div class="kws-page-glow kws-page-glow-bottom"></div>
+
+  <!-- Login Card -->
+  <div class="card border-0 overflow-hidden position-relative kws-login-card">
+
+    <!-- Top Gradient Line -->
+    <div class="kws-top-gradient"></div>
+
+    <div class="card-body p-4 p-lg-5">
+
+      <!-- Logo / Title -->
+      <div class="text-center mb-4 position-relative">
+
+        <div
+          class="d-inline-flex align-items-center justify-content-center rounded-circle position-relative mb-3 kws-logo-circle">
+          <div class="position-absolute rounded-circle kws-logo-ring"></div>
+
+          <img src="assets/images/img_logo_kits_png.png" alt="لوگو" height="78" class="position-relative z-2" />
         </div>
 
-        <p class="text-muted fs-6 mb-0">
+        <div class="fw-bold mb-2 kws-login-title">
+          {{ isKowsar ? 'ورود کاربران کوثر' : 'ورود کاربران' }}
+        </div>
+
+        <p class="mb-0 kws-login-subtitle">
           لطفاً نوع کاربر، نام کاربری و رمز عبور خود را وارد کنید
         </p>
+
       </div>
 
-      <!-- فرم ورود -->
+
+
+      @if (!smsConfirmVisible) {
+
+      <!-- Login Form -->
       <form [formGroup]="loginForm" (ngSubmit)="submit()" autocomplete="on" novalidate>
 
-        <!-- نوع کاربر -->
+        <!-- User Type -->
         <div class="mb-3">
-          <label class="form-label mb-2 fw-semibold kws-label">نوع کاربر</label>
+
+          <label class="form-label mb-2 fw-semibold">
+            نوع کاربر
+          </label>
 
           <div class="row g-2">
-            <!-- <div class="col-6">
-              <input class="btn-check" type="radio" id="ut_kowsar" value="KOWSAR" formControlName="UserType"
-                autocomplete="off" />
-              <label
-                class="btn w-100 d-flex align-items-center justify-content-center gap-2 rounded-3 py-2 kws-userType"
-                for="ut_kowsar" [class.kws-userType-active]="loginForm.value.UserType === 'KOWSAR'">
-                <i class="fa fa-building"></i>
-                <span>کاربر کوثر</span>
-              </label>
-            </div> -->
 
             <div class="col-6">
+
+              <input class="btn-check" type="radio" id="ut_KOWSAR" value="KOWSAR" formControlName="UserType"
+                autocomplete="off" />
+
+              <label
+                class="btn w-100 d-flex align-items-center justify-content-center gap-2 rounded-4 py-3 kws-user-type"
+                for="ut_KOWSAR" [class.kws-userType-active]="loginForm.value.UserType === 'KOWSAR'">
+
+                <i class="fa fa-user"></i>
+
+                <span>
+                  کاربر کوثر
+                </span>
+
+              </label>
+
+            </div>
+
+            <div class="col-6">
+
               <input class="btn-check" type="radio" id="ut_customer" value="CUSTOMER" formControlName="UserType"
                 autocomplete="off" />
+
               <label
-                class="btn w-100 d-flex align-items-center justify-content-center gap-2 rounded-3 py-2 kws-userType"
+                class="btn w-100 d-flex align-items-center justify-content-center gap-2 rounded-4 py-3 kws-user-type"
                 for="ut_customer" [class.kws-userType-active]="loginForm.value.UserType === 'CUSTOMER'">
+
                 <i class="fa fa-user"></i>
-                <span>کاربر پنل</span>
+
+                <span>
+                  کاربر پنل
+                </span>
+
               </label>
+
             </div>
+
+
           </div>
 
           <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-              validation: 'required',
-              message: 'انتخاب نوع کاربر الزامی است',
-              control: loginForm.controls['UserType']
-            }"></ng-container>
+            validation: 'required',
+            message: 'انتخاب نوع کاربر الزامی است',
+            control: loginForm.controls['UserType']
+          }">
+          </ng-container>
+
         </div>
 
-        <!-- نام کاربری -->
+        <!-- Username -->
         <div class="form-floating mb-3">
-          <input type="text" id="UName" class="form-control" placeholder="نام کاربری" formControlName="UName"
+
+          <input type="text" id="UName" class="form-control kws-input" placeholder=" " formControlName="UName"
             maxlength="100" autocomplete="username" [ngClass]="{
               'is-invalid': loginForm.controls['UName'].invalid && loginForm.controls['UName'].touched,
               'is-valid': loginForm.controls['UName'].valid && loginForm.controls['UName'].touched
             }" />
-          <label for="UName">نام کاربری</label>
 
-          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-              validation: 'required',
-              message: 'وارد کردن نام کاربری الزامی است',
-              control: loginForm.controls['UName']
-            }"></ng-container>
+          <label for="UName" class="kws-floating-label">
+            نام کاربری
+          </label>
+
         </div>
 
-        <!-- رمز عبور -->
+        <!-- Password -->
         <div class="form-floating mb-4 position-relative">
-          <input [type]="showPassword() ? 'text' : 'password'" id="UPass" class="form-control" placeholder="رمز عبور"
-            formControlName="UPass" maxlength="100" autocomplete="current-password" [ngClass]="{
+
+          <input [type]="showPassword() ? 'text' : 'password'" id="UPass"
+            class="form-control kws-input kws-password-input" placeholder=" " formControlName="UPass" maxlength="100"
+            autocomplete="current-password" [ngClass]="{
               'is-invalid': loginForm.controls['UPass'].invalid && loginForm.controls['UPass'].touched,
               'is-valid': loginForm.controls['UPass'].valid && loginForm.controls['UPass'].touched
             }" />
-          <label for="UPass">رمز عبور</label>
 
-          <!-- آیکون چشم -->
-          <span class="position-absolute top-50 end-0 translate-middle-y me-3 text-muted" style="cursor: pointer;"
-            (click)="togglePassword()">
+          <label for="UPass" class="kws-floating-label">
+            رمز عبور
+          </label>
+
+          <span class="kws-password-eye" (click)="togglePassword()">
             <i [class]="showPassword() ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
           </span>
 
-          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-              validation: 'required',
-              message: 'رمز عبور الزامی است',
-              control: loginForm.controls['UPass']
-            }"></ng-container>
         </div>
 
-        <!-- دکمه ورود (Royal Blue / Gold) -->
+        <!-- Submit -->
         <div class="d-grid">
-          <button type="submit" class="btn btn-lg fw-semibold text-white kws-submit"
-            [class.kws-submit-kowsar]="isKowsar" [class.kws-submit-customer]="!isKowsar" [disabled]="isLoading()">
-            <span *ngIf="!isLoading()">ورود</span>
-            <span *ngIf="isLoading()">
+
+          <button type="submit" class="position-relative overflow-hidden border-0 kws-login-btn"
+            [disabled]="isLoading()" (pointermove)="onLoginButtonPointerMove($event)"
+            (pointerleave)="onLoginButtonPointerLeave()">
+
+            <span class="kws-login-glow" [style.left.px]="glowX" [style.top.px]="glowY">
+            </span>
+
+            @for (p of particles; track p.id) {
+            <span class="kws-login-particle" [style.left.px]="p.x" [style.top.px]="p.y" [style.width.px]="p.size"
+              [style.height.px]="p.size" [style.animation-delay.s]="p.delay">
+            </span>
+            }
+
+            <span class="kws-login-shine"></span>
+
+            <span class="position-relative z-2 d-flex align-items-center justify-content-center">
+
+              @if (!isLoading()) {
+              <i class="fa fa-sign-in me-2"></i>
+              ورود
+              } @else {
               <i class="fa fa-spinner fa-spin me-2"></i>
               در حال ورود...
+              }
+
             </span>
+
           </button>
+
         </div>
 
       </form>
+
+      } @else {
+
+      <!-- SMS Confirm Form -->
+      <form [formGroup]="smsForm" (ngSubmit)="confirmSmsCode()" autocomplete="off" novalidate>
+
+        <div class="text-center mb-4">
+
+          <div class="fw-bold mb-2 kws-login-title">
+            تأیید شماره همراه
+          </div>
+
+          <p class="mb-0 kws-login-subtitle">
+            کد ارسال‌شده پیامکی را وارد کنید
+          </p>
+
+        </div>
+
+        <div class="form-floating mb-3">
+
+          <input type="text" id="ConfirmCode" class="form-control kws-input text-center" placeholder=" "
+            formControlName="ConfirmCode" maxlength="6" autocomplete="one-time-code" inputmode="numeric" [ngClass]="{
+          'is-invalid': smsForm.controls['ConfirmCode'].invalid && smsForm.controls['ConfirmCode'].touched,
+          'is-valid': smsForm.controls['ConfirmCode'].valid && smsForm.controls['ConfirmCode'].touched
+        }" />
+
+          <label for="ConfirmCode" class="kws-floating-label">
+            کد تأیید پیامک
+          </label>
+
+          @if (smsForm.controls['ConfirmCode'].hasError('required') && smsForm.controls['ConfirmCode'].touched) {
+          <div class="invalid-feedback d-block mt-1">
+            وارد کردن کد تأیید الزامی است
+          </div>
+          }
+
+          @if (smsForm.controls['ConfirmCode'].hasError('wrongCode') && smsForm.controls['ConfirmCode'].touched) {
+          <div class="invalid-feedback d-block mt-1">
+            کد وارد شده صحیح نیست
+          </div>
+          }
+
+        </div>
+
+        <div class="d-grid">
+
+          <button type="submit" class="position-relative overflow-hidden border-0 kws-login-btn">
+
+            <span class="position-relative z-2 d-flex align-items-center justify-content-center">
+              <i class="fa fa-check me-2"></i>
+              تأیید و ورود
+            </span>
+
+          </button>
+
+        </div>
+
+        <div class="text-center mt-3">
+
+          <button type="button" class="btn btn-link text-decoration-none" (click)="smsConfirmVisible = false">
+            بازگشت به فرم ورود
+          </button>
+
+        </div>
+
+      </form>
+
+      }
+
+
     </div>
+
   </div>
+
 </div>
 
-<!-- قالب خطاهای ورودی -->
+<!-- ===============================================================
+     FORM ERROR TEMPLATE
+     =============================================================== -->
+
 <ng-template #formError let-control="control" let-message="message" let-validation="validation">
+
   @if (control.hasError(validation) && (control.dirty || control.touched)) {
+
   <div class="invalid-feedback d-block mt-1">
-    <span role="alert">{{ message }}</span>
+    <span role="alert">
+      {{ message }}
+    </span>
   </div>
+
   }
+
 </ng-template>

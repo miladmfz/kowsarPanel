@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { OrderAppColumnListComponent } from './components/order-app-column-list/order-app-column-list.component';
 import { OrderAppColumnEditComponent } from './components/order-app-column-edit/order-app-column-edit.component';
 import { OrderAppPanelComponent } from './components/order-app-panel/order-app-panel.component';
@@ -8,9 +8,6 @@ import { OrderAppGoodListComponent } from './components/order-app-good-list/orde
 import { OrderAppGoodEditComponent } from './components/order-app-good-edit/order-app-good-edit.component';
 import { OrderAppSettingComponent } from './components/order-app-setting/order-app-setting.component';
 import { OrderAppReportComponent } from './components/order-app-report/order-app-report.component';
-import { ActivatedRoute, Router } from '@angular/router';
-import { OrderWebApiService } from '../../../services/OrderWebApi.service';
-import { AppConfigService } from 'src/app/app-config.service';
 
 @Component({
   selector: 'app-order-app',
@@ -31,12 +28,12 @@ import { AppConfigService } from 'src/app/app-config.service';
 })
 export class OrderAppComponent implements OnInit {
 
-  ObjectRef = '';
+  ObjectRef = signal('')
   activeTab = 'panel';
 
 
   id!: string;
-  JobPersonRef: string = '';
+  LoginType = signal('')
 
 
   tabs = [

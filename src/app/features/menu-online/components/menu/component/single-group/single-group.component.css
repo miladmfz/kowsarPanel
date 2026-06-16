@@ -1,0 +1,114 @@
+:host {
+    display: block;
+    min-width: 90px;
+}
+
+.kmenu-group-button {
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    text-align: center;
+}
+
+.kmenu-group-card {
+    position: relative;
+    width: 100%;
+    padding: 9px 8px;
+    border-radius: 18px;
+    overflow: hidden;
+    cursor: pointer;
+    transition:
+        transform .18s ease-in-out,
+        background .18s ease-in-out,
+        border-color .18s ease-in-out,
+        box-shadow .18s ease-in-out;
+}
+
+.kmenu-group-card-normal {
+    background: var(--kmenu-surface) !important;
+    border: 1px solid var(--kmenu-border) !important;
+    color: var(--kmenu-text) !important;
+    box-shadow: var(--kmenu-shadow-sm);
+}
+
+.kmenu-group-card-normal:hover {
+    background: var(--kmenu-surface-hover) !important;
+    box-shadow: var(--kmenu-shadow-md);
+    transform: translateY(-1px);
+}
+
+.kmenu-group-card-active {
+    background: var(--kmenu-accent) !important;
+    border: 1px solid var(--kmenu-accent-border) !important;
+    color: var(--kmenu-accent-text) !important;
+    transform: translateY(-2px);
+    box-shadow:
+        0 0 0 3px var(--kmenu-accent-soft),
+        0 10px 22px var(--kmenu-accent-shadow);
+}
+
+.kmenu-group-card-active::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg,
+            rgba(255, 255, 255, 0.20),
+            rgba(255, 255, 255, 0));
+    pointer-events: none;
+}
+
+.kmenu-group-image {
+    width: 54px;
+    height: 54px;
+    display: block;
+    margin: 0 auto 7px auto;
+    border-radius: 50%;
+    object-fit: cover;
+    transition:
+        transform .18s ease-in-out,
+        border-color .18s ease-in-out,
+        box-shadow .18s ease-in-out;
+}
+
+.kmenu-group-image-normal {
+    border: 2px solid var(--kmenu-border);
+}
+
+.kmenu-group-image-active {
+    border: 3px solid var(--kmenu-accent-text);
+    transform: scale(1.06);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.18);
+}
+
+.kmenu-group-title {
+    position: relative;
+    z-index: 1;
+    max-width: 100%;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1.5;
+    color: inherit !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 576px) {
+
+    .kmenu-group-card {
+        padding: 7px 6px;
+        border-radius: 15px;
+    }
+
+    .kmenu-group-image {
+        width: 46px;
+        height: 46px;
+        margin-bottom: 5px;
+    }
+
+    .kmenu-group-title {
+        font-size: 11px;
+    }
+}

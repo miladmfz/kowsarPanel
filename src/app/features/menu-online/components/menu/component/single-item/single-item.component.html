@@ -1,0 +1,112 @@
+<div class="kmenu-product-card" role="button" (mouseenter)="hovered = true" (mouseleave)="hovered = false"
+  (click)="SelectItem()" [style.transform]="hovered ? 'translateY(-3px)' : 'translateY(0)'">
+
+  <div class="kmenu-product-body">
+
+    <div class="kmenu-product-layout">
+
+      @if (menuConfig?.ShowProductImage) {
+
+      <div class="kmenu-product-image-box">
+
+        <img #productImage [src]="GetImageSrc(item)" class="kmenu-product-image" alt="Product Image" loading="lazy">
+
+        @if (menuConfig?.ShowProductBadge) {
+        @if (item.GoodExplain1) {
+
+        <span class="kmenu-product-badge">
+          {{ item.GoodExplain1 }}
+        </span>
+
+        }
+        }
+
+      </div>
+
+      }
+
+      @else {
+
+      <img #productImage src="./assets/images/logo_color.png" class="d-none" alt="Product Image">
+
+      }
+
+      <div class="kmenu-product-info">
+
+        <h5 class="kmenu-product-title" [title]="item.GoodName">
+
+          {{ item.GoodName }}
+
+        </h5>
+
+        <p class="kmenu-product-desc" [title]="item.GoodExplain2">
+
+          {{ item.GoodExplain2 }}
+
+        </p>
+
+        <div class="kmenu-product-bottom">
+
+          <div class="kmenu-product-price-box">
+
+            <div class="kmenu-product-price-label">
+              قیمت
+            </div>
+
+            <h5 class="kmenu-product-price">
+
+              {{ ConvertToman(item.MaxSellPrice) }}
+
+              <small>
+                تومان
+              </small>
+
+            </h5>
+
+          </div>
+
+          @if (menuConfig?.ShowAddButton) {
+
+          <button type="button" class="kmenu-product-add-btn" [ngClass]="
+                added
+                  ? 'kmenu-product-btn-success'
+                  : 'kmenu-product-btn-primary'
+              " (click)="AddItem($event)">
+
+            @if (added) {
+
+            <i class="mdi mdi-check-circle-outline me-1"></i>
+
+            <span class="kmenu-add-text">
+              اضافه شد
+            </span>
+
+            }
+
+            @else {
+
+            @if (menuConfig?.ShowAddButtonIcon) {
+
+            <i class="mdi mdi-cart-plus me-1"></i>
+
+            }
+
+            <span class="kmenu-add-text">
+              {{ menuConfig?.AddButtonText || 'افزودن' }}
+            </span>
+
+            }
+
+          </button>
+
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

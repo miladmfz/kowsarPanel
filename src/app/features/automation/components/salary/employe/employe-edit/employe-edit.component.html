@@ -1,0 +1,290 @@
+<div class="row mb-3">
+  <div class="col-12">
+    <div class="page-title-box d-flex justify-content-between align-items-center">
+      <h4 class="page-title text-primary fw-semibold">
+        {{ title() }}
+      </h4>
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="EditForm_Employee" (ngSubmit)="submit('')" id="submitForm">
+
+  <div class="card shadow-sm border-0">
+    <div class="card-body row g-3">
+
+
+      <div class="row form-group col-md-12">
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">نام</label>
+          <input type="text" formControlName="FirstName" class="form-control" [ngClass]="{
+                              'is-invalid':
+                              EditForm_Employee.controls['FirstName'].invalid &&
+                              EditForm_Employee.controls['FirstName'].touched,
+                              'is-valid':
+                              EditForm_Employee.controls['FirstName'].valid &&
+                              EditForm_Employee.controls['FirstName'].touched
+                            }" />
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                              validation: 'required',
+                              message: 'اجباری است',
+                              control: EditForm_Employee.controls['FirstName']
+                            }"></ng-container>
+        </div>
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">نام خانوادگی</label>
+          <input type="text" class="form-control" formControlName="LastName" autocomplete="off" [ngClass]="{
+                              'is-invalid':
+                              EditForm_Employee.controls['LastName'].invalid &&
+                              EditForm_Employee.controls['LastName'].touched,
+                              'is-valid':
+                              EditForm_Employee.controls['LastName'].valid &&
+                              EditForm_Employee.controls['LastName'].touched
+                            }" />
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                              validation: 'required',
+                              message: 'اجباری است',
+                              control: EditForm_Employee.controls['LastName']
+                            }"></ng-container>
+        </div>
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">کد ملی</label>
+          <input type="text" class="form-control" formControlName="CodeMeli" autocomplete="off" [ngClass]="{
+                              'is-invalid':
+                              EditForm_Employee.controls['CodeMeli'].invalid &&
+                              EditForm_Employee.controls['CodeMeli'].touched,
+                              'is-valid':
+                              EditForm_Employee.controls['CodeMeli'].valid &&
+                              EditForm_Employee.controls['CodeMeli'].touched
+                            }" />
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                              validation: 'required',
+                              message: 'اجباری است',
+                              control: EditForm_Employee.controls['CodeMeli']
+                            }"></ng-container>
+        </div>
+
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">شغل</label>
+          <input type="text" class="form-control" formControlName="JobTitle" autocomplete="off" [ngClass]="{
+                              'is-invalid':
+                              EditForm_Employee.controls['JobTitle'].invalid &&
+                              EditForm_Employee.controls['JobTitle'].touched,
+                              'is-valid':
+                              EditForm_Employee.controls['JobTitle'].valid &&
+                              EditForm_Employee.controls['JobTitle'].touched
+                            }" />
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                              validation: 'required',
+                              message: 'اجباری است',
+                              control: EditForm_Employee.controls['JobTitle']
+                            }"></ng-container>
+        </div>
+      </div>
+
+      <div class="row col-md-12">
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">روز کارکرد</label>
+          <input type="number" class="form-control" formControlName="Rozkarkard" autocomplete="off" />
+        </div>
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">ساعا ناهار و نماز</label>
+          <input type="number" class="form-control" formControlName="SaatNaharNamaz" autocomplete="off" />
+        </div>
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">نرخ اضافه کاری</label>
+          <input type="number" class="form-control" formControlName="NerkhEzafekar" autocomplete="off" />
+        </div>
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">وضعیت تاهل</label>
+          <select id="VaziyatTaahol" class="form-control" formControlName="VaziyatTaahol" [ngClass]="{
+                   'is-invalid': EditForm_Employee.controls['VaziyatTaahol'].invalid && EditForm_Employee.controls['VaziyatTaahol'].touched,
+                   'is-valid': EditForm_Employee.controls['VaziyatTaahol'].valid && EditForm_Employee.controls['VaziyatTaahol'].touched
+                 }">
+            <option value="">لطفاً انتخاب کنید</option>
+            @for (item of VaziyatTaahol_Lookup; track item) {
+            <option [value]="item.id">{{ item.name }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="row form-group col-md-12">
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">حقوق روزانه</label>
+          <input type="number" class="form-control" formControlName="NerkhHoghogh" autocomplete="off" />
+        </div>
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">سنوات روزانه</label>
+          <input type="number" class="form-control" formControlName="NerkhSanavat" autocomplete="off" />
+        </div>
+
+
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">حق مسکن روزانه</label>
+          <input type="number" class="form-control" formControlName="NerkhMaskan" autocomplete="off" />
+        </div>
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">حق خواروبار روزانه</label>
+          <input type="number" class="form-control" formControlName="NerkhKharobar" autocomplete="off" />
+        </div>
+      </div>
+      <div class="row form-group col-md-12">
+
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">حق تاعل</label>
+          <input type="number" class="form-control" formControlName="HaghTaahol" autocomplete="off" />
+        </div>
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">تعداد فرزند</label>
+          <input type="number" class="form-control" formControlName="TedadOlad" autocomplete="off" />
+        </div>
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">حق اولاد</label>
+          <input type="number" class="form-control" formControlName="HaghOlad" autocomplete="off" />
+        </div>
+
+
+      </div>
+
+
+      <div class="row form-group col-md-12">
+
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">نرخ پاداش</label>
+          <input type="number" class="form-control" formControlName="NerkhPadash" autocomplete="off" />
+        </div>
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">تعداد پاداش</label>
+          <input type="number" class="form-control" formControlName="TedadPadash" autocomplete="off" />
+        </div>
+      </div>
+
+
+      <div class="row form-group col-md-12">
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">نرخ اضافات کسورات 1</label>
+          <input type="number" class="form-control" formControlName="NerkhExtra1" autocomplete="off" />
+        </div>
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">تعداد اضافه کسورات 1</label>
+          <input type="number" class="form-control" formControlName="TedadExtra1" autocomplete="off" />
+        </div>
+
+      </div>
+
+
+      <div class="row form-group col-md-12">
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">نرخ اضافات کسورات 2</label>
+          <input type="number" class="form-control" formControlName="NerkhExtra2" autocomplete="off" />
+        </div>
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">تعداد اضافه کسورات 2</label>
+          <input type="number" class="form-control" formControlName="TedadExtra2" autocomplete="off" />
+        </div>
+      </div>
+
+
+      <div class="row form-group col-md-12">
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">بیمه</label>
+          <input type="number" class="form-control" formControlName="BimePaye" autocomplete="off" />
+        </div>
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">بیمه تکمیلی</label>
+          <input type="number" class="form-control" formControlName="BimeTakmili" autocomplete="off" />
+        </div>
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">مانده از قبل</label>
+          <input type="number" class="form-control" formControlName="Extra3" autocomplete="off" />
+        </div>
+
+        <div class="form-group col-md-3">
+          <label class="form-label fw-semibold">ضریب اضافات و کسورات</label>
+          <input type="number" class="form-control" formControlName="Extra4" autocomplete="off" />
+        </div>
+
+      </div>
+
+
+      <div class="form-group col-md-12">
+        <label class="form-label fw-semibold">توضیحات</label>
+        <input type="text" class="form-control" formControlName="Explain" autocomplete="off" />
+      </div>
+
+
+    </div>
+  </div>
+</form>
+
+<div class="card shadow-sm border-0 mt-3">
+  <div class="card-body d-flex gap-2">
+
+    <button class="btn btn-success px-4" type="button" (click)="submit('exit')">
+      <i class="fas fa-check-double me-1"></i>
+      ذخیره
+    </button>
+
+    <button class="btn btn-light px-4" type="button" (click)="onBtnCancelClick()">
+      <i class="fas fa-times me-1"></i>
+      انصراف
+    </button>
+
+  </div>
+</div>
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  @if (control.hasError(validation) && (control.dirty || control.touched)) {
+  <div class="invalid-feedback d-block">
+    {{ message }}
+  </div>
+  }
+</ng-template>
+
+<div class="modal fade" #salarylist tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class=" modal-title" id="salarylistLabel">لیست حقوق</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="salary_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="column_name_1" [rowData]="records_salary()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+            [class]="themeClass + ' w-100 h-100'">
+          </ag-grid-angular>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="salary_dialog_close()">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>

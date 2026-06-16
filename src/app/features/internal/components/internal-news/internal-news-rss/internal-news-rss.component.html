@@ -1,0 +1,188 @@
+<div class="card kowsar-news-card">
+
+  <div class="card-body">
+
+    <div class="news-header d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+
+      <div>
+        <h4 class="card-title news-card-title mb-1">
+          <i class="fas fa-rss text-warning me-1"></i>
+          مرکز اخبار مالی و حسابداری
+        </h4>
+
+        <div class="news-subtitle small">
+          آخرین اخبار از منبع:
+          <span class="fw-semibold news-primary-text">{{ selectedFeedLabel }}</span>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3" [disabled]="loading"
+        (click)="refresh()">
+
+        <i class="fas fa-sync-alt me-1" [class.fa-spin]="loading"></i>
+        بروزرسانی
+      </button>
+
+    </div>
+
+    <div class="news-source-tabs mb-3">
+
+      @for (feed of rssFeeds; track trackByFeed($index, feed)) {
+
+      <button type="button" class="news-source-btn" [class.active]="selectedTab === feed.name"
+        (click)="selectTab(feed.name)">
+
+        <i [class]="feed.icon"></i>
+        <span>{{ feed.label }}</span>
+
+      </button>
+
+      }
+
+    </div>
+
+    <div class="news-category-tabs mb-3">
+
+      @for (cat of categories; track trackByCategory($index, cat)) {
+
+      <button type="button" class="btn btn-sm rounded-pill" [class.btn-primary]="selectedCategory === cat.id"
+        [class.btn-outline-primary]="selectedCategory !== cat.id" (click)="selectCategory(cat.id)">
+
+        <i [class]="cat.icon + ' me-1'"></i>
+        {{ cat.label }}
+
+      </button>
+
+      }
+
+    </div>
+
+    @if (loading) {
+
+    <div class="news-loading py-5">
+
+      <div class="spinner-border text-primary mb-3" role="status"></div>
+
+      <div class="fw-semibold">
+        در حال دریافت اخبار...
+      </div>
+
+      <div class="news-subtitle small mt-1">
+        لطفاً چند لحظه صبر کنید
+      </div>
+
+    </div>
+
+    }
+
+    @if (!loading && errorMessage) {
+
+    <div class="news-empty py-5">
+
+      <i class="fas fa-triangle-exclamation fa-2x text-warning mb-3 d-block"></i>
+
+      <div class="fw-semibold">
+        {{ errorMessage }}
+      </div>
+
+      <button type="button" class="btn btn-outline-primary btn-sm rounded-pill mt-3" (click)="refresh()">
+
+        تلاش مجدد
+
+      </button>
+
+    </div>
+
+    }
+
+    @if (!loading && !errorMessage && filteredItems.length === 0) {
+
+    <div class="news-empty py-5">
+
+      <i class="fas fa-newspaper fa-2x mb-3 d-block"></i>
+
+      <div class="fw-semibold">
+        خبری برای نمایش وجود ندارد
+      </div>
+
+      <div class="news-subtitle small mt-1">
+        منبع یا دسته‌بندی دیگری را انتخاب کنید
+      </div>
+
+    </div>
+
+    }
+
+    @if (!loading && !errorMessage && filteredItems.length > 0) {
+
+    <div class="row g-3">
+
+      @for (item of filteredItems; track trackByItem($index, item)) {
+
+      <div class="col-xl-4 col-lg-6 col-12">
+
+        <div class="card news-item-card h-100" (click)="open(item.link)">
+
+          @if (item.image) {
+
+          <div class="news-image-wrap">
+            <img [src]="item.image" [alt]="item.title" class="news-image" loading="lazy">
+          </div>
+
+          }
+
+          <div class="card-body d-flex flex-column">
+
+            <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
+
+              <span class="badge rounded-pill px-3 py-2" [ngClass]="getCategoryClass(item)">
+                {{ getCategoryLabel(item) }}
+              </span>
+
+              <small class="news-date text-nowrap">
+                <i class="far fa-clock me-1"></i>
+                {{ toShamsi(item.pubDate) }}
+              </small>
+
+            </div>
+
+            <h5 class="news-title">
+              {{ item.title }}
+            </h5>
+
+            <p class="news-description">
+              {{ item.description }}
+            </p>
+
+            <div class="mt-auto pt-3">
+
+              <div class="news-footer d-flex align-items-center justify-content-between pt-3">
+
+                <span class="badge news-source-badge rounded-pill px-3 py-2">
+                  {{ item.source }}
+                </span>
+
+                <span class="news-link news-primary-text fw-semibold">
+                  مشاهده خبر
+                  <i class="fas fa-arrow-left ms-1"></i>
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      }
+
+    </div>
+
+    }
+
+  </div>
+
+</div>

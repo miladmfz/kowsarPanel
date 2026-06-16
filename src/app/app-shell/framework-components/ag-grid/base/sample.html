@@ -4,26 +4,28 @@
     overflow: hidden;
     background-color: var(--grid-bg, #f8f9fa);
   ">
-  <ag-grid-angular class="w-100 h-100" [class.ag-theme-balham]="!isDarkMode" [class.ag-theme-balham-dark]="isDarkMode"
-    [rowData]="records_person" [columnDefs]="columnDefs1" [defaultColDef]="defaultColDef" [gridOptions]="gridOptions"
-    [context]="context" [components]="frameworkComponents" [localeText]="localeText" [enableRtl]="true"
-    [suppressColumnVirtualisation]="false" [suppressRowVirtualisation]="false" [suppressDragLeaveHidesColumns]="true"
-    [suppressMenuHide]="false" [suppressHorizontalScroll]="false" [suppressCellFocus]="false"
+  <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+    [class]="themeClass + ' w-100 h-100'" [class.ag-theme-balham]="!isDarkMode"
+    [class.ag-theme-balham-dark]="isDarkMode" [rowData]="records_person" [columnDefs]="column_name_1"
+    [defaultColDef]="defaultColDef" [gridOptions]="gridOptions" [context]="context" [components]="frameworkComponents"
+    [localeText]="localeText" [enableRtl]="true" [suppressColumnVirtualisation]="false"
+    [suppressRowVirtualisation]="false" [suppressDragLeaveHidesColumns]="true" [suppressMenuHide]="false"
+    [suppressHorizontalScroll]="false" [suppressCellFocus]="false"
     [rowSelection]="{ mode: 'multiRow', checkboxes: true }" [animateRows]="true" [suppressRowClickSelection]="false"
     [rowMultiSelectWithClick]="true" [enableRangeSelection]="true" [rowHeight]="42" [headerHeight]="45"
     [domLayout]="'autoHeight'" [pagination]="true" [paginationAutoPageSize]="true" [enableBrowserTooltips]="true"
     [tooltipShowDelay]="200" [tooltipHideDelay]="800" [statusBar]="{
-      statusPanels: [
-        { statusPanel: 'agTotalAndFilteredRowCountComponent', align: 'left' },
-        { statusPanel: 'agAggregationComponent', align: 'right' }
-      ]
-    }" [sideBar]="{
-      toolPanels: [
-        { id: 'columns', labelDefault: 'ستون‌ها', iconKey: 'columns', toolPanel: 'agColumnsToolPanel' },
-        { id: 'filters', labelDefault: 'فیلترها', iconKey: 'filter', toolPanel: 'agFiltersToolPanel' }
-      ],
-      defaultToolPanel: ''
-    }" [popupParent]="document.body" [suppressFieldDotNotation]="true" [stopEditingWhenCellsLoseFocus]="true"
+  statusPanels: [
+  { statusPanel: 'agTotalAndFilteredRowCountComponent', align: 'left' },
+  { statusPanel: 'agAggregationComponent', align: 'right' }
+  ]
+  }" [sideBar]="{
+  toolPanels: [
+  { id: 'columns', labelDefault: 'ستون‌ها', iconKey: 'columns', toolPanel: 'agColumnsToolPanel' },
+  { id: 'filters', labelDefault: 'فیلترها', iconKey: 'filter', toolPanel: 'agFiltersToolPanel' }
+  ],
+  defaultToolPanel: ''
+  }" [popupParent]="document.body" [suppressFieldDotNotation]="true" [stopEditingWhenCellsLoseFocus]="true"
     [suppressAggFuncInHeader]="false" (gridReady)="onGridReady($event, 1)" (cellClicked)="onCellClicked($event)"
     (cellDoubleClicked)="onCellDoubleClicked($event)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
     (sortChanged)="onReloadGrid()" (filterChanged)="onReloadGrid()" (rowSelected)="onRowSelected?.($event)"
@@ -44,18 +46,20 @@
 
 <div class="ag-container" style="
     height: 600px;
-    border-radius: 8px;
+    border-radius: 4px;
     overflow: hidden;
     background-color: var(--grid-bg, #f9f9f9);
   ">
-  <ag-grid-angular class="w-100 h-100" [class.ag-theme-balham]="!isDarkMode" [class.ag-theme-balham-dark]="isDarkMode"
-    [rowData]="records_person" [columnDefs]="columnDefs1" [defaultColDef]="defaultColDef" [gridOptions]="gridOptions"
-    [context]="context" [components]="frameworkComponents" [localeText]="localeText" [enableRtl]="true"
-    [suppressColumnVirtualisation]="false" [suppressRowVirtualisation]="false" [suppressDragLeaveHidesColumns]="true"
-    [suppressMenuHide]="false" [suppressHorizontalScroll]="false" [suppressCellFocus]="false"
-    [rowSelection]="{ mode: 'singleRow' }" [animateRows]="true" [suppressRowClickSelection]="false" [pagination]="true"
-    [paginationAutoPageSize]="true" [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
-    [rowHeight]="40" [headerHeight]="42" [domLayout]="'autoHeight'" [stopEditingWhenCellsLoseFocus]="true"
+  <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+    [class]="themeClass + ' w-100 h-100'" [class.ag-theme-balham]="!isDarkMode"
+    [class.ag-theme-balham-dark]="isDarkMode" [rowData]="records_person" [columnDefs]="column_name_1"
+    [defaultColDef]="defaultColDef" [gridOptions]="gridOptions" [context]="context" [components]="frameworkComponents"
+    [localeText]="localeText" [enableRtl]="true" [suppressColumnVirtualisation]="false"
+    [suppressRowVirtualisation]="false" [suppressDragLeaveHidesColumns]="true" [suppressMenuHide]="false"
+    [suppressHorizontalScroll]="false" [suppressCellFocus]="false" [rowSelection]="{ mode: 'singleRow' }"
+    [animateRows]="true" [suppressRowClickSelection]="false" [pagination]="true" [paginationAutoPageSize]="true"
+    [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800" [rowHeight]="40"
+    [headerHeight]="42" [domLayout]="'autoHeight'" [stopEditingWhenCellsLoseFocus]="true"
     [suppressFieldDotNotation]="true" (gridReady)="onGridReady($event, 1)" (cellClicked)="onCellClicked($event)"
     (cellDoubleClicked)="onCellDoubleClicked($event)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
     (sortChanged)="onReloadGrid()" (filterChanged)="onReloadGrid()" (rowSelected)="onRowSelected?.($event)"

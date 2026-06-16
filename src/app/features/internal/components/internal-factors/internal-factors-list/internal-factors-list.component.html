@@ -5,7 +5,7 @@
       <div class="card">
         <div class="card-body">
 
-          @if (!loading_supportpanel) {
+          @if (!loading_supportpanel()) {
           <div class="card-body">
             <table class="table table-striped table-bordered"
               style="border: 3px solid #000; border-collapse: collapse;">
@@ -20,7 +20,7 @@
                 </tr>
               </thead>
               <tbody>
-                @for (row of reportData; track row) {
+                @for (row of reportData(); track row) {
                 <tr class="text-center">
                   <td>{{ row.BrokerNameWithoutType }}</td>
                   <td
@@ -41,7 +41,7 @@
           </div>
           }
 
-          <form [formGroup]="EditForm_supportfactor" (ngSubmit)="submit('')" id="submitForm">
+          <form [formGroup]="EditForm_supportfactor" id="submitForm">
             <div class="row">
               <div class="col-12">
                 <div class="card">
@@ -83,29 +83,32 @@
               فاکتور جدید
             </a>
 
-            <a type="button" class="btn btn-primary m-1" (click)="getList()">
+            <a type="button" class="btn btn-primary m-1" (click)="GetData()">
               <span class="btn-label"><i class="fas fa-search"></i></span> جستجو
             </a>
-            <a type="button" class="btn btn-light m-1" (click)="getList()">
-              <span class="btn-label"><i class="fas fa-recycle"></i></span> بازخوانی
-            </a>
+            <!-- <a type="button" class="btn btn-light m-1" (click)="GetData()">
+              <span class="btn-label"><i class="fas fa-sync me-1"></i></span> بازخوانی
+            </a> -->
 
           </div>
         </div>
 
       </div>
 
-      @if (loading) {
+      @if (loading()) {
       <div class="text-center">
         <span class="loader"></span>
       </div>
       }
 
 
+      <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
 
-      <div class="ag-container rounded-3 overflow-hidden" style="height: 600px;">
-        <ag-grid-angular [columnDefs]="columnDefs1" [rowData]="records" [gridOptions]="gridOptions"
-          (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()" class="w-100 h-100">
+
+        <ag-grid-angular [class]="themeClass + ' w-100 h-100'" [gridOptions]="gridOptions" [columnDefs]="column_name_1"
+          (firstDataRendered)="onFirstDataRendered($event)" [rowData]="records()" (gridReady)="onGridReady($event, 1)"
+          (stateChanged)="onGridStateChanged()" (filterChanged)="onGridStateChanged()"
+          (sortChanged)="onGridStateChanged()" (columnMoved)="onGridStateChanged()">
         </ag-grid-angular>
       </div>
 
@@ -117,9 +120,9 @@
 <div class="modal fade" id="supportfactorproperty" tabindex="-1" aria-labelledby="supportfactorpropertyLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="background-color: #d1dce7;">
-      <div class="modal-header" style="background-color: #949494;">
-        <h5 class="modal-title" id="supportfactorpropertyLabel">خصوصیت اضافه</h5>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class=" modal-title" id="supportfactorpropertyLabel">خصوصیت اضافه</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
           (click)="property_dialog_close()"></button>
       </div>

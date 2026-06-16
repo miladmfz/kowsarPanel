@@ -1,0 +1,261 @@
+<!-- ===============================================================
+     KOWSAR CHANGE PASSWORD PAGE
+     =============================================================== -->
+
+<div class="kws-login-page d-flex align-items-center justify-content-center position-relative overflow-hidden">
+
+  <div class="kws-page-glow kws-page-glow-top"></div>
+  <div class="kws-page-glow kws-page-glow-bottom"></div>
+
+  <div class="card border-0 overflow-hidden position-relative kws-login-card kws-modal">
+
+    <div class="kws-top-gradient"></div>
+
+    <div class="card-body p-4 p-lg-5">
+
+      <!-- Header -->
+      <div class="text-center mb-4 position-relative">
+
+        <div
+          class="d-inline-flex align-items-center justify-content-center rounded-circle position-relative mb-3 kws-logo-circle">
+
+          <div class="position-absolute rounded-circle kws-logo-ring"></div>
+
+          <i class="fe-lock position-relative z-2 fs-1"></i>
+
+        </div>
+
+        <div class="fw-bold mb-2 kws-login-title">
+          تغییر رمز عبور
+        </div>
+
+        <p class="mb-0 kws-login-subtitle">
+          برای ادامه، رمز عبور خود را بروزرسانی کنید
+        </p>
+
+      </div>
+
+      <form [formGroup]="changePassForm" (ngSubmit)="submitChangePassword()" autocomplete="off" novalidate>
+
+        <!-- User Info -->
+        <div class="kws-user-card mb-4">
+
+          <div class="d-flex align-items-center gap-2 mb-3">
+
+            <div class="kws-user-avatar">
+              <i class="fe-user"></i>
+            </div>
+
+            <div>
+              <div class="fw-bold">
+                اطلاعات کاربر
+              </div>
+
+              <small class="text-muted">
+                مشخصات حساب فعلی
+              </small>
+            </div>
+
+          </div>
+
+          <div class="row g-3">
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label small text-muted mb-1">
+                نام و نام خانوادگی
+              </label>
+
+              <input type="text" class="form-control kws-readonly-input" [value]="phFullName() || '-'" readonly />
+
+            </div>
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label small text-muted mb-1">
+                نام کاربری
+              </label>
+
+              <input type="text" class="form-control kws-readonly-input" [value]="userName() || '-'" readonly />
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Current Password -->
+        <div class="mb-3">
+
+          <label class="form-label fw-semibold">
+            رمز فعلی
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-group-text">
+              <i class="fe-shield"></i>
+            </span>
+
+            <input [type]="showCurrentPassword() ? 'text' : 'password'" class="form-control kws-input"
+              formControlName="UPass" autocomplete="current-password" placeholder="رمز فعلی را وارد کنید" />
+
+            <button type="button" class="btn btn-light" (click)="toggleCurrentPassword()">
+
+              <i [class]="showCurrentPassword() ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+
+            </button>
+
+          </div>
+
+          @if (isInvalid('UPass')) {
+          <small class="text-danger mt-1 d-block">
+            رمز فعلی را وارد کنید
+          </small>
+          }
+
+        </div>
+
+        <!-- New Password -->
+        <div class="mb-3">
+
+          <label class="form-label fw-semibold">
+            رمز جدید
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-group-text">
+              <i class="fe-lock"></i>
+            </span>
+
+            <input [type]="showNewPassword() ? 'text' : 'password'" class="form-control kws-input"
+              formControlName="UNewPass" autocomplete="new-password" placeholder="رمز جدید را وارد کنید" />
+
+            <button type="button" class="btn btn-light" (click)="toggleNewPassword()">
+
+              <i [class]="showNewPassword() ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+
+            </button>
+
+          </div>
+
+          @if (changePassForm.controls['UNewPass'].touched || changePassForm.controls['UNewPass'].dirty) {
+
+          <small class="mt-2 d-block">
+            رمز جدید معتبر باشد:
+
+            <ul class="mb-0 ps-3">
+
+              <li [class.text-success]="passwordValidations.minLength"
+                [class.text-danger]="!passwordValidations.minLength">
+                حداقل ۸ کاراکتر
+              </li>
+
+              <li [class.text-success]="passwordValidations.hasUpper"
+                [class.text-danger]="!passwordValidations.hasUpper">
+                یک حرف بزرگ انگلیسی
+              </li>
+
+              <li [class.text-success]="passwordValidations.hasLower"
+                [class.text-danger]="!passwordValidations.hasLower">
+                یک حرف کوچک انگلیسی
+              </li>
+
+              <li [class.text-success]="passwordValidations.hasNumber"
+                [class.text-danger]="!passwordValidations.hasNumber">
+                یک عدد
+              </li>
+
+              <li [class.text-success]="passwordValidations.hasSpecial"
+                [class.text-danger]="!passwordValidations.hasSpecial">
+                یک کاراکتر خاص مانند !@#$%
+              </li>
+
+            </ul>
+
+          </small>
+
+          }
+
+          @if (changePassForm.errors?.['sameAsOldPassword'] && (changePassForm.touched || changePassForm.dirty)) {
+
+          <small class="text-danger mt-1 d-block">
+            رمز جدید نباید با رمز فعلی یکسان باشد
+          </small>
+
+          }
+
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mb-4">
+
+          <label class="form-label fw-semibold">
+            تکرار رمز جدید
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-group-text">
+              <i class="fe-check-circle"></i>
+            </span>
+
+            <input [type]="showConfirmPassword() ? 'text' : 'password'" class="form-control kws-input"
+              formControlName="confirmPassword" autocomplete="new-password" placeholder="تکرار رمز جدید" />
+
+            <button type="button" class="btn btn-light" (click)="toggleConfirmPassword()">
+
+              <i [class]="showConfirmPassword() ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+
+            </button>
+
+          </div>
+
+          @if (isInvalid('confirmPassword')) {
+
+          <small class="text-danger mt-1 d-block">
+            تکرار رمز جدید را وارد کنید
+          </small>
+
+          }
+
+          @if (changePassForm.errors?.['passwordMismatch'] && (changePassForm.touched || changePassForm.dirty)) {
+
+          <small class="text-danger mt-1 d-block">
+            رمز جدید و تکرار آن یکسان نیست
+          </small>
+
+          }
+
+        </div>
+
+        <!-- Submit -->
+        <div class="d-grid">
+
+          <button type="submit" class="position-relative overflow-hidden border-0 kws-login-btn"
+            [disabled]="changePassForm.invalid || isSavingChangePass()">
+
+            <span class="position-relative z-2 d-flex align-items-center justify-content-center">
+
+              @if (!isSavingChangePass()) {
+              <i class="fe-save me-2"></i>
+              ثبت رمز عبور جدید
+              } @else {
+              <span class="spinner-border spinner-border-sm me-2"></span>
+              در حال ارسال...
+              }
+
+            </span>
+
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>

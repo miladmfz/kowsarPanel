@@ -1,0 +1,22 @@
+{
+    "itmali": {
+        "config": "itmali.json",
+        "output": "dist/KowsarPanel",
+        "baseHref": "/KowsarPanel/"
+    },
+    "itmaliIp": {
+        "config": "itmaliIp.json",
+        "output": "dist/KowsarPanelIp",
+        "baseHref": "/KowsarPanelIp/"
+    },
+    "qoqnooscoffee": {
+        "config": "qoqnooscoffee.json",
+        "output": "dist/qoqnooscoffee",
+        "baseHref": "/qoqnooscoffee/"
+    },
+    "local": {
+        "config": "local.json",
+        "output": "dist/local",
+        "baseHref": "/"
+    }
+}

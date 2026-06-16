@@ -7,9 +7,9 @@ import { SessionStorageService } from './session.storage.service';
   providedIn: 'root'
 })
 export class AgGridStateService {
-
-  constructor(private readonly sessionstorage: SessionStorageService,
-    private readonly notificationService: NotificationService) { }
+  protected readonly session = inject(SessionStorageService);
+  protected readonly notificationService = inject(NotificationService);
+  constructor() { }
 
   private makeStorageName(name: string): string {
     return `${name}_colState`;
@@ -18,13 +18,13 @@ export class AgGridStateService {
   saveState(gridColumnApi: any, name: string): void {
     const colState = JSON.stringify(gridColumnApi.getColumnState());
     const storageName = this.makeStorageName(name);
-    this.sessionstorage.setItem(storageName, colState);
+    this.session.setItem(storageName, colState);
     this.notificationService.success("حالت جدول با موفقیت ذخیره شد.");
   }
 
   restoreState(gridColumnApi: any, name: string): boolean {
     const storageName = this.makeStorageName(name);
-    const colState = JSON.parse(this.sessionstorage.getItem(storageName));
+    const colState = JSON.parse(this.session.getString(storageName));
     if (!colState) {
       return false;
     }
@@ -40,8 +40,8 @@ export class AgGridStateService {
   resetState(gridColumnApi: any, name: string): void {
     gridColumnApi.resetColumnState();
     const storageName = this.makeStorageName(name);
-    if (this.sessionstorage.exists(storageName)) {
-      this.sessionstorage.removeItem(storageName);
+    if (this.session.exists(storageName)) {
+      this.session.removeItem(storageName);
     }
 
     this.notificationService.success("برگشت جدول به حالت پیش فرض با موفقیت انجام شد.");

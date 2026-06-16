@@ -1,0 +1,197 @@
+<div class="card">
+  <div class="card-body">
+
+    <h4 class="card-title">{{ title() }}</h4>
+
+    <div class="d-flex flex-wrap mb-3 gap-2">
+
+      <a type="button" class="btn btn-success m-1" (click)="createParent()">
+        <span class="btn-label"><i class="fas fa-plus"></i></span>
+        سرشاخه جدید
+      </a>
+
+      <button class="btn btn-light m-1" (click)="GetData()">
+        <span class="btn-label"><i class="fas fa-sync me-1"></i></span>
+        بازخوانی
+      </button>
+
+
+
+    </div>
+
+
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+        [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+        [class]="themeClass + ' w-100 h-100'" [treeData]="true" [getDataPath]="getDataPath_CityCode"
+        (stateChanged)="onGridStateChanged()" (filterChanged)="onGridStateChanged()"
+        (sortChanged)="onGridStateChanged()" (columnMoved)="onGridStateChanged()"
+        (firstDataRendered)="onFirstDataRendered($event)">
+      </ag-grid-angular>
+    </div>
+
+
+
+  </div>
+</div>
+
+
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  @if (control.hasError(validation) && (control.dirty || control.touched)) {
+  <div class="fv-plugins-message-container invalid-feedback">
+    <span role="alert">
+      {{ message }}
+    </span>
+  </div>
+  }
+</ng-template>
+
+
+
+
+<div class="modal fade" id="citymodal" tabindex="-1" aria-labelledby="citymodalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class=" modal-title" id="citymodalLabel">{{modal_title()}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="city_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+
+
+        <form [formGroup]="EditForm_City" id="submitForm">
+
+          <div class="row">
+
+            <div class="row form-group m-1 col-md-12">
+              <div class="form-group col-md-3">
+                <label for="CityCode">کد </label>
+                <input type="text" id="CityCode" class="form-control" formControlName="CityCode" readonly />
+
+              </div>
+              <div class="form-group col-md-3">
+                <label for="ParentName"> نام شاخه مرجع </label>
+                <input type="text" id="ParentName" class="form-control" formControlParentName="ParentName" readonly />
+
+              </div>
+
+
+
+              <div class="form-group col-md-1">
+
+              </div>
+
+
+
+            </div>
+
+
+            <div class="form-group m-1 col-md-12">
+              <label for="Name">نام زیر شاخه <span class="text-danger">*</span></label>
+              <input type="text" id="Name" class="form-control" formControlName="Name" [ngClass]="{
+                   'is-invalid': EditForm_City.controls['Name'].invalid && EditForm_City.controls['Name'].touched,
+                   'is-valid': EditForm_City.controls['Name'].valid && EditForm_City.controls['Name'].touched
+                 }" />
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm_City.controls['Name']
+          }"></ng-container>
+            </div>
+
+
+
+          </div>
+
+        </form>
+
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="city_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="Setcity()">ثبت</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="citymodaledit" tabindex="-1" aria-labelledby="citymodaleditLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class=" modal-title" id="citymodaleditLabel">{{modal_title()}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="cityedit_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+
+
+        <form [formGroup]="EditForm_City" id="submitForm">
+
+          <div class="row">
+
+            <div class="row form-group m-1 col-md-12">
+              <div class="form-group col-md-3">
+                <label for="CityCode">کد </label>
+                <input type="text" id="CityCode" class="form-control" formControlName="CityCode" readonly />
+
+              </div>
+              <div class="form-group col-md-3">
+                <label for="ParentName">نام شاخه مرجع </label>
+                <input type="text" id="ParentName" class="form-control" formControlName="ParentName" readonly />
+
+              </div>
+
+
+
+              <div class="form-group col-md-1">
+
+              </div>
+
+
+
+            </div>
+
+
+            <div class="form-group m-1 col-md-12">
+              <label for="Name">نام <span class="text-danger">*</span></label>
+              <input type="text" id="Name" class="form-control" formControlName="Name" [ngClass]="{
+                   'is-invalid': EditForm_City.controls['Name'].invalid && EditForm_City.controls['Name'].touched,
+                   'is-valid': EditForm_City.controls['Name'].valid && EditForm_City.controls['Name'].touched
+                 }" />
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm_City.controls['Name']
+          }"></ng-container>
+            </div>
+
+
+
+          </div>
+
+        </form>
+
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="cityedit_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="Setcity()">ثبت</button>
+
+      </div>
+    </div>
+  </div>
+</div>

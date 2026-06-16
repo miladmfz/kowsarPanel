@@ -45,13 +45,14 @@
         <!-- =============================================================== -->
         <!--   گرید لیست مشتریان -->
         <!-- =============================================================== -->
-        <div style="height: 400px;">
-          <ag-grid-angular class="ag-theme-balham w-100 h-100"
-            [ngClass]="darkMode ? 'ag-theme-balham-dark' : 'ag-theme-balham'" [rowData]="records"
-            [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [enableRtl]="true" [localeText]="localeText"
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 400px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [class]="themeClass + ' w-100'" [rowData]="records" [columnDefs]="columnDefs"
+            [defaultColDef]="defaultColDef" [enableRtl]="true" [localeText]="localeText"
             [rowSelection]="{ mode: 'singleRow' ,enableClickSelection: true}" (cellClicked)="onCellClicked($event)"
             (rowDoubleClicked)="onRowDoubleClicked($event)">
           </ag-grid-angular>
+
 
         </div>
 
