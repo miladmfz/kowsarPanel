@@ -12,7 +12,7 @@
               <div class="card-body row">
 
                 <!-- انتخاب سطوح (فقط هنگام ساخت رکورد جدید) -->
-                @if (TaskCode().length === 0) {
+                @if (isCreateMode()) {
                 <div class="row col-md-12">
 
                   @if (Parent_lvl1().length > 0) {
@@ -126,10 +126,10 @@
                 }
 
                 <!-- سطح مرجع (فقط هنگام ویرایش) -->
-                @if (TaskCode().length > 0) {
-                <div class="form-group col-md-4">
-                  <label class="col-form-label" for="ParentName1">سطح مرجع</label>
-                  <input type="text" class="form-control" formControlName="ParentName1" id="ParentName1" readonly />
+                @if (isEditMode()) {
+                <div class="form-group col-md-12">
+                  <label class="col-form-label" for="ParentTitle">سطح مرجع</label>
+                  <input type="text" class="form-control" formControlName="ParentTitle" id="ParentTitle" readonly />
                 </div>
                 }
 
@@ -197,10 +197,33 @@
           </div>
         </div>
       </div>
+      @if (isEditMode()) {
+      <!-- دکمه‌ها -->
+      <div class="card">
+        <div class="card-body">
+          <!-- گرید -->
+          <a class="btn btn-info mx-1" href="javascript:void(0)" (click)="OpenDependency()">
+            <span class="btn-label"><i class="fas fa-check-double"></i></span>اضافه کردن وابستگی
+          </a>
+          <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 300px;">
+            <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+              [columnDefs]="column_name_1" [rowData]="records_dependency()" [gridOptions]="gridOptions"
+              (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+              [class]="themeClass + ' w-100 h-100'">
+            </ag-grid-angular>
+          </div>
+
+        </div>
+      </div>
+      }
 
     </div>
   </div>
 </div>
+
+
+
+
 
 <!-- قالب خطا -->
 <ng-template #formError let-control="control" let-message="message" let-validation="validation">
@@ -210,3 +233,58 @@
   </div>
   }
 </ng-template>
+
+
+
+
+<div class="modal fade" #tasklist tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl kowsar-modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class=" modal-title">لیست شرح وظایف</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="tasklist_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+
+
+
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+
+          <ag-grid-angular [class]="themeClass + ' w-100 h-100'" [columnDefs]="columnDefs3" [rowData]="records_Task()"
+            (gridReady)="onGridReady($event, 3)" (firstDataRendered)="gridApi3?.sizeColumnsToFit()" [treeData]="true"
+            [getDataPath]="getDataPath_task" [rowSelection]="{
+    mode: 'multiRow',
+    groupSelects: 'filteredDescendants',
+    checkboxes: true,
+    headerCheckbox: true,
+    checkboxLocation: 'autoGroupColumn'
+  }" [animateRows]="true" (rowSelected)="onRowSelected($event)">
+
+          </ag-grid-angular>
+
+        </div>
+
+
+        <!-- 
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden"  style="height: 350px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="columnDefs6" [rowData]="base_Group_list()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 6)" (firstDataRendered)="gridApi6?.sizeColumnsToFit()" [class]="themeClass + ' w-100 h-100'"   
+            [rowSelection]="{ mode: 'singleRow' ,enableClickSelection: true}"
+            (selectionChanged)="onSelectionChanged_Row($event)" [treeData]="true" [getDataPath]="getDataPath_group">
+          </ag-grid-angular>
+        </div> -->
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="tasklist_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="Set_goodtask()">انتخاب</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -227,7 +227,7 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
     this.repo.UpdateDbSetup(this.selected_value(), this.selected_Key())
       .subscribe(e => {
         this.orderdbsetup_Modal_Response_close()
-        this.sharedService.triggerActionAll('refresh');
+        this.sharedService.triggerRefresh('refresh');
       });
 
   }
@@ -267,7 +267,7 @@ export class OrderAppSettingComponent extends AgGridBaseComponent
           this.notificationService.error('مشکل در برقراری ارتباط', "خطا");
           return of(null); // یا هر مقدار جایگزین
         })).subscribe(e => {
-          this.sharedService.triggerActionAll('refresh');
+          this.sharedService.triggerRefresh('refresh');
           this.printerModal_Modal_Response_close()
         });
     }

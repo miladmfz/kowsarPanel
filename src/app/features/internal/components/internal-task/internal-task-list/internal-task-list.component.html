@@ -24,7 +24,7 @@
       <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
         [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions"
         (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
-        [class]="themeClass + ' w-100 h-100'" [treeData]="true" [getDataPath]="getDataPath_group">
+        [class]="themeClass + ' w-100 h-100'" [treeData]="true" [getDataPath]="getDataPath_task">
       </ag-grid-angular>
     </div>
 

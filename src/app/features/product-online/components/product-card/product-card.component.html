@@ -1,0 +1,74 @@
+<button type="button" class="product-card" (click)="open()">
+  @if (config.ShowProductImage) {
+    <div class="product-card__image-box">
+      <img
+        class="product-card__image"
+        [src]="imageSource()"
+        [alt]="item.GoodName || 'تصویر کتاب'"
+        (load)="onImageLoaded()"
+        (error)="onImageError()"
+        loading="lazy">
+
+      @if (imageLoading()) {
+        <span class="product-card__image-loader"></span>
+      }
+
+      @if (badgeText()) {
+        <span class="product-card__badge">
+          {{ badgeText() }}
+        </span>
+      }
+
+      @if (config.ShowFavorite && isFavorite()) {
+        <span class="product-card__favorite" title="علاقه‌مندی">
+          <i class="mdi mdi-heart"></i>
+        </span>
+      }
+    </div>
+  }
+
+  <div class="product-card__body">
+    <div class="product-card__top">
+      <h3 class="product-card__title">
+        {{ item.GoodName || 'بدون عنوان' }}
+      </h3>
+
+      <span class="product-card__arrow" aria-hidden="true">
+        <i class="mdi mdi-chevron-left"></i>
+      </span>
+    </div>
+
+    @if (secondaryText()) {
+      <p class="product-card__meta">
+        {{ secondaryText() }}
+      </p>
+    }
+
+    @if (item.BulletinGroupName || item.GroupsWhitoutCode) {
+      <p class="product-card__category">
+        <i class="mdi mdi-bookshelf"></i>
+        {{ item.BulletinGroupName || item.GroupsWhitoutCode }}
+      </p>
+    }
+
+    <div class="product-card__footer">
+      @if (priceValue()) {
+        <div class="product-card__price-box">
+          <span>قیمت</span>
+          <strong>
+            {{ formatPrice(priceValue()) }}
+            <small>ریال</small>
+          </strong>
+        </div>
+      }
+
+      @if (config.ShowStock) {
+        <span
+          class="product-card__stock"
+          [class.product-card__stock--available]="isAvailable()">
+          {{ stockText() }}
+        </span>
+      }
+    </div>
+  </div>
+</button>

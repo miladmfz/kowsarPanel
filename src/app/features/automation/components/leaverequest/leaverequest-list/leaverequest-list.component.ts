@@ -129,8 +129,10 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
 
     LeaveType_Lookup: Base_Lookup[] = [
         { id: 'DAILY', name: 'روزانه' },
-        { id: 'HOURLY', name: 'ساعتي' },
+        { id: 'HOURLY', name: 'ساعتی' },
+        { id: 'SICK', name: 'اضطراری' },
     ];
+
     constructor() {
         super();
     }
@@ -421,23 +423,26 @@ export class LeaverequestListComponent extends AgGridBaseComponent implements On
                 // const message = data?.LeaveRequests?.[0]?.Message ?? '';
 
                 // if (message.length > 0) {
-
                 //     this.fireDeleteSwal1(message).then((result) => {
                 //         if (result.isConfirmed) {
-
                 //             //////////////////////////////////////////////
-
                 //         } else if (result.dismiss === Swal.DismissReason.cancel) {
                 //             this.notificationService.warning('اطلاعات تغییری نکرد');
                 //         }
                 //     });
-
                 //     return;
+                // }
+
+                // const message = data?.LeaveRequests?.[0]?.Message ?? '';
+                // if (message.length > 0) {
+                //     this.notificationService.error(message);
+                // } else {
                 // }
 
                 this.notificationService.success('نظر مدیر با موفقیت ثبت شد');
                 this.closeModal();
                 this.loadLeaveList();
+
             },
 
             error: () => {

@@ -1,29 +1,17 @@
-/* ===============================================================
-   📘 LetterModalComponent
-   توضیحات کلی:
-   این کامپوننت مسئول نمایش، مدیریت و ایجاد تیکت کارشناسان است.
-   شامل قابلیت‌های زیر می‌باشد:
-   1️⃣ نمایش گرید تیکت‌ها با ag-grid  
-   2️⃣ امکان انتخاب، ایجاد یا ادامه‌ی تیکت موجود  
-   3️⃣ ارتباط با مودال انتخاب مشتری  
-   4️⃣ اعتبارسنجی فرم و ارسال داده‌ها به والد  
-
-   ساختار داخلی:
-   - ورودی‌ها: وضعیت نمایش، تم، داده‌های تیکت‌ها، و اطلاعات کارشناس
-   - خروجی‌ها: بستن مودال، ارسال فرم تیکت، درخواست انتخاب مشتری
-   - سیگنال‌ها: وضعیت تیکت جدید و تیکت انتخاب‌شده
-   =============================================================== */
-
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
+  AfterViewInit,
   Component,
+  ElementRef,
   EventEmitter,
+  inject,
   Input,
+  OnChanges,
+  OnDestroy,
   Output,
   signal,
-  OnChanges,
   SimpleChanges,
-  inject,
+  ViewChild,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -40,48 +28,69 @@ import { ColDef } from 'ag-grid-community';
   imports: [CommonModule, ReactiveFormsModule, AgGridModule],
   templateUrl: './letter-modal.component.html',
 })
-export class LetterModalComponent implements OnChanges {
-  // ===============================================================
-  //    ورودی‌ها
-  // ===============================================================
+export class LetterModalComponent implements OnChanges, AfterViewInit, OnDestroy {
+  @ViewChild('dialogElement')
+  private dialogRef?: ElementRef<HTMLDialogElement>;
+
   @Input() visible = false;
   @Input() darkMode = false;
-  @Input() records: any
-  @Input() person: any = null; // اطلاعات کارشناس از والد (selectedPerson)
+  @Input() records: any[] = [];
+  @Input() person: any = null;
 
-  // ===============================================================
-  //   خروجی‌ها
-  // ===============================================================
   @Output() close = new EventEmitter<void>();
   @Output() submitLetter = new EventEmitter<any>();
-  @Output() requestSelectCustomer = new EventEmitter<void>(); // باز کردن مودال مشتری‌ها
+  @Output() requestSelectCustomer = new EventEmitter<void>();
 
-  // ===============================================================
-  //    وضعیت داخلی
-  // ===============================================================
   isNewLetter = signal(false);
   selectedLetter = signal<any | null>(null);
+
   form: FormGroup;
   themeClass = 'ag-theme-quartz kowsar-ag-grid';
-  // ===============================================================
-  //   تنظیمات گرید
-  // ===============================================================
+
   column_name_1: ColDef[] = [
-    { field: 'LetterDate', headerName: 'تاریخ', width: 130, cellClass: 'text-center' },
-    { field: 'RowLetterDescription', headerName: 'شرح تیکت', flex: 1 },
-    { field: 'OwnerName', headerName: 'مشتری', width: 160, cellClass: 'text-center' },
-    { field: 'RowLetterState', headerName: 'وضعیت', width: 130, cellClass: 'text-center' },
-    { field: 'AutLetterRow_PropDescription1', headerName: 'شرح کار', flex: 1 },
+    {
+      field: 'LetterDate',
+      headerName: 'تاریخ',
+      width: 130,
+      cellClass: 'text-center',
+    },
+    {
+      field: 'RowLetterDescription',
+      headerName: 'شرح تیکت',
+      flex: 1,
+    },
+    {
+      field: 'OwnerName',
+      headerName: 'مشتری',
+      width: 160,
+      cellClass: 'text-center',
+    },
+    {
+      field: 'RowLetterState',
+      headerName: 'وضعیت',
+      width: 130,
+      cellClass: 'text-center',
+    },
+    {
+      field: 'AutLetterRow_PropDescription1',
+      headerName: 'شرح کار',
+      flex: 1,
+    },
   ];
 
-  defaultColDef: ColDef = { sortable: true, resizable: true, filter: true };
-  localeText = { noRowsToShow: 'هیچ تیکتی برای نمایش وجود ندارد' };
+  defaultColDef: ColDef = {
+    sortable: true,
+    resizable: true,
+    filter: true,
+  };
 
-  // ===============================================================
-  // 🧱 سازنده
-  // ===============================================================
+  localeText = {
+    noRowsToShow: 'هیچ تیکتی برای نمایش وجود ندارد',
+  };
 
+  private viewReady = false;
   private readonly fb = inject(FormBuilder);
+  private readonly document = inject(DOCUMENT);
 
   constructor() {
     this.form = this.fb.group({
@@ -95,32 +104,89 @@ export class LetterModalComponent implements OnChanges {
       LetterDescriptionText: [''],
       DescriptionText: ['', [Validators.required, Validators.minLength(10)]],
     });
-
-
   }
 
-  // ===============================================================
-  // 🧠 تغییر ورودی person
-  // ===============================================================
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['person'] && this.person) {
+      this.fillFromPerson(this.person);
+    }
 
-
-    if (changes['person'] && this.person) this.fillFromPerson(this.person);
+    if (changes['visible'] && this.viewReady) {
+      queueMicrotask(() => this.syncDialogState());
+    }
   }
 
-  /** 📋 پر کردن فرم از اطلاعات کارشناس انتخاب‌شده */
-  private fillFromPerson(p: any): void {
-    if (!p) return;
-    this.form.patchValue({
-      ExecuterCentral: p?.CentralRef ?? '',
-      ExecuterName: p?.FullName ?? '',
-      NumberPhone: p?.PhMobile1 ?? '',
+  ngAfterViewInit(): void {
+    this.viewReady = true;
+    queueMicrotask(() => this.syncDialogState());
+  }
+
+  ngOnDestroy(): void {
+    const dialog = this.dialogRef?.nativeElement;
+
+    if (dialog?.open) {
+      dialog.close();
+    }
+
+    this.refreshBodyScrollLock();
+  }
+
+  private syncDialogState(): void {
+    const dialog = this.dialogRef?.nativeElement;
+
+    if (!dialog?.isConnected) {
+      return;
+    }
+
+    if (this.visible && !dialog.open) {
+      dialog.showModal();
+    } else if (!this.visible && dialog.open) {
+      dialog.close();
+    }
+
+    this.refreshBodyScrollLock();
+  }
+
+  private refreshBodyScrollLock(): void {
+    queueMicrotask(() => {
+      const hasOpenDialog = Boolean(
+        this.document.querySelector('dialog.kowsar-dialog[open]'),
+      );
+
+      this.document.body.classList.toggle(
+        'kowsar-dialog-open',
+        hasOpenDialog,
+      );
     });
   }
 
-  // ===============================================================
-  // ➕ ایجاد تیکت جدید
-  // ===============================================================
+  requestClose(): void {
+    this.close.emit();
+  }
+
+  onDialogCancel(event: Event): void {
+    event.preventDefault();
+    this.requestClose();
+  }
+
+  onDialogBackdropClick(event: MouseEvent): void {
+    if (event.target === this.dialogRef?.nativeElement) {
+      this.requestClose();
+    }
+  }
+
+  private fillFromPerson(person: any): void {
+    if (!person) {
+      return;
+    }
+
+    this.form.patchValue({
+      ExecuterCentral: person?.CentralRef ?? '',
+      ExecuterName: person?.CentralName ?? person?.FullName ?? '',
+      NumberPhone: person?.EconomyCode ?? '',
+    });
+  }
+
   startNewLetter(): void {
     this.isNewLetter.set(true);
     this.selectedLetter.set(null);
@@ -130,15 +196,14 @@ export class LetterModalComponent implements OnChanges {
       OwnerCentral: '',
       OwnerName: '',
       ExecuterCentral: this.person?.CentralRef ?? '',
-      ExecuterName: this.person?.FullName ?? '',
-      NumberPhone: this.person?.PhMobile1 ?? '',
+      ExecuterName: this.person?.CentralName ?? this.person?.FullName ?? '',
+      NumberPhone: this.person?.EconomyCode ?? '',
       SendSms: '0',
       LetterDescriptionText: '',
       DescriptionText: '',
     });
   }
 
-  /** ❌ لغو ساخت تیکت جدید */
   cancelNewLetter(): void {
     this.isNewLetter.set(false);
     this.selectedLetter.set(null);
@@ -146,39 +211,37 @@ export class LetterModalComponent implements OnChanges {
     this.fillFromPerson(this.person);
   }
 
-  // ===============================================================
-  //   انتخاب تیکت از گرید
-  // ===============================================================
-  onRowClicked(e: any): void {
-    const r = e.data;
+  onRowClicked(event: any): void {
+    const row = event.data;
+
     this.isNewLetter.set(true);
-    this.selectedLetter.set(r);
+    this.selectedLetter.set(row);
 
     this.form.patchValue({
-      LetterCode: r?.LetterCode ?? '',
-      OwnerCentral: r?.OwnerCentral ?? '',
-      OwnerName: r?.OwnerName ?? '',
+      LetterCode: row?.LetterCode ?? '',
+      OwnerCentral: row?.OwnerCentral ?? '',
+      OwnerName: row?.OwnerName ?? '',
       ExecuterCentral: this.person?.CentralRef ?? '',
-      ExecuterName: this.person?.FullName ?? '',
-      NumberPhone: this.person?.PhMobile1 ?? '',
+      ExecuterName: this.person?.CentralName ?? this.person?.FullName ?? '',
+      NumberPhone: this.person?.EconomyCode ?? '',
       SendSms: '0',
-      LetterDescriptionText: r?.LetterDescription ?? '',
+      LetterDescriptionText: row?.LetterDescription ?? '',
       DescriptionText: '',
     });
   }
 
-  // ===============================================================
-  //   مشتریان
-  // ===============================================================
-  /**   باز کردن مودال انتخاب مشتری */
   openCustomerPicker(): void {
-    if (this.form.value.LetterCode?.length > 0) return;
+    if (this.form.value.LetterCode?.length > 0) {
+      return;
+    }
+
     this.requestSelectCustomer.emit();
   }
 
-  /** 👤 وقتی مشتری از مودال انتخاب شد */
   public patchSelectedCustomer(customer: any): void {
-    if (!customer) return;
+    if (!customer) {
+      return;
+    }
 
     const ownerCentral =
       customer.CentralRef ??
@@ -196,31 +259,31 @@ export class LetterModalComponent implements OnChanges {
       OwnerCentral: ownerCentral,
       OwnerName: ownerName,
     });
-
   }
 
-  // ===============================================================
-  // 🧹 پاکسازی ورودی
-  // ===============================================================
   sanitizeDescriptionText(event: Event): void {
     const input = event.target as HTMLTextAreaElement;
-    if (!input) return;
+
+    if (!input) {
+      return;
+    }
 
     const cleaned = input.value.replace(/[<>]/g, '');
+
     if (cleaned !== input.value) {
-      this.form.patchValue({ DescriptionText: cleaned }, { emitEvent: false });
+      this.form.patchValue(
+        { DescriptionText: cleaned },
+        { emitEvent: false },
+      );
     }
   }
 
-  // ===============================================================
-  // 📤 ارسال فرم
-  // ===============================================================
   saveLetter(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    this.submitLetter.emit(this.form.value);
+    this.submitLetter.emit(this.form.getRawValue());
   }
 }

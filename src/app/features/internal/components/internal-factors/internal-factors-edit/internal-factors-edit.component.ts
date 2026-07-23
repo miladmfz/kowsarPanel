@@ -19,6 +19,7 @@ import { KowsarBaseWebApi } from 'src/app/app-shell/framework-services/base/Kows
 import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
 import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
 import { AutletterWebApiService } from 'src/app/features/automation/services/AutletterWebApi.service';
+import { TaskWebApiService } from '../../../services/TaskWebApi.service';
 
 @Component({
   selector: 'app-internal-factors-edit',
@@ -37,6 +38,8 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   private readonly router = inject(Router);
 
   private readonly repo = inject(SupportFactorWebApiService);
+  private readonly task_repo = inject(TaskWebApiService);
+
   private readonly aut_repo = inject(AutletterWebApiService);
   private readonly base_repo = inject(KowsarBaseWebApi);
   private readonly route = inject(ActivatedRoute);
@@ -53,10 +56,6 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
 
 
 
-
-
-
-
   // #region Declare
   @ViewChild('modalsearch') modalsearch!: ElementRef;
   @ViewChild('customerlist', { static: false }) customerlist!: ElementRef<HTMLDivElement>;
@@ -64,11 +63,16 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   @ViewChild('factorproperty', { static: false }) factorproperty!: ElementRef<HTMLDivElement>;
   @ViewChild('boxbuymodal', { static: false }) boxbuymodal!: ElementRef<HTMLDivElement>;
   @ViewChild('autlettercustomer', { static: false }) autlettercustomer!: ElementRef<HTMLDivElement>;
+  @ViewChild('allgoodtaskrow', { static: false }) allgoodtaskrow!: ElementRef<HTMLDivElement>;
+
+  @ViewChild('goodtaskrow_factorrow', { static: false }) goodtaskrow_factorrow!: ElementRef<HTMLDivElement>;
+
 
 
   title = signal('فاکتور پشتیبانی')
-
+  title_modal_goodtaskrow_factorrow = signal('')
   FactorCode = signal('')
+  error_msg = signal('')
   CentralRef = signal('')
   LoginType = signal('')
   Searchtarget_customer = signal('')
@@ -92,6 +96,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   records_support_good = signal<any[]>([])
   records_support_factorrows = signal<any[]>([])
   records_support_customer = signal<any[]>([])
+  records_allgoodtaskrow = signal<any[]>([])
 
 
   time: Date = new Date();
@@ -110,7 +115,56 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   private readonly destroy$ = new Subject<void>();
 
 
+  hoursList = Array.from({ length: 24 }, (_, i) =>
+    i.toString().padStart(2, '0')
+  );
 
+  minutesList = Array.from({ length: 60 }, (_, i) =>
+    i.toString().padStart(2, '0')
+  );
+
+  getTimePart(value: any, part: 'hour' | 'minute'): string {
+    const time = (value ?? '').toString();
+
+    if (!time.includes(':')) {
+      return '';
+    }
+
+    const [hour, minute] = time.split(':');
+
+    return part === 'hour' ? (hour ?? '') : (minute ?? '');
+  }
+
+  setTimePart(
+    row: any,
+    field: 'StartTime' | 'EndTime',
+    part: 'hour' | 'minute',
+    value: string
+  ) {
+    const current = (row[field] ?? '').toString();
+
+    let hour = '';
+    let minute = '';
+
+    if (current.includes(':')) {
+      const parts = current.split(':');
+      hour = parts[0] ?? '';
+      minute = parts[1] ?? '';
+    }
+
+    if (part === 'hour') {
+      hour = value;
+    } else {
+      minute = value;
+    }
+
+    if (!hour && !minute) {
+      row[field] = '';
+      return;
+    }
+
+    row[field] = `${hour || '00'}:${minute || '00'}`;
+  }
 
   EditForm_factor = new FormGroup({
     ClassName: new FormControl(''),
@@ -205,7 +259,10 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     starttime: new FormControl(''),
     Endtime: new FormControl(''),
     worktime: new FormControl(''),
-    Barbary: new FormControl(''),
+    Barbary: new FormControl('', [
+      Validators.required,
+      Validators.minLength(20)
+    ]),
     ObjectRef: new FormControl('0'),
   });
 
@@ -469,6 +526,61 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
         minWidth: 150
       },
     ];
+
+
+    this.columnDefs6 = [
+
+      {
+        field: 'GoodName',
+        headerName: 'نام آیتم',
+        cellClass: 'text-center',
+        minWidth: 150,
+      },
+      {
+        field: 'TaskTitle',
+        headerName: 'وظیفه',
+        cellClass: 'text-center',
+        minWidth: 200,
+      },
+      {
+        field: 'CompanyPerson',
+        headerName: 'کارمند',
+        cellClass: 'text-center',
+        minWidth: 150,
+      },
+      {
+        field: 'TaskDate',
+        headerName: 'تاریخ',
+        cellClass: 'text-center',
+        minWidth: 150,
+      },
+      {
+        field: 'StartTime',
+        headerName: 'شروع',
+        cellClass: 'text-center',
+        minWidth: 150,
+      },
+      {
+        field: 'EndTime',
+        headerName: 'پایان',
+        cellClass: 'text-center',
+        minWidth: 150,
+      },
+      {
+        field: 'Explain',
+        headerName: 'توضیحات',
+        cellClass: 'text-center',
+        minWidth: 150,
+      },
+
+      {
+        field: 'StateTitle',
+        headerName: 'وضعیت',
+        cellClass: 'text-center',
+        minWidth: 150,
+      },
+
+    ];
   }
 
   pipe_function() {
@@ -708,7 +820,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
         this.notificationService.succeded();
         this.router.navigate(['/internal/internal-factors-edit', this.FactorCode()]);
 
-        this.sharedService.triggerActionAll('refresh');
+        this.sharedService.triggerRefresh('refresh');
       });
     });
   }
@@ -721,7 +833,8 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   }
 
   Set_EndFactorTime() {
-    if (this.records_support_factorrows() && this.records_support_factorrows().length > 0) {
+
+    if (this.records_support_factorrows() && this.records_support_factorrows().length > 0 && this.EditForm_supportfactor_property.value.Barbary.length > 10) {
 
 
       const currentTime = new Date();
@@ -761,7 +874,7 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
 
             this.notificationService.warning(data.SupportDatas[0].EmptyEndTimeCount + " فاکتور باز وجود دارد");
             this.GetFactor()
-            this.sharedService.triggerActionAll('refresh');
+            this.sharedService.triggerRefresh('refresh');
           } else {
             this.EditForm_Attendance.patchValue({
               CentralRef: this.session.getString("CentralRef"),
@@ -773,17 +886,50 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
               this.notificationService.succeded();
 
               this.GetFactor()
-              this.sharedService.triggerActionAll('refresh');
+              this.sharedService.triggerRefresh('refresh');
             });
           }
         });
       });
     } else {
-      this.notificationService.error("هیچ ردیفی برای این فاکتور زده نشده", "اخطار");
+      this.error_msg.set("");
+
+      const errors: string[] = [];
+
+      const rows = this.records_support_factorrows();
+
+      if (!rows || rows.length === 0) {
+        errors.push("هیچ ردیفی برای این فاکتور ثبت نشده است");
+      }
+
+      const barbary = String(this.EditForm_supportfactor_property.value?.Barbary ?? "").trim();
+
+      if (barbary.length < 15) {
+        errors.push("لطفاً شرح کار را تکمیل کنید");
+      }
+
+      if (errors.length > 0) {
+        const msg = errors.join("، ");
+        this.error_msg.set(msg);
+        this.notificationService.error(msg, "اخطار");
+      }
     }
   }
 
   Set_ExplianFactorTime() {
+
+
+    this.EditForm_supportfactor_property.patchValue(
+      {
+        Barbary: this.cleanText(this.EditForm_supportfactor_property.value.Barbary),
+      },
+    );
+
+
+
+    this.EditForm_supportfactor_property.markAllAsTouched();
+
+    if (!this.EditForm_supportfactor_property.valid) return;
 
 
     this.repo.Support_ExplainFactor(this.EditForm_supportfactor_property.value).subscribe(() => {
@@ -811,7 +957,14 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
 
       if (rowCode > 0) {
         this.notificationService.succeded();
-        this.GetFactor()
+
+
+        this.task_repo.GoodTaskRow_Factor_Add(this.FactorCode()).subscribe((data: any) => {
+          this.notificationService.succeded("وظایف اضافه شد");
+          this.GetFactor()
+
+        });
+
       } else {
         this.notificationService.error(data.Factors[0].ErrDesc);
       }
@@ -1057,17 +1210,19 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     });
   }
 
-  delete(id: any) {
+  DeleteFactorRow(data: any) {
     this.fireDeleteSwal1().then((result) => {
       if (result.isConfirmed) {
 
 
 
-        this.repo.DeleteWebFactorRowsSupport(id).subscribe(() => {
+        this.repo.DeleteWebFactorRowsSupport(data.FactorRowCode).subscribe(() => {
 
 
-          this.GetFactorrows()
-          this.notificationService.succeded();
+          this.task_repo.GoodTaskRow_Factor_Del(data.FactorRowCode, data.GoodRef).subscribe(() => {
+            this.GetFactorrows()
+            this.notificationService.succeded();
+          });
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         this.notificationService.warning('اطلاعات تغییری نکرد');
@@ -1076,9 +1231,6 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   }
 
   deletefactorRecord() {
-
-
-
     this.repo.DeleteWebFactorSupport(this.FactorCode()).subscribe(() => {
       this.EditForm_Attendance.patchValue({
         CentralRef: this.session.getString("CentralRef"),
@@ -1091,10 +1243,11 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
 
         this.notificationService.succeded();
         this.location.back();
-        this.sharedService.triggerActionAll('refresh');
+        this.sharedService.triggerRefresh('refresh');
       });
     });
   }
+
 
   Show_Customer_Property(CustomerCode: any) {
     this.property_dialog_show()
@@ -1112,9 +1265,427 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
       }
     })
   }
+
+  goodtaskrow_factorrow_list = signal<any[]>([]);
+  ShowGoodTaskRow_FactorRow(data: any) {
+
+    this.title_modal_goodtaskrow_factorrow.set(" * شرح وظایف * " + data.GoodName);
+
+    this.task_repo.GoodTaskRow_Get_ByFactorRow(data.FactorRowCode)
+      .subscribe((res: any) => {
+
+        const rows = (res?.GoodTaskRows ?? []).map((x: any) => ({
+          ...x,
+          _submitted: false,
+          State: (x.State ?? '0').toString(),
+          TaskDate: x.TaskDate ?? '',
+          StartTime: x.StartTime ?? '',
+          EndTime: x.EndTime ?? '',
+          CompanyPerson: x.CompanyPerson ?? '',
+          Explain: x.Explain ?? '',
+          CentralRef: x.CentralRef ?? ''
+        }));
+
+        this.goodtaskrow_factorrow_list.set(rows);
+
+        console.log('GoodTaskRows:', rows);
+
+        this.goodtaskrow_factorrow_dialog_show();
+
+      });
+  }
+  Save_GoodTaskRow_Info(row: any) {
+
+    row._submitted = true;
+
+    const companyPerson = (row.CompanyPerson ?? '').toString().trim();
+    const explain = (row.Explain ?? '').toString().trim();
+
+    if (companyPerson.length === 0 || explain.length === 0) {
+      this.notificationService.warning('لطفاً نماینده و توضیحات را وارد کنید');
+      return;
+    }
+
+    const body = {
+      GoodTaskRowCode: row.GoodTaskRowCode,
+      CompanyPerson: companyPerson,
+      Explain: explain,
+      CentralRef: this.session.centralRef
+    };
+
+    this.task_repo.GoodTaskRow_EditInfo(body)
+      .subscribe((res: any) => {
+
+        console.log('EditInfo Result:', res);
+
+        const result =
+          res?.GoodTaskRows?.[0] ??
+          res?.GoodTaskRow?.[0] ??
+          res?.GoodTaskRows ??
+          res;
+
+        const errCode = Number(result?.ErrCode ?? 0);
+        const errMessage = result?.ErrMessage ?? 'خطا در ثبت اطلاعات';
+
+        if (errCode === 0) {
+          this.notificationService.success('اطلاعات با موفقیت ثبت شد');
+
+          row.CompanyPerson = companyPerson;
+          row.Explain = explain;
+          row.CentralRef = body.CentralRef;
+          row._submitted = false;
+        } else {
+          this.notificationService.error(errMessage);
+        }
+
+      });
+  }
+
+
+  getDependencyRow(row: any): any | null {
+    const dependencyGoodTaskCode = (row?.DependencyGoodTaskCode ?? '0').toString();
+
+    if (dependencyGoodTaskCode === '0') {
+      return null;
+    }
+
+    return this.goodtaskrow_factorrow_list()
+      .find((x: any) =>
+        (x.GoodTaskCode ?? '').toString() === dependencyGoodTaskCode
+      ) ?? null;
+  }
+
+  canStartByDependency(row: any): boolean {
+
+    const deps = this.getDependencyRows(row);
+
+    // ❌ اگر حتی dependency STRING وجود دارد ولی match نشده
+    // => یعنی دیتا ناقصه → نباید اجازه بدیم
+    const hasDependencyDefinition =
+      (row.DependencyTaskRefs ?? '').toString().trim().length > 0 &&
+      (row.DependencyTaskRefs ?? '0') !== '0' &&
+      (row.DependencyTaskRefs ?? '000') !== '000';
+
+    // اگر dependency تعریف شده ولی نتونستیم resolve کنیم
+    if (hasDependencyDefinition && deps.length === 0) {
+      return false;
+    }
+
+    // اگر dependency نداریم → آزاد
+    if (!hasDependencyDefinition) {
+      return true;
+    }
+
+    // اگر داریم → همه باید done باشن
+    return deps.every(d =>
+      this.getState(d) === 2 && this.hasEndTime(d)
+    );
+  }
+  validateStart(row: any): { ok: boolean, message?: string } {
+
+    const deps = this.getDependencyRows(row);
+
+    const ids = (row.DependencyTaskRefs ?? '')
+      .toString()
+      .trim()
+      .split(',')
+      .filter(x => x && x !== '0');
+
+    // اگر dependency تعریف شده ولی پیدا نشده
+    if (ids.length > 0 && deps.length === 0) {
+      return {
+        ok: false,
+        message: `وابستگی‌های این وظیفه قابل شناسایی نیست`
+      };
+    }
+
+    // 🔥 همه انجام‌نشده‌ها
+    const notDoneList = deps.filter(d => Number(d.State) !== 2);
+
+    if (notDoneList.length > 0) {
+
+      const titles = notDoneList.map(x => `"${x.TaskTitle}"`).join(' و ');
+
+      return {
+        ok: false,
+        message: `ابتدا ${titles} باید تکمیل شود`
+      };
+    }
+
+    return { ok: true };
+  }
+  getDependencyErrorMessage(row: any): string {
+
+    const deps = this.getDependencyRows(row);
+
+    if (!deps.length) {
+      return 'این وظیفه وابستگی ندارد یا قابل بررسی نیست';
+    }
+
+    const notDone = deps.find(d => this.getState(d) !== 2);
+
+    if (notDone) {
+      return `ابتدا «${notDone.TaskTitle}» باید تکمیل شود`;
+    }
+
+    return 'وابستگی‌ها تکمیل نشده‌اند';
+  }
+  getDependencyList(row: any): any[] {
+
+    const raw = (row.DependencyTaskRefs ?? '')
+      .toString()
+      .trim();
+
+    if (!raw || raw === '0' || raw === '000') return [];
+
+    const ids = raw.split(',').map(x => Number(x));
+
+    return this.goodtaskrow_factorrow_list()
+      .filter(x => ids.includes(Number(x.TaskRef)))
+      .map(x => ({
+        TaskRef: x.TaskRef,
+        TaskTitle: x.TaskTitle,
+        GoodTaskRowCode: x.GoodTaskRowCode,
+        State: x.State,
+        isDone: Number(x.State) === 2,
+        StartTime: x.StartTime,
+        EndTime: x.EndTime
+      }));
+  }
+  getDependencyRows(row: any): any[] {
+
+    const ids = this.getDependencyIds(row);
+
+    if (ids.length === 0) return [];
+
+    return this.goodtaskrow_factorrow_list()
+      .filter(x => ids.includes(Number(x.TaskRef))); // 🔥 مهم: TaskRef نه GoodTaskCode
+  }
+
+  getDependencyIds(row: any): number[] {
+    const raw = (row.DependencyTaskRefs ?? '').toString().trim();
+
+    if (!raw || raw === '0' || raw === '000') return [];
+
+    return raw
+      .split(',')
+      .map(x => Number(x))
+      .filter(x => !isNaN(x) && x > 0);
+  }
+  Start_GoodTaskRow(row: any) {
+
+    if (!this.isNotStarted(row)) {
+      this.notificationService.warning('این شرح وظیفه در وضعیت قابل شروع نیست');
+      return;
+    }
+
+    if ((row.StartTime ?? '').toString().trim().length > 0) {
+      this.notificationService.warning('این شرح وظیفه قبلاً شروع شده است');
+      return;
+    }
+
+    // 🔥 validation جدید
+    const validation = this.validateStart(row);
+
+    if (!validation.ok) {
+      this.notificationService.error(validation.message!);
+      return;
+    }
+
+    const body = {
+      GoodTaskRowCode: String(row.GoodTaskRowCode),
+      State: '1',
+      TaskDate: this.session.activeDate,
+      StartTime: this.getNowTime(),
+      EndTime: '',
+      CentralRef: String(this.session.centralRef)
+    };
+
+    this.task_repo.GoodTaskRow_ChangeState(body)
+      .subscribe((res: any) => {
+
+        const result = res?.GoodTaskRows?.[0] ?? res;
+
+        if (Number(result?.ErrCode ?? 0) === 0) {
+
+          this.notificationService.success('شروع شد');
+
+          row.State = '1';
+          row.StateTitle = 'در حال انجام';
+          row.StartTime = body.StartTime;
+          row.TaskDate = body.TaskDate;
+          row.CentralRef = body.CentralRef;
+        } else {
+          this.notificationService.error(result?.ErrMessage ?? 'خطا در شروع');
+        }
+      });
+  }
+  Finish_GoodTaskRow(row: any) {
+
+    row._submitted = true;
+
+    const body = {
+      GoodTaskRowCode: row.GoodTaskRowCode,
+      State: '2',
+      TaskDate: row.TaskDate || this.session.activeDate,
+      StartTime: row.StartTime || '',
+      EndTime: this.getNowTime(),
+      CentralRef: this.session.centralRef
+    };
+
+    this.task_repo.GoodTaskRow_ChangeState(body)
+      .subscribe((res: any) => {
+
+        console.log('Finish Result:', res);
+
+        const result =
+          res?.GoodTaskRows?.[0] ??
+          res?.GoodTaskRow?.[0] ??
+          res?.GoodTaskRows ??
+          res;
+
+        const errCode = Number(result?.ErrCode ?? 0);
+        const errMessage = result?.ErrMessage ?? 'خطا در اتمام کار';
+
+        if (errCode === 0) {
+          this.notificationService.success('شرح وظیفه تمام شد');
+
+          row.State = '2';
+          row.StateTitle = 'تمام شده';
+          row.TaskDate = body.TaskDate;
+          row.StartTime = body.StartTime;
+          row.EndTime = body.EndTime;
+          row.CentralRef = body.CentralRef;
+          row._submitted = false;
+        } else {
+          this.notificationService.error(errMessage);
+        }
+
+      });
+  }
+  hasEndTime(row: any): boolean {
+    return (row.EndTime ?? '').toString().trim().length > 0;
+  }
+  getNowTime(): string {
+    const now = new Date();
+
+    const hh = now.getHours().toString().padStart(2, '0');
+    const mm = now.getMinutes().toString().padStart(2, '0');
+
+    return `${hh}:${mm}`;
+  }
+
+  getState(row: any): number {
+    return Number(row?.State ?? 0);
+  }
+
+  isNotStarted(row: any): boolean {
+    return this.getState(row) === 0;
+  }
+
+  isDoing(row: any): boolean {
+    return this.getState(row) === 1;
+  }
+
+  isDone(row: any): boolean {
+    return this.getState(row) === 2;
+  }
+
+
+
+  getStateTitle(state: any): string {
+    const value = Number(state);
+
+    switch (value) {
+      case 0:
+        return 'انجام نشده';
+      case 1:
+        return 'در حال انجام';
+      case 2:
+        return 'انجام شده';
+      case 3:
+        return 'لغو شده';
+      default:
+        return '-';
+    }
+  }
+  Save_GoodTaskRow(row: any) {
+
+    row._submitted = true;
+
+    const explain = (row.Explain ?? '').toString().trim();
+    const companyPerson = (row.CompanyPerson ?? '').toString().trim();
+    const state = row.State ?? '0';
+
+    if (companyPerson.length === 0 || state == '0' || explain.length === 0) {
+      this.notificationService.warning('لطفاً فیلدهای الزامی را تکمیل کنید');
+      return;
+    }
+
+    const body = {
+      GoodTaskRowCode: Number(row.GoodTaskRowCode),
+
+      TaskDate: this.session.activeDate,
+      StartTime: (row.StartTime ?? '').toString().trim(),
+      EndTime: (row.EndTime ?? '').toString().trim(),
+
+      State: state,
+      CompanyPerson: companyPerson,
+      Explain: explain,
+
+      CentralRef: Number(this.session.centralRef)
+    };
+
+    this.task_repo.GoodTaskRow_Edit(body)
+      .subscribe((res: any) => {
+
+        console.log('Edit Result:', res);
+
+        const result =
+          res?.GoodTaskRows?.[0] ??
+          res?.GoodTaskRow?.[0] ??
+          res?.GoodTaskRows ??
+          res;
+
+        const errCode = Number(result?.ErrCode ?? 0);
+        const errMessage = result?.ErrMessage ?? 'خطا در ثبت اطلاعات';
+
+        if (errCode === 0) {
+          this.notificationService.success('اطلاعات با موفقیت ثبت شد');
+
+          row.TaskDate = body.TaskDate;
+          row.StartTime = body.StartTime;
+          row.EndTime = body.EndTime;
+          row.State = body.State.toString();
+          row.CompanyPerson = body.CompanyPerson;
+          row.Explain = body.Explain;
+          row.CentralRef = body.CentralRef;
+
+          row._submitted = false;
+        } else {
+          this.notificationService.error(errMessage);
+        }
+
+      });
+  }
+
+  ShowAllGoodTaskRow() {
+    this.task_repo.GoodTaskRow_Get_ByFactor(this.FactorCode()).subscribe((data: any) => {
+
+      this.records_allgoodtaskrow.set(data?.GoodTaskRows ?? [])
+      this.updateGridData(6, this.records_allgoodtaskrow());
+
+      this.allgoodtaskrow_dialog_show()
+    });
+  }
+
+  isGoodTaskRowReadonly(row: any): boolean {
+    return (row.TaskDate ?? '').toString().trim().length > 0;
+  }
   // #endregion
 
   // #region Get_Data
+
 
   GetFactor() {
 
@@ -1229,6 +1800,20 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     });
   }
 
+
+
+
+
+  private cleanText(value: any): any {
+    if (value === null || value === undefined) return value;
+
+    return value
+      .toString()
+      .trim()
+      .replace(/\s+/g, ' ')
+      .replace(/([^\w\s\u0600-\u06FF])\1+/g, '$1');
+  }
+
   // #endregion
 
   override ngOnDestroy(): void {
@@ -1264,11 +1849,9 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     document.body.style.paddingRight = '';
   }
 
+
+
   // #region Modal
-
-
-
-
 
 
   property_dialog_show(): void {
@@ -1290,17 +1873,6 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   }
 
 
-
-
-
-
-
-
-
-
-
-
-
   factor_property_dialog_show(): void {
     const modal = this.factorproperty?.nativeElement;
     if (!modal) return;
@@ -1318,16 +1890,6 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     this.renderer.removeAttribute(modal, 'aria-modal');
     this.renderer.removeAttribute(modal, 'role');
   }
-
-
-
-
-
-
-
-
-
-
 
 
   boxbuy_dialog_show(): void {
@@ -1348,10 +1910,6 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     this.renderer.removeAttribute(modal, 'role');
   }
 
-
-
-
-
   Autletter_dialog_show(): void {
     const modal = this.autlettercustomer?.nativeElement;
     if (!modal) return;
@@ -1369,14 +1927,6 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     this.renderer.removeAttribute(modal, 'aria-modal');
     this.renderer.removeAttribute(modal, 'role');
   }
-
-
-
-
-
-
-
-
 
 
   customer_dialog_show(): void {
@@ -1398,6 +1948,42 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
   }
 
 
+
+  allgoodtaskrow_dialog_show(): void {
+    const modal = this.allgoodtaskrow?.nativeElement;
+    if (!modal) return;
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+
+  allgoodtaskrow_dialog_close(): void {
+    const modal = this.allgoodtaskrow?.nativeElement;
+    if (!modal) return;
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
+
+  goodtaskrow_factorrow_dialog_show(): void {
+    const modal = this.goodtaskrow_factorrow?.nativeElement;
+    if (!modal) return;
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+    this.renderer.setAttribute(modal, 'aria-modal', 'true');
+    this.renderer.setAttribute(modal, 'role', 'dialog');
+  }
+
+  goodtaskrow_factorrow_dialog_close(): void {
+    const modal = this.goodtaskrow_factorrow?.nativeElement;
+    if (!modal) return;
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+    this.renderer.removeAttribute(modal, 'aria-modal');
+    this.renderer.removeAttribute(modal, 'role');
+  }
 
 
 

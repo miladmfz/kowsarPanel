@@ -31,6 +31,7 @@ export class PermissionService {
   }
 
   hasPermission(permission: string): boolean {
+    console.log(this.getPermissions())
     return this.getPermissions().includes(permission);
   }
 
@@ -56,7 +57,7 @@ export class PermissionService {
 
 
   get canManageRole(): boolean {
-    return this.hasPermission('ROLE_MANAGE');
+    return this.hasAnyRole(['ADMIN']);
   }
 
   get canViewDashboard(): boolean {
@@ -72,12 +73,12 @@ export class PermissionService {
   }
 
   get canManageUsers(): boolean {
-    return this.hasAnyPermission([
-      'USER_VIEW',
-      'USER_INSERT',
-      'USER_EDIT',
-      'USER_DELETE',
-      'ROLE_MANAGE'
+    return this.hasAnyRole([
+      'ACCOUNTING_USER',
+      'SALES_USER',
+      'PURCHASE_USER',
+      'REPORT_VIEWER',
+      'ADMIN',
     ]);
   }
 }

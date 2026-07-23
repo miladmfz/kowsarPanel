@@ -122,6 +122,43 @@
 
       </li>
 
+      @if(LoginType()=='KOWSAR'){
+      <!-- Mini WebPhone -->
+      <li class="d-flex align-items-center m-2">
+
+        <div class="kws-mini-phone" [class.is-online]="webPhoneService.registerStatus() === 'registered'"
+          [class.is-calling]="miniPhoneHasActiveCall()" [class.is-ringing]="miniPhoneIsRinging()"
+          (click)="openPhonePage()">
+
+          <button type="button" class="kws-mini-phone-main" (click)="miniPhoneMainClick($event)">
+            @if (miniPhoneIsRinging()) {
+            <i class="mdi mdi-phone-ring"></i>
+            } @else if (webPhoneService.registerStatus() === 'registered') {
+            <i class="mdi mdi-phone-check"></i>
+            } @else {
+            <i class="mdi mdi-phone-outline"></i>
+            }
+
+            <span>
+              {{ miniPhoneText() }}
+            </span>
+
+          </button>
+
+          @if (miniPhoneHasActiveCall()) {
+          <button type="button" class="kws-mini-phone-end" title="قطع تماس" (click)="hangupMiniPhoneCall($event)">
+
+            <i class="mdi mdi-phone-hangup"></i>
+
+          </button>
+          }
+
+        </div>
+
+      </li>
+      }
+
+
       <!-- User Profile -->
       <li class="dropdown notification-list topbar-dropdown">
 
@@ -297,7 +334,7 @@
 <!-- =============================================================== -->
 <div class="modal fade kws-modal" id="changePasswordModal" tabindex="-1" aria-hidden="true">
 
-  <div class="modal-dialog modal-dialog-centered modal-md">
+  <div class="modal-dialog kowsar-modal-dialog modal-md">
 
     <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
 

@@ -52,6 +52,15 @@ export class LeaveRequestWebApiService {
 
   }
 
+
+  GetLeaveRequestStatus(CentralCode: string): Observable<any[]> {
+    const params = new HttpParams().append('CentralCode', CentralCode)
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetLeaveRequestStatus", { headers: this.headerService.headers, params: params }))
+
+  }
+
+
+
   GetLeaveRequestPerson(TargetDate: string): Observable<any[]> {
     const params = new HttpParams().append('TargetDate', TargetDate)
     return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetLeaveRequestPerson", { headers: this.headerService.headers, params: params }))
@@ -72,6 +81,15 @@ export class LeaveRequestWebApiService {
     return this.withLoading(this.client.post<any[]>(this.baseUrl + "LeaveRequest_WorkFlow", command, { headers: this.headerService.headers }))
   }
 
+
+  GetLeaveRequestUserPolicy(command: any): Observable<any[]> {
+    return this.withLoading(this.client.post<any[]>(this.baseUrl + "LeaveRequestUserPolicy_Get", command, { headers: this.headerService.headers }))
+  }
+
+
+  SaveLeaveRequestUserPolicy(command: any): Observable<any[]> {
+    return this.withLoading(this.client.post<any[]>(this.baseUrl + "LeaveRequestUserPolicy_Save", command, { headers: this.headerService.headers }))
+  }
 
 
 }

@@ -101,12 +101,12 @@ export class AutletterWebApiService {
 
   GetAutConversation(LetterRef: string): Observable<any[]> {
     const params = new HttpParams().append('LetterRef', LetterRef)
-    return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetAutConversation", { headers: this.headerService.headers, params: params }))
+    return this.client.get<any[]>(this.baseUrl + "GetAutConversation", { headers: this.headerService.headers, params: params })
   }
 
   ConversationSeen(CentralRef: string, LetterRef: string): Observable<any[]> {
     const params = new HttpParams().append('CentralRef', CentralRef).append('LetterRef', LetterRef)
-    return this.withLoading(this.client.get<any[]>(this.baseUrl + "ConversationSeen", { headers: this.headerService.headers, params: params }))
+    return this.client.get<any[]>(this.baseUrl + "ConversationSeen", { headers: this.headerService.headers, params: params })
   }
 
   GetAutletterById(

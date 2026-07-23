@@ -8,6 +8,13 @@ export const INTERNAL_ROUTES: Routes = [
     },
     // 📌 INTERNAL APPS — اپلیکیشن‌های داخلی کوثر
     {
+        path: 'internal-pattern',
+        title: 'لیست الگو های کالایی',
+        loadComponent: () =>
+            import('./components/internal-pattern/internal-pattern-list/internal-pattern-list.component')
+                .then(m => m.InternalPatternListComponent),
+    },
+    {
         path: 'internal-apps-list',
         title: 'لیست اپلیکیشن‌های داخلی کوثر',
         loadComponent: () =>
@@ -16,14 +23,14 @@ export const INTERNAL_ROUTES: Routes = [
     },
     {
         path: 'internal-apps-edit',
-        title: 'اپلیکیشن داخلی جدید',
+        title: 'ویرایش اپلیکیشن ',
         loadComponent: () =>
             import('./components/internal-apps/internal-apps-edit/internal-apps-edit.component')
                 .then(m => m.InternalAppsEditComponent),
     },
     {
         path: 'internal-apps-edit/:id',
-        title: 'ویرایش اپلیکیشن داخلی',
+        title: 'ویرایش اپلیکیشن',
         loadComponent: () =>
             import('./components/internal-apps/internal-apps-edit/internal-apps-edit.component')
                 .then(m => m.InternalAppsEditComponent),
@@ -54,7 +61,7 @@ export const INTERNAL_ROUTES: Routes = [
     },
     {
         path: 'weblog',
-        title: 'weblog',
+        title: 'لاگ نرم افزار',
 
         loadComponent: () =>
             import('../../app-shell/framework-components/kowsar/kowsar-weblog/kowsar-weblog.component').then(m => m.KowsarWeblogComponent),
@@ -76,17 +83,24 @@ export const INTERNAL_ROUTES: Routes = [
     },
     {
         path: 'internal-customer-edit',
-        title: 'اپلیکیشن داخلی جدید',
+        title: 'مشتریان  جدید',
         loadComponent: () =>
             import('./components/internal-customer/internal-customer-edit/internal-customer-edit.component')
                 .then(m => m.InternalCustomerEditComponent),
     },
     {
         path: 'internal-customer-edit/:id',
-        title: 'ویرایش اپلیکیشن داخلی',
+        title: 'ویرایش مشتریان داخلی',
         loadComponent: () =>
             import('./components/internal-customer/internal-customer-edit/internal-customer-edit.component')
                 .then(m => m.InternalCustomerEditComponent),
+    },
+    {
+        path: 'internal-customer-good/:id',
+        title: 'شرح وظایف مشتری',
+        loadComponent: () =>
+            import('./components/internal-customer-good/internal-customer-good.component')
+                .then(m => m.InternalCustomerGoodComponent),
     },
 
 
@@ -97,21 +111,21 @@ export const INTERNAL_ROUTES: Routes = [
     // 📌 INTERNAL APPS — اپلیکیشن‌های داخلی کوثر
     {
         path: 'internal-task-list',
-        title: 'لیست اپلیکیشن‌های داخلی کوثر',
+        title: 'لیست شرح کار',
         loadComponent: () =>
             import('./components/internal-task/internal-task-list/internal-task-list.component')
                 .then(m => m.InternalTaskListComponent),
     },
     {
         path: 'internal-task-edit',
-        title: 'اپلیکیشن داخلی جدید',
+        title: 'ویرایش شرح کار',
         loadComponent: () =>
             import('./components/internal-task/internal-task-edit/internal-task-edit.component')
                 .then(m => m.InternalTaskEditComponent),
     },
     {
         path: 'internal-task-edit/:id',
-        title: 'ویرایش اپلیکیشن داخلی',
+        title: 'ویرایش شرح کار',
         loadComponent: () =>
             import('./components/internal-task/internal-task-edit/internal-task-edit.component')
                 .then(m => m.InternalTaskEditComponent),
@@ -149,21 +163,21 @@ export const INTERNAL_ROUTES: Routes = [
     // 📌 INTERNAL APPS — اپلیکیشن‌های داخلی کوثر
     {
         path: 'internal-factors-list',
-        title: 'لیست اپلیکیشن‌های داخلی کوثر',
+        title: 'لیست فاکتور داخلی کوثر',
         loadComponent: () =>
             import('./components/internal-factors/internal-factors-list/internal-factors-list.component')
                 .then(m => m.InternalFactorsListComponent),
     },
     {
         path: 'internal-factors-edit',
-        title: 'اپلیکیشن داخلی جدید',
+        title: 'فاکتور داخلی جدید',
         loadComponent: () =>
             import('./components/internal-factors/internal-factors-edit/internal-factors-edit.component')
                 .then(m => m.InternalFactorsEditComponent),
     },
     {
         path: 'internal-factors-edit/:id',
-        title: 'ویرایش اپلیکیشن داخلی',
+        title: 'ویرایش فاکتور داخلی',
         loadComponent: () =>
             import('./components/internal-factors/internal-factors-edit/internal-factors-edit.component')
                 .then(m => m.InternalFactorsEditComponent),
@@ -204,6 +218,12 @@ export const INTERNAL_ROUTES: Routes = [
             import('./components/internal-news/internal-news-rss/internal-news-rss.component')
                 .then(m => m.InternalNewsRssComponent),
     },
+
+
+
+
+
+
 
 
 ];

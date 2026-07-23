@@ -1,0 +1,25 @@
+<div class="row g-3 align-items-stretch dashboard-section">
+
+  <div class="col-lg-8 col-12">
+    <app-attendance-panel></app-attendance-panel>
+  </div>
+
+  <div class="col-lg-4 col-12">
+    <app-kowsar-calendar></app-kowsar-calendar>
+  </div>
+
+</div>
+
+<div class="dashboard-section">
+  <app-leave-grid></app-leave-grid>
+</div>
+
+@if (permissionService.canManageRole) {
+<div class="dashboard-section">
+  <app-autletter-chart [CentralRef]="'0'"></app-autletter-chart>
+</div>
+}
+
+<div class="dashboard-section">
+  <app-kowsar-report></app-kowsar-report>
+</div>

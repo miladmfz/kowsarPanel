@@ -1,0 +1,195 @@
+<div class="card shadow-sm mt-3">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+      <div>
+        <h4 class="header-title mb-1">{{ title() }}</h4>
+        <div class="text-muted small">
+          تنظیم ساعت کاری، نوع همکاری و سقف‌های مرخصی برای هر CentralRef
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-light" (click)="cancel()">
+        <i class="fas fa-arrow-right me-1"></i>
+        بازگشت
+      </button>
+    </div>
+
+    @if (loading()) {
+      <div class="alert alert-info py-2">
+        <i class="fas fa-spinner fa-spin me-1"></i>
+        در حال دریافت اطلاعات...
+      </div>
+    }
+
+    <form [formGroup]="EditForm_Policy" (ngSubmit)="submit()">
+      <div class="row g-3">
+
+        <div class="col-md-2">
+          <label class="form-label">کد تنظیم</label>
+          <input formControlName="PolicyCode" class="form-control text-center" readonly />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">کاربر</label>
+          <select
+            formControlName="CentralRef"
+            class="form-control"
+            [class.is-invalid]="isInvalid('CentralRef')"
+            [class.bg-light]="!canSelectUser()"
+            [class.text-muted]="!canSelectUser()"
+            [style.pointer-events]="canSelectUser() ? 'auto' : 'none'"
+            [attr.tabindex]="canSelectUser() ? 0 : -1"
+            [attr.aria-disabled]="!canSelectUser()">
+            <option value="">لطفاً انتخاب کنید</option>
+
+            @for (user of users(); track user.CentralCode) {
+              <option [value]="user.CentralCode?.toString()">
+                {{ user.CentralName }}
+              </option>
+            }
+          </select>
+
+          @if (isInvalid('CentralRef')) {
+            <div class="invalid-feedback d-block">انتخاب کاربر اجباری است</div>
+          }
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">نوع همکاری</label>
+          <select
+            formControlName="EmploymentType"
+            class="form-control"
+            [class.is-invalid]="isInvalid('EmploymentType')">
+            @for (item of EmploymentType_Lookup; track item.id) {
+              <option [value]="item.id">{{ item.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="col-md-3 d-flex align-items-end gap-2">
+          <button type="button" class="btn btn-outline-primary w-50" (click)="applyFullTimeDefault()">
+            تمام وقت
+          </button>
+          <button type="button" class="btn btn-outline-secondary w-50" (click)="applyPartTimeDefault()">
+            پاره وقت
+          </button>
+        </div>
+
+        <div class="col-12">
+          <hr class="my-2" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">ساعت شروع کار</label>
+          <input formControlName="WorkStartTime" class="form-control text-center" placeholder="09:00" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">ساعت پایان کار</label>
+          <input formControlName="WorkEndTime" class="form-control text-center" placeholder="18:00" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">دقیقه استراحت</label>
+          <input formControlName="BreakMinute" type="number" class="form-control text-center" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">دقیقه کاری روزانه</label>
+          <input formControlName="DailyWorkMinute" type="number" class="form-control text-center" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">سهمیه مرخصی روزانه سالانه</label>
+          <input formControlName="AnnualLeaveLimitDay" type="number" step="0.5" class="form-control text-center" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">سقف مرخصی ساعتی ماهانه</label>
+          <input formControlName="MonthlyHourlyLeaveLimitMinute" type="number" class="form-control text-center" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">ضریب پاره وقت</label>
+          <input formControlName="PartTimeRatio" type="number" step="0.01" class="form-control text-center" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">وضعیت رکورد</label>
+          <select formControlName="IsActive" class="form-control">
+            <option value="1">فعال</option>
+            <option value="0">غیرفعال</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <hr class="my-2" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">شروع مجاز ارسال درخواست</label>
+          <input formControlName="RequestSubmitStartTime" class="form-control text-center" placeholder="09:00" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">پایان مجاز ارسال درخواست</label>
+          <input formControlName="RequestSubmitEndTime" class="form-control text-center" placeholder="18:00" />
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">روزانه</label>
+          <select formControlName="AllowDailyLeave" class="form-control">
+            <option value="1">مجاز</option>
+            <option value="0">غیرمجاز</option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">ساعتی</label>
+          <select formControlName="AllowHourlyLeave" class="form-control">
+            <option value="1">مجاز</option>
+            <option value="0">غیرمجاز</option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">اضطراری/استعلاجی</label>
+          <select formControlName="AllowSickLeave" class="form-control">
+            <option value="1">مجاز</option>
+            <option value="0">غیرمجاز</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">تاریخ شروع اعتبار</label>
+          <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
+            <input formControlName="EffectiveFromJDate" class="form-control text-center" placeholder="1405/01/01" />
+          </ng-persian-datepicker>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">تاریخ پایان اعتبار</label>
+          <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
+            <input formControlName="EffectiveToJDate" class="form-control text-center" placeholder="اختیاری" />
+          </ng-persian-datepicker>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">توضیحات</label>
+          <input formControlName="Explain" class="form-control" placeholder="مثلاً کارمند تمام وقت / پاره وقت" />
+        </div>
+
+        <div class="col-12 d-flex justify-content-end gap-2 mt-4">
+          <button type="button" class="btn btn-secondary px-4" (click)="cancel()">
+            انصراف
+          </button>
+
+          <button type="submit" class="btn btn-success px-4">
+            <i class="fas fa-save me-1"></i>
+            ذخیره
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

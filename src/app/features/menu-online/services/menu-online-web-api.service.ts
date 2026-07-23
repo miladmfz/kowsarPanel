@@ -4,6 +4,8 @@ import { finalize, Observable } from 'rxjs';
 
 import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { AppConfigService } from 'src/app/app-config.service';
+import { HeaderService } from 'src/app/app-shell/framework-services/HeaderService';
+import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +19,9 @@ export class MenuOnlineWebApiService {
     private readonly client = inject(HttpClient);
     private readonly config = inject(AppConfigService);
     private readonly AutoloadingService = inject(LoadingService);
+    private readonly session = inject(SessionStorageService);
+
+
 
     constructor() {
         // this.baseUrl = this.config.apiUrl + 'MenuOnline/';

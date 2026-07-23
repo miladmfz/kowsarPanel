@@ -29,7 +29,6 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   records = signal<any[]>([])
   records_factor = signal<any[]>([])
   records_support_factorrows = signal<any[]>([])
-  private readonly renderer = inject(Renderer2);
 
   // لودینگ‌ها
   loading = signal(false)
@@ -105,6 +104,7 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   private readonly router = inject(Router);
   private readonly repo = inject(CustomerWebApiService);
   private readonly base_repo = inject(KowsarBaseWebApi);
+  private readonly renderer = inject(Renderer2);
 
   protected readonly permissionService = inject(PermissionService);
   protected readonly session = inject(SessionStorageService);
@@ -246,22 +246,26 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   // Property (Show / Edit)
   // ---------------------------
 
-  NavigateToEdit(id: any) {
-    this.router.navigate(['/internal/internal-customer-edit', id]);
+  NavigateToEdit(data: any) {
+    this.router.navigate(['/internal/internal-customer-edit', data.CustomerCode]);
   }
 
 
+  CustomerTask(data: any) {
+    this.router.navigate(['/internal/internal-customer-good', data.CustomerCode]);
 
-  Show_Customer_Property(CustomerCode: any) {
-    const c = this.records().find(r => r.CustomerCode === CustomerCode);
+  }
+
+  Show_Customer_Property(data: any) {
+    const c = this.records().find(r => r.CustomerCode === data.CustomerCode);
     if (!c) return;
     this.ShowForm_property.patchValue(this.pickCustomerFields(c));
     this.property_dialog_show();
   }
 
-  Edit_Customer_Property_Explain(CustomerCode: any) {
+  Edit_Customer_Property_Explain(data: any) {
 
-    const c = this.records().find(r => r.CustomerCode === CustomerCode);
+    const c = this.records().find(r => r.CustomerCode === data.CustomerCode);
     if (!c) return;
 
     this.EditForm_property.patchValue(this.pickCustomerFields(c));
@@ -282,35 +286,35 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
     });
   }
 
-  private pickCustomerFields(c: any) {
+  private pickCustomerFields(data: any) {
     return {
-      CustName_Small: c.CustName_Small ?? '',
-      AppNumber: c.AppNumber ?? '',
-      DatabaseNumber: c.DatabaseNumber ?? '',
-      LockNumber: c.LockNumber ?? '',
-      ObjectRef: c.CustomerCode ?? '0',
-      Address: c.Address ?? '',
-      CityName: c.CityName ?? '',
-      OstanName: c.OstanName ?? '',
-      Delegacy: c.Delegacy ?? '',
-      Manager: c.Manager ?? '',
-      Phone: c.Phone ?? '',
-      PostCode: c.PostCode ?? '',
-      Mobile: c.Mobile ?? '',
-      MobileName: c.MobileName ?? '',
-      ZipCode: c.ZipCode ?? '',
-      Email: c.Email ?? '',
-      Fax: c.Fax ?? '',
+      CustName_Small: data.CustName_Small ?? '',
+      AppNumber: data.AppNumber ?? '',
+      DatabaseNumber: data.DatabaseNumber ?? '',
+      LockNumber: data.LockNumber ?? '',
+      ObjectRef: data.CustomerCode ?? '0',
+      Address: data.Address ?? '',
+      CityName: data.CityName ?? '',
+      OstanName: data.OstanName ?? '',
+      Delegacy: data.Delegacy ?? '',
+      Manager: data.Manager ?? '',
+      Phone: data.Phone ?? '',
+      PostCode: data.PostCode ?? '',
+      Mobile: data.Mobile ?? '',
+      MobileName: data.MobileName ?? '',
+      ZipCode: data.ZipCode ?? '',
+      Email: data.Email ?? '',
+      Fax: data.Fax ?? '',
     };
   }
 
   // ---------------------------
   // Factors / Support
   // ---------------------------
-  Factor_Customer_Property(CustomerCode: any) {
+  Factor_Customer_Property(customer_data: any) {
     this.loading_factor.set(true)
 
-    this.repo.GetCustomerFactor(CustomerCode).subscribe((data: any) => {
+    this.repo.GetCustomerFactor(customer_data.CustomerCode).subscribe((data: any) => {
 
       this.records_factor.set(data?.Factors ?? [])
       this.loading_factor.set(false)

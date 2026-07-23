@@ -2,6 +2,7 @@
 
   <div class="card-body">
 
+    @if(LoginType() == 'KOWSAR'){
     <form [formGroup]="Autletter_data">
 
       <div class="kws-info-panel mb-3">
@@ -90,10 +91,81 @@
       </div>
 
     </form>
+    }@else{
+    <form [formGroup]="Autletter_data">
+
+      <div class="kws-info-panel mb-3">
+
+        <div class="kws-section-header mb-3">
+
+          <div class="d-flex align-items-center gap-2">
+
+            <div class="kws-section-icon">
+              <i class="fe-send"></i>
+            </div>
+
+            <div>
+              <h5 class="mb-0">اطلاعات تیکت</h5>
+              <small class="text-muted">مشخصات اصلی درخواست ارسالی</small>
+            </div>
+
+          </div>
+
+          <button type="button" class="btn btn-soft-danger kws-back-btn" (click)="onBtnCancelClick()">
+
+            <i class="fas fa-arrow-right"></i>
+            <span>بازگشت</span>
+
+          </button>
+
+        </div>
+
+        <div class="row g-3">
+
+          <div class="col-12 col-md-2">
+            <label for="LetterDate" class="form-label">تاریخ</label>
+            <input type="text" class="form-control kws-readonly" id="LetterDate" formControlName="LetterDate"
+              readonly />
+          </div>
+
+          <div class="col-12 col-md-2">
+            <label for="LetterState" class="form-label">وضعیت</label>
+            <input type="text" class="form-control kws-readonly" id="LetterState" formControlName="LetterState"
+              readonly />
+          </div>
+
+          <div class="col-12 col-md-2">
+            <label for="CreatorName" class="form-label">ایجاد کننده</label>
+            <input type="text" class="form-control kws-readonly" id="CreatorName" formControlName="CreatorName"
+              readonly />
+          </div>
+
+          <div class="col-12 col-md-2">
+            <label for="LetterTitle" class="form-label">عنوان</label>
+            <input type="text" class="form-control kws-readonly" id="LetterTitle" formControlName="LetterTitle"
+              readonly />
+          </div>
+
+          <div class="col-12 col-md-4">
+            <label for="LetterDescription" class="form-label">شرح</label>
+            <input type="text" class="form-control kws-readonly" id="LetterDescription"
+              formControlName="LetterDescription" readonly />
+          </div>
+
+
+
+
+        </div>
+
+      </div>
+
+    </form>
+    }
+
 
     <ul class="nav nav-pills navtab-bg nav-justified kws-tabs mb-0">
 
-      @for (tab of tabs; track tab.id) {
+      @for (tab of filteredTabs; track tab.id) {
       <li class="nav-item">
         <button type="button" class="nav-link kws-tab-link w-100" [class.active]="activeTab() === tab.id"
           (click)="activeTab.set(tab.id)">
@@ -121,8 +193,10 @@
       }
 
       @case ('chat') {
+      @if (LetterState_str()) {
       <app-autletter-chat [ObjectRef]="LetterRef()" [LetterState]="LetterState_str()">
       </app-autletter-chat>
+      }
       }
 
       @case ('attach') {
@@ -140,7 +214,7 @@
 
 <div class="modal fade" id="ownerfactorlist" tabindex="-1" aria-labelledby="ownerfactorlistLabel" aria-hidden="true">
 
-  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+  <div class="modal-dialog modal-xl kowsar-modal-dialog modal-dialog-scrollable">
 
     <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
 

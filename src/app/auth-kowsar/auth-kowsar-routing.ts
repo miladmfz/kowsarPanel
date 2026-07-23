@@ -12,10 +12,19 @@ export const authKowsarRoutes: Routes = [
                 pathMatch: 'full',
             },
             {
-                path: 'login',
+                path: 'login-kowsar',
                 loadComponent: () =>
-                    import('./components/login/login.component').then(m => m.LoginComponent),
+                    import('./components/login-kowsar/login-kowsar.component').then(m => m.LoginKowsarComponent),
             },
+
+            {
+                path: 'login-person',
+                loadComponent: () =>
+                    import('./components/login-person/login-person.component').then(m => m.LoginPersonComponent),
+            },
+
+
+
             {
                 path: 'register',
                 loadComponent: () =>

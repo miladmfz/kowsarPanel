@@ -17,15 +17,38 @@ export class SwalService {
     text: string = '',
     icon: SwalIcon = 'info'
   ): Promise<void> {
+
     const Swal = this.Swal;
+
     if (Swal) {
       await Swal.fire({
         title,
         text,
         icon,
+
         confirmButtonText: 'باشه',
-        confirmButtonColor: '#3085d6'
+        confirmButtonColor: '#3085d6',
+
+        // 🔥 مهم‌ترین بخش (Fix dark mode)
+        background: '#ffffff',
+        color: '#000000',
+
+        iconColor: icon === 'error'
+          ? '#ff4d4f'
+          : icon === 'success'
+            ? '#28a745'
+            : icon === 'warning'
+              ? '#ffc107'
+              : '#3085d6',
+
+        customClass: {
+          popup: 'kws-swal-popup',
+          title: 'kws-swal-title',
+          htmlContainer: 'kws-swal-text',
+          confirmButton: 'kws-swal-btn'
+        }
       });
+
     } else {
       window.alert(`${title}\n\n${text}`);
     }

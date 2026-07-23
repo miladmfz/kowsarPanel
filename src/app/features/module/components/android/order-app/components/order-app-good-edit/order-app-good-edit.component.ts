@@ -238,7 +238,7 @@ export class OrderAppGoodEditComponent implements OnInit {
 
 
     this.repo.DeleteGoodGroupCode(GoodGroupCode).subscribe(e => {
-      this.sharedService.triggerActionAll('refresh');
+      this.sharedService.triggerRefresh('refresh');
     });
 
   }
@@ -268,7 +268,7 @@ export class OrderAppGoodEditComponent implements OnInit {
 
 
     // this.repo.SendImageToServer(data).subscribe((response) => {
-    //   this.sharedService.triggerActionAll('refresh');
+    //   this.sharedService.triggerRefresh('refresh');
     // });
 
   }
@@ -303,7 +303,7 @@ export class OrderAppGoodEditComponent implements OnInit {
       }
 
       this.repo.ChangeGoodActive(this.SingleItems[0].GoodCode, this.ActiveFlag()).subscribe(e => {
-        this.sharedService.triggerActionAll('refresh');
+        this.sharedService.triggerRefresh('refresh');
       });
 
 

@@ -290,30 +290,7 @@
    INPUTS / FLOATING LABEL
    =============================================================== */
 
-.form-floating>.form-control.kws-input {
-    height: 58px;
-    border-radius: 16px;
-    background: #ffffff !important;
-    border: 1px solid #e4e9f2 !important;
-    color: #10203a !important;
-    box-shadow: none !important;
-    padding: 1.6rem 1rem .55rem 1rem;
 
-    transition:
-        border-color .2s ease,
-        box-shadow .2s ease,
-        background-color .2s ease;
-}
-
-.form-floating>.form-control.kws-input:hover {
-    border-color: #cfd7e3 !important;
-}
-
-.form-floating>.form-control.kws-input:focus {
-    background: #ffffff !important;
-    border-color: #5b8def !important;
-    box-shadow: 0 0 0 .18rem rgba(91, 141, 239, .12) !important;
-}
 
 .form-floating>label.kws-floating-label {
     right: 0;
@@ -339,32 +316,83 @@
     background: transparent !important;
 }
 
+/* =========================================================
+   FORCE CLEAN INPUT (LIGHT STYLE ONLY - ALL MODES)
+   ========================================================= */
+
+.form-floating>.form-control.kws-input {
+    background: #ffffff !important;
+    color: #000000 !important;
+
+    border: 1px solid #d0d7e2 !important;
+    border-radius: 16px;
+
+    box-shadow: none !important;
+
+    height: 58px;
+
+    padding-inline: 1rem !important;
+    padding-top: 1.6rem;
+    padding-bottom: .55rem;
+
+    transition: none !important;
+}
+
+/* =========================
+   HOVER = NO CHANGE
+   ========================= */
+.form-floating>.form-control.kws-input:hover {
+    background: #ffffff !important;
+    color: #000000 !important;
+
+    border: 1px solid #d0d7e2 !important;
+    box-shadow: none !important;
+}
+
+/* =========================
+   FOCUS = ONLY SIMPLE OUTLINE
+   ========================= */
+.form-floating>.form-control.kws-input:focus {
+    background: #ffffff !important;
+    color: #000000 !important;
+
+    border-color: #9bbcff !important;
+
+    box-shadow: 0 0 0 .15rem rgba(155, 188, 255, .25) !important;
+}
+
+/* =========================
+   VALID / INVALID = NO VISUAL DIFFERENCE
+   ========================= */
+.form-control.is-valid,
+.form-control.is-invalid {
+    background: #ffffff !important;
+    color: #000000 !important;
+
+    border: 1px solid #d0d7e2 !important;
+
+    box-shadow: none !important;
+}
+
+/* =========================
+   DARK MODE = FORCE LIGHT INPUT
+   ========================= */
 :host-context(html[data-bs-theme='dark']) .form-floating>.form-control.kws-input,
 :host-context(body[data-layout-color='dark']) .form-floating>.form-control.kws-input,
 :host-context(body[data-layout-mode='dark']) .form-floating>.form-control.kws-input {
-    background: rgba(255, 255, 255, .085) !important;
-    border-color: rgba(255, 255, 255, .16) !important;
-    color: #f8fafc !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+
+    border: 1px solid #d0d7e2 !important;
 }
 
-:host-context(html[data-bs-theme='dark']) .form-floating>.form-control.kws-input:hover,
-:host-context(body[data-layout-color='dark']) .form-floating>.form-control.kws-input:hover,
-:host-context(body[data-layout-mode='dark']) .form-floating>.form-control.kws-input:hover {
-    border-color: rgba(142, 197, 255, .34) !important;
-}
 
-:host-context(html[data-bs-theme='dark']) .form-floating>.form-control.kws-input:focus,
-:host-context(body[data-layout-color='dark']) .form-floating>.form-control.kws-input:focus,
-:host-context(body[data-layout-mode='dark']) .form-floating>.form-control.kws-input:focus {
-    background: rgba(255, 255, 255, .11) !important;
-    border-color: rgba(142, 197, 255, .60) !important;
-    box-shadow: 0 0 0 .18rem rgba(142, 197, 255, .12) !important;
-}
+
 
 :host-context(html[data-bs-theme='dark']) .form-floating>label.kws-floating-label,
 :host-context(body[data-layout-color='dark']) .form-floating>label.kws-floating-label,
 :host-context(body[data-layout-mode='dark']) .form-floating>label.kws-floating-label {
-    color: rgba(255, 255, 255, .78) !important;
+    color: rgba(12, 12, 12, 0.78) !important;
     background: transparent !important;
 }
 
@@ -374,7 +402,7 @@
 :host-context(body[data-layout-color='dark']) .form-floating>.form-control:not(:placeholder-shown)~label.kws-floating-label,
 :host-context(body[data-layout-mode='dark']) .form-floating>.form-control:focus~label.kws-floating-label,
 :host-context(body[data-layout-mode='dark']) .form-floating>.form-control:not(:placeholder-shown)~label.kws-floating-label {
-    color: #8ec5ff !important;
+    color: #292929 !important;
     background: transparent !important;
 }
 
@@ -382,21 +410,18 @@
    PASSWORD FIELD
    =============================================================== */
 
-.kws-password-input {
-    padding-left: 3rem !important;
-    padding-right: 1rem !important;
+.kws-password-wrapper {
+    position: relative;
 }
 
 .kws-password-eye {
     position: absolute;
     top: 50%;
-    left: 1rem;
-    right: auto;
+    inset-inline-start: 1rem;
+    /* مهم برای RTL/LTR */
     transform: translateY(-50%);
-    z-index: 5;
     cursor: pointer;
-    color: #98a6ad;
-    transition: color .2s ease;
+    z-index: 5;
 }
 
 .kws-password-eye:hover {

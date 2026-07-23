@@ -1,19 +1,20 @@
-/* ===============================================================
-   📘 CustomerListModalComponent
-   توضیحات کلی:
-   این کامپوننت برای نمایش، جستجو و انتخاب مشتریان در یک مودال طراحی شده است.
-   شامل فرم جستجو، گرید داده‌ها، و رویدادهای تعامل با Parent می‌باشد.
-
-   ویژگی‌ها:
-   1️⃣ امکان جستجو با ارسال درخواست به Parent (searchRequested)
-   2️⃣ انتخاب مشتری از طریق دکمه یا دابل‌کلیک روی ردیف
-   3️⃣ پشتیبانی از تم روشن و تیره (darkMode)
-   4️⃣ ساختار گرید واکنش‌گرا و قابل فیلتر، مرتب‌سازی و تغییر اندازه
-   =============================================================== */
-
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output, signal } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  signal,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
 import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
@@ -24,43 +25,23 @@ import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
   imports: [CommonModule, ReactiveFormsModule, AgGridModule],
   templateUrl: './customer-list-modal.component.html',
 })
-export class CustomerListModalComponent implements OnInit, OnDestroy {
+export class CustomerListModalComponent
+  implements OnInit, OnChanges, AfterViewInit, OnDestroy {
 
-  // ===============================================================
-  //    ورودی‌ها
-  // ===============================================================
+  @ViewChild('dialogElement')
+  private dialogRef?: ElementRef<HTMLDialogElement>;
 
   @Input() visible = false;
   @Input() darkMode = false;
-  @Input() records: any
-
-  // ===============================================================
-  //   خروجی‌ها
-  // ===============================================================
+  @Input() records: any[] = [];
 
   @Output() close = new EventEmitter<void>();
   @Output() selectCustomer = new EventEmitter<any>();
   @Output() searchRequested = new EventEmitter<string>();
 
-  // ===============================================================
-  // 🧾 فرم جستجو
-  // ===============================================================
-
   searchForm: FormGroup;
-
-  // برای نگه‌داشتن Subscription مربوط به debounce
-  private searchSub?: Subscription;
-
-  // ===============================================================
-  // 👤 وضعیت انتخاب مشتری
-  // ===============================================================
-
   selectedCustomer = signal<any | null>(null);
   themeClass = 'ag-theme-quartz kowsar-ag-grid';
-
-  // ===============================================================
-  //   تنظیمات گرید
-  // ===============================================================
 
   columnDefs: ColDef[] = [
     {
@@ -69,13 +50,33 @@ export class CustomerListModalComponent implements OnInit, OnDestroy {
       pinned: 'left',
       width: 100,
       cellRenderer: () =>
-        `<button class="btn btn-sm btn-primary">انتخاب</button>`,
+        '<button class="btn btn-sm btn-primary">انتخاب</button>',
     },
-    { field: 'CentralRef', headerName: 'کد مشتری', width: 120, cellClass: 'text-center' },
+    {
+      field: 'CentralRef',
+      headerName: 'کد مشتری',
+      width: 120,
+      cellClass: 'text-center',
+    },
     { field: 'CustName_Small', headerName: 'نام مشتری', flex: 1 },
-    { field: 'Explain', headerName: 'توضیحات', width: 180, cellClass: 'text-center' },
-    { field: 'Mobile', headerName: 'موبایل', width: 140, cellClass: 'text-center' },
-    { field: 'Phone', headerName: 'تلفن', width: 140, cellClass: 'text-center' },
+    {
+      field: 'Explain',
+      headerName: 'توضیحات',
+      width: 180,
+      cellClass: 'text-center',
+    },
+    {
+      field: 'Mobile',
+      headerName: 'موبایل',
+      width: 140,
+      cellClass: 'text-center',
+    },
+    {
+      field: 'Phone',
+      headerName: 'تلفن',
+      width: 140,
+      cellClass: 'text-center',
+    },
   ];
 
   defaultColDef: ColDef = {
@@ -88,10 +89,11 @@ export class CustomerListModalComponent implements OnInit, OnDestroy {
     noRowsToShow: 'هیچ مشتری‌ای برای نمایش وجود ندارد',
   };
 
-  // ===============================================================
-  // 🧱 سازنده
-  // ===============================================================
+  private searchSub?: Subscription;
+  private viewReady = false;
+
   private readonly fb = inject(FormBuilder);
+  private readonly document = inject(DOCUMENT);
 
   constructor() {
     this.searchForm = this.fb.group({
@@ -99,17 +101,13 @@ export class CustomerListModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ===============================================================
-  //   Lifecycle
-  // ===============================================================
-
   ngOnInit(): void {
-    // دیباونس روی تغییرات فیلد جستجو
-    this.searchSub = this.searchForm.get('query')!
+    this.searchSub = this.searchForm
+      .get('query')!
       .valueChanges
       .pipe(
-        debounceTime(500),       // ⏱ مکث ۵۰۰ میلی‌ثانیه بین تایپ‌ها
-        distinctUntilChanged(),  // فقط اگر مقدار واقعاً تغییر کرده باشد
+        debounceTime(500),
+        distinctUntilChanged(),
       )
       .subscribe((value: string) => {
         const query = (value ?? '').trim();
@@ -117,40 +115,85 @@ export class CustomerListModalComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy(): void {
-    this.searchSub?.unsubscribe();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['visible'] && this.viewReady) {
+      queueMicrotask(() => this.syncDialogState());
+    }
   }
 
-  // ===============================================================
-  //   جستجو (روی Submit فرم / دکمه)
-  // ===============================================================
+  ngAfterViewInit(): void {
+    this.viewReady = true;
+    queueMicrotask(() => this.syncDialogState());
+  }
+
+  ngOnDestroy(): void {
+    this.searchSub?.unsubscribe();
+
+    const dialog = this.dialogRef?.nativeElement;
+
+    if (dialog?.open) {
+      dialog.close();
+    }
+
+    this.refreshBodyScrollLock();
+  }
+
+  private syncDialogState(): void {
+    const dialog = this.dialogRef?.nativeElement;
+
+    if (!dialog?.isConnected) {
+      return;
+    }
+
+    if (this.visible && !dialog.open) {
+      dialog.showModal();
+    } else if (!this.visible && dialog.open) {
+      dialog.close();
+    }
+
+    this.refreshBodyScrollLock();
+  }
+
+  private refreshBodyScrollLock(): void {
+    queueMicrotask(() => {
+      const hasOpenDialog = Boolean(
+        this.document.querySelector('dialog.kowsar-dialog[open]'),
+      );
+
+      this.document.body.classList.toggle(
+        'kowsar-dialog-open',
+        hasOpenDialog,
+      );
+    });
+  }
+
+  requestClose(): void {
+    this.close.emit();
+  }
+
+  onDialogCancel(event: Event): void {
+    event.preventDefault();
+    this.requestClose();
+  }
+
+  onDialogBackdropClick(event: MouseEvent): void {
+    if (event.target === this.dialogRef?.nativeElement) {
+      this.requestClose();
+    }
+  }
 
   onSearch(): void {
     const query = this.searchForm.get('query')?.value?.trim() ?? '';
     this.searchRequested.emit(query);
   }
 
-  // ===============================================================
-  // 🖱️ انتخاب مشتری از گرید
-  // ===============================================================
   onCellClicked(event: any): void {
     if (event.colDef.field === 'action') {
       this.selectCustomer.emit(event.data);
     }
   }
 
-  // ===============================================================
-  // 🖱️ دابل کلیک روی ردیف گرید
-  // ===============================================================
   onRowDoubleClicked(event: any): void {
     this.selectCustomer.emit(event.data);
-  }
-
-  // ===============================================================
-  // ❌ بستن مودال
-  // ===============================================================
-
-  onCloseClicked(): void {
-    this.close.emit();
   }
 }

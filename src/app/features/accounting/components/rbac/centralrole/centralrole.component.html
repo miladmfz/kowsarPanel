@@ -1,0 +1,76 @@
+<div class="card">
+  <div class="card-body">
+
+    <h4 class="card-title">{{ title() }}</h4>
+
+    <div class="row mb-2">
+      <div class="col-sm-12">
+
+        <a type="button" class="btn btn-success waves-effect waves-light m-1"
+          [routerLink]="['/internal/internal-apps-edit', 0]">
+          <span class="btn-label"><i class="fas fa-plus"></i></span>
+          جدید
+        </a>
+
+
+        <button type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
+          <span class="btn-label"><i class="fas fa-sync me-1"></i></span>
+          بازخوانی
+        </button>
+
+
+
+
+      </div>
+    </div>
+
+    @if (loading()) {
+    <div class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    }
+
+    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+        [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+        [class]="themeClass + ' w-100 h-100'">
+      </ag-grid-angular>
+    </div>
+
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="CentralRole" tabindex="-1" aria-labelledby="CentralRoleLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg kowsar-modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="CentralRoleLabel">لیست دسترسی ها</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="CentralRole_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="columnDefs2" [rowData]="records_CentralRole()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()"
+            [class]="themeClass + ' w-100 h-100'">
+          </ag-grid-angular>
+        </div>
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="CentralRole_dialog_close()">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>

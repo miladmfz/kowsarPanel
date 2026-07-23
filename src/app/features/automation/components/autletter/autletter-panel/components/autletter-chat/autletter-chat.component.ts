@@ -7,7 +7,8 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   inject,
-  signal
+  signal,
+  SimpleChanges
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
@@ -40,12 +41,12 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
 
   data_resive_FileUrl: string | null = null;   //   اضافه شود
   data_resive_FileName: string | null = null;  //   اضافه شود
-
+  chatInterval: ReturnType<typeof setInterval> | null = null;
   msgs = signal<any[]>([])
   loading = signal(false)
 
   modalLoading = signal(false)
-  ShowInsertRow = signal(true)
+  ShowInsertRow = signal(false)
 
   LetterRef = signal('')
   CentralRef = signal('')
@@ -88,24 +89,18 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
   constructor() { }
 
   ngOnInit(): void {
+
     this.LetterRef.set(this.ObjectRef);
-    this.CentralRef.set(this.session.centralRef)
-    this.State.set(this.LetterState);
+    this.CentralRef.set(this.session.centralRef);
+    this.State.set(this.LetterState ?? '');
 
     const UserType = this.session.getString('UserType') || '';
 
-
-
     if (['1274', '1139', '1843'].includes(this.CentralRef()) || ['admin'].includes(UserType)) {
-      this.ShowInsertRow.set(true)
+      this.ShowInsertRow.set(true);
     } else {
-      this.ShowInsertRow.set(false)
-
+      this.ShowInsertRow.set(false);
     }
-
-
-
-
 
     this.MessageForm.patchValue({
       LetterRef: this.LetterRef(),
@@ -118,12 +113,84 @@ export class AutletterChatComponent implements OnInit, AfterViewInit {
     });
 
     this.GetAutConversation();
+
+    this.handleChatInterval();
+
   }
+  canInsertMessage(): boolean {
+
+    const state = (this.State() ?? '').trim();
+
+    return state !== 'تمام شده' || this.ShowInsertRow();
+
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (changes['LetterState']) {
+      this.State.set(this.LetterState ?? '');
+      this.handleChatInterval();
+    }
+
+    if (changes['ObjectRef']) {
+      this.LetterRef.set(this.ObjectRef ?? '');
+
+      this.MessageForm.patchValue({
+        LetterRef: this.LetterRef()
+      });
+
+      this.FileForm.patchValue({
+        LetterRef: this.LetterRef()
+      });
+    }
+
+  }
+
+  ngOnDestroy(): void {
+    this.stopChatInterval();
+  }
+
+  private isFinishedTicket(): boolean {
+    return (this.State() ?? '').trim() === 'تمام شده';
+  }
+
+  private handleChatInterval(): void {
+
+    if (this.isFinishedTicket()) {
+      this.stopChatInterval();
+      return;
+    }
+
+    this.startChatInterval();
+
+  }
+
+  private startChatInterval(): void {
+
+    if (this.chatInterval) return;
+
+    this.chatInterval = setInterval(() => {
+      this.GetAutConversation();
+    }, 15000);
+
+  }
+
+  private stopChatInterval(): void {
+
+    if (!this.chatInterval) return;
+
+    clearInterval(this.chatInterval);
+    this.chatInterval = null;
+
+  }
+
 
   ngAfterViewInit(): void {
     setTimeout(() => this.scrollToBottom(), 100);
   }
-
+  refreshChat(): void {
+    this.GetAutConversation(); // همون API که چت رو میاره
+  }
   // ============================================================
   // دریافت لیست پیام‌ها
   // ============================================================

@@ -7,8 +7,7 @@
       <div class="col-sm-12">
 
         <!-- جدید -->
-        <a type="button" class="btn btn-success waves-effect waves-light m-1"
-          [routerLink]="['/internal/internal-apps-edit', 0]">
+        <a type="button" class="btn btn-success waves-effect waves-light m-1" (click)="New_Pattern()">
           <span class="btn-label"><i class="fas fa-plus"></i></span>
           جدید
         </a>
@@ -46,3 +45,206 @@
 
   </div>
 </div>
+
+
+
+<!-- Modal: ردیف‌های فاکتور -->
+<div class="modal fade" #patterngood tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-xl kowsar-modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header bg-light">
+        <h5 class="modal-title">
+          <i class="fas fa-list-alt ms-2"></i>
+          {{modal_PatternGood_title()}}
+        </h5>
+        <button type="button" class="btn-close" (click)="patterngood_dialog_close()"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 350px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800" class="w-100
+          h-100" [columnDefs]="columnDefs2" [rowData]="records_patternGoods()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()">
+          </ag-grid-angular>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-primary" (click)="ShowGoodList_Modal()">
+          اضافه کردن آیتم
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+<div class="modal fade" #goodlist tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-lg kowsar-modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="goodlistLabel">
+          لیست مشتریان
+        </h5>
+
+        <button type="button" class="btn-close" aria-label="Close" (click)="goodlist_dialog_close()"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <form [formGroup]="EditForm_SearchTarget">
+          <div class="row g-2 align-items-end mb-3">
+
+            <div class="form-group col-lg-8 col-md-7 col-12">
+              <label class="col-form-label">جستجو</label>
+              <input #modalsearch type="text" class="form-control" placeholder="جستجو..."
+                [ngModel]="Searchtarget_Good()"
+                (ngModelChange)="Searchtarget_Good.set($event); onInputChange_Customer()"
+                [ngModelOptions]="{ standalone: true }" />
+            </div>
+
+          </div>
+        </form>
+
+        @if (loading()) {
+        <div class="text-center py-3">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        }
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 400px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="columnDefs3" [rowData]="records_goods()" [gridOptions]="gridOptions"
+            [rowSelection]="{ mode: 'singleRow', enableClickSelection: true }" (gridReady)="onGridReady($event, 3)"
+            (firstDataRendered)="gridApi3?.sizeColumnsToFit()" [class]="themeClass + ' w-100 h-100'">
+          </ag-grid-angular>
+
+
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="goodlist_dialog_close()">
+          بستن
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal: ردیف‌های فاکتور -->
+<div class="modal fade" #patterndetail tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-xl kowsar-modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header bg-light">
+        <h5 class="modal-title">
+          <i class="fas fa-list-alt ms-2"></i>
+          {{modal_Pattern_title()}}
+        </h5>
+        <button type="button" class="btn-close" (click)="patterndetail_dialog_close()"></button>
+      </div>
+
+
+      <div class="modal-body">
+        <form [formGroup]="EditForm_Pattern" class="row g-3">
+
+          <!-- عنوان الگو -->
+          <div class="col-12 col-md-6">
+            <label for="Title" class="form-label">
+              عنوان الگو
+              <span class="text-danger">*</span>
+            </label>
+
+            <input type="text" class="form-control" id="Title" formControlName="Title" maxlength="100"
+              autocomplete="off" placeholder="عنوان الگو را وارد کنید" [ngClass]="{
+          'is-invalid':
+            EditForm_Pattern.controls['Title'].invalid &&
+            EditForm_Pattern.controls['Title'].touched,
+          'is-valid':
+            EditForm_Pattern.controls['Title'].valid &&
+            EditForm_Pattern.controls['Title'].touched
+        }" />
+
+            <div class="invalid-feedback">
+              عنوان الگو الزامی است
+            </div>
+          </div>
+
+          <!-- توضیحات -->
+          <div class="col-12 col-md-6">
+            <label for="Explain" class="form-label">
+              توضیحات
+            </label>
+
+            <input type="text" class="form-control" id="Explain" formControlName="Explain" maxlength="100"
+              autocomplete="off" placeholder="توضیحات الگو را وارد کنید" [ngClass]="{
+          'is-invalid':
+            EditForm_Pattern.controls['Explain'].invalid &&
+            EditForm_Pattern.controls['Explain'].touched,
+          'is-valid':
+            EditForm_Pattern.controls['Explain'].valid &&
+            EditForm_Pattern.controls['Explain'].touched
+        }" />
+
+            <div class="invalid-feedback">
+              توضیحات معتبر نیست
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="patterngood_dialog_close()">
+          بستن
+        </button>
+
+        <button type="button" class="btn btn-primary" (click)="submit_pattern()">
+          بروزرسانی
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =============================================================== -->
+<!-- Validation Template -->
+<!-- =============================================================== -->
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+  @if (control.hasError(validation) && (control.dirty || control.touched)) {
+  <div class="fv-plugins-message-container invalid-feedback d-block">
+    <span role="alert">
+      {{ message }}
+    </span>
+  </div>
+  }
+</ng-template>

@@ -1,276 +1,147 @@
-@if (visible) {
+<dialog #dialogElement class="kowsar-dialog" dir="rtl" aria-labelledby="letterDialogTitle"
+  (cancel)="onDialogCancel($event)" (click)="onDialogBackdropClick($event)">
 
-<div class="modal fade show d-block kowsar-modal-overlay" tabindex="-1" dir="rtl">
+  <div class="modal-content kowsar-dialog-panel kowsar-modal-content"
+    [ngClass]="darkMode ? 'bg-dark text-white' : 'bg-light text-dark'">
 
-  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-header kowsar-modal-header"
+      [ngClass]="darkMode ? 'bg-secondary text-white' : 'bg-light text-dark'">
 
-    <div class="modal-content kowsar-modal-content" [ngClass]="darkMode ? 'bg-dark text-white' : 'bg-light text-dark'">
+      <h5 id="letterDialogTitle" class="modal-title d-flex align-items-center gap-2">
+        <i class="fas fa-envelope"></i>
 
-      <!-- =============================================================== -->
-      <!-- HEADER -->
-      <!-- =============================================================== -->
+        <span>
+          تیکت‌های
+          {{ form.value.ExecuterName || person?.FullName || 'کارشناس' }}
+        </span>
+      </h5>
 
-      <div class="modal-header kowsar-modal-header"
-        [ngClass]="darkMode ? 'bg-secondary text-white' : 'bg-light text-dark'">
+      <button type="button" class="btn-close" aria-label="بستن" (click)="requestClose()">
+      </button>
+    </div>
 
-        <h5 class="modal-title d-flex align-items-center gap-2">
-          <i class="fas fa-envelope"></i>
+    <div class="modal-body kowsar-modal-body">
 
-          <span>
-            تیکت‌های
-            {{ form.value.ExecuterName || person?.FullName || 'کارشناس' }}
-          </span>
-        </h5>
-
-        <button type="button" class="btn-close" (click)="close.emit()">
-        </button>
-
+      <div class="ag-container rounded-3 border shadow-sm kowsar-dialog-grid mb-4">
+        <ag-grid-angular [class]="themeClass + ' w-100 h-100'" [rowData]="records" [columnDefs]="column_name_1"
+          [defaultColDef]="defaultColDef" [enableRtl]="true" [pagination]="true" [localeText]="localeText"
+          [rowSelection]="{
+            mode: 'singleRow',
+            enableClickSelection: true
+          }" (rowClicked)="onRowClicked($event)">
+        </ag-grid-angular>
       </div>
 
-      <!-- =============================================================== -->
-      <!-- BODY -->
-      <!-- =============================================================== -->
+      @if (isNewLetter()) {
+      <form [formGroup]="form" (ngSubmit)="saveLetter()" novalidate>
 
-      <div class="modal-body kowsar-modal-body">
+        <div class="row g-3 align-items-start">
 
-        <!-- =============================================================== -->
-        <!-- GRID -->
-        <!-- =============================================================== -->
-        <div class="ag-container rounded-3 border shadow-sm overflow-hidden kowsar-grid-wrapper mb-4">
-          <div class="kowsar-grid-wrapper mb-4">
-
-            <ag-grid-angular [class]="themeClass + ' w-100'" [rowData]="records" [columnDefs]="column_name_1"
-              [defaultColDef]="defaultColDef" [enableRtl]="true" [pagination]="true" [localeText]="localeText"
-              (rowClicked)="onRowClicked($event)" [rowSelection]="{
-              mode: 'singleRow',
-              enableClickSelection: true
-            }">
-            </ag-grid-angular>
-
+          @if (form.value.LetterCode?.length > 0) {
+          <div class="col-lg-3 col-md-4 col-12">
+            <label class="form-label">کد تیکت</label>
+            <input class="form-control" formControlName="LetterCode" readonly />
           </div>
-        </div>
-        <!-- =============================================================== -->
-        <!-- FORM -->
-        <!-- =============================================================== -->
+          }
 
-        @if (isNewLetter()) {
+          <div class="col-lg-3 col-md-4 col-12">
+            <label class="form-label">کد مشتری</label>
 
-        <form [formGroup]="form" (ngSubmit)="saveLetter()" novalidate>
-
-          <div class="row g-3 align-items-start">
-
-            <!-- LetterCode -->
-
-            @if (form.value.LetterCode?.length > 0) {
-
-            <div class="col-lg-3 col-md-4 col-12">
-
-              <label class="form-label">
-                کد تیکت
-              </label>
-
-              <input class="form-control" formControlName="LetterCode" readonly />
-
-            </div>
-
-            }
-
-            <!-- OwnerCentral -->
-
-            <div class="col-lg-3 col-md-4 col-12">
-
-              <label class="form-label">
-                کد مشتری
-              </label>
-
-              <input class="form-control" formControlName="OwnerCentral" readonly placeholder="نمایش مشتریان"
-                [disabled]="form.value.LetterCode?.length > 0" [ngClass]="{
+            <input class="form-control" formControlName="OwnerCentral" readonly placeholder="نمایش مشتریان" [ngClass]="{
                   'bg-light': form.value.LetterCode?.length > 0
-                }" (click)="
-                  form.value.LetterCode?.length === 0 &&
-                  openCustomerPicker()
-                " />
+                }" (click)="openCustomerPicker()" />
 
-              <small class="text-muted">
+            <small class="text-muted">
+              @if (form.value.LetterCode?.length > 0) {
+              تیکت قبلاً ایجاد شده است
+              } @else {
+              برای انتخاب مشتری کلیک کنید
+              }
+            </small>
+          </div>
 
-                @if (form.value.LetterCode?.length > 0) {
+          <div class="col-lg-4 col-md-4 col-12">
+            <label class="form-label">نام مشتری</label>
+            <input class="form-control" formControlName="OwnerName" readonly />
+          </div>
 
-                (تیکت قبلاً ایجاد شده)
+          <div class="col-lg-2 col-md-4 col-12">
+            <label class="form-label">ارسال SMS</label>
 
-                } @else {
+            <select class="form-select" formControlName="SendSms">
+              <option value="0">خیر</option>
+              <option value="1">بله</option>
+            </select>
+          </div>
 
-                برای انتخاب مشتری کلیک کنید
+          @if (form.value.LetterCode?.length > 0) {
+          <div class="col-12">
+            <label class="form-label">شرح تیکت</label>
 
-                }
+            <textarea rows="3" class="form-control" formControlName="LetterDescriptionText" readonly>
+                </textarea>
+          </div>
+          }
 
-              </small>
+          <div class="col-12">
+            <label class="form-label">شرح ارجاع</label>
 
-            </div>
-
-            <!-- OwnerName -->
-
-            <div class="col-lg-4 col-md-4 col-12">
-
-              <label class="form-label">
-                نام مشتری
-              </label>
-
-              <input class="form-control" formControlName="OwnerName" readonly />
-
-            </div>
-
-            <!-- SendSms -->
-
-            <div class="col-lg-2 col-md-4 col-12">
-
-              <label class="form-label">
-                ارسال SMS
-              </label>
-
-              <select class="form-select" formControlName="SendSms">
-
-                <option value="0">
-                  خیر
-                </option>
-
-                <option value="1">
-                  بله
-                </option>
-
-              </select>
-
-            </div>
-
-            <!-- LetterDescriptionText -->
-
-            @if (form.value.LetterCode?.length > 0) {
-
-            <div class="col-12">
-
-              <label class="form-label">
-                شرح تیکت
-              </label>
-
-              <textarea rows="3" class="form-control" formControlName="LetterDescriptionText" readonly>
-              </textarea>
-
-            </div>
-
-            }
-
-            <!-- DescriptionText -->
-
-            <div class="col-12">
-
-              <label class="form-label">
-                شرح ارجاع
-              </label>
-
-              <textarea rows="4" class="form-control" id="DescriptionText" formControlName="DescriptionText"
-                maxlength="400" (input)="sanitizeDescriptionText($event)" [ngClass]="{
+            <textarea rows="4" class="form-control" id="DescriptionText" formControlName="DescriptionText"
+              maxlength="400" (input)="sanitizeDescriptionText($event)" [ngClass]="{
                   'is-invalid':
                     form.controls['DescriptionText'].invalid &&
                     form.controls['DescriptionText'].touched,
-
                   'is-valid':
                     form.controls['DescriptionText'].valid &&
                     form.controls['DescriptionText'].touched
                 }">
               </textarea>
 
-              <small class="text-muted">
-                {{ form.controls['DescriptionText'].value?.length || 0 }}/400 کاراکتر
-              </small>
+            <small class="text-muted">
+              {{ form.controls['DescriptionText'].value?.length || 0 }}/400 کاراکتر
+            </small>
 
-              @if (
-              form.controls['DescriptionText'].invalid &&
-              form.controls['DescriptionText'].touched
-              ) {
-
-              <div class="text-danger mt-2">
-
-                @if (
-                form.controls['DescriptionText'].errors?.['required']
-                ) {
-
-                <div>
-                  پر کردن این فیلد اجباری است
-                </div>
-
-                }
-
-                @if (
-                form.controls['DescriptionText'].errors?.['minlength']
-                ) {
-
-                <div>
-                  حداقل ۱۰ کاراکتر وارد کنید
-                </div>
-
-                }
-
-              </div>
-
+            @if (
+            form.controls['DescriptionText'].invalid &&
+            form.controls['DescriptionText'].touched
+            ) {
+            <div class="text-danger mt-2">
+              @if (form.controls['DescriptionText'].errors?.['required']) {
+              <div>پر کردن این فیلد اجباری است</div>
               }
 
+              @if (form.controls['DescriptionText'].errors?.['minlength']) {
+              <div>حداقل ۱۰ کاراکتر وارد کنید</div>
+              }
             </div>
-
+            }
           </div>
+        </div>
 
-          <!-- ACTIONS -->
+        <div class="text-end mt-4">
+          <button type="submit" class="btn btn-success px-4" [disabled]="form.invalid">
+            ارسال تیکت
+          </button>
 
-          <div class="text-end mt-4">
-
-            <button type="submit" class="btn btn-success px-4" [disabled]="form.invalid">
-
-              ارسال تیکت
-
-            </button>
-
-            <button type="button" class="btn btn-outline-secondary px-4 ms-2" (click)="cancelNewLetter()">
-
-              انصراف
-
-            </button>
-
-          </div>
-
-        </form>
-
-        }
-
-      </div>
-
-      <!-- =============================================================== -->
-      <!-- FOOTER -->
-      <!-- =============================================================== -->
-
-      <div class="modal-footer kowsar-modal-footer justify-content-between">
-
-        <button class="btn btn-outline-secondary" (click)="close.emit()">
-
-          بستن
-
-        </button>
-
-        @if (!isNewLetter()) {
-
-        <button class="btn btn-primary" (click)="startNewLetter()">
-
-          <i class="fas fa-plus-circle me-1"></i>
-
-          ایجاد تیکت جدید
-
-        </button>
-
-        }
-
-      </div>
-
+          <button type="button" class="btn btn-outline-secondary px-4 ms-2" (click)="cancelNewLetter()">
+            انصراف
+          </button>
+        </div>
+      </form>
+      }
     </div>
 
+    <div class="modal-footer kowsar-modal-footer justify-content-between">
+      <button type="button" class="btn btn-outline-secondary" (click)="requestClose()">
+        بستن
+      </button>
+
+      @if (!isNewLetter()) {
+      <button type="button" class="btn btn-primary" (click)="startNewLetter()">
+        <i class="fas fa-plus-circle me-1"></i>
+        ایجاد تیکت جدید
+      </button>
+      }
+    </div>
   </div>
-
-</div>
-
-}
+</dialog>

@@ -495,6 +495,11 @@
               <li><a [routerLink]="['/accounting/tanzimat/dbsetup']">لیست تنظیمات کوثر</a></li>
               <li><a [routerLink]="['/accounting/tanzimat/fiscal-period-list']">ایجاد دوره مالی</a></li>
               <li><a [routerLink]="['/accounting/tanzimat/fiscal-period-list']">تغییر دوره مالی</a></li>
+
+              <li><a [routerLink]="['/rbac/role']">نقش ها</a></li>
+              <li><a [routerLink]="['/rbac/permission']">دسترسی ها</a></li>
+              <!-- <li><a [routerLink]="['/rbac/role-permission']">دسترسی نقش ها</a></li> -->
+              <li><a [routerLink]="['/rbac/centralrole']">نقض اشخاص</a></li>
             </ul>
           </div>
         </li>
@@ -557,8 +562,14 @@
               <li><a [routerLink]="['/automation/leaverequest-list']">لیست مرخصی</a></li>
 
               @if (permissionService.canManageRole) {
+
+              <li><a [routerLink]="['/internal/santral-call']">مرکز تماس</a></li>
+              <li><a [routerLink]="['/internal/santral-report']">گزارش تماس</a></li>
               <li><a [routerLink]="['/internal/internal-task-list']">لیست خدمات</a></li>
               <li><a [routerLink]="['/internal/internal-good-list']">لیست کالاها</a></li>
+              <li><a [routerLink]="['/internal/internal-pattern']">لیست الگو های کالایی</a></li>
+
+
               }
 
               <li><a [routerLink]="['/internal/internal-customer-list']">لیست مشتریان</a></li>
@@ -575,6 +586,30 @@
               @if (LoginType() === 'KOWSAR') {
               <li><a [routerLink]="['/automation/letter-user']">لیست تمامی تیکت‌ها</a></li>
               <li><a [routerLink]="['/automation/letter-mine']">وضعیت تیکت‌های من</a></li>
+              }
+            </ul>
+          </div>
+        </li>
+
+        <li>
+          <a href="#santral" data-bs-toggle="collapse" aria-expanded="false" aria-controls="santral">
+            <i class="ri-customer-service-2-line"></i>
+            <span>سانترال</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="santral" data-bs-parent="#side-menu">
+            <ul class="nav-second-level">
+
+              <li><a [routerLink]="['/santral/santral-phone']">تلفن</a></li>
+              @if (permissionService.canManageRole) {
+              <li><a [routerLink]="['/santral/santral-call']">مرکز تماس</a></li>
+              <li><a [routerLink]="['/santral/santral-user']">کاربران</a></li>
+              <li><a [routerLink]="['/santral/santral-ringgroup']">تماس گروهی</a></li>
+              <li><a [routerLink]="['/santral/santral-blacklist']">لیست سیاه تماس</a></li>
+
+              <li><a [routerLink]="['/santral/santral-operator-ranking']">رتبه بندی کاربران</a></li>
+              <li><a [routerLink]="['/santral/santral-phonebook']">دفترچه تلفن</a></li>
+              <li><a [routerLink]="['/santral/santral-report']">گزارش تماس</a></li>
               }
             </ul>
           </div>

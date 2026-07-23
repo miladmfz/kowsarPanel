@@ -1,47 +1,28 @@
-/* ===============================================================
-   📘 DashboardComponent
-   نمای اصلی داشبورد سیستم
-   =============================================================== */
-
 import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../framework-services/ui/notification.service';
-import { AttendancePanelComponent } from 'src/app/features/internal/components/attendance-panel/attendance-panel.component';
-import { KowsarReportComponent } from 'src/app/features/internal/components/kowsar-report/kowsar-report.component';
-import { KowsarCalendarComponent } from '../../framework-components/kowsar/kowsar-calendar/kowsar-calendar.component';
-import { LeaveGridComponent } from 'src/app/features/internal/components/attendance-panel/components/leave-grid/leave-grid.component';
-import { AutletterChartComponent } from 'src/app/features/internal/components/autletter-chart/autletter-chart.component';
 import { KowsarBaseWebApi } from '../../framework-services/base/KowsarBaseWebApi.service';
 import { PermissionService } from '../../framework-services/storage/PermissionService';
 import { SessionStorageService } from '../../framework-services/storage/session.storage.service';
+import { KowsarDashboardComponent } from '../../framework-components/kowsar/kowsar-dashboard/kowsar-dashboard.component';
+import { CustomerDashboardComponent } from '../../framework-components/kowsar/customer-dashboard/customer-dashboard.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
     CommonModule,
-    AttendancePanelComponent,
-    KowsarReportComponent,
-    KowsarCalendarComponent,
-    LeaveGridComponent,
-    AutletterChartComponent
+    KowsarDashboardComponent,
+    CustomerDashboardComponent
   ],
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  // ===============================================================
-  //   وضعیت‌ها و داده‌های اصلی
-  // ===============================================================
 
 
   LoginType = signal('')
-
   ToDayDate = signal('')
   attendanceInterval!: ReturnType<typeof setInterval>;
-
-  // ===============================================================
-  //   سازنده
-  // ===============================================================
 
   private readonly base_repo = inject(KowsarBaseWebApi);
   private readonly notificationService = inject(NotificationService);
@@ -49,9 +30,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   protected readonly session = inject(SessionStorageService);
   constructor() { }
 
-  // ===============================================================
-  // 🚀 Lifecycle Hooks
-  // ===============================================================
   ngOnInit(): void {
     this.initDashboard();
 
@@ -63,17 +41,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ===============================================================
-  //    مقداردهی اولیه داشبورد
-  // ===============================================================
   private initDashboard(): void {
     this.loadTodayDate();
     this.detectUserInfo();
   }
 
-  // ===============================================================
-  // 📅 دریافت تاریخ امروز از سرور
-  // ===============================================================
   private loadTodayDate(): void {
     this.base_repo.GetTodeyFromServer().subscribe({
       next: (data: any) => {
@@ -94,10 +66,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ===============================================================
-  // 👤 شناسایی نوع کاربر و مقداردهی اطلاعات پایه
-  // ===============================================================
-
 
 
   private detectUserInfo(): void {
@@ -108,32 +76,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.notificationService.warning('شناسه کاربر یافت نشد.');
     }
 
-
-    // console.log('dashborddddddddddd');
-
-    // if (this.permissionService.hasPermission('ROLE_MANAGE')) {
-    //   console.log('has ROLE_MANAGE');
-    // } else {
-    //   console.log('no ROLE_MANAGE');
-    // }
-
-    // if (
-    //   this.permissionService.hasAnyPermission([
-    //     'ROLE_MANAGE',
-    //     'USER_EDIT',
-    //     'USER_INSERT'
-    //   ])
-    // ) {
-    //   console.log('majmoeshono shamel beshe');
-    // } else {
-    //   console.log('nadare');
-    // }
-
-    // if (this.permissionService.hasRole('ADMIN')) {
-    //   console.log('ADMIN rolesh has');
-    // } else {
-    //   console.log('ADMIN rolesh nis');
-    // }
 
 
   }

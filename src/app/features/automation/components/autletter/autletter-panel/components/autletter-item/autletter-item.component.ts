@@ -84,11 +84,6 @@ export class AutletterItemComponent
     ExecuterCentral: new FormControl('', Validators.required),
   });
 
-
-
-
-
-
   // =============== Constructor ===============
   private readonly router = inject(Router);
   protected readonly session = inject(SessionStorageService);
@@ -417,7 +412,8 @@ export class AutletterItemComponent
     return value
       .toString()
       .trim()
-      .replace(/\s+/g, ' ');
+      .replace(/\s+/g, ' ')
+      .replace(/([^\w\s\u0600-\u06FF])\1+/g, '$1');
   }
   // ============================================================
   //                        MODAL

@@ -141,7 +141,7 @@ html[data-bs-theme='dark'] * {
 
 .kws-content-page .container-fluid {
     position: relative;
-    z-index: 1;
+    z-index: auto !important;
 }
 
 .content-page {
@@ -198,6 +198,7 @@ html[data-bs-theme='dark'] * {
     border-bottom: 1px solid rgba(13, 71, 161, .06) !important;
     box-shadow: 0 2px 18px rgba(15, 23, 42, .04) !important;
     backdrop-filter: blur(10px);
+    z-index: 1030 !important;
 }
 
 .navbar-custom .nav-link,
@@ -3118,4 +3119,375 @@ body[data-layout-color='dark'] .chart-container .apexcharts-yaxis text {
         border-color: rgba(142, 197, 255, .35) !important;
     }
 
+}
+
+.swal2-popup {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-radius: 18px !important;
+}
+
+.swal2-title {
+    color: #000000 !important;
+    font-weight: 800 !important;
+}
+
+.swal2-html-container {
+    color: #333 !important;
+}
+
+.swal2-icon.swal2-error {
+    border-color: #ff4d4f !important;
+    color: #ff4d4f !important;
+}
+
+.swal2-confirm {
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+}
+
+/* =========================================================
+   Chat Compact Override
+========================================================= */
+
+.kws-chat-card {
+    height: calc(100vh - 245px) !important;
+    min-height: 430px !important;
+    max-height: 640px !important;
+}
+
+.kws-chat-header {
+    padding: 12px 16px !important;
+}
+
+.kws-chat-header-icon {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 14px !important;
+    font-size: 20px !important;
+}
+
+.kws-chat-header h5 {
+    font-size: 15px !important;
+}
+
+.kws-chat-header .small {
+    font-size: 12px !important;
+}
+
+.refresh-btn {
+    min-height: 36px !important;
+    padding: 6px 12px !important;
+    border-radius: 12px !important;
+    font-size: 12px !important;
+}
+
+.kws-chat-body {
+    padding: 16px !important;
+}
+
+.kws-chat-row {
+    margin-bottom: 12px !important;
+}
+
+.kws-message-box {
+    max-width: min(74%, 620px) !important;
+    padding: 9px 14px !important;
+    border-radius: 18px !important;
+    line-height: 1.9 !important;
+    font-size: 13px !important;
+}
+
+.kws-chat-date {
+    font-size: 11px !important;
+    margin-top: 4px !important;
+}
+
+.kws-chat-input-area {
+    padding: 12px 14px !important;
+}
+
+.kws-chat-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.kws-chat-input {
+    min-height: 42px !important;
+    height: 42px !important;
+    border-radius: 14px !important;
+    font-size: 13px !important;
+}
+
+.kws-send-btn {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    padding: 0 !important;
+    border-radius: 14px !important;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.kws-send-btn i {
+    font-size: 20px;
+}
+
+/* Upload File Label */
+.kws-upload-action {
+    height: 42px;
+    min-width: 118px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    padding: 0 10px;
+
+    border-radius: 14px;
+
+    color: var(--kws-blue);
+    background: rgba(13, 110, 253, .07);
+    border: 1px solid rgba(13, 110, 253, .12);
+
+    font-size: 12px;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+.kws-upload-action app-autletter-file-upload {
+    display: inline-flex;
+    align-items: center;
+}
+
+.kws-upload-text {
+    line-height: 1;
+}
+
+/* فایل‌هایی که داخل چت نمایش داده می‌شوند */
+.kws-file-btn {
+    padding: 9px 14px !important;
+    border-radius: 16px !important;
+    font-size: 13px !important;
+}
+
+/* =========================================================
+   Chat Compact Responsive
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .kws-chat-card {
+        height: calc(100vh - 150px) !important;
+        min-height: 380px !important;
+        max-height: none !important;
+    }
+
+    .kws-chat-header {
+        padding: 10px 12px !important;
+    }
+
+    .kws-chat-header-icon {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 18px !important;
+    }
+
+    .kws-chat-body {
+        padding: 12px !important;
+    }
+
+    .kws-message-box {
+        max-width: 92% !important;
+        font-size: 12.5px !important;
+    }
+
+    .kws-chat-input-area {
+        padding: 10px !important;
+    }
+
+    .kws-chat-input-row {
+        gap: 6px;
+    }
+
+    .kws-upload-action {
+        min-width: 42px;
+        width: 42px;
+        padding: 0;
+    }
+
+    .kws-upload-text {
+        display: none;
+    }
+
+}
+
+/* =========================================================
+   Dark Mode
+========================================================= */
+
+[data-bs-theme="dark"] {
+
+    .kws-upload-action {
+        color: #93c5fd;
+        background: rgba(59, 130, 246, .12);
+        border-color: rgba(255, 255, 255, .08);
+    }
+
+}
+
+/* =========================================================
+   28) NATIVE TOP-LAYER DIALOGS
+   Fixes modal clipping behind Minton fixed header/footer.
+   ========================================================= */
+
+body.kowsar-dialog-open {
+    overflow: hidden !important;
+}
+
+dialog.kowsar-dialog {
+    box-sizing: border-box;
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 12px;
+    border: 0;
+    outline: 0;
+    color: inherit;
+    background: transparent !important;
+    overflow: hidden;
+}
+
+dialog.kowsar-dialog[open] {
+    display: grid;
+    place-items: center;
+}
+
+dialog.kowsar-dialog::backdrop {
+    background: rgba(15, 23, 42, .52);
+    backdrop-filter: blur(1.5px);
+}
+
+.kowsar-dialog .kowsar-dialog-panel {
+    width: min(1140px, 100%);
+    max-width: 1140px;
+    max-height: calc(100dvh - 24px);
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden !important;
+}
+
+.kowsar-dialog .kowsar-modal-header,
+.kowsar-dialog .kowsar-modal-footer {
+    flex: 0 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.kowsar-dialog .kowsar-modal-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+}
+
+.kowsar-dialog .kowsar-dialog-grid {
+    width: 100%;
+    height: clamp(210px, 40dvh, 400px);
+    min-height: 210px;
+    overflow: hidden;
+}
+
+.kowsar-dialog .kowsar-dialog-grid>ag-grid-angular {
+    display: block;
+    width: 100%;
+    height: 100% !important;
+    min-height: 0 !important;
+}
+
+/* Keep native dialog itself transparent in dark mode. */
+html[data-bs-theme='dark'] dialog.kowsar-dialog,
+body[data-layout-color='dark'] dialog.kowsar-dialog {
+    color: #e6ecf5;
+    background: transparent !important;
+}
+
+@media (max-height: 700px) {
+    dialog.kowsar-dialog {
+        padding: 4px;
+        place-items: start center;
+    }
+
+    .kowsar-dialog .kowsar-dialog-panel {
+        max-height: calc(100dvh - 8px);
+        border-radius: 18px !important;
+    }
+
+    .kowsar-dialog .kowsar-modal-header {
+        padding: .65rem .9rem;
+    }
+
+    .kowsar-dialog .kowsar-modal-body {
+        padding: .7rem !important;
+    }
+
+    .kowsar-dialog .kowsar-modal-footer {
+        padding: .6rem .85rem;
+    }
+
+    .kowsar-dialog .kowsar-dialog-grid {
+        height: clamp(180px, 35dvh, 250px);
+        min-height: 180px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    dialog.kowsar-dialog {
+        padding: 4px;
+        place-items: start center;
+    }
+
+    .kowsar-dialog .kowsar-dialog-panel {
+        width: 100%;
+        max-height: calc(100dvh - 8px);
+        border-radius: 16px !important;
+    }
+
+    .kowsar-dialog .modal-title {
+        min-width: 0;
+        font-size: 14px;
+    }
+
+    .kowsar-dialog .modal-title span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kowsar-dialog .kowsar-modal-header {
+        padding: .65rem .75rem;
+    }
+
+    .kowsar-dialog .kowsar-modal-body {
+        padding: .65rem !important;
+    }
+
+    .kowsar-dialog .kowsar-modal-footer {
+        padding: .6rem .7rem;
+    }
+
+    .kowsar-dialog .kowsar-dialog-grid {
+        height: 210px;
+        min-height: 180px;
+    }
 }

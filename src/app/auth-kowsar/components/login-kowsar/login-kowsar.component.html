@@ -1,0 +1,201 @@
+<!-- ===============================================================
+     KOWSAR LOGIN PAGE
+     =============================================================== -->
+
+<div class="kws-login-page d-flex align-items-center justify-content-center position-relative overflow-hidden">
+
+  <!-- Floating Glow -->
+  <div class="kws-page-glow kws-page-glow-top"></div>
+  <div class="kws-page-glow kws-page-glow-bottom"></div>
+
+  <!-- Login Card -->
+  <div class="card border-0 overflow-hidden position-relative kws-login-card">
+
+    <!-- Top Gradient Line -->
+    <div class="kws-top-gradient"></div>
+
+    <div class="card-body p-4 p-lg-5">
+
+      <!-- Logo / Title -->
+      <div class="text-center mb-4 position-relative">
+        <div class="d-flex justify-content-start mb-3">
+          <button type="button" class="kws-person-entry-btn" (click)="gopersonlogin()">
+            ورود به امور مشتریان
+          </button>
+        </div>
+        <div
+          class="d-inline-flex align-items-center justify-content-center rounded-circle position-relative mb-3 kws-logo-circle">
+          <div class="position-absolute rounded-circle kws-logo-ring"></div>
+
+          <img src="assets/images/img_logo_kits_png.png" alt="لوگو" height="78" class="position-relative z-2" />
+        </div>
+
+        <div class="fw-bold mb-2 kws-login-title">
+          نرم افزار حسابداری
+        </div>
+
+        <p class="mb-0 kws-login-subtitle">
+          لطفاً نام کاربری و رمز عبور خود را وارد کنید
+        </p>
+
+      </div>
+
+      @if (showAutoLoginBanner()) {
+
+      <button type="button" class="kws-person-entry-btn mx-2" (click)="loginsadeghzade()">
+        صادق زاده
+      </button>
+            <button type="button" class="kws-person-entry-btn mx-2" (click)="loginkhosravi()">
+       خسروی
+      </button>
+      <button type="button" class="kws-person-entry-btn" (click)="loginmfz()">
+        005
+      </button>
+
+
+      
+      }
+
+      @if (!smsConfirmVisible) {
+
+      <!-- Login Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="submit()" autocomplete="on" novalidate>
+
+        <!-- User Type -->
+        <!-- <div class="mb-3">
+
+          <label class="form-label mb-2 fw-semibold">
+            نوع کاربر
+          </label>
+
+          <div class="row g-2">
+
+            <div class="col-6">
+
+              <input class="btn-check" type="radio" id="ut_KOWSAR" value="KOWSAR" formControlName="UserType"
+                autocomplete="off" />
+
+              <label
+                class="btn w-100 d-flex align-items-center justify-content-center gap-2 rounded-4 py-3 kws-user-type"
+                for="ut_KOWSAR" [class.kws-userType-active]="loginForm.value.UserType === 'KOWSAR'">
+
+                <i class="fa fa-user"></i>
+
+                <span>
+                  کاربر کوثر
+                </span>
+
+              </label>
+
+            </div>
+
+
+
+          </div>
+
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'انتخاب نوع کاربر الزامی است',
+            control: loginForm.controls['UserType']
+          }">
+          </ng-container>
+
+        </div> -->
+
+        <!-- Username -->
+        <div class="form-floating mb-4  position-relative">
+
+          <input type="text" id="UName" class="form-control kws-input" placeholder=" " formControlName="UName"
+            maxlength="100" autocomplete="username" [ngClass]="{
+              'is-invalid': loginForm.controls['UName'].invalid && loginForm.controls['UName'].touched,
+              'is-valid': loginForm.controls['UName'].valid && loginForm.controls['UName'].touched
+            }" />
+
+          <label for="UName" class="kws-floating-label">
+            نام کاربری
+          </label>
+
+        </div>
+
+        <!-- Password -->
+        <div class="form-floating mb-4 kws-password-wrapper position-relative">
+
+          <input [type]="showPassword() ? 'text' : 'password'" id="UPass"
+            class="form-control kws-input kws-password-input" placeholder=" " formControlName="UPass" maxlength="100"
+            autocomplete="current-password" [ngClass]="{
+              'is-invalid': loginForm.controls['UPass'].invalid && loginForm.controls['UPass'].touched,
+              'is-valid': loginForm.controls['UPass'].valid && loginForm.controls['UPass'].touched
+            }" />
+
+          <label for="UPass" class="kws-floating-label">
+            رمز عبور
+          </label>
+
+          <span class="kws-password-eye" (click)="togglePassword()">
+            <i [class]="showPassword() ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+          </span>
+
+        </div>
+
+        <!-- Submit -->
+        <div class="d-grid">
+
+          <button type="submit" class="position-relative overflow-hidden border-0 kws-login-btn"
+            [disabled]="isLoading()" (pointermove)="onLoginButtonPointerMove($event)"
+            (pointerleave)="onLoginButtonPointerLeave()">
+
+            <span class="kws-login-glow" [style.left.px]="glowX" [style.top.px]="glowY">
+            </span>
+
+            @for (p of particles; track p.id) {
+            <span class="kws-login-particle" [style.left.px]="p.x" [style.top.px]="p.y" [style.width.px]="p.size"
+              [style.height.px]="p.size" [style.animation-delay.s]="p.delay">
+            </span>
+            }
+
+            <span class="kws-login-shine"></span>
+
+            <span class="position-relative z-2 d-flex align-items-center justify-content-center">
+
+              @if (!isLoading()) {
+              <i class="fa fa-sign-in me-2"></i>
+              ورود
+              } @else {
+              <i class="fa fa-spinner fa-spin me-2"></i>
+              در حال ورود...
+              }
+
+            </span>
+
+          </button>
+
+        </div>
+
+      </form>
+
+      }
+
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ===============================================================
+     FORM ERROR TEMPLATE
+     =============================================================== -->
+
+<ng-template #formError let-control="control" let-message="message" let-validation="validation">
+
+  @if (control.hasError(validation) && (control.dirty || control.touched)) {
+
+  <div class="invalid-feedback d-block mt-1">
+    <span role="alert">
+      {{ message }}
+    </span>
+  </div>
+
+  }
+
+</ng-template>

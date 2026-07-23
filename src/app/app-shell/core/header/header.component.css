@@ -1,0 +1,316 @@
+/* =========================================================
+   Mini WebPhone - Premium Header Widget
+   ========================================================= */
+
+.kws-mini-phone {
+    height: 40px;
+    min-width: 145px;
+    max-width: 245px;
+    padding: 4px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    transition: all .22s ease;
+    backdrop-filter: blur(14px);
+}
+
+.kws-mini-phone::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, .34),
+            rgba(255, 255, 255, 0));
+    pointer-events: none;
+    z-index: -1;
+}
+
+.kws-mini-phone:hover {
+    transform: translateY(-2px);
+}
+
+.kws-mini-phone-main {
+    height: 32px;
+    min-width: 0;
+    flex: 1;
+    border: 0;
+    border-radius: 999px;
+    padding: 0 .85rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .45rem;
+    font-size: .78rem;
+    font-weight: 900;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: all .22s ease;
+}
+
+.kws-mini-phone-main span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    direction: ltr;
+}
+
+.kws-mini-phone-main i {
+    font-size: 1.08rem;
+    flex: 0 0 auto;
+}
+
+/* Offline */
+.kws-mini-phone:not(.is-online):not(.is-calling):not(.is-ringing) {
+    background: linear-gradient(135deg, #eef4ff, #ffffff);
+    border: 1px solid rgba(37, 99, 235, .22);
+    box-shadow:
+        0 10px 24px rgba(15, 23, 42, .10),
+        inset 0 1px 0 rgba(255, 255, 255, .85);
+}
+
+.kws-mini-phone:not(.is-online):not(.is-calling):not(.is-ringing)::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #94a3b8;
+    box-shadow: 0 0 0 4px rgba(148, 163, 184, .16);
+    margin-inline-start: 6px;
+    flex: 0 0 auto;
+}
+
+.kws-mini-phone:not(.is-online):not(.is-calling):not(.is-ringing) .kws-mini-phone-main {
+    background: linear-gradient(135deg, #ffffff, #dbeafe);
+    color: #1e3a8a;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .95),
+        0 7px 16px rgba(37, 99, 235, .12);
+}
+
+.kws-mini-phone:not(.is-online):not(.is-calling):not(.is-ringing) .kws-mini-phone-main i {
+    color: #2563eb;
+}
+
+.kws-mini-phone:not(.is-online):not(.is-calling):not(.is-ringing):hover {
+    border-color: rgba(37, 99, 235, .45);
+    box-shadow:
+        0 14px 30px rgba(37, 99, 235, .18),
+        inset 0 1px 0 rgba(255, 255, 255, .9);
+}
+
+.kws-mini-phone:not(.is-online):not(.is-calling):not(.is-ringing):hover .kws-mini-phone-main {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: #ffffff;
+}
+
+.kws-mini-phone:not(.is-online):not(.is-calling):not(.is-ringing):hover .kws-mini-phone-main i {
+    color: #ffffff;
+}
+
+/* Online */
+.kws-mini-phone.is-online:not(.is-calling):not(.is-ringing) {
+    background: linear-gradient(135deg, rgba(22, 163, 74, .22), rgba(255, 255, 255, .92));
+    border: 1px solid rgba(34, 197, 94, .42);
+    box-shadow:
+        0 10px 26px rgba(22, 163, 74, .18),
+        inset 0 1px 0 rgba(255, 255, 255, .75);
+}
+
+.kws-mini-phone.is-online:not(.is-calling):not(.is-ringing)::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, .18);
+    margin-inline-start: 6px;
+    animation: kws-mini-phone-online-dot 1.8s infinite;
+    flex: 0 0 auto;
+}
+
+.kws-mini-phone.is-online:not(.is-calling):not(.is-ringing) .kws-mini-phone-main {
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    color: #ffffff;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .25),
+        0 8px 18px rgba(22, 163, 74, .25);
+}
+
+.kws-mini-phone.is-online:not(.is-calling):not(.is-ringing) .kws-mini-phone-main i {
+    color: #dcfce7;
+}
+
+/* Incoming */
+.kws-mini-phone.is-ringing {
+    background: linear-gradient(135deg, rgba(245, 158, 11, .28), rgba(255, 255, 255, .92));
+    border: 1px solid rgba(245, 158, 11, .48);
+    box-shadow:
+        0 0 0 4px rgba(245, 158, 11, .16),
+        0 12px 28px rgba(245, 158, 11, .25);
+}
+
+.kws-mini-phone.is-ringing .kws-mini-phone-main {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: #111827;
+    animation: kws-mini-phone-ring 1s infinite;
+}
+
+/* Active Call */
+.kws-mini-phone.is-calling:not(.is-ringing) {
+    background: linear-gradient(135deg, rgba(37, 99, 235, .24), rgba(255, 255, 255, .92));
+    border: 1px solid rgba(59, 130, 246, .45);
+    box-shadow:
+        0 0 0 4px rgba(37, 99, 235, .12),
+        0 12px 28px rgba(37, 99, 235, .22);
+}
+
+.kws-mini-phone.is-calling:not(.is-ringing) .kws-mini-phone-main {
+    background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+    color: #ffffff;
+    animation: kws-mini-phone-pulse 1.4s infinite;
+}
+
+/* Hangup */
+.kws-mini-phone-end {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 18px rgba(239, 68, 68, .35);
+    transition: all .2s ease;
+}
+
+.kws-mini-phone-end:hover {
+    transform: scale(1.07);
+    box-shadow: 0 10px 24px rgba(239, 68, 68, .45);
+}
+
+.kws-mini-phone-end i {
+    font-size: 1.05rem;
+}
+
+/* Dark mode */
+html[data-bs-theme="dark"] .kws-mini-phone:not(.is-online):not(.is-calling):not(.is-ringing) {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    border-color: rgba(148, 163, 184, .24);
+}
+
+html[data-bs-theme="dark"] .kws-mini-phone:not(.is-online):not(.is-calling):not(.is-ringing) .kws-mini-phone-main {
+    background: linear-gradient(135deg, #1e293b, #334155);
+    color: #e2e8f0;
+}
+
+html[data-bs-theme="dark"] .kws-mini-phone:not(.is-online):not(.is-calling):not(.is-ringing) .kws-mini-phone-main i {
+    color: #93c5fd;
+}
+
+html[data-bs-theme="dark"] .kws-mini-phone.is-online:not(.is-calling):not(.is-ringing) {
+    background: linear-gradient(135deg, rgba(22, 163, 74, .28), rgba(15, 23, 42, .9));
+}
+
+html[data-bs-theme="dark"] .kws-mini-phone.is-ringing {
+    background: linear-gradient(135deg, rgba(245, 158, 11, .32), rgba(15, 23, 42, .9));
+}
+
+html[data-bs-theme="dark"] .kws-mini-phone.is-calling:not(.is-ringing) {
+    background: linear-gradient(135deg, rgba(37, 99, 235, .32), rgba(15, 23, 42, .9));
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .kws-mini-phone {
+        min-width: 44px;
+        max-width: 44px;
+    }
+
+    .kws-mini-phone-main {
+        width: 32px;
+        padding: 0;
+    }
+
+    .kws-mini-phone-main span {
+        display: none;
+    }
+
+    .kws-mini-phone.is-calling,
+    .kws-mini-phone.is-ringing {
+        min-width: 132px;
+        max-width: 165px;
+    }
+
+    .kws-mini-phone.is-calling .kws-mini-phone-main,
+    .kws-mini-phone.is-ringing .kws-mini-phone-main {
+        width: auto;
+        padding: 0 .65rem;
+    }
+
+    .kws-mini-phone.is-calling .kws-mini-phone-main span,
+    .kws-mini-phone.is-ringing .kws-mini-phone-main span {
+        display: inline-block;
+        max-width: 90px;
+    }
+}
+
+@keyframes kws-mini-phone-online-dot {
+    0% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, .48);
+    }
+
+    70% {
+        box-shadow: 0 0 0 7px rgba(34, 197, 94, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+    }
+}
+
+@keyframes kws-mini-phone-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(37, 99, 235, .38);
+    }
+
+    70% {
+        box-shadow: 0 0 0 8px rgba(37, 99, 235, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+    }
+}
+
+@keyframes kws-mini-phone-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    15% {
+        transform: rotate(-2deg);
+    }
+
+    30% {
+        transform: rotate(2deg);
+    }
+
+    45% {
+        transform: rotate(-2deg);
+    }
+
+    60% {
+        transform: rotate(2deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}

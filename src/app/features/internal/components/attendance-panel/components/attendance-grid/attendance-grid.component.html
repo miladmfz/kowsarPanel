@@ -22,11 +22,11 @@
 
 } @else {
 <div class="ag-container rounded-3 border shadow-sm overflow-hidden"
-  style="height: 500px; border-radius: 4px; overflow: hidden;">
-
+  style="height: 520px; border-radius: 4px; overflow: hidden;">
   <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
-    [columnDefs]="column_name_1" [rowData]="records()" (gridReady)="onGridReady($event, 1)" [gridOptions]="gridOptions"
-    [class]="themeClass + ' w-100 h-100'" (firstDataRendered)="gridApi1?.sizeColumnsToFit()">
+    [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions" [pagination]="true"
+    [paginationAutoPageSize]="false" [paginationPageSize]="11" (gridReady)="onGridReady($event, 1)"
+    [class]="themeClass + ' w-100 h-100'">
   </ag-grid-angular>
 </div>
 }

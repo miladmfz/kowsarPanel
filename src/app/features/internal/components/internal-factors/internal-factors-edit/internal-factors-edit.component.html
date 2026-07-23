@@ -255,6 +255,12 @@
             پایان کار
           </button>
           }
+          <button (click)="ShowAllGoodTaskRow()" type="button" class="btn btn-warning waves-effect waves-light">
+            <span class="btn-label">
+              <i class="fas fa-info"></i>
+            </span>
+            لیست کل شرح وظایف
+          </button>
 
           }
 
@@ -391,7 +397,7 @@
 
 <div class="modal fade" #customerlist tabindex="-1" aria-hidden="true">
 
-  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+  <div class="modal-dialog modal-lg kowsar-modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
 
       <div class="modal-header">
@@ -437,7 +443,7 @@
         </div>
         }
 
-        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 400px;">
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 450px;">
           <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
             [columnDefs]="columnDefs3" [rowData]="records_support_customer()" [gridOptions]="gridOptions"
             [rowSelection]="{ mode: 'singleRow', enableClickSelection: true }" (gridReady)="onGridReady($event, 3)"
@@ -471,7 +477,7 @@
 
 <div class="modal fade" #factorcustomerproperty tabindex="-1" aria-hidden="true">
 
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog kowsar-modal-dialog">
     <div class="modal-content">
 
       <div class="modal-header">
@@ -541,7 +547,7 @@
 <!-- =============================================================== -->
 <div class="modal fade" #factorproperty tabindex="-1" aria-hidden="true">
 
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog kowsar-modal-dialog">
     <div class="modal-content">
 
       <div class="modal-header">
@@ -554,11 +560,39 @@
 
       <div class="modal-body">
         <form [formGroup]="EditForm_supportfactor_property">
-          <div class="form-group">
+
+          <div class="col-md-12">
             <label for="Barbary" class="col-form-label">شرح</label>
-            <textarea class="form-control" id="Barbary" formControlName="Barbary" maxlength="400" rows="5"
-              autocomplete="off" (keydown)="handleEnterKey($event)"></textarea>
+
+            <textarea formControlName="Barbary" rows="4" maxlength="400" class="form-control" autocomplete="off"
+              [ngClass]="{
+                  'is-invalid': EditForm_supportfactor_property.controls['Barbary'].invalid && EditForm_supportfactor_property.controls['Barbary'].touched,
+                  'is-valid': EditForm_supportfactor_property.controls['Barbary'].valid && EditForm_supportfactor_property.controls['Barbary'].touched
+                }" (keydown)="handleEnterKey($event)">
+              </textarea>
+
+            <small class="text-muted">
+              {{ EditForm_supportfactor_property.controls['Barbary'].value?.length || 0 }}/400 کاراکتر
+            </small>
+
+            @if (EditForm_supportfactor_property.controls['Barbary'].invalid &&
+            EditForm_supportfactor_property.controls['Barbary'].touched) {
+            <div class="text-danger mt-1">
+              @if (EditForm_supportfactor_property.controls['Barbary'].errors?.['required']) {
+              <div>پر کردن این فیلد اجباری است</div>
+              }
+              @if (EditForm_supportfactor_property.controls['Barbary'].errors?.['minlength']) {
+              <div>
+                حداقل ۲۰ کاراکتر وارد کنید
+                ({{ EditForm_supportfactor_property.controls['Barbary'].value?.length || 0 }} تایپ شده)
+              </div>
+              }
+            </div>
+            }
           </div>
+
+
+
         </form>
       </div>
 
@@ -581,7 +615,7 @@
 <!-- =============================================================== -->
 <div class="modal fade" #boxbuymodal tabindex="-1" aria-hidden="true">
 
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog kowsar-modal-dialog">
     <div class="modal-content">
 
       <div class="modal-header">
@@ -655,7 +689,7 @@
 <!-- =============================================================== -->
 <div class="modal fade" #autlettercustomer tabindex="-1" aria-hidden="true">
 
-  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+  <div class="modal-dialog modal-xl kowsar-modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
 
       <div class="modal-header">
@@ -829,6 +863,238 @@
   </div>
 </div>
 
+
+<div class="modal fade kws-task-modal" #allgoodtaskrow tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-xl kowsar-modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header bg-light">
+        <h5 class="modal-title">
+          <i class="fas fa-list-alt ms-2"></i>
+          تمامی شرح وظایف
+        </h5>
+        <button type="button" class="btn-close" (click)="allgoodtaskrow_dialog_close()"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 350px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800" class="w-100
+          h-100" [columnDefs]="columnDefs6" [rowData]="records_allgoodtaskrow()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 6)" (firstDataRendered)="gridApi6?.sizeColumnsToFit()">
+          </ag-grid-angular>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<div class="modal fade" #goodtaskrow_factorrow tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-xl kowsar-modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+
+      <div class="modal-header bg-light">
+        <h5 class="modal-title mb-0">
+          <i class="fas fa-list-alt ms-2"></i>
+          {{ title_modal_goodtaskrow_factorrow() }}
+        </h5>
+
+        <button type="button" class="btn-close" aria-label="Close" (click)="goodtaskrow_factorrow_dialog_close()">
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        @if (goodtaskrow_factorrow_list().length === 0) {
+
+        <div class="alert alert-warning text-center mb-0">
+          هیچ شرح وظیفه‌ای برای این ردیف ثبت نشده است
+        </div>
+
+        } @else {
+
+        <div class="row g-3">
+
+          @for (row of goodtaskrow_factorrow_list(); track row.GoodTaskRowCode; let i = $index) {
+
+          <div class="col-12">
+
+            <div class="card border shadow-none mb-0">
+
+              <div class="card-header bg-light">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-primary">
+                      {{ i + 1 }}
+                    </span>
+
+                    <h6 class="mb-0 fw-bold">
+                      {{ row.GoodName }} - {{ row.TaskTitle }}
+                    </h6>
+                  </div>
+
+                  <div class="d-flex flex-wrap align-items-center gap-2">
+
+                    @if (isNotStarted(row)) {
+                    <span class="badge bg-secondary">
+                      انجام نشده
+                    </span>
+                    }
+
+                    @if (isDoing(row)) {
+                    <span class="badge bg-warning text-dark">
+                      در حال انجام
+                    </span>
+                    }
+
+                    @if (isDone(row)) {
+                    <span class="badge bg-success">
+                      تمام شده
+                    </span>
+                    }
+
+                    @if (row.CompanyConfirm === 'True' || row.CompanyConfirm === true) {
+                    <span class="badge bg-success">
+                      تأیید شده
+                    </span>
+                    } @else {
+                    <span class="badge bg-light text-muted">
+                      تأیید نشده
+                    </span>
+                    }
+
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="card-body">
+
+                <div class="row g-3 align-items-end">
+
+                  <div class="col-xl-2 col-md-3 col-6">
+                    <label class="form-label">تاریخ ثبت</label>
+                    <input type="text" class="form-control" readonly [value]="row.TaskDate || '-'" />
+                  </div>
+
+                  <div class="col-xl-2 col-md-3 col-6">
+                    <label class="form-label">ساعت شروع</label>
+                    <input type="text" class="form-control" readonly [value]="row.StartTime || '-'" />
+                  </div>
+
+                  <div class="col-xl-2 col-md-3 col-6">
+                    <label class="form-label">ساعت پایان</label>
+                    <input type="text" class="form-control" readonly [value]="row.EndTime || '-'" />
+                  </div>
+
+                  <div class="col-xl-2 col-md-3 col-6">
+                    <label class="form-label">وضعیت</label>
+                    <input type="text" class="form-control" readonly [value]="getStateTitle(row)" />
+                  </div>
+
+                  <div class="col-xl-4 col-md-12 col-12">
+                    <label class="form-label">
+                      نماینده
+                      <span class="text-danger">*</span>
+                    </label>
+
+                    <input type="text" class="form-control" placeholder="نام نماینده" [readonly]="isNotStarted(row)"
+                      [class.is-invalid]="row._submitted && !(row.CompanyPerson ?? '').toString().trim()"
+                      [(ngModel)]="row.CompanyPerson" />
+
+                    <div class="invalid-feedback">
+                      وارد کردن نام نماینده الزامی است
+                    </div>
+                  </div>
+
+                  <div class="col-xl-10 col-md-9 col-12">
+                    <label class="form-label">
+                      توضیحات
+                      <span class="text-danger">*</span>
+                    </label>
+
+                    <textarea class="form-control" rows="2" placeholder="توضیحات" [readonly]="isNotStarted(row)"
+                      [class.is-invalid]="row._submitted && !(row.Explain ?? '').toString().trim()"
+                      [(ngModel)]="row.Explain"></textarea>
+
+                    <div class="invalid-feedback">
+                      وارد کردن توضیحات الزامی است
+                    </div>
+                  </div>
+
+                  <div class="col-xl-2 col-md-3 col-12 d-grid gap-2">
+
+                    @if (isNotStarted(row)) {
+                    <button type="button" class="btn btn-warning" (click)="Start_GoodTaskRow(row)">
+
+                      <i class="fas fa-play ms-1"></i>
+                      شروع انجام
+
+                    </button>
+                    }
+
+                    @if (!isNotStarted(row)) {
+                    <button type="button" class="btn btn-primary" (click)="Save_GoodTaskRow_Info(row)">
+
+                      <i class="fas fa-save ms-1"></i>
+                      ثبت اطلاعات
+
+                    </button>
+
+                    }
+                    @if (isDoing(row) && !hasEndTime(row)) {
+                    <button type="button" class="btn btn-success" (click)="Finish_GoodTaskRow(row)">
+
+                      <i class="fas fa-check ms-1"></i>
+                      اتمام کار
+
+                    </button>
+                    }
+                    @if (isDone(row)) {
+                    <button type="button" class="btn btn-light" disabled>
+
+                      <i class="fas fa-lock ms-1"></i>
+                      پایان یافته
+
+                    </button>
+                    }
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          }
+
+        </div>
+
+        }
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
 <!-- =============================================================== -->
 <!-- Validation Template -->
 <!-- =============================================================== -->

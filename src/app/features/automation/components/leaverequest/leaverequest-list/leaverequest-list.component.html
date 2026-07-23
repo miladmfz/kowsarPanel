@@ -35,7 +35,9 @@
         <a class="btn btn-success" [routerLink]="['/automation/leaverequest-edit']">
           <i class="fas fa-plus me-1"></i> جدید
         </a>
-
+        <a class="btn btn-info" [routerLink]="['/automation/leaverequest-policy-list']">
+          <i class="fas fa-user me-1"></i> کارمندان
+        </a>
         <button type="button" class="btn btn-light" (click)="loadLeaveList()">
           <i class="fas fa-sync me-1"></i> بازخوانی
         </button>
@@ -61,7 +63,7 @@
   Modal جزئیات مرخصی و گردش‌کار
 =============================================================== -->
 <div class="modal fade" id="leavedetail" tabindex="-1" aria-labelledby="leavedetailLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl">
+  <div class="modal-dialog kowsar-modal-dialog modal-xl">
     <div class="modal-content">
       <!--    Header -->
       <div class="modal-header bg-secondary text-white">

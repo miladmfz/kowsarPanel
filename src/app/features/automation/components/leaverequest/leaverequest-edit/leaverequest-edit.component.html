@@ -1,144 +1,998 @@
 <!-- ===============================================================
 📋 فرم ثبت و ویرایش درخواست مرخصی
-شامل انتخاب نوع مرخصی، تاریخ شروع و پایان، توضیحات و پیوست‌ها
 =============================================================== -->
 
-<div class="card shadow-sm mt-3">
-  <div class="card-body">
-    <!--   عنوان -->
-    <h4 class="header-title mb-4">{{ title() }}</h4>
+<div class="card shadow-sm mt-2">
+  <div class="card-body py-2 px-2">
 
-    <!-- 🧾 فرم اصلی -->
+    <h4 class="header-title mb-3">{{ title() }}</h4>
+
     <form [formGroup]="EditForm_LeaveRequest" (ngSubmit)="submit()">
-      <div class="row g-3">
 
-        <!-- 📅 تاریخ درخواست -->
-        <div class="col-md-3">
-          <label class="form-label">تاریخ درخواست</label>
-          <input formControlName="LeaveRequestDate" class="form-control" readonly />
+      <!-- 💾 نوار سریع ذخیره - بدون حذف دکمه اصلی پایین فرم -->
+      <div
+        class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2 py-2 px-2 border rounded position-sticky"
+        style="top: 72px; z-index: 20; background: rgba(255,255,255,.92); backdrop-filter: blur(8px);">
+        <div class="small text-muted">
+          <i class="fas fa-info-circle me-1"></i>
+          اطلاعات وضعیت و تنظیمات کاری نمایش داده می‌شود؛ فرم ثبت پایین همین بخش است.
         </div>
 
-        <!-- 🧭 نوع مرخصی -->
-        <div class="col-md-3">
-          <label class="form-label">نوع مرخصی</label>
-          <select class="form-select" formControlName="LeaveRequestType" (change)="onLeaveTypeChange()"
-            [class.is-invalid]="EditForm_LeaveRequest.controls['LeaveRequestType'].invalid && EditForm_LeaveRequest.controls['LeaveRequestType'].touched"
-            [class.is-valid]="EditForm_LeaveRequest.controls['LeaveRequestType'].valid && EditForm_LeaveRequest.controls['LeaveRequestType'].touched">
-            <option value="">انتخاب کنید</option>
-            @for (item of LeaveType_Lookup; track item) {
-            <option [value]="item.id">{{ item.name }}</option>
-            }
-          </select>
-        </div>
+        <div class="d-flex gap-2">
+          <a href="#leave-request-form-fields" class="btn btn-light btn-sm border">
+            رفتن به فرم
+          </a>
 
-
-
-        <!-- 📆 تاریخ شروع -->
-        <div class="col-md-3">
-          <label class="form-label">تاریخ شروع</label>
-          <ng-persian-datepicker [uiTheme]="customTheme">
-            <input class="form-control text-center" formControlName="LeaveStartDate" autocomplete="off"
-              [class.is-invalid]="EditForm_LeaveRequest.controls['LeaveStartDate'].invalid && EditForm_LeaveRequest.controls['LeaveStartDate'].touched"
-              [class.is-valid]="EditForm_LeaveRequest.controls['LeaveStartDate'].valid && EditForm_LeaveRequest.controls['LeaveStartDate'].touched" />
-          </ng-persian-datepicker>
-        </div>
-
-        <!-- 📆 تاریخ پایان -->
-        <div class="col-md-3">
-          <label class="form-label">تاریخ پایان</label>
-          <ng-persian-datepicker [uiTheme]="customTheme">
-            <input class="form-control text-center" formControlName="LeaveEndDate" autocomplete="off"
-              [class.is-invalid]="EditForm_LeaveRequest.controls['LeaveEndDate'].invalid && EditForm_LeaveRequest.controls['LeaveEndDate'].touched"
-              [class.is-valid]="EditForm_LeaveRequest.controls['LeaveEndDate'].valid && EditForm_LeaveRequest.controls['LeaveEndDate'].touched" />
-          </ng-persian-datepicker>
-        </div>
-
-        <!-- ⏰ بازه زمانی (فقط برای مرخصی ساعتی) -->
-        @if (showTimeFields()) {
-        <!-- <div class="col-md-3">
-          <label class="form-label">از ساعت</label>
-          <input formControlName="LeaveStartTime" class="form-control" type="time"
-            [class.is-invalid]="EditForm_LeaveRequest.controls['LeaveStartTime'].invalid && EditForm_LeaveRequest.controls['LeaveStartTime'].touched"
-            [class.is-valid]="EditForm_LeaveRequest.controls['LeaveStartTime'].valid && EditForm_LeaveRequest.controls['LeaveStartTime'].touched" />
-        </div> -->
-
-
-        <div class="col-md-3">
-          <label class="form-label">از ساعت</label>
-
-          <select class="form-select" formControlName="LeaveStartTime" (change)="onTimeChange()"
-            [class.is-invalid]="EditForm_LeaveRequest.controls['LeaveStartTime'].invalid && EditForm_LeaveRequest.controls['LeaveStartTime'].touched"
-            [class.is-valid]="EditForm_LeaveRequest.controls['LeaveStartTime'].valid && EditForm_LeaveRequest.controls['LeaveStartTime'].touched">
-
-            <option value="">انتخاب کنید</option>
-
-            <option *ngFor="let t of timeOptions" [value]="t">
-              {{ t }}
-            </option>
-
-          </select>
-        </div>
-
-        <div class="col-md-3">
-          <label class="form-label">تا ساعت</label>
-
-          <select class="form-select" formControlName="LeaveEndTime" (change)="onTimeChange()"
-            [class.is-invalid]="EditForm_LeaveRequest.controls['LeaveEndTime'].invalid && EditForm_LeaveRequest.controls['LeaveEndTime'].touched"
-            [class.is-valid]="EditForm_LeaveRequest.controls['LeaveEndTime'].valid && EditForm_LeaveRequest.controls['LeaveEndTime'].touched">
-
-            <option value="">انتخاب کنید</option>
-
-            <option *ngFor="let t of timeOptions" [value]="t">
-              {{ t }}
-            </option>
-
-          </select>
-        </div>
-
-
-        <!-- <div class="col-md-3">
-          <label class="form-label">تا ساعت</label>
-          <input formControlName="LeaveEndTime" class="form-control" type="time"
-            [class.is-invalid]="EditForm_LeaveRequest.controls['LeaveEndTime'].invalid && EditForm_LeaveRequest.controls['LeaveEndTime'].touched"
-            [class.is-valid]="EditForm_LeaveRequest.controls['LeaveEndTime'].valid && EditForm_LeaveRequest.controls['LeaveEndTime'].touched" />
-        </div> -->
-        }
-        <!--   توضیحات -->
-        <div class="col-md-12">
-          <label class="form-label">توضیحات<span class="text-danger">*</span></label>
-          <textarea formControlName="LeaveRequestExplain" class="form-control" rows="2"
-            [class.is-invalid]="EditForm_LeaveRequest.controls['LeaveRequestExplain'].invalid && EditForm_LeaveRequest.controls['LeaveRequestExplain'].touched"
-            [class.is-valid]="EditForm_LeaveRequest.controls['LeaveRequestExplain'].valid && EditForm_LeaveRequest.controls['LeaveRequestExplain'].touched"></textarea>
-          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-            validation: 'required',
-            message: 'اجباری است',
-            control: EditForm_LeaveRequest.controls['LeaveRequestExplain']
-          }"></ng-container>
-        </div>
-        <!-- 💾 دکمه ذخیره -->
-        <div class="col-12 text-end mt-3">
-          <button type="submit" class="btn btn-success px-4">
-            <i class="fas fa-check-double me-2"></i>
+          <button type="submit" class="btn btn-success btn-sm px-3"
+            [disabled]="leaveStatusLoading() || !canRequestSelectedLeaveType()">
+            <i class="fas fa-check-double me-1"></i>
             ذخیره
           </button>
         </div>
       </div>
-    </form>
+
+      <div class="row g-2">
+
+        <!-- 📅 تاریخ درخواست -->
+        <div class="col-md-2">
+          <label class="form-label">تاریخ درخواست</label>
+
+          <input formControlName="LeaveRequestDate" class="form-control text-center" readonly autocomplete="off" />
+        </div>
+
+        <!-- 👤 کاربر -->
+        <div class="col-md-3">
+          <label class="form-label">کاربر</label>
+
+          <select formControlName="UserRef" class="form-control" [class.bg-light]="!canSelectUser()"
+            [class.text-muted]="!canSelectUser()" [style.pointer-events]="canSelectUser() ? 'auto' : 'none'"
+            [attr.tabindex]="canSelectUser() ? 0 : -1" [attr.aria-disabled]="!canSelectUser()" [ngClass]="{
+    'is-invalid': EditForm_LeaveRequest.controls['UserRef'].invalid && EditForm_LeaveRequest.controls['UserRef'].touched,
+    'is-valid': EditForm_LeaveRequest.controls['UserRef'].valid && EditForm_LeaveRequest.controls['UserRef'].touched
+  }">
+            <option value="">لطفاً انتخاب کنید</option>
+
+            @for (user of users(); track user.CentralCode) {
+            <option [value]="user.CentralCode?.toString()">
+              {{ user.CentralName }}
+            </option>
+            }
+          </select>
+
+          @if (!canSelectUser()) {
+          <div class="form-text text-muted">
+            کاربر بر اساس حساب شما انتخاب شده و قابل تغییر نیست.
+          </div>
+          }
+
+          <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+      control: EditForm_LeaveRequest.controls['UserRef'],
+      message: 'اجباری است',
+      validation: 'required'
+    }">
+          </ng-container>
+        </div>
+
+        <!-- 🔄 وضعیت دریافت اطلاعات مرخصی -->
+        @if (leaveStatusLoading()) {
+        <div class="col-12">
+          <div class="alert alert-info d-flex align-items-center gap-2 mb-0 py-2">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>در حال دریافت وضعیت مرخصی کاربر...</span>
+          </div>
+        </div>
+        }
+
+        <!-- ⚠️ قبل از انتخاب کاربر -->
+        @if (!canShowLeaveForm() && !leaveStatusLoading()) {
+        <div class="col-12">
+          <div class="alert alert-warning mb-0 py-2">
+            ابتدا کاربر را انتخاب کنید تا وضعیت مرخصی او دریافت شود.
+          </div>
+        </div>
+        }
+
+        <!-- ✅ نمایش وضعیت مرخصی کاربر -->
+        @if (canShowLeaveForm() && leaveStatus()) {
+        <div class="col-12">
+
+          <div class="card report-section-card report-blue mb-2">
+            <div class="card-body py-2 px-2">
+
+              <!-- Header -->
+              <div class="report-section-head mb-2">
+                <div class="report-title-wrap">
+                  <div class="report-icon">
+                    <i class="fas fa-user-clock"></i>
+                  </div>
+
+                  <div>
+                    <div class="report-title">وضعیت مرخصی کاربر</div>
+                    <div class="report-subtitle">
+                      سال گزارش: <strong>{{ leaveStatus()?.ReportYear }}</strong>
+                      <span class="mx-1">•</span>
+                      امروز: <strong>{{ leaveStatus()?.TodayFromServer }}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="report-actions">
+                  <span class="badge report-pill report-badge-success">
+                    <i class="fas fa-check-circle me-1"></i>
+                    اطلاعات دریافت شد
+                  </span>
+
+                  <button type="button" class="btn btn-sm btn-outline-primary report-toggle-btn"
+                    (click)="toggleLeaveStatusReport()">
+                    @if (showLeaveStatusReport()) {
+                    <span>بستن خلاصه</span>
+                    <i class="fas fa-chevron-up"></i>
+                    } @else {
+                    <span>نمایش خلاصه</span>
+                    <i class="fas fa-chevron-down"></i>
+                    }
+                  </button>
+                </div>
+              </div>
+
+              <!-- خلاصه بالا - ۶ کارت مساوی -->
+              @if (showLeaveStatusReport()) {
+              <div class="row g-2 mb-2 align-items-stretch">
+
+                <div class="col-xl-2 col-md-4 col-6">
+                  <div class="card border mb-0 h-100">
+                    <div class="card-body py-2 px-2">
+                      <div class="text-muted small mb-1">کل درخواست‌ها</div>
+
+                      <h5 class="mb-0">
+                        {{ leaveStatus()?.TotalRequestCount }}
+                      </h5>
+
+                      <div class="small text-muted">
+                        سال {{ leaveStatus()?.ReportYear }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-xl-2 col-md-4 col-6">
+                  <div class="card border mb-0 h-100">
+                    <div class="card-body py-2 px-2">
+                      <div class="text-muted small mb-1">مانده روزانه سالانه</div>
+
+                      <h5 class="mb-0" [class.text-success]="remainingDailyLeaveDay() >= 1"
+                        [class.text-warning]="remainingDailyLeaveDay() > 0 && remainingDailyLeaveDay() < 1"
+                        [class.text-danger]="remainingDailyLeaveDay() <= 0">
+                        {{ day(leaveStatus()?.RemainingDailyLeaveDay) }} روز
+                      </h5>
+
+                      <div class="small text-muted">
+                        از سهمیه {{ day(leaveStatus()?.AnnualLeaveLimitDay) }} روز
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-xl-2 col-md-4 col-6">
+                  <div class="card border mb-0 h-100">
+                    <div class="card-body py-2 px-2">
+                      <div class="text-muted small mb-1">مانده ساعتی ماه جاری</div>
+
+                      <h5 class="mb-0" [class.text-success]="remainingMonthlyHourlyMinute() > 0"
+                        [class.text-danger]="remainingMonthlyHourlyMinute() <= 0">
+                        {{ minuteToHourLabel(leaveStatus()?.RemainingMonthlyHourlyMinute) }}
+                      </h5>
+
+                      <div class="small text-muted">
+                        از سقف {{ minuteToHourLabel(leaveStatus()?.MonthlyHourlyLeaveLimitMinute) }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-xl-2 col-md-4 col-6">
+                  <div class="card border mb-0 h-100">
+                    <div class="card-body py-2 px-2">
+                      <div class="text-muted small mb-1">در انتظار بررسی</div>
+
+                      <h5 class="mb-0 text-warning">
+                        {{ leaveStatus()?.PendingRequestCount }}
+                      </h5>
+
+                      <div class="small text-muted">
+                        {{ statusPercent(leaveStatus()?.PendingRequestCount, leaveStatus()?.TotalRequestCount) }}٪
+                        درخواست‌ها
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-xl-2 col-md-4 col-6">
+                  <div class="card border mb-0 h-100">
+                    <div class="card-body py-2 px-2">
+                      <div class="text-muted small mb-1">تأیید شده</div>
+
+                      <h5 class="mb-0 text-success">
+                        {{ leaveStatus()?.AcceptedRequestCount }}
+                      </h5>
+
+                      <div class="small text-muted">
+                        {{ statusPercent(leaveStatus()?.AcceptedRequestCount, leaveStatus()?.TotalRequestCount) }}٪
+                        درخواست‌ها
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-xl-2 col-md-4 col-6">
+                  <div class="card border mb-0 h-100">
+                    <div class="card-body py-2 px-2">
+                      <div class="text-muted small mb-1">رد شده</div>
+
+                      <h5 class="mb-0 text-danger">
+                        {{ leaveStatus()?.RejectedRequestCount }}
+                      </h5>
+
+                      <div class="small text-muted">
+                        {{ statusPercent(leaveStatus()?.RejectedRequestCount, leaveStatus()?.TotalRequestCount) }}٪
+                        درخواست‌ها
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              }
+
+              <!-- تفکیک نوع مرخصی -->
+              <div class="report-section-head report-green mt-2 mb-2">
+                <div class="report-title-wrap">
+                  <div class="report-icon">
+                    <i class="fas fa-chart-pie"></i>
+                  </div>
+
+                  <div>
+                    <div class="report-title">گزارش نوع مرخصی‌ها</div>
+                    <div class="report-subtitle">روزانه، ساعتی و اضطراری بدون حذف اطلاعات</div>
+                  </div>
+                </div>
+
+                <div class="report-actions">
+                  <span class="badge report-pill report-badge-dark">
+                    {{ leaveStatus()?.TotalRequestCount }} درخواست
+                  </span>
+
+                  <button type="button" class="btn btn-sm btn-outline-success report-toggle-btn"
+                    (click)="toggleLeaveTypeReport()">
+                    @if (showLeaveTypeReport()) {
+                    <span>بستن</span>
+                    <i class="fas fa-chevron-up"></i>
+                    } @else {
+                    <span>نمایش</span>
+                    <i class="fas fa-chevron-down"></i>
+                    }
+                  </button>
+                </div>
+              </div>
+
+              @if (showLeaveTypeReport()) {
+              <div class="row g-2 align-items-stretch">
+
+                <!-- مرخصی روزانه -->
+                <div class="col-lg-4">
+                  <div class="card border mb-0 h-100">
+                    <div class="card-header bg-transparent py-2 d-flex justify-content-between align-items-center">
+                      <strong>
+                        <i class="fas fa-calendar-day me-1"></i>
+                        مرخصی روزانه
+                      </strong>
+
+                      <span class="badge bg-primary">
+                        {{ leaveStatus()?.DailyRequestCount }} درخواست
+                      </span>
+                    </div>
+
+                    <div class="card-body d-flex flex-column py-2 px-2">
+
+                      <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                        <span class="text-muted">سهمیه سالانه</span>
+                        <strong>{{ day(leaveStatus()?.AnnualLeaveLimitDay) }} روز</strong>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                        <span class="text-muted">مصرف تایید شده</span>
+                        <strong>
+                          {{ day(leaveStatus()?.UsedDailyForBalance) }} روز
+                        </strong>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                        <span class="text-muted">تأیید شده</span>
+                        <strong class="text-success">
+                          {{ day(leaveStatus()?.UsedAcceptedDailyForBalance) }} روز
+                        </strong>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                        <span class="text-muted">در انتظار، بدون کسر از مانده</span>
+                        <strong class="text-warning">
+                          {{ day(leaveStatus()?.UsedPendingDailyForBalance) }} روز
+                        </strong>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                        <span class="text-muted">مانده سالانه</span>
+
+                        <strong [class.text-success]="remainingDailyLeaveDay() >= 1"
+                          [class.text-warning]="remainingDailyLeaveDay() > 0 && remainingDailyLeaveDay() < 1"
+                          [class.text-danger]="remainingDailyLeaveDay() <= 0">
+                          {{ day(leaveStatus()?.RemainingDailyLeaveDay) }} روز
+                        </strong>
+                      </div>
+
+                      <div class="d-flex justify-content-between mt-auto">
+                        <span class="text-muted">امکان ثبت روزانه</span>
+
+                        @if (canRequestDailyLeave()) {
+                        <span class="badge bg-success">دارد</span>
+                        } @else {
+                        <span class="badge bg-danger">ندارد</span>
+                        }
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+                <!-- مرخصی ساعتی -->
+                <div class="col-lg-4">
+                  <div class="card border mb-0 h-100">
+                    <div class="card-header bg-transparent py-2 d-flex justify-content-between align-items-center">
+                      <strong>
+                        <i class="fas fa-clock me-1"></i>
+                        مرخصی ساعتی
+                      </strong>
+
+                      <span class="badge bg-info">
+                        {{ leaveStatus()?.HourlyRequestCount }} درخواست
+                      </span>
+                    </div>
+
+                    <div class="card-body d-flex flex-column py-2 px-2">
+
+                      <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                        <span class="text-muted">کل زمان سال</span>
+                        <strong>
+                          {{ hour(leaveStatus()?.HourlyTotalHour) }} ساعت
+                          <small class="text-muted">
+                            / {{ minute(leaveStatus()?.HourlyTotalMinute) }} دقیقه
+                          </small>
+                        </strong>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                        <span class="text-muted">تأیید شده سال</span>
+                        <strong class="text-success">
+                          {{ hour(leaveStatus()?.AcceptedHourlyHour) }} ساعت
+                          <small class="text-muted">
+                            / {{ minute(leaveStatus()?.AcceptedHourlyMinute) }} دقیقه
+                          </small>
+                        </strong>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                        <span class="text-muted">در انتظار سال</span>
+                        <strong class="text-warning">
+                          {{ hour(leaveStatus()?.PendingHourlyHour) }} ساعت
+                          <small class="text-muted">
+                            / {{ minute(leaveStatus()?.PendingHourlyMinute) }} دقیقه
+                          </small>
+                        </strong>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                        <span class="text-muted">سقف ماهانه</span>
+                        <strong>
+                          {{ minuteToHourLabel(leaveStatus()?.MonthlyHourlyLeaveLimitMinute) }}
+                          <small class="text-muted">
+                            / {{ leaveStatus()?.MonthlyHourlyLeaveLimitMinute }} دقیقه
+                          </small>
+                        </strong>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                        <span class="text-muted">مصرف تایید شده ماه جاری</span>
+                        <strong class="text-info">
+                          {{ minuteToHourLabel(leaveStatus()?.UsedMonthlyHourlyMinuteForBalance) }}
+                          <small class="text-muted">
+                            / {{ leaveStatus()?.UsedMonthlyHourlyMinuteForBalance }} دقیقه
+                          </small>
+                        </strong>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                        <span class="text-muted">تأیید شده ماه جاری</span>
+                        <strong class="text-success">
+                          {{ minuteToHourLabel(leaveStatus()?.UsedAcceptedMonthlyHourlyMinuteForBalance) }}
+                          <small class="text-muted">
+                            / {{ leaveStatus()?.UsedAcceptedMonthlyHourlyMinuteForBalance }} دقیقه
+                          </small>
+                        </strong>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                        <span class="text-muted">در انتظار ماه جاری، بدون کسر از مانده</span>
+                        <strong class="text-warning">
+                          {{ minuteToHourLabel(leaveStatus()?.UsedPendingMonthlyHourlyMinuteForBalance) }}
+                          <small class="text-muted">
+                            / {{ leaveStatus()?.UsedPendingMonthlyHourlyMinuteForBalance }} دقیقه
+                          </small>
+                        </strong>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                        <span class="text-muted">مانده ماه جاری</span>
+
+                        <strong [class.text-success]="remainingMonthlyHourlyMinute() > 0"
+                          [class.text-danger]="remainingMonthlyHourlyMinute() <= 0">
+                          {{ minuteToHourLabel(leaveStatus()?.RemainingMonthlyHourlyMinute) }}
+                          <small class="text-muted">
+                            / {{ leaveStatus()?.RemainingMonthlyHourlyMinute }} دقیقه
+                          </small>
+                        </strong>
+                      </div>
+
+                      <div class="d-flex justify-content-between mt-auto">
+                        <span class="text-muted">امکان ثبت ساعتی</span>
+
+                        @if (canRequestHourlyLeave()) {
+                        <span class="badge bg-success">دارد</span>
+                        } @else {
+                        <span class="badge bg-danger">ندارد</span>
+                        }
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+                <!-- مرخصی اضطراری -->
+                <div class="col-lg-4">
+                  <div class="card border mb-0 h-100">
+                    <div class="card-header bg-transparent py-2 d-flex justify-content-between align-items-center">
+                      <strong>
+                        <i class="fas fa-notes-medical me-1"></i>
+                        مرخصی اضطراری
+                      </strong>
+
+                      <span class="badge bg-secondary">
+                        {{ leaveStatus()?.SickRequestCount }} درخواست
+                      </span>
+                    </div>
+
+                    <div class="card-body d-flex flex-column py-2 px-2">
+
+                      <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                        <span class="text-muted">کل روز کاری</span>
+                        <strong>{{ day(leaveStatus()?.SickWorkDay) }} روز</strong>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                        <span class="text-muted">تأیید شده</span>
+                        <strong class="text-success">
+                          {{ day(leaveStatus()?.AcceptedSickWorkDay) }} روز
+                        </strong>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                        <span class="text-muted">در انتظار</span>
+                        <strong class="text-warning">
+                          {{ day(leaveStatus()?.PendingSickWorkDay) }} روز
+                        </strong>
+                      </div>
+
+                      <div class="d-flex justify-content-between mt-auto">
+                        <span class="text-muted">محدودیت مانده</span>
+                        <span class="badge bg-success">ندارد</span>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              }
+
+              <!-- وضعیت ماه جاری -->
+              <div class="card report-section-card report-orange mb-0 mt-2">
+                <div class="card-body py-2 px-2">
+
+                  <div class="report-section-head mb-2">
+                    <div class="report-title-wrap">
+                      <div class="report-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                      </div>
+
+                      <div>
+                        <div class="report-title">وضعیت ماه جاری</div>
+                        <div class="report-subtitle">
+                          ماه {{ leaveStatus()?.CurrentMonth }} از سال {{ leaveStatus()?.CurrentYear }}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="report-actions">
+                      <span class="badge report-pill report-badge-dark">
+                        {{ leaveStatus()?.CurrentMonthRequestCount }} درخواست
+                      </span>
+
+                      <button type="button" class="btn btn-sm btn-outline-warning report-toggle-btn"
+                        (click)="toggleMonthlyReport()">
+                        @if (showMonthlyReport()) {
+                        <span>بستن</span>
+                        <i class="fas fa-chevron-up"></i>
+                        } @else {
+                        <span>نمایش</span>
+                        <i class="fas fa-chevron-down"></i>
+                        }
+                      </button>
+                    </div>
+                  </div>
+
+                  @if (showMonthlyReport()) {
+                  <div class="row g-2">
+
+                    <div class="col-md-3 col-6">
+                      <div class="border rounded p-2 py-1 h-100">
+                        <div class="small text-muted mb-1">روزانه</div>
+                        <strong>{{ leaveStatus()?.CurrentMonthDailyRequestCount }}</strong>
+                        <span class="small text-muted">درخواست</span>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3 col-6">
+                      <div class="border rounded p-2 py-1 h-100">
+                        <div class="small text-muted mb-1">ساعتی</div>
+                        <strong>{{ leaveStatus()?.CurrentMonthHourlyRequestCount }}</strong>
+                        <span class="small text-muted">درخواست</span>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3 col-6">
+                      <div class="border rounded p-2 py-1 h-100">
+                        <div class="small text-muted mb-1">اضطراری</div>
+                        <strong>{{ leaveStatus()?.CurrentMonthSickRequestCount }}</strong>
+                        <span class="small text-muted">درخواست</span>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3 col-6">
+                      <div class="border rounded p-2 py-1 h-100">
+                        <div class="small text-muted mb-1">ساعتی مصرف‌شده</div>
+                        <strong>{{ minuteToHourLabel(leaveStatus()?.CurrentMonthHourlyMinute) }}</strong>
+                        <span class="small text-muted">
+                          / {{ leaveStatus()?.CurrentMonthHourlyMinute }} دقیقه
+                        </span>
+                      </div>
+                    </div>
+
+                  </div>
+                  }
+
+                </div>
+              </div>
+
+              @if (showLeaveStatusReport()) {
+              @if (num(leaveStatus()?.PendingRequestCount) > 0) {
+              <div class="alert alert-warning mt-2 mb-0 py-2">
+                <i class="fas fa-exclamation-triangle me-1"></i>
+                این کاربر
+                <strong>{{ leaveStatus()?.PendingRequestCount }}</strong>
+                درخواست مرخصی در انتظار بررسی دارد. این درخواست‌ها از مانده کم نمی‌شوند.
+              </div>
+              }
+
+              @if (remainingDailyLeaveDay() <= 0) { <div class="alert alert-danger mt-2 mb-0 py-2">
+                <i class="fas fa-ban me-1"></i>
+                مانده مرخصی روزانه سالانه این کاربر تمام شده است و امکان ثبت مرخصی روزانه وجود ندارد.
+            </div>
+            } @else if (remainingDailyLeaveDay() < 1) { <div class="alert alert-warning mt-2 mb-0 py-2">
+              <i class="fas fa-exclamation-circle me-1"></i>
+              مانده مرخصی روزانه کمتر از یک روز است و امکان ثبت مرخصی روزانه وجود ندارد.
+          </div>
+          }
+
+          @if (remainingMonthlyHourlyMinute() <= 0) { <div class="alert alert-danger mt-2 mb-0 py-2">
+            <i class="fas fa-clock me-1"></i>
+            مانده مرخصی ساعتی ماه جاری تمام شده است.
+        </div>
+        }
+        }
+
+      </div>
+  </div>
+
+</div>
+}
+
+
+<!-- ⚙️ تنظیمات کاری / Policy کاربر -->
+@if (leavePolicyLoading()) {
+<div class="col-12">
+  <div class="alert alert-info d-flex align-items-center gap-2 mb-0 py-2">
+    <i class="fas fa-spinner fa-spin"></i>
+    <span>در حال دریافت تنظیمات کاری کاربر...</span>
   </div>
 </div>
+}
 
-<!-- 📎 نمایش بخش پیوست‌ها در صورت ثبت مرخصی -->
-@if (LeaveRequestCode().length > 0) {
-<div class="card mt-3 shadow-sm">
-  <div class="card-body">
+@if (leavePolicyLoaded() && leavePolicy()) {
+<div class="col-12">
+  <div class="card report-section-card report-purple mb-2">
+    <div class="card-header border-0 p-2">
+      <div class="report-section-head">
+        <div class="report-title-wrap">
+          <div class="report-icon">
+            <i class="fas fa-business-time"></i>
+          </div>
+
+          <div>
+            <div class="report-title">تنظیمات کاری و سهمیه مرخصی کاربر</div>
+            <div class="report-subtitle">
+              ساعت کاری، سقف‌ها و مجوزهای مرخصی این کاربر
+            </div>
+          </div>
+        </div>
+
+        <div class="report-actions">
+          <span class="badge report-pill report-badge-purple">
+            {{ employmentTypeText(leavePolicy()?.EmploymentType) }}
+          </span>
+
+          <button type="button" class="btn btn-sm btn-outline-primary report-toggle-btn" (click)="togglePolicyReport()">
+            @if (showPolicyReport()) {
+            <span>بستن</span>
+            <i class="fas fa-chevron-up"></i>
+            } @else {
+            <span>نمایش</span>
+            <i class="fas fa-chevron-down"></i>
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+
+    @if (showPolicyReport()) {
+    <div class="card-body py-2 px-2">
+      <div class="row g-2">
+
+        <div class="col-xl-2 col-md-4 col-6">
+          <div class="border rounded p-2 py-1 h-100">
+            <div class="small text-muted mb-1">ساعت کاری</div>
+            <strong>{{ timeRangeText(leavePolicy()?.WorkStartTime, leavePolicy()?.WorkEndTime) }}</strong>
+          </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+          <div class="border rounded p-2 py-1 h-100">
+            <div class="small text-muted mb-1">ارسال درخواست</div>
+            <strong>{{ timeRangeText(leavePolicy()?.RequestSubmitStartTime, leavePolicy()?.RequestSubmitEndTime)
+              }}</strong>
+          </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+          <div class="border rounded p-2 py-1 h-100">
+            <div class="small text-muted mb-1">کار روزانه</div>
+            <strong>{{ minuteToHourText(leavePolicy()?.DailyWorkMinute) }}</strong>
+          </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+          <div class="border rounded p-2 py-1 h-100">
+            <div class="small text-muted mb-1">استراحت</div>
+            <strong>{{ leavePolicy()?.BreakMinute }} دقیقه</strong>
+          </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+          <div class="border rounded p-2 py-1 h-100">
+            <div class="small text-muted mb-1">سهمیه سالانه</div>
+            <strong>{{ day(leavePolicy()?.AnnualLeaveLimitDay) }} روز</strong>
+          </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+          <div class="border rounded p-2 py-1 h-100">
+            <div class="small text-muted mb-1">سقف ساعتی ماهانه</div>
+            <strong>{{ minuteToHourText(leavePolicy()?.MonthlyHourlyLeaveLimitMinute) }}</strong>
+          </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+          <div class="border rounded p-2 py-1 h-100">
+            <div class="small text-muted mb-1">ضریب پاره‌وقت</div>
+            <strong>{{ leavePolicy()?.PartTimeRatio }}</strong>
+          </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+          <div class="border rounded p-2 py-1 h-100">
+            <div class="small text-muted mb-1">مرخصی روزانه</div>
+            <span class="badge" [ngClass]="boolBadgeClass(leavePolicy()?.AllowDailyLeave)">
+              {{ boolText(leavePolicy()?.AllowDailyLeave) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+          <div class="border rounded p-2 py-1 h-100">
+            <div class="small text-muted mb-1">مرخصی ساعتی</div>
+            <span class="badge" [ngClass]="boolBadgeClass(leavePolicy()?.AllowHourlyLeave)">
+              {{ boolText(leavePolicy()?.AllowHourlyLeave) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+          <div class="border rounded p-2 py-1 h-100">
+            <div class="small text-muted mb-1">مرخصی اضطراری</div>
+            <span class="badge" [ngClass]="boolBadgeClass(leavePolicy()?.AllowSickLeave)">
+              {{ boolText(leavePolicy()?.AllowSickLeave) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+          <div class="border rounded p-2 py-1 h-100">
+            <div class="small text-muted mb-1">شروع اعتبار</div>
+            <strong>{{ leavePolicy()?.EffectiveFromJDate || '-' }}</strong>
+          </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+          <div class="border rounded p-2 py-1 h-100">
+            <div class="small text-muted mb-1">پایان اعتبار</div>
+            <strong>{{ leavePolicy()?.EffectiveToJDate || '-' }}</strong>
+          </div>
+        </div>
+
+        @if (leavePolicy()?.Explain) {
+        <div class="col-12">
+          <div class="alert alert-light border mb-0 py-1 small text-muted">
+            <i class="fas fa-info-circle me-1"></i>
+            {{ leavePolicy()?.Explain }}
+          </div>
+        </div>
+        }
+
+      </div>
+    </div>
+    }
+  </div>
+</div>
+}
+
+@if (leavePolicyLoaded() && !leavePolicy()) {
+<div class="col-12">
+  <div class="alert alert-warning mb-0 py-2">
+    <i class="fas fa-exclamation-triangle me-1"></i>
+    برای این کاربر تنظیمات کاری ثبت نشده است؛ مقادیر پیش‌فرض سیستم استفاده می‌شود.
+  </div>
+</div>
+}
+
+<!-- =======================================================
+        بقیه فرم فقط بعد از دریافت وضعیت مرخصی نمایش داده شود
+        ======================================================= -->
+@if (canShowLeaveForm()) {
+
+<!-- 🧭 نوع مرخصی -->
+<div id="leave-request-form-fields" class="col-md-2">
+  <label class="form-label">نوع مرخصی</label>
+
+  <select class="form-select" formControlName="LeaveRequestType"
+    [class.is-invalid]="EditForm_LeaveRequest.controls['LeaveRequestType'].invalid && EditForm_LeaveRequest.controls['LeaveRequestType'].touched"
+    [class.is-valid]="EditForm_LeaveRequest.controls['LeaveRequestType'].valid && EditForm_LeaveRequest.controls['LeaveRequestType'].touched">
+    <option value="">انتخاب کنید</option>
+
+    @for (item of LeaveType_Lookup; track item.id) {
+    <option [value]="item.id" [disabled]="isLeaveTypeDisabled(item.id)">
+      {{ item.name }} {{ isLeaveTypeDisabled(item.id) ? ' - مانده کافی نیست' : '' }}
+    </option>
+    }
+  </select>
+
+  <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                control: EditForm_LeaveRequest.controls['LeaveRequestType'],
+                message: 'اجباری است',
+                validation: 'required'
+              }">
+  </ng-container>
+</div>
+
+@if (
+EditForm_LeaveRequest.controls['LeaveRequestType'].value &&
+!canRequestSelectedLeaveType()
+) {
+<div class="col-12">
+  <div class="alert alert-danger mb-0">
+    <i class="fas fa-ban me-1"></i>
+    {{ leaveBalanceWarningText() }}
+  </div>
+</div>
+}
+
+<!-- 📆 تاریخ شروع -->
+<div class="col-md-2">
+  <label class="form-label">تاریخ شروع</label>
+
+  <ng-persian-datepicker [uiTheme]="customTheme" [dateMin]="hasLeaveDateLimit() ? minLeaveStartDateTimestamp() : null"
+    (dateOnSelect)="onLeaveDateSelect($event, 'LeaveStartDate')">
+    <input class="form-control text-center" formControlName="LeaveStartDate" autocomplete="off"
+      [readonly]="hasLeaveDateLimit()" [class.is-invalid]="
+        isHolidayWarningFor('LeaveStartDate') ||
+        (EditForm_LeaveRequest.controls['LeaveStartDate'].invalid &&
+        EditForm_LeaveRequest.controls['LeaveStartDate'].touched)
+      " [class.is-valid]="
+        !isHolidayWarningFor('LeaveStartDate') &&
+        EditForm_LeaveRequest.controls['LeaveStartDate'].valid &&
+        EditForm_LeaveRequest.controls['LeaveStartDate'].touched
+      " />
+  </ng-persian-datepicker>
+
+  @if (isHolidayWarningFor('LeaveStartDate')) {
+  <div class="invalid-feedback d-block">
+    {{ holidayDateWarning() }}
+  </div>
+  }
+
+  <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+      control: EditForm_LeaveRequest.controls['LeaveStartDate'],
+      message: 'اجباری است',
+      validation: 'required'
+    }">
+  </ng-container>
+</div>
+<!-- 📆 تاریخ پایان - فقط برای غیر ساعتی -->
+@if (!showEndTimeFields()) {
+<div class="col-md-2">
+  <label class="form-label">تاریخ پایان</label>
+
+  <ng-persian-datepicker [uiTheme]="customTheme" [dateMin]="minLeaveEndDateTimestamp()"
+    (dateOnSelect)="onLeaveDateSelect($event, 'LeaveEndDate')">
+    <input class="form-control text-center" formControlName="LeaveEndDate" autocomplete="off"
+      [readonly]="hasLeaveDateLimit()" [class.is-invalid]="
+        isHolidayWarningFor('LeaveEndDate') ||
+        (EditForm_LeaveRequest.controls['LeaveEndDate'].invalid &&
+        EditForm_LeaveRequest.controls['LeaveEndDate'].touched)
+      " [class.is-valid]="
+        !isHolidayWarningFor('LeaveEndDate') &&
+        EditForm_LeaveRequest.controls['LeaveEndDate'].valid &&
+        EditForm_LeaveRequest.controls['LeaveEndDate'].touched
+      " />
+  </ng-persian-datepicker>
+
+  @if (isHolidayWarningFor('LeaveEndDate')) {
+  <div class="invalid-feedback d-block">
+    {{ holidayDateWarning() }}
+  </div>
+  }
+
+  <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+      control: EditForm_LeaveRequest.controls['LeaveEndDate'],
+      message: 'اجباری است',
+      validation: 'required'
+    }">
+  </ng-container>
+</div>
+} @else {
+<div class="col-md-2"></div>
+}
+<!-- ⏰ بازه زمانی فقط برای مرخصی ساعتی -->
+@if (showEndTimeFields()) {
+
+<div class="col-md-3">
+  <label class="form-label">از ساعت</label>
+
+  <select class="form-select" formControlName="LeaveStartTime" (change)="onTimeChange()"
+    [class.is-invalid]="EditForm_LeaveRequest.controls['LeaveStartTime'].invalid && EditForm_LeaveRequest.controls['LeaveStartTime'].touched"
+    [class.is-valid]="EditForm_LeaveRequest.controls['LeaveStartTime'].valid && EditForm_LeaveRequest.controls['LeaveStartTime'].touched">
+    <option value="">انتخاب کنید</option>
+
+    @for (t of timeOptions; track t) {
+    <option [value]="t">
+      {{ t }}
+    </option>
+    }
+  </select>
+
+  <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                  control: EditForm_LeaveRequest.controls['LeaveStartTime'],
+                  message: 'اجباری است',
+                  validation: 'required'
+                }">
+  </ng-container>
+</div>
+
+<div class="col-md-3">
+  <label class="form-label">تا ساعت</label>
+
+  <select class="form-select" formControlName="LeaveEndTime" (change)="onTimeChange()"
+    [class.is-invalid]="EditForm_LeaveRequest.controls['LeaveEndTime'].invalid && EditForm_LeaveRequest.controls['LeaveEndTime'].touched"
+    [class.is-valid]="EditForm_LeaveRequest.controls['LeaveEndTime'].valid && EditForm_LeaveRequest.controls['LeaveEndTime'].touched">
+    <option value="">انتخاب کنید</option>
+
+    @for (t of timeOptions; track t) {
+    <option [value]="t">
+      {{ t }}
+    </option>
+    }
+  </select>
+
+  <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                  control: EditForm_LeaveRequest.controls['LeaveEndTime'],
+                  message: 'اجباری است',
+                  validation: 'required'
+                }">
+  </ng-container>
+
+  <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                  control: EditForm_LeaveRequest.controls['LeaveEndTime'],
+                  message: 'ساعت پایان باید بعد از ساعت شروع باشد',
+                  validation: 'invalidRange'
+                }">
+  </ng-container>
+</div>
+}
+
+<!-- 📝 توضیحات -->
+<div class="col-md-12">
+  <label class="form-label">
+    توضیحات
+    <span class="text-danger">*</span>
+  </label>
+
+  <textarea formControlName="LeaveRequestExplain" class="form-control" rows="2"
+    [class.is-invalid]="EditForm_LeaveRequest.controls['LeaveRequestExplain'].invalid && EditForm_LeaveRequest.controls['LeaveRequestExplain'].touched"
+    [class.is-valid]="EditForm_LeaveRequest.controls['LeaveRequestExplain'].valid && EditForm_LeaveRequest.controls['LeaveRequestExplain'].touched"></textarea>
+
+  <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                validation: 'required',
+                message: 'اجباری است',
+                control: EditForm_LeaveRequest.controls['LeaveRequestExplain']
+              }">
+  </ng-container>
+</div>
+
+<!-- 💾 دکمه ذخیره -->
+<div class="col-12 text-end mt-2 py-2 border-top position-sticky"
+  style="bottom: 0; z-index: 20; background: rgba(255,255,255,.92); backdrop-filter: blur(8px);">
+  <button type="submit" class="btn btn-success px-4"
+    [disabled]="leaveStatusLoading() || !canRequestSelectedLeaveType()">
+    <i class="fas fa-check-double me-2"></i>
+    ذخیره
+  </button>
+</div>
+}
+
+</div>
+</form>
+</div>
+</div>
+
+<!-- 📎 پیوست‌ها -->
+@if (isEditMode()) {
+<div class="card mt-2 shadow-sm">
+  <div class="card-body py-3">
     <app-kowsar-attach [ObjectRef]="LeaveRequestCode()" [ClassName]="'LeaveReq'"></app-kowsar-attach>
   </div>
 </div>
 }
 
-
-
-<!--   قالب خطا -->
+<!-- قالب خطا -->
 <ng-template #formError let-control="control" let-message="message" let-validation="validation">
   @if (control.hasError(validation) && (control.dirty || control.touched)) {
   <div class="fv-plugins-message-container invalid-feedback">

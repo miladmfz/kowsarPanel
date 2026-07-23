@@ -45,9 +45,9 @@
 
   </div>
 </div>
-
 <div *ngIf="tooltipOpen" class="kcal-tooltip shadow" [style.left.px]="tooltipX" [style.top.px]="tooltipY"
   (click)="$event.stopPropagation()">
+
   <div class="d-flex align-items-center justify-content-between mb-2">
     <div class="fw-bold">
       {{ tooltipDateKey() }}
@@ -57,23 +57,36 @@
     <button type="button" class="btn-close kcal-tip-close" aria-label="Close" (click)="closeTooltip()"></button>
   </div>
 
+  <div class="small opacity-75 mb-2">
+    <div *ngIf="tooltipMoonDate">قمری: {{ tooltipMoonDate }}</div>
+    <div *ngIf="tooltipGregorianText">
+      میلادی: {{ tooltipGregorianText }}
+    </div>
+  </div>
+
   <div *ngIf="tooltipEvents.length === 0" class="small opacity-75">
     رویدادی ثبت نشده است
   </div>
 
   <div *ngFor="let e of tooltipEvents" class="kcal-tip-item">
     <div class="d-flex align-items-start gap-2">
-      <span class="badge" [class.bg-danger]="e.is_holiday" [class.bg-secondary]="!e.is_holiday"
-        [class.bg-purple]="e.is_religious">
-        {{ e.is_holiday ? 'تعطیل' : (e.is_religious ? 'مذهبی' : 'مناسبت') }}
+
+      <span class="badge" [class.bg-purple]="e.type === 'مذهبی'" [class.bg-secondary]="e.type !== 'مذهبی'">
+        {{ e.type || 'مناسبت' }}
       </span>
 
       <div>
         <div class="kcal-tip-title">{{ e.description }}</div>
+
+        <div *ngIf="e.date_text" class="kcal-tip-sub">
+          {{ e.date_text }}
+        </div>
+
         <div *ngIf="e.additional_description" class="kcal-tip-sub">
           {{ e.additional_description }}
         </div>
       </div>
+
     </div>
   </div>
 

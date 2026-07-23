@@ -11,19 +11,19 @@ export const Module_ROUTES: Routes = [
     //Factor
     {
         path: 'broker-app',
-        title: 'لیست فاکتورهای کوثر',
+        title: 'نرم افزار بازاریاب',
         loadComponent: () =>
             import('./components/android/broker-app/broker-app.component')
                 .then(m => m.BrokerAppComponent),
     }, {
         path: 'ocr-app',
-        title: 'لیست فاکتورهای کوثر',
+        title: 'نرم افزار پردازش انبار',
         loadComponent: () =>
             import('./components/android/ocr-app/ocr-app.component')
                 .then(m => m.OcrAppComponent),
     }, {
         path: 'order-app',
-        title: 'لیست فاکتورهای کوثر',
+        title: 'نرم افزار سفارشگیر',
         loadComponent: () =>
             import('./components/android/order-app/order-app.component')
                 .then(m => m.OrderAppComponent),

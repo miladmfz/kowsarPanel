@@ -112,9 +112,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.loadProfileImage();
       this.LoadAttendance()
     }, 100);
-    this.refreshSub = this.sharedService.RefreshAllActions$?.subscribe(action => {
-      if (action === 'refresh') this.LoadAttendance();
-    });
+    this.refreshSub = this.sharedService.RefreshAllActions$
+      .subscribe(action => {
+
+        console.log("action = " + action)
+        if (action === 'refresh') {
+          this.LoadAttendance();
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -165,13 +170,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     const apiUrl_temp = this.config.apiUrl;
     this.IsCustomerBuild.set(!(
-      ///apiUrl_temp === 'http://192.168.1.27:60006/api/' ||
+      ///apiUrl_temp === 'http://192.168.1.27:60007/api/' ||
       apiUrl_temp === 'https://itmali.ir/webapi/' ||
       apiUrl_temp === 'http://5.160.152.173:60005/api/'
     ))
 
     this.IsKowsarSupportBuild.set((
-      apiUrl_temp === 'http://192.168.1.27:60006/api/' ||
+      apiUrl_temp === 'http://192.168.1.27:60007/api/' ||
       apiUrl_temp === 'https://itmali.ir/webapi/' ||
       apiUrl_temp === 'http://5.160.152.173:60005/api/'
     ))
@@ -187,7 +192,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     if (!this.CentralRef) return;
 
 
-    this.base_repo.GetImageFromServer(this.CentralRef()).subscribe({
+    this.base_repo.GetImageFromServer(this.CentralRef(), "Central").subscribe({
       next: (data: any) => {
 
         if (data?.Text && data?.Text !== "Nophoto") {
@@ -207,23 +212,47 @@ export class SidebarComponent implements OnInit, OnDestroy {
   // 🟢 تغییر وضعیت حضور (ارسال به سرور)
   // ===============================================================
   setStatus(status: string): void {
-    // ۱️⃣ بروزرسانی فرم
-    this.EditForm_Attendance.patchValue({ Status: status });
-    this.currentStatus.set(status)
 
+    this.base_repo.AttendanceDashboard().subscribe({
+      next: (data: any) => {
 
-    // ۲️⃣ ارسال به API
+        if (status === "3") {
 
-    this.base_repo.ManualAttendance(this.EditForm_Attendance.value).subscribe({
-      next: (response: any) => {
+          const attendances = data?.Attendances ?? [];
 
-        // ۳️⃣ اطلاع‌رسانی به سایر بخش‌ها برای رفرش
-        this.sharedService.triggerRefresh('refresh');
+          const leaveCount = attendances.filter(
+            (x: any) => x.Status === "3"
+          ).length;
+
+          if (leaveCount > 1) {
+
+            this.notificationService.error(
+              "تعداد افراد مرخصی بیش از حد مجاز است"
+            );
+
+            return;
+
+          }
+        }
+
+        this.EditForm_Attendance.patchValue({ Status: status });
+        this.currentStatus.set(status);
+
+        this.base_repo.ManualAttendance(this.EditForm_Attendance.value).subscribe({
+          next: (response: any) => {
+            this.sharedService.triggerRefresh('refresh');
+          },
+          error: (err) => {
+            console.error('❌ خطا در ManualAttendance:', err);
+          },
+        });
+
       },
       error: (err) => {
-        console.error('❌ خطا در ManualAttendance:', err);
-      },
+        console.error(err);
+      }
     });
+
   }
 
   // ===============================================================

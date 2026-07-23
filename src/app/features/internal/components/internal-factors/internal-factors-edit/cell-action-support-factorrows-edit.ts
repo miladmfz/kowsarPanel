@@ -5,8 +5,12 @@ declare var $: any;
 @Component({
     selector: 'edit-delete-cell-renderer',
     template: ` 
-
-  <span  (click)="btnDeleteClicked(2)" class="btn btn-sm btn-outline-danger " data-toggle="tooltip" title="خصوصیت اضافه ">
+  <span  (click)="ShowGoodTaskRow_FactorRow()" class="btn btn-sm btn-outline-primary mx-1" data-toggle="tooltip" title="شرح وظایف">
+  <a >
+    <i class=" fas fa-info"></i>
+  </a>
+  </span>
+  <span  (click)="DeleteFactorRow()" class="btn btn-sm btn-outline-danger " data-toggle="tooltip" title="حذف ردیف">
   <a >
     <i class=" fas fa-trash"></i>
   </a>
@@ -45,7 +49,17 @@ export class CellActionSupportFactorRowsEdit implements ICellRendererAngularComp
     }
 
 
-    btnDeleteClicked(arg) {
-        this.params.context.componentParent.delete(this.params.data.FactorRowCode);
+    DeleteFactorRow() {
+        this.params.context.componentParent.DeleteFactorRow(this.params.data);
     }
+
+
+    ShowGoodTaskRow_FactorRow() {
+        this.params.context.componentParent.ShowGoodTaskRow_FactorRow(this.params.data);
+    }
+
+
+
+
+
 }

@@ -21,14 +21,22 @@ import { NotificationService } from '../../framework-services/ui/notification.se
 import { PermissionService } from '../../framework-services/storage/PermissionService';
 import { SessionStorageService } from '../../framework-services/storage/session.storage.service';
 import { KowsarBaseWebApi } from '../../framework-services/base/KowsarBaseWebApi.service';
-
+import { AppConfigService } from 'src/app/app-config.service';
+import { WebPhoneService } from 'src/app/features/santral/services/webphone.service';
 declare const bootstrap: any;
-
+import { NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs';
+import { cleanSantralText } from 'src/app/features/santral/shared/utils/santral-format.util';
+import { WebPhoneTonePlayer } from 'src/app/features/santral/shared/webphone/webphone-tone-player';
+import { SantralWebApiService } from 'src/app/features/santral/services/santralapi.service';
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [CommonModule, RouterModule, ReactiveFormsModule],
   templateUrl: './header.component.html',
+  styleUrls: [
+    './header.component.css',
+  ],
 })
 export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   // ===============================================================
@@ -57,7 +65,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   private lastLeaveRequestCount = 0;
   private lastAlarmRowCount = 0;
   private lastAlarmNewCount = 0;
-
+  private headerPhoneBook = signal<any[]>([]);
   // ===============================================================
   // 🔐 Change Password (Modal + Form)
   // ===============================================================
@@ -77,7 +85,9 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly router = inject(Router);
   protected readonly permissionService = inject(PermissionService);
   protected readonly session = inject(SessionStorageService);
-
+  private readonly appConfig = inject(AppConfigService);
+  protected readonly webPhoneService = inject(WebPhoneService);
+  private readonly santralApi = inject(SantralWebApiService) as any;
   constructor() { }
 
   requestNotificationPermission(): void {
@@ -98,7 +108,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     // ✅ ساخت فرم تغییر رمز (بعد از inject شدن fb)
     this.initChangePasswordForm();
-
+    this.initHeaderWebPhone();
+    this.loadHeaderPhoneBook();
     const savedTheme = (localStorage.getItem('theme') as 'light' | 'dark') || 'light';
 
     this.isDarkMode.set(savedTheme === 'dark')
@@ -113,8 +124,136 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.Get_Notification();
 
     this.loadProfileImage();
+    this.bindHeaderIncomingPreviewHandler();
+
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        if (!this.router.url.includes('/santral/santral-phone')) {
+          this.bindHeaderIncomingPreviewHandler();
+        }
+      });
+  }
+  private loadHeaderPhoneBook(): void {
+    const extension = String(this.session.manager ?? '').trim();
+
+    this.santralApi.GetPhoneBook(extension, false).subscribe({
+      next: (res: any) => {
+        const list =
+          Array.isArray(res?.phonebook) ? res.phonebook :
+            Array.isArray(res?.items) ? res.items :
+              Array.isArray(res?.records) ? res.records :
+                [];
+
+        const mapped = list
+          .map((row: any) => {
+            const number = cleanSantralText(
+              row?.display_number ??
+              row?.DisplayNumber ??
+              row?.Number ??
+              row?.number ??
+              ''
+            );
+
+            const name = cleanSantralText(
+              row?.Name ??
+              row?.name ??
+              ''
+            );
+
+            return {
+              name,
+              number
+            };
+          })
+          .filter((item: any) => !!item.number);
+
+        this.headerPhoneBook.set(mapped);
+        this.refreshIncomingNamesFromHeaderPhoneBook();
+      },
+      error: () => {
+        this.headerPhoneBook.set([]);
+      }
+    });
   }
 
+  private normalizeHeaderPhoneValue(value: any): string {
+    let text = cleanSantralText(value);
+
+    if (!text) {
+      return '';
+    }
+
+    const fa = '۰۱۲۳۴۵۶۷۸۹';
+    const ar = '٠١٢٣٤٥٦٧٨٩';
+
+    text = text.replace(/[۰-۹]/g, d => String(fa.indexOf(d)));
+    text = text.replace(/[٠-٩]/g, d => String(ar.indexOf(d)));
+
+    text = text.replace(/[^\d]/g, '');
+
+    if (text.startsWith('0098')) {
+      text = '0' + text.substring(4);
+    }
+
+    if (text.startsWith('98') && text.length === 12) {
+      text = '0' + text.substring(2);
+    }
+
+    return text;
+  }
+
+  private isSameHeaderPhoneNumber(a: any, b: any): boolean {
+    const x = this.normalizeHeaderPhoneValue(a);
+    const y = this.normalizeHeaderPhoneValue(b);
+
+    if (!x || !y) {
+      return false;
+    }
+
+    if (x === y) {
+      return true;
+    }
+
+    // برای موبایل / شماره شهری با پیش‌شماره متفاوت
+    if (x.length >= 8 && y.length >= 8) {
+      return x.slice(-8) === y.slice(-8);
+    }
+
+    return false;
+  }
+
+  private findHeaderContactName(number: string): string {
+    const found = this.headerPhoneBook().find(item =>
+      this.isSameHeaderPhoneNumber(item.number, number)
+    );
+
+    return cleanSantralText(found?.name ?? '');
+  }
+
+  private refreshIncomingNamesFromHeaderPhoneBook(): void {
+    this.webPhoneService.lines().forEach(line => {
+      if (!line?.number) {
+        return;
+      }
+
+      const currentName = cleanSantralText(line.name);
+
+      if (currentName && currentName !== line.number) {
+        return;
+      }
+
+      const name = this.findHeaderContactName(line.number);
+
+      if (!name) {
+        return;
+      }
+
+      this.webPhoneService.updateLine(line.index, {
+        name
+      });
+    });
+  }
   ngAfterViewInit(): void {
     this.zone.runOutsideAngular(() => {
       setTimeout(() => {
@@ -126,6 +265,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.attendanceInterval) clearInterval(this.attendanceInterval);
+    this.stopMiniIncomingAlert();
+    this.miniIncomingTone.dispose();
   }
 
   routeletter() {
@@ -233,7 +374,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   private loadProfileImage(): void {
 
     if (!this.session.centralRef) return;
-    this.base_repo.GetImageFromServer(this.session.centralRef).subscribe({
+    this.base_repo.GetImageFromServer(this.session.centralRef, "Central").subscribe({
       next: (data: any) => {
         if (data?.Text && data?.Text !== 'Nophoto') {
           this.zone.run(() => {
@@ -255,7 +396,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   Get_Notification(): void {
 
-    const request$ = this.permissionService.canManageRole
+    const request$ = this.permissionService.canManageUsers
       ? this.base_repo.GetKowsarNotification()
       : this.base_repo.GetCustomerNotification();
 
@@ -368,7 +509,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   logout(): void {
 
     this.session.clearSession();
-    this.router.navigateByUrl('/auth/login');
+    window.location.reload();
   }
 
   // ===============================================================
@@ -468,5 +609,241 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     } catch {
       // silent
     }
+  }
+  private initHeaderWebPhone(): void {
+    const cfg = this.appConfig.santralWebPhone;
+
+    const wsUrl = String(cfg?.wsUrl ?? '').trim();
+    const domain = String(cfg?.domain ?? '').trim();
+    const extension = String(this.session.manager ?? '').trim();
+    const password = String(this.session.delegacy ?? '').trim();
+
+    if (!wsUrl || !domain || !extension || !password) {
+      return;
+    }
+
+    this.webPhoneService.init({
+      wsUrl,
+      domain,
+      extension,
+      password
+    });
+  }
+  toggleMiniPhoneConnection(): void {
+    if (this.miniPhoneIsRinging() || this.miniPhoneHasActiveCall()) {
+      this.openPhonePage();
+      return;
+    }
+
+    if (this.webPhoneService.isConnected()) {
+      this.webPhoneService.disconnect();
+      return;
+    }
+
+    this.initHeaderWebPhone();
+    this.bindHeaderIncomingPreviewHandler();
+    this.webPhoneService.connect();
+  }
+  miniPhoneActiveNumber(): string {
+    const line = this.webPhoneService
+      .lines()
+      .find(item => !!item.session);
+
+    return line?.number || '';
+  }
+  miniPhoneHasActiveCall(): boolean {
+    return this.webPhoneService
+      .lines()
+      .some(item => !!item.session);
+  }
+  hangupMiniPhoneCall(event: Event): void {
+    event.stopPropagation();
+    this.stopMiniIncomingAlert();
+    const line = this.webPhoneService
+      .lines()
+      .find(item => !!item.session);
+
+    if (!line?.session) {
+      return;
+    }
+
+    try {
+      line.session.terminate();
+    } catch {
+      // ignore
+    }
+  }
+  openPhonePage(): void {
+    this.router.navigate(['/santral/santral-phone']);
+  }
+  private bindHeaderIncomingPreviewHandler(): void {
+    this.webPhoneService.setIncomingSessionHandler((session: any) => {
+      this.handleHeaderIncomingPreview(session);
+    });
+  }
+  private handleHeaderIncomingPreview(session: any): void {
+    const lineIndex = this.findHeaderFreeLine();
+
+    if (!lineIndex) {
+      return;
+    }
+
+    const remoteIdentity = session?.remote_identity;
+
+    const callerNumber = cleanSantralText(remoteIdentity?.uri?.user);
+    const callerName =
+      cleanSantralText(remoteIdentity?.display_name) ||
+      this.findHeaderContactName(callerNumber);
+    this.webPhoneService.activeLineIndex.set(lineIndex);
+
+    this.webPhoneService.updateLine(lineIndex, {
+      session,
+      status: 'incoming',
+      number: callerNumber,
+      name: callerName,
+      direction: 'incoming',
+      muted: false,
+      held: false,
+      answered: false,
+      startedAt: Date.now(),
+      connectedAt: null
+    });
+    this.startMiniIncomingAlert(callerNumber, callerName);
+    this.showMiniIncomingNotification(callerNumber, callerName);
+    session.on('ended', () => {
+      this.clearHeaderIncomingPreview(lineIndex);
+    });
+
+    session.on('failed', () => {
+      this.clearHeaderIncomingPreview(lineIndex);
+    });
+  }
+  private findHeaderFreeLine(): number | null {
+    const current = this.webPhoneService.activeLine();
+
+    if (!current.session) {
+      return current.index;
+    }
+
+    const empty = this.webPhoneService
+      .lines()
+      .find(line => !line.session);
+
+    return empty?.index ?? null;
+  }
+  private clearHeaderIncomingPreview(lineIndex: number): void {
+    this.stopMiniIncomingAlert();
+    this.webPhoneService.updateLine(lineIndex, {
+      status: 'ended',
+      session: null,
+      held: false,
+      muted: false
+    });
+
+    setTimeout(() => {
+      this.webPhoneService.clearLine(lineIndex);
+    }, 800);
+  }
+  miniPhoneIncomingLine(): any {
+    return this.webPhoneService
+      .lines()
+      .find(item => item.status === 'incoming') ?? null;
+  }
+  miniPhoneIsRinging(): boolean {
+    return !!this.miniPhoneIncomingLine();
+  }
+  miniPhoneText(): string {
+    const incoming = this.miniPhoneIncomingLine();
+
+    if (incoming) {
+      return incoming.name || incoming.number || 'تماس ورودی';
+    }
+
+    const active = this.webPhoneService
+      .lines()
+      .find(item => !!item.session);
+
+    if (active) {
+      return active.name || active.number || 'تماس فعال';
+    }
+
+    if (this.webPhoneService.registerStatus() === 'registered') {
+      return this.webPhoneService.extension() || 'تلفن متصل';
+    }
+
+    return 'اتصال تلفن';
+  }
+  miniPhoneMainClick(event: Event): void {
+    event.stopPropagation();
+
+    if (this.miniPhoneIsRinging() || this.miniPhoneHasActiveCall()) {
+      this.openPhonePage();
+      return;
+    }
+
+    if (this.webPhoneService.isConnected()) {
+      this.webPhoneService.disconnect();
+      return;
+    }
+
+    this.initHeaderWebPhone();
+    this.bindHeaderIncomingPreviewHandler();
+    this.webPhoneService.connect();
+  }
+  private readonly miniIncomingTone = new WebPhoneTonePlayer({
+    frequencies: [880],
+    gain: 0.04,
+    toneDurationMs: 450,
+    intervalMs: 1200
+  });
+
+  private miniIncomingNotification: Notification | null = null;
+  private startMiniIncomingAlert(number: string, name: string): void {
+    this.miniIncomingTone.start();
+  }
+  private stopMiniIncomingAlert(): void {
+    this.miniIncomingTone.stop();
+
+    if (this.miniIncomingNotification) {
+      this.miniIncomingNotification.close();
+      this.miniIncomingNotification = null;
+    }
+  }
+  private showMiniIncomingNotification(number: string, name: string): void {
+    if (!('Notification' in window)) {
+      return;
+    }
+
+    if (!window.isSecureContext) {
+      return;
+    }
+
+    if (Notification.permission !== 'granted') {
+      return;
+    }
+
+    const title = 'تماس ورودی';
+    const body = name
+      ? `${name} - ${number}`
+      : number || 'تماس جدید';
+
+    this.miniIncomingNotification?.close();
+
+    this.miniIncomingNotification = new Notification(title, {
+      body,
+      tag: 'kowsar-webphone-incoming',
+      requireInteraction: true
+    });
+
+    this.miniIncomingNotification.onclick = () => {
+      window.focus();
+
+      this.zone.run(() => {
+        this.openPhonePage();
+      });
+
+      this.miniIncomingNotification?.close();
+      this.miniIncomingNotification = null;
+    };
   }
 }

@@ -25,7 +25,7 @@ export class InternalAppsEditComponent implements OnInit {
   constructor() { }
 
   title = signal('فرم اطلاعات اپلیکیشن')
-  ActivationCode = signal('')
+  AppActivationCode = signal('')
   SingleItems = signal<any[]>([])
 
   EditForm = new FormGroup({
@@ -64,7 +64,7 @@ export class InternalAppsEditComponent implements OnInit {
     this.route.paramMap.subscribe((params: ParamMap) => {
       var id = params.get('id');
       if (id != null) {
-        this.ActivationCode.set(id)
+        this.AppActivationCode.set(id)
         this.getDetails();
       }
     });
@@ -72,7 +72,7 @@ export class InternalAppsEditComponent implements OnInit {
 
   getDetails() {
 
-    this.repo.GetAppActivationByCode(this.ActivationCode())
+    this.repo.GetAppActivationByCode(this.AppActivationCode())
       .subscribe((data: any) => {
 
         this.EditForm.patchValue({
@@ -104,8 +104,8 @@ export class InternalAppsEditComponent implements OnInit {
     this.repo.CrudAppActivation(this.EditForm.value)
       .subscribe((data: any) => {
 
-        if (data.AppActivations[0].ActivationCode.length > 0) {
-          this.ActivationCode = data.AppActivations[0].ActivationCode;
+        if (data.AppActivations[0].AppActivationCode.length > 0) {
+          this.AppActivationCode = data.AppActivations[0].AppActivationCode;
           this.getDetails();
           this.notificationService.success('اطلاعات با موفقیت ذخیره شد');
         }

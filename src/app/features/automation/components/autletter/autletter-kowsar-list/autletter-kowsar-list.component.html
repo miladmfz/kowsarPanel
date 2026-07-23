@@ -1,13 +1,15 @@
-<!--   کارت اصلی لیست نامه‌ها -->
+<!-- کارت اصلی لیست نامه‌ها -->
 <div class="card">
   <div class="card-body">
     <h4 class="card-title mb-3">{{ title() }}</h4>
 
-    <!--   فرم جستجو و فیلتر -->
+    <!-- فرم جستجو و فیلتر -->
     <form [formGroup]="EditForm_autletter" class="row mb-4 align-items-end">
+
       <!-- جستجو -->
       <div class="col-md-3">
         <label class="form-label">جستجو</label>
+
         <input type="text" class="form-control" formControlName="SearchTarget" placeholder="عبارت مورد نظر..."
           (input)="getList()" />
       </div>
@@ -15,6 +17,7 @@
       <!-- نمایش تیکت‌ها -->
       <div class="col-md-3">
         <label class="form-label">نمایش تیکت‌ها</label>
+
         <select class="form-select" formControlName="SelectedOption">
           <option value="0">همه</option>
           <option value="1">خودم</option>
@@ -24,7 +27,9 @@
       <!-- از تاریخ -->
       <div class="col-md-3">
         <label class="form-label">از تاریخ</label>
+
         <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
+
           <input type="text" class="form-control text-center" formControlName="StartTime" placeholder="انتخاب تاریخ"
             autocomplete="off" />
         </ng-persian-datepicker>
@@ -33,65 +38,74 @@
       <!-- تا تاریخ -->
       <div class="col-md-3">
         <label class="form-label">تا تاریخ</label>
+
         <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
+
           <input type="text" class="form-control text-center" formControlName="EndTime" placeholder="انتخاب تاریخ"
             autocomplete="off" />
         </ng-persian-datepicker>
       </div>
 
-      <!--   دکمه‌ها -->
-      <div class="col-12 d-flex justify-content-end mt-3 gap-2">
+      <!-- دکمه‌ها -->
+      <div class="col-12 d-flex justify-content-end mt-3 gap-2 flex-wrap">
         <button type="button" class="btn btn-primary" (click)="getList()">
-          <i class="fas fa-search me-1"></i> جستجو
+          <i class="fas fa-search me-1"></i>
+          جستجو
         </button>
 
         <a class="btn btn-success" [routerLink]="['/automation/insert-letter']">
-          <i class="fas fa-plus me-1"></i> جدید
+          <i class="fas fa-plus me-1"></i>
+          جدید
         </a>
 
         <button type="button" class="btn btn-light" (click)="getList()">
-          <i class="fas fa-sync me-1"></i> بازخوانی
+          <i class="fas fa-sync me-1"></i>
+          بازخوانی
         </button>
 
         <button type="button" class="btn btn-outline-secondary" (click)="clearFilter()">
-          <i class="fas fa-eye-slash me-1"></i> حذف جستجو
+          <i class="fas fa-eye-slash me-1"></i>
+          حذف جستجو
+        </button>
+
+        <button type="button" class="btn btn-outline-secondary" (click)="resetColumnLayout()">
+          <i class="fas fa-columns me-1"></i>
+          بازنشانی ستون‌ها
         </button>
       </div>
     </form>
 
-    <!--   جدول اصلی -->
+    <!-- جدول اصلی -->
     <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
-      <!-- <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
-        [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions"
-        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
-        [class]="themeClass + ' w-100 h-100'"   ></ag-grid-angular> -->
 
       <ag-grid-angular [class]="themeClass + ' w-100 h-100'" [gridOptions]="gridOptions" [columnDefs]="column_name_1"
-        (firstDataRendered)="onFirstDataRendered($event)" [rowData]="records()" (gridReady)="onGridReady($event, 1)"
-        (stateChanged)="onGridStateChanged()" (filterChanged)="onGridStateChanged()"
-        (sortChanged)="onGridStateChanged()" (columnMoved)="onGridStateChanged()">
+        [rowData]="records()" [initialState]="initialGridState" (gridReady)="onGridReady($event, 1)"
+        (firstDataRendered)="onFirstDataRendered($event)" (filterChanged)="onGridFilterChanged()"
+        (stateUpdated)="onGridStateUpdated($event)">
       </ag-grid-angular>
     </div>
-
-
   </div>
 </div>
 
-<!--   Modal جزئیات نامه -->
+<!-- Modal جزئیات نامه -->
 <div #autletterDetail class="modal fade" id="autletterdetail" tabindex="-1" aria-labelledby="autletterdetailLabel"
   aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl">
+
+  <div class="modal-dialog kowsar-modal-dialog modal-xl">
     <div class="modal-content bg-light">
       <div class="modal-header bg-secondary text-white">
         <h5 class="modal-title" id="autletterdetailLabel">
           شرح وضعیت و کار
         </h5>
+
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
-          (click)="closeModal()"></button>
+          (click)="closeModal()">
+        </button>
       </div>
 
       <div class="modal-body">
         <form [formGroup]="EditForm_autletter_detail" id="submitForm">
+
           <div class="card">
             <div class="card-body row g-3">
               <div class="col-md-6" *ngFor="let field of [
@@ -110,6 +124,7 @@
                   'AutLetterRow_PropDescription1',
                   'RowsCount'
                 ]">
+
                 <label [for]="field" class="form-label">
                   {{
                   field === 'LetterCode' ? 'کد نامه' :
@@ -129,6 +144,7 @@
                   field
                   }}
                 </label>
+
                 <input [formControlName]="field" [id]="field" class="form-control" autocomplete="off" readonly />
               </div>
             </div>

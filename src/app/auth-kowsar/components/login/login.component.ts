@@ -32,9 +32,13 @@ export class LoginComponent implements OnInit {
   private readonly notificationService = inject(NotificationService);
   protected readonly session = inject(SessionStorageService);
   ngOnInit(): void {
+
+
     this.buildForm();
 
-    if (this.config.apiUrl === 'http://192.168.1.27:60006/api/') {
+
+
+    if (this.config.apiUrl === 'http://192.168.1.27:60007/api/') {
       this.autoLogin();
     }
   }
@@ -54,11 +58,22 @@ export class LoginComponent implements OnInit {
   // Form
   // -------------------------------
   private buildForm(): void {
+
+
     this.loginForm = this.fb.group({
-      UserType: ['CUSTOMER', Validators.required],
+      UserType: [localStorage.getItem('UserTypeLogin') || 'CUSTOMER', Validators.required],
       UName: ['', Validators.required],
       UPass: ['', Validators.required],
       DepartmentCode: [1],
+
+    });
+    // 2. listen تغییرات فرم
+    this.loginForm.get('UserType')?.valueChanges.subscribe(value => {
+
+      if (value) {
+        localStorage.setItem('UserTypeLogin', value);
+        this.reset_LoginForm()
+      }
 
     });
   }
@@ -201,6 +216,16 @@ export class LoginComponent implements OnInit {
     }
   }
   ///////////////////////////
+  private reset_LoginForm(): void {
+    this.loginForm.reset(
+      {
+        UserType: localStorage.getItem('UserTypeLogin') || 'CUSTOMER',
+        UName: "",
+        UPass: "",
+        DepartmentCode: 1,
+      });
+  }
+
 
   private handleLoginSuccess(data: any): void {
     this.isLoading.set(false);
@@ -209,7 +234,7 @@ export class LoginComponent implements OnInit {
 
     if (!user) {
       this.swal.error('اطلاعات کاربر دریافت نشد');
-      this.loginForm.reset({ UserType: 'CUSTOMER' });
+      this.reset_LoginForm()
       return;
     }
 
@@ -222,7 +247,7 @@ export class LoginComponent implements OnInit {
 
     if (errCode !== '0') {
       this.swal.error(user.ErrDesc || user.Message || 'ورود ناموفق بود');
-      this.loginForm.reset({ UserType: loginType as UserType });
+      this.reset_LoginForm()
       return;
     }
 
@@ -344,7 +369,7 @@ export class LoginComponent implements OnInit {
 
     if (!user || user.ErrCode !== '0') {
       this.swal.error(user?.ErrDesc || 'ورود ناموفق بود');
-      this.loginForm.reset({ UserType: 'CUSTOMER' });
+      this.reset_LoginForm()
       return;
     }
 
@@ -372,6 +397,7 @@ export class LoginComponent implements OnInit {
     this.isLoading.set(false);
     console.error('Login error:', error);
     this.swal.error('خطا در ارتباط با سرور');
+    this.reset_LoginForm()
   }
 
   // -------------------------------

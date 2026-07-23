@@ -13,7 +13,13 @@ declare var $: any;
   </a>
   </span>
 
-
+  
+  <span (click)="ShowGoodTask()" class="btn btn-sm btn-outline-primary mx-1"data-toggle="tooltip"
+  title="شرح وظیفه آیتم" >
+  <a >
+        <i class="fas fa-file-invoice"></i>
+  </a>
+  </span>
   `,
     standalone: false
 })
@@ -47,6 +53,13 @@ export class CellActionInternalGoodList implements ICellRendererAngularComp {
         }
     }
     NavigateToEdit() {
-        this.params.context.componentParent.navigateToEdit(this.params.data.GoodCode);
+        this.params.context.componentParent.navigateToEdit(this.params.data);
     }
+    ShowGoodTask() {
+        this.params.context.componentParent.ShowGoodTask(this.params.data);
+    }
+
+
+
+
 }

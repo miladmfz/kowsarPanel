@@ -1,4 +1,4 @@
-import { enableProdMode, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
+import { enableProdMode, importProvidersFrom, provideZonelessChangeDetection, isDevMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { HttpClientModule, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideRouter, withRouterConfig } from '@angular/router';
@@ -18,6 +18,7 @@ import {
   AllEnterpriseModule,
   LicenseManager,
 } from 'ag-grid-enterprise';
+import { provideServiceWorker } from '@angular/service-worker';
 
 // ✔ مجوز AG-Grid
 LicenseManager.setLicenseKey("MjAwMDAwMDAwMDAwMA==5a5ea3be8a8aaa9b54ce7186663066431");
@@ -97,7 +98,10 @@ fetch('./assets/config.json')
         importProvidersFrom(CommonModule, HttpClientModule),
 
         // 🔥 مهم: چون بدون Zone کار می‌کنی، tooling درست فعال می‌شود
-        provideZonelessChangeDetection(),
+        provideZonelessChangeDetection(), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          }),
       ],
     });
 

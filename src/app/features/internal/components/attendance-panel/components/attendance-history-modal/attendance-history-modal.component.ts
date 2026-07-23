@@ -1,13 +1,19 @@
-/* ===============================================================
-   📘 AttendanceHistoryModalComponent
-   توضیحات کلی:
-   این کامپوننت برای نمایش تاریخچه حضور کارشناسان در قالب مودال طراحی شده است.
-   شامل گرید داده‌ها، مدیریت حالت نمایش، فرمت‌دهی وضعیت و تاریخ،
-   و قابلیت محاسبه تعداد رکوردها می‌باشد.
-   =============================================================== */
-
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, signal, computed } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  signal,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
 import { CellStatusAttendanceHistoryPanel } from './cell-status-history-attendance-panel';
@@ -18,63 +24,53 @@ import { CellStatusAttendanceHistoryPanel } from './cell-status-history-attendan
   imports: [CommonModule, AgGridModule],
   templateUrl: './attendance-history-modal.component.html',
 })
-export class AttendanceHistoryModalComponent {
+export class AttendanceHistoryModalComponent
+  implements OnChanges, AfterViewInit, OnDestroy {
 
-  // ===============================================================
-  //    وضعیت نمایش مودال
-  // ===============================================================
+  @ViewChild('dialogElement')
+  private dialogRef?: ElementRef<HTMLDialogElement>;
+
   private _visible = signal(false);
+  private _records = signal<any[]>([]);
+  private viewReady = false;
+
   themeClass = 'ag-theme-quartz kowsar-ag-grid';
-  @Input() set visible(v: boolean) {
-    this._visible.set(v);
+
+  @Input() set visible(value: boolean) {
+    this._visible.set(value);
   }
 
   get visibleValue(): boolean {
     return this._visible();
   }
 
-  // ===============================================================
-  //    داده‌های تاریخچه
-  // ===============================================================
-  private _records = signal<any[]>([]);
-
-  @Input() set records(r: any[]) {
-    this._records.set(r ?? []);
+  @Input() set records(records: any[]) {
+    this._records.set(records ?? []);
   }
 
   get recordsValue(): any[] {
     return this._records();
   }
 
-  // ===============================================================
-  //    سایر ورودی‌ها
-  // ===============================================================
   @Input() title = 'تاریخچه حضور';
   @Input() darkMode = false;
 
-  // ===============================================================
-  //    خروجی‌ها
-  // ===============================================================
   @Output() close = new EventEmitter<void>();
 
-  // ===============================================================
-  //    محاسبه تعداد کل رکوردها
-  // ===============================================================
   totalRecords = computed(() => this._records().length);
 
-  // ===============================================================
-  //    تنظیمات گرید
-  // ===============================================================
   columnDefs: ColDef[] = [
     {
       field: 'AttendanceDate',
       headerName: 'تاریخ و ساعت حضور',
       valueFormatter: this.formatDate,
     },
-
-
-    { field: 'وضعیت حضور', cellRenderer: CellStatusAttendanceHistoryPanel, cellClass: 'text-center', width: 80 },
-
+    {
+      field: 'وضعیت حضور',
+      cellRenderer: CellStatusAttendanceHistoryPanel,
+      cellClass: 'text-center',
+      width: 80,
+    },
     {
       field: 'PhFirstName',
       headerName: 'نام',
@@ -97,18 +93,74 @@ export class AttendanceHistoryModalComponent {
     noRowsToShow: 'هیچ اطلاعاتی برای نمایش وجود ندارد',
   };
 
-  // ===============================================================
-  //    رویداد بستن مودال
-  // ===============================================================
-  closeModal(): void {
+  private readonly document = inject(DOCUMENT);
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['visible'] && this.viewReady) {
+      queueMicrotask(() => this.syncDialogState());
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.viewReady = true;
+    queueMicrotask(() => this.syncDialogState());
+  }
+
+  ngOnDestroy(): void {
+    const dialog = this.dialogRef?.nativeElement;
+
+    if (dialog?.open) {
+      dialog.close();
+    }
+
+    this.refreshBodyScrollLock();
+  }
+
+  private syncDialogState(): void {
+    const dialog = this.dialogRef?.nativeElement;
+
+    if (!dialog?.isConnected) {
+      return;
+    }
+
+    if (this.visibleValue && !dialog.open) {
+      dialog.showModal();
+    } else if (!this.visibleValue && dialog.open) {
+      dialog.close();
+    }
+
+    this.refreshBodyScrollLock();
+  }
+
+  private refreshBodyScrollLock(): void {
+    queueMicrotask(() => {
+      const hasOpenDialog = Boolean(
+        this.document.querySelector('dialog.kowsar-dialog[open]'),
+      );
+
+      this.document.body.classList.toggle(
+        'kowsar-dialog-open',
+        hasOpenDialog,
+      );
+    });
+  }
+
+  requestClose(): void {
     this.close.emit();
   }
 
-  // ===============================================================
-  //    فرمت تاریخ به فارسی
-  // ===============================================================
-  formatDate(params: any): string {
+  onDialogCancel(event: Event): void {
+    event.preventDefault();
+    this.requestClose();
+  }
 
+  onDialogBackdropClick(event: MouseEvent): void {
+    if (event.target === this.dialogRef?.nativeElement) {
+      this.requestClose();
+    }
+  }
+
+  formatDate(params: any): string {
     if (!params.value) {
       return '';
     }
@@ -119,110 +171,5 @@ export class AttendanceHistoryModalComponent {
       dateStyle: 'short',
       timeStyle: 'short',
     });
-  }
-
-  // ===============================================================
-  //    ساخت Badge وضعیت حضور
-  // ===============================================================
-  styles: [`
-
-    .kws-attendance-wrapper {
-
-        width: 100%;
-
-        height: 100%;
-
-        display: flex;
-
-        align-items: center;
-
-        justify-content: center;
-    }
-
-    .kws-attendance-badge {
-
-        padding: 4px 10px;
-
-        border-radius: 20px;
-
-        font-size: 11px;
-
-        font-weight: 700;
-
-        line-height: 1.2;
-
-        white-space: nowrap;
-
-        min-width: 90px;
-
-        text-align: center;
-
-        box-shadow: 0 1px 2px rgba(0,0,0,.08);
-    }
-
-`]
-  private statusBadgeRenderer(params: any): string {
-
-    const status = this.getStatusInfo(params.value);
-
-    return `
-        <div class="kws-attendance-wrapper">
-
-            <span class="kws-attendance-badge ${status.className}">
-                ${status.label}
-            </span>
-
-        </div>
-    `;
-  }
-  // ===============================================================
-  //    تعیین متن و رنگ وضعیت حضور
-  // ===============================================================
-  private getStatusInfo(status: string | number | null): { label: string; className: string } {
-
-    switch (String(status ?? '')) {
-
-      case '0':
-        return {
-          label: 'عدم حضور',
-          className: 'bg-danger text-white',
-        };
-
-      case '1':
-        return {
-          label: 'آزاد',
-          className: 'bg-success text-white',
-        };
-
-      case '2':
-        return {
-          label: 'در حال کار',
-          className: 'bg-warning text-dark',
-        };
-
-      case '3':
-        return {
-          label: 'ناهار و نماز',
-          className: 'bg-info text-white',
-        };
-
-      case '4':
-        return {
-          label: 'مرخصی اداری',
-          className: 'bg-primary text-white',
-        };
-
-      case '5':
-        return {
-          label: 'قطع برق و اینترنت',
-          className: 'bg-secondary text-white',
-        };
-
-      default:
-        return {
-          label: '—',
-          className: 'bg-light text-dark',
-        };
-    }
   }
 }

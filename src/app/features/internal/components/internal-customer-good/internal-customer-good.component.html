@@ -1,0 +1,497 @@
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+  <!-- Header -->
+  <div class="card-header bg-light border-bottom">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+
+      <div>
+        <h4 class="page-title mb-1">
+          {{ title() }}
+        </h4>
+
+        <div class="text-muted small">
+          مدیریت کالاها و شرح وظایف مشتری
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+
+        <button class="btn btn-secondary" type="button">
+          <i class="fas fa-times me-1"></i>
+          انصراف
+        </button>
+
+        <button (click)="ShowAllGoodTaskRow()" type="button" class="btn btn-warning waves-effect waves-light">
+
+          <span class="btn-label">
+            <i class="fas fa-info"></i>
+          </span>
+          لیست کل شرح وظایف
+        </button>
+
+        @if(permissionService.canManageRole){
+        <button (click)="Show_Pattern()" type="button" class="btn btn-info waves-effect waves-light">
+
+          <span class="btn-label">
+            <i class="fas fa-layer-group"></i>
+          </span>
+          نمایش الگوهای خدمات
+        </button>
+        }
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card-body">
+
+    <!-- Customer Info -->
+    <form [formGroup]="EditForm_Customer" id="submitForm">
+
+      <div class="card border mb-3">
+        <div class="card-body">
+
+          <div class="row g-3">
+
+            <div class="col-lg-3 col-md-4 col-12">
+              <label class="form-label">نام</label>
+              <input type="text" formControlName="FName" class="form-control" readonly />
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-12">
+              <label class="form-label">نام خانوادگی</label>
+              <input type="text" class="form-control" formControlName="LName" readonly />
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-12">
+              <label class="form-label">موبایل</label>
+              <input type="text" class="form-control" formControlName="Mobile" readonly />
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </form>
+
+    <!-- Lists -->
+    <div class="row g-3">
+
+      @if (ShowGoodList()) {
+
+      <!-- Goods List -->
+      <div class="col-xl-6 col-12">
+
+        <div class="card border h-100 mb-0">
+
+          <div class="card-header bg-light border-bottom">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+
+              <div>
+                <h5 class="card-title mb-1">
+                  لیست کالاها
+                </h5>
+
+                <div class="small text-muted">
+                  انتخاب کالا برای افزودن به خدمات مشتری
+                </div>
+              </div>
+
+              @if(permissionService.canManageRole){
+              <button type="button" class="btn btn-soft-danger rounded-pill waves-effect waves-light"
+                (click)="taggelShowGoodList()">
+
+                <i class="fas fa-times me-1"></i>
+                بستن کالاها
+              </button>
+              }
+
+            </div>
+          </div>
+
+          <div class="card-body">
+
+            <div class="mb-3">
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="fas fa-search"></i>
+                </span>
+
+                <input type="text" class="form-control" placeholder="جستجوی کالا..." [ngModel]="Searchtarget_Good()"
+                  (ngModelChange)="Searchtarget_Good.set($event); onInputChange_Good()"
+                  [ngModelOptions]="{ standalone: true }" />
+              </div>
+            </div>
+
+            <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+              <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+                [columnDefs]="column_name_1" [rowData]="records_all_good()" [gridOptions]="gridOptions"
+                (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+                [class]="themeClass + ' w-100 h-100'">
+              </ag-grid-angular>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      }
+
+      <!-- Customer Goods -->
+      <div [class]="ShowGoodList() ? 'col-xl-6 col-12' : 'col-12'">
+
+        <div class="card border h-100 mb-0">
+
+          <div class="card-header bg-light border-bottom">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+
+              <div>
+                <h5 class="card-title mb-1">
+                  لیست اقلام فاکتور شده
+                </h5>
+
+                <div class="small text-muted">
+                  کالاها و خدمات ثبت‌شده برای مشتری
+                </div>
+              </div>
+              @if(permissionService.canManageRole){
+              @if (!ShowGoodList()) {
+              <button type="button" class="btn btn-soft-info rounded-pill waves-effect waves-light"
+                (click)="taggelShowGoodList()">
+
+                <i class="fas fa-plus me-1"></i>
+                اضافه کردن کالا
+              </button>
+              }
+              }
+
+            </div>
+          </div>
+
+          <div class="card-body">
+
+            <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+              <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+                [columnDefs]="columnDefs2" [rowData]="records_customer_good()" [gridOptions]="gridOptions"
+                (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()"
+                [class]="themeClass + ' w-100 h-100'">
+              </ag-grid-angular>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<div class="modal fade kws-task-modal" #pattern tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-xl kowsar-modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header bg-light">
+        <h5 class="modal-title">
+          <i class="fas fa-list-alt ms-2"></i>
+          تمامی الگو های خدمات
+        </h5>
+        <button type="button" class="btn-close" (click)="pattern_dialog_close()"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 350px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800" class="w-100
+          h-100" [columnDefs]="columnDefs3" [rowData]="records_pattern()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 3)" (firstDataRendered)="gridApi3?.sizeColumnsToFit()">
+          </ag-grid-angular>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<div class="modal fade kws-task-modal" #patterngood tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-xl kowsar-modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header bg-light">
+        <h5 class="modal-title">
+          <i class="fas fa-list-alt ms-2"></i>
+          {{modal_PatternGood_title()}}
+        </h5>
+        <button type="button" class="btn-close" (click)="patterngood_dialog_close()"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 350px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800" class="w-100
+          h-100" [columnDefs]="columnDefs4" [rowData]="records_pattern_Goods()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 4)" (firstDataRendered)="gridApi4?.sizeColumnsToFit()">
+          </ag-grid-angular>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="modal fade kws-task-modal" #allgoodtaskrow tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-xl kowsar-modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header bg-light">
+        <h5 class="modal-title">
+          <i class="fas fa-list-alt ms-2"></i>
+          تمامی شرح وظایف
+        </h5>
+        <button type="button" class="btn-close" (click)="allgoodtaskrow_dialog_close()"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 350px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800" class="w-100
+          h-100" [columnDefs]="columnDefs6" [rowData]="records_allgoodtaskrow()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 6)" (firstDataRendered)="gridApi6?.sizeColumnsToFit()">
+          </ag-grid-angular>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<div class="modal fade" #goodtaskrow_factorrow tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-xl kowsar-modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+
+      <div class="modal-header bg-light">
+        <h5 class="modal-title mb-0">
+          <i class="fas fa-list-alt ms-2"></i>
+          {{ title_modal_goodtaskrow_factorrow() }}
+        </h5>
+
+        <button type="button" class="btn-close" aria-label="Close" (click)="goodtaskrow_factorrow_dialog_close()">
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        @if (goodtaskrow_factorrow_list().length === 0) {
+
+        <div class="alert alert-warning text-center mb-0">
+          هیچ شرح وظیفه‌ای برای این ردیف ثبت نشده است
+        </div>
+
+        } @else {
+
+        <div class="row g-3">
+
+          @for (row of goodtaskrow_factorrow_list(); track row.GoodTaskRowCode; let i = $index) {
+
+          <div class="col-12">
+
+            <div class="card border shadow-none mb-0">
+
+              <div class="card-header bg-light">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-primary">
+                      {{ i + 1 }}
+                    </span>
+
+                    <h6 class="mb-0 fw-bold">
+                      {{ row.GoodName }} - {{ row.TaskTitle }}
+                    </h6>
+                  </div>
+
+                  <div class="d-flex flex-wrap align-items-center gap-2">
+
+                    @if (isNotStarted(row)) {
+                    <span class="badge bg-secondary">
+                      انجام نشده
+                    </span>
+                    }
+
+                    @if (isDoing(row)) {
+                    <span class="badge bg-warning text-dark">
+                      در حال انجام
+                    </span>
+                    }
+
+                    @if (isDone(row)) {
+                    <span class="badge bg-success">
+                      تمام شده
+                    </span>
+                    }
+
+                    @if (row.CompanyConfirm === 'True' || row.CompanyConfirm === true) {
+                    <span class="badge bg-success">
+                      تأیید شده
+                    </span>
+                    } @else {
+                    <span class="badge bg-light text-muted">
+                      تأیید نشده
+                    </span>
+                    }
+
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="card-body">
+
+                <div class="row g-3 align-items-end">
+
+                  <div class="col-xl-2 col-md-3 col-6">
+                    <label class="form-label">تاریخ ثبت</label>
+                    <input type="text" class="form-control" readonly [value]="row.TaskDate || '-'" />
+                  </div>
+
+                  <div class="col-xl-2 col-md-3 col-6">
+                    <label class="form-label">ساعت شروع</label>
+                    <input type="text" class="form-control" readonly [value]="row.StartTime || '-'" />
+                  </div>
+
+                  <div class="col-xl-2 col-md-3 col-6">
+                    <label class="form-label">ساعت پایان</label>
+                    <input type="text" class="form-control" readonly [value]="row.EndTime || '-'" />
+                  </div>
+
+                  <div class="col-xl-2 col-md-3 col-6">
+                    <label class="form-label">وضعیت</label>
+                    <input type="text" class="form-control" readonly [value]="getStateTitle(row)" />
+                  </div>
+
+                  <div class="col-xl-4 col-md-12 col-12">
+                    <label class="form-label">
+                      نماینده
+                      <span class="text-danger">*</span>
+                    </label>
+
+                    <input type="text" class="form-control" placeholder="نام نماینده" [readonly]="isNotStarted(row)"
+                      [class.is-invalid]="row._submitted && !(row.CompanyPerson ?? '').toString().trim()"
+                      [(ngModel)]="row.CompanyPerson" />
+
+                    <div class="invalid-feedback">
+                      وارد کردن نام نماینده الزامی است
+                    </div>
+                  </div>
+
+                  <div class="col-xl-10 col-md-9 col-12">
+                    <label class="form-label">
+                      توضیحات
+                      <span class="text-danger">*</span>
+                    </label>
+
+                    <textarea class="form-control" rows="2" placeholder="توضیحات" [readonly]="isNotStarted(row)"
+                      [class.is-invalid]="row._submitted && !(row.Explain ?? '').toString().trim()"
+                      [(ngModel)]="row.Explain"></textarea>
+
+                    <div class="invalid-feedback">
+                      وارد کردن توضیحات الزامی است
+                    </div>
+                  </div>
+
+                  <div class="col-xl-2 col-md-3 col-12 d-grid gap-2">
+
+                    @if (isNotStarted(row)) {
+                    <button type="button" class="btn btn-warning" (click)="Start_GoodTaskRow(row)">
+
+                      <i class="fas fa-play ms-1"></i>
+                      شروع انجام
+
+                    </button>
+                    }
+
+                    @if (!isNotStarted(row)) {
+                    <button type="button" class="btn btn-primary" (click)="Save_GoodTaskRow_Info(row)">
+
+                      <i class="fas fa-save ms-1"></i>
+                      ثبت اطلاعات
+
+                    </button>
+
+                    }
+                    @if (isDoing(row) && !hasEndTime(row)) {
+                    <button type="button" class="btn btn-success" (click)="Finish_GoodTaskRow(row)">
+
+                      <i class="fas fa-check ms-1"></i>
+                      اتمام کار
+
+                    </button>
+                    }
+                    @if (isDone(row)) {
+                    <button type="button" class="btn btn-light" disabled>
+
+                      <i class="fas fa-lock ms-1"></i>
+                      پایان یافته
+
+                    </button>
+                    }
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          }
+
+        </div>
+
+        }
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,735 @@
+/* WORKSPACE */
+
+.kws-workspace-card {
+    padding: 22px;
+    min-height: 100%;
+}
+
+.kws-workspace-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.kws-workspace-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.kws-workspace-subtitle {
+    margin-top: 6px;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.kws-workspace-tabs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.kws-workspace-tabs button,
+.kws-log-filter-btn {
+    min-height: 38px;
+    padding: 0 16px;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 999px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: 0.18s ease;
+}
+
+.kws-workspace-tabs button:hover,
+.kws-log-filter-btn:hover {
+    background: #eaf1fb;
+    color: #1e3a8a;
+}
+
+.kws-workspace-tabs button.is-active,
+.kws-log-filter-btn.is-active {
+    background: linear-gradient(135deg, #1e3a8a, #2563eb);
+    border-color: rgba(37, 99, 235, 0.45);
+    color: #ffffff;
+    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.20);
+}
+
+.kws-workspace-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.kws-panel-toolbar {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.kws-workspace-search {
+    width: 100%;
+    max-width: 420px;
+    height: 44px;
+    padding: 0 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.26);
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 13px;
+    font-weight: 800;
+    outline: none;
+}
+
+.kws-log-filter-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.kws-big-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: calc(100vh - 280px);
+    overflow: auto;
+    padding-inline-end: 4px;
+}
+
+.kws-big-list-item {
+    width: 100%;
+    min-height: 76px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 18px;
+    background: rgba(248, 250, 252, 0.96);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    text-align: right;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+    transition: 0.18s ease;
+}
+
+.kws-big-list-item:hover {
+    border-color: rgba(37, 99, 235, 0.28);
+    background: rgba(255, 255, 255, 0.98);
+    transform: translateY(-1px);
+}
+
+.kws-big-list-item.is-favorite-row {
+    border-color: rgba(245, 158, 11, 0.26);
+}
+
+.kws-big-list-pick {
+    flex: 1;
+    min-width: 0;
+    min-height: 58px;
+    border: 0;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    text-align: right;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.kws-big-list-main {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.kws-big-list-main strong {
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.kws-big-list-main span {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.kws-big-list-side {
+    flex: 0 0 auto;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+    text-align: left;
+}
+
+.kws-big-list-side em,
+.kws-big-list-side small {
+    direction: ltr;
+    font-style: normal;
+}
+
+.kws-big-list-side em {
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.kws-big-list-side small {
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.kws-favorite-btn {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    border: 0;
+    border-radius: 15px;
+    background: rgba(148, 163, 184, 0.14);
+    color: #64748b;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.18s ease;
+}
+
+.kws-favorite-btn i {
+    font-size: 23px;
+    line-height: 1;
+}
+
+.kws-favorite-btn:hover {
+    background: rgba(245, 158, 11, 0.14);
+    color: #d97706;
+    transform: scale(1.04);
+}
+
+.kws-favorite-btn.active {
+    background: rgba(245, 158, 11, 0.20);
+    color: #d97706;
+}
+
+.kws-favorite-btn.active:hover {
+    background: rgba(245, 158, 11, 0.28);
+}
+
+.kws-empty-state {
+    min-height: 220px;
+    border-radius: 18px;
+    background: #f8fafc;
+    border: 1px dashed rgba(148, 163, 184, 0.35);
+    color: #94a3b8;
+    font-size: 14px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.kws-phone-page .kws-remote-call-audio {
+    display: none;
+}
+
+.kws-phone-page .kws-voicemail-player {
+    margin-top: 10px;
+    display: grid;
+    gap: 8px;
+}
+
+.kws-phone-page .kws-voicemail-audio {
+    display: block !important;
+    width: 100%;
+    height: 38px;
+    border-radius: 12px;
+}
+
+.kws-phone-page .kws-voicemail-open {
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+    color: #2563eb;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+    .kws-app-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .kws-workspace-card {
+        min-height: unset;
+    }
+
+    .kws-big-list {
+        max-height: 420px;
+    }
+}
+
+@media (max-width: 576px) {
+    .kws-phone-page {
+        padding: 14px;
+    }
+
+    .kws-phone-card,
+    .kws-workspace-card {
+        padding: 18px;
+        border-radius: 24px;
+    }
+
+    .kws-workspace-header {
+        flex-direction: column;
+    }
+
+    .kws-workspace-tabs {
+        width: 100%;
+    }
+
+    .kws-workspace-tabs button {
+        flex: 1;
+        padding-inline: 8px;
+    }
+
+    .kws-phone-screen {
+        padding-inline: 48px;
+    }
+
+    .kws-number-input {
+        font-size: 25px;
+    }
+
+    .kws-keypad-btn {
+        height: 58px;
+        border-radius: 20px;
+    }
+
+    .kws-big-list-item {
+        align-items: stretch;
+    }
+
+    .kws-big-list-pick {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .kws-big-list-side {
+        min-width: 0;
+        width: 100%;
+        align-items: flex-start;
+        text-align: right;
+    }
+
+    .kws-favorite-btn {
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
+    }
+}
+
+/* DARK MODE */
+
+[data-bs-theme="dark"] .kws-phone-card,
+[data-bs-theme="dark"] .kws-workspace-card {
+    background: rgba(17, 24, 39, 0.94);
+    border-color: rgba(148, 163, 184, 0.18);
+    box-shadow:
+        0 22px 60px rgba(0, 0, 0, 0.38),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+[data-bs-theme="dark"] .kws-phone-title,
+[data-bs-theme="dark"] .kws-workspace-title,
+[data-bs-theme="dark"] .kws-big-list-main strong,
+[data-bs-theme="dark"] .kws-number-input,
+[data-bs-theme="dark"] .kws-incoming-number,
+[data-bs-theme="dark"] .kws-active-call-number {
+    color: #f8fafc;
+}
+
+[data-bs-theme="dark"] .kws-phone-subtitle,
+[data-bs-theme="dark"] .kws-workspace-subtitle,
+[data-bs-theme="dark"] .kws-webphone-caption,
+[data-bs-theme="dark"] .kws-screen-label,
+[data-bs-theme="dark"] .kws-big-list-main span {
+    color: #94a3b8;
+}
+
+[data-bs-theme="dark"] .kws-line-tab,
+[data-bs-theme="dark"] .kws-keypad-btn,
+[data-bs-theme="dark"] .kws-workspace-search,
+[data-bs-theme="dark"] .kws-transfer-input {
+    background: #1e293b;
+    color: #f8fafc;
+    border-color: rgba(148, 163, 184, 0.18);
+}
+
+[data-bs-theme="dark"] .kws-big-list-item {
+    background: rgba(30, 41, 59, 0.82);
+    border-color: rgba(148, 163, 184, 0.16);
+}
+
+[data-bs-theme="dark"] .kws-big-list-item:hover {
+    background: rgba(30, 41, 59, 0.96);
+    border-color: rgba(96, 165, 250, 0.32);
+}
+
+[data-bs-theme="dark"] .kws-big-list-side em {
+    color: #93c5fd;
+}
+
+[data-bs-theme="dark"] .kws-workspace-tabs button,
+[data-bs-theme="dark"] .kws-log-filter-btn {
+    background: rgba(15, 23, 42, 0.72);
+    border-color: rgba(148, 163, 184, 0.16);
+    color: #cbd5e1;
+}
+
+[data-bs-theme="dark"] .kws-workspace-tabs button:hover,
+[data-bs-theme="dark"] .kws-log-filter-btn:hover {
+    background: rgba(30, 41, 59, 0.95);
+    color: #93c5fd;
+}
+
+[data-bs-theme="dark"] .kws-workspace-tabs button.is-active,
+[data-bs-theme="dark"] .kws-log-filter-btn.is-active,
+[data-bs-theme="dark"] .kws-tool-btn.is-active {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+[data-bs-theme="dark"] .kws-phone-status {
+    background: #1e293b;
+    color: #cbd5e1;
+}
+
+[data-bs-theme="dark"] .kws-favorite-btn {
+    background: rgba(148, 163, 184, 0.12);
+    color: #94a3b8;
+}
+
+[data-bs-theme="dark"] .kws-favorite-btn.active {
+    background: rgba(245, 158, 11, 0.22);
+    color: #fbbf24;
+}
+
+.kws-tab-with-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .35rem;
+}
+
+.kws-missed-badge {
+    min-width: 18px;
+    height: 18px;
+    padding: 0 .35rem;
+    border-radius: 999px;
+    background: #ef4444;
+    color: #ffffff;
+    font-size: .7rem;
+    font-weight: 900;
+    line-height: 18px;
+}
+
+.kws-voicemail-audio {
+    width: 100%;
+    margin-top: 10px;
+    height: 36px;
+    border-radius: 12px;
+}
+
+.kws-phone-page .kws-voicemail-player {
+    width: 100%;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(148, 163, 184, 0.25);
+    display: grid;
+    gap: 8px;
+}
+
+.kws-phone-page .kws-voicemail-audio {
+    display: block !important;
+    width: 100% !important;
+    min-width: 260px;
+    height: 42px;
+}
+
+.kws-phone-page .kws-voicemail-open {
+    width: fit-content;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+    color: #2563eb;
+}
+
+.kws-phone-page .kws-voicemail-card {
+    width: 100%;
+    padding: 14px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    display: grid;
+    gap: 12px;
+}
+
+.kws-phone-page .kws-voicemail-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    direction: rtl;
+}
+
+.kws-phone-page .kws-voicemail-caller {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.kws-phone-page .kws-voicemail-caller i {
+    width: 38px;
+    height: 38px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: rgba(37, 99, 235, 0.10);
+    color: #2563eb;
+    font-size: 20px;
+    flex: 0 0 auto;
+}
+
+.kws-phone-page .kws-voicemail-caller strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.kws-phone-page .kws-voicemail-caller span {
+    display: block;
+    margin-top: 3px;
+    font-size: 12px;
+    font-weight: 800;
+    color: #64748b;
+}
+
+.kws-phone-page .kws-voicemail-meta {
+    text-align: left;
+    direction: ltr;
+    flex: 0 0 auto;
+}
+
+.kws-phone-page .kws-voicemail-meta span {
+    display: block;
+    font-size: 12px;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.kws-phone-page .kws-voicemail-meta small {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+.kws-phone-page .kws-voicemail-player {
+    width: 100%;
+    display: grid;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(148, 163, 184, 0.24);
+}
+
+.kws-phone-page .kws-voicemail-audio {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 42px;
+}
+
+.kws-phone-page .kws-voicemail-open {
+    width: fit-content;
+    font-size: 12px;
+    font-weight: 900;
+    text-decoration: none;
+    color: #2563eb;
+}
+
+[data-bs-theme="dark"] .kws-phone-page .kws-voicemail-card {
+    background: rgba(15, 23, 42, 0.92);
+    border-color: rgba(148, 163, 184, 0.22);
+}
+
+[data-bs-theme="dark"] .kws-phone-page .kws-voicemail-caller strong,
+[data-bs-theme="dark"] .kws-phone-page .kws-voicemail-meta span {
+    color: #e5e7eb;
+}
+
+[data-bs-theme="dark"] .kws-phone-page .kws-voicemail-caller span,
+[data-bs-theme="dark"] .kws-phone-page .kws-voicemail-meta small {
+    color: #94a3b8;
+}
+
+.kws-phone-page .kws-voicemail-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.kws-phone-page .kws-voicemail-delete {
+    border: 0;
+    border-radius: 12px;
+    padding: 8px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(239, 68, 68, 0.10);
+    color: #dc2626;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.kws-phone-page .kws-voicemail-delete:hover {
+    background: rgba(239, 68, 68, 0.18);
+}
+
+.kws-phone-page .kws-voicemail-read {
+    border: 0;
+    border-radius: 12px;
+    padding: 8px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(34, 197, 94, 0.12);
+    color: #16a34a;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.kws-phone-page .kws-voicemail-read:hover {
+    background: rgba(34, 197, 94, 0.20);
+}
+
+/* Voicemail latest layout */
+.kws-phone-page .kws-voicemail-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 6px;
+    border-radius: 16px;
+    background: rgba(148, 163, 184, 0.12);
+}
+
+.kws-phone-page .kws-voicemail-tabs button {
+    flex: 1;
+    border: 0;
+    border-radius: 12px;
+    padding: 9px 10px;
+    background: transparent;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.kws-phone-page .kws-voicemail-tabs button.is-active {
+    background: #ffffff;
+    color: #2563eb;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
+.kws-phone-page .kws-voicemail-tabs span {
+    min-width: 20px;
+    height: 20px;
+    margin-inline-start: 6px;
+    padding: 0 6px;
+    border-radius: 999px;
+    display: inline-grid;
+    place-items: center;
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.kws-phone-page .kws-voicemail-card.is-new {
+    border-color: rgba(37, 99, 235, 0.25);
+}
+
+.kws-phone-page .kws-voicemail-card.is-old {
+    opacity: 0.92;
+}
+
+.kws-phone-page .kws-voicemail-card.is-old .kws-voicemail-caller i {
+    background: rgba(100, 116, 139, 0.12);
+    color: #64748b;
+}
+
+.kws-phone-page .kws-voicemail-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.kws-phone-page .kws-voicemail-delete,
+.kws-phone-page .kws-voicemail-read {
+    border: 0;
+    border-radius: 12px;
+    padding: 8px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.kws-phone-page .kws-voicemail-delete {
+    background: rgba(239, 68, 68, 0.10);
+    color: #dc2626;
+}
+
+.kws-phone-page .kws-voicemail-delete:hover {
+    background: rgba(239, 68, 68, 0.18);
+}
+
+.kws-phone-page .kws-voicemail-read {
+    background: rgba(34, 197, 94, 0.12);
+    color: #16a34a;
+}
+
+.kws-phone-page .kws-voicemail-read:hover {
+    background: rgba(34, 197, 94, 0.20);
+}
+
+[data-bs-theme="dark"] .kws-phone-page .kws-voicemail-tabs {
+    background: rgba(15, 23, 42, 0.6);
+}
+
+[data-bs-theme="dark"] .kws-phone-page .kws-voicemail-tabs button.is-active {
+    background: rgba(30, 41, 59, 0.95);
+    color: #93c5fd;
+}

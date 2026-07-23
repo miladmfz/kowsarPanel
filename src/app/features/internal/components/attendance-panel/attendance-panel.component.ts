@@ -122,7 +122,7 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
         const apiUrl_temp = this.config.apiUrl;
 
         this.IsCustomerBuild = !(
-            apiUrl_temp === 'http://192.168.1.27:60006/api/' ||
+            apiUrl_temp === 'http://192.168.1.27:60007/api/' ||
             apiUrl_temp === 'https://itmali.ir/webapi/' ||
             apiUrl_temp === 'http://5.160.152.173:60005/api_book/' ||
             apiUrl_temp === 'http://5.160.152.173:60005/api/'

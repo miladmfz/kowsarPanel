@@ -1,0 +1,83 @@
+<div class="card">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+      <div>
+        <h4 class="card-title mb-1">تنظیمات مرخصی کاربران</h4>
+        <div class="text-muted small">
+          تعریف ساعت کاری، سهمیه سالانه، سقف مرخصی ساعتی و نوع همکاری هر شخص
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-success" (click)="NavigateToCreate()">
+        <i class="fas fa-plus me-1"></i>
+        جدید
+      </button>
+    </div>
+
+    <form [formGroup]="EditForm_Search" class="row g-3 align-items-end mb-3">
+      <div class="col-md-4">
+        <label class="form-label">کاربر</label>
+
+        <select
+          formControlName="CentralRef"
+          class="form-control"
+          [class.bg-light]="!canSelectUser()"
+          [class.text-muted]="!canSelectUser()"
+          [style.pointer-events]="canSelectUser() ? 'auto' : 'none'"
+          [attr.tabindex]="canSelectUser() ? 0 : -1"
+          [attr.aria-disabled]="!canSelectUser()">
+          <option value="0">همه کاربران</option>
+
+          @for (user of users(); track user.CentralCode) {
+            <option [value]="user.CentralCode?.toString()">
+              {{ user.CentralName }}
+            </option>
+          }
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">وضعیت</label>
+        <select formControlName="OnlyActive" class="form-control">
+          <option value="">همه</option>
+          <option value="1">فقط فعال</option>
+          <option value="0">فقط غیرفعال</option>
+        </select>
+      </div>
+
+      <div class="col-md-5 d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-primary" (click)="loadPolicyList()">
+          <i class="fas fa-search me-1"></i>
+          جستجو
+        </button>
+
+        <button type="button" class="btn btn-light" (click)="loadPolicyList()">
+          <i class="fas fa-sync me-1"></i>
+          بازخوانی
+        </button>
+      </div>
+    </form>
+
+    @if (loading()) {
+      <div class="alert alert-info py-2">
+        <i class="fas fa-spinner fa-spin me-1"></i>
+        در حال دریافت اطلاعات...
+      </div>
+    }
+
+    <div class="ag-container" style="height: 620px; border-radius: 4px; overflow: hidden;">
+      <ag-grid-angular
+        [enableBrowserTooltips]="true"
+        [tooltipShowDelay]="200"
+        [tooltipHideDelay]="800"
+        [columnDefs]="column_name_1"
+        [rowData]="records()"
+        (gridReady)="onGridReady($event, 1)"
+        (cellClicked)="onCellClicked($event)"
+        [gridOptions]="gridOptions"
+        [class]="themeClass + ' w-100 h-100'"
+        (firstDataRendered)="gridApi1?.sizeColumnsToFit()">
+      </ag-grid-angular>
+    </div>
+  </div>
+</div>

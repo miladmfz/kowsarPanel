@@ -297,41 +297,17 @@ export class AutletterCustomerListComponent extends AgGridBaseComponent implemen
 
 
     const CentralRef = this.session.centralRef;
-    const loginType = this.session.loginType;
 
     this.EditForm_autletter.patchValue({
       SearchTarget: this.EditForm_autletter.value.SearchTarget?.trim() || '',
       CentralRef: CentralRef,
       OwnCentralRef: CentralRef,
+      OwnerPersonInfoRef: this.session.personInfoRef,
     });
 
-    if (loginType === 'KOWSAR') {
-      this.EditForm_autletter.patchValue({
-        OwnerPersonInfoRef: "",
-      });
-    } else {
-
-      this.EditForm_autletter.patchValue({
-        OwnerPersonInfoRef: this.session.personInfoRef,
-      });
-    }
-
-
-
-
-
-
-    //   تعیین CentralRef بر اساس وضعیت انتخاب
-    this.CentralRef.set(loginType === 'KOWSAR' && this.EditForm_autletter.value.SelectedOption === '0' ? '' : CentralRef);
-
-    this.EditForm_autletter.patchValue({ CentralRef: this.CentralRef() });
-
-    // 🚀 دریافت داده از سرور
 
     this.repo.GetAutLetterListForCustomer(this.EditForm_autletter.value).subscribe({
       next: (data: any) => {
-
-
 
         this.records.set(data?.AutLetters || []);
 
@@ -339,9 +315,6 @@ export class AutletterCustomerListComponent extends AgGridBaseComponent implemen
           rowData: data?.AutLetters || [],
           columnDefs: this.column_name_1
         });
-
-
-
       },
       error: () => {
 

@@ -32,3 +32,101 @@
 
   </div>
 </div>
+
+
+
+
+<!-- Modal: ردیف‌های فاکتور -->
+<div class="modal fade" #goodtask tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-xl kowsar-modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header bg-light">
+        <h5 class="modal-title">
+          <i class="fas fa-list-alt ms-2"></i>
+          {{modal_GoodTask_title()}}
+        </h5>
+        <button type="button" class="btn-close" (click)="goodtask_dialog_close()"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 350px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800" class="w-100
+          h-100" [columnDefs]="columnDefs2" [rowData]="records_GoodTask()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()">
+          </ag-grid-angular>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-primary" (click)="ShowTask_Modal()">
+          اضافه کردن آیتم
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+<div class="modal fade" #tasklist tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl kowsar-modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class=" modal-title">لیست شرح وظایف</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="tasklist_dialog_close()"></button>
+      </div>
+      <div class="modal-body">
+
+
+
+
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
+
+          <ag-grid-angular [class]="themeClass + ' w-100 h-100'" [columnDefs]="columnDefs3" [rowData]="records_Task()"
+            (gridReady)="onGridReady($event, 3)" (firstDataRendered)="gridApi3?.sizeColumnsToFit()" [treeData]="true"
+            [getDataPath]="getDataPath_task" [rowSelection]="{
+    mode: 'multiRow',
+    groupSelects: 'filteredDescendants',
+    checkboxes: true,
+    headerCheckbox: true,
+    checkboxLocation: 'autoGroupColumn'
+  }" [animateRows]="true" (rowSelected)="onRowSelected($event)">
+
+          </ag-grid-angular>
+
+        </div>
+
+
+        <!-- 
+        <div class="ag-container rounded-3 border shadow-sm overflow-hidden"  style="height: 350px;">
+          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+            [columnDefs]="columnDefs6" [rowData]="base_Group_list()" [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event, 6)" (firstDataRendered)="gridApi6?.sizeColumnsToFit()" [class]="themeClass + ' w-100 h-100'"   
+            [rowSelection]="{ mode: 'singleRow' ,enableClickSelection: true}"
+            (selectionChanged)="onSelectionChanged_Row($event)" [treeData]="true" [getDataPath]="getDataPath_group">
+          </ag-grid-angular>
+        </div> -->
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="tasklist_dialog_close()">بستن</button>
+        <button type="button" class="btn btn-primary" (click)="Set_goodtask()">انتخاب</button>
+      </div>
+    </div>
+  </div>
+</div>

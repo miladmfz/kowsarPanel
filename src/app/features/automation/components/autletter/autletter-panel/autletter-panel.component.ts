@@ -141,9 +141,9 @@ export class AutletterPanelComponent
   // ===============================================================
 
   tabs = [
-    { id: 'detail', title: 'روند ارجاع تیکت' },
-    { id: 'chat', title: 'مکاتبات' },
-    { id: 'attach', title: 'پیوست' }
+    { id: 'detail', title: 'روند ارجاع تیکت', loginSee: ['KOWSAR'] },
+    { id: 'chat', title: 'مکاتبات', loginSee: ['KOWSAR', 'CUSTOMER'] },
+    { id: 'attach', title: 'پیوست', loginSee: ['KOWSAR', 'CUSTOMER'] },
   ];
 
   // ===============================================================
@@ -171,20 +171,25 @@ export class AutletterPanelComponent
   // ===============================================================
   // 🔁 Lifecycle
   // ===============================================================
+  get filteredTabs() {
+    const loginType = this.LoginType();
+
+    return this.tabs.filter(tab =>
+      !tab.loginSee || tab.loginSee.includes(loginType)
+    );
+  }
 
   ngOnInit(): void {
 
-    this.LoginType.set(
-      this.session.loginType
-    );
+    this.LoginType.set(this.session.loginType);
+    this.CentralRef.set(this.session.centralRef);
+    this.PersonInfoRef.set(this.session.personInfoRef);
 
-    this.CentralRef.set(
-      this.session.centralRef
-    );
-
-    this.PersonInfoRef.set(
-      this.session.personInfoRef
-    );
+    if (this.LoginType() == 'KOWSAR') {
+      this.activeTab.set('detail')
+    } else {
+      this.activeTab.set('chat')
+    }
 
     this.route.paramMap.subscribe(params => {
 
@@ -229,7 +234,6 @@ export class AutletterPanelComponent
         // 🔒 Access Control
         // ===============================================================
         if (!this.LoginType() || this.LoginType() == 'KOWSAR') {
-
           // کاربران KOWSAR نیازی به بررسی دسترسی تیکت ندارند
         } else {
           const letter = data.AutLetters?.[0];
@@ -363,7 +367,7 @@ export class AutletterPanelComponent
     const api = this.config.apiUrl;
 
     if (
-      api === 'http://192.168.1.27:60006/api/' ||
+      api === 'http://192.168.1.27:60007/api/' ||
       api === 'https://itmali.ir/webapi/' ||
       api === 'http://5.160.152.173:60005/api/'
     ) {

@@ -227,7 +227,7 @@ export class OcrAppSettingComponent extends AgGridBaseComponent
   UpdateDbSetup() {
 
     this.repo.UpdateDbSetup(this.selected_value(), this.selected_Key()).subscribe(e => {
-      this.sharedService.triggerActionAll('refresh');
+      this.sharedService.triggerRefresh('refresh');
       this.ocrbsetup_Modal_Response_close()
     });
 
@@ -258,7 +258,7 @@ export class OcrAppSettingComponent extends AgGridBaseComponent
       this.repo.UpdatePrinter(command).subscribe(e => {
         this.printerModal_Modal_Response_close()
 
-        this.sharedService.triggerActionAll('refresh');
+        this.sharedService.triggerRefresh('refresh');
       });
     }
   }

@@ -1,0 +1,107 @@
+<div class="dashboard-wrapper" dir="rtl">
+
+  <div class="row g-3 dashboard-grid">
+
+    <!-- Add Ticket -->
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="card dashboard-card add-card" (click)="openNewTicket()">
+        <div class="card-body text-center">
+
+          <div class="icon-circle outline-primary">
+            <i class="mdi mdi-plus"></i>
+          </div>
+
+          <h6 class="card-title mt-3 fw-bold">
+            ایجاد تیکت جدید
+          </h6>
+
+          <p class="card-desc text-muted small mb-3">
+            برای ثبت درخواست جدید کلیک کنید
+          </p>
+
+          <button type="button" class="btn btn-primary btn-sm ticket-btn">
+            + تیکت جدید
+          </button>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Waiting -->
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="card dashboard-card status-card status-waiting">
+        <div class="card-body text-center">
+
+          <div class="icon-circle bg-danger-soft">
+            <i class="mdi mdi-bell-outline"></i>
+          </div>
+
+          <h1 class="counter text-danger">
+            {{ waitingCount() }}
+          </h1>
+
+          <h6 class="status-title">
+            منتظر اقدام
+          </h6>
+
+          <small class="status-subtitle text-danger">
+            در انتظار اقدام
+          </small>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- In Progress -->
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="card dashboard-card status-card status-progress">
+        <div class="card-body text-center">
+
+          <div class="icon-circle bg-warning-soft">
+            <i class="mdi mdi-timer-sand"></i>
+          </div>
+
+          <h1 class="counter text-warning">
+            {{ inProgressCount() }}
+          </h1>
+
+          <h6 class="status-title">
+            در حال انجام
+          </h6>
+
+          <small class="status-subtitle text-warning">
+            تیکت‌های در حال پیگیری
+          </small>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Done -->
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="card dashboard-card status-card status-done">
+        <div class="card-body text-center">
+
+          <div class="icon-circle bg-success-soft">
+            <i class="mdi mdi-check-circle-outline"></i>
+          </div>
+
+          <h1 class="counter text-success">
+            {{ doneCount() }}
+          </h1>
+
+          <h6 class="status-title">
+            تمام شده
+          </h6>
+
+          <small class="status-subtitle text-success">
+            تیکت‌های بسته شده
+          </small>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

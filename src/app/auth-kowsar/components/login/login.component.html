@@ -103,7 +103,7 @@
         </div>
 
         <!-- Username -->
-        <div class="form-floating mb-3">
+        <div class="form-floating mb-4  position-relative">
 
           <input type="text" id="UName" class="form-control kws-input" placeholder=" " formControlName="UName"
             maxlength="100" autocomplete="username" [ngClass]="{
@@ -118,7 +118,7 @@
         </div>
 
         <!-- Password -->
-        <div class="form-floating mb-4 position-relative">
+        <div class="form-floating mb-4 kws-password-wrapper position-relative">
 
           <input [type]="showPassword() ? 'text' : 'password'" id="UPass"
             class="form-control kws-input kws-password-input" placeholder=" " formControlName="UPass" maxlength="100"

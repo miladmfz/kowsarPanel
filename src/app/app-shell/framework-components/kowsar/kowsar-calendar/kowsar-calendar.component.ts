@@ -4,13 +4,22 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import * as jalaali from 'jalaali-js';
 
 interface DayEventItem {
+  type: string;
   description: string;
-  additional_description: string;
-  is_holiday: boolean;
-  is_religious: boolean;
+  date_text?: string;
+
+  additional_description?: string;
+
+  is_holiday?: boolean;
+  is_religious?: boolean;
 }
 
 interface DayEventsInfo {
+  solar_date?: string;
+  moon_date?: string;
+  gregorian_date?: string;
+  gregorian_text?: string;
+
   is_holiday: boolean;
   events: DayEventItem[];
 }
@@ -257,24 +266,35 @@ export class KowsarCalendarComponent implements OnInit {
 
   onDayClick(ev: MouseEvent, d: CalendarDay): void {
     ev.stopPropagation();
-    // اگر روی همون روز دوباره کلیک شد، toggle
+
     const key = this.makeJalaliKey(d.jYear, d.jMonth, d.jDay);
-    if (this.tooltipPinned && this.tooltipDateKey() === key) {
+
+    if (this.tooltipPinned && this.tooltipSelectedKey === key) {
       this.closeTooltip();
       return;
     }
+
     this.openTooltip(ev, d, true);
   }
+  tooltipSelectedKey = '';
 
+  tooltipMoonDate = '';
+  tooltipGregorianDate = '';
+  tooltipGregorianText = '';
   private openTooltip(ev: MouseEvent, d: CalendarDay, pin: boolean): void {
     const k = this.makeJalaliKey(d.jYear, d.jMonth, d.jDay);
     const info = this.getDayInfo(k, d.jYear);
 
-    this.tooltipDateKey.set(k)
-    this.tooltipIsHoliday = !!info?.is_holiday;
-    this.tooltipEvents = info?.events ?? []
+    this.tooltipSelectedKey = k;
 
-    // موقعیت نزدیک نشانگر (با کمی آفست)
+    this.tooltipDateKey.set(info?.solar_date ?? k);
+    this.tooltipIsHoliday = !!info?.is_holiday;
+    this.tooltipEvents = info?.events ?? [];
+
+    this.tooltipMoonDate = info?.moon_date ?? '';
+    this.tooltipGregorianDate = info?.gregorian_date ?? '';
+    this.tooltipGregorianText = info?.gregorian_text ?? '';
+
     this.tooltipX = ev.clientX + 12;
     this.tooltipY = ev.clientY + 12;
 

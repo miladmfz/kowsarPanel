@@ -6375,7 +6375,7 @@ fieldset:disabled .btn {
   overflow-y: auto;
 }
 
-.modal-dialog-centered {
+.kowsar-modal-dialog {
   display: flex;
   align-items: center;
   min-height: calc(100% - 1rem);
@@ -6465,7 +6465,7 @@ fieldset:disabled .btn {
     height: calc(100% - 3.5rem);
   }
 
-  .modal-dialog-centered {
+  .kowsar-modal-dialog {
     min-height: calc(100% - 3.5rem);
   }
 

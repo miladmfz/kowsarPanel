@@ -68,16 +68,8 @@ export class SharedService {
     this.tempData = null;
   }
 
-  // === 🔁 Refresh Action ===
-  /** 🔔 ارسال رویداد رفرش به سایر کامپوننت‌ها */
-  triggerRefresh(action: string = 'refresh'): void {
+
+  triggerRefresh(action: string = 'refresh') {
     this.refreshAllActionsSource.next(action);
   }
-  private actionTrigger = new Subject<string>();
-  actionTriggered$ = this.actionTrigger.asObservable();
-
-  triggerActionAll(action: string) {
-    this.actionTrigger.next(action);
-  }
-
 }

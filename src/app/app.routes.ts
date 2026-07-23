@@ -22,6 +22,12 @@ export const routes: Routes = [
                 .then(m => m.MENU_ONLINE_ROUTES),
     },
     {
+        path: 'product',
+        loadChildren: () =>
+            import('./features/product-online/product-online.routes')
+                .then(m => m.PRODUCT_ONLINE_ROUTES),
+    },
+    {
         path: 'showtree',
         loadComponent: () =>
             import('./app-shell/framework-components/kowsar/project-tree/project-tree.component')
@@ -93,6 +99,22 @@ export const routes: Routes = [
                 loadChildren: () =>
                     import('./features/internal/internal.routes')
                         .then(m => m.INTERNAL_ROUTES),
+            },
+            // 🧰 پنل داخلی
+            {
+                path: 'santral',
+                // canActivate: [UrlGuard, RoleGuard],
+                loadChildren: () =>
+                    import('./features/santral/santral.routes')
+                        .then(m => m.Santral_ROUTES),
+            },
+            // 🧰 پنل داخلی
+            {
+                path: 'rbac',
+                // canActivate: [UrlGuard, RoleGuard],
+                loadChildren: () =>
+                    import('./features/accounting/components/rbac/rbac.routes')
+                        .then(m => m.RBAC_ROUTES),
             },
         ],
     },

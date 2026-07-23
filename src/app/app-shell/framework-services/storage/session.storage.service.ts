@@ -104,6 +104,15 @@ export class SessionStorageService {
         return this.getString('UserId');
     }
 
+    get manager(): string {
+        return this.getString('Manager');
+    }
+
+    get delegacy(): string {
+        return this.getString('Delegacy');
+    }
+
+
     get oldUserId(): string {
         return this.getString('OldUserId');
     }
@@ -111,7 +120,6 @@ export class SessionStorageService {
     get loginType(): string {
         return this.getString('LoginType');
     }
-
 
 
     get userName(): string {

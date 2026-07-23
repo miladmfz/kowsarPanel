@@ -35,7 +35,7 @@ import { FormsModule } from '@angular/forms';
 
 //   Framework Services
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
-import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
+
 
 //   Models & Services
 import { Base_Lookup, DbSetup_lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
@@ -173,7 +173,7 @@ export class AutletterInsertComponent extends AgGridBaseComponent implements OnI
         const apiUrl_temp = this.config.apiUrl;
 
         this.IsCustomerBuild.set(!(
-            apiUrl_temp === 'http://192.168.1.27:60006/api/' ||
+            apiUrl_temp === 'http://192.168.1.27:60007/api/' ||
             apiUrl_temp === 'https://itmali.ir/webapi/' ||
             apiUrl_temp === 'http://5.160.152.173:60005/api/'
         ))
@@ -198,10 +198,11 @@ export class AutletterInsertComponent extends AgGridBaseComponent implements OnI
     // ===============================================================
     private initSessionData(): void {
         this.LoginType.set(this.session.loginType)
+        this.CentralRef.set(this.session.centralRef)
 
         this.EditForm_LetterInsert.patchValue({
             OwnerPersonInfoRef: this.session.personInfoRef,
-            CreatorCentral: this.session.centralRef,
+            CreatorCentral: this.CentralRef(),
         });
 
         if (this.LoginType() === 'KOWSAR') {
@@ -210,7 +211,7 @@ export class AutletterInsertComponent extends AgGridBaseComponent implements OnI
         } else {
             this.IsEmploy.set(false)
             this.EditForm_LetterInsert.patchValue({
-                OwnerCentral: this.session.centralRef,
+                OwnerCentral: this.CentralRef(),
                 OwnerName: this.session.getString('CustName_Small'),
                 InOutFlag: '0',
             });
@@ -316,26 +317,89 @@ export class AutletterInsertComponent extends AgGridBaseComponent implements OnI
             if (!isNaN(intValue) && intValue > 0) {
                 this.notificationService.success('  تیکت با موفقیت ثبت شد');
 
-                if (action === '') {
+                this.SendMessage(data.AutLetters[0].LetterCode, action)
 
-                    if (this.session.loginType == 'KOWSAR') {
-                        this.router.navigate(['/automation/letter-user']);
-
-                    } else {
-                        this.router.navigate(['/automation/letter-customer']);
-
-                    }
-
-
-
-
-
-                } else if (action === 'detail') {
-                    this.router.navigate(['/automation/letter-detail', data.AutLetters[0].LetterCode]);
-                }
             }
         });
     }
+
+    SendMessage(LetterCode: string, action: string) {
+
+
+        const cleanMessage_From_Digits = this.convertSpecialCharacters(this.EditForm_LetterInsert.value.Description);
+
+        const cleanMessage_From_number = this.convertToEnglishDigits(cleanMessage_From_Digits);
+
+
+
+        this.repo.Conversation_Insert(LetterCode, this.CentralRef(), cleanMessage_From_number)
+            .subscribe({
+                next: () => {
+                    if (action === '') {
+
+                        if (this.session.loginType == 'KOWSAR') {
+                            this.router.navigate(['/automation/letter-user']);
+
+                        } else {
+                            this.router.navigate(['/automation/letter-panel', LetterCode]);
+                        }
+
+                    } else if (action === 'detail') {
+                        this.router.navigate(['/automation/letter-panel', LetterCode]);
+                    }
+                },
+                error: () => {
+
+                    this.notificationService.error('ارسال پیام با خطا مواجه شد');
+                }
+            });
+    }
+
+
+
+
+    convertToEnglishDigits(str: string): string {
+        const persian = [/۰/g, /۱/g, /۲/g, /۳/g, /۴/g, /۵/g, /۶/g, /۷/g, /۸/g, /۹/g];
+        const arabic = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
+
+        for (let i = 0; i < 10; i++) {
+            str = str.replace(persian[i], String(i)).replace(arabic[i], String(i));
+        }
+        return str;
+    }
+
+    convertSpecialCharacters(text): string {
+
+
+        const otherChars = {
+            // '@': 'at',
+            '!': 'exclamation',
+            '#': 'hash',
+            '%': 'percent',
+            '&': 'ampersand',
+            // '-': 'minus',
+            // '=': 'equals',
+
+            // '{': 'openCurly',
+            // '}': 'closeCurly',
+            // ':': 'colon',
+            // ';': 'semicolon',
+            '"': 'doubleQuote', // ممکن است بهتر باشد این را در بکتیکس یا جعبه نشان دهید
+            "'": 'singleQuote',
+            // '<': 'lessThan',
+            // '>': 'greaterThan',
+            // ',': 'comma',
+        };
+
+
+        Object.entries(otherChars).forEach(([char, replacement]) => {
+
+            text = text.replace(new RegExp(char, 'g'), `_${replacement}_`);
+        });
+
+        return text;
+    }
+
 
     // ===============================================================
     //   مدیریت مودال انتخاب مشتری

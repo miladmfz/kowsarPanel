@@ -49,6 +49,37 @@ export class AuthKowsarWebApiService {
     return this.withLoading(this.client.get<any[]>(this.baseUrl + "CentralPermission", { headers: this.headerService.headers, params: params }))
   }
 
+  GetRoles(): Observable<any[]> {
+    const params = new HttpParams()
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetRoles", { headers: this.headerService.headers, params: params }))
+  }
+
+
+  GetRoleById(RoleCode: string): Observable<any[]> {
+    const params = new HttpParams().append('RoleCode', RoleCode)
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetRoleById", { headers: this.headerService.headers, params: params }))
+  }
+
+  GetPermissions(): Observable<any[]> {
+    const params = new HttpParams()
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetPermissions", { headers: this.headerService.headers, params: params }))
+  }
+
+
+  GetRolePermissions(RoleRef: string): Observable<any[]> {
+    const params = new HttpParams().append('RoleRef', RoleRef)
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetRolePermissions", { headers: this.headerService.headers, params: params }))
+  }
+
+  GetCentralRoles(CentralRef: string): Observable<any[]> {
+    const params = new HttpParams().append('CentralRef', CentralRef)
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetCentralRoles", { headers: this.headerService.headers, params: params }))
+  }
+
+  GetCentralUsers(): Observable<any[]> {
+    const params = new HttpParams()
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetCentralUsers", { headers: this.headerService.headers, params: params }))
+  }
 
 
 

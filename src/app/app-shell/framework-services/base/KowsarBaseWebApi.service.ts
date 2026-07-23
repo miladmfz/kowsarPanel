@@ -149,11 +149,12 @@ export class KowsarBaseWebApi {
 
 
 
-  GetImageFromServer(ObjectRef: string): Observable<any[]> {
-    const params = new HttpParams().append('pixelScale', '300').append('ClassName', 'TGood').append('ObjectRef', ObjectRef)
+  GetImageFromServer(ObjectRef: string, ClassName: string): Observable<any[]> {
+    const params = new HttpParams().append('pixelScale', '300').append('ClassName', ClassName).append('ObjectRef', ObjectRef)
     return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetWebImagess", { headers: this.headerService.headers, params: params }))
 
   }
+
 
   ManualAttendance(command): Observable<any[]> {
     return this.withLoading(this.client.post<any[]>(this.baseUrl + "ManualAttendance", command, { headers: this.headerService.headers }))
@@ -178,6 +179,11 @@ export class KowsarBaseWebApi {
 
   }
 
+
+  GetCentralUser(): Observable<any[]> {
+    const params = new HttpParams()
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetCentralUser", { headers: this.headerService.headers }))
+  }
 
 
 

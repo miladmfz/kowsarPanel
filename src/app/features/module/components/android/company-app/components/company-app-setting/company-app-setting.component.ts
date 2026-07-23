@@ -125,7 +125,7 @@ export class CompanyAppSettingComponent implements OnInit {
     if (this.EditForm_printer.value.PrinterName !== "") {
 
       this.repo.UpdatePrinter(command).subscribe(e => {
-        this.sharedService.triggerActionAll('refresh');
+        this.sharedService.triggerRefresh('refresh');
       });
     }
   }
@@ -139,7 +139,7 @@ export class CompanyAppSettingComponent implements OnInit {
   UpdateDbSetup() {
 
     this.repo.UpdateDbSetup(this.selected_value(), this.selected_Key()).subscribe(e => {
-      this.sharedService.triggerActionAll('refresh');
+      this.sharedService.triggerRefresh('refresh');
     });
 
   }

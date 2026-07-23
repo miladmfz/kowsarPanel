@@ -1,0 +1,68 @@
+<div class="kws-phone-page">
+
+  @if (canInstallPwa()) {
+  <div class="kws-install-phone-row">
+    <button type="button" class="kws-install-phone-btn" (click)="installPwa()">
+
+      <i class="mdi mdi-cellphone-arrow-down"></i>
+      نصب تلفن
+    </button>
+  </div>
+  }
+  <div class="kws-phone-page">
+    <div class="kws-app-shell">
+      <app-phone-dialer-panel [callerExtension]="callerExtension()" [registerStatus]="registerStatus()"
+        [registerText]="getRegisterText()" [lines]="lines()" [activeLineIndex]="activeLineIndex()"
+        [activeLine]="activeLine()" [incomingLine]="firstIncomingLine()" [callStatus]="callStatus()"
+        [statusText]="getStatusText()" [targetNumber]="targetNumber()" [transferNumber]="transferNumber()"
+        [showTransferBox]="showTransferBox()" [conferenceNumber]="conferenceNumber()"
+        [showConferenceBox]="showConferenceBox()" [conferenceLoading]="conferenceLoading()"
+        [resultMessage]="resultMessage()" [isCalling]="isCalling()" [isHangingUp]="isHangingUp()" [keypad]="keypad"
+        [canEditDial]="canEditDial()" [canCall]="canCall()" [canHangup]="canHangup()" [canHold]="canHold()"
+        [canResume]="canResume()" [canMute]="canMute()" [canTransfer]="canTransfer()" [canConference]="canConference()"
+        (connectWebPhone)="connectWebPhone()" (disconnectWebPhone)="disconnectWebPhone()"
+        (selectLine)="selectLine($event)" (answerIncomingCall)="answerIncomingCall($event)"
+        (rejectIncomingCall)="rejectIncomingCall($event)" (targetNumberChange)="onTargetNumberChange($event)"
+        (transferNumberChange)="onTransferNumberChange($event)"
+        (conferenceNumberChange)="onConferenceNumberChange($event)" (enterCall)="onEnterCall($event)"
+        (backspace)="backspace()" (pressKey)="pressKey($event)" (startCall)="startCall()" (endCall)="endCall()"
+        (toggleHoldActiveLine)="toggleHoldActiveLine()" (toggleMuteActiveLine)="toggleMuteActiveLine()"
+        (toggleTransferBox)="toggleTransferBox()" (transferActiveLine)="transferActiveLine()"
+        (toggleConferenceBox)="toggleConferenceBox()" (startConference)="startConference()"
+        (clearNumber)="clearNumber()" [activeCallDurationText]="getActiveCallDurationText()"
+        [canUseKeypad]="canUseKeypad()" [ringtoneSettingsOpen]="ringtoneSettingsOpen()"
+        [ringtoneBoostEnabled]="ringtoneBoostEnabled()" [ringtoneGainValue]="ringtoneGainValue()"
+        [ringtoneGainLabel]="getRingtoneGainLabel()" [callVolumeBoostEnabled]="callVolumeBoostEnabled()"
+        [callVolumeGainValue]="callVolumeGainValue()" [callVolumeGainLabel]="getCallVolumeGainLabel()"
+        (toggleRingtoneSettings)="toggleRingtoneSettings()" (toggleRingtoneBoost)="toggleRingtoneBoost()"
+        (ringtoneGainValueChange)="onRingtoneGainValueChange($event)" (toggleCallVolumeBoost)="toggleCallVolumeBoost()"
+        (callVolumeGainValueChange)="onCallVolumeGainValueChange($event)"
+        (previewIncomingRingtone)="previewIncomingRingtone()">
+      </app-phone-dialer-panel>
+
+      <app-phone-workspace-panel [workspaceTab]="workspaceTab()" [phoneBookSearch]="phoneBookSearch()"
+        [filteredPhoneBook]="filteredPhoneBook()" [favoritePhoneBook]="favoritePhoneBook()" [logFilter]="logFilter()"
+        [visibleCallLogs]="visibleCallLogs()" [voicemailMessages]="voicemailMessages()"
+        [voicemailLoading]="voicemailLoading()" (setWorkspaceTab)="setWorkspaceTab($event)"
+        (phoneBookSearchChange)="onPhoneBookSearchChange($event)" (pickPhoneBookItem)="pickPhoneBookItem($event)"
+        (togglePhoneBookFavorite)="togglePhoneBookFavorite($event.item, $event.event)"
+        (setLogFilter)="setLogFilter($event)" (callFromLog)="callFromLog($event)"
+        (refreshVoicemail)="loadVoicemailMessages()" [missedCallBadgeCount]="missedCallBadgeCount()"
+        (deleteVoicemail)="deleteVoicemailMessage($event)" (moveVoicemailToOld)="moveVoicemailToOld($event)">
+      </app-phone-workspace-panel>
+    </div>
+    @if (webPhoneDebug().length > 0) {
+    <div class="kws-webphone-debug">
+      <div class="kws-webphone-debug-title">
+        WebPhone Audio Debug: {{ remoteAudioState() }}
+      </div>
+
+      @for (item of webPhoneDebug(); track item) {
+      <div class="kws-webphone-debug-line">
+        {{ item }}
+      </div>
+      }
+    </div>
+    }
+    <audio #remoteAudio class="kws-remote-call-audio" autoplay playsinline></audio>
+  </div>

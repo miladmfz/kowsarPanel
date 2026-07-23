@@ -144,7 +144,25 @@ export const AUTOMATION_ROUTES: Routes = [
             import('./components/salary/salarysummary/salarysummary-edit/salarysummary-edit.component').then(m => m.SalarysummaryEditComponent),
     },
 
+    {
+        path: 'leaverequest-list',
+        title: 'لیست درخواست‌های مرخصی',
+        loadComponent: () =>
+            import('./components/leaverequest/leaverequest-list/leaverequest-list.component').then(m => m.LeaverequestListComponent),
+    },
 
+    {
+        path: 'leaverequest-policy-list',
+        title: 'لیست وضعیت کارکنان',
+        loadComponent: () => import('./components/leaverequest/leaverequest-policy-list/leaverequest-policy-list.component')
+            .then(m => m.LeaverequestPolicyListComponent),
+    },
+    {
+        path: 'leaverequest-policy-edit/:id',
+        title: 'اطلاعات وضعیت کارکنان',
+        loadComponent: () => import('./components/leaverequest/leaverequest-policy-edit/leaverequest-policy-edit.component')
+            .then(m => m.LeaverequestPolicyEditComponent),
+    },
 
 
 

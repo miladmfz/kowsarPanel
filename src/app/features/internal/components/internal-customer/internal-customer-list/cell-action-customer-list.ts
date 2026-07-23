@@ -9,7 +9,7 @@ declare var $: any;
 <!-- اصلاح مشتری -->
 
 @if(permissionService.canManageRole){
-<span
+<!-- <span
   (click)="NavigateToEdit()"
   class="btn btn-sm btn-outline-primary d-inline-flex align-items-center justify-content-center"
   data-toggle="tooltip"
@@ -17,8 +17,17 @@ declare var $: any;
 
   <i class="fas fa-user-edit"></i>
 
-</span>
+</span> -->
 }
+<span
+  (click)="CustomerTask()"
+  class="btn btn-sm btn-outline-info d-inline-flex align-items-center justify-content-center"
+  data-toggle="tooltip"
+  title="شرح کار مشتری">
+
+  <i class="fas fa-info"></i>
+
+</span>
 
 
 <!-- لیست فاکتور -->
@@ -91,24 +100,27 @@ export class CellActionCustomerList implements ICellRendererAngularComp {
 
 
     NavigateToEdit() {
-        this.params.context.componentParent.NavigateToEdit(this.params.data.CustomerCode);
+        this.params.context.componentParent.NavigateToEdit(this.params.data);
     }
 
     Edit_Customer_Property_Explain() {
 
-        this.params.context.componentParent.Edit_Customer_Property_Explain(this.params.data.CustomerCode);
+        this.params.context.componentParent.Edit_Customer_Property_Explain(this.params.data);
     }
 
     Factor_Customer() {
-        this.params.context.componentParent.Factor_Customer_Property(this.params.data.CustomerCode);
+        this.params.context.componentParent.Factor_Customer_Property(this.params.data);
     }
 
 
 
     Show_Customer_Property() {
-        this.params.context.componentParent.Show_Customer_Property(this.params.data.CustomerCode);
+        this.params.context.componentParent.Show_Customer_Property(this.params.data);
     }
 
+    CustomerTask() {
+        this.params.context.componentParent.CustomerTask(this.params.data);
+    }
 
 
 }

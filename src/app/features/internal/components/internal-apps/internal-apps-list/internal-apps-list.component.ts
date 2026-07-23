@@ -13,8 +13,6 @@ import { InternalAppsWebApiService } from '../../../services/InternalAppsWebApi.
   selector: 'app-application-list',
   templateUrl: './internal-apps-list.component.html',
   standalone: true,
-
-  // مهم‌ترین بخش!
   imports: [
     CommonModule,
     AgGridModule,

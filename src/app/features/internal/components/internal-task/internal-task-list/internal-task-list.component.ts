@@ -50,7 +50,7 @@ export class InternalTaskListComponent
   });
 
   // مسیر درختی AG Grid
-  getDataPath_group = (task: any): string[] => {
+  getDataPath_task = (task: any): string[] => {
     const path: string[] = [];
     let current = task;
 

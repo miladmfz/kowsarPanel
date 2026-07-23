@@ -36,8 +36,13 @@ export class AppComponent implements OnInit {
       && !isMenuRoute
       && !isAuthRoute
     ) {
+      if (localStorage.getItem('UserTypeLogin') == 'KOWSAR') {
+        this.router.createUrlTree(['/auth/login-kowsar']);
 
-      this.router.navigate(['/auth/login']);
+      } else {
+        this.router.createUrlTree(['/auth/login-person']);
+
+      }
     }
 
     setTimeout(() =>

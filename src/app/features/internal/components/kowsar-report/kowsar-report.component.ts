@@ -69,7 +69,7 @@ export class KowsarReportComponent extends AgGridBaseComponent implements OnInit
     });
 
     EditForm_KowsarReport3 = new FormGroup({
-        SearchTarget: new FormControl<string>(''),
+        SearchTarget: new FormControl<string>('منتظراقدام'),
         CentralRef: new FormControl<string>('0'),
         LetterRowCode: new FormControl<string>('0'),
         Flag: new FormControl<string>(''),
@@ -80,7 +80,6 @@ export class KowsarReportComponent extends AgGridBaseComponent implements OnInit
     //   وضعیت‌های لوکاپ برای فیلتر گزارش
     // ===============================================================
     LetterState_Lookup: Base_Lookup[] = [
-        { id: '', name: 'دیده نشده' },
         { id: 'منتظراقدام', name: 'منتظراقدام' },
         { id: 'درحال انجام', name: 'درحال انجام' },
         { id: 'تمام شده', name: 'تمام شده' },

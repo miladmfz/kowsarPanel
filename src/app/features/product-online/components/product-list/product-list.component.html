@@ -1,0 +1,130 @@
+<section class="product-page" dir="rtl">
+  <div class="product-shell">
+    <header class="product-header">
+      <div class="product-header__main">
+        @if (showHeaderImage()) {
+          <div class="product-header__image">
+            <img
+              [src]="config.HeaderImage"
+              [alt]="config.HeaderImageAlt || config.HeaderTitle"
+              (error)="onHeaderImageError()">
+          </div>
+        }
+
+        <div class="product-header__content">
+          @if (config.ShowHeaderTitle) {
+            <h1>{{ config.HeaderTitle }}</h1>
+          }
+
+          @if (config.ShowHeaderSubTitle) {
+            <p>{{ config.HeaderSubTitle }}</p>
+          }
+
+          <div class="product-header__meta">
+            <span>
+              <i class="mdi mdi-bookshelf"></i>
+              {{ filteredProducts().length.toLocaleString('fa-IR') }} کتاب
+            </span>
+
+            @if (selectedGroupName()) {
+              <span>
+                <i class="mdi mdi-folder-outline"></i>
+                {{ selectedGroupName() }}
+              </span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="product-refresh"
+        [disabled]="loading()"
+        (click)="refresh()">
+        <i
+          class="mdi mdi-refresh"
+          [class.product-refresh__icon--loading]="loading()">
+        </i>
+        <span>تازه‌سازی</span>
+      </button>
+    </header>
+
+    @if (config.EnableSearch) {
+      <div class="product-search">
+        <i class="mdi mdi-magnify"></i>
+
+        <input
+          type="search"
+          autocomplete="off"
+          placeholder="جستجو با نام کتاب، نویسنده، ناشر یا شابک"
+          [disabled]="loading() && products().length === 0"
+          [ngModel]="searchTerm()"
+          (ngModelChange)="onSearchChange($event)">
+
+        @if (searchTerm()) {
+          <button type="button" (click)="clearSearch()" title="پاک کردن جستجو">
+            <i class="mdi mdi-close"></i>
+          </button>
+        }
+      </div>
+    }
+
+    @if (config.ShowQuickGroups && groups().length > 0) {
+      <nav
+        class="product-groups"
+        [class.product-groups--scroll]="config.EnableCategoryScroll">
+        @for (group of groups(); track trackGroup($index, group)) {
+          <button
+            type="button"
+            class="product-group"
+            [class.product-group--selected]="selectedGroupCode() === group.GroupCode"
+            (click)="selectGroup(group)">
+            @if (config.ShowGroupImage && group.Imageitem) {
+              <img [src]="group.Imageitem" [alt]="group.Name || ''">
+            }
+
+            <span>{{ group.Name || 'بدون عنوان' }}</span>
+          </button>
+        }
+      </nav>
+    }
+
+    <div class="product-result-bar">
+      <strong>
+        {{ filteredProducts().length.toLocaleString('fa-IR') }} کتاب
+      </strong>
+
+      @if (searchTerm()) {
+        <span>نتیجه جستجو برای «{{ searchTerm() }}»</span>
+      }
+    </div>
+
+    @if (loading()) {
+      <div class="product-loading">
+        <span class="product-loading__spinner"></span>
+        <strong>در حال دریافت اطلاعات...</strong>
+      </div>
+    } @else if (errorMessage()) {
+      <div class="product-state product-state--error">
+        <i class="mdi mdi-alert-circle-outline"></i>
+        <strong>{{ errorMessage() }}</strong>
+        <button type="button" (click)="refresh()">تلاش دوباره</button>
+      </div>
+    } @else if (filteredProducts().length === 0) {
+      <div class="product-state">
+        <i class="mdi mdi-book-search-outline"></i>
+        <strong>کتابی پیدا نشد</strong>
+        <span>عبارت جستجو یا گروه انتخاب‌شده را تغییر دهید.</span>
+      </div>
+    } @else {
+      <div class="product-grid">
+        @for (product of filteredProducts(); track trackProduct($index, product)) {
+          <app-product-card
+            [item]="product"
+            [config]="config"
+            (selected)="openProduct($event)" />
+        }
+      </div>
+    }
+  </div>
+</section>
