@@ -200,8 +200,16 @@
       }
 
       @case ('attach') {
-      <app-kowsar-attach [ObjectRef]="LetterRef()" [ClassName]="'AutLetter'">
+
+      @if (this.LetterState_str() == 'تمام شده') {
+      <app-kowsar-attach [ObjectRef]="LetterRef()" [ClassName]="'AutLetter'" [CanInsert]="false">
       </app-kowsar-attach>
+      }@else{
+      <app-kowsar-attach [ObjectRef]="LetterRef()" [ClassName]="'AutLetter'" [CanInsert]="true">
+      </app-kowsar-attach>
+      }
+
+
       }
 
       }

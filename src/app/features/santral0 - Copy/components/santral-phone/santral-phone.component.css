@@ -1,0 +1,52 @@
+/* Styles were split in refactor stage 3. See ./styles/*.css */
+.kws-webphone-debug {
+    margin-top: 12px;
+    padding: 10px;
+    border: 1px dashed rgba(148, 163, 184, 0.45);
+    border-radius: 12px;
+    background: rgba(15, 23, 42, 0.05);
+    direction: ltr;
+    text-align: left;
+    font-family: monospace;
+    font-size: 12px;
+    max-height: 220px;
+    overflow: auto;
+}
+
+.kws-webphone-debug-title {
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.kws-webphone-debug-line {
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    white-space: pre-wrap;
+}
+
+.kws-install-phone-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: .75rem;
+}
+
+.kws-install-phone-btn {
+    border: 0;
+    border-radius: 14px;
+    padding: .65rem 1rem;
+    background: #1f4e79;
+    color: #ffffff;
+    font-weight: 900;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    box-shadow: 0 10px 24px rgba(31, 78, 121, .22);
+}
+
+.kws-install-phone-btn i {
+    font-size: 1.1rem;
+}
+
+.kws-install-phone-btn:hover {
+    background: #163b5c;
+}

@@ -12,6 +12,11 @@ import {
     SantralCallRecordingResponse,
     SantralCallRecordingSaveRequest,
     SantralDefinitionsResponse,
+    SantralExtensionMonitorHistoryResponse,
+    SantralExtensionReportResponse,
+    SantralExtensionMonitorSnapshotResponse,
+    SantralFollowupFilter,
+    SantralFollowupResponse,
     SantralLiveStatusResponse,
     SantralOperatorRankingsResponse,
     SantralPagedFilter,
@@ -301,6 +306,79 @@ export class SantralWebApiService {
     }
 
     // =========================================================
+    // Separate Extension Health Monitor
+    // =========================================================
+
+    GetExtensionMonitorSnapshot(
+        extensions?: string | string[],
+        showLoading = false
+    ): Observable<SantralExtensionMonitorSnapshotResponse> {
+        const query: Record<string, any> = {};
+
+        if (extensions) {
+            query['extensions'] = Array.isArray(extensions)
+                ? extensions.join(',')
+                : extensions;
+        }
+
+        return this.get<SantralExtensionMonitorSnapshotResponse>(
+            'getExtensionMonitorSnapshot',
+            query,
+            showLoading
+        );
+    }
+
+    GetExtensionMonitorHistory(
+        extension: string,
+        startdate: string,
+        enddate: string,
+        limit = 200,
+        showLoading = false
+    ): Observable<SantralExtensionMonitorHistoryResponse> {
+        return this.get<SantralExtensionMonitorHistoryResponse>(
+            'getExtensionMonitorHistory',
+            {
+                extension,
+                startdate,
+                enddate,
+                limit
+            },
+            showLoading
+        );
+    }
+
+
+    GetExtensionMonitorReport(
+        extension: string,
+        startdate: string,
+        enddate: string,
+        limit = 500,
+        showLoading = false
+    ): Observable<SantralExtensionReportResponse> {
+        return this.get<SantralExtensionReportResponse>(
+            'getExtensionMonitorReport',
+            {
+                extension,
+                startdate,
+                enddate,
+                limit
+            },
+            showLoading
+        );
+    }
+
+    AcknowledgeExtensionMonitor(
+        extension: string,
+        showLoading = false
+    ): Observable<any> {
+        return this.get(
+            'acknowledgeExtensionMonitor',
+            { extension },
+            showLoading
+        );
+    }
+
+    // =========================================================
     // CDR
     // =========================================================
 
@@ -343,6 +421,17 @@ export class SantralWebApiService {
             dst: filter.dst,
             did: filter.did,
             CallType: filter.CallType
+        }, showLoading);
+    }
+
+    GetDashboardCalls(filter: SantralPagedFilter = {}, showLoading = false): Observable<any> {
+        return this.get('getDashboardCalls', {
+            startdate: filter.startdate,
+            enddate: filter.enddate,
+            disposition: filter.disposition,
+            extension: filter.extension,
+            scanLimit: filter.scanLimit ?? 20000,
+            limit: filter.limit ?? 1000
         }, showLoading);
     }
 
@@ -454,6 +543,20 @@ export class SantralWebApiService {
             CallType: filter.CallType,
             scanLimit: filter.scanLimit,
             chunkSize: filter.chunkSize
+        }, showLoading);
+    }
+
+    GetFollowupCalls(
+        filter: SantralFollowupFilter = {},
+        showLoading = false
+    ): Observable<SantralFollowupResponse> {
+        return this.get<SantralFollowupResponse>('getFollowupCalls', {
+            startdate: filter.startdate,
+            enddate: filter.enddate,
+            extension: filter.extension,
+            min_billsec: filter.min_billsec ?? 3,
+            scanLimit: filter.scanLimit ?? 20000,
+            limit: filter.limit ?? 500
         }, showLoading);
     }
 
@@ -622,6 +725,30 @@ export class SantralWebApiService {
             explain
         }, showLoading);
     }
+    SearchKowsarCentralForPhonebook(
+        q: string,
+        number: string = '',
+        limit: number = 30,
+        showLoading = true
+    ) {
+        return this.get('searchKowsarCentralForPhonebook', {
+            q,
+            number,
+            limit
+        }, showLoading);
+    }
+
+    BatchSearchKowsarPhonesForPhonebook(
+        numbers: string[],
+        maxPerNumber: number = 5,
+        showLoading = true
+    ) {
+        return this.get('batchSearchKowsarPhonesForPhonebook', {
+            numbers: (numbers || []).join(','),
+            max_per_number: maxPerNumber
+        }, showLoading);
+    }
+
     GetUnknownCallerNumbers(startdate: string, enddate: string, limit: number = 500, showLoading = true) {
         return this.get('getUnknownCallerNumbers', {
             startdate,
@@ -629,7 +756,7 @@ export class SantralWebApiService {
             limit
         }, showLoading);
     }
-    GetCallerNumberDetails(number: string, startdate: string, enddate: string, limit: number = 500, showLoading = true) {
+    GetCallerNumberDetails(number: string, startdate: string, enddate: string, limit: number = 0, showLoading = true) {
         return this.get('getCallerNumberDetails', { number, startdate, enddate, limit }, showLoading);
     }
 
@@ -708,13 +835,15 @@ export class SantralWebApiService {
         description: string,
         strategy: string,
         grptime: number,
+        create = false,
         showLoading = true
     ): Observable<any> {
         return this.get('saveSantralRingGroupBasic', {
             grpnum,
             description,
             strategy,
-            grptime
+            grptime,
+            create: create ? 1 : 0
         }, showLoading);
     }
     SaveSantralRingGroupMembers(

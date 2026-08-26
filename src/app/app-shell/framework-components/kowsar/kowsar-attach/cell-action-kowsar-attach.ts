@@ -7,8 +7,9 @@
 - برقراری ارتباط با والد از طریق context برای اجرای توابع اصلی
 =============================================================== */
 
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
+import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
 
 declare var $: any;
 
@@ -26,13 +27,22 @@ declare var $: any;
       </a>
     </span>
 
-    <button
+
+
+      @if(LoginType()=='KOWSAR'){
+ <button
       (click)="btnDeleteClicked()"
       class="btn btn-sm btn-outline-danger"
       title="حذف"
     >
       <i class="fas fa-trash"></i>
     </button>
+      }
+
+   
+
+
+
   `,
   standalone: false,
 })
@@ -43,6 +53,8 @@ export class CellActionKowsarAttach implements ICellRendererAngularComp {
   canDelete = true;
   canView = true;
   id = 0;
+  LoginType = signal('')
+  protected readonly session = inject(SessionStorageService);
 
   // 🔁 اجرای مجدد رندر (در اینجا نیازی به تغییر محتوا نیست)
   refresh(params: any): boolean {
@@ -52,6 +64,9 @@ export class CellActionKowsarAttach implements ICellRendererAngularComp {
   //   مقداردهی اولیه سلول
   agInit(params: any): void {
     this.params = params;
+
+
+    this.LoginType.set(this.session.loginType)
   }
 
   //   حذف فایل

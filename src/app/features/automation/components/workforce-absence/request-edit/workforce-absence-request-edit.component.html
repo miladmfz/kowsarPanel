@@ -1,0 +1,474 @@
+<div class="card shadow-sm mt-3">
+  <div class="card-body">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+      <div>
+        <h4 class="header-title mb-1">{{ title() }}</h4>
+        <div class="text-muted small">
+          ثبت درخواست در سیستم جدید WorkforceAbsence
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-light" (click)="cancel()">
+        <i class="fas fa-arrow-right me-1"></i>
+        بازگشت
+      </button>
+    </div>
+
+    @if (loading()) {
+      <div class="alert alert-info py-2">
+        <i class="fas fa-spinner fa-spin me-1"></i>
+        در حال دریافت یا ذخیره اطلاعات...
+      </div>
+    }
+
+    @if (holidaysLoadFailed() && !permission.canManageRole) {
+      <div class="alert alert-danger py-2">
+        <i class="fas fa-exclamation-triangle me-1"></i>
+        فایل تعطیلات رسمی بارگذاری نشده است و ثبت درخواست کاربر تا رفع مشکل امکان‌پذیر نیست.
+      </div>
+    }
+
+    <form [formGroup]="EditForm" (ngSubmit)="submit()">
+      <div class="row g-3">
+
+        <div class="col-md-2">
+          <label class="form-label">کد درخواست</label>
+          <input
+            formControlName="AbsenceRequestCode"
+            class="form-control text-center bg-light"
+            readonly />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">کاربر</label>
+
+          <select
+            formControlName="CentralRef"
+            class="form-control"
+            [class.is-invalid]="isInvalid('CentralRef')"
+            [class.bg-light]="!canSelectUser()"
+            [class.text-muted]="!canSelectUser()"
+            [style.pointer-events]="canSelectUser() ? 'auto' : 'none'"
+            [attr.tabindex]="canSelectUser() ? 0 : -1"
+            [attr.aria-disabled]="!canSelectUser()">
+
+            <option value="">لطفاً انتخاب کنید</option>
+
+            @for (user of users(); track user.CentralCode) {
+              <option [value]="user.CentralCode?.toString()">
+                {{ user.CentralName }}
+              </option>
+            }
+          </select>
+
+          @if (isInvalid('CentralRef')) {
+            <div class="invalid-feedback d-block">
+              انتخاب کاربر اجباری است
+            </div>
+          }
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">نوع درخواست</label>
+
+          <select
+            formControlName="AbsenceTypeKey"
+            class="form-control"
+            [class.is-invalid]="isInvalid('AbsenceTypeKey')">
+
+            <option value="">لطفاً انتخاب کنید</option>
+
+            @for (item of types(); track item.AbsenceTypeCode) {
+              <option [value]="item.TypeKey">
+                {{ item.TypeTitle }}
+              </option>
+            }
+          </select>
+        </div>
+
+        @if (showModeSelector()) {
+          <div class="col-md-3">
+            <label class="form-label">حالت درخواست</label>
+
+            <select formControlName="RequestMode" class="form-control">
+              <option value="DAY">روزانه</option>
+              <option value="MINUTE">ساعتی</option>
+            </select>
+          </div>
+        } @else {
+          <div class="col-md-3">
+            <label class="form-label">حالت محاسبه</label>
+            <input
+              class="form-control text-center bg-light"
+              [value]="isMinuteMode() ? 'ساعتی' : 'روزانه'"
+              readonly />
+          </div>
+        }
+
+        <div class="col-12">
+          <div class="condition-card p-3">
+            <div class="fw-bold mb-2">
+              <i class="fas fa-circle-info me-1"></i>
+              قوانین نوع انتخاب‌شده
+            </div>
+
+            <div class="text-muted mb-2">
+              {{ typeHelpText() }}
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+              <span class="rule-pill">
+                <i class="fas fa-calendar-day"></i>
+                فاصله ثبت:
+                {{ permission.canManageRole ? 'بدون محدودیت مدیر' : requiredAdvanceWorkDay() + ' روز کاری' }}
+              </span>
+
+              <span class="rule-pill">
+                <i class="fas fa-calendar-times"></i>
+                جمعه:
+                {{ permission.canManageRole || allowsFridayForUser() ? 'مجاز' : 'غیرمجاز' }}
+              </span>
+
+              <span class="rule-pill">
+                <i class="fas fa-calendar-check"></i>
+                تعطیل رسمی:
+                {{ permission.canManageRole || allowsHolidayForUser() ? 'مجاز' : 'غیرمجاز' }}
+              </span>
+
+              <span class="rule-pill">
+                <i class="fas fa-user-shield"></i>
+                نقش:
+                {{ permission.canManageRole ? 'مدیر' : 'کاربر عادی' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        @if (policyLoading()) {
+          <div class="col-12">
+            <div class="alert alert-info py-2 mb-0">
+              <i class="fas fa-spinner fa-spin me-1"></i>
+              در حال دریافت Policy کاربر...
+            </div>
+          </div>
+        }
+
+        @if (!policyLoading() && EditForm.controls.CentralRef.value && !policy()) {
+          <div class="col-12">
+            <div class="alert alert-warning py-2 mb-0">
+              برای کاربر انتخاب‌شده Policy فعال تعریف نشده است.
+            </div>
+          </div>
+        }
+
+        @if (policy()) {
+          <div class="col-12">
+            <div class="row g-2">
+              <div class="col-md-3">
+                <div class="summary-box">
+                  <div class="text-muted small">ساعت کاری</div>
+                  <div class="summary-value text-primary">
+                    {{ policy()?.WorkStartTime }} تا {{ policy()?.WorkEndTime }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="summary-box">
+                  <div class="text-muted small">ساعت مجاز ارسال</div>
+                  <div class="summary-value text-primary">
+                    {{ policy()?.RequestSubmitStartTime }} تا {{ policy()?.RequestSubmitEndTime }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="summary-box">
+                  <div class="text-muted small">سهمیه روزانه سالانه</div>
+                  <div class="summary-value text-success">
+                    {{ policy()?.AnnualDailyLimit }} روز
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="summary-box">
+                  <div class="text-muted small">سقف ساعتی ماهانه</div>
+                  <div class="summary-value text-success">
+                    {{ minuteToText(policy()?.MonthlyHourlyLimitMinute) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (statusLoading()) {
+          <div class="col-12">
+            <div class="alert alert-info py-2 mb-0">
+              در حال دریافت وضعیت مانده مرخصی...
+            </div>
+          </div>
+        }
+
+        @if (status()) {
+          <div class="col-12">
+            <div class="row g-2">
+              <div class="col-md-3">
+                <div class="summary-box">
+                  <div class="text-muted small">مانده روزانه سال</div>
+                  <div class="summary-value text-success">
+                    {{ status()?.RemainingDaily }} روز
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="summary-box">
+                  <div class="text-muted small">مانده ساعتی ماه</div>
+                  <div class="summary-value text-success">
+                    {{ minuteToText(status()?.RemainingHourlyMinute) }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="summary-box">
+                  <div class="text-muted small">در انتظار</div>
+                  <div class="summary-value text-warning">
+                    {{ status()?.PendingRequestCount }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="summary-box">
+                  <div class="text-muted small">تایید شده</div>
+                  <div class="summary-value text-primary">
+                    {{ status()?.AcceptedRequestCount }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        <div class="col-12">
+          <hr class="my-1" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">تاریخ درخواست</label>
+          <input
+            formControlName="RequestJDate"
+            class="form-control text-center bg-light"
+            readonly />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">تاریخ شروع</label>
+
+          <ng-persian-datepicker
+            [uiTheme]="customTheme"
+            [dateMin]="minimumStartTimestamp()"
+            [uiHideOnOutsideClick]="true"
+            [uiHideAfterSelectDate]="true"
+            (dateOnSelect)="onDateSelect($event, 'StartJDate')">
+
+            <input
+              formControlName="StartJDate"
+              class="form-control text-center"
+              autocomplete="off"
+              readonly
+              [class.is-invalid]="isInvalid('StartJDate')" />
+          </ng-persian-datepicker>
+
+          @if (!permission.canManageRole && minimumStartJDate()) {
+            <div class="form-text text-primary">
+              اولین تاریخ مجاز: {{ minimumStartJDate() }}
+            </div>
+          }
+        </div>
+
+        @if (!isMinuteMode()) {
+          <div class="col-md-3">
+            <label class="form-label">تاریخ پایان</label>
+
+            <ng-persian-datepicker
+              [uiTheme]="customTheme"
+              [dateMin]="minimumEndTimestamp()"
+              [uiHideOnOutsideClick]="true"
+              [uiHideAfterSelectDate]="true"
+              (dateOnSelect)="onDateSelect($event, 'EndJDate')">
+
+              <input
+                formControlName="EndJDate"
+                class="form-control text-center"
+                autocomplete="off"
+                readonly
+                [class.is-invalid]="isInvalid('EndJDate')" />
+            </ng-persian-datepicker>
+          </div>
+        } @else {
+          <div class="col-md-3">
+            <label class="form-label">تاریخ پایان</label>
+            <input
+              formControlName="EndJDate"
+              class="form-control text-center bg-light"
+              readonly />
+          </div>
+        }
+
+        <div class="col-md-3">
+          <label class="form-label">پیوست ثبت شده</label>
+          <select formControlName="HasAttachment" class="form-control">
+            <option value="0">خیر</option>
+            <option value="1">بله</option>
+          </select>
+        </div>
+
+        @if (isMinuteMode()) {
+          <div class="col-md-3">
+            <label class="form-label">از ساعت</label>
+
+            <select
+              formControlName="StartTime"
+              class="form-control"
+              [class.is-invalid]="isInvalid('StartTime')">
+
+              <option value="">انتخاب کنید</option>
+
+              @for (time of timeOptions(); track time) {
+                <option [value]="time">{{ time }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">تا ساعت</label>
+
+            <select
+              formControlName="EndTime"
+              class="form-control"
+              [class.is-invalid]="isInvalid('EndTime')">
+
+              <option value="">انتخاب کنید</option>
+
+              @for (time of timeOptions(); track time) {
+                <option [value]="time">{{ time }}</option>
+              }
+            </select>
+          </div>
+        }
+
+        <div [class.col-md-6]="!permission.canManageRole" [class.col-md-4]="permission.canManageRole">
+          <label class="form-label">توضیحات</label>
+          <textarea
+            formControlName="Description"
+            rows="2"
+            class="form-control"
+            [class.is-invalid]="isInvalid('Description')"></textarea>
+        </div>
+
+        @if (permission.canManageRole) {
+          <div class="col-md-4">
+            <label class="form-label">دلیل Override مدیر</label>
+            <input
+              formControlName="ManagerOverrideReason"
+              class="form-control"
+              placeholder="برای اصلاح درخواست تاییدشده الزامی است" />
+          </div>
+        }
+
+        <div class="col-12">
+          <div class="row g-2">
+            <div class="col-md-3">
+              <div class="summary-box text-center">
+                <div class="text-muted small">کل روز تقویمی</div>
+                <div class="summary-value">
+                  {{ EditForm.controls.TotalCalendarDay.value }}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="summary-box text-center">
+                <div class="text-muted small">روز کاری</div>
+                <div class="summary-value text-success">
+                  {{ EditForm.controls.TotalWorkDay.value }}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="summary-box text-center">
+                <div class="text-muted small">جمعه و تعطیل رسمی</div>
+                <div class="summary-value text-warning">
+                  {{ EditForm.controls.TotalOffDay.value }}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="summary-box text-center">
+                <div class="text-muted small">مدت ساعتی</div>
+                <div class="summary-value">
+                  {{ minuteToText(EditForm.controls.TotalMinute.value) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        @if (dateWarning()) {
+          <div class="col-12">
+            <div class="alert alert-warning py-2 mb-0">
+              {{ dateWarning() }}
+            </div>
+          </div>
+        }
+
+        @if (submitWarning()) {
+          <div class="col-12">
+            <div class="alert alert-warning py-2 mb-0">
+              {{ submitWarning() }}
+            </div>
+          </div>
+        }
+
+        <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+          <button
+            type="button"
+            class="btn btn-secondary px-4"
+            (click)="cancel()">
+            انصراف
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-success px-4"
+            [disabled]="loading() || !policy() || (holidaysLoadFailed() && !permission.canManageRole)">
+
+            <i class="fas fa-save me-1"></i>
+            ذخیره
+          </button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>
+
+@if (isEditMode()) {
+  <div class="card shadow-sm mt-3">
+    <div class="card-body">
+      <div class="fw-bold mb-2">پیوست‌های درخواست</div>
+
+      <app-kowsar-attach
+        [ObjectRef]="requestCode()"
+        [ClassName]="'WorkforceAbsence'">
+      </app-kowsar-attach>
+    </div>
+  </div>
+}

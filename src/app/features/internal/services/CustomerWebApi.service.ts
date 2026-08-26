@@ -51,6 +51,15 @@ export class CustomerWebApiService {
 
   }
 
+
+  GetCustomerByCodeFromSantral(CentralRef: string): Observable<any[]> {
+    const params = new HttpParams().append('CentralRef', CentralRef)
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetCustomerByCodeFromSantral", { headers: this.headerService.headers, params: params }))
+
+  }
+
+
+
   GetWebFactorRowsSupport(FactorCode: string): Observable<any[]> {
     const params = new HttpParams().append('FactorCode', FactorCode)
     return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetWebFactorRowsSupport", { headers: this.headerService.headers, params: params }))

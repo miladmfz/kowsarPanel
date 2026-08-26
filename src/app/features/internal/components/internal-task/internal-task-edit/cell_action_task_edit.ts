@@ -6,17 +6,17 @@ declare var $: any;
   selector: 'edit-delete-cell-renderer',
   template: ` 
 
-  <span   (click)="btnDeleteClicked()" class="btn btn-sm btn-outline-danger mx-1" data-toggle="tooltip" >
-  <a >
-    <i class="fas fa-trash"></i>
-  </a>
+  <span (click)="MoveDependencyUp($event)" class="btn btn-sm btn-outline-secondary mx-1" data-toggle="tooltip" title="انتقال به بالا">
+    <a><i class="fas fa-arrow-up"></i></a>
   </span>
-<!--   
-<span   (click)="CheckPort()" class="btn btn-sm btn-outline-primary " data-toggle="tooltip" title="خصوصیت اضافه ">
-  <a >
-    <i class=" far fa-file-alt"></i>
-  </a>
-  </span> -->
+
+  <span (click)="MoveDependencyDown($event)" class="btn btn-sm btn-outline-secondary mx-1" data-toggle="tooltip" title="انتقال به پایین">
+    <a><i class="fas fa-arrow-down"></i></a>
+  </span>
+
+  <span (click)="btnDeleteClicked($event)" class="btn btn-sm btn-outline-danger mx-1" data-toggle="tooltip" title="حذف وابستگی">
+    <a><i class="fas fa-trash"></i></a>
+  </span>
 `,
   standalone: false
 })
@@ -30,8 +30,10 @@ export class CellActionTaskEdit implements ICellRendererAngularComp {
   refresh(params: any): boolean {
     return true;
   }
+
   agInit(params: any): void {
     this.params = params;
+
     if (params.canEdit) {
       this.canEdit = params.canEdit;
     }
@@ -48,14 +50,18 @@ export class CellActionTaskEdit implements ICellRendererAngularComp {
     }
   }
 
-  btnDeleteClicked() {
-
+  btnDeleteClicked(event?: MouseEvent) {
+    event?.stopPropagation();
     this.params.context.componentParent.btnDeleteClicked(this.params.data);
   }
 
+  MoveDependencyUp(event?: MouseEvent) {
+    event?.stopPropagation();
+    this.params.context.componentParent.MoveDependencyUp(this.params.data);
+  }
 
-
+  MoveDependencyDown(event?: MouseEvent) {
+    event?.stopPropagation();
+    this.params.context.componentParent.MoveDependencyDown(this.params.data);
+  }
 }
-
-
-

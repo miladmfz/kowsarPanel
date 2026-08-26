@@ -294,24 +294,6 @@ export class InternalCustomerGoodComponent extends AgGridBaseComponent implement
       this.patterngood_dialog_show()
     });
   }
-
-
-  getDependencyRows(row: any): any[] {
-
-    const list = (this.goodtaskrow_factorrow_list() ?? []);
-
-    const depIds = (row.DependencyTaskRefs ?? '')
-      .toString()
-      .split(',')
-      .map(x => x.trim())
-      .filter(x => x && x !== '0');
-
-    if (depIds.length === 0) return [];
-
-    return list.filter(x =>
-      depIds.includes((x.TaskRef ?? '').toString())
-    );
-  }
   AddGoodsToCustomer(pattern: any): void {
 
     this.task_repo.GetGoodFromPattern(pattern.PatternCode)
@@ -382,90 +364,6 @@ export class InternalCustomerGoodComponent extends AgGridBaseComponent implement
 
 
   }
-
-
-
-  validateStart(row: any): { ok: boolean, message?: string } {
-
-    const deps = this.getDependencyRows(row);
-
-    const depTitles = (row.DependencyTaskTitles ?? '')
-      .toString()
-      .split(',')
-      .map(x => x.trim())
-      .filter(x => x.length > 0);
-
-    // اگر dependency تعریف شده ولی پیدا نشده
-    if (depTitles.length > 0 && deps.length === 0) {
-      return {
-        ok: false,
-        message: `وابستگی‌های این وظیفه قابل شناسایی نیست`
-      };
-    }
-
-    // ❌ پیدا کردن unfinished ها
-    const notFinished = deps.filter(d =>
-      Number(d.State) !== 2
-    );
-
-    if (notFinished.length > 0) {
-
-      const msg = notFinished
-        .map(x => `"${x.TaskTitle}"`)
-        .join(' و ');
-
-      return {
-        ok: false,
-        message: `ابتدا ${msg} باید تکمیل شود`
-      };
-    }
-
-    return { ok: true };
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   getTimePart(value: any, part: 'hour' | 'minute'): string {
     const time = (value ?? '').toString();
 
@@ -803,48 +701,105 @@ export class InternalCustomerGoodComponent extends AgGridBaseComponent implement
       });
   }
 
+  getDependencyTaskIds(row: any): string[] {
+    const raw = (row?.DependencyTaskRefs ?? '').toString().trim();
 
-  getDependencyRow(row: any): any | null {
-    const dependencyGoodTaskCode = (row?.DependencyGoodTaskCode ?? '0').toString();
-
-    if (dependencyGoodTaskCode === '0') {
-      return null;
+    if (!raw || raw === '0' || raw === '000') {
+      return [];
     }
 
-    return this.goodtaskrow_factorrow_list()
-      .find((x: any) =>
-        (x.GoodTaskCode ?? '').toString() === dependencyGoodTaskCode
-      ) ?? null;
+    return raw
+      .split(',')
+      .map((x: string) => x.trim())
+      .filter((x: string) => x.length > 0 && x !== '0' && x !== '000');
   }
+
+
+  getDependencyRows(row: any): any[] {
+    const ids = this.getDependencyTaskIds(row);
+
+    if (ids.length === 0) {
+      return [];
+    }
+
+    return (this.goodtaskrow_factorrow_list() ?? [])
+      .filter((x: any) => ids.includes((x.TaskRef ?? '').toString()))
+      .sort((a: any, b: any) => {
+        const ai = ids.indexOf((a.TaskRef ?? '').toString());
+        const bi = ids.indexOf((b.TaskRef ?? '').toString());
+        return ai - bi;
+      });
+  }
+
+
+  getDependencyTitlesFromString(row: any): string[] {
+    const raw = (row?.DependencyTaskTitles ?? '').toString().trim();
+
+    if (!raw) {
+      return [];
+    }
+
+    return raw
+      .split(',')
+      .map((x: string) => x.trim())
+      .filter((x: string) => x.length > 0);
+  }
+
+
+  validateStart(row: any): { ok: boolean; message?: string } {
+    const dependencyIds = this.getDependencyTaskIds(row);
+
+    if (dependencyIds.length === 0) {
+      return { ok: true };
+    }
+
+    const dependencyRows = this.getDependencyRows(row);
+
+    // اگر وابستگی در لیست همین کالا/ردیف وجود نداشت، طبق تصمیم قبلی مانع شروع نمی‌شویم.
+    // چون ممکن است آن Task در مجموعه ردیف‌های فعلی نیامده باشد.
+    if (dependencyRows.length === 0) {
+      return { ok: true };
+    }
+
+    const notFinishedRows = dependencyRows.filter((d: any) => !this.hasEndTime(d));
+
+    if (notFinishedRows.length > 0) {
+      const titles = notFinishedRows
+        .map((x: any) => `"${x.TaskTitle ?? 'بدون عنوان'}"`)
+        .join(' و ');
+
+      const endText = notFinishedRows.length > 1 ? 'شوند' : 'شود';
+
+      return {
+        ok: false,
+        message: `ابتدا ${titles} باید تکمیل ${endText}`
+      };
+    }
+
+    return { ok: true };
+  }
+
 
   canStartByDependency(row: any): boolean {
-    const dependencyGoodTaskCode = (row?.DependencyGoodTaskCode ?? '0').toString();
-
-    // وابستگی ندارد
-    if (dependencyGoodTaskCode === '0') {
-      return true;
-    }
-
-    const dependencyRow = this.getDependencyRow(row);
-
-    // وابستگی دارد، ولی داخل ردیف‌های همین لیست نیست
-    // پس اینجا نباید جلو شروع را بگیریم
-    if (!dependencyRow) {
-      return true;
-    }
-
-    // وابستگی داخل همین لیست هست؛ باید EndTime داشته باشد
-    return this.hasEndTime(dependencyRow);
+    return this.validateStart(row).ok;
   }
 
+
   getDependencyErrorMessage(row: any): string {
-    const dependencyTitle = (row?.DependencyTaskTitle ?? '').toString().trim();
+    return this.validateStart(row).message ?? 'وابستگی‌ها تکمیل نشده‌اند';
+  }
 
-    if (dependencyTitle.length > 0) {
-      return `ابتدا شرح وظیفه «${dependencyTitle}» باید تکمیل شود`;
-    }
 
-    return 'ابتدا شرح وظیفه وابسته باید تکمیل شود';
+  getDependencyList(row: any): any[] {
+    return this.getDependencyRows(row).map((x: any) => ({
+      TaskRef: x.TaskRef,
+      TaskTitle: x.TaskTitle,
+      GoodTaskRowCode: x.GoodTaskRowCode,
+      State: x.State,
+      isDone: this.hasEndTime(x),
+      StartTime: x.StartTime,
+      EndTime: x.EndTime
+    }));
   }
 
 
@@ -870,10 +825,10 @@ export class InternalCustomerGoodComponent extends AgGridBaseComponent implement
     const body = {
       GoodTaskRowCode: (row.GoodTaskRowCode ?? '').toString(),
       State: '1',
-      TaskDate: this.session.activeDate,
+      TaskDate: (this.session.activeDate ?? '').toString(),
       StartTime: this.getNowTime(),
       EndTime: '',
-      CentralRef: this.session.centralRef
+      CentralRef: (this.session.centralRef ?? '').toString()
     };
 
     this.task_repo.GoodTaskRow_ChangeState(body)
@@ -907,12 +862,12 @@ export class InternalCustomerGoodComponent extends AgGridBaseComponent implement
     row._submitted = true;
 
     const body = {
-      GoodTaskRowCode: row.GoodTaskRowCode,
+      GoodTaskRowCode: (row.GoodTaskRowCode ?? '').toString(),
       State: '2',
-      TaskDate: row.TaskDate || this.session.activeDate,
-      StartTime: row.StartTime || '',
+      TaskDate: (row.TaskDate || this.session.activeDate || '').toString(),
+      StartTime: (row.StartTime || '').toString(),
       EndTime: this.getNowTime(),
-      CentralRef: this.session.centralRef
+      CentralRef: (this.session.centralRef ?? '').toString()
     };
 
     this.task_repo.GoodTaskRow_ChangeState(body)

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, inject, OnDestroy, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, debounceTime } from 'rxjs';
 import { AgGridModule } from 'ag-grid-angular';
@@ -102,9 +102,17 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
   });
 
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly repo = inject(CustomerWebApiService);
   private readonly base_repo = inject(KowsarBaseWebApi);
+  private readonly customer_repo = inject(CustomerWebApiService);
+
   private readonly renderer = inject(Renderer2);
+
+  private pendingSantralAction: 'factors' | 'properties' | null = null;
+  private pendingSantralCustomerCode = '';
+  private pendingSantralCentralRef = '';
+  private routeInitialized = false;
 
   protected readonly permissionService = inject(PermissionService);
   protected readonly session = inject(SessionStorageService);
@@ -174,10 +182,34 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
     this.EditForm_SearchTarget.patchValue({
       BrokerRef: this.session.getString("BrokerCode"),
       SearchTarget: ''
-
     });
 
+    this.route.queryParamMap.subscribe(params => {
+      const source = String(params.get('source') ?? '').toUpperCase();
+      const action = String(params.get('action') ?? '').toLowerCase();
+      const customerCode = String(params.get('customerCode') ?? '').trim();
+      const centralRef = String(params.get('centralRef') ?? '').trim();
 
+      if (
+        source === 'SANTRAL' &&
+        customerCode &&
+        (action === 'factors' || action === 'properties')
+      ) {
+        this.pendingSantralAction = action;
+        this.pendingSantralCustomerCode = customerCode;
+        this.pendingSantralCentralRef = centralRef;
+        this.EditForm_SearchTarget.patchValue({
+          SearchTarget: customerCode,
+          BrokerRef: ''
+        }, { emitEvent: false });
+
+        if (this.routeInitialized) {
+          this.getList();
+        }
+      }
+    });
+
+    this.routeInitialized = true;
     this.getList();
 
     this.searchSubject
@@ -236,11 +268,82 @@ export class InternalCustomerListComponent extends AgGridBaseComponent
           this.updateGridData(1, this.records());
           this.gridApi1.sizeColumnsToFit();
         }
+
+        this.openPendingSantralAction();
       },
       error: () => (this.loading.set(false)),
     });
   }
 
+
+  private openPendingSantralAction(): void {
+    const action = this.pendingSantralAction;
+    const customerCode = this.pendingSantralCustomerCode;
+    const centralRef = this.pendingSantralCentralRef;
+
+    if (!action || !customerCode) {
+      return;
+    }
+
+    const customer = this.records().find(item =>
+      String(item?.CustomerCode ?? '').trim() === customerCode
+    );
+
+    if (action === 'factors') {
+      this.clearPendingSantralAction();
+      setTimeout(() => {
+        this.Factor_Customer_Property(customer ?? { CustomerCode: customerCode });
+      }, 0);
+      return;
+    }
+
+    if (customer) {
+      this.clearPendingSantralAction();
+      setTimeout(() => this.Show_Customer_Property(customer), 0);
+      return;
+    }
+
+    if (!centralRef) {
+      return;
+    }
+
+    this.customer_repo.GetCustomerByCodeFromSantral(centralRef + "").subscribe({
+      next: (data: any) => {
+        const row = Array.isArray(data?.Customers) ? data.Customers[0] : null;
+        if (!row) {
+          return;
+        }
+
+        const fallbackCustomer = {
+          ...row,
+          CustomerCode: customerCode,
+          LockNumber: row?.LockNumber ?? row?.lockNumber ?? ''
+        };
+
+        this.records.update(items => [fallbackCustomer, ...items]);
+        this.clearPendingSantralAction();
+        setTimeout(() => this.Show_Customer_Property(fallbackCustomer), 0);
+      }
+    });
+  }
+
+  private clearPendingSantralAction(): void {
+    this.pendingSantralAction = null;
+    this.pendingSantralCustomerCode = '';
+    this.pendingSantralCentralRef = '';
+
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        source: null,
+        customerCode: null,
+        centralRef: null,
+        action: null
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
+  }
 
   // ---------------------------
   // Property (Show / Edit)

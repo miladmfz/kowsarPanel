@@ -53,8 +53,37 @@ export interface PhoneBookItem {
   dialNumber: string;
   extension?: string;
   explain?: string;
+  centralRef?: number;
+  customerCode?: number;
+  addressRef?: number;
   isFavorite: boolean;
   favoriteId: number;
+}
+
+export interface PhoneCustomerContext {
+  lineIndex?: number;
+  number: string;
+  name: string;
+  explain?: string;
+  centralRef?: number;
+  customerCode?: number;
+  addressRef?: number;
+  centralName?: string;
+  customerName?: string;
+  customerExplain?: string;
+  appNumber?: string;
+  databaseNumber?: string;
+  lockNumber?: string;
+  customerType?: string;
+  economyCode?: string;
+  codeMelli?: string;
+  manager?: string;
+  phone?: string;
+  mobile?: string;
+  email?: string;
+  address?: string;
+  loading?: boolean;
+  source?: 'PHONEBOOK' | 'CALL' | 'MANUAL';
 }
 
 export interface CallLogItem {

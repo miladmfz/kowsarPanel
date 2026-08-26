@@ -1,0 +1,25 @@
+@if (visible) {
+<div class="attendance-call-modal-backdrop" (click)="closeModal()"></div>
+
+<div class="attendance-call-modal-shell" dir="rtl">
+  <div class="attendance-call-modal-dialog" [class.dark-modal]="darkMode" (click)="$event.stopPropagation()">
+    <div class="attendance-call-modal-header">
+      <div>
+        <h5>
+          <i class="fas fa-chart-bar"></i>
+          گزارش تماس {{ personName || 'کارشناس' }}
+        </h5>
+        <small>گزارش امروز داخلی {{ extension || '---' }}</small>
+      </div>
+
+      <button type="button" class="btn-close" aria-label="بستن" (click)="closeModal()"></button>
+    </div>
+
+    <div class="attendance-call-modal-body">
+      <app-attendance-call-report [extension]="extension" [personName]="personName" [darkMode]="darkMode"
+        [compact]="true">
+      </app-attendance-call-report>
+    </div>
+  </div>
+</div>
+}

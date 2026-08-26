@@ -27,12 +27,28 @@
 
             <div class="col-lg-3 col-md-6 col-12">
               <label class="form-label fw-semibold">نام فارسی افزونه</label>
-              <input type="text" class="form-control" formControlName="PersianCompanyName" autocomplete="off" />
+              <input type="text" class="form-control" formControlName="PersianCompanyName" autocomplete="off" [ngClass]="{
+                   'is-invalid': EditForm.controls['PersianCompanyName'].invalid && EditForm.controls['PersianCompanyName'].touched,
+                   'is-valid': EditForm.controls['PersianCompanyName'].valid && EditForm.controls['PersianCompanyName'].touched
+                 }" />
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm.controls['PersianCompanyName']
+          }"></ng-container>
             </div>
 
             <div class="col-lg-3 col-md-6 col-12">
               <label class="form-label fw-semibold">نام انگلیسی افزونه</label>
-              <input type="text" class="form-control" formControlName="EnglishCompanyName" autocomplete="off" />
+              <input type="text" class="form-control" formControlName="EnglishCompanyName" autocomplete="off" [ngClass]="{
+                   'is-invalid': EditForm.controls['EnglishCompanyName'].invalid && EditForm.controls['EnglishCompanyName'].touched,
+                   'is-valid': EditForm.controls['EnglishCompanyName'].valid && EditForm.controls['EnglishCompanyName'].touched
+                 }" />
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm.controls['EnglishCompanyName']
+          }"></ng-container>
             </div>
 
             <div class="col-lg-3 col-md-6 col-12">
@@ -55,12 +71,28 @@
 
             <div class="col-lg-3 col-md-6 col-12">
               <label class="form-label fw-semibold">نام دیتابیس</label>
-              <input type="text" class="form-control" formControlName="DbName" autocomplete="off" />
+              <input type="text" class="form-control" formControlName="DbName" autocomplete="off" [ngClass]="{
+                   'is-invalid': EditForm.controls['DbName'].invalid && EditForm.controls['DbName'].touched,
+                   'is-valid': EditForm.controls['DbName'].valid && EditForm.controls['DbName'].touched
+                 }" />
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm.controls['DbName']
+          }"></ng-container>
             </div>
 
             <div class="col-lg-3 col-md-6 col-12">
               <label class="form-label fw-semibold">نام دیتابیس عکس</label>
-              <input type="text" class="form-control" formControlName="DbImageName" autocomplete="off" />
+              <input type="text" class="form-control" formControlName="DbImageName" autocomplete="off" [ngClass]="{
+                   'is-invalid': EditForm.controls['DbImageName'].invalid && EditForm.controls['DbImageName'].touched,
+                   'is-valid': EditForm.controls['DbImageName'].valid && EditForm.controls['DbImageName'].touched
+                 }" />
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm.controls['DbImageName']
+          }"></ng-container>
             </div>
 
             <div class="col-lg-3 col-md-6 col-12">
@@ -75,7 +107,15 @@
 
             <div class="col-lg-3 col-md-6 col-12">
               <label class="form-label fw-semibold">آدرس سرور</label>
-              <input type="text" class="form-control" formControlName="ServerIp" autocomplete="off" />
+              <input type="text" class="form-control" formControlName="ServerIp" autocomplete="off" [ngClass]="{
+                   'is-invalid': EditForm.controls['ServerIp'].invalid && EditForm.controls['ServerIp'].touched,
+                   'is-valid': EditForm.controls['ServerIp'].valid && EditForm.controls['ServerIp'].touched
+                 }" />
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+            validation: 'required',
+            message: 'اجباری است',
+            control: EditForm.controls['ServerIp']
+          }"></ng-container>
             </div>
 
             <div class="col-lg-3 col-md-6 col-12">

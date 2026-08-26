@@ -1,0 +1,594 @@
+<section class="attendance-call-report" [class.compact-report]="compact" [class.dark-report]="darkMode"
+  [class.summary-only]="mode === 'summary'" [class.followup-only]="mode === 'followup'" dir="rtl">
+
+  @if (mode !== 'followup') {
+  <div class="attendance-call-report__header">
+    <div>
+      <div class="attendance-call-report__title">
+        <i class="fas fa-headset"></i>
+        گزارش تماس امروز
+        @if (personName) {
+        <span>{{ personName }}</span>
+        }
+      </div>
+      <div class="attendance-call-report__subtitle">
+        داخلی {{ extension || '---' }}
+        @if (lastUpdate()) {
+        <span>آخرین بروزرسانی {{ lastUpdate() }}</span>
+        }
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-sm btn-outline-primary attendance-call-report__refresh"
+      [disabled]="loading() || !extension" (click)="refreshReport()" title="بروزرسانی گزارش تماس">
+      <i class="fas fa-sync-alt" [class.fa-spin]="loading()"></i>
+      <span>بروزرسانی</span>
+    </button>
+  </div>
+  }
+
+  @if (!extension) {
+  <div class="attendance-call-report__empty">
+    <i class="fas fa-phone-slash"></i>
+    <span>برای این کارشناس داخلی سانترال مشخص نشده است.</span>
+  </div>
+  } @else {
+  @if (errorMessage()) {
+  <div class="alert alert-danger py-2 mb-3">
+    {{ errorMessage() }}
+  </div>
+  }
+
+  @if (mode !== 'followup') {
+  <div class="attendance-call-report__stats" [class.is-loading]="loading()">
+    <article class="attendance-call-stat neutral">
+      <div class="attendance-call-stat__top">
+        <span class="attendance-call-stat__icon"><i class="fas fa-phone-alt"></i></span>
+        <span class="attendance-call-stat__title">کل تماس‌ها</span>
+      </div>
+      <strong>{{ formatNumber(totalCalls()) }}</strong>
+      <small>تماس امروز</small>
+      <button type="button" class="attendance-call-stat__action" (click)="openMetricDetails('total')">
+        <i class="fas fa-eye"></i>
+        جزئیات
+      </button>
+    </article>
+
+    <article class="attendance-call-stat success">
+      <div class="attendance-call-stat__top">
+        <span class="attendance-call-stat__icon"><i class="fas fa-phone-volume"></i></span>
+        <span class="attendance-call-stat__title">پاسخ داده شده</span>
+      </div>
+      <strong>{{ formatNumber(answeredCalls()) }}</strong>
+      <small>تماس موفق</small>
+      <button type="button" class="attendance-call-stat__action" (click)="openMetricDetails('answered')">
+        <i class="fas fa-eye"></i>
+        جزئیات
+      </button>
+    </article>
+
+    <article class="attendance-call-stat danger">
+      <div class="attendance-call-stat__top">
+        <span class="attendance-call-stat__icon"><i class="fas fa-phone-slash"></i></span>
+        <span class="attendance-call-stat__title">بی‌پاسخ</span>
+      </div>
+      <strong>{{ formatNumber(noAnswerCalls()) }}</strong>
+      <small>نیازمند بررسی</small>
+      <button type="button" class="attendance-call-stat__action" (click)="openMetricDetails('no-answer')">
+        <i class="fas fa-eye"></i>
+        جزئیات
+      </button>
+    </article>
+
+    <article class="attendance-call-stat warning">
+      <div class="attendance-call-stat__top">
+        <span class="attendance-call-stat__icon"><i class="fas fa-phone-square"></i></span>
+        <span class="attendance-call-stat__title">اشغال</span>
+      </div>
+      <strong>{{ formatNumber(busyCalls()) }}</strong>
+      <small>نتیجه اشغال</small>
+      <button type="button" class="attendance-call-stat__action" (click)="openMetricDetails('busy')">
+        <i class="fas fa-eye"></i>
+        جزئیات
+      </button>
+    </article>
+
+    <article class="attendance-call-stat info">
+      <div class="attendance-call-stat__top">
+        <span class="attendance-call-stat__icon"><i class="fas fa-clock"></i></span>
+        <span class="attendance-call-stat__title">مجموع مکالمه</span>
+      </div>
+      <strong class="attendance-call-stat__text-value">{{ talkTime() }}</strong>
+      <small>زمان گفت‌وگو</small>
+      <button type="button" class="attendance-call-stat__action" (click)="openMetricDetails('talk-time')">
+        <i class="fas fa-eye"></i>
+        جزئیات
+      </button>
+    </article>
+
+    <article class="attendance-call-stat primary">
+      <div class="attendance-call-stat__top">
+        <span class="attendance-call-stat__icon"><i class="fas fa-chart-line"></i></span>
+        <span class="attendance-call-stat__title">نرخ پاسخ</span>
+      </div>
+      <strong>{{ answerRate() }}</strong>
+      <small>عملکرد امروز</small>
+      <button type="button" class="attendance-call-stat__action" (click)="openMetricDetails('answer-rate')">
+        <i class="fas fa-eye"></i>
+        جزئیات
+      </button>
+    </article>
+
+    <article class="attendance-call-stat reserved">
+      <div class="attendance-call-stat__top">
+        <span class="attendance-call-stat__icon"><i class="fas fa-plus"></i></span>
+        <span class="attendance-call-stat__title">جایگاه ۷</span>
+      </div>
+      <strong>—</strong>
+      <small>رزرو برای گزارش بعدی</small>
+      <button type="button" class="attendance-call-stat__action" (click)="openMetricDetails('slot-7')">
+        <i class="fas fa-info-circle"></i>
+        مشاهده
+      </button>
+    </article>
+
+    <article class="attendance-call-stat reserved">
+      <div class="attendance-call-stat__top">
+        <span class="attendance-call-stat__icon"><i class="fas fa-plus"></i></span>
+        <span class="attendance-call-stat__title">جایگاه ۸</span>
+      </div>
+      <strong>—</strong>
+      <small>رزرو برای گزارش بعدی</small>
+      <button type="button" class="attendance-call-stat__action" (click)="openMetricDetails('slot-8')">
+        <i class="fas fa-info-circle"></i>
+        مشاهده
+      </button>
+    </article>
+
+    <article class="attendance-call-stat reserved">
+      <div class="attendance-call-stat__top">
+        <span class="attendance-call-stat__icon"><i class="fas fa-plus"></i></span>
+        <span class="attendance-call-stat__title">جایگاه ۹</span>
+      </div>
+      <strong>—</strong>
+      <small>رزرو برای گزارش بعدی</small>
+      <button type="button" class="attendance-call-stat__action" (click)="openMetricDetails('slot-9')">
+        <i class="fas fa-info-circle"></i>
+        مشاهده
+      </button>
+    </article>
+
+    <article class="attendance-call-stat reserved">
+      <div class="attendance-call-stat__top">
+        <span class="attendance-call-stat__icon"><i class="fas fa-plus"></i></span>
+        <span class="attendance-call-stat__title">جایگاه ۱۰</span>
+      </div>
+      <strong>—</strong>
+      <small>رزرو برای گزارش بعدی</small>
+      <button type="button" class="attendance-call-stat__action" (click)="openMetricDetails('slot-10')">
+        <i class="fas fa-info-circle"></i>
+        مشاهده
+      </button>
+    </article>
+  </div>
+  }
+
+  @if (mode !== 'summary') {
+  <div class="attendance-call-report__followup">
+    <div class="attendance-call-report__followup-header">
+      <div>
+        <h6>
+          <i class="fas fa-headset"></i>
+          پیگیری ارتباط با مشتری
+        </h6>
+        <small>
+          تماس‌های مستقیم و تماس‌های گروهی بی‌پاسخ نمایش داده می‌شوند؛ تماس داخلی در این گزارش نیست.
+        </small>
+      </div>
+
+      <div class="attendance-call-report__followup-actions">
+        <span class="attendance-call-report__count">
+          {{ formatNumber(totalFollowupCount()) }} مورد باز
+        </span>
+
+        @if (mode === 'followup') {
+        <button type="button" class="btn btn-sm btn-outline-primary attendance-call-report__refresh"
+          [disabled]="loading() || !extension" (click)="refreshReport()" title="بروزرسانی تماس‌های نیازمند پیگیری">
+          <i class="fas fa-sync-alt" [class.fa-spin]="loading()"></i>
+          <span>بروزرسانی</span>
+        </button>
+        }
+      </div>
+    </div>
+
+    <div class="attendance-followup-tabs" role="tablist" aria-label="نوع پیگیری تماس">
+      <button type="button" role="tab" class="attendance-followup-tab incoming"
+        [class.active]="activeFollowupDirection() === 'incoming'"
+        [attr.aria-selected]="activeFollowupDirection() === 'incoming'" (click)="selectFollowupDirection('incoming')">
+        <span class="attendance-followup-tab__icon"><i class="fas fa-phone-alt"></i></span>
+        <span class="attendance-followup-tab__text">
+          <strong>ورودی بی‌پاسخ</strong>
+          <small>تماس مستقیم یا گروهی برقرار نشده است</small>
+        </span>
+        <span class="attendance-followup-tab__count">
+          {{ formatNumber(incomingFollowupRows().length) }}
+        </span>
+      </button>
+
+      <button type="button" role="tab" class="attendance-followup-tab outgoing"
+        [class.active]="activeFollowupDirection() === 'outgoing'"
+        [attr.aria-selected]="activeFollowupDirection() === 'outgoing'" (click)="selectFollowupDirection('outgoing')">
+        <span class="attendance-followup-tab__icon"><i class="fas fa-phone-volume"></i></span>
+        <span class="attendance-followup-tab__text">
+          <strong>خروجی بی‌نتیجه</strong>
+          <small>کارشناس تماس گرفته و گفتگو انجام نشده</small>
+        </span>
+        <span class="attendance-followup-tab__count">
+          {{ formatNumber(outgoingFollowupRows().length) }}
+        </span>
+      </button>
+    </div>
+
+    <div class="attendance-followup-rule">
+      <i class="fas fa-check-double"></i>
+      <span>
+        مکالمه موفق کارشناس، پیگیری‌های شخصی را می‌بندد؛ مکالمه موفق هر عضو گروه نیز پیگیری گروهی همان شماره را می‌بندد.
+      </span>
+    </div>
+
+    @if (loading() && followupRows().length === 0) {
+    <div class="attendance-call-report__loading">
+      <i class="fas fa-spinner fa-spin"></i>
+      در حال محاسبه دوره‌های پیگیری...
+    </div>
+    } @else if (followupRows().length === 0) {
+    <div class="attendance-call-report__empty small-empty">
+      <i class="fas fa-check-circle"></i>
+      @if (activeFollowupDirection() === 'incoming') {
+      <span>تماس ورودی بی‌پاسخِ بازی برای امروز وجود ندارد.</span>
+      } @else {
+      <span>تماس خروجی بی‌نتیجهِ بازی برای امروز وجود ندارد.</span>
+      }
+    </div>
+    } @else {
+    <div class="attendance-call-report__grid followup-grid">
+      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [columnDefs]="columnDefs"
+        [rowData]="followupRows()" [gridOptions]="gridOptions" [pagination]="true" [paginationAutoPageSize]="false"
+        [paginationPageSize]="pageSize" (gridReady)="onGridReady($event, 1)" [class]="themeClass + ' w-100 h-100'">
+      </ag-grid-angular>
+    </div>
+    }
+  </div>
+  }
+  }
+</section>
+
+@if (detailModalOpen()) {
+<div class="attendance-call-detail-backdrop" (click)="closeMetricDetails()">
+  <section class="attendance-call-detail-modal" role="dialog" aria-modal="true" aria-labelledby="callMetricModalTitle"
+    (click)="$event.stopPropagation()" dir="rtl">
+
+    <header class="attendance-call-detail-modal__header">
+      <div class="attendance-call-detail-modal__heading">
+        <span class="attendance-call-detail-modal__icon">
+          <i class="fas fa-chart-bar"></i>
+        </span>
+        <div>
+          <h5 id="callMetricModalTitle">{{ detailTitle() }}</h5>
+          <p>{{ detailDescription() }}</p>
+        </div>
+      </div>
+
+      <button type="button" class="attendance-call-detail-modal__close" (click)="closeMetricDetails()" title="بستن">
+        <i class="fas fa-times"></i>
+      </button>
+    </header>
+
+    <div class="attendance-call-detail-modal__summary">
+      <div>
+        <span>مقدار گزارش</span>
+        <strong>{{ detailValue() }}</strong>
+      </div>
+      <div>
+        <span>کارشناس</span>
+        <strong>{{ personName || '---' }}</strong>
+      </div>
+      <div>
+        <span>داخلی</span>
+        <strong>{{ extension || '---' }}</strong>
+      </div>
+      <div>
+        <span>تاریخ</span>
+        <strong>{{ detailDateLabel() }}</strong>
+      </div>
+      <div>
+        <span>تعداد ردیف</span>
+        <strong>{{ detailRowsCount() }}</strong>
+      </div>
+    </div>
+
+    <div class="attendance-call-detail-modal__body">
+      @if (detailLoading()) {
+      <div class="attendance-call-detail-modal__state">
+        <i class="fas fa-spinner fa-spin"></i>
+        <span>در حال دریافت جزئیات تماس...</span>
+      </div>
+      } @else if (detailError()) {
+      <div class="attendance-call-detail-modal__state is-error">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>{{ detailError() }}</span>
+      </div>
+      } @else if (detailMetric().startsWith('slot-')) {
+      <div class="attendance-call-detail-modal__state is-reserved">
+        <i class="fas fa-layer-group"></i>
+        <strong>این جایگاه آماده تعریف گزارش جدید است.</strong>
+        <span>عنوان، منبع داده و عملکرد این کارت در مرحله بعد مشخص می‌شود.</span>
+      </div>
+      } @else if (detailRows().length === 0) {
+      <div class="attendance-call-detail-modal__state">
+        <i class="fas fa-check-circle"></i>
+        <span>برای این گزارش در امروز رکوردی ثبت نشده است.</span>
+      </div>
+      } @else {
+      <div class="attendance-call-detail-modal__grid">
+        <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [columnDefs]="detailColumnDefs"
+          [rowData]="detailRows()" [gridOptions]="gridOptions" [pagination]="true" [paginationAutoPageSize]="false"
+          [paginationPageSize]="detailPageSize" (gridReady)="onGridReady($event, 2)"
+          [class]="themeClass + ' w-100 h-100'">
+        </ag-grid-angular>
+      </div>
+      }
+    </div>
+
+    <footer class="attendance-call-detail-modal__footer">
+      <span>اطلاعات بر اساس تماس‌های امروز داخلی {{ extension }} نمایش داده می‌شود.</span>
+      <button type="button" class="btn btn-primary btn-sm" (click)="closeMetricDetails()">
+        بستن
+      </button>
+    </footer>
+  </section>
+</div>
+}
+@if (followupDetailModalOpen()) {
+<div class="attendance-call-detail-backdrop" (click)="closeFollowupDetails()">
+  <section class="attendance-call-detail-modal attendance-followup-detail-modal" role="dialog" aria-modal="true"
+    aria-labelledby="followupDetailModalTitle" (click)="$event.stopPropagation()" dir="rtl">
+
+    <header class="attendance-call-detail-modal__header">
+      <div class="attendance-call-detail-modal__heading">
+        <span class="attendance-call-detail-modal__icon followup-icon">
+          <i class="fas fa-history"></i>
+        </span>
+        <div>
+          <h5 id="followupDetailModalTitle">
+            {{ selectedFollowup()?.direction_fa || 'جزئیات پیگیری' }}
+          </h5>
+          <p>
+            {{ selectedFollowup()?.display_name || selectedFollowup()?.number || '---' }}
+          </p>
+        </div>
+      </div>
+
+      <button type="button" class="attendance-call-detail-modal__close" (click)="closeFollowupDetails()" title="بستن">
+        <i class="fas fa-times"></i>
+      </button>
+    </header>
+
+    <div class="attendance-call-detail-modal__summary followup-summary">
+      <div>
+        <span>شماره</span>
+        <strong>{{ selectedFollowup()?.number || '---' }}</strong>
+      </div>
+      <div>
+        <span>تعداد تلاش این دوره</span>
+        <strong>{{ formatNumber(selectedFollowup()?.attempt_count) }}</strong>
+      </div>
+      <div>
+        <span>اولین تلاش</span>
+        <strong>{{ selectedFollowup()?.first_attempt_fa || '---' }}</strong>
+      </div>
+      <div>
+        <span>آخرین تلاش</span>
+        <strong>{{ selectedFollowup()?.last_attempt_fa || '---' }}</strong>
+      </div>
+      <div>
+        <span>آخرین گفتگوی موفق قبلی</span>
+        <strong>{{ selectedFollowup()?.last_success_fa || 'ندارد' }}</strong>
+      </div>
+      @if (selectedFollowup()?.is_ringgroup) {
+      <div>
+        <span>گروه زنگ</span>
+        <strong>
+          {{ selectedFollowup()?.ringgroup_name || selectedFollowup()?.ringgroup_number || 'گروه زنگ' }}
+        </strong>
+      </div>
+      }
+    </div>
+
+    <div class="attendance-followup-modal-rule">
+      <i class="fas fa-info-circle"></i>
+      <span>
+        این جدول فقط تلاش‌های دوره باز را نشان می‌دهد. در پیگیری گروهی، پاسخ یا تماس موفق هر عضو گروه دوره قبلی را
+        می‌بندد.
+      </span>
+    </div>
+
+    <div class="attendance-call-detail-modal__body">
+      @if (followupAttemptRows().length === 0) {
+      <div class="attendance-call-detail-modal__state">
+        <i class="fas fa-check-circle"></i>
+        <span>تلاشی برای این دوره ثبت نشده است.</span>
+      </div>
+      } @else {
+      <div class="attendance-call-detail-modal__grid followup-attempt-grid">
+        <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200"
+          [columnDefs]="followupAttemptColumnDefs" [rowData]="followupAttemptRows()" [gridOptions]="gridOptions"
+          [pagination]="true" [paginationAutoPageSize]="false" [paginationPageSize]="detailPageSize"
+          (gridReady)="onGridReady($event, 3)" [class]="themeClass + ' w-100 h-100'">
+        </ag-grid-angular>
+      </div>
+      }
+    </div>
+
+    <footer class="attendance-call-detail-modal__footer">
+      <span>داخلی {{ extension }} — تماس‌های مستقیم و RingGroup بر اساس تماس منطقی محاسبه می‌شوند.</span>
+      <button type="button" class="btn btn-primary btn-sm" (click)="closeFollowupDetails()">
+        بستن
+      </button>
+    </footer>
+  </section>
+</div>
+}
+
+@if (phonebookModalOpen()) {
+<div class="attendance-phonebook-backdrop" (click)="closePhonebookAdd()">
+  <section class="attendance-phonebook-modal" role="dialog" aria-modal="true" aria-labelledby="phonebookQuickAddTitle"
+    (click)="$event.stopPropagation()" dir="rtl">
+
+    <header class="attendance-phonebook-modal__header">
+      <div>
+        <h5 id="phonebookQuickAddTitle">
+          <i class="fas fa-user-plus"></i>
+          ثبت شماره در دفتر تلفن
+        </h5>
+        <p>شماره می‌تواند به یک مشتری کوثر متصل شود یا به‌صورت مخاطب آزاد ثبت شود.</p>
+      </div>
+
+      <button type="button" class="attendance-phonebook-modal__close" (click)="closePhonebookAdd()"
+        [disabled]="phonebookSaving()" title="بستن">
+        <i class="fas fa-times"></i>
+      </button>
+    </header>
+
+    <div class="attendance-phonebook-modal__body">
+      <div class="attendance-phonebook-number-box">
+        <span>شماره تماس</span>
+        <strong dir="ltr">{{ phonebookForm().number }}</strong>
+      </div>
+
+      <div class="attendance-phonebook-mode-switch" role="group" aria-label="نوع ثبت مخاطب">
+        <button type="button" [class.active]="phonebookSaveMode() === 'customer'"
+          (click)="setPhonebookSaveMode('customer')" [disabled]="phonebookSaving()">
+          <i class="fas fa-users"></i>
+          ثبت از مشتریان
+        </button>
+        <button type="button" [class.active]="phonebookSaveMode() === 'manual'" (click)="setPhonebookSaveMode('manual')"
+          [disabled]="phonebookSaving()">
+          <i class="fas fa-user-edit"></i>
+          بدون مشتری
+        </button>
+      </div>
+
+      @if (phonebookSaveMode() === 'customer') {
+      <div class="attendance-phonebook-customer-section">
+        <div class="attendance-phonebook-customer-heading">
+          <div>
+            <strong>مشتری کوثر</strong>
+            <small>همان لیست مشتریان مورد استفاده در فاکتور و تیکت</small>
+          </div>
+          <button type="button" class="btn btn-outline-primary btn-sm" (click)="openPhonebookCustomerModal('')"
+            [disabled]="phonebookSaving() || phonebookCustomerResolving()">
+            <i class="fas fa-search"></i>
+            {{ phonebookSelectedCustomer() ? 'تغییر مشتری' : 'انتخاب مشتری' }}
+          </button>
+        </div>
+
+        @if (phonebookSelectedCustomer()) {
+        <div class="attendance-phonebook-selected-customer">
+          <div class="attendance-phonebook-selected-customer__icon">
+            <i class="fas fa-building"></i>
+          </div>
+          <div class="attendance-phonebook-selected-customer__body">
+            <strong>{{ phonebookSelectedCustomerName() }}</strong>
+            <div>
+              <span>CentralRef: <b>{{ phonebookCustomerMeta().centralRef || '...' }}</b></span>
+              <span>CustomerCode: <b>{{ phonebookCustomerMeta().customerCode || '...' }}</b></span>
+              <span>AddressRef: <b>{{ phonebookCustomerMeta().addressRef || '...' }}</b></span>
+            </div>
+          </div>
+          @if (phonebookCustomerResolving()) {
+          <span class="spinner-border spinner-border-sm text-primary" title="در حال تکمیل کدها"></span>
+          }
+        </div>
+        } @else {
+        <button type="button" class="attendance-phonebook-customer-empty" (click)="openPhonebookCustomerModal('')"
+          [disabled]="phonebookSaving()">
+          <i class="fas fa-user-plus"></i>
+          <span>برای ادامه یک مشتری را انتخاب کنید</span>
+        </button>
+        }
+      </div>
+      }
+
+      <div class="mb-3">
+        <label class="form-label fw-bold">نام مخاطب <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" [ngModel]="phonebookForm().name"
+          (ngModelChange)="onPhonebookNameChange($event)" placeholder="نامی که در دفتر تلفن نمایش داده می‌شود"
+          autocomplete="off" [disabled]="phonebookSaving()" />
+        @if (phonebookSaveMode() === 'customer' && phonebookSelectedCustomer()) {
+        <small class="attendance-phonebook-field-hint">
+          نام مشتری به‌صورت پیش‌فرض قرار گرفته؛ در صورت نیاز می‌توانید نام دفتر تلفن را ویرایش کنید.
+        </small>
+        }
+      </div>
+
+      @if (phonebookSaveMode() === 'manual') {
+      <div>
+        <label class="form-label fw-bold">توضیحات</label>
+        <textarea class="form-control attendance-phonebook-explain" rows="3" [ngModel]="phonebookForm().explain"
+          (ngModelChange)="onPhonebookExplainChange($event)"
+          placeholder="مثلاً واحد فروش، مشتری قدیمی، پیگیری سفارش و ..." [disabled]="phonebookSaving()"></textarea>
+      </div>
+      } @else {
+      <div class="attendance-phonebook-kowsar-explain">
+        <div class="attendance-phonebook-kowsar-explain__title">
+          <i class="fas fa-link"></i>
+          <span>توضیحات سیستمی اتصال به کوثر</span>
+        </div>
+        @if (phonebookSelectedCustomer()) {
+        <code dir="ltr">{{ phonebookCustomerSystemExplain() }}</code>
+        <small>CentralRef، CustomerCode، AddressRef و داخلی ثبت‌کننده سیستمی هستند و قابل ویرایش نیستند.</small>
+        } @else {
+        <span class="text-muted">پس از انتخاب مشتری، اطلاعات اتصال به کوثر اینجا ساخته می‌شود.</span>
+        }
+      </div>
+      }
+
+      <div class="attendance-phonebook-system-audit">
+        <div>
+          <i class="fas fa-shield-alt"></i>
+          <span>اطلاعات سیستمی ثبت</span>
+        </div>
+        <strong>ثبت توسط داخلی: {{ phonebookRegisteredBy() || 'نامشخص' }}</strong>
+        @if (phonebookSaveMode() === 'manual') {
+        <small>این مقدار به‌صورت سیستمی به انتهای توضیحات اضافه می‌شود و قابل ویرایش نیست.</small>
+        } @else {
+        <small>داخلی ثبت‌کننده داخل فیلد ext در توضیح KOWSAR ذخیره می‌شود و قابل تغییر نیست.</small>
+        }
+      </div>
+    </div>
+
+    <footer class="attendance-phonebook-modal__footer">
+      <button type="button" class="btn btn-light" (click)="closePhonebookAdd()" [disabled]="phonebookSaving()">
+        انصراف
+      </button>
+      <button type="button" class="btn btn-primary" (click)="savePhonebookContact()"
+        [disabled]="phonebookSaving() || phonebookCustomerResolving() || (phonebookSaveMode() === 'customer' && !phonebookSelectedCustomer())">
+        @if (phonebookSaving()) {
+        <span class="spinner-border spinner-border-sm"></span>
+        در حال ذخیره...
+        } @else {
+        <i class="fas fa-save"></i>
+        ذخیره مخاطب
+        }
+      </button>
+    </footer>
+  </section>
+</div>
+}
+
+@if (phonebookCustomerModalOpen()) {
+<app-customer-list-modal [visible]="phonebookCustomerModalOpen()" [records]="phonebookCustomerRows()"
+  [darkMode]="darkMode" (close)="closePhonebookCustomerModal()" (selectCustomer)="selectPhonebookCustomer($event)"
+  (searchRequested)="loadPhonebookCustomers($event)"></app-customer-list-modal>
+}

@@ -1,10 +1,30 @@
-<div class="row g-3 align-items-stretch dashboard-section">
+<div class="row g-3 align-items-stretch dashboard-section dashboard-top-row">
 
-  <div class="col-lg-8 col-12">
+  <div class="col-lg-8 col-12 dashboard-attendance-column">
     <app-attendance-panel></app-attendance-panel>
   </div>
 
-  <div class="col-lg-4 col-12">
+  @if (LoginType() === 'KOWSAR') {
+  <div class="col-lg-4 col-12 dashboard-call-summary-column">
+    <app-attendance-call-report class="h-100" [extension]="ownExtension()" [personName]="ownPersonName()"
+      [darkMode]="false" [compact]="true" mode="summary">
+    </app-attendance-call-report>
+  </div>
+  }
+
+</div>
+
+<div class="row g-3 align-items-stretch dashboard-section dashboard-second-row">
+
+  @if (LoginType() === 'KOWSAR') {
+  <div class="col-lg-8 col-12 dashboard-followup-column">
+    <app-attendance-call-report class="h-100" [extension]="ownExtension()" [personName]="ownPersonName()"
+      [darkMode]="false" mode="followup">
+    </app-attendance-call-report>
+  </div>
+  }
+
+  <div class="col-lg-4 col-12 dashboard-calendar-column">
     <app-kowsar-calendar></app-kowsar-calendar>
   </div>
 

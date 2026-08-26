@@ -71,9 +71,32 @@ export class TaskWebApiService {
     return this.withLoading(this.client.get<any[]>(this.baseUrl + "KowsarTaskDependency_Delete", { headers: this.headerService.headers, params: params }))
   }
 
-  KowsarTaskDependency_Save(TaskRef: string, DependencyTaskRef: string): Observable<any[]> {
-    const params = new HttpParams().append('TaskRef', TaskRef).append('DependencyTaskRef', DependencyTaskRef)
+  KowsarTaskDependency_Save(TaskRef: string, DependencyTaskRef: string, DependencyOrder: string = '0'): Observable<any[]> {
+    const params = new HttpParams()
+      .append('TaskRef', (TaskRef ?? '').toString())
+      .append('DependencyTaskRef', (DependencyTaskRef ?? '').toString())
+      .append('DependencyOrder', (DependencyOrder ?? '0').toString())
+
     return this.withLoading(this.client.get<any[]>(this.baseUrl + "KowsarTaskDependency_Save", { headers: this.headerService.headers, params: params }))
+  }
+
+
+  KowsarTaskDependency_UpdateOrder(DependencyCode: string, DependencyOrder: string): Observable<any[]> {
+    const params = new HttpParams()
+      .append('DependencyCode', (DependencyCode ?? '').toString())
+      .append('DependencyOrder', (DependencyOrder ?? '').toString())
+
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "KowsarTaskDependency_UpdateOrder", { headers: this.headerService.headers, params: params }))
+  }
+
+
+  KowsarTaskDependency_SaveOrder(rows: any[]): Observable<any[]> {
+    const body = (rows ?? []).map((x: any) => ({
+      DependencyCode: (x.DependencyCode ?? '').toString(),
+      DependencyOrder: (x.DependencyOrder ?? '').toString()
+    }));
+
+    return this.withLoading(this.client.post<any[]>(this.baseUrl + "KowsarTaskDependency_SaveOrder", body, { headers: this.headerService.headers }))
   }
 
 
@@ -141,9 +164,32 @@ export class TaskWebApiService {
   }
 
 
-  GoodTask_Add(GoodRef: string, TaskRef: string): Observable<any[]> {
-    const params = new HttpParams().append('GoodRef', GoodRef).append('TaskRef', TaskRef)
+  GoodTask_Add(GoodRef: string, TaskRef: string, GoodTaskOrder: string = '0'): Observable<any[]> {
+    const params = new HttpParams()
+      .append('GoodRef', (GoodRef ?? '').toString())
+      .append('TaskRef', (TaskRef ?? '').toString())
+      .append('GoodTaskOrder', (GoodTaskOrder ?? '0').toString())
+
     return this.withLoading(this.client.get<any[]>(this.baseUrl + "GoodTask_Add", { headers: this.headerService.headers, params: params }))
+  }
+
+
+  GoodTask_UpdateOrder(GoodTaskCode: string, GoodTaskOrder: string): Observable<any[]> {
+    const params = new HttpParams()
+      .append('GoodTaskCode', (GoodTaskCode ?? '').toString())
+      .append('GoodTaskOrder', (GoodTaskOrder ?? '').toString())
+
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "GoodTask_UpdateOrder", { headers: this.headerService.headers, params: params }))
+  }
+
+
+  GoodTask_SaveOrder(rows: any[]): Observable<any[]> {
+    const body = (rows ?? []).map((x: any) => ({
+      GoodTaskCode: (x.GoodTaskCode ?? '').toString(),
+      GoodTaskOrder: (x.GoodTaskOrder ?? '').toString()
+    }));
+
+    return this.withLoading(this.client.post<any[]>(this.baseUrl + "GoodTask_SaveOrder", body, { headers: this.headerService.headers }))
   }
 
   GoodTask_Del(GoodTaskCode: string): Observable<any[]> {

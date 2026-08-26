@@ -120,6 +120,12 @@ export class SessionStorageService {
     get loginType(): string {
         return this.getString('LoginType');
     }
+    get CustomerCode(): string {
+        return this.getString('CustomerCode');
+    }
+    get CustName_Small(): string {
+        return this.getString('CustName_Small');
+    }
 
 
     get userName(): string {

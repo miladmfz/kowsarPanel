@@ -29,9 +29,6 @@
               "src/favicon.ico"
             ],
             "styles": [
-              "src/assets/css/modern/bootstrap-rtl.min.css",
-              "src/assets/css/modern/app-rtl.min.css",
-              "src/assets/css/icons.min.css",
               "src/assets/libs/sweetalert2/sweetalert2.min.css",
               "src/assets/libs/simplebar/simplebar.min.css",
               "src/styles.scss",

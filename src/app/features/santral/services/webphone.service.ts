@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import * as JsSIP from 'jssip';
-import { WebPhoneLine } from '../models/webphone.models';
+import { PhoneCustomerContext, WebPhoneLine } from '../models/webphone.models';
 
 export type WebPhoneRegisterStatus =
     | 'offline'
@@ -46,6 +46,10 @@ export class WebPhoneService {
     ]);
 
     activeLineIndex = signal(1);
+
+    // اطلاعات مخاطب تماس در سرویس سراسری نگهداری می‌شود تا با تغییر Route از بین نرود.
+    customerContext = signal<PhoneCustomerContext | null>(null);
+    customerContextLoading = signal(false);
 
     private ua: any = null;
     private config: WebPhoneConfig | null = null;
@@ -169,6 +173,8 @@ export class WebPhoneService {
         this.ua = null;
 
         this.clearLines();
+        this.customerContext.set(null);
+        this.customerContextLoading.set(false);
 
         this.registerStatus.set('offline');
         this.callStatus.set('idle');

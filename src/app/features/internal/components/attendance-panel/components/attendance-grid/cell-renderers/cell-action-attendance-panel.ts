@@ -1,16 +1,7 @@
-/* ===============================================================
-   🎯 کامپوننت CellActionAttendancePanel
-   توضیحات کلی:
-   این کامپوننت به عنوان سل‌ رندرر (Cell Renderer) در گرید حضور کارشناسان استفاده می‌شود.
-   وظیفه آن نمایش دکمه‌های عملیاتی هر ردیف است:
-   1️⃣ دکمه «تیکت» برای مشاهده یا ایجاد تیکت مربوط به آن ردیف.
-   2️⃣ دکمه «تاریخچه» برای نمایش سوابق حضور کارشناس (در شرایط خاص).
-   داده‌ها از پارامترهای گرید و sessionStorage گرفته می‌شوند.
-   =============================================================== */
-
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
+
 import { PermissionService } from 'src/app/app-shell/framework-services/storage/PermissionService';
 import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
 
@@ -19,71 +10,151 @@ import { SessionStorageService } from 'src/app/app-shell/framework-services/stor
   standalone: true,
   imports: [CommonModule],
   template: `
-    <!-- 🎟️ دکمه تیکت -->
-    <button
-      type="button"
-      class="btn btn-sm btn-outline-primary me-1"
-      title="تیکت"
-      (click)="setLetterConfig()"
-    >
-      <i class="far fa-list-alt"></i>
-    </button>
+    <div class="attendance-action-buttons">
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-primary"
+        title="تیکت"
+        (click)="setLetterConfig($event)">
+        <i class="far fa-list-alt"></i>
+      </button>
 
-    <!-- 🕓 دکمه تاریخچه (برای همه یا شرایط خاص) -->
-    <button
-      *ngIf="showHistoryButton"
-      type="button"
-      class="btn btn-sm btn-outline-primary"
-      title="تاریخچه"
-      (click)="showHistory()"
-    >
-      <i class="fas fa-history"></i>
-    </button>
-  `
+      @if (showHistoryButton()) {
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-primary"
+          title="تاریخچه حضور"
+          (click)="showHistory($event)">
+          <i class="fas fa-history"></i>
+        </button>
+      }
+
+      @if (showCallReportButton()) {
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-success"
+          [disabled]="!personExtension()"
+          [title]="personExtension() ? 'گزارش تماس امروز' : 'داخلی سانترال تعریف نشده است'"
+          (click)="showCallReport($event)">
+          <i class="fas fa-phone-alt"></i>
+        </button>
+      }
+    </div>
+  `,
+  styles: [`
+    .attendance-action-buttons {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+      direction: rtl;
+    }
+
+    .attendance-action-buttons .btn {
+      width: 29px;
+      height: 29px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border-radius: 8px;
+      line-height: 1;
+    }
+  `],
 })
 export class CellActionAttendancePanel implements ICellRendererAngularComp {
   private params: any;
   private data: any;
+
   protected readonly session = inject(SessionStorageService);
   protected readonly permissionService = inject(PermissionService);
 
+  showHistoryButton = signal(false);
+  showCallReportButton = signal(false);
+  personExtension = signal('');
 
-  attendanceCentralRef = signal('')
-  CentralRef = signal('')
-
-  /** وضعیت دکمه تاریخچه */
-  showHistoryButton = signal(false)
-
-  // ===============================================================
-  //    متدهای AgGrid
-  // ===============================================================
   agInit(params: any): void {
     this.params = params;
-    this.data = params.data ?? {};
+    this.data = params?.data ?? {};
 
-    this.CentralRef.set(this.session.centralRef)
-
-
-    this.attendanceCentralRef.set(this.data?.CentralRef ?? '')
-
-    // 🎯 تعیین نمایش یا عدم نمایش دکمه تاریخچه
-    this.showHistoryButton.set(
+    const ownCentralRef = String(this.session.centralRef ?? '').trim();
+    const rowCentralRef = String(this.data?.CentralRef ?? '').trim();
+    const canSeePersonalActions =
       this.permissionService.canManageRole ||
-      (this.CentralRef === this.attendanceCentralRef))
+      (ownCentralRef !== '' && ownCentralRef === rowCentralRef);
+
+    this.personExtension.set(this.resolvePersonExtension(this.data));
+    this.showHistoryButton.set(canSeePersonalActions);
+    this.showCallReportButton.set(canSeePersonalActions);
   }
 
   refresh(): boolean {
-    return false; // جلوگیری از render مجدد غیرضروری
+    return false;
   }
 
-  // ===============================================================
-  //    اکشن‌ها
-  // ===============================================================
-  setLetterConfig(): void {
+  setLetterConfig(event?: MouseEvent): void {
+    event?.stopPropagation();
+
+    if (typeof this.params?.onLetter === 'function') {
+      this.params.onLetter(this.data);
+      return;
+    }
+
     this.params?.context?.componentParent?.SetLetter_config?.(this.data);
   }
 
-  showHistory(): void {
+  showHistory(event?: MouseEvent): void {
+    event?.stopPropagation();
+
+    if (typeof this.params?.onHistory === 'function') {
+      this.params.onHistory(this.data);
+      return;
+    }
+
     this.params?.context?.componentParent?.ShowHistory?.(this.data);
+  }
+
+  showCallReport(event?: MouseEvent): void {
+    event?.stopPropagation();
+
+    if (!this.personExtension()) {
+      return;
+    }
+
+    if (typeof this.params?.onCallReport === 'function') {
+      this.params.onCallReport(this.data);
+      return;
+    }
+
+    this.params?.context?.componentParent?.ShowCallReport?.(this.data);
+  }
+
+  private resolvePersonExtension(item: any): string {
+    const candidates = [
+      item?.Manager,
+      item?.manager,
+      item?.Extension,
+      item?.extension,
+      item?.ExtensionNo,
+      item?.InternalNo,
+      item?.PhoneExtension,
+      item?.SantralExtension,
+      item?.PhAddress3,
+    ];
+
+    for (const value of candidates) {
+      const extension = String(value ?? '')
+        .trim()
+        .replace(/[۰-۹]/g, digit => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(digit)))
+        .replace(/\D+/g, '');
+
+      if (extension.length >= 2 && extension.length <= 8) {
+        return extension;
+      }
+    }
+
+    return '';
   }
 }

@@ -15,10 +15,10 @@
     </div>
 
     @if (loading()) {
-      <div class="alert alert-info py-2">
-        <i class="fas fa-spinner fa-spin me-1"></i>
-        در حال دریافت اطلاعات...
-      </div>
+    <div class="alert alert-info py-2">
+      <i class="fas fa-spinner fa-spin me-1"></i>
+      در حال دریافت اطلاعات...
+    </div>
     }
 
     <form [formGroup]="EditForm_Policy" (ngSubmit)="submit()">
@@ -31,37 +31,30 @@
 
         <div class="col-md-4">
           <label class="form-label">کاربر</label>
-          <select
-            formControlName="CentralRef"
-            class="form-control"
-            [class.is-invalid]="isInvalid('CentralRef')"
-            [class.bg-light]="!canSelectUser()"
-            [class.text-muted]="!canSelectUser()"
-            [style.pointer-events]="canSelectUser() ? 'auto' : 'none'"
-            [attr.tabindex]="canSelectUser() ? 0 : -1"
+          <select formControlName="CentralRef" class="form-control" [class.is-invalid]="isInvalid('CentralRef')"
+            [class.bg-light]="!canSelectUser()" [class.text-muted]="!canSelectUser()"
+            [style.pointer-events]="canSelectUser() ? 'auto' : 'none'" [attr.tabindex]="canSelectUser() ? 0 : -1"
             [attr.aria-disabled]="!canSelectUser()">
             <option value="">لطفاً انتخاب کنید</option>
 
             @for (user of users(); track user.CentralCode) {
-              <option [value]="user.CentralCode?.toString()">
-                {{ user.CentralName }}
-              </option>
+            <option [value]="user.CentralCode?.toString()">
+              {{ user.CentralName }}
+            </option>
             }
           </select>
 
           @if (isInvalid('CentralRef')) {
-            <div class="invalid-feedback d-block">انتخاب کاربر اجباری است</div>
+          <div class="invalid-feedback d-block">انتخاب کاربر اجباری است</div>
           }
         </div>
 
         <div class="col-md-3">
           <label class="form-label">نوع همکاری</label>
-          <select
-            formControlName="EmploymentType"
-            class="form-control"
+          <select formControlName="EmploymentType" class="form-control"
             [class.is-invalid]="isInvalid('EmploymentType')">
             @for (item of EmploymentType_Lookup; track item.id) {
-              <option [value]="item.id">{{ item.name }}</option>
+            <option [value]="item.id">{{ item.name }}</option>
             }
           </select>
         </div>
@@ -74,6 +67,15 @@
             پاره وقت
           </button>
         </div>
+
+        @if (policyLookupStatus() !== 'none') {
+        <div class="col-12">
+          <div [ngClass]="policyLookupAlertClass()">
+            <i [class]="policyLookupIconClass()"></i>
+            {{ policyLookupMessage() }}
+          </div>
+        </div>
+        }
 
         <div class="col-12">
           <hr class="my-2" />
@@ -105,7 +107,7 @@
         </div>
 
         <div class="col-md-3">
-          <label class="form-label">سقف مرخصی ساعتی ماهانه</label>
+          <label class="form-label">سقف مرخصی ساعتی ماهانه (بر حسب دقیقه)</label>
           <input formControlName="MonthlyHourlyLeaveLimitMinute" type="number" class="form-control text-center" />
         </div>
 

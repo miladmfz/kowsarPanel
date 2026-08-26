@@ -1,0 +1,101 @@
+:host {
+  display: contents;
+}
+
+.attendance-call-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10600;
+  background: rgba(15, 23, 42, 0.58);
+  backdrop-filter: blur(2px);
+}
+
+.attendance-call-modal-shell {
+  position: fixed;
+  inset: 0;
+  z-index: 10610;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  pointer-events: none;
+}
+
+.attendance-call-modal-dialog {
+  width: min(1180px, 96vw);
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #dbe4ef;
+  border-radius: 18px;
+  background: #f8fafc;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.22);
+  pointer-events: auto;
+}
+
+.attendance-call-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  background: #fff;
+}
+
+.attendance-call-modal-header h5 {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 0.2rem;
+  color: #1e293b;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.attendance-call-modal-header small {
+  color: #64748b;
+  font-size: 0.72rem;
+}
+
+.attendance-call-modal-body {
+  min-height: 0;
+  padding: 0.85rem;
+  overflow: auto;
+}
+
+.dark-modal {
+  border-color: #475569;
+  background: #0f172a;
+}
+
+.dark-modal .attendance-call-modal-header {
+  border-color: #475569;
+  background: #1e293b;
+}
+
+.dark-modal .attendance-call-modal-header h5,
+.dark-modal .attendance-call-modal-header small {
+  color: #f8fafc;
+}
+
+.dark-modal .btn-close {
+  filter: invert(1);
+}
+
+@media (max-width: 768px) {
+  .attendance-call-modal-shell {
+    padding: 0.45rem;
+  }
+
+  .attendance-call-modal-dialog {
+    width: 100%;
+    max-height: 96vh;
+    border-radius: 13px;
+  }
+
+  .attendance-call-modal-body {
+    padding: 0.5rem;
+  }
+}

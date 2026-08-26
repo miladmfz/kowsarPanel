@@ -1,47 +1,121 @@
 import { Routes } from '@angular/router';
 
+import { workforceAbsenceRoutes } from './components/workforce-absence/workforce-absence.routes';
+
 export const AUTOMATION_ROUTES: Routes = [
+
+    // =============================================================
+    // Automation Home
+    // =============================================================
+
     {
         path: '',
         loadComponent: () =>
-            import('./automation.component').then(m => m.AutomationComponent),
+            import('./automation.component').then(
+                (m) => m.AutomationComponent
+            ),
     },
+
+    // =============================================================
+    // Workforce Absence
+    // سیستم جدید مرخصی
+    // =============================================================
+
+    ...workforceAbsenceRoutes,
+
+    // =============================================================
+    // Leave Request
+    // سیستم فعلی مرخصی
+    // =============================================================
+
     {
         path: 'leaverequest-list',
         title: 'لیست درخواست‌های مرخصی',
         loadComponent: () =>
-            import('./components/leaverequest/leaverequest-list/leaverequest-list.component').then(m => m.LeaverequestListComponent),
+            import(
+                './components/leaverequest/leaverequest-list/leaverequest-list.component'
+            ).then(
+                (m) => m.LeaverequestListComponent
+            ),
     },
+
     {
         path: 'leaverequest-edit',
         title: 'درخواست مرخصی جدید',
         loadComponent: () =>
-            import('./components/leaverequest/leaverequest-edit/leaverequest-edit.component').then(m => m.LeaverequestEditComponent),
+            import(
+                './components/leaverequest/leaverequest-edit/leaverequest-edit.component'
+            ).then(
+                (m) => m.LeaverequestEditComponent
+            ),
     },
+
     {
         path: 'leaverequest-edit/:id',
         title: 'ویرایش درخواست مرخصی',
         loadComponent: () =>
-            import('./components/leaverequest/leaverequest-edit/leaverequest-edit.component').then(m => m.LeaverequestEditComponent),
+            import(
+                './components/leaverequest/leaverequest-edit/leaverequest-edit.component'
+            ).then(
+                (m) => m.LeaverequestEditComponent
+            ),
     },
 
+    {
+        path: 'leaverequest-policy-list',
+        title: 'لیست وضعیت کارکنان',
+        loadComponent: () =>
+            import(
+                './components/leaverequest/leaverequest-policy-list/leaverequest-policy-list.component'
+            ).then(
+                (m) => m.LeaverequestPolicyListComponent
+            ),
+    },
 
+    {
+        path: 'leaverequest-policy-edit',
+        title: 'ایجاد وضعیت کارمند',
+        loadComponent: () =>
+            import(
+                './components/leaverequest/leaverequest-policy-edit/leaverequest-policy-edit.component'
+            ).then(
+                (m) => m.LeaverequestPolicyEditComponent
+            ),
+    },
+
+    {
+        path: 'leaverequest-policy-edit/:id',
+        title: 'اطلاعات وضعیت کارکنان',
+        loadComponent: () =>
+            import(
+                './components/leaverequest/leaverequest-policy-edit/leaverequest-policy-edit.component'
+            ).then(
+                (m) => m.LeaverequestPolicyEditComponent
+            ),
+    },
+
+    // =============================================================
+    // Automation Letters
+    // =============================================================
 
     {
         path: 'letter-customer',
         title: 'لیست نامه‌ها',
         loadComponent: () =>
-            import('./components/autletter/autletter-customer-list/autletter-customer-list.component').then(
+            import(
+                './components/autletter/autletter-customer-list/autletter-customer-list.component'
+            ).then(
                 (m) => m.AutletterCustomerListComponent
             ),
     },
-
 
     {
         path: 'letter-user',
         title: 'لیست نامه‌ها',
         loadComponent: () =>
-            import('./components/autletter/autletter-kowsar-list/autletter-kowsar-list.component').then(
+            import(
+                './components/autletter/autletter-kowsar-list/autletter-kowsar-list.component'
+            ).then(
                 (m) => m.AutletterKowsarListComponent
             ),
     },
@@ -50,120 +124,144 @@ export const AUTOMATION_ROUTES: Routes = [
         path: 'letter-panel/:id',
         title: 'جزئیات نامه',
         loadComponent: () =>
-            import('./components/autletter/autletter-panel/autletter-panel.component').then(
+            import(
+                './components/autletter/autletter-panel/autletter-panel.component'
+            ).then(
                 (m) => m.AutletterPanelComponent
             ),
     },
+
     {
         path: 'insert-letter',
         title: 'افزودن نامه جدید',
         loadComponent: () =>
-            import('./components/autletter/autletter-insert/autletter-insert.component').then(
+            import(
+                './components/autletter/autletter-insert/autletter-insert.component'
+            ).then(
                 (m) => m.AutletterInsertComponent
             ),
     },
+
     {
         path: 'letter-mine',
         title: 'نامه‌های من',
         loadComponent: () =>
-            import('./components/autletter/autletter-mine/autletter-mine.component').then(
+            import(
+                './components/autletter/autletter-mine/autletter-mine.component'
+            ).then(
                 (m) => m.AutLetterMineComponent
             ),
     },
 
+    // =============================================================
+    // Employees
+    // =============================================================
 
     {
         path: 'employe-list',
         title: 'کارمندان',
         loadComponent: () =>
-            import('./components/salary/employe/employe-list/employe-list.component').then(
+            import(
+                './components/salary/employe/employe-list/employe-list.component'
+            ).then(
                 (m) => m.EmployeListComponent
             ),
     },
+
     {
         path: 'employe-edit',
-        title: 'کارمندان',
+        title: 'ایجاد کارمند',
         loadComponent: () =>
-            import('./components/salary/employe/employe-edit/employe-edit.component').then(m => m.EmployeEditComponent),
+            import(
+                './components/salary/employe/employe-edit/employe-edit.component'
+            ).then(
+                (m) => m.EmployeEditComponent
+            ),
     },
+
     {
         path: 'employe-edit/:id',
-        title: 'کارمندان',
+        title: 'ویرایش کارمند',
         loadComponent: () =>
-            import('./components/salary/employe/employe-edit/employe-edit.component').then(m => m.EmployeEditComponent),
+            import(
+                './components/salary/employe/employe-edit/employe-edit.component'
+            ).then(
+                (m) => m.EmployeEditComponent
+            ),
     },
 
-
-
-
+    // =============================================================
+    // Month Summary
+    // =============================================================
 
     {
         path: 'monthsummary-list',
         title: 'لیست ماه',
         loadComponent: () =>
-            import('./components/salary/monthsummary/monthsummary-list/monthsummary-list.component').then(
+            import(
+                './components/salary/monthsummary/monthsummary-list/monthsummary-list.component'
+            ).then(
                 (m) => m.MonthsummaryListComponent
             ),
     },
+
     {
         path: 'monthsummary-edit',
-        title: 'لیست ماه',
+        title: 'ایجاد اطلاعات ماه',
         loadComponent: () =>
-            import('./components/salary/monthsummary/monthsummary-edit/monthsummary-edit.component').then(m => m.MonthsummaryEditComponent),
+            import(
+                './components/salary/monthsummary/monthsummary-edit/monthsummary-edit.component'
+            ).then(
+                (m) => m.MonthsummaryEditComponent
+            ),
     },
+
     {
         path: 'monthsummary-edit/:id',
-        title: 'لیست ماه',
+        title: 'ویرایش اطلاعات ماه',
         loadComponent: () =>
-            import('./components/salary/monthsummary/monthsummary-edit/monthsummary-edit.component').then(m => m.MonthsummaryEditComponent),
+            import(
+                './components/salary/monthsummary/monthsummary-edit/monthsummary-edit.component'
+            ).then(
+                (m) => m.MonthsummaryEditComponent
+            ),
     },
 
-
-
-
-
+    // =============================================================
+    // Salary Summary
+    // =============================================================
 
     {
         path: 'salarysummary-list',
         title: 'لیست حقوق',
         loadComponent: () =>
-            import('./components/salary/salarysummary/salarysummary-list/salarysummary-list.component').then(
+            import(
+                './components/salary/salarysummary/salarysummary-list/salarysummary-list.component'
+            ).then(
                 (m) => m.SalarysummaryListComponent
             ),
     },
+
     {
         path: 'salarysummary-edit',
-        title: 'لیست حقوق',
+        title: 'ایجاد اطلاعات حقوق',
         loadComponent: () =>
-            import('./components/salary/salarysummary/salarysummary-edit/salarysummary-edit.component').then(m => m.SalarysummaryEditComponent),
+            import(
+                './components/salary/salarysummary/salarysummary-edit/salarysummary-edit.component'
+            ).then(
+                (m) => m.SalarysummaryEditComponent
+            ),
     },
+
     {
         path: 'salarysummary-edit/:id',
-        title: 'لیست حقوق',
+        title: 'ویرایش اطلاعات حقوق',
         loadComponent: () =>
-            import('./components/salary/salarysummary/salarysummary-edit/salarysummary-edit.component').then(m => m.SalarysummaryEditComponent),
+            import(
+                './components/salary/salarysummary/salarysummary-edit/salarysummary-edit.component'
+            ).then(
+                (m) => m.SalarysummaryEditComponent
+            ),
     },
-
-    {
-        path: 'leaverequest-list',
-        title: 'لیست درخواست‌های مرخصی',
-        loadComponent: () =>
-            import('./components/leaverequest/leaverequest-list/leaverequest-list.component').then(m => m.LeaverequestListComponent),
-    },
-
-    {
-        path: 'leaverequest-policy-list',
-        title: 'لیست وضعیت کارکنان',
-        loadComponent: () => import('./components/leaverequest/leaverequest-policy-list/leaverequest-policy-list.component')
-            .then(m => m.LeaverequestPolicyListComponent),
-    },
-    {
-        path: 'leaverequest-policy-edit/:id',
-        title: 'اطلاعات وضعیت کارکنان',
-        loadComponent: () => import('./components/leaverequest/leaverequest-policy-edit/leaverequest-policy-edit.component')
-            .then(m => m.LeaverequestPolicyEditComponent),
-    },
-
-
 
 ];

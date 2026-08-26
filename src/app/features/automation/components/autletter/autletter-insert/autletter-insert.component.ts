@@ -26,7 +26,7 @@ import {
     Validators,
     ReactiveFormsModule,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, Subject } from 'rxjs';
 import { IDatepickerTheme, NgPersianDatepickerModule } from 'ng-persian-datepicker';
 import { CommonModule } from '@angular/common';
@@ -124,7 +124,7 @@ export class AutletterInsertComponent extends AgGridBaseComponent implements OnI
         LetterDate: new FormControl(''),
         title: new FormControl('', [Validators.required]),
         Description: new FormControl('', [Validators.required]),
-        LetterState: new FormControl('درحال انجام'),
+        LetterState: new FormControl('منتظراقدام'),
         LetterPriority: new FormControl('عادی'),
         CentralRef: new FormControl(''),
         InOutFlag: new FormControl('', [Validators.required]),
@@ -146,6 +146,7 @@ export class AutletterInsertComponent extends AgGridBaseComponent implements OnI
     // ===============================================================
 
     private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
 
     private readonly repo = inject(AutletterWebApiService);
     private readonly base_repo = inject(KowsarBaseWebApi);
@@ -165,6 +166,7 @@ export class AutletterInsertComponent extends AgGridBaseComponent implements OnI
     ngOnInit(): void {
         this.initGrid();
         this.initSessionData();
+        this.applySantralPrefill();
         this.loadLookups();
         this.pipe_function();
 
@@ -216,6 +218,31 @@ export class AutletterInsertComponent extends AgGridBaseComponent implements OnI
                 InOutFlag: '0',
             });
         }
+    }
+
+    private applySantralPrefill(): void {
+        const params = this.route.snapshot.queryParamMap;
+        const centralRef = String(params.get('centralRef') ?? '').trim();
+
+        if (!centralRef) {
+            return;
+        }
+
+        const centralName = String(params.get('centralName') ?? '').trim();
+        const phone = String(params.get('phone') ?? '').trim();
+        const description = phone
+            ? `پیگیری تماس تلفنی با ${centralName || 'مشتری'} - شماره ${phone}`
+            : `پیگیری تماس تلفنی با ${centralName || 'مشتری'}`;
+
+        this.EditForm_LetterInsert.patchValue({
+            CentralRef: centralRef,
+            OwnerCentral: centralRef,
+            OwnerName: centralName,
+            InOutFlag: '0',
+            Description: description
+        });
+
+        this.Searchtarget_central.set(centralName || phone || centralRef);
     }
 
     // ===============================================================

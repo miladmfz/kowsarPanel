@@ -128,11 +128,27 @@ export class InternalTaskEditComponent extends AgGridBaseComponent
         minWidth: 150,
       },
       {
-        field: 'DependencyTaskTitle',
-        headerName: 'وظیقه وابستگی',
-
+        field: 'DependencyOrder',
+        headerName: 'ترتیب',
         cellClass: 'text-center',
-        minWidth: 150
+        minWidth: 90,
+        editable: true,
+        valueParser: (params: any) => {
+          const value = Number(params.newValue ?? 0);
+          return isNaN(value) || value <= 0 ? params.oldValue : value.toString();
+        }
+      },
+      {
+        field: 'DependencyTaskTitle',
+        headerName: 'وظیفه وابسته',
+        cellClass: 'text-center',
+        minWidth: 180
+      },
+      {
+        field: 'DependencyTaskExplain',
+        headerName: 'توضیح وظیفه وابسته',
+        cellClass: 'text-center',
+        minWidth: 240
       },
 
     ];
@@ -323,9 +339,27 @@ export class InternalTaskEditComponent extends AgGridBaseComponent
   // حالت ویرایش
   GetDependency() {
 
+    if (!this.TaskCode() || this.TaskCode() === '0') {
+      this.records_dependency.set([]);
+      this.updateGridData(1, []);
+      return;
+    }
+
     this.repo.KowsarTaskDependency_Get(this.TaskCode()).subscribe((data: any) => {
-      this.records_dependency.set(data?.KowsarTasks ?? [])
-      this.updateGridData(1, this.records_dependency());
+
+      const rows = (data?.KowsarTasks ?? []).map((x: any, index: number) => ({
+        ...x,
+        DependencyCode: (x.DependencyCode ?? '').toString(),
+        TaskRef: (x.TaskRef ?? '').toString(),
+        DependencyTaskRef: (x.DependencyTaskRef ?? '').toString(),
+        DependencyTaskTitle: x.DependencyTaskTitle ?? '',
+        DependencyTaskExplain: x.DependencyTaskExplain ?? '',
+        DependencyOrder: (x.DependencyOrder ?? (index + 1)).toString()
+      }))
+        .sort((a: any, b: any) => Number(a.DependencyOrder) - Number(b.DependencyOrder));
+
+      this.records_dependency.set(rows)
+      this.updateGridData(1, rows);
 
     });
   }
@@ -434,13 +468,120 @@ export class InternalTaskEditComponent extends AgGridBaseComponent
 
   btnDeleteClicked(data: any): void {
 
-    this.repo.KowsarTaskDependency_Delete(data.DependencyCode
-    ).subscribe((data: any) => {
+    this.repo.KowsarTaskDependency_Delete((data.DependencyCode ?? '').toString())
+      .subscribe((res: any) => {
 
-      this.GetDependency()
+        const result = res?.KowsarTasks?.[0] ?? res;
+        const errCode = Number(result?.ErrCode ?? 0);
 
-    });
+        if (errCode === 0) {
+          this.notificationService.success(result?.ErrDesc ?? 'وابستگی حذف شد');
+          this.GetDependency()
+        } else {
+          this.notificationService.error(result?.ErrDesc ?? 'خطا در حذف وابستگی');
+        }
 
+      });
+
+  }
+
+  private normalizeDependencyOrder(): any[] {
+
+    const rows = [...(this.records_dependency() ?? [])]
+      .sort((a: any, b: any) => {
+        const aOrder = Number(a.DependencyOrder || 999999);
+        const bOrder = Number(b.DependencyOrder || 999999);
+
+        if (aOrder === bOrder) {
+          return Number(a.DependencyCode || 0) - Number(b.DependencyCode || 0);
+        }
+
+        return aOrder - bOrder;
+      })
+      .map((x: any, index: number) => ({
+        ...x,
+        DependencyOrder: (index + 1).toString()
+      }));
+
+    this.records_dependency.set(rows);
+    this.updateGridData(1, rows);
+
+    return rows;
+  }
+
+  SaveDependencyOrder(): void {
+
+    const rows = this.normalizeDependencyOrder()
+      .filter((x: any) => (x.DependencyCode ?? '').toString().length > 0);
+
+    if (rows.length === 0) {
+      this.notificationService.warning('وابستگی برای ذخیره ترتیب وجود ندارد');
+      return;
+    }
+
+    const body = rows.map((x: any) => ({
+      DependencyCode: (x.DependencyCode ?? '').toString(),
+      DependencyOrder: (x.DependencyOrder ?? '').toString()
+    }));
+
+    this.repo.KowsarTaskDependency_SaveOrder(body)
+      .subscribe((res: any) => {
+
+        const result = res?.KowsarTasks?.[0] ?? res;
+        const errCode = Number(result?.ErrCode ?? 0);
+
+        if (errCode === 0) {
+          this.notificationService.success(result?.ErrDesc ?? 'ترتیب با موفقیت ذخیره شد');
+          this.GetDependency();
+        } else {
+          this.notificationService.error(result?.ErrDesc ?? 'خطا در ذخیره ترتیب');
+        }
+
+      });
+  }
+
+  MoveDependencyUp(row: any): void {
+
+    const rows = [...(this.records_dependency() ?? [])]
+      .sort((a: any, b: any) => Number(a.DependencyOrder) - Number(b.DependencyOrder));
+
+    const index = rows.findIndex((x: any) =>
+      (x.DependencyCode ?? '').toString() === (row.DependencyCode ?? '').toString()
+    );
+
+    if (index <= 0) return;
+
+    [rows[index - 1], rows[index]] = [rows[index], rows[index - 1]];
+
+    const fixed = rows.map((x: any, i: number) => ({
+      ...x,
+      DependencyOrder: (i + 1).toString()
+    }));
+
+    this.records_dependency.set(fixed);
+    this.updateGridData(1, fixed);
+  }
+
+  MoveDependencyDown(row: any): void {
+
+    const rows = [...(this.records_dependency() ?? [])]
+      .sort((a: any, b: any) => Number(a.DependencyOrder) - Number(b.DependencyOrder));
+
+    const index = rows.findIndex((x: any) =>
+      (x.DependencyCode ?? '').toString() === (row.DependencyCode ?? '').toString()
+    );
+
+    if (index < 0 || index >= rows.length - 1) return;
+
+    [rows[index], rows[index + 1]] = [rows[index + 1], rows[index]];
+
+    const fixed = rows.map((x: any, i: number) => ({
+      ...x,
+      DependencyOrder: (i + 1).toString()
+    }));
+
+    this.records_dependency.set(fixed);
+    this.updateGridData(1, fixed);
   }
   getDataPath_task = (task: any): string[] => {
     const path: string[] = [];
@@ -530,15 +671,31 @@ export class InternalTaskEditComponent extends AgGridBaseComponent
       return;
     }
 
-    this.notificationService.develop();
+    const currentTaskCode = (this.TaskCode() ?? '').toString();
+    const exists = new Set(
+      (this.records_dependency() ?? []).map((x: any) => (x.DependencyTaskRef ?? '').toString())
+    );
 
-    from(childRows)
+    const filteredRows = childRows.filter((row: any) => {
+      const taskCode = (row.TaskCode ?? '').toString();
+      return taskCode !== currentTaskCode && !exists.has(taskCode);
+    });
+
+    if (filteredRows.length === 0) {
+      this.notificationService.warning('وابستگی جدیدی برای ثبت وجود ندارد');
+      return;
+    }
+
+    const startOrder = this.records_dependency().length;
+
+    from(filteredRows)
       .pipe(
-        concatMap((row: any) => {
+        concatMap((row: any, index: number) => {
 
           return this.repo.KowsarTaskDependency_Save(
             this.TaskCode(),
-            row.TaskCode
+            (row.TaskCode ?? '').toString(),
+            (startOrder + index + 1).toString()
           );
         }),
 
@@ -549,6 +706,7 @@ export class InternalTaskEditComponent extends AgGridBaseComponent
           console.log('همه انجام شدند:', results);
           this.notificationService.success('عملیات با موفقیت انجام شد');
           this.GetDependency()
+          this.selectedRows.set([])
           this.tasklist_dialog_close()
         },
         error: (err: any) => {

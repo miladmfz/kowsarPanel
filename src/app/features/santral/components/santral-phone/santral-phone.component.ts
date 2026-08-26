@@ -11,13 +11,16 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AppConfigService } from 'src/app/app-config.service';
 import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
+import { KowsarBaseWebApi } from 'src/app/app-shell/framework-services/base/KowsarBaseWebApi.service';
 import { SantralWebApiService } from '../../services/santralapi.service';
 import {
   CallDirection,
   CallLogItem,
   PhoneBookItem,
+  PhoneCustomerContext,
   PhoneCallStatus,
   RegisterStatus,
   WebPhoneLine
@@ -28,12 +31,14 @@ import { WebPhoneNotificationManager } from '../../shared/webphone/webphone-noti
 import { PwaInstallService } from '../../services/pwa-install.service';
 import { PhoneDialerPanelComponent } from './partials/phone-dialer-panel.component';
 import { PhoneWorkspacePanelComponent } from './partials/phone-workspace-panel.component';
+import { PhoneCustomerContextPanelComponent } from './partials/phone-customer-context-panel.component';
 import { WebPhoneService } from '../../services/webphone.service';
 import { WebPhoneAudioService } from '../../services/webphone-audio.service';
+import { CustomerWebApiService } from 'src/app/features/internal/services/CustomerWebApi.service';
 @Component({
   selector: 'app-santral-phone',
   standalone: true,
-  imports: [CommonModule, FormsModule, PhoneDialerPanelComponent, PhoneWorkspacePanelComponent],
+  imports: [CommonModule, FormsModule, PhoneDialerPanelComponent, PhoneWorkspacePanelComponent, PhoneCustomerContextPanelComponent],
   templateUrl: './santral-phone.component.html',
   styleUrls: [
     './santral-phone.component.css',
@@ -48,9 +53,11 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
   private config = inject(AppConfigService);
   private session = inject(SessionStorageService);
   private santralApi = inject(SantralWebApiService) as any;
+  private kowsarBaseApi = inject(CustomerWebApiService);
   private pwaInstallService = inject(PwaInstallService);
   private webPhoneService = inject(WebPhoneService);
   private webPhoneAudioService = inject(WebPhoneAudioService);
+  private router = inject(Router);
   @ViewChild('remoteAudio')
   remoteAudio?: ElementRef<HTMLAudioElement>;
 
@@ -79,6 +86,11 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
   phoneBook = signal<PhoneBookItem[]>([]);
   phoneBookSearch = signal('');
   showPhoneBook = signal(false);
+
+  // State سراسری است؛ با رفتن به صفحه تیکت/فاکتور و برگشتن از بین نمی‌رود.
+  callCustomerContext = this.webPhoneService.customerContext;
+  callCustomerContextLoading = this.webPhoneService.customerContextLoading;
+  private callCustomerContextRequestId = 0;
 
   callLogs = signal<CallLogItem[]>([]);
   logFilter = signal<'received' | 'missed' | 'outgoing'>('received');
@@ -695,6 +707,7 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
     this.stopAllCallTones();
     this.webPhoneAudioService.stop();
     this.notificationManager.closeIncomingCall();
+    this.notificationManager.closeConnectedCall();
 
     this.webPhoneService.disconnect();
 
@@ -741,6 +754,7 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
     this.callStatus.set('calling');
     this.resultMessage.set('در حال شماره‌گیری...');
     this.startOutgoingCallTone();
+    this.prepareCallCustomerContext(targetDisplay, this.findContactName(targetDisplay), lineIndex, 'CALL');
 
     this.updateLine(lineIndex, {
       status: 'dialing',
@@ -801,7 +815,11 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
 
     const remoteIdentity = session?.remote_identity;
     const callerNumber = this.cleanText(remoteIdentity?.uri?.user);
-    const callerName = this.cleanText(remoteIdentity?.display_name) || this.findContactName(callerNumber);
+    const phoneBookItem = this.findPhoneBookItem(callerNumber);
+    const remoteName = this.cleanCallerDisplayName(remoteIdentity?.display_name, callerNumber);
+    const callerName = phoneBookItem?.name || remoteName || callerNumber;
+
+    this.prepareCallCustomerContext(callerNumber, callerName, lineIndex, 'CALL', phoneBookItem);
 
     this.activeLineIndex.set(lineIndex);
 
@@ -849,7 +867,7 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
     }
 
     this.stopIncomingRingtone();
-    this.notificationManager.closeIncomingCall();
+    this.notificationManager.closeIncomingCall(index);
 
     const options = {
       mediaConstraints: {
@@ -905,7 +923,7 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.notificationManager.closeIncomingCall();
+    this.notificationManager.closeIncomingCall(index);
 
     try {
       line.session.terminate({
@@ -1135,6 +1153,7 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
     this.targetDialNumber.set(this.normalizePhoneValue(item.dialNumber || item.number));
 
     this.phoneBookSearch.set(item.name || item.number);
+    this.prepareCallCustomerContext(item.number, item.name, undefined, 'PHONEBOOK', item);
   }
   callFromLog(item: CallLogItem): void {
     if (!this.canEditDial()) {
@@ -1232,6 +1251,7 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
 
     session.on('confirmed', () => {
       this.stopAllCallTones();
+      this.notificationManager.closeIncomingCall(lineIndex);
 
       this.isCalling.set(false);
       this.isHangingUp.set(false);
@@ -1247,6 +1267,7 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
       this.activeLineIndex.set(lineIndex);
       this.callStatus.set('sent');
       this.resultMessage.set('');
+      this.showConnectedCallNotification(lineIndex);
     });
 
     session.on('ended', () => {
@@ -1287,7 +1308,8 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
 
   private finishLine(lineIndex: number, status: PhoneCallStatus, message: string): void {
     this.stopAllCallTones();
-    this.notificationManager.closeIncomingCall();
+    this.notificationManager.closeIncomingCall(lineIndex);
+    this.notificationManager.closeConnectedCall(lineIndex);
 
     const line = this.lines().find(item => item.index === lineIndex);
 
@@ -2032,12 +2054,284 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
     }
   }
 
-  private showIncomingCallNotification(lineIndex: number, number: string, name: string): void {
+  private showIncomingCallNotification(
+    lineIndex: number,
+    number: string,
+    name: string,
+    silent = false
+  ): void {
+    const context = this.callCustomerContext();
+    const sameNumber = !context?.number || this.isSamePhoneNumber(context.number, number);
+
     this.notificationManager.showIncomingCall({
       lineIndex,
       number,
-      name
+      name,
+      customerName: sameNumber ? context?.customerName : undefined,
+      explain: sameNumber ? context?.customerExplain : undefined,
+      silent
     });
+  }
+
+  private showConnectedCallNotification(lineIndex: number): void {
+    const line = this.lines().find(item => item.index === lineIndex);
+    if (!line) {
+      return;
+    }
+
+    const context = this.callCustomerContext();
+    const sameNumber = !context?.number || this.isSamePhoneNumber(context.number, line.number);
+
+    this.notificationManager.showConnectedCall({
+      lineIndex,
+      number: line.number,
+      name: sameNumber ? (context?.name || line.name) : line.name,
+      customerName: sameNumber ? context?.customerName : undefined,
+      explain: sameNumber ? context?.customerExplain : undefined,
+      centralRef: sameNumber ? context?.centralRef : undefined,
+      customerCode: sameNumber ? context?.customerCode : undefined,
+      customerType: sameNumber ? context?.customerType : undefined,
+      manager: sameNumber ? context?.manager : undefined
+    });
+  }
+
+  private cleanCallerDisplayName(value: any, number: string): string {
+    const name = this.cleanText(value);
+    if (!name) {
+      return '';
+    }
+
+    const normalized = name.toUpperCase();
+    if (/^CID\s*:/i.test(name) || normalized === 'UNKNOWN' || normalized === 'ANONYMOUS') {
+      return '';
+    }
+
+    return name === number ? '' : name;
+  }
+
+  private parseKowsarPhonebookExplain(explain: string): { centralRef?: number; customerCode?: number; addressRef?: number } {
+    const text = String(explain ?? '').trim();
+    if (!text || !/^KOWSAR(?:\||$)/i.test(text)) {
+      return {};
+    }
+
+    const values: Record<string, number> = {};
+    for (const part of text.split('|').slice(1)) {
+      const [rawKey, rawValue] = part.split('=', 2);
+      const key = String(rawKey ?? '').trim().toLowerCase();
+      const value = Number(String(rawValue ?? '').trim());
+      if (key && Number.isFinite(value) && value > 0) {
+        values[key] = value;
+      }
+    }
+
+    return {
+      centralRef: values['centralref'],
+      customerCode: values['customercode'],
+      addressRef: values['addressref']
+    };
+  }
+
+  private prepareCallCustomerContext(
+    number: string,
+    name: string,
+    lineIndex?: number,
+    source: 'PHONEBOOK' | 'CALL' | 'MANUAL' = 'CALL',
+    knownItem?: PhoneBookItem
+  ): void {
+    const item = knownItem ?? this.findPhoneBookItem(number);
+    const link = item
+      ? { centralRef: item.centralRef, customerCode: item.customerCode, addressRef: item.addressRef }
+      : {};
+
+    const context: PhoneCustomerContext = {
+      lineIndex,
+      number: this.normalizePhoneValue(number),
+      name: item?.name || name || number,
+      explain: item?.explain,
+      centralRef: link.centralRef,
+      customerCode: link.customerCode,
+      addressRef: link.addressRef,
+      loading: !!link.centralRef,
+      source
+    };
+
+    this.callCustomerContext.set(context);
+    this.callCustomerContextLoading.set(!!link.centralRef);
+
+    if (link.centralRef) {
+      this.loadKowsarCentralProfile(link.centralRef);
+    }
+  }
+
+  private loadKowsarCentralProfile(centralRef: number): void {
+    const requestId = ++this.callCustomerContextRequestId;
+
+    this.kowsarBaseApi.GetCustomerByCodeFromSantral(centralRef + "").subscribe({
+      next: (res: any) => {
+        if (requestId !== this.callCustomerContextRequestId) {
+          return;
+        }
+
+        this.callCustomerContextLoading.set(false);
+
+        const current = this.callCustomerContext();
+        if (!current || Number(current.centralRef ?? 0) !== centralRef) {
+          return;
+        }
+
+        const customers = Array.isArray(res?.Customers) ? res.Customers : [];
+        const customer = customers[0] ?? {};
+
+        const customerName = this.cleanText(customer?.CustName_Small ?? '');
+        const updated: PhoneCustomerContext = {
+          ...current,
+          loading: false,
+          customerName,
+          centralName: customerName || current.centralName,
+          name: current.name,
+          customerExplain: this.cleanText(customer?.Explain ?? ''),
+          appNumber: this.cleanText(customer?.AppNumber ?? ''),
+          databaseNumber: this.cleanText(customer?.DatabaseNumber ?? ''),
+          lockNumber: this.cleanText(customer?.lockNumber ?? customer?.LockNumber ?? '')
+        };
+
+        this.callCustomerContext.set(updated);
+
+        if (updated.lineIndex) {
+          const line = this.lines().find(item => item.index === updated.lineIndex);
+
+          if (line?.status === 'incoming' || line?.status === 'ringing') {
+            this.showIncomingCallNotification(
+              updated.lineIndex,
+              line.number,
+              updated.name || line.name,
+              true
+            );
+          } else if (line?.status === 'active' || line?.status === 'held') {
+            this.showConnectedCallNotification(updated.lineIndex);
+          }
+        }
+      },
+      error: () => {
+        if (requestId !== this.callCustomerContextRequestId) {
+          return;
+        }
+
+        this.callCustomerContextLoading.set(false);
+        this.callCustomerContext.update(current => current
+          ? { ...current, loading: false }
+          : current
+        );
+      }
+    });
+  }
+
+  private restoreCallCustomerContextFromActiveLine(): void {
+    const line = this.lines().find(item => !!item.session && !!item.number);
+    if (!line) {
+      return;
+    }
+
+    const current = this.callCustomerContext();
+    if (current?.number && this.isSamePhoneNumber(current.number, line.number)) {
+      return;
+    }
+
+    const item = this.findPhoneBookItem(line.number);
+    this.prepareCallCustomerContext(
+      line.number,
+      item?.name || line.name || line.number,
+      line.index,
+      'CALL',
+      item
+    );
+  }
+
+  private isSamePhoneNumber(first: string, second: string): boolean {
+    const a = this.normalizePhoneValue(first);
+    const b = this.normalizePhoneValue(second);
+    if (!a || !b) {
+      return false;
+    }
+    return a === b || (a.length >= 8 && b.length >= 8 && a.slice(-8) === b.slice(-8));
+  }
+
+  clearCallCustomerContext(): void {
+    this.callCustomerContextRequestId++;
+    this.callCustomerContextLoading.set(false);
+    this.callCustomerContext.set(null);
+  }
+
+  createTicketForCurrentCustomer(): void {
+    const context = this.callCustomerContext();
+    if (!context?.centralRef) {
+      return;
+    }
+
+    this.navigatePanelRoute(['/automation/insert-letter'], {
+      source: 'SANTRAL',
+      centralRef: context.centralRef,
+      centralName: context.centralName || context.name,
+      phone: context.number
+    });
+  }
+
+  createFactorForCurrentCustomer(): void {
+    const context = this.callCustomerContext();
+    if (!context?.customerCode) {
+      return;
+    }
+
+    this.navigatePanelRoute(['/internal/internal-factors-edit'], {
+      source: 'SANTRAL',
+      customerCode: context.customerCode,
+      customerName: context.centralName || context.name,
+      centralRef: context.centralRef || '',
+      phone: context.number
+    });
+  }
+
+  openCurrentCustomerFactors(): void {
+    const context = this.callCustomerContext();
+    if (!context?.customerCode) {
+      return;
+    }
+
+    this.navigatePanelRoute(['/internal/internal-customer-list'], {
+      source: 'SANTRAL',
+      customerCode: context.customerCode,
+      centralRef: context.centralRef || '',
+      action: 'factors'
+    });
+  }
+
+  openCurrentCustomerProperties(): void {
+    const context = this.callCustomerContext();
+    if (!context?.customerCode) {
+      return;
+    }
+
+    this.navigatePanelRoute(['/internal/internal-customer-list'], {
+      source: 'SANTRAL',
+      customerCode: context.customerCode,
+      centralRef: context.centralRef || '',
+      action: 'properties'
+    });
+  }
+
+  isCustomerCallActive(): boolean {
+    const context = this.callCustomerContext();
+    if (!context?.lineIndex) {
+      return false;
+    }
+
+    const line = this.lines().find(item => item.index === context.lineIndex);
+    return line?.status === 'incoming' || line?.status === 'ringing' || line?.status === 'active' || line?.status === 'held';
+  }
+
+  private navigatePanelRoute(commands: any[], queryParams: Record<string, any>): void {
+    void this.router.navigate(commands, { queryParams });
   }
 
   private stopIncomingRingtone(): void {
@@ -2138,13 +2432,19 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
                 displayNumber
               );
 
+              const explain = this.cleanText(row?.Explain ?? row?.explain ?? '');
+              const link = this.parseKowsarPhonebookExplain(explain);
+
               return {
                 id: Number(row?.Id ?? row?.id ?? 0),
                 name,
                 number: displayNumber,
                 dialNumber,
                 extension: '',
-                explain: this.cleanText(row?.Explain ?? row?.explain ?? ''),
+                explain,
+                centralRef: link.centralRef,
+                customerCode: link.customerCode,
+                addressRef: link.addressRef,
                 isFavorite: Number(row?.IsFavorite ?? row?.is_favorite ?? 0) === 1,
                 favoriteId: Number(row?.FavoriteId ?? row?.favorite_id ?? 0)
               } as PhoneBookItem;
@@ -2153,6 +2453,8 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
 
 
           this.phoneBook.set(mapped);
+          this.refreshContactNamesFromPhoneBook();
+          this.restoreCallCustomerContextFromActiveLine();
         },
         error: (err: any) => {
           console.error('PHONEBOOK ERROR:', err);
@@ -2188,6 +2490,7 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
 
           const mappedMessages = messages.map((msg: any) => ({
             ...msg,
+            caller_name: this.findContactName(String(msg?.caller_number || '')),
             play_url: this.santralApi.SantralVoicemail_PlayUrl(
               msg.extension,
               msg.folder,
@@ -2207,14 +2510,46 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
       });
   }
 
+  private refreshContactNamesFromPhoneBook(): void {
+    let logsChanged = false;
+
+    this.callLogs.update(list => list.map(log => {
+      const contactName = this.findContactName(log.number);
+
+      if (!contactName || contactName === log.name) {
+        return log;
+      }
+
+      logsChanged = true;
+      return { ...log, name: contactName };
+    }));
+
+    this.voicemailMessages.update(list => list.map(msg => {
+      const contactName = this.findContactName(String(msg?.caller_number || ''));
+
+      return contactName
+        ? { ...msg, caller_name: contactName }
+        : msg;
+    }));
+
+    if (logsChanged) {
+      this.saveCallLogs();
+    }
+  }
+
+
   private findContactName(number: string): string {
+    return this.findPhoneBookItem(number)?.name ?? '';
+  }
+
+  private findPhoneBookItem(number: string): PhoneBookItem | undefined {
     const cleanNumber = this.normalizePhoneValue(number);
 
     if (!cleanNumber) {
-      return '';
+      return undefined;
     }
 
-    const found = this.phoneBook().find(item => {
+    return this.phoneBook().find(item => {
       const itemNumber = this.normalizePhoneValue(item.number);
 
       if (!itemNumber) {
@@ -2225,14 +2560,10 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
         return true;
       }
 
-      if (itemNumber.length >= 8 && cleanNumber.length >= 8) {
-        return itemNumber.slice(-8) === cleanNumber.slice(-8);
-      }
-
-      return false;
+      return itemNumber.length >= 8 && cleanNumber.length >= 8
+        ? itemNumber.slice(-8) === cleanNumber.slice(-8)
+        : false;
     });
-
-    return found?.name ?? '';
   }
 
   private getLogsStorageKey(): string {
@@ -2539,6 +2870,7 @@ export class SantralPhoneComponent implements OnInit, OnDestroy {
 
     if (activeLine?.number) {
       this.targetNumber.set(activeLine.number);
+      this.restoreCallCustomerContextFromActiveLine();
     }
 
     this.lines()

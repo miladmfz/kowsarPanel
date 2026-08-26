@@ -29,6 +29,26 @@ import { filter } from 'rxjs';
 import { cleanSantralText } from 'src/app/features/santral/shared/utils/santral-format.util';
 import { WebPhoneTonePlayer } from 'src/app/features/santral/shared/webphone/webphone-tone-player';
 import { SantralWebApiService } from 'src/app/features/santral/services/santralapi.service';
+import { CustomerWebApiService } from 'src/app/features/internal/services/CustomerWebApi.service';
+
+interface HeaderPhoneBookItem {
+  name: string;
+  number: string;
+  explain: string;
+  centralRef?: number;
+  customerCode?: number;
+  addressRef?: number;
+}
+
+interface HeaderCallContext {
+  number: string;
+  phoneBookName: string;
+  customerName: string;
+  customerExplain: string;
+  centralRef?: number;
+  customerCode?: number;
+}
+
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -65,7 +85,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   private lastLeaveRequestCount = 0;
   private lastAlarmRowCount = 0;
   private lastAlarmNewCount = 0;
-  private headerPhoneBook = signal<any[]>([]);
+  private headerPhoneBook = signal<HeaderPhoneBookItem[]>([]);
+  private headerCallContexts = new Map<number, HeaderCallContext>();
   // ===============================================================
   // 🔐 Change Password (Modal + Form)
   // ===============================================================
@@ -80,6 +101,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   // ===============================================================
   private readonly zone = inject(NgZone);
   private readonly base_repo = inject(KowsarBaseWebApi);
+  private readonly customer_repo = inject(CustomerWebApiService);
+
   private readonly fb = inject(FormBuilder);
   private readonly notificationService = inject(NotificationService);
   private readonly router = inject(Router);
@@ -108,15 +131,18 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     // ✅ ساخت فرم تغییر رمز (بعد از inject شدن fb)
     this.initChangePasswordForm();
-    this.initHeaderWebPhone();
-    this.loadHeaderPhoneBook();
+
+
     const savedTheme = (localStorage.getItem('theme') as 'light' | 'dark') || 'light';
 
     this.isDarkMode.set(savedTheme === 'dark')
     this.PhFullName.set(this.session.phFullName)
     this.LoginType.set(this.session.loginType)
     this.ActiveDate_str.set(this.session.getString('ActiveDate') || '')
-
+    if (this.LoginType() == 'KOWSAR') {
+      this.initHeaderWebPhone();
+      this.loadHeaderPhoneBook();
+    }
     this.requestNotificationPermission();
 
     this.attendanceInterval = setInterval(() => this.Get_Notification(), 2 * (60000));
@@ -131,6 +157,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(() => {
         if (!this.router.url.includes('/santral/santral-phone')) {
           this.bindHeaderIncomingPreviewHandler();
+          this.restoreHeaderPhoneState();
         }
       });
   }
@@ -161,9 +188,19 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
               ''
             );
 
+            const explain = cleanSantralText(
+              row?.Explain ??
+              row?.explain ??
+              ''
+            );
+
+            const link = this.parseHeaderKowsarExplain(explain);
+
             return {
               name,
-              number
+              number,
+              explain,
+              ...link
             };
           })
           .filter((item: any) => !!item.number);
@@ -223,12 +260,40 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
 
-  private findHeaderContactName(number: string): string {
-    const found = this.headerPhoneBook().find(item =>
+  private parseHeaderKowsarExplain(
+    explain: string
+  ): { centralRef?: number; customerCode?: number; addressRef?: number } {
+    const text = String(explain ?? '').trim();
+    if (!text || !/^KOWSAR(?:\||$)/i.test(text)) {
+      return {};
+    }
+
+    const values: Record<string, number> = {};
+    for (const part of text.split('|').slice(1)) {
+      const [rawKey, rawValue] = part.split('=', 2);
+      const key = String(rawKey ?? '').trim().toLowerCase();
+      const value = Number(String(rawValue ?? '').trim());
+
+      if (key && Number.isFinite(value) && value > 0) {
+        values[key] = value;
+      }
+    }
+
+    return {
+      centralRef: values['centralref'],
+      customerCode: values['customercode'],
+      addressRef: values['addressref']
+    };
+  }
+
+  private findHeaderContact(number: string): HeaderPhoneBookItem | undefined {
+    return this.headerPhoneBook().find(item =>
       this.isSameHeaderPhoneNumber(item.number, number)
     );
+  }
 
-    return cleanSantralText(found?.name ?? '');
+  private findHeaderContactName(number: string): string {
+    return cleanSantralText(this.findHeaderContact(number)?.name ?? '');
   }
 
   private refreshIncomingNamesFromHeaderPhoneBook(): void {
@@ -266,6 +331,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.attendanceInterval) clearInterval(this.attendanceInterval);
     this.stopMiniIncomingAlert();
+    this.closeMiniConnectedNotification();
     this.miniIncomingTone.dispose();
   }
 
@@ -659,6 +725,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   hangupMiniPhoneCall(event: Event): void {
     event.stopPropagation();
     this.stopMiniIncomingAlert();
+    this.closeMiniConnectedNotification();
     const line = this.webPhoneService
       .lines()
       .find(item => !!item.session);
@@ -681,6 +748,41 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       this.handleHeaderIncomingPreview(session);
     });
   }
+
+  private restoreHeaderPhoneState(): void {
+    this.webPhoneService.lines()
+      .filter(line => !!line.session)
+      .forEach(line => {
+        if (this.headerCallContexts.has(line.index)) {
+          return;
+        }
+
+        const phoneBookItem = this.findHeaderContact(line.number);
+        const phoneBookName = phoneBookItem?.name || line.name || line.number;
+
+        this.headerCallContexts.set(line.index, {
+          number: line.number,
+          phoneBookName,
+          customerName: '',
+          customerExplain: '',
+          centralRef: phoneBookItem?.centralRef,
+          customerCode: phoneBookItem?.customerCode
+        });
+
+        if (phoneBookItem?.name && phoneBookItem.name !== line.name) {
+          this.webPhoneService.updateLine(line.index, { name: phoneBookItem.name });
+        }
+
+        if (line.status === 'incoming' || line.status === 'ringing') {
+          this.startMiniIncomingAlert();
+          this.showMiniIncomingNotification(line.index, false);
+        }
+
+        if (phoneBookItem?.centralRef) {
+          this.loadHeaderCustomerProfile(line.index, phoneBookItem.centralRef, line.session);
+        }
+      });
+  }
   private handleHeaderIncomingPreview(session: any): void {
     const lineIndex = this.findHeaderFreeLine();
 
@@ -689,13 +791,21 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     const remoteIdentity = session?.remote_identity;
-
     const callerNumber = cleanSantralText(remoteIdentity?.uri?.user);
-    const callerName =
-      cleanSantralText(remoteIdentity?.display_name) ||
-      this.findHeaderContactName(callerNumber);
-    this.webPhoneService.activeLineIndex.set(lineIndex);
+    const phoneBookItem = this.findHeaderContact(callerNumber);
+    const remoteName = cleanSantralText(remoteIdentity?.display_name);
+    const callerName = phoneBookItem?.name || remoteName || callerNumber;
 
+    this.headerCallContexts.set(lineIndex, {
+      number: callerNumber,
+      phoneBookName: callerName,
+      customerName: '',
+      customerExplain: '',
+      centralRef: phoneBookItem?.centralRef,
+      customerCode: phoneBookItem?.customerCode
+    });
+
+    this.webPhoneService.activeLineIndex.set(lineIndex);
     this.webPhoneService.updateLine(lineIndex, {
       session,
       status: 'incoming',
@@ -708,8 +818,33 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       startedAt: Date.now(),
       connectedAt: null
     });
-    this.startMiniIncomingAlert(callerNumber, callerName);
-    this.showMiniIncomingNotification(callerNumber, callerName);
+
+    this.startMiniIncomingAlert();
+    this.showMiniIncomingNotification(lineIndex, false);
+
+    if (phoneBookItem?.centralRef) {
+      this.loadHeaderCustomerProfile(lineIndex, phoneBookItem.centralRef, session);
+    }
+
+    let connectedHandled = false;
+    const handleConnected = () => {
+      if (connectedHandled) {
+        return;
+      }
+
+      connectedHandled = true;
+      this.stopMiniIncomingAlert();
+      this.webPhoneService.updateLine(lineIndex, {
+        status: 'active',
+        answered: true,
+        connectedAt: Date.now()
+      });
+      this.showMiniConnectedNotification(lineIndex);
+    };
+
+    session.on('accepted', handleConnected);
+    session.on('confirmed', handleConnected);
+
     session.on('ended', () => {
       this.clearHeaderIncomingPreview(lineIndex);
     });
@@ -718,6 +853,39 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       this.clearHeaderIncomingPreview(lineIndex);
     });
   }
+
+  private loadHeaderCustomerProfile(lineIndex: number, centralRef: number, session: any): void {
+    this.customer_repo.GetCustomerByCodeFromSantral(centralRef + "").subscribe({
+      next: (res: any) => {
+        const current = this.headerCallContexts.get(lineIndex);
+        const line = this.webPhoneService.lines().find(item => item.index === lineIndex);
+
+        if (!current || !line?.session || line.session !== session) {
+          return;
+        }
+
+        const customer = Array.isArray(res?.Customers) ? res.Customers[0] : null;
+        if (!customer) {
+          return;
+        }
+
+        const updated: HeaderCallContext = {
+          ...current,
+          customerName: cleanSantralText(customer?.CustName_Small ?? ''),
+          customerExplain: cleanSantralText(customer?.Explain ?? '')
+        };
+
+        this.headerCallContexts.set(lineIndex, updated);
+
+        if (line.status === 'incoming' || line.status === 'ringing') {
+          this.showMiniIncomingNotification(lineIndex, true);
+        } else if (line.status === 'active' || line.status === 'held') {
+          this.showMiniConnectedNotification(lineIndex);
+        }
+      }
+    });
+  }
+
   private findHeaderFreeLine(): number | null {
     const current = this.webPhoneService.activeLine();
 
@@ -731,8 +899,12 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
     return empty?.index ?? null;
   }
+
   private clearHeaderIncomingPreview(lineIndex: number): void {
     this.stopMiniIncomingAlert();
+    this.closeMiniConnectedNotification();
+    this.headerCallContexts.delete(lineIndex);
+
     this.webPhoneService.updateLine(lineIndex, {
       status: 'ended',
       session: null,
@@ -744,14 +916,17 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       this.webPhoneService.clearLine(lineIndex);
     }, 800);
   }
+
   miniPhoneIncomingLine(): any {
     return this.webPhoneService
       .lines()
       .find(item => item.status === 'incoming') ?? null;
   }
+
   miniPhoneIsRinging(): boolean {
     return !!this.miniPhoneIncomingLine();
   }
+
   miniPhoneText(): string {
     const incoming = this.miniPhoneIncomingLine();
 
@@ -773,6 +948,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
     return 'اتصال تلفن';
   }
+
   miniPhoneMainClick(event: Event): void {
     event.stopPropagation();
 
@@ -790,6 +966,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.bindHeaderIncomingPreviewHandler();
     this.webPhoneService.connect();
   }
+
   private readonly miniIncomingTone = new WebPhoneTonePlayer({
     frequencies: [880],
     gain: 0.04,
@@ -798,9 +975,13 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   });
 
   private miniIncomingNotification: Notification | null = null;
-  private startMiniIncomingAlert(number: string, name: string): void {
+  private miniConnectedNotification: Notification | null = null;
+  private miniConnectedNotificationTimer: ReturnType<typeof setTimeout> | null = null;
+
+  private startMiniIncomingAlert(): void {
     this.miniIncomingTone.start();
   }
+
   private stopMiniIncomingAlert(): void {
     this.miniIncomingTone.stop();
 
@@ -809,31 +990,58 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       this.miniIncomingNotification = null;
     }
   }
-  private showMiniIncomingNotification(number: string, name: string): void {
-    if (!('Notification' in window)) {
+
+  private notificationBody(context: HeaderCallContext | undefined): string {
+    if (!context) {
+      return 'تماس جدید';
+    }
+
+    const lines: string[] = [];
+    const phoneBookName = cleanSantralText(context.phoneBookName);
+    const customerName = cleanSantralText(context.customerName);
+    const number = cleanSantralText(context.number);
+    const explain = cleanSantralText(context.customerExplain);
+
+    if (phoneBookName && phoneBookName !== number) {
+      lines.push(phoneBookName);
+    }
+    if (customerName && customerName !== phoneBookName && customerName !== number) {
+      lines.push(`نام مشتری: ${customerName}`);
+    }
+    if (number) {
+      lines.push(number);
+    }
+    if (explain) {
+      lines.push(`توضیحات: ${explain}`);
+    }
+
+    return lines.join('\n') || 'تماس جدید';
+  }
+
+  private canShowPhoneNotification(): boolean {
+    return (
+      'Notification' in window &&
+      window.isSecureContext &&
+      Notification.permission === 'granted'
+    );
+  }
+
+  private showMiniIncomingNotification(lineIndex: number, silentUpdate: boolean): void {
+    if (!this.canShowPhoneNotification()) {
       return;
     }
 
-    if (!window.isSecureContext) {
-      return;
-    }
-
-    if (Notification.permission !== 'granted') {
-      return;
-    }
-
-    const title = 'تماس ورودی';
-    const body = name
-      ? `${name} - ${number}`
-      : number || 'تماس جدید';
-
+    const context = this.headerCallContexts.get(lineIndex);
     this.miniIncomingNotification?.close();
 
-    this.miniIncomingNotification = new Notification(title, {
-      body,
+    this.miniIncomingNotification = new Notification('تماس ورودی', {
+      body: this.notificationBody(context),
       tag: 'kowsar-webphone-incoming',
-      requireInteraction: true
-    });
+      requireInteraction: true,
+      silent: silentUpdate,
+      renotify: !silentUpdate,
+      dir: 'rtl'
+    } as NotificationOptions & { requireInteraction?: boolean; renotify?: boolean });
 
     this.miniIncomingNotification.onclick = () => {
       window.focus();
@@ -846,4 +1054,45 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       this.miniIncomingNotification = null;
     };
   }
+
+  private showMiniConnectedNotification(lineIndex: number): void {
+    if (!this.canShowPhoneNotification()) {
+      return;
+    }
+
+    this.stopMiniIncomingAlert();
+    this.closeMiniConnectedNotification();
+
+    const context = this.headerCallContexts.get(lineIndex);
+    this.miniConnectedNotification = new Notification('تماس برقرار شد', {
+      body: this.notificationBody(context),
+      tag: 'kowsar-webphone-connected',
+      requireInteraction: false,
+      silent: true,
+      dir: 'rtl'
+    } as NotificationOptions & { requireInteraction?: boolean });
+
+    this.miniConnectedNotification.onclick = () => {
+      window.focus();
+      this.zone.run(() => this.openPhonePage());
+      this.closeMiniConnectedNotification();
+    };
+
+    this.miniConnectedNotificationTimer = setTimeout(() => {
+      this.closeMiniConnectedNotification();
+    }, 8000);
+  }
+
+  private closeMiniConnectedNotification(): void {
+    if (this.miniConnectedNotificationTimer) {
+      clearTimeout(this.miniConnectedNotificationTimer);
+      this.miniConnectedNotificationTimer = null;
+    }
+
+    if (this.miniConnectedNotification) {
+      this.miniConnectedNotification.close();
+      this.miniConnectedNotification = null;
+    }
+  }
+
 }

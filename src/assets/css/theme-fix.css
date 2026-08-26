@@ -3451,6 +3451,53 @@ body[data-layout-color='dark'] dialog.kowsar-dialog {
     }
 }
 
+/* =========================================================
+   MOBILE SIDEBAR FIX
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+
+    body[data-sidebar-size='condensed'] .left-side-menu {
+        width: 240px !important;
+        position: fixed !important;
+        right: 0 !important;
+    }
+
+    body[data-sidebar-size='condensed'] .left-side-menu .text-center.border-bottom {
+        display: block !important;
+    }
+
+    body[data-sidebar-size='condensed'] #sidebar-menu .menu-title {
+        display: block !important;
+    }
+
+    body[data-sidebar-size='condensed'] #sidebar-menu>ul>li>a {
+        justify-content: flex-start !important;
+        width: auto !important;
+        margin: 4px 6px !important;
+        padding: 12px 14px !important;
+    }
+
+    body[data-sidebar-size='condensed'] #sidebar-menu>ul>li>a span {
+        display: inline !important;
+    }
+
+    body[data-sidebar-size='condensed'] #sidebar-menu>ul>li>a i {
+        margin: 0 !important;
+    }
+
+    body[data-sidebar-size='condensed'] .menu-arrow {
+        display: inline-block !important;
+    }
+
+    body[data-sidebar-size='condensed'] #sidebar-menu>ul>li:hover>.collapse>ul {
+        position: static !important;
+        width: 100% !important;
+        right: auto !important;
+        box-shadow: none !important;
+    }
+}
+
 @media (max-width: 575.98px) {
     dialog.kowsar-dialog {
         padding: 4px;
@@ -3489,5 +3536,55 @@ body[data-layout-color='dark'] dialog.kowsar-dialog {
     .kowsar-dialog .kowsar-dialog-grid {
         height: 210px;
         min-height: 180px;
+    }
+
+    /* =========================================================
+   CONDENSED SIDEBAR FLYOUT FIX
+   ========================================================= */
+
+    @media (min-width: 992px) {
+
+        body[data-sidebar-size='condensed'] .left-side-menu #side-menu>li {
+            position: relative !important;
+            overflow: visible !important;
+        }
+
+        /* منویی که با کلیک قبلی باز مانده، مخفی شود */
+        body[data-sidebar-size='condensed'] .left-side-menu #side-menu>li:not(:hover):not(:focus-within)>.collapse {
+            display: none !important;
+        }
+
+        /* آیتم والد همیشه بالاتر از زیرمنو باشد */
+        body[data-sidebar-size='condensed'] .left-side-menu #side-menu>li:hover>a,
+        body[data-sidebar-size='condensed'] .left-side-menu #side-menu>li:focus-within>a {
+            position: relative !important;
+            width: 260px !important;
+            z-index: 10002 !important;
+        }
+
+        /* زیرمنو در موقعیت ثابت و یکسان باز شود */
+        body[data-sidebar-size='condensed'] .left-side-menu #side-menu>li:hover>.collapse,
+        body[data-sidebar-size='condensed'] .left-side-menu #side-menu>li:focus-within>.collapse {
+            display: block !important;
+            height: auto !important;
+            overflow: visible !important;
+            transition: none !important;
+        }
+
+        body[data-sidebar-size='condensed'] .left-side-menu #side-menu>li:hover>.collapse>ul,
+        body[data-sidebar-size='condensed'] .left-side-menu #side-menu>li:focus-within>.collapse>ul {
+            display: block !important;
+            position: absolute !important;
+
+            top: 54px !important;
+            right: 70px !important;
+            left: auto !important;
+
+            width: 190px !important;
+            margin: 0 !important;
+
+            z-index: 10001 !important;
+            pointer-events: auto !important;
+        }
     }
 }

@@ -634,6 +634,19 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
       }
     });
 
+    this.route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe((params: ParamMap) => {
+      const customerCode = String(params.get('customerCode') ?? '').trim();
+      if (!customerCode || this.HasFactorCode()) {
+        return;
+      }
+
+      this.prefillSantralCustomer(
+        customerCode,
+        String(params.get('customerName') ?? '').trim(),
+        String(params.get('phone') ?? '').trim()
+      );
+    });
+
     this.Config_Declare();
     this.pipe_function();
 
@@ -646,6 +659,36 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     });
   }
 
+
+  private prefillSantralCustomer(customerCode: string, customerName: string, phone: string): void {
+    this.EditForm_search.patchValue({ ObjectRef: customerCode });
+
+    this.EditForm_Factor_Header.patchValue({
+      CustomerCode: customerCode,
+      CustName: customerName,
+      OwnerName: this.session.phFullName,
+      Explain: phone ? `ایجاد از تماس تلفنی با شماره ${phone}` : 'ایجاد از پنل تلفن'
+    });
+
+    this.repo.GetCustomerById(this.EditForm_search.value).subscribe({
+      next: (data: any) => {
+        const customer = data?.Customers?.[0];
+        if (!customer) {
+          return;
+        }
+
+        this.EditForm_Factor_Header.patchValue({
+          CustomerCode: customer.CustomerCode ?? customerCode,
+          CustName: customer.CustName_Small ?? customerName,
+          OwnerName: this.session.phFullName,
+          Active: customer.Active ?? '0'
+        });
+      },
+      error: () => {
+        // اطلاعات پایه QueryString حفظ می‌شود و کاربر می‌تواند ادامه دهد.
+      }
+    });
+  }
 
   Autletterfromcustomer() {
     this.Autletter_dialog_show()
@@ -1341,137 +1384,107 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
       });
   }
 
+  getDependencyTaskIds(row: any): string[] {
+    const raw = (row?.DependencyTaskRefs ?? '').toString().trim();
 
-  getDependencyRow(row: any): any | null {
-    const dependencyGoodTaskCode = (row?.DependencyGoodTaskCode ?? '0').toString();
-
-    if (dependencyGoodTaskCode === '0') {
-      return null;
+    if (!raw || raw === '0' || raw === '000') {
+      return [];
     }
 
-    return this.goodtaskrow_factorrow_list()
-      .find((x: any) =>
-        (x.GoodTaskCode ?? '').toString() === dependencyGoodTaskCode
-      ) ?? null;
-  }
-
-  canStartByDependency(row: any): boolean {
-
-    const deps = this.getDependencyRows(row);
-
-    // ❌ اگر حتی dependency STRING وجود دارد ولی match نشده
-    // => یعنی دیتا ناقصه → نباید اجازه بدیم
-    const hasDependencyDefinition =
-      (row.DependencyTaskRefs ?? '').toString().trim().length > 0 &&
-      (row.DependencyTaskRefs ?? '0') !== '0' &&
-      (row.DependencyTaskRefs ?? '000') !== '000';
-
-    // اگر dependency تعریف شده ولی نتونستیم resolve کنیم
-    if (hasDependencyDefinition && deps.length === 0) {
-      return false;
-    }
-
-    // اگر dependency نداریم → آزاد
-    if (!hasDependencyDefinition) {
-      return true;
-    }
-
-    // اگر داریم → همه باید done باشن
-    return deps.every(d =>
-      this.getState(d) === 2 && this.hasEndTime(d)
-    );
-  }
-  validateStart(row: any): { ok: boolean, message?: string } {
-
-    const deps = this.getDependencyRows(row);
-
-    const ids = (row.DependencyTaskRefs ?? '')
-      .toString()
-      .trim()
+    return raw
       .split(',')
-      .filter(x => x && x !== '0');
+      .map((x: string) => x.trim())
+      .filter((x: string) => x.length > 0 && x !== '0' && x !== '000');
+  }
 
-    // اگر dependency تعریف شده ولی پیدا نشده
-    if (ids.length > 0 && deps.length === 0) {
-      return {
-        ok: false,
-        message: `وابستگی‌های این وظیفه قابل شناسایی نیست`
-      };
+
+  getDependencyRows(row: any): any[] {
+    const ids = this.getDependencyTaskIds(row);
+
+    if (ids.length === 0) {
+      return [];
     }
 
-    // 🔥 همه انجام‌نشده‌ها
-    const notDoneList = deps.filter(d => Number(d.State) !== 2);
+    return (this.goodtaskrow_factorrow_list() ?? [])
+      .filter((x: any) => ids.includes((x.TaskRef ?? '').toString()))
+      .sort((a: any, b: any) => {
+        const ai = ids.indexOf((a.TaskRef ?? '').toString());
+        const bi = ids.indexOf((b.TaskRef ?? '').toString());
+        return ai - bi;
+      });
+  }
 
-    if (notDoneList.length > 0) {
 
-      const titles = notDoneList.map(x => `"${x.TaskTitle}"`).join(' و ');
+  getDependencyTitlesFromString(row: any): string[] {
+    const raw = (row?.DependencyTaskTitles ?? '').toString().trim();
+
+    if (!raw) {
+      return [];
+    }
+
+    return raw
+      .split(',')
+      .map((x: string) => x.trim())
+      .filter((x: string) => x.length > 0);
+  }
+
+
+  validateStart(row: any): { ok: boolean; message?: string } {
+    const dependencyIds = this.getDependencyTaskIds(row);
+
+    if (dependencyIds.length === 0) {
+      return { ok: true };
+    }
+
+    const dependencyRows = this.getDependencyRows(row);
+
+    // اگر وابستگی در لیست همین کالا/ردیف وجود نداشت، طبق تصمیم قبلی مانع شروع نمی‌شویم.
+    // چون ممکن است آن Task در مجموعه ردیف‌های فعلی نیامده باشد.
+    if (dependencyRows.length === 0) {
+      return { ok: true };
+    }
+
+    const notFinishedRows = dependencyRows.filter((d: any) => !this.hasEndTime(d));
+
+    if (notFinishedRows.length > 0) {
+      const titles = notFinishedRows
+        .map((x: any) => `"${x.TaskTitle ?? 'بدون عنوان'}"`)
+        .join(' و ');
+
+      const endText = notFinishedRows.length > 1 ? 'شوند' : 'شود';
 
       return {
         ok: false,
-        message: `ابتدا ${titles} باید تکمیل شود`
+        message: `ابتدا ${titles} باید تکمیل ${endText}`
       };
     }
 
     return { ok: true };
   }
+
+
+  canStartByDependency(row: any): boolean {
+    return this.validateStart(row).ok;
+  }
+
+
   getDependencyErrorMessage(row: any): string {
-
-    const deps = this.getDependencyRows(row);
-
-    if (!deps.length) {
-      return 'این وظیفه وابستگی ندارد یا قابل بررسی نیست';
-    }
-
-    const notDone = deps.find(d => this.getState(d) !== 2);
-
-    if (notDone) {
-      return `ابتدا «${notDone.TaskTitle}» باید تکمیل شود`;
-    }
-
-    return 'وابستگی‌ها تکمیل نشده‌اند';
+    return this.validateStart(row).message ?? 'وابستگی‌ها تکمیل نشده‌اند';
   }
+
+
   getDependencyList(row: any): any[] {
-
-    const raw = (row.DependencyTaskRefs ?? '')
-      .toString()
-      .trim();
-
-    if (!raw || raw === '0' || raw === '000') return [];
-
-    const ids = raw.split(',').map(x => Number(x));
-
-    return this.goodtaskrow_factorrow_list()
-      .filter(x => ids.includes(Number(x.TaskRef)))
-      .map(x => ({
-        TaskRef: x.TaskRef,
-        TaskTitle: x.TaskTitle,
-        GoodTaskRowCode: x.GoodTaskRowCode,
-        State: x.State,
-        isDone: Number(x.State) === 2,
-        StartTime: x.StartTime,
-        EndTime: x.EndTime
-      }));
-  }
-  getDependencyRows(row: any): any[] {
-
-    const ids = this.getDependencyIds(row);
-
-    if (ids.length === 0) return [];
-
-    return this.goodtaskrow_factorrow_list()
-      .filter(x => ids.includes(Number(x.TaskRef))); // 🔥 مهم: TaskRef نه GoodTaskCode
+    return this.getDependencyRows(row).map((x: any) => ({
+      TaskRef: x.TaskRef,
+      TaskTitle: x.TaskTitle,
+      GoodTaskRowCode: x.GoodTaskRowCode,
+      State: x.State,
+      isDone: this.hasEndTime(x),
+      StartTime: x.StartTime,
+      EndTime: x.EndTime
+    }));
   }
 
-  getDependencyIds(row: any): number[] {
-    const raw = (row.DependencyTaskRefs ?? '').toString().trim();
-
-    if (!raw || raw === '0' || raw === '000') return [];
-
-    return raw
-      .split(',')
-      .map(x => Number(x))
-      .filter(x => !isNaN(x) && x > 0);
-  }
   Start_GoodTaskRow(row: any) {
 
     if (!this.isNotStarted(row)) {
@@ -1525,12 +1538,12 @@ export class InternalFactorsEditComponent extends AgGridBaseComponent implements
     row._submitted = true;
 
     const body = {
-      GoodTaskRowCode: row.GoodTaskRowCode,
+      GoodTaskRowCode: (row.GoodTaskRowCode ?? '').toString(),
       State: '2',
-      TaskDate: row.TaskDate || this.session.activeDate,
-      StartTime: row.StartTime || '',
+      TaskDate: (row.TaskDate || this.session.activeDate || '').toString(),
+      StartTime: (row.StartTime || '').toString(),
       EndTime: this.getNowTime(),
-      CentralRef: this.session.centralRef
+      CentralRef: (this.session.centralRef ?? '').toString()
     };
 
     this.task_repo.GoodTaskRow_ChangeState(body)

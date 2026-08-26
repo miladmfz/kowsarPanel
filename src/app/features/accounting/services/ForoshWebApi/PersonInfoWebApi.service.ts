@@ -40,7 +40,9 @@ export class PersonInfoWebApiService {
     return this.withLoading(this.client.post<any[]>(this.baseUrl + "GetPersonInfo", command, { headers: this.headerService.headers }))
   }
 
-
+  GetPersonInfo_Customer(command): Observable<any[]> {
+    return this.withLoading(this.client.post<any[]>(this.baseUrl + "GetPersonInfo_Customer", command, { headers: this.headerService.headers }))
+  }
   GetPersonInfoById(PersonInfoCode: string): Observable<any[]> {
     const params = new HttpParams().append('PersonInfoCode', PersonInfoCode)
     return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetPersonInfoById", { headers: this.headerService.headers, params: params }))
@@ -59,6 +61,40 @@ export class PersonInfoWebApiService {
   ChangeXUserInfo(command): Observable<any[]> {
     return this.withLoading(this.client.post<any[]>(this.baseUrl + "ChangeXUserInfo", command, { headers: this.headerService.headers }))
   }
+
+
+
+
+
+
+
+
+
+  SetPersonInfo_XUserNew(command): Observable<any[]> {
+    return this.withLoading(this.client.post<any[]>(this.baseUrl + "SetPersonInfo_XUserNew", command, { headers: this.headerService.headers }))
+  }
+
+  SetPersonInfo_XUserName(command): Observable<any[]> {
+    return this.withLoading(this.client.post<any[]>(this.baseUrl + "SetPersonInfo_XUserName", command, { headers: this.headerService.headers }))
+  }
+  SetPersonInfo_XUserPass(command): Observable<any[]> {
+    return this.withLoading(this.client.post<any[]>(this.baseUrl + "SetPersonInfo_XUserPass", command, { headers: this.headerService.headers }))
+  }
+
+
+  SetPersonInfo_XUserActive(PersonInfoCode: string, Active: string): Observable<any[]> {
+    const params = new HttpParams().append('PersonInfoCode', PersonInfoCode).append('Active', Active)
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "SetPersonInfo_XUserActive", { headers: this.headerService.headers, params: params }))
+  }
+
+  SetPersonInfo_XUserAuthSms(PersonInfoCode: string, AuthSMS: string): Observable<any[]> {
+    const params = new HttpParams().append('PersonInfoCode', PersonInfoCode).append('AuthSMS', AuthSMS)
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "SetPersonInfo_XUserAuthSms", { headers: this.headerService.headers, params: params }))
+  }
+
+
+
+
 
 
 

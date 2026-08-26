@@ -186,7 +186,6 @@ export class AutletterItemComponent
 
   private loadRows() {
 
-
     this.repo.GetLetterRowList(this.ObjectRef).subscribe((data: any) => {
 
       const rows = data?.AutLetters ?? [];
@@ -194,31 +193,41 @@ export class AutletterItemComponent
       this.records.set(rows);
       this.updateGridData(1, rows);
 
-      if (this.records().length > 0) {
-
-        const allDone = rows.every((x: any) => x.LetterRowState === 'تمام شده');
-
-        if (allDone) {
-
-
-          if (this.State() != 'تمام شده') {
-            this.State.set('تمام شده');
-            this.Update_LetterState();
-          } else {
-            this.notificationService.info('وضعیت این تیکت تمام شده است');
-          }
-
-        } else {
-
-          if (this.State() != 'درحال انجام') {
-            this.State.set('درحال انجام');
-            this.Update_LetterState();
-
-          }
-
-        }
+      // No rows: do nothing
+      if (rows.length === 0) {
+        return;
       }
 
+      // One row: ticket must be in progress
+      if (rows.length === 1) {
+
+        if (this.State() !== 'درحال انجام') {
+          this.State.set('درحال انجام');
+          this.Update_LetterState();
+        }
+      }
+      // More than one row
+      const allDone = rows.every(
+        (x: any) => x.LetterRowState === 'تمام شده'
+      );
+
+      if (allDone) {
+
+        if (this.State() !== 'تمام شده') {
+          this.State.set('تمام شده');
+          this.Update_LetterState();
+        } else {
+          this.notificationService.info('وضعیت این تیکت تمام شده است');
+        }
+
+      } else {
+
+        if (this.State() !== 'درحال انجام') {
+          this.State.set('درحال انجام');
+          this.Update_LetterState();
+        }
+
+      }
 
     });
   }

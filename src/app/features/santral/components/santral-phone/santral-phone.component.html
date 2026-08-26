@@ -40,16 +40,29 @@
         (previewIncomingRingtone)="previewIncomingRingtone()">
       </app-phone-dialer-panel>
 
-      <app-phone-workspace-panel [workspaceTab]="workspaceTab()" [phoneBookSearch]="phoneBookSearch()"
-        [filteredPhoneBook]="filteredPhoneBook()" [favoritePhoneBook]="favoritePhoneBook()" [logFilter]="logFilter()"
-        [visibleCallLogs]="visibleCallLogs()" [voicemailMessages]="voicemailMessages()"
-        [voicemailLoading]="voicemailLoading()" (setWorkspaceTab)="setWorkspaceTab($event)"
-        (phoneBookSearchChange)="onPhoneBookSearchChange($event)" (pickPhoneBookItem)="pickPhoneBookItem($event)"
-        (togglePhoneBookFavorite)="togglePhoneBookFavorite($event.item, $event.event)"
-        (setLogFilter)="setLogFilter($event)" (callFromLog)="callFromLog($event)"
-        (refreshVoicemail)="loadVoicemailMessages()" [missedCallBadgeCount]="missedCallBadgeCount()"
-        (deleteVoicemail)="deleteVoicemailMessage($event)" (moveVoicemailToOld)="moveVoicemailToOld($event)">
-      </app-phone-workspace-panel>
+      <div class="kws-phone-right-column">
+        <app-phone-customer-context-panel
+          [context]="callCustomerContext()"
+          [loading]="callCustomerContextLoading()"
+          [callActive]="isCustomerCallActive()"
+          (createTicket)="createTicketForCurrentCustomer()"
+          (createFactor)="createFactorForCurrentCustomer()"
+          (openFactors)="openCurrentCustomerFactors()"
+          (openProperties)="openCurrentCustomerProperties()"
+          (close)="clearCallCustomerContext()">
+        </app-phone-customer-context-panel>
+
+        <app-phone-workspace-panel [workspaceTab]="workspaceTab()" [phoneBookSearch]="phoneBookSearch()"
+          [filteredPhoneBook]="filteredPhoneBook()" [favoritePhoneBook]="favoritePhoneBook()" [logFilter]="logFilter()"
+          [visibleCallLogs]="visibleCallLogs()" [voicemailMessages]="voicemailMessages()"
+          [voicemailLoading]="voicemailLoading()" (setWorkspaceTab)="setWorkspaceTab($event)"
+          (phoneBookSearchChange)="onPhoneBookSearchChange($event)" (pickPhoneBookItem)="pickPhoneBookItem($event)"
+          (togglePhoneBookFavorite)="togglePhoneBookFavorite($event.item, $event.event)"
+          (setLogFilter)="setLogFilter($event)" (callFromLog)="callFromLog($event)"
+          (refreshVoicemail)="loadVoicemailMessages()" [missedCallBadgeCount]="missedCallBadgeCount()"
+          (deleteVoicemail)="deleteVoicemailMessage($event)" (moveVoicemailToOld)="moveVoicemailToOld($event)">
+        </app-phone-workspace-panel>
+      </div>
     </div>
     @if (webPhoneDebug().length > 0) {
     <div class="kws-webphone-debug">

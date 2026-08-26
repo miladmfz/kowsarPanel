@@ -1,0 +1,117 @@
+.kws-stat-card {
+    position: relative;
+}
+
+.kws-stat-card::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: -35px;
+    top: -35px;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    opacity: 0.12;
+}
+
+.kws-stat-card .card-body {
+    min-height: 108px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.kws-stat-icon {
+    width: 54px;
+    height: 54px;
+    min-width: 54px;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    font-size: 28px;
+}
+
+.kws-stat-title {
+    font-size: 0.82rem;
+    color: var(--kws-muted);
+    font-weight: 900;
+}
+
+.kws-stat-value {
+    font-size: 1.55rem;
+    font-weight: 950;
+    line-height: 1.6;
+}
+
+.kws-stat-sub {
+    color: var(--kws-muted);
+    font-size: 0.74rem;
+    font-weight: 700;
+}
+
+.kws-stat-primary::before {
+    background: var(--kws-primary);
+}
+
+.kws-stat-primary .kws-stat-icon {
+    background: var(--kws-primary-soft);
+    color: var(--kws-primary);
+}
+
+.kws-stat-success::before {
+    background: var(--kws-success);
+}
+
+.kws-stat-success .kws-stat-icon {
+    background: var(--kws-success-soft);
+    color: var(--kws-success);
+}
+
+.kws-stat-warning::before {
+    background: var(--kws-warning);
+}
+
+.kws-stat-warning .kws-stat-icon {
+    background: var(--kws-warning-soft);
+    color: var(--kws-warning);
+}
+
+.kws-stat-gold::before {
+    background: var(--kws-gold);
+}
+
+.kws-stat-gold .kws-stat-icon {
+    background: var(--kws-gold-soft);
+    color: var(--kws-gold);
+}
+
+.kws-mini-card .card-body {
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.kws-mini-label {
+    display: block;
+    color: var(--kws-muted);
+    font-size: 0.78rem;
+    font-weight: 900;
+}
+
+.kws-mini-card strong {
+    font-size: 0.98rem;
+    font-weight: 950;
+    color: var(--kws-text);
+}
+
+.kws-mini-card i {
+    width: 42px;
+    height: 42px;
+    border-radius: 15px;
+    background: var(--kws-primary-soft);
+    color: var(--kws-primary);
+    display: grid;
+    place-items: center;
+    font-size: 23px;
+}

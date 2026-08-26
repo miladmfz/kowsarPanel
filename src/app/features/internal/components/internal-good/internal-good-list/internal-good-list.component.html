@@ -55,11 +55,23 @@
       <!-- Body -->
       <div class="modal-body">
 
+        <div class="d-flex flex-wrap mb-2 gap-2">
+          <button type="button" class="btn btn-success" (click)="SaveGoodTaskOrder()">
+            <span class="btn-label"><i class="fas fa-sort-numeric-down"></i></span>
+            ذخیره ترتیب
+          </button>
+        </div>
+
         <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 350px;">
           <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800" class="w-100
           h-100" [columnDefs]="columnDefs2" [rowData]="records_GoodTask()" [gridOptions]="gridOptions"
             (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()">
           </ag-grid-angular>
+        </div>
+
+        <div class="alert alert-light border mt-2 mb-0 small">
+          برای تغییر ترتیب، مقدار ستون «ترتیب» را تغییر بده یا از دکمه‌های بالا/پایین استفاده کن، سپس «ذخیره ترتیب» را
+          بزن.
         </div>
 
       </div>

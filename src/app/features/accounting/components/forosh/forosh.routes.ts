@@ -117,9 +117,13 @@ export const Forosh_ROUTES: Routes = [
     { path: 'customer-edit', title: 'customer-edit', loadComponent: () => import('./customer/customer-edit/customer-edit.component').then(m => m.CustomerEditComponent), },
     { path: 'customer-edit/:id', title: 'customer-edit', loadComponent: () => import('./customer/customer-edit/customer-edit.component').then(m => m.CustomerEditComponent), },
 
-    { path: 'personinfo-list', title: 'personinfo-list', loadComponent: () => import('./personinfo/personinfo-list/personinfo-list.component').then(m => m.PersoninfoListComponent), },
-    { path: 'personinfo-edit', title: 'personinfo-edit', loadComponent: () => import('./personinfo/personinfo-edit/personinfo-edit.component').then(m => m.PersoninfoEditComponent), },
-    { path: 'personinfo-edit/:id', title: 'personinfo-edit', loadComponent: () => import('./personinfo/personinfo-edit/personinfo-edit.component').then(m => m.PersoninfoEditComponent), },
+    { path: 'personinfo-list', title: 'لیست مشترکین', loadComponent: () => import('./personinfo/personinfo-list/personinfo-list.component').then(m => m.PersoninfoListComponent), },
+    { path: 'personinfo-edit', title: 'اصلاح کاربران', loadComponent: () => import('./personinfo/personinfo-edit/personinfo-edit.component').then(m => m.PersoninfoEditComponent), },
+    { path: 'personinfo-edit/:id', title: 'اصلاح کاربران', loadComponent: () => import('./personinfo/personinfo-edit/personinfo-edit.component').then(m => m.PersoninfoEditComponent), },
+
+    { path: 'personinfo-customer-list', title: 'لیست مشترکین', loadComponent: () => import('./personinfo-customer/personinfo-customer-list/personinfo-customer-list.component').then(m => m.PersoninfoCustomerListComponent), },
+    { path: 'personinfo-customer-edit', title: 'اصلاح کاربران', loadComponent: () => import('./personinfo-customer/personinfo-customer-edit/personinfo-customer-edit.component').then(m => m.PersoninfoCustomerEditComponent), },
+    { path: 'personinfo-customer-edit/:id', title: 'اصلاح کاربران', loadComponent: () => import('./personinfo-customer/personinfo-customer-edit/personinfo-customer-edit.component').then(m => m.PersoninfoCustomerEditComponent), },
 
     { path: 'personetebar-list', title: 'personetebar-list', loadComponent: () => import('./personetebar/personetebar-list/personetebar-list.component').then(m => m.PersonetebarListComponent), },
     { path: 'personetebar-edit', title: 'personetebar-edit', loadComponent: () => import('./personetebar/personetebar-edit/personetebar-edit.component').then(m => m.PersonetebarEditComponent), },

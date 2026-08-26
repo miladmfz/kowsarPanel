@@ -104,9 +104,21 @@ export class InternalGoodListComponent extends AgGridBaseComponent
       {
         headerName: 'عملیات',
         pinned: 'left',
-        width: 80,
+        width: 150,
         cellRenderer: CellActionGoodTaskList,
 
+      },
+      {
+        field: 'GoodTaskOrder',
+        headerName: 'ترتیب',
+        cellClass: 'text-center',
+        headerClass: 'text-center',
+        minWidth: 90,
+        editable: true,
+        valueParser: (params: any) => {
+          const value = Number(params.newValue ?? 0);
+          return isNaN(value) || value <= 0 ? params.oldValue : value.toString();
+        }
       },
       {
         field: 'ParentTitle',
@@ -117,7 +129,7 @@ export class InternalGoodListComponent extends AgGridBaseComponent
       },
       {
         field: 'Title',
-        headerName: 'عنوان وظبفه',
+        headerName: 'عنوان وظیفه',
 
         cellClass: 'text-center',
         headerClass: 'text-center',
@@ -199,8 +211,18 @@ export class InternalGoodListComponent extends AgGridBaseComponent
     this.task_repo.GetTaskFromGood(this.GoodCode_selected())
       .subscribe((data: any) => {
 
-        this.records_GoodTask.set(data.GoodTasks)
-        this.updateGridData(2, this.records_GoodTask());
+        const rows = (data?.GoodTasks ?? []).map((x: any, index: number) => ({
+          ...x,
+          GoodTaskCode: (x.GoodTaskCode ?? '').toString(),
+          GoodRef: (x.GoodRef ?? '').toString(),
+          TaskRef: (x.TaskRef ?? x.TaskCode ?? '').toString(),
+          TaskCode: (x.TaskCode ?? x.TaskRef ?? '').toString(),
+          GoodTaskOrder: (x.GoodTaskOrder ?? (index + 1)).toString()
+        }))
+          .sort((a: any, b: any) => Number(a.GoodTaskOrder) - Number(b.GoodTaskOrder));
+
+        this.records_GoodTask.set(rows)
+        this.updateGridData(2, rows);
         this.goodtask_dialog_show()
 
       });
@@ -211,10 +233,109 @@ export class InternalGoodListComponent extends AgGridBaseComponent
     console.log(data.GoodTaskCode)
     console.log(data)
 
-    this.task_repo.GoodTask_Del(data.GoodTaskCode)
+    this.task_repo.GoodTask_Del((data.GoodTaskCode ?? '').toString())
       .subscribe((data: any) => {
         this.GetTaskFromGood()
       });
+  }
+
+  private normalizeGoodTaskOrder(): any[] {
+
+    const rows = [...(this.records_GoodTask() ?? [])]
+      .sort((a: any, b: any) => {
+        const aOrder = Number(a.GoodTaskOrder || 999999);
+        const bOrder = Number(b.GoodTaskOrder || 999999);
+
+        if (aOrder === bOrder) {
+          return Number(a.GoodTaskCode || 0) - Number(b.GoodTaskCode || 0);
+        }
+
+        return aOrder - bOrder;
+      })
+      .map((x: any, index: number) => ({
+        ...x,
+        GoodTaskOrder: (index + 1).toString()
+      }));
+
+    this.records_GoodTask.set(rows);
+    this.updateGridData(2, rows);
+
+    return rows;
+  }
+
+  SaveGoodTaskOrder(): void {
+
+    const rows = this.normalizeGoodTaskOrder()
+      .filter((x: any) => (x.GoodTaskCode ?? '').toString().length > 0);
+
+    if (rows.length === 0) {
+      this.notificationService.warning('وظیفه‌ای برای ذخیره ترتیب وجود ندارد');
+      return;
+    }
+
+    const body = rows.map((x: any) => ({
+      GoodTaskCode: (x.GoodTaskCode ?? '').toString(),
+      GoodTaskOrder: (x.GoodTaskOrder ?? '').toString()
+    }));
+
+    this.task_repo.GoodTask_SaveOrder(body)
+      .subscribe((res: any) => {
+
+        const result = res?.GoodTasks?.[0] ?? res?.Goods?.[0] ?? res;
+        const errCode = Number(result?.ErrCode ?? 0);
+
+        if (errCode === 0) {
+          this.notificationService.success(result?.ErrDesc ?? 'ترتیب با موفقیت ذخیره شد');
+          this.GetTaskFromGood();
+        } else {
+          this.notificationService.error(result?.ErrDesc ?? 'خطا در ذخیره ترتیب');
+        }
+
+      });
+  }
+
+  MoveGoodTaskUp(row: any): void {
+
+    const rows = [...(this.records_GoodTask() ?? [])]
+      .sort((a: any, b: any) => Number(a.GoodTaskOrder) - Number(b.GoodTaskOrder));
+
+    const index = rows.findIndex((x: any) =>
+      (x.GoodTaskCode ?? '').toString() === (row.GoodTaskCode ?? '').toString()
+    );
+
+    if (index <= 0) return;
+
+    [rows[index - 1], rows[index]] = [rows[index], rows[index - 1]];
+
+    const fixed = rows.map((x: any, i: number) => ({
+      ...x,
+      GoodTaskOrder: (i + 1).toString()
+    }));
+
+    this.records_GoodTask.set(fixed);
+    this.updateGridData(2, fixed);
+  }
+
+  MoveGoodTaskDown(row: any): void {
+
+    const rows = [...(this.records_GoodTask() ?? [])]
+      .sort((a: any, b: any) => Number(a.GoodTaskOrder) - Number(b.GoodTaskOrder));
+
+    const index = rows.findIndex((x: any) =>
+      (x.GoodTaskCode ?? '').toString() === (row.GoodTaskCode ?? '').toString()
+    );
+
+    if (index < 0 || index >= rows.length - 1) return;
+
+    [rows[index], rows[index + 1]] = [rows[index + 1], rows[index]];
+
+    const fixed = rows.map((x: any, i: number) => ({
+      ...x,
+      GoodTaskOrder: (i + 1).toString()
+    }));
+
+    this.records_GoodTask.set(fixed);
+    this.updateGridData(2, fixed);
   }
 
   ShowTask_Modal() {
@@ -310,16 +431,30 @@ export class InternalGoodListComponent extends AgGridBaseComponent
       return;
     }
 
-    this.notificationService.develop();
+    const exists = new Set(
+      (this.records_GoodTask() ?? []).map((x: any) => (x.TaskRef ?? x.TaskCode ?? '').toString())
+    );
 
-    from(childRows)
+    const filteredRows = childRows.filter((row: any) =>
+      !exists.has((row.TaskCode ?? '').toString())
+    );
+
+    if (filteredRows.length === 0) {
+      this.notificationService.warning('وظیفه جدیدی برای ثبت وجود ندارد');
+      return;
+    }
+
+    const startOrder = this.records_GoodTask().length;
+
+    from(filteredRows)
       .pipe(
-        concatMap((row: any) => {
+        concatMap((row: any, index: number) => {
           console.log('در حال انجام TaskCode:', row.TaskCode);
 
           return this.task_repo.GoodTask_Add(
             this.GoodCode_selected(),
-            row.TaskCode
+            (row.TaskCode ?? '').toString(),
+            (startOrder + index + 1).toString()
           );
         }),
 
@@ -330,6 +465,7 @@ export class InternalGoodListComponent extends AgGridBaseComponent
           console.log('همه انجام شدند:', results);
           this.notificationService.success('عملیات با موفقیت انجام شد');
           this.GetTaskFromGood()
+          this.selectedRows.set([])
           this.tasklist_dialog_close()
         },
         error: (err: any) => {

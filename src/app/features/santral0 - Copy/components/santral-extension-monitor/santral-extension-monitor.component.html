@@ -1,0 +1,404 @@
+<div class="extension-report-page" dir="rtl">
+  <section class="extension-report-header">
+    <div>
+      <div class="extension-report-kicker">گزارش مستقل داخلی‌ها</div>
+      <h1>وضعیت و ریز مکالمات هر داخلی</h1>
+      <p>
+        داخلی موردنظر را انتخاب کن تا بازه‌های وضعیت، تماس‌های منطقی و ریز مسیرهای CDR همان شخص نمایش داده شود.
+      </p>
+    </div>
+
+    <div class="extension-report-actions">
+      <button
+        type="button"
+        class="report-btn report-btn--primary"
+        [disabled]="requestInProgress()"
+        (click)="loadSnapshot(false)">
+        <i class="mdi mdi-refresh" [class.report-spin]="requestInProgress()"></i>
+        بروزرسانی فهرست
+      </button>
+
+      <label class="report-switch">
+        <input
+          type="checkbox"
+          [ngModel]="autoRefresh()"
+          (ngModelChange)="setAutoRefresh($event)">
+        <span>بروزرسانی خودکار</span>
+      </label>
+
+      <select
+        class="report-select report-select--small"
+        [disabled]="!autoRefresh()"
+        [ngModel]="refreshSeconds()"
+        (ngModelChange)="setRefreshSeconds($event)">
+        <option [ngValue]="10">هر ۱۰ ثانیه</option>
+        <option [ngValue]="30">هر ۳۰ ثانیه</option>
+        <option [ngValue]="60">هر ۱ دقیقه</option>
+      </select>
+    </div>
+  </section>
+
+  <section
+    class="report-daemon-banner"
+    [class.report-daemon-banner--online]="response()?.monitor?.daemon_online === 1"
+    [class.report-daemon-banner--offline]="response()?.monitor?.daemon_online !== 1">
+    <i
+      class="mdi"
+      [class.mdi-access-point-check]="response()?.monitor?.daemon_online === 1"
+      [class.mdi-alert-circle-outline]="response()?.monitor?.daemon_online !== 1">
+    </i>
+    <span>{{ daemonTitle() }}</span>
+    <small>آخرین بروزرسانی فهرست: {{ lastUpdateText() || '-' }}</small>
+  </section>
+
+  @if (errorMessage()) {
+    <div class="report-alert report-alert--danger">{{ errorMessage() }}</div>
+  }
+
+  <section class="report-toolbar">
+    <label class="report-search">
+      <i class="mdi mdi-magnify"></i>
+      <input
+        type="search"
+        placeholder="جستجو با نام، داخلی، IP یا وضعیت..."
+        [ngModel]="searchText()"
+        (ngModelChange)="searchText.set($event)">
+    </label>
+
+    <select
+      class="report-select"
+      [ngModel]="statusFilter()"
+      (ngModelChange)="statusFilter.set($event)">
+      @for (option of statusOptions; track option.value) {
+        <option [value]="option.value">{{ option.title }}</option>
+      }
+    </select>
+
+    <span class="report-result-count">{{ filteredItems().length }} داخلی</span>
+  </section>
+
+  @if (loading()) {
+    <div class="report-loading">
+      <i class="mdi mdi-loading report-spin"></i>
+      در حال دریافت داخلی‌ها...
+    </div>
+  } @else {
+    <section class="extension-card-grid">
+      @for (item of filteredItems(); track item.extension) {
+        <article class="extension-card" (click)="openDetails(item)">
+          <header class="extension-card-head">
+            <div class="extension-card-avatar">
+              {{ item.extension }}
+            </div>
+            <div class="extension-card-user">
+              <strong>{{ item.name }}</strong>
+              <button
+                type="button"
+                class="extension-copy"
+                title="کپی داخلی"
+                (click)="copy(item.extension, $event)">
+                داخلی {{ item.extension }}
+                <i class="mdi mdi-content-copy"></i>
+              </button>
+            </div>
+            <span [class]="itemStatusClass(item)">{{ item.health_title }}</span>
+          </header>
+
+          <div class="extension-card-body">
+            <div>
+              <span>رجیستر</span>
+              <strong [class.text-success]="item.is_registered === 1" [class.text-danger]="item.is_registered !== 1">
+                {{ item.is_registered === 1 ? 'متصل' : 'قطع' }}
+              </strong>
+            </div>
+            <div>
+              <span>وضعیت دستگاه</span>
+              <strong>{{ item.device_state_fa || item.peer_status || '-' }}</strong>
+            </div>
+            <div>
+              <span>آخرین رویداد</span>
+              <strong>{{ item.last_event_title || '-' }}</strong>
+            </div>
+            <div>
+              <span>آخرین زمان</span>
+              <strong>{{ item.last_event_at || item.updated_at || '-' }}</strong>
+            </div>
+          </div>
+
+          <footer class="extension-card-footer">
+            <div class="extension-warning-list">
+              <span>رد: {{ item.consecutive_reject_count }}</span>
+              <span>بی‌پاسخ: {{ item.consecutive_noanswer_count }}</span>
+              <span>قطع سریع: {{ item.short_drop_count }}</span>
+            </div>
+            <button type="button" class="extension-details-btn" (click)="openDetails(item); $event.stopPropagation()">
+              مشاهده گزارش کامل
+              <i class="mdi mdi-chevron-left"></i>
+            </button>
+          </footer>
+        </article>
+      } @empty {
+        <div class="report-empty">داخلی مطابق فیلتر فعلی پیدا نشد.</div>
+      }
+    </section>
+  }
+
+  @if (detailVisible() && selectedItem(); as selected) {
+    <div class="extension-detail-backdrop" (click)="closeDetails()">
+      <section class="extension-detail-modal" (click)="$event.stopPropagation()">
+        <header class="extension-detail-header">
+          <div class="extension-detail-title">
+            <div class="extension-detail-avatar">{{ selected.extension }}</div>
+            <div>
+              <small>گزارش وضعیت و مکالمات</small>
+              <h2>{{ selected.name }}</h2>
+              <span>داخلی {{ selected.extension }}</span>
+            </div>
+          </div>
+
+          <button type="button" class="extension-detail-close" (click)="closeDetails()">
+            <i class="mdi mdi-close"></i>
+          </button>
+        </header>
+
+        <div class="extension-detail-filter">
+          <label>
+            از تاریخ
+            <input type="date" [ngModel]="reportStartDate()" (ngModelChange)="reportStartDate.set($event)">
+          </label>
+          <label>
+            تا تاریخ
+            <input type="date" [ngModel]="reportEndDate()" (ngModelChange)="reportEndDate.set($event)">
+          </label>
+          <button type="button" class="report-btn report-btn--primary" [disabled]="reportLoading()" (click)="loadReport()">
+            <i class="mdi mdi-magnify" [class.report-spin]="reportLoading()"></i>
+            دریافت گزارش
+          </button>
+        </div>
+
+        <nav class="extension-detail-tabs">
+          <button type="button" [class.active]="detailTab() === 'summary'" (click)="setDetailTab('summary')">
+            <i class="mdi mdi-view-dashboard-outline"></i>
+            خلاصه
+          </button>
+          <button type="button" [class.active]="detailTab() === 'statuses'" (click)="setDetailTab('statuses')">
+            <i class="mdi mdi-timeline-clock-outline"></i>
+            بازه‌های وضعیت
+            <span>{{ report()?.status_periods?.length ?? 0 }}</span>
+          </button>
+          <button type="button" [class.active]="detailTab() === 'calls'" (click)="setDetailTab('calls')">
+            <i class="mdi mdi-phone-log-outline"></i>
+            ریز مکالمات
+            <span>{{ report()?.call_summary?.total ?? 0 }}</span>
+          </button>
+          <button type="button" [class.active]="detailTab() === 'events'" (click)="setDetailTab('events')">
+            <i class="mdi mdi-format-list-bulleted"></i>
+            رویدادهای فنی
+            <span>{{ report()?.events?.length ?? 0 }}</span>
+          </button>
+        </nav>
+
+        @if (reportError()) {
+          <div class="report-alert report-alert--danger">{{ reportError() }}</div>
+        }
+
+        <div class="extension-detail-body">
+          @if (reportLoading()) {
+            <div class="report-loading">
+              <i class="mdi mdi-loading report-spin"></i>
+              در حال ساخت گزارش داخلی...
+            </div>
+          } @else if (report(); as data) {
+            @if (detailTab() === 'summary') {
+              <section class="extension-current-state">
+                <div>
+                  <small>وضعیت فعلی</small>
+                  <strong [class]="'current-state current-state--' + data.extension.current_status_class">
+                    {{ data.extension.current_status_title }}
+                  </strong>
+                </div>
+                <div>
+                  <small>آخرین تغییر وضعیت</small>
+                  <strong>{{ data.extension.last_event_at || '-' }}</strong>
+                </div>
+                <div>
+                  <small>آخرین نتیجه تماس</small>
+                  <strong>{{ data.extension.last_dial_status_fa || '-' }}</strong>
+                </div>
+                <div>
+                  <small>Cause آخر</small>
+                  <strong>{{ data.extension.last_hangup_cause || '-' }} {{ data.extension.last_hangup_cause_txt }}</strong>
+                </div>
+              </section>
+
+              <section class="extension-summary-grid">
+                <article><span>کل تماس‌ها</span><strong>{{ data.call_summary.total }}</strong></article>
+                <article><span>ورودی</span><strong>{{ data.call_summary.incoming }}</strong></article>
+                <article><span>خروجی</span><strong>{{ data.call_summary.outgoing }}</strong></article>
+                <article><span>داخلی</span><strong>{{ data.call_summary.internal }}</strong></article>
+                <article class="summary-success"><span>پاسخ‌داده‌شده</span><strong>{{ data.call_summary.answered }}</strong></article>
+                <article class="summary-danger"><span>بی‌پاسخ</span><strong>{{ data.call_summary.missed }}</strong></article>
+                <article><span>مکالمه کل</span><strong>{{ data.call_summary.talk_fa }}</strong></article>
+                <article><span>مدت نگهداری تاریخچه</span><strong>{{ data.retention_days }} روز</strong></article>
+              </section>
+
+              <section class="status-duration-grid">
+                @for (summary of data.status_summary; track summary.status_code) {
+                  <article>
+                    <span>{{ summary.status_title }}</span>
+                    <strong>{{ summary.duration_fa }}</strong>
+                    <small>{{ summary.period_count }} بازه</small>
+                  </article>
+                } @empty {
+                  <div class="report-empty">برای این بازه وضعیت ثبت‌شده‌ای وجود ندارد.</div>
+                }
+              </section>
+            }
+
+            @if (detailTab() === 'statuses') {
+              <section class="status-period-list">
+                @for (period of data.status_periods; track period.start_at + period.status_code) {
+                  <article class="status-period-row">
+                    <span [class]="periodStatusClass(period.status_class)">{{ period.status_title }}</span>
+                    <div class="status-period-time">
+                      <strong>{{ period.start_at }}</strong>
+                      <i class="mdi mdi-arrow-left"></i>
+                      <strong>{{ period.is_current === 1 ? 'اکنون' : period.end_at }}</strong>
+                    </div>
+                    <div class="status-period-details">
+                      <span>مدت: {{ period.duration_fa }}</span>
+                      @if (period.direction_fa) {
+                        <span>جهت: {{ period.direction_fa }}</span>
+                      }
+                      @if (period.peer_number) {
+                        <button type="button" (click)="copy(period.peer_number, $event)">
+                          طرف مقابل: {{ period.peer_number }}
+                          <i class="mdi mdi-content-copy"></i>
+                        </button>
+                      }
+                      @if (period.reason) {
+                        <span>{{ period.reason }}</span>
+                      }
+                    </div>
+                  </article>
+                } @empty {
+                  <div class="report-empty">در این بازه تاریخچه وضعیتی ثبت نشده است.</div>
+                }
+              </section>
+            }
+
+            @if (detailTab() === 'calls') {
+              <section class="extension-call-list">
+                @for (call of data.calls; track call.call_key) {
+                  <article class="extension-call-row" [class.expanded]="expandedCallKey() === call.call_key">
+                    <button type="button" class="extension-call-main" (click)="toggleCall(call)">
+                      <div class="call-direction-icon" [class.outgoing]="call.direction === 'Outgoing'" [class.internal]="call.direction === 'Internal'">
+                        <i
+                          class="mdi"
+                          [class.mdi-phone-incoming-outline]="call.direction === 'Incoming'"
+                          [class.mdi-phone-outgoing-outline]="call.direction === 'Outgoing'"
+                          [class.mdi-phone-classic]="call.direction === 'Internal'">
+                        </i>
+                      </div>
+
+                      <div class="call-peer">
+                        <strong>{{ call.peer_display || '-' }}</strong>
+                        <span>{{ call.peer_name ? call.peer_number : call.direction_fa }}</span>
+                      </div>
+
+                      <div class="call-time">
+                        <strong>{{ call.start_at }}</strong>
+                        <span>تا {{ call.end_at }}</span>
+                      </div>
+
+                      <div class="call-durations">
+                        <span>زنگ: {{ call.ring_fa }}</span>
+                        <span>مکالمه: {{ call.talk_fa }}</span>
+                      </div>
+
+                      <span [class]="callStatusClass(call.disposition)">{{ call.disposition_fa }}</span>
+
+                      <i class="mdi" [class.mdi-chevron-down]="expandedCallKey() !== call.call_key" [class.mdi-chevron-up]="expandedCallKey() === call.call_key"></i>
+                    </button>
+
+                    @if (expandedCallKey() === call.call_key) {
+                      <div class="extension-call-details">
+                        <div class="call-meta-grid">
+                          <div><span>پاسخگو</span><strong>{{ call.answered_by || '-' }}</strong></div>
+                          <div><span>داخلی‌های تلاش‌شده</span><strong>{{ call.attempted_extensions.join('، ') || '-' }}</strong></div>
+                          <div><span>RingGroup</span><strong>{{ call.ring_group || '-' }}</strong></div>
+                          <div><span>DID</span><strong>{{ call.did || '-' }}</strong></div>
+                          <div><span>تعداد Leg</span><strong>{{ call.legs_count }}</strong></div>
+                          <div><span>فایل ضبط</span><strong>{{ call.has_recording === 1 ? 'دارد' : 'ندارد' }}</strong></div>
+                        </div>
+
+                        <div class="call-leg-table-wrap">
+                          <table class="call-leg-table">
+                            <thead>
+                              <tr>
+                                <th>زمان</th>
+                                <th>مبدأ</th>
+                                <th>مقصد</th>
+                                <th>Channel</th>
+                                <th>DstChannel</th>
+                                <th>وضعیت</th>
+                                <th>مدت</th>
+                                <th>مکالمه</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              @for (leg of call.legs; track leg.id) {
+                                <tr>
+                                  <td>{{ leg.calldate }}</td>
+                                  <td (dblclick)="copy(leg.src, $event)">{{ leg.src }}</td>
+                                  <td (dblclick)="copy(leg.dst, $event)">{{ leg.dst }}</td>
+                                  <td>{{ leg.channel }}</td>
+                                  <td>{{ leg.dstchannel }}</td>
+                                  <td>{{ leg.disposition }}</td>
+                                  <td>{{ leg.duration }} ثانیه</td>
+                                  <td>{{ leg.billsec }} ثانیه</td>
+                                </tr>
+                              }
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    }
+                  </article>
+                } @empty {
+                  <div class="report-empty">در بازه انتخابی مکالمه‌ای برای این داخلی پیدا نشد.</div>
+                }
+              </section>
+            }
+
+            @if (detailTab() === 'events') {
+              <section class="technical-event-list">
+                @for (event of data.events; track event.id) {
+                  <article>
+                    <div>
+                      <strong>{{ event.event_title }}</strong>
+                      <time>{{ event.event_time }}</time>
+                    </div>
+                    <p>
+                      جهت: {{ event.direction_fa || '-' }} ·
+                      طرف مقابل: {{ event.peer_number || '-' }} ·
+                      نتیجه: {{ event.dial_status_fa || '-' }} ·
+                      Cause: {{ event.hangup_cause || '-' }}
+                    </p>
+                    @if (event.detail || event.hangup_cause_txt) {
+                      <small>{{ event.detail || event.hangup_cause_txt }}</small>
+                    }
+                  </article>
+                } @empty {
+                  <div class="report-empty">رویداد فنی ثبت‌شده‌ای وجود ندارد.</div>
+                }
+              </section>
+            }
+          } @else {
+            <div class="report-empty">گزارش هنوز دریافت نشده است.</div>
+          }
+        </div>
+      </section>
+    </div>
+  }
+</div>

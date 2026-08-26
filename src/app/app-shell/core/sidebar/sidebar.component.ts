@@ -12,7 +12,7 @@
    5️⃣ پشتیبانی از حالت تیره و روشن  
    =============================================================== */
 
-import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -255,6 +255,98 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   }
 
+  handleCondensedMenuClick(event: MouseEvent): void {
+    const isCondensed =
+      document.body.getAttribute('data-sidebar-size') === 'condensed';
+
+    const isDesktop = window.innerWidth >= 992;
+
+    if (!isCondensed || !isDesktop) {
+      return;
+    }
+
+    const target = event.target as HTMLElement;
+
+    const parentToggle = target.closest<HTMLAnchorElement>(
+      '#side-menu > li > a[data-bs-toggle="collapse"]'
+    );
+
+    if (!parentToggle) {
+      return;
+    }
+
+    // جلوگیری از باز ماندن منو توسط Bootstrap
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.closeCondensedMenus();
+  }
+
+  private closeCondensedMenus(): void {
+    document
+      .querySelectorAll<HTMLElement>(
+        '#side-menu > li > .collapse.show'
+      )
+      .forEach((menu) => {
+        menu.classList.remove('show', 'collapsing');
+        menu.style.removeProperty('height');
+      });
+
+    document
+      .querySelectorAll<HTMLAnchorElement>(
+        '#side-menu > li > a[aria-expanded="true"]'
+      )
+      .forEach((link) => {
+        link.setAttribute('aria-expanded', 'false');
+        link.classList.add('collapsed');
+      });
+  }
+  toggleSidebarCompact(event: Event): void {
+    const checked =
+      (event.target as HTMLInputElement).checked;
+
+    document.body.setAttribute(
+      'data-sidebar-size',
+      checked ? 'condensed' : 'default'
+    );
+  }
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    const body = document.body;
+    const isDesktop = window.innerWidth >= 992;
+
+    if (isDesktop) {
+      body.classList.remove('sidebar-enable');
+      return;
+    }
+
+    // جلوگیری از ترکیب Mobile و Condensed
+    body.setAttribute('data-sidebar-size', 'default');
+  }
+  toggleSidebar(): void {
+    const body = document.body;
+    const isDesktop = window.innerWidth >= 992;
+
+    if (isDesktop) {
+      body.classList.remove('sidebar-enable');
+
+      const currentSize =
+        body.getAttribute('data-sidebar-size');
+
+      body.setAttribute(
+        'data-sidebar-size',
+        currentSize === 'condensed'
+          ? 'default'
+          : 'condensed'
+      );
+
+      return;
+    }
+
+    // در موبایل نباید condensed باقی بماند
+    body.setAttribute('data-sidebar-size', 'default');
+    body.classList.toggle('sidebar-enable');
+  }
   // ===============================================================
   // 🔁 بروزرسانی دستی اطلاعات کاربر
   // ===============================================================

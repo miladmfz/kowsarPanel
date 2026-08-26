@@ -202,15 +202,27 @@
       <div class="card">
         <div class="card-body">
           <!-- گرید -->
-          <a class="btn btn-info mx-1" href="javascript:void(0)" (click)="OpenDependency()">
-            <span class="btn-label"><i class="fas fa-check-double"></i></span>اضافه کردن وابستگی
-          </a>
+          <div class="d-flex flex-wrap mb-2 gap-2">
+            <a class="btn btn-info mx-1" href="javascript:void(0)" (click)="OpenDependency()">
+              <span class="btn-label"><i class="fas fa-check-double"></i></span>اضافه کردن وابستگی
+            </a>
+
+            <a class="btn btn-success mx-1" href="javascript:void(0)" (click)="SaveDependencyOrder()">
+              <span class="btn-label"><i class="fas fa-sort-numeric-down"></i></span>ذخیره ترتیب
+            </a>
+          </div>
+
           <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 300px;">
             <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
               [columnDefs]="column_name_1" [rowData]="records_dependency()" [gridOptions]="gridOptions"
               (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
               [class]="themeClass + ' w-100 h-100'">
             </ag-grid-angular>
+          </div>
+
+          <div class="alert alert-light border mt-2 mb-0 small">
+            برای تغییر ترتیب، مقدار ستون «ترتیب» را تغییر بده یا از دکمه‌های بالا/پایین استفاده کن، سپس «ذخیره ترتیب» را
+            بزن.
           </div>
 
         </div>

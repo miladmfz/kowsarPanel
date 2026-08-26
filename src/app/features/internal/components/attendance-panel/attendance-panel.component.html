@@ -19,7 +19,7 @@
   <!-- =============================================================== -->
   <!--    Header -->
   <!-- =============================================================== -->
-  <div class="card-header d-flex justify-content-between align-items-center" [ngClass]="{
+  <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2" [ngClass]="{
       'bg-dark text-white border-secondary': isDarkMode,
       'bg-light text-dark border-light': !isDarkMode
     }">
@@ -28,11 +28,40 @@
       وضعیت حضور
     </h5>
 
-    <!-- 🔁 دکمه رفرش -->
-    <button class="btn btn-sm" [ngClass]="isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'"
-      (click)="refreshData()">
-      <i class="fas fa-sync-alt"></i>
-    </button>
+    <!-- 🔁 کنترل بروزرسانی دستی / خودکار -->
+    <div class="attendance-refresh-controls">
+      <button type="button" class="btn attendance-refresh-btn"
+        [ngClass]="isDarkMode ? 'btn-outline-light' : 'btn-outline-primary'" [disabled]="isRefreshing()"
+        (click)="manualRefresh()" title="بروزرسانی دستی">
+        <i class="fas fa-sync-alt" [class.fa-spin]="isRefreshing()"></i>
+        <span>بروزرسانی</span>
+      </button>
+
+      <button type="button" class="btn attendance-refresh-btn attendance-auto-btn" [class.active]="autoRefresh()"
+        (click)="toggleAutoRefresh()"
+        [title]="autoRefresh() ? 'بروزرسانی خودکار فعال است' : 'بروزرسانی خودکار غیرفعال است'">
+        <i [class]="autoRefresh() ? 'fas fa-stopwatch' : 'fas fa-pause-circle'"></i>
+        <span>{{ autoRefresh() ? 'خودکار فعال' : 'حالت دستی' }}</span>
+      </button>
+
+      <label class="attendance-refresh-interval" title="فاصله بروزرسانی خودکار">
+        <i class="fas fa-clock"></i>
+        <select [value]="refreshSeconds()" (change)="changeRefreshSeconds($any($event.target).value)"
+          [disabled]="!autoRefresh()">
+          <option value="5">هر ۵ ثانیه</option>
+          <option value="10">هر ۱۰ ثانیه</option>
+          <option value="15">هر ۱۵ ثانیه</option>
+          <option value="30">هر ۳۰ ثانیه</option>
+          <option value="60">هر ۱ دقیقه</option>
+          <option value="120">هر ۲ دقیقه</option>
+        </select>
+      </label>
+
+      <div class="attendance-last-update" title="آخرین زمان بروزرسانی موفق">
+        آخرین بروزرسانی
+        <strong>{{ lastUpdateText() || '---' }}</strong>
+      </div>
+    </div>
   </div>
 
   <!-- =============================================================== -->
@@ -45,8 +74,18 @@
   <!-- 📋 گرید حضور کارشناسان -->
   <!-- =============================================================== -->
   <app-attendance-grid #attendanceGrid [darkMode]="isDarkMode" (openHistory)="openHistory($event)"
-    (openLetter)="openLetter($event)"></app-attendance-grid>
+    (openLetter)="openLetter($event)" (openCallReport)="openCallReport($event)"
+    (refreshFinished)="onAttendanceRefreshFinished($event)"></app-attendance-grid>
 </div>
+
+<!-- =============================================================== -->
+<!-- ☎️ مودال گزارش تماس کارشناس -->
+<!-- =============================================================== -->
+@if (Call_report_Show_Modal()) {
+<app-attendance-call-report-modal [visible]="Call_report_Show_Modal()" [extension]="Call_report_extension()"
+  [personName]="Call_report_person_name()" [darkMode]="isDarkMode" (close)="closeCallReportModal()">
+</app-attendance-call-report-modal>
+}
 
 <!-- =============================================================== -->
 <!-- 🕓 مودال تاریخچه حضور -->

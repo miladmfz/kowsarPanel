@@ -1,0 +1,184 @@
+<div class="kws-blacklist-page">
+
+  <div class="kws-blacklist-header">
+
+    <div>
+      <h4>
+        لیست سیاه تماس‌ها
+      </h4>
+
+      <p>
+        مدیریت شماره‌های غیرمجاز برای جلوگیری از اشغال خطوط و اپراتورها
+      </p>
+    </div>
+
+    <button type="button" class="btn btn-outline-primary" (click)="loadBlacklist()" [disabled]="loading()">
+
+      @if (loading()) {
+      <span class="spinner-border spinner-border-sm ms-1"></span>
+      }
+
+      بروزرسانی
+    </button>
+
+  </div>
+
+  <div class="card kws-blacklist-card">
+    <div class="card-body">
+
+      <div class="row g-3 align-items-end">
+
+        <div class="col-md-5">
+          <label class="form-label">
+            شماره جدید
+          </label>
+
+          <input type="text" class="form-control" placeholder="مثلاً 09121234567" [ngModel]="newNumber()"
+            (ngModelChange)="setNewNumber($event)" (keyup.enter)="addBlacklist()" />
+        </div>
+
+        <div class="col-md-3">
+          <button type="button" class="btn btn-danger w-100" (click)="addBlacklist()" [disabled]="saving()">
+
+            @if (saving()) {
+            <span class="spinner-border spinner-border-sm ms-1"></span>
+            }
+
+            افزودن به لیست سیاه
+          </button>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">
+            جستجو
+          </label>
+
+          <input type="text" class="form-control" placeholder="جستجو شماره..." [ngModel]="searchText()"
+            (ngModelChange)="setSearchText($event)" />
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="kws-blacklist-summary">
+
+    <div class="kws-summary-box">
+      <span>
+        تعداد شماره‌ها
+      </span>
+
+      <strong>
+        {{ toFaNumber(groups().length) }}
+      </strong>
+    </div>
+
+    <div class="kws-summary-box">
+      <span>
+        تعداد حالت‌های ثبت‌شده
+      </span>
+
+      <strong>
+        {{ toFaNumber(items().length) }}
+      </strong>
+    </div>
+
+  </div>
+
+  <div class="card kws-blacklist-card">
+    <div class="card-body p-0">
+
+      @if (loading()) {
+      <div class="kws-empty-state">
+        <span class="spinner-border spinner-border-sm ms-2"></span>
+        در حال دریافت لیست سیاه...
+      </div>
+      }
+
+      @if (!loading() && filteredGroups().length === 0) {
+      <div class="kws-empty-state">
+        شماره‌ای در لیست سیاه وجود ندارد
+      </div>
+      }
+
+      @if (!loading() && filteredGroups().length > 0) {
+
+      <div class="table-responsive">
+
+        <table class="table table-hover align-middle mb-0 kws-blacklist-table">
+
+          <thead>
+            <tr>
+              <th>
+                شماره اصلی
+              </th>
+
+              <th>
+                حالت‌های ثبت‌شده
+              </th>
+
+              <th class="text-center">
+                عملیات
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            @for (group of filteredGroups(); track group.mainNumber) {
+
+            <tr>
+
+              <td>
+                <div class="kws-main-number">
+                  <i class="mdi mdi-phone-off-outline"></i>
+
+                  <strong>
+                    {{ toFaNumber(group.mainNumber) }}
+                  </strong>
+                </div>
+              </td>
+
+              <td>
+                <div class="kws-variant-list">
+
+                  @for (variant of group.variants; track variant) {
+                  <span class="kws-variant-badge">
+                    {{ toFaNumber(variant) }}
+                  </span>
+                  }
+
+                </div>
+              </td>
+
+              <td class="text-center">
+
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="deleteBlacklist(group)"
+                  [disabled]="deletingNumber() === group.mainNumber">
+
+                  @if (deletingNumber() === group.mainNumber) {
+                  <span class="spinner-border spinner-border-sm ms-1"></span>
+                  }
+
+                  حذف
+                </button>
+
+              </td>
+
+            </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      }
+
+    </div>
+  </div>
+
+</div>

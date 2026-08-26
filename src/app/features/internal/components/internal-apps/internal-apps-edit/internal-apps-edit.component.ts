@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { Base_Lookup } from 'src/app/app-shell/framework-services/model/lookup-type';
 import { CommonModule } from '@angular/common';
@@ -30,17 +30,17 @@ export class InternalAppsEditComponent implements OnInit {
 
   EditForm = new FormGroup({
     ActivationCode: new FormControl(''),
-    EnglishCompanyName: new FormControl(''),
-    PersianCompanyName: new FormControl(''),
+    EnglishCompanyName: new FormControl('', Validators.required),
+    PersianCompanyName: new FormControl('', Validators.required),
     ServerURL: new FormControl(''),
     SQLiteURL: new FormControl('D:\\\\KowsarAcc\\\\WebApiLocation\\\\database\\\\111111\\\\KowsarDb_new.sqlite'),
     UsedDevice: new FormControl('0'),
     MaxDevice: new FormControl('1'),
     SecendServerURL: new FormControl(''),
-    DbName: new FormControl(''),
-    DbImageName: new FormControl(''),
+    DbName: new FormControl('', Validators.required),
+    DbImageName: new FormControl('', Validators.required),
     AppType: new FormControl('1'),
-    ServerIp: new FormControl(''),
+    ServerIp: new FormControl('', Validators.required),
     ServerPort: new FormControl('60005'),
     ServerPathApi: new FormControl('login'),
     IsActive: new FormControl('1'),
@@ -100,14 +100,19 @@ export class InternalAppsEditComponent implements OnInit {
   }
 
   submit(action: string) {
-
+    this.EditForm.markAllAsTouched();
+    if (!this.EditForm.valid) return;
     this.repo.CrudAppActivation(this.EditForm.value)
       .subscribe((data: any) => {
 
+        console.log(data)
         if (data.AppActivations[0].AppActivationCode.length > 0) {
-          this.AppActivationCode = data.AppActivations[0].AppActivationCode;
+          this.AppActivationCode.set(data.AppActivations[0].ActivationCode)
           this.getDetails();
           this.notificationService.success('اطلاعات با موفقیت ذخیره شد');
+        } else {
+          console.log("sssssssss")
+
         }
       });
   }

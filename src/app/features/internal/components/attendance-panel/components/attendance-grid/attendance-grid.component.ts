@@ -50,6 +50,8 @@ export class AttendanceGridComponent extends AgGridBaseComponent implements OnIn
     /** 📤 رویدادهای خروجی برای Parent */
     @Output() openLetter = new EventEmitter<any>();
     @Output() openHistory = new EventEmitter<any>();
+    @Output() openCallReport = new EventEmitter<any>();
+    @Output() refreshFinished = new EventEmitter<boolean>();
 
     /**   داده‌ها و وضعیت بارگذاری (Reactive Signals) */
     records = signal<any[]>([])
@@ -79,7 +81,21 @@ export class AttendanceGridComponent extends AgGridBaseComponent implements OnIn
 
         // 🧱 تعریف ستون‌های گرید حضور کارشناسان
         this.column_name_1 = [
-            { field: 'عملیات', pinned: 'left', cellRenderer: CellActionAttendancePanel, width: 100 },
+            {
+                field: 'عملیات',
+                pinned: 'left',
+                cellRenderer: CellActionAttendancePanel,
+                cellRendererParams: {
+                    onLetter: (item: any) => this.SetLetter_config(item),
+                    onHistory: (item: any) => this.ShowHistory(item),
+                    onCallReport: (item: any) => this.ShowCallReport(item),
+                },
+                width: 145,
+                minWidth: 145,
+                maxWidth: 145,
+                sortable: false,
+                filter: false,
+            },
             { field: 'CentralName', headerName: 'کارشناس', cellClass: 'text-center', minWidth: 120 },
             { field: 'وضعیت حضور', cellRenderer: CellStatusAttendancePanel, cellClass: 'text-center', width: 80 },
             { field: 'تاریخ', cellRenderer: CellDateAttendancePanel, cellClass: 'text-center', width: 80 },
@@ -118,11 +134,13 @@ export class AttendanceGridComponent extends AgGridBaseComponent implements OnIn
                 this.records.set(data?.Attendances ?? []);
                 this.loading.set(false);
                 this.updateGridData(1, this.records());
+                this.refreshFinished.emit(true);
             },
             error: (err) => {
                 console.error('❌ خطا در دریافت اطلاعات حضور:', err);
                 this.records.set([]);
                 this.loading.set(false);
+                this.refreshFinished.emit(false);
             },
         });
     }
@@ -134,6 +152,11 @@ export class AttendanceGridComponent extends AgGridBaseComponent implements OnIn
     /** 📬 باز کردن تیکت مربوط به کارشناس */
     SetLetter_config(item: any): void {
         this.openLetter.emit(item);
+    }
+
+    /** ☎️ نمایش گزارش تماس امروز کارشناس */
+    ShowCallReport(item: any): void {
+        this.openCallReport.emit(item);
     }
 
     /** 🕓 نمایش تاریخچه حضور کارشناس */

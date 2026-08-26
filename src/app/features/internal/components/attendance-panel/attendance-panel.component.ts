@@ -30,6 +30,7 @@ import { AttendanceGridComponent } from './components/attendance-grid/attendance
 import { AttendanceHistoryModalComponent } from './components/attendance-history-modal/attendance-history-modal.component';
 import { LetterModalComponent } from './components/letter-modal/letter-modal.component';
 import { CustomerListModalComponent } from './components/customer-list-modal/customer-list-modal.component';
+import { AttendanceCallReportModalComponent } from './components/call-report-modal/attendance-call-report-modal.component';
 
 import { SharedService } from 'src/app/app-shell/framework-services/shared.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
@@ -48,8 +49,127 @@ import { KowsarBaseWebApi } from 'src/app/app-shell/framework-services/base/Kows
         AttendanceHistoryModalComponent,
         LetterModalComponent,
         CustomerListModalComponent,
+        AttendanceCallReportModalComponent,
     ],
     templateUrl: './attendance-panel.component.html',
+    styles: [`
+        :host {
+            display: block;
+        }
+
+        .attendance-refresh-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+            direction: rtl;
+        }
+
+        .attendance-refresh-btn {
+            min-height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.7rem;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: 0.18s ease;
+        }
+
+        .attendance-refresh-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .attendance-auto-btn.active {
+            color: #137a3c;
+            background: #eaf9f0;
+            border-color: #66cf8b;
+        }
+
+        .attendance-auto-btn:not(.active) {
+            color: #9a3412;
+            background: #fff7ed;
+            border-color: #fdba74;
+        }
+
+        .attendance-refresh-interval {
+            min-height: 34px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.2rem 0.45rem;
+            border: 1px solid #d8e1ec;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.88);
+            color: #475569;
+            font-size: 0.74rem;
+            white-space: nowrap;
+        }
+
+        .attendance-refresh-interval select {
+            min-width: 92px;
+            height: 28px;
+            padding: 0 0.4rem;
+            border: 0;
+            border-radius: 7px;
+            background: #f8fafc;
+            color: #1e293b;
+            font-size: 0.75rem;
+            font-weight: 700;
+            outline: none;
+        }
+
+        .attendance-last-update {
+            min-width: 76px;
+            color: #64748b;
+            font-size: 0.68rem;
+            line-height: 1.35;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .attendance-last-update strong {
+            display: block;
+            color: #334155;
+            font-size: 0.72rem;
+        }
+
+
+        .bg-dark .attendance-refresh-interval {
+            color: #cbd5e1;
+            background: rgba(15, 23, 42, 0.65);
+            border-color: #475569;
+        }
+
+        .bg-dark .attendance-refresh-interval select {
+            color: #f8fafc;
+            background: #1e293b;
+        }
+
+        .bg-dark .attendance-last-update,
+        .bg-dark .attendance-last-update strong {
+            color: #e2e8f0;
+        }
+
+        @media (max-width: 768px) {
+            .attendance-refresh-controls {
+                width: 100%;
+                margin-top: 0.65rem;
+            }
+
+            .attendance-refresh-btn span {
+                display: none;
+            }
+
+            .attendance-last-update {
+                display: none;
+            }
+        }
+    `],
 })
 export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestroy {
     // ===============================================================
@@ -89,10 +209,28 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
     Customer_records = signal<any[]>([])
 
     // ===============================================================
+    // ☎️ گزارش تماس داخلی جاری و کارشناسان
+    // ===============================================================
+    Call_report_Show_Modal = signal(false);
+    Call_report_selected = signal<any | null>(null);
+    Call_report_extension = signal('');
+    Call_report_person_name = signal('');
+
+    // ===============================================================
     // 🔌 اشتراک‌ها
     // ===============================================================
     private themeSub?: Subscription;
     private refreshSub?: Subscription;
+
+    // ===============================================================
+    // 🔄 بروزرسانی دستی / خودکار
+    // ===============================================================
+    autoRefresh = signal(false);
+    refreshSeconds = signal(10);
+    lastUpdateText = signal('');
+
+    private refreshTimer: ReturnType<typeof setInterval> | null = null;
+    private notifyAfterRefresh = false;
 
 
 
@@ -116,8 +254,9 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
         );
 
         this.refreshSub = this.sharedService.RefreshAllActions$?.subscribe(action => {
-            if (action === 'refresh') this.refreshData();
+            if (action === 'refresh') this.refreshData(true);
         });
+
 
         const apiUrl_temp = this.config.apiUrl;
 
@@ -130,21 +269,183 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     ngAfterViewInit(): void {
-        this.refreshData();
+        // AttendanceGrid بارگذاری اولیه را خودش انجام می‌دهد.
+        // اینجا فقط زمان‌بند بروزرسانی خودکار را فعال می‌کنیم تا درخواست تکراری اولیه ایجاد نشود.
+        this.startAutoRefresh();
     }
 
     ngOnDestroy(): void {
         this.themeSub?.unsubscribe();
         this.refreshSub?.unsubscribe();
+        this.stopAutoRefresh();
     }
 
     // ===============================================================
     // 🔁 رفرش داده‌ها
     // ===============================================================
-    refreshData(): void {
-        this.attendanceGrid?.refresh();
-        // this.leaveGrid?.refresh();
-        this.notificationService.info('بروز شد.');
+    manualRefresh(): void {
+        this.refreshData(true);
+    }
+
+    refreshData(showNotification = false): void {
+        const grid = this.attendanceGrid;
+
+        // تا پایان درخواست قبلی، درخواست جدید ساخته نشود.
+        if (!grid || grid.loading()) {
+            return;
+        }
+
+        this.notifyAfterRefresh = showNotification;
+        grid.refresh();
+    }
+
+    onAttendanceRefreshFinished(success: boolean): void {
+        if (success) {
+            this.lastUpdateText.set(
+                new Intl.DateTimeFormat('fa-IR', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                }).format(new Date())
+            );
+
+            if (this.notifyAfterRefresh) {
+                this.notificationService.success('اطلاعات حضور بروزرسانی شد.');
+            }
+        } else if (this.notifyAfterRefresh) {
+            this.notificationService.error('خطا در بروزرسانی اطلاعات حضور.');
+        }
+
+        this.notifyAfterRefresh = false;
+    }
+
+    isRefreshing(): boolean {
+        return this.attendanceGrid?.loading() ?? false;
+    }
+
+    toggleAutoRefresh(): void {
+        this.autoRefresh.update(value => !value);
+
+        if (this.autoRefresh()) {
+            this.startAutoRefresh();
+        } else {
+            this.stopAutoRefresh();
+        }
+    }
+
+    changeRefreshSeconds(value: string | number): void {
+        const seconds = Number(value);
+
+        if (!Number.isFinite(seconds)) {
+            return;
+        }
+
+        this.refreshSeconds.set(Math.min(300, Math.max(5, seconds)));
+
+        if (this.autoRefresh()) {
+            this.startAutoRefresh();
+        }
+    }
+
+    private startAutoRefresh(): void {
+        this.stopAutoRefresh();
+
+        if (!this.autoRefresh()) {
+            return;
+        }
+
+        this.refreshTimer = setInterval(() => {
+            this.refreshData(false);
+        }, this.refreshSeconds() * 1000);
+    }
+
+    private stopAutoRefresh(): void {
+        if (this.refreshTimer) {
+            clearInterval(this.refreshTimer);
+            this.refreshTimer = null;
+        }
+    }
+
+    // ===============================================================
+    // ☎️ گزارش تماس کارشناس
+    // ===============================================================
+    openCallReport(item: any): void {
+        const extension = this.resolvePersonExtension(item);
+
+        if (!extension) {
+            this.notificationService.warning('برای این کارشناس داخلی سانترال مشخص نشده است.');
+            return;
+        }
+
+        this.Call_report_selected.set(item);
+        this.Call_report_extension.set(extension);
+        this.Call_report_person_name.set(this.resolvePersonName(item));
+        this.Call_report_Show_Modal.set(true);
+    }
+
+    closeCallReportModal(): void {
+        this.Call_report_Show_Modal.set(false);
+        this.Call_report_selected.set(null);
+        this.Call_report_extension.set('');
+        this.Call_report_person_name.set('');
+    }
+
+    private resolvePersonExtension(item: any): string {
+        const candidates = [
+            item?.Manager,
+            item?.manager,
+            item?.Extension,
+            item?.extension,
+            item?.ExtensionNo,
+            item?.InternalNo,
+            item?.PhoneExtension,
+            item?.SantralExtension,
+            item?.PhAddress3,
+        ];
+
+        return this.firstExtension(candidates);
+    }
+
+    private resolvePersonName(item: any): string {
+        const fullName = String(
+            item?.CentralName ||
+            item?.FullName ||
+            item?.PhFullName ||
+            `${item?.PhFirstName ?? ''} ${item?.PhLastName ?? ''}`
+        ).trim();
+
+        return fullName || 'کارشناس';
+    }
+
+    private firstExtension(values: any[]): string {
+        for (const value of values) {
+            const extension = String(value ?? '')
+                .trim()
+                .replace(/[۰-۹]/g, digit => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(digit)))
+                .replace(/\D+/g, '');
+
+            if (extension.length >= 2 && extension.length <= 8) {
+                return extension;
+            }
+        }
+
+        return '';
+    }
+
+    private safeSessionValue(key: string): string {
+        try {
+            return this.session.getString(key) ?? '';
+        } catch {
+            return '';
+        }
+    }
+
+    private safeNativeSessionValue(key: string): string {
+        try {
+            return sessionStorage.getItem(key) ?? '';
+        } catch {
+            return '';
+        }
     }
 
     // ===============================================================
@@ -249,7 +550,7 @@ export class AttendancePanelComponent implements OnInit, AfterViewInit, OnDestro
             LetterDate: this.convertFaToEn(this.ToDayDate),
             title: 'ارتباط با همکاران',
             Description: formData.DescriptionText,
-            LetterState: '',
+            LetterState: 'منتظراقدام',
             LetterPriority: 'عادی',
             CentralRef: this.session.centralRef,
             InOutFlag: '2',

@@ -1,294 +1,340 @@
 <section class="detail-page" dir="rtl">
   <div class="detail-shell">
+
+    <!-- Header -->
     <header class="detail-toolbar">
       <div class="detail-toolbar__main">
+
         @if (showHeaderImage()) {
-          <div class="detail-toolbar__image">
-            <img
-              [src]="config.HeaderImage"
-              [alt]="config.HeaderImageAlt || config.HeaderTitle"
-              (error)="onHeaderImageError()">
-          </div>
+        <div class="detail-toolbar__image">
+          <img [src]="config.HeaderImage" [alt]="config.HeaderImageAlt || config.HeaderTitle"
+            (error)="onHeaderImageError()">
+        </div>
         }
 
         <div class="detail-toolbar__content">
           @if (config.ShowHeaderTitle) {
-            <h1>{{ config.HeaderTitle }}</h1>
+          <h1>{{ config.HeaderTitle }}</h1>
           }
 
           @if (product(); as toolbarProduct) {
-            <p>{{ toolbarProduct.GoodName }}</p>
+          <p>{{ toolbarProduct.GoodName }}</p>
           } @else if (config.ShowHeaderSubTitle) {
-            <p>{{ config.HeaderSubTitle }}</p>
+          <p>{{ config.HeaderSubTitle }}</p>
           }
         </div>
+
       </div>
 
       <div class="detail-toolbar__actions">
-        @if (product(); as toolbarProduct) {
-          <div class="detail-toolbar-code">
-            <i class="mdi mdi-identifier"></i>
 
-            <div>
-              <span>کد کتاب</span>
-              <strong>{{ toolbarProduct.GoodCode }}</strong>
-            </div>
-          </div>
-        }
+        <!-- کد کتاب حذف شد -->
 
         <button type="button" class="detail-back" (click)="back()">
+
           <i class="mdi mdi-arrow-right"></i>
           <span>بازگشت به فهرست</span>
+
         </button>
+
       </div>
     </header>
 
+
+    <!-- Loading -->
     @if (loading()) {
-      <div class="detail-state">
-        <div class="detail-loader">
-          <span></span>
-        </div>
 
-        <strong>در حال دریافت مشخصات کتاب...</strong>
-        <small>لطفاً چند لحظه صبر کنید</small>
+    <div class="detail-state">
+
+      <div class="detail-loader">
+        <span></span>
       </div>
+
+      <strong>در حال دریافت مشخصات کتاب...</strong>
+      <small>لطفاً چند لحظه صبر کنید</small>
+
+    </div>
+
     } @else if (errorMessage()) {
-      <div class="detail-state detail-state--error">
-        <div class="detail-state-icon">
-          <i class="mdi mdi-book-alert-outline"></i>
-        </div>
 
-        <strong>{{ errorMessage() }}</strong>
+    <!-- Error -->
+    <div class="detail-state detail-state--error">
 
-        <div class="detail-state-actions">
-          <button type="button" class="detail-retry" (click)="retry()">
-            <i class="mdi mdi-refresh"></i>
-            تلاش مجدد
-          </button>
-
-          <button type="button" class="detail-return" (click)="back()">
-            بازگشت
-          </button>
-        </div>
+      <div class="detail-state-icon">
+        <i class="mdi mdi-book-alert-outline"></i>
       </div>
+
+      <strong>{{ errorMessage() }}</strong>
+
+      <div class="detail-state-actions">
+
+        <button type="button" class="detail-retry" (click)="retry()">
+
+          <i class="mdi mdi-refresh"></i>
+          تلاش مجدد
+
+        </button>
+
+        <button type="button" class="detail-return" (click)="back()">
+
+          بازگشت
+
+        </button>
+
+      </div>
+
+    </div>
+
     } @else if (product(); as item) {
-      <article class="detail-card">
-        <aside class="detail-gallery">
-          <div class="detail-gallery-sticky">
-            <div class="detail-main-image">
-              @if (imageLoading()) {
-                <div class="detail-image-loading">
-                  <span></span>
-                </div>
-              }
 
-              <img
-                [src]="selectedImage() || placeholderImage"
-                [alt]="item.GoodName"
-                (load)="onMainImageLoaded()"
-                (error)="onMainImageError()">
+    <article class="detail-card">
 
-              @if (isFavorite()) {
-                <span class="detail-favorite">
-                  <i class="mdi mdi-heart"></i>
-                  علاقه‌مندی
-                </span>
-              }
+      <!-- ============================ -->
+      <!-- Gallery -->
+      <!-- ============================ -->
 
-              @if (item.GoodType) {
-                <span class="detail-image-type">
-                  {{ item.GoodType }}
-                </span>
-              }
+      <aside class="detail-gallery">
+
+        <div class="detail-gallery-sticky">
+
+          <div class="detail-main-image">
+
+            @if (imageLoading()) {
+            <div class="detail-image-loading">
+              <span></span>
+            </div>
+            }
+
+            <img [src]="selectedImage() || placeholderImage" [alt]="item.GoodName" (load)="onMainImageLoaded()"
+              (error)="onMainImageError()">
+
+          </div>
+
+
+          <!-- اگر چند تصویر داشت -->
+          @if (images().length > 1) {
+
+          <div class="detail-thumbnails">
+
+            @for (image of images(); track $index) {
+
+            <button type="button" class="detail-thumbnail" [class.is-active]="selectedImage() === image"
+              [attr.aria-label]="'تصویر ' + ($index + 1)" (click)="chooseImage(image)">
+
+              <img [src]="image" [alt]="item.GoodName + ' - تصویر ' + ($index + 1)" (error)="onThumbnailError($event)">
+
+            </button>
+
+            }
+
+          </div>
+
+          }
+
+          <!-- ISBN حذف شد -->
+
+        </div>
+
+      </aside>
+
+
+      <!-- ============================ -->
+      <!-- Content -->
+      <!-- ============================ -->
+
+      <div class="detail-content">
+
+
+        <!-- Badge ها حذف شدند -->
+
+
+        <!-- عنوان -->
+        <div class="detail-title-area">
+
+          <h1>{{ item.GoodName }}</h1>
+
+        </div>
+
+
+        <!--
+            بخش نویسنده / مترجم / ناشر
+            که بالای قیمت بود حذف شد
+          -->
+
+
+        <!-- ============================ -->
+        <!-- Price -->
+        <!-- ============================ -->
+
+        @if (priceValue()) {
+
+        <section class="detail-commerce">
+
+          <div class="detail-price">
+
+            <span>قیمت کتاب</span>
+
+            <strong>
+
+              {{ formatPrice(priceValue()) }}
+
+              <small>ریال</small>
+
+            </strong>
+
+          </div>
+
+        </section>
+
+        }
+
+
+        <!-- ============================ -->
+        <!-- Book Specifications -->
+        <!-- فقط نویسنده و مترجم -->
+        <!-- ============================ -->
+
+        @if (item.Writer || item.DragoMan) {
+
+        <section class="detail-section">
+
+          <div class="detail-section-title">
+
+            <span>
+              <i class="mdi mdi-format-list-bulleted-square"></i>
+            </span>
+
+            <div>
+
+              <h2>مشخصات کتاب</h2>
+
+              <p>اطلاعات اصلی کتاب</p>
+
             </div>
 
-            @if (images().length > 1) {
-              <div class="detail-thumbnails">
-                @for (image of images(); track $index) {
-                  <button
-                    type="button"
-                    class="detail-thumbnail"
-                    [class.is-active]="selectedImage() === image"
-                    [attr.aria-label]="'تصویر ' + ($index + 1)"
-                    (click)="chooseImage(image)">
-                    <img
-                      [src]="image"
-                      [alt]="item.GoodName + ' - تصویر ' + ($index + 1)"
-                      (error)="onThumbnailError($event)">
-                  </button>
-                }
-              </div>
-            }
-
-            @if (item.ISBN) {
-              <div class="detail-isbn">
-                <i class="mdi mdi-barcode-scan"></i>
-
-                <div>
-                  <span>شابک</span>
-                  <strong>{{ item.ISBN }}</strong>
-                </div>
-              </div>
-            }
-          </div>
-        </aside>
-
-        <div class="detail-content">
-          <div class="detail-badges">
-            @if (item.BulletinGroupName) {
-              <span>
-                <i class="mdi mdi-bookshelf"></i>
-                {{ item.BulletinGroupName }}
-              </span>
-            }
-
-            @if (item.CoverType) {
-              <span>
-                <i class="mdi mdi-book-outline"></i>
-                {{ item.CoverType }}
-              </span>
-            }
-
-            @if (item.Size) {
-              <span>
-                <i class="mdi mdi-resize"></i>
-                قطع {{ item.Size }}
-              </span>
-            }
           </div>
 
-          <div class="detail-title-area">
-            <h1>{{ item.GoodName }}</h1>
 
-            @if (item.GroupsWhitoutCode) {
-              <p class="detail-category-path">
-                <i class="mdi mdi-folder-outline"></i>
-                {{ item.GroupsWhitoutCode }}
-              </p>
-            }
-          </div>
+          <div class="detail-spec-grid">
 
-          @if (item.Writer || item.DragoMan || item.Nasher) {
-            <section class="detail-people">
-              @if (item.Writer) {
-                <div class="detail-person">
-                  <span class="detail-person-icon">
-                    <i class="mdi mdi-account-edit-outline"></i>
-                  </span>
 
-                  <div>
-                    <span>نویسنده</span>
-                    <strong>{{ item.Writer }}</strong>
-                  </div>
-                </div>
-              }
+            <!-- نویسنده -->
+            @if (item.Writer) {
 
-              @if (item.DragoMan) {
-                <div class="detail-person">
-                  <span class="detail-person-icon">
-                    <i class="mdi mdi-translate"></i>
-                  </span>
+            <div class="detail-spec">
 
-                  <div>
-                    <span>مترجم</span>
-                    <strong>{{ item.DragoMan }}</strong>
-                  </div>
-                </div>
-              }
+              <span class="detail-spec-icon">
 
-              @if (item.Nasher) {
-                <div class="detail-person">
-                  <span class="detail-person-icon">
-                    <i class="mdi mdi-domain"></i>
-                  </span>
+                <i class="mdi mdi-account-edit-outline"></i>
 
-                  <div>
-                    <span>ناشر</span>
-                    <strong>{{ item.Nasher }}</strong>
-                  </div>
-                </div>
-              }
-            </section>
-          }
+              </span>
 
-          <section class="detail-commerce">
-            @if (priceValue()) {
-              <div class="detail-price">
-                <span>قیمت کتاب</span>
+              <div>
+
+                <span>نویسنده</span>
 
                 <strong>
-                  {{ formatPrice(priceValue()) }}
-                  <small>ریال</small>
+                  {{ item.Writer }}
                 </strong>
+
               </div>
+
+            </div>
+
             }
 
-            @if (config.ShowStock) {
-              <div
-                class="detail-stock"
-                [class.is-available]="stockAmount() > 0"
-                [class.is-unavailable]="stockAmount() <= 0">
-                <i
-                  [class]="stockAmount() > 0
-                    ? 'mdi mdi-check-circle-outline'
-                    : 'mdi mdi-close-circle-outline'">
-                </i>
 
-                <div>
-                  <span>وضعیت موجودی</span>
-                  <strong>{{ stockText() }}</strong>
-                </div>
+            <!-- مترجم -->
+            @if (item.DragoMan) {
+
+            <div class="detail-spec">
+
+              <span class="detail-spec-icon">
+
+                <i class="mdi mdi-translate"></i>
+
+              </span>
+
+              <div>
+
+                <span>مترجم</span>
+
+                <strong>
+                  {{ item.DragoMan }}
+                </strong>
+
               </div>
+
+            </div>
+
             }
-          </section>
 
-          @if (config.ShowBookSpecifications && specifications().length > 0) {
-            <section class="detail-section">
-              <div class="detail-section-title">
-                <span>
-                  <i class="mdi mdi-format-list-bulleted-square"></i>
-                </span>
+            <!-- مترجم -->
+            @if (item.GoodExplain4) {
 
-                <div>
-                  <h2>مشخصات کتاب</h2>
-                  <p>اطلاعات فنی و نشر کتاب</p>
-                </div>
+            <div class="detail-spec">
+
+              <span class="detail-spec-icon">
+
+                <i class="mdi mdi-translate"></i>
+
+              </span>
+
+              <div>
+
+                <span>گروه سنی</span>
+
+                <strong>
+                  {{ item.GoodExplain4 }}
+                </strong>
+
               </div>
 
-              <div class="detail-spec-grid">
-                @for (field of specifications(); track field.label) {
-                  <div class="detail-spec">
-                    <span class="detail-spec-icon">
-                      <i [class]="'mdi ' + field.icon"></i>
-                    </span>
+            </div>
 
-                    <div>
-                      <span>{{ field.label }}</span>
-                      <strong>{{ field.value }}</strong>
-                    </div>
-                  </div>
-                }
-              </div>
-            </section>
-          }
+            }
 
-          @for (section of descriptionSections(); track section.title) {
-            <section class="detail-section detail-description">
-              <div class="detail-section-title">
-                <span>
-                  <i [class]="'mdi ' + section.icon"></i>
-                </span>
+          </div>
 
-                <div>
-                  <h2>{{ section.title }}</h2>
-                </div>
-              </div>
+        </section>
 
-              <p>{{ section.value }}</p>
-            </section>
-          }
+        }
+
+
+        <!-- ============================ -->
+        <!-- Collection Name -->
+        <!-- ============================ -->
+
+        @if (item.GoodExplain2) {
+
+        <div class="detail-spec">
+
+          <span class="detail-spec-icon">
+
+            <i class="mdi mdi-translate"></i>
+
+          </span>
+
+          <div>
+
+            <span>نام مجموعه</span>
+
+            <strong>
+              {{ item.GoodExplain2 }}
+            </strong>
+
+          </div>
+
         </div>
-      </article>
+
+        }
+
+
+      </div>
+
+    </article>
+
     }
+
   </div>
 </section>

@@ -21,6 +21,19 @@ import type { SantralPhonebookComponent } from '../santral-phonebook.component';
       شماره‌های ناشناس
       <span>{{ vm.unknownNumbers().length }}</span>
     </button>
+
+    <button type="button" class="phonebook-tab" [class.active]="vm.activeTab() === 'report'" (click)="vm.setTab('report')">
+      <i class="mdi mdi-chart-box-outline"></i>
+      گزارش شماره
+      <span><i class="mdi mdi-magnify"></i></span>
+    </button>
+
+    <button type="button" class="phonebook-tab" [class.active]="vm.activeTab() === 'kowsar-audit'"
+      (click)="vm.setTab('kowsar-audit')">
+      <i class="mdi mdi-database-sync-outline"></i>
+      تطبیق CDR با کوثر
+      <span><i class="mdi mdi-history"></i></span>
+    </button>
   </div>
 `
 })

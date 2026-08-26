@@ -1,0 +1,28 @@
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+      <div><h4 class="card-title mb-1">داشبورد WorkforceAbsence</h4><div class="text-muted small">خلاصه وضعیت سیستم جدید</div></div>
+      <div class="d-flex gap-2"><a class="btn btn-light" [routerLink]="['/automation/workforce-absence/request-list']">درخواست‌ها</a><a class="btn btn-light" [routerLink]="['/automation/workforce-absence/policy-list']">Policy</a></div>
+    </div>
+
+    <form [formGroup]="SearchForm" class="row g-3 align-items-end">
+      <div class="col-md-3"><label class="form-label">تاریخ گزارش</label><ng-persian-datepicker [uiTheme]="customTheme"><input formControlName="TargetJDate" class="form-control text-center" /></ng-persian-datepicker></div>
+      <div class="col-md-5"><label class="form-label">کاربر</label><select formControlName="CentralRef" class="form-control"><option value="0">همه کاربران</option>@for (user of users(); track user.CentralCode) { <option [value]="user.CentralCode?.toString()">{{ user.CentralName }}</option> }</select></div>
+      <div class="col-md-4 d-grid"><button type="button" class="btn btn-primary" (click)="loadDashboard()">نمایش گزارش</button></div>
+    </form>
+  </div>
+</div>
+
+@if (loading()) { <div class="alert alert-info">در حال دریافت گزارش...</div> }
+
+@if (dashboard()) {
+  <div class="row g-3">
+    <div class="col-md-3"><div class="card dash-card h-100"><div class="card-body"><div class="text-muted small">کل درخواست‌ها</div><div class="dash-value">{{ dashboard()?.TotalRequestCount }}</div></div></div></div>
+    <div class="col-md-3"><div class="card dash-card h-100"><div class="card-body"><div class="text-muted small">در انتظار</div><div class="dash-value text-warning">{{ dashboard()?.PendingRequestCount }}</div></div></div></div>
+    <div class="col-md-3"><div class="card dash-card h-100"><div class="card-body"><div class="text-muted small">تایید شده</div><div class="dash-value text-success">{{ dashboard()?.AcceptedRequestCount }}</div></div></div></div>
+    <div class="col-md-3"><div class="card dash-card h-100"><div class="card-body"><div class="text-muted small">رد شده</div><div class="dash-value text-danger">{{ dashboard()?.RejectedRequestCount }}</div></div></div></div>
+    <div class="col-md-4"><div class="card dash-card h-100"><div class="card-body"><div class="text-muted small">افراد مرخصی تایید شده امروز</div><div class="dash-value text-primary">{{ dashboard()?.TodayAcceptedPersonCount }}</div></div></div></div>
+    <div class="col-md-4"><div class="card dash-card h-100"><div class="card-body"><div class="text-muted small">روز کاری تایید شده ماه</div><div class="dash-value">{{ dashboard()?.CurrentMonthAcceptedDay }}</div></div></div></div>
+    <div class="col-md-4"><div class="card dash-card h-100"><div class="card-body"><div class="text-muted small">مرخصی ساعتی تایید شده ماه</div><div class="dash-value">{{ minuteToText(dashboard()?.CurrentMonthAcceptedMinute) }}</div></div></div></div>
+  </div>
+}

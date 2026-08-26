@@ -6,7 +6,8 @@
     "apiUrl": "http://192.168.1.27:60007/api/",
     "baseHref": "/KowsarPanel/",
     "MenuapiUrl": "http://localhost:60009/loginCoffee/index.php?tag=",
-    "ProductapiUrl": "http://localhost:60009/loginpakhsh/index.php?tag=",
+    "ProductapiUrl1": "http://localhost:60009/loginpakhsh/index.php?tag=",
+    "ProductapiUrl": "https://ofoqpublication.ir/login/index.php?tag=",
     "santralUrl": "http://localhost:60009/login_cdr/index.php?tag=",
     "santralWebPhone": {
         "wsUrl": "ws://192.168.1.27:60007/asterisk-ws",

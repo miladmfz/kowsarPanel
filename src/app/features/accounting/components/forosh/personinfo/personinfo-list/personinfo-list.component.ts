@@ -48,6 +48,10 @@ export class PersoninfoListComponent extends AgGridBaseComponent
 
   records = signal<any[]>([])
 
+  XUserName_selected = signal('')
+  PersonInfoCode_selected = signal('')
+  mobile_selected = signal('')
+
   gridMemory1 = new Map<string, any>();
   gridKey = signal('');
   dateValue = new FormControl();
@@ -85,7 +89,7 @@ export class PersoninfoListComponent extends AgGridBaseComponent
   }
 
   AddNew() {
-    this.notificationService.develop()
+    this.router.navigate(['/accounting/forosh/personinfo-edit', 0]);
   }
 
   getGridSchema() {
@@ -102,7 +106,7 @@ export class PersoninfoListComponent extends AgGridBaseComponent
             filter: 'agSetColumnFilter',
             sortable: true,
             resizable: true,
-            minWidth: parseInt(schema.Width) + 100,
+            width: parseInt(schema.Width) + 100,
             valueFormatter: schema.Separator === '1' ? this.customNumberFormatter : undefined
           }));
 
@@ -284,9 +288,20 @@ export class PersoninfoListComponent extends AgGridBaseComponent
       confirmPassword: '',
 
       isActive: data?.Active === true || data?.Active === 'True' || data?.Active === 1,
-      smsLoginEnabled: data?.SmsLoginEnabled === true || data?.SmsLoginEnabled === 'True' || data?.SmsLoginEnabled === 1,
+      smsLoginEnabled: data?.AuthSms === true || data?.AuthSms === 'True' || data?.AuthSms === 1,
       mobile: data?.PhMobile1 ?? data?.Mobile ?? '',
     });
+
+    this.PersonInfoCode_selected.set(data?.PersonInfoCode ?? '')
+    this.XUserName_selected.set(data?.XUserName ?? '')
+    this.mobile_selected.set(data?.PhMobile1 ?? '')
+
+
+    if (this.XUserName_selected().length == 0) {
+      this.userManageForm.patchValue({
+        actionType: 'changeUserName'
+      });
+    }
 
     this.userManageForm.markAsPristine();
     this.userManageForm.markAsUntouched();
@@ -329,7 +344,10 @@ export class PersoninfoListComponent extends AgGridBaseComponent
       return null;
     };
   }
+
+
   submitUserManage(): void {
+
     if (this.userManageForm.invalid) {
       this.userManageForm.markAllAsTouched();
       return;
@@ -338,40 +356,178 @@ export class PersoninfoListComponent extends AgGridBaseComponent
     this.isSavingUserManage.set(true);
 
     const value = this.userManageForm.value;
+    const actionType = value.actionType;
 
-    const payload = {
-      UName: this.session.userName,
-      ActionType: value.actionType,
 
-      NewUserName: value.newUserName,
-      NewPassword: value.newPassword,
+    // =====================================================
+    // تغییر / ایجاد نام کاربری
+    // =====================================================
 
-      IsActive: value.isActive,
-      SmsLoginEnabled: value.smsLoginEnabled,
-      Mobile: value.mobile,
-    };
+    if (actionType === 'changeUserName') {
 
-    this.repo.ChangeXUserInfo(payload).subscribe({
-      next: (data: any) => {
-        if (data.users?.[0]?.ErrDesc?.length > 0) {
-          this.notificationService.error(data.users[0].ErrDesc);
-        } else {
+      // کاربر هنوز XUser ندارد
+      if (this.XUserName_selected().length === 0) {
+
+        const payload = {
+          PersonInfoRef: this.PersonInfoCode_selected(),
+          XUserName: value.newUserName,
+          XUserPass: "Aa@123456",
+        };
+
+        this.repo.SetPersonInfo_XUserNew(payload).subscribe({
+
+          next: (data: any) => {
+
+            this.isSavingUserManage.set(false);
+
+            this.notificationService.succeded();
+
+            this.userManageModal?.hide();
+
+            this.GetData();
+          },
+
+          error: () => {
+
+            this.isSavingUserManage.set(false);
+
+            this.notificationService.error('خطا در ارسال اطلاعات');
+          },
+
+        });
+
+        return;
+      }
+
+
+      // کاربر XUser دارد و فقط نام کاربری عوض می‌شود
+      const payload = {
+        PersonInfoRef: this.PersonInfoCode_selected(),
+        XUserName: value.newUserName,
+      };
+
+      this.repo.SetPersonInfo_XUserName(payload).subscribe({
+
+        next: (data: any) => {
+
+          this.isSavingUserManage.set(false);
+
           this.notificationService.succeded();
+
           this.userManageModal?.hide();
-        }
 
-        this.isSavingUserManage.set(false);
+          this.GetData();
+        },
 
-      },
-      error: () => {
-        this.isSavingUserManage.set(false);
-        this.notificationService.error('خطا در ارسال اطلاعات');
+        error: () => {
 
-      },
-    });
+          this.isSavingUserManage.set(false);
+
+          this.notificationService.error('خطا در ارسال اطلاعات');
+        },
+
+      });
+
+      return;
+    }
+
+
+    // =====================================================
+    // تغییر رمز عبور
+    // =====================================================
+
+    if (actionType === 'changePassword') {
+
+      const payload = {
+        PersonInfoRef: this.PersonInfoCode_selected(),
+        XUserPass: value.newPassword,
+      };
+
+      this.repo.SetPersonInfo_XUserPass(payload).subscribe({
+
+        next: (data: any) => {
+
+          this.isSavingUserManage.set(false);
+
+          this.notificationService.succeded();
+
+          this.userManageModal?.hide();
+        },
+
+        error: () => {
+
+          this.isSavingUserManage.set(false);
+
+          this.notificationService.error('خطا در ارسال اطلاعات');
+        },
+
+      });
+
+      return;
+    }
+
+
+    // اگر actionType هیچکدام نبود
+    this.isSavingUserManage.set(false);
   }
+
   isUserManageInvalid(controlName: string): boolean {
     const control = this.userManageForm.get(controlName);
     return !!control && control.invalid && (control.dirty || control.touched);
   }
+
+
+
+
+  onUserActiveChange(): void {
+
+    const isActive = this.userManageForm.get('isActive')?.value ?? false;
+
+    const isActive_str = isActive ? "1" : "0";
+
+    this.repo.SetPersonInfo_XUserActive(
+      this.PersonInfoCode_selected(),
+      isActive_str
+    ).subscribe({
+      next: (data: any) => {
+
+        this.notificationService.succeded();
+
+      },
+      error: () => {
+
+        this.notificationService.error('خطا در ارسال اطلاعات');
+
+      },
+    });
+
+  }
+
+  onSmsLoginChange(event: Event): void {
+
+    const enabled = (event.target as HTMLInputElement).checked;
+
+    const enabled_str = enabled ? "1" : "0";
+
+
+
+
+
+    this.repo.SetPersonInfo_XUserAuthSms(this.PersonInfoCode_selected(), enabled_str).subscribe({
+      next: (data: any) => {
+
+        this.notificationService.succeded();
+
+      },
+      error: () => {
+
+        this.notificationService.error('خطا در ارسال اطلاعات');
+
+      },
+    });
+
+  }
+
+
+
 }

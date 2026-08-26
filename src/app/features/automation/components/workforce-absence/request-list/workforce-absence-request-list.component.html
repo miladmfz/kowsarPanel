@@ -1,0 +1,147 @@
+<div class="card shadow-sm">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+      <div>
+        <h4 class="card-title mb-1">مدیریت جدید مرخصی و غیبت</h4>
+        <div class="text-muted small">ماژول مستقل WorkforceAbsence</div>
+      </div>
+
+      <div class="d-flex flex-wrap gap-2">
+        @if (permission.canManageRole) {
+          <a class="btn btn-light" [routerLink]="['/automation/workforce-absence/dashboard']">داشبورد</a>
+          <a class="btn btn-light" [routerLink]="['/automation/workforce-absence/policy-list']">Policy</a>
+          <a class="btn btn-light" [routerLink]="['/automation/workforce-absence/type-list']">انواع</a>
+        }
+
+        <button type="button" class="btn btn-success" (click)="navigateToCreate()">
+          <i class="fas fa-plus me-1"></i>
+          درخواست جدید
+        </button>
+      </div>
+    </div>
+
+    <form [formGroup]="SearchForm" class="row g-3 align-items-end mb-3">
+      <div class="col-md-2">
+        <label class="form-label">از تاریخ</label>
+        <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
+          <input formControlName="StartJDate" class="form-control text-center" />
+        </ng-persian-datepicker>
+      </div>
+
+      <div class="col-md-2">
+        <label class="form-label">تا تاریخ</label>
+        <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
+          <input formControlName="EndJDate" class="form-control text-center" />
+        </ng-persian-datepicker>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">کاربر</label>
+        <select
+          formControlName="CentralRef"
+          class="form-control"
+          [style.pointer-events]="canSelectUser() ? 'auto' : 'none'"
+          [class.bg-light]="!canSelectUser()"
+          [attr.tabindex]="canSelectUser() ? 0 : -1">
+          <option value="0">همه کاربران</option>
+          @for (user of users(); track user.CentralCode) {
+            <option [value]="user.CentralCode?.toString()">{{ user.CentralName }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="col-md-2">
+        <label class="form-label">نوع</label>
+        <select formControlName="AbsenceTypeKey" class="form-control">
+          <option value="">همه</option>
+          @for (item of types(); track item.AbsenceTypeCode) {
+            <option [value]="item.TypeKey">{{ item.TypeTitle }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="col-md-2">
+        <label class="form-label">وضعیت</label>
+        <select formControlName="WorkflowStatus" class="form-control">
+          <option value="-1">همه</option>
+          <option value="0">در انتظار</option>
+          <option value="1">تایید شده</option>
+          <option value="2">رد شده</option>
+          <option value="3">بررسی مجدد</option>
+          <option value="4">لغو شده</option>
+        </select>
+      </div>
+
+      <div class="col-md-1 d-grid">
+        <button type="button" class="btn btn-primary" (click)="loadList()">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+    </form>
+
+    @if (loading()) {
+      <div class="alert alert-info py-2">
+        <i class="fas fa-spinner fa-spin me-1"></i>
+        در حال دریافت اطلاعات...
+      </div>
+    }
+
+    <div class="ag-container" style="height: 610px; border-radius: 8px; overflow: hidden;">
+      <ag-grid-angular
+        [columnDefs]="column_name_1"
+        [rowData]="records()"
+        [gridOptions]="gridOptions"
+        [class]="themeClass + ' w-100 h-100'"
+        (gridReady)="onGridReady($event, 1)"
+        (cellClicked)="onCellClicked($event)"
+        (firstDataRendered)="gridApi1?.sizeColumnsToFit()">
+      </ag-grid-angular>
+    </div>
+  </div>
+</div>
+
+@if (showWorkflowPanel() && selectedRequest()) {
+  <div class="card shadow-sm mt-3 border-primary">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <strong>گردش‌کار درخواست شماره {{ selectedRequest()?.AbsenceRequestCode }}</strong>
+      <button type="button" class="btn btn-sm btn-light" (click)="closeWorkflow()">بستن</button>
+    </div>
+
+    <div class="card-body">
+      <div class="alert alert-light border small">
+        {{ selectedRequest()?.CentralName }} ـ {{ selectedRequest()?.TypeTitle }} ـ
+        {{ selectedRequest()?.StartJDate }} تا {{ selectedRequest()?.EndJDate }}
+      </div>
+
+      <form [formGroup]="WorkflowForm" class="row g-3 align-items-end">
+        <div class="col-md-3">
+          <label class="form-label">وضعیت جدید</label>
+          <select formControlName="WorkflowStatus" class="form-control">
+            <option value="">انتخاب کنید</option>
+            <option value="1">تایید</option>
+            <option value="2">رد</option>
+            <option value="3">بررسی مجدد</option>
+            <option value="4">لغو</option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">پیوست دارد</label>
+          <select formControlName="HasAttachment" class="form-control">
+            <option value="0">خیر</option>
+            <option value="1">بله</option>
+          </select>
+        </div>
+
+        <div class="col-md-5">
+          <label class="form-label">توضیحات مدیر</label>
+          <input formControlName="ManagerExplain" class="form-control" />
+        </div>
+
+        <div class="col-md-2 d-grid">
+          <button type="button" class="btn btn-primary" (click)="submitWorkflow()">ثبت گردش‌کار</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

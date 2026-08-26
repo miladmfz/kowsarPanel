@@ -7,6 +7,7 @@ import { NotificationService } from 'src/app/app-shell/framework-services/ui/not
 import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.service';
 import { KowsarBaseWebApi } from '../../../framework-services/base/KowsarBaseWebApi.service';
 import { CellActionKowsarAttach } from './cell-action-kowsar-attach';
+import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
 
 @Component({
   selector: 'app-kowsar-attach',
@@ -18,6 +19,7 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
 
   @Input() ObjectRef = ""
   @Input() ClassName = ""
+  @Input() CanInsert = true
 
   records = signal<any[]>([])
 
@@ -31,11 +33,13 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
     FileType: new FormControl(''),
     Data: new FormControl(''),
   });
+  CanInsertAttach = signal(true)
 
   selectedFileName = signal('')
   selectedFileSize = signal(0)
   selectedFileType = signal('')
-
+  protected readonly session = inject(SessionStorageService);
+  LoginType = signal('');
 
   private readonly repo = inject(KowsarBaseWebApi);
   private readonly notify = inject(NotificationService);
@@ -53,6 +57,16 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
       { field: 'FileName', headerName: 'نام فایل', minWidth: 150 },
       { field: 'CreationDate', headerName: 'تاریخ ایجاد', minWidth: 130 },
     ];
+
+    this.LoginType.set(this.session.loginType);
+
+    if (this.LoginType() == 'KOWSAR') {
+      this.CanInsertAttach.set(true)
+
+    } else {
+      this.CanInsertAttach.set(this.CanInsert)
+
+    }
   }
 
 
@@ -133,9 +147,15 @@ export class KowsarAttachComponent extends AgGridBaseComponent implements OnChan
     reader.onload = (e: any) => {
       const base64 = e.target.result.split(',')[1];
 
-      this.selectedFileName.set(file.name.replace(/\s/g, '').split('.')[0])
+      this.selectedFileName.set(
+        file.name
+          .replace(/\.[^/.]+$/, '')
+          .trim()
+          .replace(/\s+/g, '_')
+      );
       this.selectedFileSize.set(Math.round(file.size / 1024))
       this.selectedFileType.set(ext)
+      console.log(this.selectedFileName())
 
       this.EditForm.patchValue({
         FileName: this.selectedFileName(),

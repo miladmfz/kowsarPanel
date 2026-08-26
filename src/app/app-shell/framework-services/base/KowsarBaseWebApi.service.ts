@@ -162,7 +162,7 @@ export class KowsarBaseWebApi {
 
   AttendanceDashboard(): Observable<any[]> {
     const params = new HttpParams()
-    return this.withLoading(this.client.get<any[]>(this.baseUrl + "AttendanceDashboard", { headers: this.headerService.headers, params: params }))
+    return this.client.get<any[]>(this.baseUrl + "AttendanceDashboard", { headers: this.headerService.headers, params: params })
   }
 
 

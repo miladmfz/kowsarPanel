@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { PersistentPhoneDockComponent } from './persistent-phone-dock/persistent-phone-dock.component';
 
 @Component({
   selector: 'app-layout',
@@ -12,6 +13,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     HeaderComponent,
     SidebarComponent,
     FooterComponent,
+    PersistentPhoneDockComponent,
   ],
   templateUrl: './layout.component.html',
 })
