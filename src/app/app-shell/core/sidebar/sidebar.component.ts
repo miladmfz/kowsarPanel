@@ -50,6 +50,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   IsCustomerBuild = signal(false)
   IsKowsarSupportBuild = signal(false)
   ShowHoghogh = signal(false)
+  Show_adminUser = signal(false)
 
   currentStatus = signal('')
 
@@ -104,6 +105,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.ShowHoghogh.set(true)
     } else {
       this.ShowHoghogh.set(false)
+    }
+
+    const IsAdminUser = String(this.session.IsAdminUser ?? '0').trim();
+    if (IsAdminUser === '1' || IsAdminUser.toLowerCase() === 'true') {
+      this.Show_adminUser.set(true)
+    } else {
+      this.Show_adminUser.set(false)
     }
 
 

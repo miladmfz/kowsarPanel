@@ -199,28 +199,58 @@
 
           @if (userManageForm.value.actionType === 'changeStatus') {
 
-          <div class="kws-user-card">
+          <div class="row">
+            <div class="kws-user-card  col-6">
 
-            <label class="form-label fw-semibold mb-3">
-              وضعیت کاربر
-            </label>
-
-            <div class="form-check form-switch mb-0">
-
-              <input class="form-check-input" type="checkbox" id="userActiveSwitch" formControlName="isActive"
-                (change)="onUserActiveChange()">
-
-              <label class="form-check-label fw-bold" for="userActiveSwitch">
-
-                {{ userManageForm.get('isActive')?.value
-                ? 'کاربر فعال است'
-                : 'کاربر غیرفعال است' }}
-
+              <label class="form-label fw-semibold mb-3">
+                وضعیت کاربر
               </label>
+
+              <div class="form-check form-switch mb-0">
+
+                <input class="form-check-input" type="checkbox" id="userActiveSwitch" formControlName="isActive"
+                  (change)="onUserActiveChange()">
+
+                <label class="form-check-label fw-bold" for="userActiveSwitch">
+
+                  {{ userManageForm.get('isActive')?.value
+                  ? 'کاربر فعال است'
+                  : 'کاربر غیرفعال است' }}
+
+                </label>
+
+              </div>
+
+
+
+            </div>
+
+            <div class="kws-user-card col-6">
+
+
+              <label class="form-label fw-semibold mb-3">
+                مدیر بخش
+              </label>
+
+              <div class="form-check form-switch mb-0">
+
+                <input class="form-check-input" type="checkbox" id="userAdminSwitch" formControlName="IsAdminUser"
+                  (change)="onUserAdminUserChange()">
+
+                <label class="form-check-label fw-bold" for="userAdminSwitch">
+
+                  {{ userManageForm.get('IsAdminUser')?.value
+                  ? 'کاربر مدیر بخش است'
+                  : 'کاربر غیرفعال است' }}
+
+                </label>
+
+              </div>
 
             </div>
 
           </div>
+
 
           }
           @if (userManageForm.value.actionType === 'smsLogin') {

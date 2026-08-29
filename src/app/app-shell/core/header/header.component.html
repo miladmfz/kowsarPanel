@@ -158,12 +158,10 @@
       </li>
       }
 
+      <li class="dropdown notification-list topbar-dropdown kws-profile-root">
 
-      <!-- User Profile -->
-      <li class="dropdown notification-list topbar-dropdown">
-
-        <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light d-flex align-items-center"
-          data-bs-toggle="dropdown" href="#" role="button">
+        <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light d-flex align-items-center" href="#"
+          role="button" (click)="toggleProfileDropdown($event)" [attr.aria-expanded]="profileDropdownOpen()">
 
           @if (Imageitem() && Imageitem().startsWith('data:image')) {
           <img [src]="Imageitem()" alt="user-image" class="rounded-circle user-avatar" />
@@ -173,13 +171,17 @@
 
           <span class="pro-user-name ms-2 fw-semibold">
             {{ PhFullName() || 'کاربر سیستم' }}
-            <i class="mdi mdi-chevron-down ms-1 kws-chevron-icon"></i>
+
+            <i class="mdi kws-chevron-icon" [class.mdi-chevron-down]="!profileDropdownOpen()"
+              [class.mdi-chevron-up]="profileDropdownOpen()">
+            </i>
           </span>
 
         </a>
 
         <div
-          class="dropdown-menu dropdown-menu-end profile-dropdown kws-profile-dropdown shadow-lg border-0 rounded-4 overflow-hidden">
+          class="dropdown-menu dropdown-menu-end profile-dropdown kws-profile-dropdown shadow-lg border-0 rounded-4 overflow-hidden"
+          [class.show]="profileDropdownOpen()">
 
           <!-- Theme Switch -->
           <div class="theme-switch-wrapper px-3 py-3 d-flex align-items-center justify-content-between">
@@ -191,12 +193,9 @@
               </div>
 
               <div>
-
                 <div class="fw-semibold small">
                   {{ isDarkMode() ? 'حالت شب' : 'حالت روز' }}
                 </div>
-
-
               </div>
 
             </div>
@@ -213,7 +212,7 @@
 
           <div class="dropdown-divider my-0"></div>
 
-          <!-- Change Password -->
+
           @if (session.loginType === "CUSTOMER") {
 
           <button type="button" class="dropdown-item kws-profile-item" (click)="openChangePasswordModal()">
@@ -228,7 +227,6 @@
                 <div class="fw-medium">
                   تغییر رمز عبور
                 </div>
-
               </div>
 
             </div>
@@ -237,7 +235,7 @@
 
           }
 
-          <!-- Logout -->
+
           <button type="button" class="dropdown-item kws-profile-item kws-logout-item" (click)="logout()">
 
             <div class="d-flex align-items-center gap-3">
@@ -250,7 +248,6 @@
                 <div class="fw-medium text-danger">
                   خروج از حساب
                 </div>
-
               </div>
 
             </div>

@@ -580,8 +580,10 @@
 
               }
               @if (LoginType() === 'CUSTOMER') {
+              @if (Show_adminUser() ) {
               <li><a [routerLink]="['/accounting/forosh/personinfo-customer-list']">مدیریت مشترکین</a></li>
 
+              }
               }
               <li><a [routerLink]="['/automation/insert-letter']">ایجاد تیکت جدید</a></li>
 
@@ -648,8 +650,10 @@
             <ul class="nav-second-level">
 
               @if (LoginType() === 'CUSTOMER') {
+              @if (Show_adminUser() ) {
               <li><a [routerLink]="['/accounting/forosh/personinfo-customer-list']">مدیریت مشترکین</a></li>
 
+              }
               }
               <li><a [routerLink]="['/automation/insert-letter']">ایجاد تیکت جدید</a></li>
 

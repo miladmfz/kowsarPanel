@@ -91,6 +91,10 @@ export class PersonInfoWebApiService {
     const params = new HttpParams().append('PersonInfoCode', PersonInfoCode).append('AuthSMS', AuthSMS)
     return this.withLoading(this.client.get<any[]>(this.baseUrl + "SetPersonInfo_XUserAuthSms", { headers: this.headerService.headers, params: params }))
   }
+  SetPersonInfo_XUserAdminUser(PersonInfoCode: string, IsAdminUser: string): Observable<any[]> {
+    const params = new HttpParams().append('PersonInfoCode', PersonInfoCode).append('IsAdminUser', IsAdminUser)
+    return this.withLoading(this.client.get<any[]>(this.baseUrl + "SetPersonInfo_XUserAdminUser", { headers: this.headerService.headers, params: params }))
+  }
 
 
 

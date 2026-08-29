@@ -14,7 +14,7 @@
    =============================================================== */
 
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, AfterViewInit, OnDestroy, NgZone, inject, signal } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, NgZone, inject, signal, HostListener } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl, ValidationErrors, FormGroup } from '@angular/forms';
 import { NotificationService } from '../../framework-services/ui/notification.service';
@@ -67,8 +67,26 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   AlarmActive_Conversation = signal(0)
   AlarmActive_LeaveRequest = signal(0)
   AlarmActive_New = signal(0)
+  profileDropdownOpen = signal(false);
+  toggleProfileDropdown(event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.profileDropdownOpen.update(value => !value);
+  }
 
 
+  closeProfileDropdown(): void {
+    this.profileDropdownOpen.set(false);
+  }
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+
+    if (!target.closest('.kws-profile-root')) {
+      this.profileDropdownOpen.set(false);
+    }
+  }
   attendanceInterval!: ReturnType<typeof setInterval>;
 
   // ===============================================================
@@ -597,17 +615,16 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   // 🔐 Change Password Modal Methods
   // ===============================================================
   openChangePasswordModal(): void {
-    // اگر dropdown پروفایل باز باشد، ببند (برای UX بهتر)
-    this.closeAnyOpenDropdowns();
+
+    this.profileDropdownOpen.set(false);
 
     const el = document.getElementById('changePasswordModal');
     if (!el) return;
 
-    // ریست فرم هر بار باز شدن
     this.changePassForm.reset();
     this.changePassForm.markAsPristine();
     this.changePassForm.markAsUntouched();
-    this.isSavingChangePass.set(false)
+    this.isSavingChangePass.set(false);
 
     this.changePassModal = bootstrap.Modal.getOrCreateInstance(el, {
       backdrop: 'static',

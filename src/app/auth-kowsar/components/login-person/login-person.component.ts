@@ -362,6 +362,7 @@ export class LoginPersonComponent implements OnInit {
       PhFullName: user.PhFullName || '',
       SessionId: user.SessionId || '',
       ActiveDate: user.ActiveDate || '',
+      IsAdminUser: user.IsAdminUser || '',
       Message: user.Message || user.ErrDesc || '',
       ErrCode: user.ErrCode || '0'
     };

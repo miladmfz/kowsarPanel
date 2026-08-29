@@ -158,13 +158,6 @@ export class PersoninfoCustomerEditComponent extends AgGridBaseComponent impleme
 
     CustomerRef: new FormControl(null),
     CustomerName: new FormControl(""),
-
-    PhEmail: new FormControl(''),
-    PhGender: new FormControl(0),
-
-    JobPersonRef: new FormControl(null),
-    JobPersonName: new FormControl(""),
-    SumReward: new FormControl(0),
   });
 
   onSelectionChanged(event: any) {
@@ -298,14 +291,6 @@ export class PersoninfoCustomerEditComponent extends AgGridBaseComponent impleme
 
           CustomerRef: personInfo.CustomerRef ?? 0,
           CustomerName: personInfo.CustName_Small ?? 0,
-
-
-          PhEmail: personInfo.PhEmail ?? '',
-          PhGender: personInfo.PhGender ?? 0,
-
-          JobPersonRef: personInfo.JobPersonRef ?? 0,
-          JobPersonName: personInfo.JobPersonTitle ?? 0,
-
 
         });
 

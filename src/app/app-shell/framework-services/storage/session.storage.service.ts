@@ -37,6 +37,7 @@ export class SessionStorageService {
     setItem<T>(key: string, value: T): void {
         if (!this.hasWindow) return;
 
+        console.log(key + '=' + JSON.stringify(value))
         try {
             sessionStorage.setItem(key, JSON.stringify(value));
         } catch (err) {
@@ -166,6 +167,9 @@ export class SessionStorageService {
 
     get activeDate(): string {
         return this.getString('ActiveDate');
+    }
+    get IsAdminUser(): string {
+        return this.getString('IsAdminUser');
     }
 
     get currentUser(): any {

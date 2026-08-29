@@ -261,7 +261,7 @@ export class PersoninfoListComponent extends AgGridBaseComponent
       confirmPassword: [''],
 
       isActive: [true],
-
+      IsAdminUser: [true],
       smsLoginEnabled: [false],
       mobile: [''],
     },
@@ -288,6 +288,7 @@ export class PersoninfoListComponent extends AgGridBaseComponent
       confirmPassword: '',
 
       isActive: data?.Active === true || data?.Active === 'True' || data?.Active === 1,
+      IsAdminUser: data?.IsAdminUser === true || data?.IsAdminUser === 'True' || data?.IsAdminUser === 1,
       smsLoginEnabled: data?.AuthSms === true || data?.AuthSms === 'True' || data?.AuthSms === 1,
       mobile: data?.PhMobile1 ?? data?.Mobile ?? '',
     });
@@ -528,6 +529,30 @@ export class PersoninfoListComponent extends AgGridBaseComponent
 
   }
 
+  onUserAdminUserChange(): void {
+
+
+
+    const IsAdminUser = this.userManageForm.get('IsAdminUser')?.value ?? false;
+
+    const IsAdminUser_str = IsAdminUser ? "1" : "0";
+
+
+
+    this.repo.SetPersonInfo_XUserAdminUser(this.PersonInfoCode_selected(), IsAdminUser_str).subscribe({
+      next: (data: any) => {
+
+        this.notificationService.succeded();
+
+      },
+      error: () => {
+
+        this.notificationService.error('خطا در ارسال اطلاعات');
+
+      },
+    });
+
+  }
 
 
 }

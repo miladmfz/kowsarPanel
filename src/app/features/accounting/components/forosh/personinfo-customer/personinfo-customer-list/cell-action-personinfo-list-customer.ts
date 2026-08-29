@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
+import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
 declare var $: any;
 
 @Component({
   selector: 'edit-delete-cell-renderer',
   template: ` 
 
+   @if (Show_adminUser() ) {
   <span   (click)="NavigateToEdit()" class="btn btn-sm btn-outline-primary" data-toggle="tooltip" title="جزئیات">
   <a >
     <i class="fas fa-eye"></i>
@@ -22,6 +24,9 @@ declare var $: any;
   </a>
   </span>
 
+  }
+
+
 
   
 
@@ -31,6 +36,8 @@ declare var $: any;
 
 export class CellActionPersonInfoCustomerList implements ICellRendererAngularComp {
   params: any;
+  protected readonly session = inject(SessionStorageService);
+  Show_adminUser = signal(false)
 
   id: 0;
 
@@ -40,6 +47,12 @@ export class CellActionPersonInfoCustomerList implements ICellRendererAngularCom
 
   agInit(params: any): void {
     this.params = params;
+    const IsAdminUser = String(this.session.IsAdminUser ?? '0').trim();
+    if (IsAdminUser === '1' || IsAdminUser.toLowerCase() === 'true') {
+      this.Show_adminUser.set(true)
+    } else {
+      this.Show_adminUser.set(false)
+    }
 
     // if (params.data.FactorCode) {
     //     this.id = params.data.FactorCode;
