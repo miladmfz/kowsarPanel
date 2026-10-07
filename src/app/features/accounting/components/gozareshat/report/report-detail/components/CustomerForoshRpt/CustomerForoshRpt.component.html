@@ -3,7 +3,6 @@
     <h4 class="card-title mb-3">{{ title() }}</h4>
 
     <form [formGroup]="EditForm_SearchTarget" class="row mb-4 align-items-end">
-
       <!-- <div class="col-md-3">
         <label class="form-label">جستجو</label>
         <input type="text" class="form-control" formControlName="SearchTarget" placeholder="عبارت مورد نظر..."
@@ -20,41 +19,146 @@
 
       <div class="col-md-3">
         <label class="form-label">از تاریخ</label>
-        <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
-          <input type="text" class="form-control text-center" formControlName="FromDate" placeholder="انتخاب تاریخ"
-            autocomplete="off" />
+        <ng-persian-datepicker
+          [uiTheme]="customTheme"
+          [uiHideOnOutsideClick]="true"
+          [uiHideAfterSelectDate]="true"
+        >
+          <input
+            type="text"
+            class="form-control text-center"
+            formControlName="FromDate"
+            placeholder="انتخاب تاریخ"
+            autocomplete="off"
+          />
         </ng-persian-datepicker>
       </div>
 
       <div class="col-md-3">
         <label class="form-label">تا تاریخ</label>
-        <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
-          <input type="text" class="form-control text-center" formControlName="ToDate" placeholder="انتخاب تاریخ"
-            autocomplete="off" />
+        <ng-persian-datepicker
+          [uiTheme]="customTheme"
+          [uiHideOnOutsideClick]="true"
+          [uiHideAfterSelectDate]="true"
+        >
+          <input
+            type="text"
+            class="form-control text-center"
+            formControlName="ToDate"
+            placeholder="انتخاب تاریخ"
+            autocomplete="off"
+          />
         </ng-persian-datepicker>
       </div>
 
       <div class="col-12 d-flex justify-content-end mt-3 gap-2">
-        <button type="button" class="btn btn-primary" (click)="loadList()">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="loadList()"
+          [disabled]="loading()"
+        >
           <i class="fas fa-search me-1"></i> جستجو
         </button>
 
-
-        <button type="button" class="btn btn-light" (click)="loadList()">
+        <button
+          type="button"
+          class="btn btn-light"
+          (click)="loadList()"
+          [disabled]="loading()"
+        >
           <i class="fas fa-sync me-1"></i> بازخوانی
         </button>
 
-        <button type="button" class="btn btn-outline-secondary" (click)="clearFilter()">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="clearFilter()"
+        >
           <i class="fas fa-eye-slash me-1"></i> حذف جستجو
         </button>
       </div>
     </form>
 
-    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
-      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
-        [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions"
-        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
-        [class]="themeClass + ' w-100 h-100'"></ag-grid-angular>
+    <div class="d-flex justify-content-end mb-3">
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="toggleReportView()"
+        [disabled]="loading() || records().length === 0"
+      >
+        {{ showChart() ? "نمایش لیست" : "نمایش نمودار" }}
+      </button>
     </div>
+
+    @if (hasLoaded()) {
+      <div class="row g-2 mb-3">
+        <div class="col-6 col-lg">
+          <div class="border rounded p-2 text-center">
+            <small class="text-muted d-block">تعداد رکورد</small
+            ><strong>{{ formatNumber(totals().count) }}</strong>
+          </div>
+        </div>
+        <div class="col-6 col-lg">
+          <div class="border rounded p-2 text-center">
+            <small class="text-muted d-block">جمع تعداد</small
+            ><strong>{{ formatNumber(totals().amount) }}</strong>
+          </div>
+        </div>
+        <div class="col-6 col-lg">
+          <div class="border rounded p-2 text-center">
+            <small class="text-muted d-block">جمع خالص</small
+            ><strong>{{ formatNumber(totals().net) }}</strong>
+          </div>
+        </div>
+        <div class="col-6 col-lg">
+          <div class="border rounded p-2 text-center">
+            <small class="text-muted d-block">جمع ناخالص</small
+            ><strong>{{ formatNumber(totals().gross) }}</strong>
+          </div>
+        </div>
+        <div class="col-6 col-lg">
+          <div class="border rounded p-2 text-center">
+            <small class="text-muted d-block">جمع تخفیف</small
+            ><strong>{{ formatNumber(totals().discount) }}</strong>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <div class="alert alert-danger">{{ errorMessage() }}</div>
+    } @else if (hasLoaded() && records().length === 0) {
+      <div class="alert alert-info">
+        برای فیلترهای انتخاب‌شده رکوردی پیدا نشد.
+      </div>
+    }
+
+    @if (showChart()) {
+      <app-kowsar-chart-column
+        [title]="title()"
+        [series]="chartModel().series"
+        [categories]="chartModel().categories"
+        [height]="520"
+      ></app-kowsar-chart-column>
+    } @else {
+      <div
+        class="ag-container rounded-3 border shadow-sm overflow-hidden"
+        style="height: 600px"
+      >
+        <ag-grid-angular
+          [enableBrowserTooltips]="true"
+          [tooltipShowDelay]="200"
+          [tooltipHideDelay]="800"
+          [columnDefs]="column_name_1"
+          [rowData]="records()"
+          [gridOptions]="gridOptions"
+          (gridReady)="onGridReady($event, 1)"
+          (sortChanged)="syncChartOrder()"
+          (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+          [class]="themeClass + ' w-100 h-100'"
+        ></ag-grid-angular>
+      </div>
+    }
   </div>
 </div>

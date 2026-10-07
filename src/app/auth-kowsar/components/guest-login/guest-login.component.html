@@ -1,0 +1,136 @@
+<main class="kws-login-page d-flex align-items-center justify-content-center position-relative overflow-hidden" dir="rtl">
+  <div class="kws-page-glow kws-page-glow-top"></div>
+  <div class="kws-page-glow kws-page-glow-bottom"></div>
+
+  <section class="card border-0 overflow-hidden position-relative kws-login-card" aria-labelledby="guest-login-title">
+    <div class="kws-top-gradient"></div>
+
+    <div class="card-body p-4 p-lg-5">
+      <div class="text-center mb-4 position-relative">
+        <button type="button" class="guest-back-button" (click)="backToCustomerLogin()">
+          <i class="mdi mdi-arrow-right" aria-hidden="true"></i>
+          <span>ورود کاربران</span>
+        </button>
+
+        <div class="d-inline-flex align-items-center justify-content-center rounded-circle position-relative mb-3 kws-logo-circle">
+          <div class="position-absolute rounded-circle kws-logo-ring"></div>
+          <img
+            src="assets/images/img_logo_kits_png.png"
+            alt="لوگوی کوثر"
+            height="78"
+            class="position-relative z-2"
+          />
+        </div>
+
+        <h1 id="guest-login-title" class="fw-bold mb-2 kws-login-title">ورود مهمان</h1>
+        <p class="mb-0 kws-login-subtitle">
+          با شماره همراه وارد شوید و درخواست پشتیبانی خود را ثبت کنید
+        </p>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="alert alert-danger guest-alert" role="alert" aria-live="assertive">
+          <i class="mdi mdi-alert-circle-outline" aria-hidden="true"></i>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+
+      @if (step() === 'mobile') {
+        <form [formGroup]="mobileForm" (ngSubmit)="requestCode()" autocomplete="on" novalidate>
+          <div class="form-floating mb-3 position-relative">
+            <input
+              id="guest-mobile"
+              type="tel"
+              class="form-control kws-input guest-mobile-input"
+              formControlName="mobile"
+              inputmode="numeric"
+              autocomplete="tel"
+              maxlength="11"
+              placeholder=" "
+              [class.is-invalid]="mobileForm.controls.mobile.invalid && mobileForm.controls.mobile.touched"
+            />
+            <label for="guest-mobile" class="kws-floating-label">شماره همراه</label>
+          </div>
+
+          @if (mobileForm.controls.mobile.invalid && mobileForm.controls.mobile.touched) {
+            <div class="invalid-feedback d-block mb-3" role="alert">
+              شماره همراه را به‌صورت ۱۱ رقمی و با 09 وارد کنید.
+            </div>
+          }
+
+          <div class="d-grid">
+            <button type="submit" class="position-relative overflow-hidden border-0 kws-login-btn" [disabled]="loading()">
+              <span class="kws-login-shine"></span>
+              <span class="position-relative z-2 d-flex align-items-center justify-content-center">
+                @if (loading()) {
+                  <i class="fa fa-spinner fa-spin me-2" aria-hidden="true"></i>
+                  در حال ارسال...
+                } @else {
+                  <i class="mdi mdi-cellphone-message me-2" aria-hidden="true"></i>
+                  دریافت کد تأیید
+                }
+              </span>
+            </button>
+          </div>
+
+          @if (isDevelopment) {
+            <div class="development-hint" role="note">
+              <i class="mdi mdi-code-tags" aria-hidden="true"></i>
+              در محیط Development پیامک واقعی ارسال نمی‌شود و کد تنظیم‌شده در Backend به‌صورت خودکار وارد می‌شود.
+            </div>
+          }
+        </form>
+      } @else {
+        <form [formGroup]="codeForm" (ngSubmit)="verifyCode()" autocomplete="off" novalidate>
+          <div class="guest-step-status" role="status" aria-live="polite">
+            <span class="guest-step-icon"><i class="mdi mdi-message-check-outline" aria-hidden="true"></i></span>
+            <div>
+              <strong>کد تأیید را وارد کنید</strong>
+              <span>برای شماره {{ mobileForm.controls.mobile.value }}</span>
+            </div>
+          </div>
+
+          <div class="form-floating mb-3 position-relative">
+            <input
+              #codeInput
+              id="guest-code"
+              type="text"
+              class="form-control kws-input text-center guest-code-input"
+              formControlName="code"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              maxlength="8"
+              placeholder=" "
+              [class.is-invalid]="codeForm.controls.code.invalid && codeForm.controls.code.touched"
+            />
+            <label for="guest-code" class="kws-floating-label">کد تأیید</label>
+          </div>
+
+          @if (codeForm.controls.code.invalid && codeForm.controls.code.touched) {
+            <div class="invalid-feedback d-block mb-3" role="alert">کد تأیید ۴ تا ۸ رقمی را وارد کنید.</div>
+          }
+
+          <div class="d-grid">
+            <button type="submit" class="position-relative overflow-hidden border-0 kws-login-btn" [disabled]="loading()">
+              <span class="kws-login-shine"></span>
+              <span class="position-relative z-2 d-flex align-items-center justify-content-center">
+                @if (loading()) {
+                  <i class="fa fa-spinner fa-spin me-2" aria-hidden="true"></i>
+                  در حال بررسی...
+                } @else {
+                  <i class="fa fa-check me-2" aria-hidden="true"></i>
+                  تأیید و ورود
+                }
+              </span>
+            </button>
+          </div>
+
+          <button class="guest-edit-mobile" type="button" (click)="editMobile()" [disabled]="loading()">
+            <i class="mdi mdi-pencil-outline" aria-hidden="true"></i>
+            اصلاح شماره همراه
+          </button>
+        </form>
+      }
+    </div>
+  </section>
+</main>

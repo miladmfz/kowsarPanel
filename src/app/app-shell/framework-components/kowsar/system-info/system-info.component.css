@@ -599,3 +599,83 @@
         max-width: 100%;
     }
 }
+
+/* Dark-theme contract for the component's custom, non-Bootstrap surfaces. */
+:host-context(html[data-bs-theme='dark']) .metric-card,
+:host-context(html[data-bs-theme='dark']) .section-card {
+    color: var(--kws-dark-text, #f1f5f9);
+    background: var(--kws-dark-surface, #252e40);
+    border-color: var(--kws-dark-border, rgba(226, 232, 240, .18));
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .26);
+}
+
+:host-context(html[data-bs-theme='dark']) .section-title {
+    border-color: var(--kws-dark-border, rgba(226, 232, 240, .18));
+}
+
+:host-context(html[data-bs-theme='dark']) .metric-card strong,
+:host-context(html[data-bs-theme='dark']) .section-title h3,
+:host-context(html[data-bs-theme='dark']) .architecture-root strong,
+:host-context(html[data-bs-theme='dark']) .architecture-box h4,
+:host-context(html[data-bs-theme='dark']) .feature-card h4,
+:host-context(html[data-bs-theme='dark']) .service-card h4,
+:host-context(html[data-bs-theme='dark']) .route-card h4,
+:host-context(html[data-bs-theme='dark']) .build-card strong,
+:host-context(html[data-bs-theme='dark']) .dependency-chip strong,
+:host-context(html[data-bs-theme='dark']) .tool-card strong {
+    color: var(--kws-dark-text, #f1f5f9);
+}
+
+:host-context(html[data-bs-theme='dark']) .metric-card span,
+:host-context(html[data-bs-theme='dark']) .section-title p,
+:host-context(html[data-bs-theme='dark']) .architecture-root span,
+:host-context(html[data-bs-theme='dark']) .architecture-box p,
+:host-context(html[data-bs-theme='dark']) .feature-card p,
+:host-context(html[data-bs-theme='dark']) .service-card p,
+:host-context(html[data-bs-theme='dark']) .technical-item span,
+:host-context(html[data-bs-theme='dark']) .config-line span,
+:host-context(html[data-bs-theme='dark']) .route-card p,
+:host-context(html[data-bs-theme='dark']) .build-card span,
+:host-context(html[data-bs-theme='dark']) .file-item span,
+:host-context(html[data-bs-theme='dark']) .dependency-chip span,
+:host-context(html[data-bs-theme='dark']) .notes-section li,
+:host-context(html[data-bs-theme='dark']) .tool-card span {
+    color: var(--kws-dark-muted, #c2ccda);
+}
+
+:host-context(html[data-bs-theme='dark']) .architecture-section {
+    background:
+        linear-gradient(var(--kws-dark-surface, #252e40), var(--kws-dark-surface, #252e40)) padding-box,
+        linear-gradient(135deg, #3b82f6, #8b5cf6) border-box;
+}
+
+:host-context(html[data-bs-theme='dark']) .architecture-root,
+:host-context(html[data-bs-theme='dark']) .architecture-box,
+:host-context(html[data-bs-theme='dark']) .feature-card,
+:host-context(html[data-bs-theme='dark']) .technical-item,
+:host-context(html[data-bs-theme='dark']) .config-line,
+:host-context(html[data-bs-theme='dark']) .route-card,
+:host-context(html[data-bs-theme='dark']) .build-card,
+:host-context(html[data-bs-theme='dark']) .file-item,
+:host-context(html[data-bs-theme='dark']) .service-card,
+:host-context(html[data-bs-theme='dark']) .tool-card,
+:host-context(html[data-bs-theme='dark']) .dependency-chip {
+    background: var(--kws-dark-surface-raised, #303b51);
+    border-color: var(--kws-dark-border, rgba(226, 232, 240, .18));
+}
+
+:host-context(html[data-bs-theme='dark']) .architecture-line {
+    background: rgba(148, 163, 184, .5);
+}
+
+:host-context(html[data-bs-theme='dark']) .section-chip,
+:host-context(html[data-bs-theme='dark']) .technical-item code,
+:host-context(html[data-bs-theme='dark']) .config-line code,
+:host-context(html[data-bs-theme='dark']) .route-card code {
+    color: #bfdbfe;
+    background: rgba(59, 130, 246, .18);
+}
+
+:host-context(html[data-bs-theme='dark']) .tool-card:hover {
+    background: #37445c;
+}

@@ -215,6 +215,40 @@ export class AttendanceCallReportComponent
       filter: 'agSetColumnFilter',
     },
     {
+      field: 'route_display',
+      headerName: 'مسیر تماس',
+      minWidth: 155,
+      filter: 'agSetColumnFilter',
+      cellRenderer: (params: any) => {
+        const value = this.escapeHtml(params?.value || '-');
+        const routeType = this.cleanText(params?.data?.route_type).toUpperCase();
+
+        let cssClass = 'is-direct';
+        let icon = 'fa-phone-alt';
+
+        switch (routeType) {
+          case 'RINGGROUP':
+            cssClass = 'is-ringgroup';
+            icon = 'fa-users';
+            break;
+          case 'FORWARD':
+            cssClass = 'is-forward';
+            icon = 'fa-share';
+            break;
+          case 'TRANSFER':
+            cssClass = 'is-transfer';
+            icon = 'fa-random';
+            break;
+          case 'IVR':
+            cssClass = 'is-ivr';
+            icon = 'fa-stream';
+            break;
+        }
+
+        return `<span class="attendance-call-route ${cssClass}"><i class="fas ${icon}"></i>${value}</span>`;
+      },
+    },
+    {
       field: 'peer_display',
       headerName: 'طرف مقابل',
       minWidth: 190,
@@ -1107,6 +1141,7 @@ export class AttendanceCallReportComponent
       call_type_display: this.callTypeTitle(
         this.cleanText(row?.call_type_fa || row?.call_type)
       ),
+      route_display: this.callRouteTitle(row),
       peer_display: peer || '-',
       disposition_display: this.dispositionTitle(
         this.cleanText(row?.disposition_fa || row?.disposition)
@@ -1143,6 +1178,50 @@ export class AttendanceCallReportComponent
       case 'TRANSFER': return 'انتقالی';
       default: return value || 'سایر';
     }
+  }
+
+  private callRouteTitle(row: any): string {
+    const explicit = this.cleanText(row?.route_display);
+    if (explicit) {
+      return explicit;
+    }
+
+    const routeType = this.cleanText(row?.route_type).toUpperCase();
+    const routeFrom = this.cleanText(
+      row?.route_from || row?.forwarded_from || row?.transferred_from
+    );
+    const ringGroupNumber = this.cleanText(row?.ringgroup_number);
+    const ringGroupName = this.cleanText(row?.ringgroup_name);
+
+    switch (routeType) {
+      case 'RINGGROUP':
+        return ringGroupName || (ringGroupNumber ? `گروه ${ringGroupNumber}` : 'گروه زنگ');
+      case 'FORWARD':
+        return routeFrom ? `فوروارد از ${routeFrom}` : 'فوروارد';
+      case 'TRANSFER':
+        return routeFrom ? `انتقال مکالمه از ${routeFrom}` : 'انتقال مکالمه';
+      case 'IVR':
+        return 'منوی صوتی';
+      case 'DIRECT': {
+        const callType = this.cleanText(row?.call_type).toUpperCase();
+        if (callType === 'INTERNAL') return 'داخلی مستقیم';
+        if (callType === 'INCOMING') return 'ورودی مستقیم';
+        if (callType === 'OUTGOING') return 'خروجی مستقیم';
+        return 'مستقیم';
+      }
+    }
+
+    // سازگاری با Backend قبلی تا زمان جایگزینی کامل فایل Class
+    if (this.toNumber(row?.is_ringgroup) === 1) {
+      return ringGroupName || (ringGroupNumber ? `گروه ${ringGroupNumber}` : 'گروه زنگ');
+    }
+
+    const callType = this.cleanText(row?.call_type).toUpperCase();
+    if (callType === 'INTERNAL') return 'داخلی مستقیم';
+    if (callType === 'INCOMING') return 'ورودی مستقیم';
+    if (callType === 'OUTGOING') return 'خروجی مستقیم';
+
+    return '-';
   }
 
   private detailDispositionClass(value: any): string {

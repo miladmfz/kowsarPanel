@@ -30,9 +30,9 @@
           <img src="assets/images/img_logo_kits_png.png" alt="لوگو" height="78" class="position-relative z-2" />
         </div>
 
-        <div class="fw-bold mb-2 kws-login-title">
+        <h1 class="fw-bold mb-2 kws-login-title">
           نرم افزار حسابداری
-        </div>
+        </h1>
 
         <p class="mb-0 kws-login-subtitle">
           لطفاً نام کاربری و رمز عبور خود را وارد کنید
@@ -131,9 +131,11 @@
             رمز عبور
           </label>
 
-          <span class="kws-password-eye" (click)="togglePassword()">
-            <i [class]="showPassword() ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
-          </span>
+          <button type="button" class="kws-password-eye" (click)="togglePassword()"
+            [attr.aria-label]="showPassword() ? 'پنهان کردن رمز عبور' : 'نمایش رمز عبور'"
+            [attr.aria-pressed]="showPassword()">
+            <i [class]="showPassword() ? 'fa fa-eye-slash' : 'fa fa-eye'" aria-hidden="true"></i>
+          </button>
 
         </div>
 

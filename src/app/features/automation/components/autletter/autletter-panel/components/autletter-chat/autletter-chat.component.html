@@ -1,137 +1,372 @@
-<div class="card kws-chat-card border-0 shadow-sm rounded-4 overflow-hidden">
+<div class="card kws-chat-card border-0 shadow-sm rounded-4 overflow-hidden" (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
 
-  <!-- HEADER -->
   <div class="kws-chat-header">
-
-    <div class="d-flex align-items-center justify-content-between">
-
-      <!-- Left side (title) -->
+    <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
       <div class="d-flex align-items-center gap-3">
-
         <div class="kws-chat-header-icon">
           <i class="mdi mdi-message-processing-outline"></i>
         </div>
 
         <div>
           <h5 class="mb-1 fw-bold">گفتگوهای تیکت</h5>
-          <div class="small text-muted">مشاهده و ارسال پیام‌ها</div>
-        </div>
+          <div class="small text-muted d-flex align-items-center gap-2">
+            <span class="kws-connection-dot" [class.online]="connectionState() === 'online'"
+              [class.connecting]="connectionState() === 'connecting'"></span>
+            @if (connectionState() === 'online') { آنلاین }
+            @else if (connectionState() === 'connecting') { در حال اتصال... }
+            @else { آفلاین }
+          </div>
 
+          @if (onlineUsers().length) {
+          <div class="kws-online-users mt-2">
+            @for (u of onlineUsers(); track u.CentralRef + ':' + u.UserRef) {
+            <span class="kws-online-user" [title]="u.ConnectionCount > 1 ? (u.ConnectionCount + ' اتصال') : 'آنلاین'">
+              <i class="mdi mdi-circle kws-online-mini-dot"></i>
+              {{ u.DisplayName }}
+            </span>
+            }
+          </div>
+          }
+        </div>
       </div>
 
-      <!-- Right side (refresh button) -->
-      <button class="btn btn-light btn-sm refresh-btn" (click)="refreshChat()">
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <input class="form-control form-control-sm kws-search" type="search" placeholder="جستجو در گفتگو..."
+          [value]="searchText()" (input)="searchText.set($any($event.target).value)" />
 
-        <i class="mdi mdi-refresh me-1"></i>
-        بروزرسانی
 
-      </button>
-
+      </div>
     </div>
-
   </div>
 
-  <!-- BODY -->
+  @if (isDragging()) {
+  <div class="kws-drop-overlay">
+    <i class="mdi mdi-cloud-upload-outline"></i>
+    <div>فایل را اینجا رها کنید</div>
+  </div>
+  }
+
   <div #chatContainer class="kws-chat-body">
-
-    @for (msg of msgs(); track msg.Id; let i = $index) {
-
-    <div class="kws-chat-row" [class.kws-chat-row-mine]="msg.IsMine">
-
-      <!-- name -->
-      @if (!msg.IsMine) {
-      <div class="kws-chat-user">
-        {{ msg.Name }}
-      </div>
-      }
-
-      <!-- text -->
-      @if (msg.ClassName === 'Text') {
-
-      <div class="kws-message-box" [class.kws-message-mine]="msg.IsMine" [class.kws-message-other]="!msg.IsMine">
-
-        {{ msg.ConversationText }}
-
-      </div>
-
-      }
-
-      <!-- file -->
-      @if (msg.ClassName === 'File') {
-
-      <button class="btn kws-file-btn" [class.kws-message-mine]="msg.IsMine" [class.kws-message-other]="!msg.IsMine"
-        (click)="GetFileFromAttach(i, 'other')">
-
-        <i class="mdi mdi-paperclip"></i>
-
-        <span>
-          نمایش فایل
-        </span>
-
-      </button>
-
-      }
-
-      <!-- date -->
-      <div class="kws-chat-date">
-
-        {{ msg.CreationDate }}
-
-      </div>
-
+    @if (loading() && msgs().length === 0) {
+    <div class="kws-chat-loading" role="status" aria-live="polite">
+      <span class="kws-chat-loading-spinner" aria-hidden="true"></span>
+      <strong>در حال دریافت گفتگو</strong>
+      <span>پیام‌ها تا چند لحظه دیگر نمایش داده می‌شوند.</span>
     </div>
-
     }
 
+    @for (msg of visibleMsgs(); track msg.ConversationCode) {
+    <div class="kws-chat-row" [class.kws-chat-row-mine]="msg.IsMine" [id]="'chat-msg-' + msg.ConversationCode">
+      <div class="kws-message-wrap">
+        @if (!msg.IsMine) {
+        <div class="kws-chat-user">{{ msg.Name }}</div>
+        }
+
+        @if (msg.ReplyToConversationRef) {
+        <button type="button" class="kws-reply-quote" (click)="scrollToMessage(msg.ReplyToConversationRef)">
+          <strong>{{ msg.ReplyName || 'پیام قبلی' }}</strong>
+          <span>{{ msg.ReplyText }}</span>
+        </button>
+        }
+
+        @if (msg.IsDeleted) {
+        <div class="kws-message-box kws-message-deleted" [class.kws-message-mine]="msg.IsMine"
+          [class.kws-message-other]="!msg.IsMine">
+          <i class="mdi mdi-delete-outline"></i>
+          این پیام حذف شده است
+        </div>
+        }
+        @else if (msg.ClassName === 'File') {
+          @if (hasInlineImagePreview(msg)) {
+          <button class="btn kws-image-file-btn" [class.kws-message-mine]="msg.IsMine" [class.kws-message-other]="!msg.IsMine"
+            (click)="openFile(msg)">
+            <img class="kws-inline-image-thumb" [src]="getInlineImageUrl(msg)" [alt]="getFileDisplayName(msg)" />
+            <span class="kws-inline-image-caption">{{ getFileDisplayName(msg) }}</span>
+          </button>
+          } @else if (hasInlineAudioPreview(msg)) {
+          <div class="kws-voice-message" [class.kws-message-mine]="msg.IsMine" [class.kws-message-other]="!msg.IsMine">
+            <audio #audioPlayer [src]="getInlineAudioUrl(msg)" preload="metadata"
+              (loadedmetadata)="onAudioLoaded(msg, audioPlayer)"
+              (timeupdate)="onAudioTimeUpdate(msg, audioPlayer)"
+              (ended)="onAudioEnded(msg)"></audio>
+
+            <button type="button" class="kws-voice-play" (click)="toggleInlineAudio(msg, audioPlayer)"
+              [title]="getAudioState(msg).playing ? 'توقف' : 'پخش'">
+              <i class="mdi" [class.mdi-pause]="getAudioState(msg).playing"
+                [class.mdi-play]="!getAudioState(msg).playing"></i>
+            </button>
+
+            <div class="kws-voice-content">
+              <div class="kws-voice-title">
+                <i class="mdi mdi-microphone"></i>
+                <span>پیام صوتی</span>
+              </div>
+
+              <input class="kws-voice-progress" type="range" min="0"
+                [max]="getAudioState(msg).duration || 0"
+                [value]="getAudioState(msg).currentTime"
+                (input)="seekInlineAudio(msg, audioPlayer, $any($event.target).value)" />
+
+              <div class="kws-voice-time">
+                <span>{{ formatAudioTime(getAudioState(msg).currentTime) }}</span>
+                <span>{{ formatAudioTime(getAudioState(msg).duration) }}</span>
+              </div>
+            </div>
+          </div>
+          } @else {
+          <button class="btn kws-file-btn" [class.kws-message-mine]="msg.IsMine" [class.kws-message-other]="!msg.IsMine"
+            (click)="openFile(msg)">
+            <i class="mdi mdi-paperclip"></i>
+            <span>{{ getFileDisplayName(msg) }}</span>
+          </button>
+          }
+        }
+        @else {
+        <div class="kws-message-box" [class.kws-message-mine]="msg.IsMine" [class.kws-message-other]="!msg.IsMine">
+          <div class="kws-message-text">{{ msg.ConversationText }}</div>
+        </div>
+        }
+
+        <div class="kws-message-meta">
+          <span>{{ formatMessageDate(msg.CreationDate) }}</span>
+          @if (msg.IsEdited && !msg.IsDeleted) {
+          <span>ویرایش شده</span>
+          }
+          @if (msg.IsMine && !msg.IsDeleted) {
+          <button type="button" class="kws-seen kws-seen-btn" [class.seen]="msg.SeenByOthers"
+            (click)="toggleSeenDetails(msg)" title="مشاهده افرادی که پیام را دیده‌اند">
+            <i class="mdi" [class.mdi-check-all]="msg.SeenByOthers" [class.mdi-check]="!msg.SeenByOthers"></i>
+            @if (msg.SeenCount > 0) { <span>{{ msg.SeenCount }}</span> }
+          </button>
+          }
+        </div>
+
+        @if (seenDetailsMessage()?.ConversationCode === msg.ConversationCode) {
+        <div class="kws-seen-details">
+          @if (msg.SeenBy.length === 0) {
+          <span>هنوز توسط شخص دیگری دیده نشده.</span>
+          } @else {
+          <strong>دیده شده توسط:</strong>
+          @for (viewer of msg.SeenBy; track viewer.CentralRef + ':' + viewer.UserRef) {
+          <div class="kws-seen-person">
+            <span>{{ viewer.DisplayName }}</span>
+            <small>{{ viewer.LastSeenDate }}</small>
+          </div>
+          }
+          }
+        </div>
+        }
+
+        @if (!msg.IsDeleted) {
+        <div class="kws-message-actions">
+          <button type="button" class="btn btn-link btn-sm p-0" (click)="setReply(msg)" title="پاسخ">
+            <i class="mdi mdi-reply-outline"></i>
+          </button>
+
+          @if (msg.IsMine && msg.ClassName === 'Text') {
+          <button type="button" class="btn btn-link btn-sm p-0" (click)="startEdit(msg)" title="ویرایش">
+            <i class="mdi mdi-pencil-outline"></i>
+          </button>
+          }
+
+          @if (msg.IsMine) {
+          <button type="button" class="btn btn-link btn-sm p-0 text-danger" (click)="deleteMessage(msg)" title="حذف">
+            <i class="mdi mdi-delete-outline"></i>
+          </button>
+          }
+        </div>
+        }
+
+        @if (ShowInsertRow() && (msg.IsEdited || msg.IsDeleted)) {
+        <button type="button" class="btn btn-link btn-sm p-0 kws-audit-link" (click)="openAudit(msg)">
+          <i class="mdi mdi-history"></i>
+          سوابق تغییر
+        </button>
+        }
+      </div>
+    </div>
+    }
+
+    @if (typingText()) {
+    <div class="kws-typing">
+      <span class="kws-typing-dots"><i></i><i></i><i></i></span>
+      {{ typingText() }}
+    </div>
+    }
   </div>
 
-  <!-- INPUT -->
-  @if(canInsertMessage()) {
-
+  @if (canInsertMessage()) {
   <div class="kws-chat-input-area" [formGroup]="MessageForm">
 
-    <div class="kws-chat-input-row">
+    @if (replyTo()) {
+    <div class="kws-compose-context">
+      <div>
+        <strong>پاسخ به {{ replyTo()?.Name || 'پیام' }}</strong>
+        <div>{{ replyTo()?.ConversationText }}</div>
+      </div>
+      <button type="button" class="btn btn-sm btn-light" (click)="cancelReply()">
+        <i class="mdi mdi-close"></i>
+      </button>
+    </div>
+    }
 
-      <!-- Upload -->
-      <div class="kws-upload-action" title="آپلود فایل">
-        <app-autletter-file-upload (fileReady)="onFileReadyForUpload($event)">
-        </app-autletter-file-upload>
+    @if (editingMessage()) {
+    <div class="kws-compose-context kws-compose-edit">
+      <div class="w-100">
+        <strong>ویرایش پیام</strong>
+        <textarea class="kws-edit-textarea"
+          [value]="MessageForm.controls.Description.value"
+          (input)="MessageForm.controls.Description.setValue($any($event.target).value)"></textarea>
+      </div>
+      <button type="button" class="btn btn-sm btn-light" (click)="cancelEdit()">
+        <i class="mdi mdi-close"></i>
+      </button>
+    </div>
+    }
 
-        <span class="kws-upload-text">
-          آپلود فایل
-        </span>
+    @if (pendingVoice(); as voice) {
+    <div class="kws-voice-compose-preview">
+      <div class="kws-voice-compose-info">
+        <div class="kws-voice-compose-icon"><i class="mdi mdi-microphone"></i></div>
+        <div class="flex-grow-1">
+          <strong>پیش‌نمایش پیام صوتی</strong>
+          <audio class="kws-voice-compose-audio" [src]="voice.url" controls preload="metadata"></audio>
+        </div>
       </div>
 
-      <!-- Message -->
-      <input type="text" class="form-control kws-chat-input" formControlName="Description" placeholder="متن پیام..."
-        (keydown.enter)="onEnterPress($event)" />
+      <div class="kws-voice-compose-actions">
+        <button type="button" class="btn btn-outline-danger" (click)="cancelPendingVoice()">
+          <i class="mdi mdi-delete-outline"></i>
+          حذف
+        </button>
+        <button type="button" class="btn btn-primary" (click)="sendPendingVoice()">
+          <i class="mdi mdi-send"></i>
+          ارسال
+        </button>
+      </div>
+    </div>
+    }
+    @else if (isRecording()) {
+    <div class="kws-recording-bar">
+      <span class="kws-recording-dot"></span>
+      <strong>در حال ضبط {{ recordingSeconds() }} ثانیه</strong>
 
-      <!-- Send -->
-      <button class="btn kws-send-btn" type="button" title="ارسال پیام" (click)="SendMessage()">
+      <div class="ms-auto d-flex gap-2">
+        <button type="button" class="btn btn-sm btn-outline-danger" (click)="cancelRecording()">
+          لغو
+        </button>
+        <button type="button" class="btn btn-sm btn-success" (click)="stopRecording()">
+          ارسال ویس
+        </button>
+      </div>
+    </div>
+    }
+    @else {
+    <div class="kws-chat-input-row">
+      <div class="kws-upload-action" title="آپلود فایل">
+        <app-autletter-file-upload (fileReady)="onFileReadyForUpload($event)"></app-autletter-file-upload>
+      </div>
 
-        <i class="mdi mdi-send"></i>
-
+      <button type="button" class="btn btn-light kws-voice-btn" title="ضبط ویس" (click)="startRecording()">
+        <i class="mdi mdi-microphone-outline"></i>
       </button>
 
+      <textarea class="form-control kws-chat-input" rows="1" formControlName="Description"
+        placeholder="متن پیام... (Shift+Enter برای خط جدید)" (input)="onMessageInput()" (paste)="onPaste($event)"
+        (keydown.enter)="onEnterPress($event)"></textarea>
+
+      <button class="btn kws-send-btn" type="button" title="ارسال پیام" (click)="SendMessage()">
+        <i class="mdi mdi-send"></i>
+      </button>
     </div>
-
+    }
   </div>
-
   }
   @else {
-
   <div class="kws-chat-closed">
+    <div class="mb-2"><i class="fas fa-check-circle"></i></div>
+    <h5>وضعیت این تیکت: «تمام شده»</h5>
+    <p>امکان ثبت پیام جدید وجود ندارد.</p>
+  </div>
+  }
+</div>
 
-    <div class="mb-2">
-      <i class="fas fa-check-circle"></i>
+@if (auditMessage(); as am) {
+<div class="kws-preview-backdrop" (click)="closeAudit()">
+  <div class="kws-audit-panel" (click)="$event.stopPropagation()">
+    <div class="kws-preview-header">
+      <strong>سوابق پیام #{{ am.ConversationCode }}</strong>
+      <button type="button" class="btn btn-sm btn-light" (click)="closeAudit()">
+        <i class="mdi mdi-close"></i>
+      </button>
     </div>
 
-    <h5> وضعیت این تیکت: «تمام شده» </h5>
+    <div class="kws-audit-body">
+      @if (auditLoading()) {
+      <div class="text-muted text-center py-4">در حال دریافت سوابق...</div>
+      } @else if (auditItems().length === 0) {
+      <div class="text-muted text-center py-4">سابقه‌ای ثبت نشده است.</div>
+      } @else {
+      @for (item of auditItems(); track item.AuditCode) {
+      <div class="kws-audit-item">
+        <div class="d-flex justify-content-between gap-3 flex-wrap">
+          <strong>{{ item.ActionType === 'DELETE' ? 'حذف پیام' : 'ویرایش پیام' }}</strong>
+          <small>{{ item.ActionDate }}</small>
+        </div>
+        <div class="small text-muted mt-1">توسط {{ item.ActorName }}</div>
 
-    <p> امکان ثبت پیام جدید وجود ندارد. </p>
+        <div class="kws-audit-label">متن قبل</div>
+        <div class="kws-audit-text">{{ item.OldConversationText || '—' }}</div>
 
+        @if (item.ActionType === 'EDIT') {
+        <div class="kws-audit-label">متن بعد</div>
+        <div class="kws-audit-text">{{ item.NewConversationText || '—' }}</div>
+        }
+      </div>
+      }
+      }
+    </div>
   </div>
-
-  }
-
 </div>
+}
+
+@if (preview(); as p) {
+<div class="kws-preview-backdrop" (click)="closePreview()">
+  <div class="kws-preview-panel" (click)="$event.stopPropagation()">
+    <div class="kws-preview-header">
+      <strong>{{ p.fileName }}</strong>
+      <div class="d-flex gap-2">
+        <button type="button" class="btn btn-sm btn-light" (click)="downloadPreview()">
+          <i class="mdi mdi-download"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-light" (click)="closePreview()">
+          <i class="mdi mdi-close"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="kws-preview-body">
+      @if (p.kind === 'image') {
+      <img [src]="p.url" [alt]="p.fileName" />
+      }
+      @else if (p.kind === 'audio') {
+      <audio [src]="p.url" controls autoplay></audio>
+      }
+      @else if (p.kind === 'video') {
+      <video [src]="p.url" controls autoplay></video>
+      }
+      @else if (p.kind === 'pdf') {
+      <iframe [src]="p.safeUrl" title="PDF preview"></iframe>
+      }
+      @else {
+      <div class="text-center py-5">
+        <i class="mdi mdi-file-outline display-4"></i>
+        <div class="mt-3">برای این نوع فایل پیش‌نمایش داخلی نداریم.</div>
+        <button type="button" class="btn btn-primary mt-3" (click)="downloadPreview()">دانلود فایل</button>
+      </div>
+      }
+    </div>
+  </div>
+</div>
+}

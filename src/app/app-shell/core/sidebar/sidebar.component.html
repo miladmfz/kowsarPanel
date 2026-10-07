@@ -156,6 +156,15 @@
           </a>
         </li>
 
+        @if (LoginType() === 'KOWSAR' && (permissionService.isAdmin || permissionService.hasPermission('Collaboration.View') || permissionService.hasPermission('Collaboration.Admin'))) {
+        <li>
+          <a [routerLink]="['/collaboration']" routerLinkActive="active" class="waves-effect">
+            <i class="ri-discuss-line"></i>
+            <span>همکاری سازمانی</span>
+          </a>
+        </li>
+        }
+
         <!-- 💰 فروش (فقط برای مشتریان) -->
         @if (IsCustomerBuild()) {
 
@@ -467,6 +476,12 @@
           </a>
           <div class="collapse" id="report" data-bs-parent="#side-menu">
             <ul class="nav-second-level">
+              @if (permissionService.canViewBiDashboard) {
+              <li><a [routerLink]="['/accounting/gozareshat/bi']">داشبورد مدیریتی</a></li>
+              }
+              @if (permissionService.canManageBiCatalog) {
+              <li><a [routerLink]="['/accounting/gozareshat/bi/catalog']">مدیریت کاتالوگ BI</a></li>
+              }
               <li><a [routerLink]="['/accounting/gozareshat/report-list']">لیست گزارشات</a></li>
 
 
@@ -500,6 +515,7 @@
               <li><a [routerLink]="['/rbac/permission']">دسترسی ها</a></li>
               <!-- <li><a [routerLink]="['/rbac/role-permission']">دسترسی نقش ها</a></li> -->
               <li><a [routerLink]="['/rbac/centralrole']">نقض اشخاص</a></li>
+
             </ul>
           </div>
         </li>
@@ -559,11 +575,9 @@
               @if (LoginType() === 'KOWSAR') {
               <li><a [routerLink]="['/internal/internal-factors-edit']">فاکتور پشتیبانی</a></li>
               <li><a [routerLink]="['/internal/internal-factors-list']">لیست فاکتور پشتیبانی</a></li>
-              <li><a [routerLink]="['/automation/leaverequest-list']">لیست مرخصی</a></li>
-              <a class="dropdown-item" [routerLink]="['/automation/workforce-absence/request-list']">
-                <i class="fas fa-calendar-check me-2"></i>
-                مرخصی جدید - آزمایشی
-              </a>
+              <li><a [routerLink]="['/automation/workforce-absence/request-list']">لیست مرخصی</a></li>
+
+
 
               @if (permissionService.canManageRole) {
 
@@ -571,11 +585,13 @@
               <li><a [routerLink]="['/internal/internal-task-list']">لیست خدمات</a></li>
               <li><a [routerLink]="['/internal/internal-good-list']">لیست کالاها</a></li>
               <li><a [routerLink]="['/internal/internal-pattern']">لیست الگو های کالایی</a></li>
-
+              <li><a [routerLink]="['/rbac/sessions']">نشست‌های ورود</a></li>
 
               }
 
               <li><a [routerLink]="['/internal/internal-customer-list']">لیست مشتریان</a></li>
+              <li><a [routerLink]="['/accounting/forosh/personinfo-list']">مدیریت مشترکین</a></li>
+
               <li><a [routerLink]="['/internal/internal-report']">گزارش پشتیبانی کوثر</a></li>
 
               }

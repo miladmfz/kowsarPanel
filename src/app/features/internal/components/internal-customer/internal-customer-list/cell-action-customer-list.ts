@@ -1,7 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { PermissionService } from 'src/app/app-shell/framework-services/storage/PermissionService';
-declare var $: any;
 
 @Component({
     selector: 'edit-delete-cell-renderer',

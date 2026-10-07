@@ -1,0 +1,281 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title mb-3">{{ title() }}</h4>
+
+    <form
+      [formGroup]="EditForm_SearchTarget"
+      class="row g-3 mb-4 align-items-end"
+      (ngSubmit)="loadList()"
+    >
+      <div class="col-sm-6 col-lg-3">
+        <label class="form-label" for="inventory-search">جستجو</label>
+        <input
+          id="inventory-search"
+          type="text"
+          maxlength="120"
+          class="form-control"
+          formControlName="SearchTarget"
+          placeholder="کد، نام کالا یا توضیحات"
+          autocomplete="off"
+        />
+      </div>
+
+      @if (filterConfig.dateRange) {
+        <div class="col-sm-6 col-lg-2">
+          <label class="form-label" for="inventory-from-date">از تاریخ</label>
+          <input
+            id="inventory-from-date"
+            type="text"
+            inputmode="numeric"
+            maxlength="10"
+            class="form-control text-center"
+            formControlName="FromDate"
+            placeholder="1405/01/01"
+            autocomplete="off"
+          />
+        </div>
+        <div class="col-sm-6 col-lg-2">
+          <label class="form-label" for="inventory-to-date">تا تاریخ</label>
+          <input
+            id="inventory-to-date"
+            type="text"
+            inputmode="numeric"
+            maxlength="10"
+            class="form-control text-center"
+            formControlName="ToDate"
+            placeholder="1405/12/29"
+            autocomplete="off"
+          />
+        </div>
+      }
+
+      @if (filterConfig.department) {
+        <div class="col-sm-6 col-lg-2">
+          <label class="form-label" for="inventory-department"
+            >کد دپارتمان</label
+          >
+          <input
+            id="inventory-department"
+            type="text"
+            inputmode="numeric"
+            class="form-control"
+            formControlName="Department"
+            placeholder="1 یا 1,2"
+            autocomplete="off"
+          />
+        </div>
+      }
+
+      @if (filterConfig.goodCode) {
+        <div class="col-sm-6 col-lg-2">
+          <label class="form-label" for="inventory-good-code">کد کالا</label>
+          <input
+            id="inventory-good-code"
+            type="text"
+            class="form-control"
+            formControlName="GoodCode"
+            autocomplete="off"
+          />
+        </div>
+      }
+
+      @if (filterConfig.stack) {
+        <div class="col-sm-6 col-lg-2">
+          <label class="form-label" for="inventory-stack">انبار</label>
+          <select
+            id="inventory-stack"
+            class="form-select"
+            formControlName="StackCode"
+          >
+            <option value="">همه انبارها</option>
+            @for (stack of stacks(); track stack.StackCode) {
+              <option [value]="stack.StackCode">{{ stack.Name }}</option>
+            }
+          </select>
+        </div>
+      }
+
+      @if (filterConfig.provider) {
+        <div class="col-sm-6 col-lg-2">
+          <label class="form-label" for="inventory-provider">کد فروشنده</label>
+          <input
+            id="inventory-provider"
+            type="text"
+            inputmode="numeric"
+            class="form-control"
+            formControlName="ProviderCode"
+            autocomplete="off"
+          />
+        </div>
+      }
+
+      @if (filterConfig.group) {
+        <div class="col-sm-6 col-lg-2">
+          <label class="form-label" for="inventory-group">کد گروه کالا</label>
+          <input
+            id="inventory-group"
+            type="text"
+            inputmode="numeric"
+            class="form-control"
+            formControlName="GroupCode"
+            autocomplete="off"
+          />
+        </div>
+      }
+
+      @if (filterConfig.activeState) {
+        <div class="col-sm-6 col-lg-2">
+          <label class="form-label" for="inventory-active-state"
+            >وضعیت کالا در انبار</label
+          >
+          <select
+            id="inventory-active-state"
+            class="form-select"
+            formControlName="ActiveState"
+          >
+            <option value="active">فعال</option>
+            <option value="inactive">غیرفعال</option>
+            <option value="all">هر دو</option>
+          </select>
+        </div>
+      }
+
+      @if (filterConfig.mainCode) {
+        <div class="col-sm-6 col-lg-2">
+          <div class="form-check mb-2">
+            <input
+              id="inventory-main-code"
+              type="checkbox"
+              class="form-check-input"
+              formControlName="WithMainCode"
+            />
+            <label class="form-check-label" for="inventory-main-code">
+              با کد اصلی کالا
+            </label>
+          </div>
+        </div>
+      }
+
+      @if (filterConfig.group) {
+        <div class="col-sm-6 col-lg-2">
+          <div class="form-check mb-2">
+            <input
+              id="inventory-subgroups"
+              type="checkbox"
+              class="form-check-input"
+              formControlName="IncludeSubgroups"
+            />
+            <label class="form-check-label" for="inventory-subgroups">
+              همراه زیرگروه‌ها
+            </label>
+          </div>
+        </div>
+      }
+
+      @if (filterConfig.stackGrouping) {
+        <div class="col-sm-6 col-lg-2">
+          <div class="form-check mb-2">
+            <input
+              id="inventory-stack-grouping"
+              type="checkbox"
+              class="form-check-input"
+              formControlName="WithStackGrouping"
+            />
+            <label class="form-check-label" for="inventory-stack-grouping">
+              مجموع انبارها
+            </label>
+          </div>
+        </div>
+      }
+
+      <div class="col-12 d-flex justify-content-end gap-2">
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="toggleReportView()"
+          [disabled]="loading() || records().length === 0"
+        >
+          <i class="fas fa-chart-column me-1"></i>
+          {{ chartButtonLabel() }}
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading()">
+          <i class="fas fa-search me-1"></i>
+          {{ loading() ? "در حال دریافت..." : "جستجو" }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-light"
+          (click)="loadList()"
+          [disabled]="loading()"
+        >
+          <i class="fas fa-sync me-1"></i> بازخوانی
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="clearFilter()"
+          [disabled]="loading()"
+        >
+          <i class="fas fa-eraser me-1"></i> پاک‌کردن فیلترها
+        </button>
+      </div>
+    </form>
+
+    @if (hasLoaded()) {
+      <div class="row g-2 mb-3" aria-label="جمع گزارش">
+        @for (card of summaryCards(); track card.label) {
+          <div class="col-6 col-lg">
+            <div class="border rounded p-2 text-center h-100">
+              <small class="text-muted d-block">{{ card.label }}</small>
+              <strong>{{ formatNumber(card.value) }}</strong>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <div class="alert alert-danger" role="alert" aria-live="polite">
+        {{ errorMessage() }}
+      </div>
+    } @else if (hasLoaded() && !loading() && records().length === 0) {
+      <div class="alert alert-info" role="status">
+        برای فیلترهای انتخاب‌شده رکوردی پیدا نشد.
+      </div>
+    }
+
+    @if (showChart()) {
+      <div class="border rounded-3 shadow-sm p-3">
+        <app-kowsar-chart-column
+          [title]="chartTitle"
+          [series]="chartModel().series"
+          [categories]="chartModel().categories"
+          [height]="520"
+        ></app-kowsar-chart-column>
+        @if (records().length > 12) {
+          <small class="text-muted d-block text-center mt-2">
+            نمودار بر اساس ۱۲ ردیف اولِ ترتیب فعلی گزارش نمایش داده شده است.
+          </small>
+        }
+      </div>
+    } @else {
+      <div
+        class="ag-container rounded-3 border shadow-sm overflow-hidden"
+        style="height: 600px"
+      >
+        <ag-grid-angular
+          [enableBrowserTooltips]="true"
+          [tooltipShowDelay]="200"
+          [tooltipHideDelay]="800"
+          [columnDefs]="column_name_1"
+          [rowData]="records()"
+          [gridOptions]="gridOptions"
+          (gridReady)="onGridReady($event, 1)"
+          (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+          (sortChanged)="syncChartOrder()"
+          [class]="themeClass + ' w-100 h-100'"
+        ></ag-grid-angular>
+      </div>
+    }
+  </div>
+</div>

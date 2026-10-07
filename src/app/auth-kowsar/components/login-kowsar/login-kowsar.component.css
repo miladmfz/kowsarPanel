@@ -30,7 +30,8 @@
 .kws-login-page {
     position: fixed !important;
     inset: 0 !important;
-    width: 100vw !important;
+    width: auto !important;
+    box-sizing: border-box;
     min-height: 100vh !important;
     padding: 40px 16px !important;
     overflow-y: auto !important;
@@ -102,6 +103,8 @@
 .kws-login-card {
     width: 100%;
     max-width: 460px;
+    min-width: 0;
+    flex: 0 1 460px;
     border-radius: 34px;
     backdrop-filter: blur(16px);
 
@@ -422,10 +425,20 @@
     transform: translateY(-50%);
     cursor: pointer;
     z-index: 5;
+    padding: .35rem;
+    border: 0;
+    background: transparent;
+    color: inherit;
 }
 
 .kws-password-eye:hover {
     color: var(--bs-primary);
+}
+
+.kws-password-eye:focus-visible {
+    outline: 3px solid var(--bs-primary);
+    outline-offset: 2px;
+    border-radius: .375rem;
 }
 
 :host-context(html[data-bs-theme='dark']) .kws-password-eye,
@@ -578,7 +591,16 @@ input:-webkit-autofill:focus {
     }
 
     .kws-login-card {
+        width: calc(100vw - 32px) !important;
+        max-width: calc(100vw - 32px) !important;
+        min-width: 0;
+        flex: 0 0 auto;
         border-radius: 26px;
+    }
+
+    .kws-login-card .card-body {
+        min-width: 0;
+        padding-inline: 1rem !important;
     }
 
     .kws-logo-circle {

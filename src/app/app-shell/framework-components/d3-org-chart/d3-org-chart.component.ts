@@ -2,7 +2,6 @@ import { OnChanges, Component, OnInit, Input, ViewChild, ElementRef, AfterViewIn
 import { CommonModule } from '@angular/common';
 import { OrgChart } from 'd3-org-chart';
 import * as d3 from 'd3';
-declare var $: any;
 
 @Component({
   selector: 'app-d3-org-chart',
@@ -48,6 +47,13 @@ export class D3OrgChartComponent implements OnInit, OnChanges, AfterViewInit {
       .childrenMargin((d) => 130)
       .compactMarginBetween((d) => 75)
       .compactMarginPair((d) => 80)
+      .onNodeClick((node) => {
+        const selectedNode = document.getElementById('selected_node_guid') as HTMLInputElement | null;
+        if (!selectedNode) return;
+
+        selectedNode.value = String(node.data.guid ?? '');
+        selectedNode.dispatchEvent(new Event('change', { bubbles: true }));
+      })
       .linkUpdate(function (d, i, arr) {
         d3.select(this)
           .attr('stroke', (d: any) =>
@@ -77,7 +83,7 @@ export class D3OrgChartComponent implements OnInit, OnChanges, AfterViewInit {
         const outsideCircleDim = 110;
 
         return `
-                <div id="org_node_${d.data.guid}" style="background-color:white; position:absolute;width:${d.width}px;height:${d.height}px;" onclick="$('#selected_node_guid').val('${d.data.guid}')">
+                <div id="org_node_${d.data.guid}" style="background-color:white; position:absolute;width:${d.width}px;height:${d.height}px;">
                    <div style="background-color:${color};position:absolute;margin-top:-${outsideCircleDim / 2}px;margin-right:${d.width / 2 - outsideCircleDim / 2}px;border-radius:100px;width:${outsideCircleDim}px;height:${outsideCircleDim}px;"></div>
                    <div style="background-color:#ffffff;position:absolute;margin-top:-${lightCircleDim / 2}px;margin-right:${d.width / 2 - lightCircleDim / 2}px;border-radius:100px;width:${lightCircleDim}px;height:${lightCircleDim}px;"></div>
                    <img src=" ${d.data.imageUrl}" style="position:absolute;margin-top:-${imageDim / 2}px;margin-right:${d.width / 2 - imageDim / 2}px;border-radius:100px;width:${imageDim}px;height:${imageDim}px;" />

@@ -22,6 +22,7 @@ import { AppConfigService } from '../../../app-config.service';
 import { SharedService } from '../../framework-services/shared.service';
 import { NotificationService } from '../../framework-services/ui/notification.service';
 import { SessionStorageService } from '../../framework-services/storage/session.storage.service';
+import { AuthTokenService } from 'src/app/auth-kowsar/services/auth-token.service';
 import { PermissionService } from '../../framework-services/storage/PermissionService';
 import { KowsarBaseWebApi } from '../../framework-services/base/KowsarBaseWebApi.service';
 
@@ -88,6 +89,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   private readonly config = inject(AppConfigService);
   private readonly router = inject(Router);
   protected readonly session = inject(SessionStorageService);
+  private readonly authTokens = inject(AuthTokenService);
   private readonly notificationService = inject(NotificationService);
   protected readonly permissionService = inject(PermissionService);
 
@@ -367,7 +369,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   // 🚪 خروج از سیستم
   // ===============================================================
   logout(): void {
-    sessionStorage.clear();
-    this.router.navigate(['/auth/login']);
+    const loginRoute = this.session.loginRoute;
+    this.authTokens.logout().subscribe(() => void this.router.navigateByUrl(loginRoute));
   }
 }

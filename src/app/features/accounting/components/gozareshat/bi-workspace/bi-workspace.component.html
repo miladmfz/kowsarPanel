@@ -1,0 +1,259 @@
+<main class="bi-page" dir="rtl">
+  <header class="bi-hero">
+    <div>
+      <span class="bi-eyebrow">Kowsar BI Workspace</span>
+      <h1>داشبورد مدیریتی</h1>
+      <p>شاخص، مقایسه و ترکیب واحدها را با چیدمان شخصی و Semantic Layer کنترل‌شده بررسی کنید.</p>
+    </div>
+    <div class="bi-hero-actions">
+      <a class="bi-button bi-button-ghost" routerLink="/accounting/gozareshat/bi"><i class="mdi mdi-view-dashboard-outline"></i> BI Home</a>
+      @if (canManageCatalog()) {
+        <a class="bi-button bi-button-ghost" routerLink="/accounting/gozareshat/bi/catalog"><i class="mdi mdi-database-cog-outline"></i> مدیریت کاتالوگ</a>
+      }
+      <a class="bi-button bi-button-ghost" routerLink="/accounting/gozareshat/report-list">گزارش‌های عملیاتی</a>
+      @if (canEdit()) {
+        <button type="button" class="bi-button bi-button-primary" (click)="toggleEdit()">
+          <i class="mdi" [class.mdi-pencil-outline]="!editing()" [class.mdi-check]="editing()"></i>
+          {{ editing() ? 'پایان ویرایش' : 'شخصی‌سازی' }}
+        </button>
+      }
+    </div>
+  </header>
+
+  @if (error()) {
+    <div class="bi-alert bi-alert-error" role="alert"><i class="mdi mdi-alert-circle-outline"></i><span>{{ error() }}</span><button type="button" aria-label="بستن پیام" (click)="error.set('')">×</button></div>
+  }
+  @if (notice()) {
+    <div class="bi-alert bi-alert-success" role="status"><i class="mdi mdi-check-circle-outline"></i><span>{{ notice() }}</span><button type="button" aria-label="بستن پیام" (click)="notice.set('')">×</button></div>
+  }
+  @if (compatibilityWarnings().length) {
+    <div class="bi-alert bi-alert-warning" role="status"><i class="mdi mdi-update"></i><span>{{ compatibilityWarnings().join(' ') }}</span></div>
+  }
+
+  <section class="bi-toolbar" aria-label="کنترل‌های داشبورد">
+    <div class="bi-dashboard-picker">
+      <label for="dashboard-picker">داشبورد</label>
+      <div class="bi-picker-row">
+        <select id="dashboard-picker" [ngModel]="dashboard().dashboardCode" (ngModelChange)="selectDashboard($event)">
+          @if (!dashboard().dashboardCode) { <option [ngValue]="0">داشبورد ذخیره‌نشده</option> }
+          @for (item of dashboards(); track item.dashboardCode) { <option [ngValue]="item.dashboardCode">{{ item.title }}{{ item.isDefault ? ' • پیش‌فرض' : '' }}</option> }
+        </select>
+        @if (permissions.canEditOwnBiDashboard) {
+          <button type="button" class="bi-icon-button" title="داشبورد جدید" (click)="newPersonalDashboard()"><i class="mdi mdi-plus"></i></button>
+        }
+        @if (canCopy()) {
+          <button type="button" class="bi-icon-button" title="ساخت کپی" [disabled]="!dashboard().dashboardCode || saving()" (click)="copyDashboard()"><i class="mdi mdi-content-copy"></i></button>
+        }
+        @if (dashboard().dashboardCode) {
+          <button type="button" class="bi-icon-button" title="پیش‌فرض شخصی" (click)="setPersonalDefault()"><i class="mdi" [class.mdi-home-star]="dashboard().isDefault" [class.mdi-home-star-outline]="!dashboard().isDefault"></i></button>
+          <button type="button" class="bi-icon-button" title="Bookmark و انتشار" (click)="governanceOpen.set(!governanceOpen())"><i class="mdi mdi-bookmark-multiple-outline"></i></button>
+        }
+      </div>
+    </div>
+    <div class="bi-filter"><label for="bi-from">از تاریخ</label><input id="bi-from" maxlength="10" placeholder="۱۴۰۳/۰۱/۰۱" [(ngModel)]="fromDate"></div>
+    <div class="bi-filter"><label for="bi-to">تا تاریخ</label><input id="bi-to" maxlength="10" placeholder="۱۴۰۳/۱۲/۲۹" [(ngModel)]="toDate"></div>
+    <div class="bi-filter"><label for="bi-grain">دوره</label><select id="bi-grain" [(ngModel)]="grain"><option value="month">ماهانه</option><option value="day">روزانه</option></select></div>
+    <div class="bi-filter"><label for="bi-department">واحد سازمانی</label><select id="bi-department" [(ngModel)]="departmentRef"><option [ngValue]="0">همه واحدهای مجاز</option>@for (department of catalog()?.departments ?? []; track department.departmentCode) { <option [ngValue]="department.departmentCode">{{ department.departmentName }}</option> }</select></div>
+    <div class="bi-filter"><label for="bi-comparison">مقایسه</label><select id="bi-comparison" [(ngModel)]="comparisonMode"><option value="none">بدون مقایسه</option><option value="previousPeriod">دوره قبل</option><option value="previousYear">سال قبل</option><option value="custom">بازه دلخواه</option></select></div>
+    @if (comparisonMode === 'custom') {
+      <div class="bi-filter"><label for="bi-comparison-from">از مقایسه</label><input id="bi-comparison-from" maxlength="10" [(ngModel)]="comparisonFromDate"></div>
+      <div class="bi-filter"><label for="bi-comparison-to">تا مقایسه</label><input id="bi-comparison-to" maxlength="10" [(ngModel)]="comparisonToDate"></div>
+    }
+    <button type="button" class="bi-button bi-button-query" [disabled]="queryLoading()" (click)="refreshData()">
+      @if (queryLoading()) { <span class="bi-spinner"></span> } @else { <i class="mdi mdi-refresh"></i> } به‌روزرسانی
+    </button>
+  </section>
+
+  @if (editing()) {
+    <section class="bi-editor" aria-label="تنظیم داشبورد">
+      <div class="bi-editor-title"><label for="dashboard-title">عنوان داشبورد</label><input id="dashboard-title" maxlength="200" [ngModel]="dashboard().title" (ngModelChange)="updateTitle($event)"></div>
+      <label class="bi-check"><input type="checkbox" [ngModel]="dashboard().isDefault" (ngModelChange)="updateDefault($event)"> داشبورد پیش‌فرض من</label>
+      <div class="bi-add-wrap">
+        <button type="button" class="bi-button bi-button-builder" (click)="openSmartBuilder()"><i class="mdi mdi-auto-fix"></i> ساخت هوشمند از Dataset</button>
+        <button type="button" class="bi-button bi-button-soft" (click)="paletteOpen.set(!paletteOpen())"><i class="mdi mdi-view-grid-plus-outline"></i> افزودن ویجت</button>
+        @if (paletteOpen()) {
+          <div class="bi-palette">
+            <button type="button" (click)="addWidget('kpi')"><i class="mdi mdi-card-text-outline"></i> KPI</button>
+            <button type="button" (click)="addWidget('trend')"><i class="mdi mdi-chart-line"></i> روند</button>
+            <button type="button" (click)="addWidget('stackedBar')"><i class="mdi mdi-chart-bar-stacked"></i> نمودار انباشته</button>
+            <button type="button" (click)="addWidget('donut')"><i class="mdi mdi-chart-donut"></i> Donut واحدها</button>
+            <button type="button" (click)="addWidget('pivot')"><i class="mdi mdi-table-pivot"></i> Pivot</button>
+            <button type="button" (click)="addWidget('summaryList')"><i class="mdi mdi-format-list-numbered"></i> خلاصه واحدها</button>
+            <button type="button" (click)="addWidget('table')"><i class="mdi mdi-table"></i> جدول دوره‌ای</button>
+          </div>
+        }
+      </div>
+      <button type="button" class="bi-button bi-button-primary" [disabled]="saving() || !dirty()" (click)="saveDashboard()">@if (saving()) { <span class="bi-spinner"></span> } @else { <i class="mdi mdi-content-save-outline"></i> } ذخیره</button>
+      @if (dashboard().dashboardCode && dashboard().isOwner !== false) { <button type="button" class="bi-button bi-button-danger" [disabled]="saving()" (click)="deleteDashboard()"><i class="mdi mdi-delete-outline"></i> حذف</button> }
+      @if (dirty()) { <span class="bi-unsaved">تغییرات ذخیره‌نشده</span> }
+    </section>
+
+    @if (builderOpen()) {
+      <section class="bi-builder" aria-label="سازنده هوشمند گزارش">
+        <div class="bi-builder-head">
+          <div><span>Kowsar Visual Builder</span><h2>ساخت گزارش بدون SQL مستقیم</h2><p>پرسش فارسی بنویسید یا Dataset، Metric و بُعد تحلیل را انتخاب کنید؛ سیستم Query کنترل‌شده و چیدمان مناسب را می‌سازد.</p></div>
+          <button type="button" aria-label="بستن سازنده" (click)="closeSmartBuilder()">×</button>
+        </div>
+
+        <div class="bi-builder-question">
+          <label for="bi-builder-question">نیاز گزارشی</label>
+          <div><input id="bi-builder-question" maxlength="500" [(ngModel)]="builderQuestion" placeholder="مثلاً فروش خالص ماهانه و تعداد فاکتور را نشان بده"><button type="button" class="bi-button bi-button-soft" [disabled]="interpreting() || !builderQuestion.trim()" (click)="interpretBuilderQuestion()">@if (interpreting()) { <span class="bi-spinner"></span> } @else { <i class="mdi mdi-text-search"></i> } تحلیل پرسش</button></div>
+          <small>متن به SQL آزاد تبدیل نمی‌شود؛ فقط به Dataset و Metricهای منتشرشده نگاشت می‌شود و قبل از اجرا قابل بررسی است.</small>
+        </div>
+
+        <div class="bi-builder-grid">
+          <label>Dataset<select [ngModel]="builderDatasetKey" (ngModelChange)="changeBuilderDataset($event)">@for (item of catalog()?.datasets ?? []; track item.datasetKey) { <option [value]="item.datasetKey">{{ item.title }} · {{ item.domain }}</option> }</select></label>
+          <label>بُعد تحلیل<select [(ngModel)]="builderDimension"><option value="summary">فقط خلاصه بازه</option><option value="period">دوره زمانی</option><option value="department">واحد سازمانی</option><option value="periodDepartment">دوره × واحد سازمانی</option></select></label>
+          <label>نوع نمایش<select [(ngModel)]="builderVisual"><option value="auto">انتخاب خودکار</option><option value="kpi">KPI</option><option value="trend">روند</option><option value="stackedBar">نمودار چند Metric</option><option value="donut">Donut واحدها</option><option value="pivot">Pivot</option><option value="summaryList">رتبه‌بندی</option><option value="table">جدول</option></select></label>
+          <label class="bi-builder-replace"><input type="checkbox" [(ngModel)]="builderReplaceLayout"> جایگزینی چیدمان فعلی</label>
+        </div>
+
+        <div class="bi-builder-metrics">
+          <strong>Metricها <small>حداکثر ۵ مورد</small></strong>
+          <div>@for (metric of builderMetrics(); track metric.metricKey) { <label [title]="metric.definition"><input type="checkbox" [checked]="builderMetricSelected(metric.metricKey)" [disabled]="!builderMetricSelected(metric.metricKey) && builderMetricKeys.length >= 5" (change)="toggleBuilderMetric(metric.metricKey, $any($event.target).checked)"><span>{{ metric.title }}</span><small>{{ metric.unit || metric.metricRole }}</small></label> } @empty { <p>Metric منتشرشده‌ای برای این Dataset در دسترس نیست.</p> }</div>
+        </div>
+
+        <div class="bi-builder-preview">
+          <div><span>نمایش پیشنهادی</span><strong>{{ widgetKind(recommendedBuilderVisual()) }}</strong></div>
+          <div><span>محور X / دسته‌بندی</span><strong>{{ builderXAxis() }}</strong></div>
+          <div><span>محور Y / مقدار</span><strong>{{ builderYAxis() }}</strong></div>
+          <div><span>Query Scope</span><strong>{{ fromDate }} تا {{ toDate }} · {{ departmentRef > 0 ? 'واحد ' + departmentRef : 'همه واحدهای مجاز' }}</strong></div>
+          @if (builderDefinitions()) { <p><i class="mdi mdi-information-outline"></i> {{ builderDefinitions() }}</p> }
+        </div>
+        @if (builderMessage()) { <div class="bi-builder-message">{{ builderMessage() }}</div> }
+        <div class="bi-builder-actions"><button type="button" class="bi-button bi-button-soft" (click)="closeSmartBuilder()">انصراف</button><button type="button" class="bi-button bi-button-primary" [disabled]="!builderMetricKeys.length" (click)="applySmartBuilder()"><i class="mdi mdi-view-dashboard-edit-outline"></i> ساخت چیدمان و اجرای Query</button></div>
+      </section>
+    }
+
+    @if (selectedWidget(); as widget) {
+      <section class="bi-widget-settings" aria-label="تنظیمات ویجت">
+        <div class="bi-settings-head"><div><strong>تنظیمات ویجت</strong><span>Config schema v{{ widget.configVersion }}</span></div><button type="button" (click)="selectedWidgetKey.set('')" aria-label="بستن تنظیمات">×</button></div>
+        <div class="bi-settings-grid">
+          <label>عنوان<input maxlength="200" [ngModel]="widget.title" (ngModelChange)="updateWidgetTitle($event)"></label>
+          <label>Metric<select [ngModel]="widget.config.metric" (ngModelChange)="updateWidgetConfig('metric', $event)">@for (metric of metricOptions(); track metric.metricKey) { <option [ngValue]="metric.metricKey">{{ metric.title }}</option> }</select></label>
+          <label>فرمت عدد<select [ngModel]="widget.config.numberFormat" (ngModelChange)="updateWidgetConfig('numberFormat', $event)"><option value="number">عدد</option><option value="currency">ریال</option><option value="compact">فشرده</option><option value="percent">درصد</option></select></label>
+          <label>نمایش مقایسه<select [ngModel]="widget.config.comparison" (ngModelChange)="updateWidgetConfig('comparison', $event)"><option value="none">خاموش</option><option value="value">اختلاف عددی</option><option value="percent">درصد تغییر</option></select></label>
+          <label>واحد همین ویجت<select [ngModel]="widget.config.departmentRefs?.[0] ?? 0" (ngModelChange)="updateWidgetDepartment($event)"><option [ngValue]="0">مطابق Scope اصلی</option>@for (department of catalog()?.departments ?? []; track department.departmentCode) { <option [ngValue]="department.departmentCode">{{ department.departmentName }}</option> }</select></label>
+          <label>از تاریخ ویجت<input maxlength="10" [ngModel]="widget.config.fromDate" (ngModelChange)="updateWidgetConfig('fromDate', $event)"></label>
+          <label>تا تاریخ ویجت<input maxlength="10" [ngModel]="widget.config.toDate" (ngModelChange)="updateWidgetConfig('toDate', $event)"></label>
+          @if (widget.widgetType === 'donut' || widget.widgetType === 'summaryList') {
+            <label>حداکثر آیتم<select [ngModel]="widget.config.maxItems" (ngModelChange)="updateWidgetConfig('maxItems', +$event)"><option [ngValue]="3">۳</option><option [ngValue]="4">۴</option><option [ngValue]="5">۵</option></select></label>
+          }
+        </div>
+        @if (widget.widgetType === 'table' || widget.widgetType === 'stackedBar') {
+          <div class="bi-widget-metrics"><strong>Metricهای قابل نمایش</strong>@for (metric of metricOptions(); track metric.metricKey) { <label><input type="checkbox" [checked]="widget.config.metrics?.includes(metric.metricKey)" (change)="toggleWidgetMetric(widget, metric.metricKey, $any($event.target).checked)"> {{ metric.title }}</label> }</div>
+        }
+        <p>Filter این ویجت فقط زیرمجموعه Scope مجاز سرور است؛ امکان افزایش دسترسی از این بخش وجود ندارد.</p>
+      </section>
+    }
+  }
+
+  @if (governanceOpen() && dashboard().dashboardCode) {
+    <section class="bi-governance" aria-label="Bookmark، انتشار و اشتراک‌گذاری">
+      <div class="bi-governance-column">
+        <h3><i class="mdi mdi-bookmark-outline"></i> Bookmark شخصی</h3>
+        <div class="bi-inline-form"><input maxlength="200" [(ngModel)]="bookmarkTitle" placeholder="نام Bookmark"><button type="button" class="bi-button bi-button-soft" [disabled]="!bookmarkTitle.trim()" (click)="saveBookmark()">ذخیره وضعیت</button></div>
+        <div class="bi-chip-list">@for (bookmark of bookmarks(); track bookmark.bookmarkCode) { <span><button type="button" (click)="applyBookmark(bookmark)">{{ bookmark.title }}</button><button type="button" aria-label="حذف Bookmark" (click)="deleteBookmark(bookmark)">×</button></span> } @empty { <small>Bookmark شخصی هنوز ذخیره نشده است.</small> }</div>
+      </div>
+      @if (canGovern()) {
+        <div class="bi-governance-column">
+          <h3><i class="mdi mdi-publish"></i> Publish و Template</h3>
+          <label class="bi-check"><input type="checkbox" [(ngModel)]="publishAsTemplate"> نمایش در قالب‌های سازمانی</label>
+          <input maxlength="1000" [(ngModel)]="templateDescription" placeholder="توضیح قالب">
+          <div class="bi-inline-form"><input maxlength="500" [(ngModel)]="publishNote" placeholder="یادداشت نسخه"><button type="button" class="bi-button bi-button-primary" [disabled]="saving() || !permissions.canPublishBiDashboard" (click)="publishDashboard()">Publish</button></div>
+          <div class="bi-chip-list">@for (version of versions(); track version.versionNumber) { <span><button type="button" [disabled]="!permissions.canPublishBiDashboard" (click)="rollback(version)">v{{ version.versionNumber }} · {{ version.createdAt | date:'yyyy/MM/dd HH:mm' }}</button></span> } @empty { <small>نسخه منتشرشده‌ای وجود ندارد.</small> }</div>
+        </div>
+      }
+      @if (dashboard().isOwner !== false && permissions.canShareBiDashboard) {
+        <div class="bi-governance-column">
+          <h3><i class="mdi mdi-account-multiple-plus-outline"></i> Share</h3>
+          <select [(ngModel)]="shareTargetKey"><option value="">انتخاب User یا Role</option>@for (target of shareTargets(); track target.targetType + target.targetKey) { <option [value]="target.targetKey">{{ target.title }} · {{ target.targetType }}</option> }</select>
+          <div class="bi-inline-form"><select [(ngModel)]="shareAccess"><option value="View">View</option><option value="Copy">Copy</option><option value="Edit">Edit</option></select><label class="bi-check"><input type="checkbox" [(ngModel)]="shareDefault"> پیش‌فرض</label><input type="number" min="0" max="1000" [(ngModel)]="sharePriority" aria-label="اولویت"><button type="button" class="bi-button bi-button-soft" [disabled]="!shareTargetKey || dashboard().publishState !== 'Published'" (click)="saveShare()">اعمال</button></div>
+          <div class="bi-chip-list">@for (share of shares(); track share.shareCode) { <span><button type="button">{{ share.targetKey }} · {{ share.accessLevel }}{{ share.isDefault ? ' · Default' : '' }}</button><button type="button" aria-label="حذف Share" (click)="deleteShare(share)">×</button></span> } @empty { <small>اشتراک فعالی وجود ندارد؛ ابتدا Dashboard را Publish کنید.</small> }</div>
+        </div>
+      }
+    </section>
+  }
+
+  @if (dashboard().scopeAdjusted) { <div class="bi-alert bi-alert-warning"><i class="mdi mdi-shield-alert-outline"></i><span>Scope این داشبورد با Departmentهای مجاز شما محدود شده است.</span></div> }
+
+  <section class="bi-context" aria-label="وضعیت داده">
+    <span><i class="mdi mdi-database-outline"></i> {{ dataset()?.title || 'فروش و برگشت فروش' }}</span>
+    @if (result()) {
+      <span><i class="mdi mdi-domain"></i> واحدهای مجاز: {{ appliedScope() || 'بدون واحد مجاز' }}</span>
+      <span><i class="mdi mdi-clock-outline"></i> پاسخ: {{ result()?.elapsedMs }} ms</span>
+      <span><i class="mdi mdi-shield-check-outline"></i> نسخه تعریف: {{ result()?.definitionVersion }}</span>
+      <span class="bi-freshness" [class.is-stale]="result()?.source?.freshnessStatus !== 'Current'"><i class="mdi mdi-database-clock-outline"></i> داده تا: {{ result()?.source?.dataThroughDate || 'نامشخص' }}</span>
+      <span title="{{ result()?.source?.description }}"><i class="mdi mdi-source-branch"></i> {{ result()?.source?.sourceName }}</span>
+      @if (result()?.comparison) { <span><i class="mdi mdi-compare-horizontal"></i> مقایسه: {{ result()?.comparison?.fromDate }} تا {{ result()?.comparison?.toDate }}</span> }
+      @if (crossFilterPeriod()) { <span class="bi-cross-filter"><i class="mdi mdi-calendar-filter"></i> دوره: {{ crossFilterPeriod() }}</span> }
+      @if (departmentRef > 0 || crossFilterPeriod()) { <button type="button" class="bi-clear-cross" (click)="clearCrossFilters()"><i class="mdi mdi-filter-remove-outline"></i> حذف Cross-filter</button> }
+    }
+  </section>
+
+  @if (loading()) {
+    <section class="bi-loading" aria-live="polite"><span class="bi-spinner bi-spinner-large"></span><p>در حال آماده‌سازی فضای تحلیل...</p></section>
+  } @else {
+    @if (result()?.warnings?.length) { <div class="bi-alert bi-alert-warning"><i class="mdi mdi-database-alert-outline"></i><span>{{ result()?.warnings?.join(' ') }}</span></div> }
+    <div #grid class="grid-stack bi-grid" [class.bi-grid-editing]="editing()">
+      @for (widget of widgets(); track trackWidget($index, widget)) {
+        <article class="grid-stack-item" [attr.gs-id]="widget.widgetKey" [attr.gs-x]="widget.x" [attr.gs-y]="widget.y" [attr.gs-w]="widget.w" [attr.gs-h]="widget.h">
+          <div class="grid-stack-item-content bi-widget">
+            <header class="bi-widget-header bi-widget-handle">
+              <div><span class="bi-widget-kicker">{{ widgetKind(widget.widgetType) }}</span><h2>{{ widget.title }}</h2><small class="bi-widget-axis">{{ widgetAxisDescription(widget) }}</small></div>
+              <div class="bi-widget-actions">
+                @if (editing()) {
+                  <button type="button" class="bi-widget-action" aria-label="تنظیمات ویجت" (click)="$event.stopPropagation(); openWidgetSettings(widget.widgetKey)"><i class="mdi mdi-tune-variant"></i></button>
+                  <button type="button" class="bi-widget-remove" aria-label="حذف ویجت" (click)="$event.stopPropagation(); removeWidget(widget.widgetKey)"><i class="mdi mdi-close"></i></button>
+                } @else if (widget.widgetType === 'table' || widget.widgetType === 'pivot') {
+                  <a class="bi-drill-link" routerLink="/accounting/gozareshat/report-list">جزئیات <i class="mdi mdi-arrow-left"></i></a>
+                }
+              </div>
+            </header>
+
+            @switch (widget.widgetType) {
+              @case ('kpi') {
+                <div class="bi-kpi"><strong>{{ formatWidgetValue(widget, metricValue(widget)) }}</strong><span>{{ metricUnit(widget.config.metric) }}</span>
+                  @let delta = comparisonDelta(widget);
+                  @if (delta !== null) { <div class="bi-delta" [class.negative]="delta < 0"><i class="mdi" [class.mdi-trending-up]="delta >= 0" [class.mdi-trending-down]="delta < 0"></i>{{ formatNumber(delta) }}{{ widget.config.comparison === 'percent' ? '٪' : '' }}</div> }
+                  <div class="bi-kpi-foot">{{ widget.config.fromDate || fromDate }} تا {{ widget.config.toDate || toDate }}</div>
+                </div>
+              }
+              @case ('trend') {
+                @if (widgetRows(widget).length) {
+                  <div class="bi-chart" role="img" [attr.aria-label]="widget.title"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="88" x2="100" y2="88" class="bi-chart-axis"></line><polyline [attr.points]="chartPoints(widget)" class="bi-chart-line"></polyline></svg><div class="bi-chart-labels">@for (row of widgetRows(widget); track row.period) { <button type="button" (click)="crossFilterByPeriod(row.period)" [class.active]="crossFilterPeriod() === row.period">{{ row.period }}</button> }</div></div>
+                } @else { <div class="bi-empty-small"><i class="mdi mdi-chart-line"></i><span>داده‌ای برای رسم روند وجود ندارد.</span></div> }
+              }
+              @case ('stackedBar') {
+                <div class="bi-bars" role="img" [attr.aria-label]="widget.title">
+                  @for (row of widgetRows(widget); track row.period) {
+                    <div class="bi-bar-row" (click)="crossFilterByPeriod(row.period)" [class.active]="crossFilterPeriod() === row.period"><span>{{ row.period }}</span><div class="bi-bar-track">@for (metric of stackedMetrics(widget); track metric; let index = $index; let count = $count) { <i [style.top.%]="index * (100 / count)" [style.height.%]="100 / count" [style.background]="metricColor(index)" [style.width.%]="barWidth(widget, row, metric)"></i> }</div><b>{{ formatWidgetValue(widget, pointValue(row, widget.config.metric)) }}</b></div>
+                  } @empty { <div class="bi-empty-small">داده‌ای برای نمودار وجود ندارد.</div> }
+                  <div class="bi-legend">@for (metric of stackedMetrics(widget); track metric; let index = $index) { <span><i [style.background]="metricColor(index)"></i> {{ metricTitle(metric) }}</span> }</div>
+                </div>
+              }
+              @case ('donut') {
+                @if (donutSlices(widget).length) {
+                  @if (widgetStates()[widget.widgetKey]?.drillValue) { <button type="button" class="bi-drill-reset" (click)="clearDrill(widget)"><i class="mdi mdi-filter-remove-outline"></i> حذف Drill</button> }
+                  <div class="bi-donut-wrap"><div class="bi-donut" [style.background]="donutBackground(widget)" role="img" [attr.aria-label]="widget.title"><div><strong>{{ formatWidgetValue(widget, metricValue(widget)) }}</strong><span>{{ metricUnit(widget.config.metric) }}</span></div></div><ol>@for (slice of donutSlices(widget); track slice.code) { <li (click)="drillDepartment(widget, slice)" [class.is-drillable]="slice.code > 0"><i [style.background]="slice.color"></i><span>{{ slice.name }}</span><b>{{ formatNumber(slice.share) }}٪</b></li> }</ol></div>
+                } @else { <div class="bi-empty-small">ترکیب مثبتی برای نمایش وجود ندارد.</div> }
+              }
+              @case ('summaryList') {
+                @if (widgetStates()[widget.widgetKey]?.drillValue) { <button type="button" class="bi-drill-reset" (click)="clearDrill(widget)"><i class="mdi mdi-filter-remove-outline"></i> حذف Drill</button> }
+                <ol class="bi-summary-list">@for (slice of donutSlices(widget); track slice.code; let rank = $index) { <li (click)="drillDepartment(widget, slice)" [class.is-drillable]="slice.code > 0"><span class="rank">{{ rank + 1 }}</span><div><strong>{{ slice.name }}</strong><small>{{ formatNumber(slice.share) }}٪ از کل</small></div><b>{{ formatWidgetValue(widget, slice.value) }}</b></li> } @empty { <li class="bi-table-empty">داده‌ای وجود ندارد.</li> }</ol>
+              }
+              @case ('pivot') {
+                <div class="bi-table-wrap"><table><thead><tr><th>دوره</th>@for (department of pivotDepartments(widget); track department.code) { @if (department.code > 0) { <th>{{ department.name }}</th> } }<th>جمع</th></tr></thead><tbody>@for (row of pivotRows(widget); track row.period) { <tr (click)="crossFilterByPeriod(row.period)" [class.active]="crossFilterPeriod() === row.period"><td>{{ row.period }}</td>@for (department of pivotDepartments(widget); track department.code) { @if (department.code > 0) { <td>{{ formatWidgetValue(widget, row.values.get(department.code) ?? 0) }}</td> } }<td><strong>{{ formatWidgetValue(widget, row.total) }}</strong></td></tr> } @empty { <tr><td class="bi-table-empty">داده‌ای وجود ندارد.</td></tr> }</tbody></table></div>
+              }
+              @case ('table') {
+                <div class="bi-table-wrap"><table><thead><tr><th><button type="button" (click)="toggleSort(widget,'period')">دوره <i class="mdi mdi-sort"></i></button></th>@for (metric of tableMetrics(widget); track metric.metricKey) { <th><button type="button" (click)="toggleSort(widget,metric.metricKey)">{{ metric.title }} <i class="mdi mdi-sort"></i></button></th> }</tr></thead><tbody>@for (row of displayRows(widget); track row.period) { <tr (click)="crossFilterByPeriod(row.period)" [class.active]="crossFilterPeriod() === row.period"><td>{{ row.period }}</td>@for (metric of tableMetrics(widget); track metric.metricKey) { <td>{{ formatMetricValue(metric.metricKey, pointValue(row, metric.metricKey)) }}</td> }</tr> } @empty { <tr><td [attr.colspan]="tableMetrics(widget).length+1" class="bi-table-empty">داده‌ای در این بازه وجود ندارد.</td></tr> }</tbody></table></div>
+              }
+            }
+          </div>
+        </article>
+      } @empty {
+        <div class="bi-empty-dashboard"><i class="mdi mdi-view-dashboard-outline"></i><h2>داشبورد شما خالی است</h2><p>حالت شخصی‌سازی را باز کنید و اولین ویجت را اضافه کنید.</p></div>
+      }
+    </div>
+  }
+</main>

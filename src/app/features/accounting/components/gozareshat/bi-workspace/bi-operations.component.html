@@ -1,0 +1,162 @@
+<main class="operations" dir="rtl">
+  <header class="hero">
+    <div><span>Performance &amp; Operations</span><h1>مرکز عملیات هوش مدیریتی</h1><p>سلامت Query، صف‌های سنگین، Snapshot و Alertهای scope-aware را از یک نقطه کنترل کنید.</p></div>
+    <nav><a routerLink="/accounting/gozareshat/bi"><i class="mdi mdi-arrow-right"></i> BI Home</a><button type="button" (click)="refresh()" [disabled]="loading()"><i class="mdi mdi-refresh" [class.mdi-spin]="loading()"></i> به‌روزرسانی</button></nav>
+  </header>
+
+  @if (error()) { <div class="message error" role="alert">{{ error() }}</div> }
+  @if (notice()) { <div class="message success" role="status">{{ notice() }}</div> }
+  @if (loading()) { <div class="loading"><i class="mdi mdi-loading mdi-spin"></i> در حال خواندن telemetry عملیاتی...</div> }
+  @if (pilot(); as item) {
+    <section class="pilot" aria-labelledby="pilot-title">
+      <div class="section-title"><div><span>Controlled rollout evidence</span><h2 id="pilot-title">آمادگی Pilot فروش</h2></div><div class="gate" [attr.data-ready]="item.rolloutReady"><i class="mdi" [class.mdi-check-decagram-outline]="item.rolloutReady" [class.mdi-progress-alert]="!item.rolloutReady"></i>{{ item.rolloutReady ? 'آماده Rollout' : 'در حال جمع‌آوری شواهد' }}</div></div>
+      <div class="pilot-summary">
+        <article class="progress-card"><div class="progress-head"><span>Query واقعی واجد شرایط</span><strong>{{ item.eligibleQueries | number }} / {{ item.targetQueries | number }}</strong></div><div class="progress" role="progressbar" aria-label="پیشرفت Pilot" [attr.aria-valuenow]="item.progressPercentage" aria-valuemin="0" aria-valuemax="100"><i [style.width.%]="item.progressPercentage"></i></div><small>{{ item.remainingQueries | number }} Query دیگر لازم است؛ فقط نسخه جاری پس از ثبت کامل شرکت‌کنندگان شمرده می‌شود.</small></article>
+        <article><span>شروع شواهد Pilot</span><strong>@if (item.pilotEvidenceFrom) { {{ item.pilotEvidenceFrom | date:'yyyy/MM/dd HH:mm' }} } @else { شروع نشده }</strong><small>با ذخیره Manager و ReportViewer از دو Department</small></article>
+        <article><span>سابقه قبل از Pilot</span><strong>{{ persianInteger(item.prePilotEligibleQueries) }}</strong><small>حفظ شده، اما در پیشرفت شمرده نمی‌شود</small></article>
+        <article><span>کاربر آماده Pilot</span><strong>{{ item.availablePilotUsers | number }}</strong><small>در همین CentralRef؛ حداقل ۲</small></article>
+        <article><span>Department آماده</span><strong>{{ item.availablePilotDepartments | number }}</strong><small>برای دو Scope مستقل؛ حداقل ۲</small></article>
+        <article><span>کاربر انتخاب‌شده</span><strong>{{ item.selectedPilotUsers | number }}</strong><small>از فهرست کاربران فعال Kowsar</small></article>
+        <article><span>Department انتخاب‌شده</span><strong>{{ item.selectedPilotDepartments | number }}</strong><small>بر اساس عضویت واقعی کاربر</small></article>
+        <article><span>Role پایه</span><strong>{{ item.hasReportViewerRole ? 'فعال' : 'غیرفعال' }}</strong><small>REPORT_VIEWER در Central فعلی</small></article>
+        <article><span>کاربر واقعی</span><strong>{{ item.distinctActors | number }}</strong><small>حداقل هدف: ۲</small></article>
+        <article><span>Scope مجزا</span><strong>{{ item.distinctScopes | number }}</strong><small>بدون ذخیره فیلتر خام</small></article>
+        <article><span>P95 تعاملی</span><strong>@if (item.eligibleQueries > 0) { {{ item.p95Ms | number }} ms } @else { — }</strong><small>هدف حداکثر ۲۰۰۰ms</small></article>
+        <article><span>Failure</span><strong>@if (item.attemptedQueries > 0) { {{ percent(item.failureRate) }} } @else { — }</strong><small>Guardrail حداکثر ۱٪</small></article>
+      </div>
+      <div class="pilot-setup" aria-labelledby="pilot-setup-title">
+        <div class="setup-heading"><div><span>Operational setup assistant</span><h3 id="pilot-setup-title">مسیر تکمیل Pilot</h3></div><small>هر مرحله فقط از شواهد واقعی Backend محاسبه می‌شود.</small></div>
+        <div class="setup-steps">
+          @for (step of pilotSetupSteps(); track step.key; let index = $index) {
+            <article [attr.data-status]="step.status">
+              <div class="step-index"><i class="mdi" [class.mdi-check]="step.status==='Passed'" [class.mdi-alert-outline]="step.status==='Blocked'" [class.mdi-clock-outline]="step.status==='Pending'"></i><span>{{ index + 1 | number }}</span></div>
+              <div><strong>{{ step.title }}</strong><p>{{ step.detail }}</p></div>
+              <span class="step-status">{{ setupStatusLabel(step.status) }}</span>
+              @if (step.route && step.actionLabel) { <a [routerLink]="step.route"><i class="mdi mdi-arrow-left"></i>{{ step.actionLabel }}</a> }
+            </article>
+          }
+        </div>
+      </div>
+      <div class="pilot-grid">
+        <div class="criteria"><h3>Gateهای پذیرش</h3>@for (criterion of item.criteria; track criterion.key) { <article [attr.data-status]="criterion.status"><i class="mdi" [class.mdi-check-circle-outline]="criterion.status==='Passed'" [class.mdi-clock-outline]="criterion.status==='Pending'" [class.mdi-account-check-outline]="criterion.status==='Manual'" [class.mdi-close-circle-outline]="criterion.status==='Rejected'"></i><div><strong>{{ criterion.title }}</strong><p>{{ criterion.evidence }}</p></div><span>{{ criterion.status }}</span></article> }</div>
+        <div class="metric-review"><h3>تعریف‌های نیازمند sign-off</h3><div class="table-wrap"><table><thead><tr><th>Metric</th><th>Role</th><th>Version</th><th>وضعیت</th></tr></thead><tbody>@for (metric of item.metrics; track metric.metricKey) { <tr><td><strong>{{ metric.title }}</strong><code>{{ metric.metricKey }}</code></td><td>{{ metric.metricRole }}</td><td>v{{ metric.definitionVersion }}</td><td><span class="review-status">در انتظار مالک کسب‌وکار</span></td></tr> }</tbody></table></div></div>
+      </div>
+      @if (permissions.canReviewBiPilot && pilotParticipants(); as configuration) {
+        <form class="pilot-participants" (ngSubmit)="savePilotParticipants()" aria-labelledby="pilot-participants-title">
+          <div class="section-title">
+            <div><span>Tenant-scoped enrollment</span><h3 id="pilot-participants-title">تعیین شرکت‌کنندگان Pilot</h3></div>
+            @if (configuration.updatedAt) { <small>آخرین تغییر: {{ configuration.updatedAt | date:'yyyy/MM/dd HH:mm' }}</small> }
+          </div>
+          <p class="participant-help">گزینه‌ها از کاربران فعال Kowsar و عضویت واقعی Department در Central جاری خوانده می‌شوند. این انتخاب فقط personaی Pilot را تعیین می‌کند و Role امنیتی جدیدی grant نمی‌کند.</p>
+          <div class="participant-grid">
+            <label>کاربر Manager
+              <select name="pilotManager" [(ngModel)]="pilotManagerKey">
+                <option value="">انتخاب نشده</option>
+                @for (option of configuration.options; track participantKey(option)) {
+                  <option [value]="participantKey(option)">{{ option.displayName }} — {{ option.departmentName }}</option>
+                }
+              </select>
+            </label>
+            <label>کاربر ReportViewer
+              <select name="pilotReportViewer" [(ngModel)]="pilotReportViewerKey">
+                <option value="">انتخاب نشده</option>
+                @for (option of configuration.options; track participantKey(option)) {
+                  <option [value]="participantKey(option)">{{ option.displayName }} — {{ option.departmentName }}</option>
+                }
+              </select>
+            </label>
+            <button class="primary" type="submit" [disabled]="busy()==='pilot-participants' || configuration.options.length===0"><i class="mdi" [class.mdi-loading]="busy()==='pilot-participants'" [class.mdi-spin]="busy()==='pilot-participants'" [class.mdi-account-multiple-check-outline]="busy()!=='pilot-participants'"></i> ذخیره شرکت‌کنندگان</button>
+          </div>
+          @if (configuration.options.length===0) { <div class="empty">در Central فعلی کاربر فعال Kowsar قابل انتخاب وجود ندارد.</div> }
+        </form>
+      }
+      @if (permissions.canReviewBiPilot) {
+        <form class="pilot-review" (ngSubmit)="savePilotReview()" aria-labelledby="pilot-review-title">
+          <div class="section-title">
+            <div><span>Versioned approval</span><h3 id="pilot-review-title">ثبت بازبینی Pilot برای v{{ item.definitionVersion }}</h3></div>
+            @if (item.review) { <small>آخرین ثبت: {{ item.review.reviewedAt | date:'yyyy/MM/dd HH:mm' }}</small> }
+          </div>
+          <div class="review-grid">
+            <label>پوشش Manager و REPORT_VIEWER
+              <select name="pilotRoleStatus" [(ngModel)]="pilotRoleStatus"><option value="Pending">در انتظار بررسی</option><option value="Approved">تأیید</option><option value="Rejected">رد</option></select>
+            </label>
+            <label>توضیح پوشش نقش‌ها
+              <textarea name="pilotRoleNote" [(ngModel)]="pilotRoleNote" maxlength="1000" rows="3" placeholder="شواهد بررسی دو persona و Scopeهای مستقل"></textarea>
+            </label>
+            <label>تأیید KPI، Target و Freshness SLA
+              <select name="pilotBusinessStatus" [(ngModel)]="pilotBusinessStatus"><option value="Pending">در انتظار مالک کسب‌وکار</option><option value="Approved">تأیید</option><option value="Rejected">رد</option></select>
+            </label>
+            <label>توضیح مالک کسب‌وکار
+              <textarea name="pilotBusinessNote" [(ngModel)]="pilotBusinessNote" maxlength="1000" rows="3" placeholder="نتیجه reconciliation، target و SLA مورد توافق"></textarea>
+            </label>
+            <label>تصمیم نهایی
+              <select name="pilotDecision" [(ngModel)]="pilotDecision"><option value="Pending">در انتظار تصمیم</option><option value="Approve">Approve</option><option value="ApproveWithActions">Approve with actions</option><option value="Reject">Reject</option></select>
+            </label>
+            <div class="review-action"><small>نام کاربری از JWT در audit ثبت می‌شود؛ اطلاعات شخصی یا محرمانه را داخل توضیحات ننویسید.</small><button class="primary" type="submit" [disabled]="busy()==='pilot-review'"><i class="mdi" [class.mdi-loading]="busy()==='pilot-review'" [class.mdi-spin]="busy()==='pilot-review'" [class.mdi-content-save-check-outline]="busy()!=='pilot-review'"></i> ثبت بازبینی</button></div>
+          </div>
+        </form>
+      }
+      <div class="recommendations pilot-warnings">@for (warning of item.warnings; track warning) { <p><i class="mdi mdi-information-outline"></i>{{ warning }}</p> }</div>
+    </section>
+  }
+  @if (health(); as item) {
+    <section aria-labelledby="health-title">
+      <div class="section-title"><div><span>Observed telemetry</span><h2 id="health-title">سلامت {{ item.windowDays }} روز اخیر</h2></div><div class="segmented" aria-label="بازه سلامت">@for (days of [1,7,30,90]; track days) { <button type="button" [class.active]="windowDays()===days" (click)="changeWindow(days)">{{ days }} روز</button> }</div></div>
+      <div class="kpis">
+        <article><i class="mdi mdi-timer-outline"></i><span>P95 latency</span><strong>{{ item.p95Ms | number }} ms</strong><small>میانگین {{ item.averageMs | number:'1.0-1' }} ms</small></article>
+        <article><i class="mdi mdi-cached"></i><span>Cache hit</span><strong>{{ percent(item.cacheHitRate) }}</strong><small>{{ item.queryCount | number }} Query مشاهده‌شده</small></article>
+        <article><i class="mdi mdi-alert-circle-outline"></i><span>Failure rate</span><strong>{{ percent(item.failureRate) }}</strong><small>{{ item.timeoutCount | number }} timeout</small></article>
+        <article><i class="mdi mdi-database-clock-outline"></i><span>Freshness</span><strong>{{ item.staleCount | number }}</strong><small>پاسخ stale یا بدون داده</small></article>
+        <article><i class="mdi mdi-progress-clock"></i><span>Async queue</span><strong>{{ item.pendingJobs + item.runningJobs | number }}</strong><small>{{ item.failedJobs | number }} ناموفق</small></article>
+        <article><i class="mdi mdi-calendar-alert"></i><span>Due schedules</span><strong>{{ item.dueSchedules | number }}</strong><small>آخرین cleanup: {{ item.lastCleanupAt ? (item.lastCleanupAt | date:'yyyy/MM/dd HH:mm') : 'ثبت نشده' }}</small></article>
+      </div>
+      <div class="recommendations">@for (recommendation of item.recommendations; track recommendation) { <p><i class="mdi mdi-lightbulb-on-outline"></i>{{ recommendation }}</p> }</div>
+      <div class="table-wrap"><table><thead><tr><th>Dataset</th><th>Query</th><th>Avg</th><th>P95</th><th>Max</th><th>Cache</th><th>Failure</th><th>Timeout</th><th>Stale</th></tr></thead><tbody>
+        @for (dataset of item.datasets; track dataset.datasetKey) { <tr><td><code>{{ dataset.datasetKey }}</code></td><td>{{ dataset.queryCount }}</td><td>{{ dataset.averageMs | number:'1.0-1' }} ms</td><td>{{ dataset.p95Ms }} ms</td><td>{{ dataset.maxMs }} ms</td><td>{{ percent(dataset.cacheHitRate) }}</td><td>{{ percent(dataset.failureRate) }}</td><td>{{ dataset.timeoutCount }}</td><td>{{ dataset.staleCount }}</td></tr> }
+        @empty { <tr><td colspan="9" class="empty">هنوز telemetry کافی در این بازه وجود ندارد.</td></tr> }
+      </tbody></table></div>
+    </section>
+  }
+
+  <section aria-labelledby="work-title">
+    <div class="section-title"><div><span>Governed execution</span><h2 id="work-title">Query و Export سنگین</h2></div><p>درخواست در پس‌زمینه با scope و permission فعلی اجرا می‌شود.</p></div>
+    <div class="form-grid">
+      <label>Dataset<select [(ngModel)]="datasetKey" (ngModelChange)="datasetChanged()">@for (dataset of catalog()?.datasets ?? []; track dataset.datasetKey) { <option [value]="dataset.datasetKey">{{ dataset.title }} — {{ dataset.datasetKey }}</option> }</select></label>
+      <label>از تاریخ<input [(ngModel)]="fromDate" inputmode="numeric" placeholder="1405/01/01"></label>
+      <label>تا تاریخ<input [(ngModel)]="toDate" inputmode="numeric" placeholder="1405/12/29"></label>
+      <label>دوره<select [(ngModel)]="grain"><option value="day">روزانه</option><option value="month">ماهانه</option></select></label>
+      <label>نوع Job<select [(ngModel)]="jobType"><option value="query">Query JSON</option>@if (permissions.canExportBi) { <option value="export">Export CSV</option> }</select></label>
+      <button class="primary form-action" type="button" (click)="createJob()" [disabled]="busy()==='job'"><i class="mdi" [class.mdi-loading]="busy()==='job'" [class.mdi-spin]="busy()==='job'" [class.mdi-play-circle-outline]="busy()!=='job'"></i> قرار دادن در صف</button>
+    </div>
+    <div class="cards-list">
+      @for (job of jobs(); track job.jobCode) { <article class="job"><div><span class="status" [attr.data-status]="job.status">{{ statusLabel(job.status) }}</span><strong>{{ job.jobType }} #{{ job.jobCode }}</strong><small>{{ job.createdAt | date:'yyyy/MM/dd HH:mm:ss' }} · انقضا {{ job.expiresAt | date:'yyyy/MM/dd' }}</small>@if (job.errorCode) { <em>{{ job.errorCode }}</em> }</div><div class="actions">@if (job.status==='Succeeded') { <button type="button" (click)="download(job)" [disabled]="busy()==='download-'+job.jobCode"><i class="mdi mdi-download"></i> دریافت</button> }<button type="button" class="danger" (click)="removeJob(job)" [disabled]="job.status==='Running' || busy()==='job-'+job.jobCode"><i class="mdi" [class.mdi-cancel]="job.status==='Pending'" [class.mdi-delete-outline]="job.status!=='Pending'"></i> {{ job.status==='Pending' ? 'لغو' : 'حذف' }}</button></div></article> }
+      @empty { <div class="empty">Job شخصی ثبت نشده است.</div> }
+    </div>
+  </section>
+
+  @if (permissions.canManageBiSchedules) {
+    <section aria-labelledby="schedule-title">
+      <div class="section-title"><div><span>Scheduled intelligence</span><h2 id="schedule-title">Snapshot و Threshold Alert</h2></div><p>تنظیمات تنها با مجوز مستقل BI_SCHEDULE_MANAGE قابل تغییر است.</p></div>
+      <div class="form-grid schedule-form">
+        <label>عنوان<input [(ngModel)]="scheduleTitle" maxlength="200" placeholder="پایش روزانه فروش"></label>
+        <label>نوع<select [(ngModel)]="scheduleType"><option value="Snapshot">Snapshot</option><option value="Alert">Alert</option></select></label>
+        <label>تناوب<select [(ngModel)]="cadence"><option value="Hourly">ساعتی</option><option value="Daily">روزانه</option><option value="Weekly">هفتگی</option><option value="Monthly">ماهانه</option></select></label>
+        <label>نگهداری (روز)<input type="number" [(ngModel)]="retentionDays" min="1" max="365"></label>
+        @if (scheduleType==='Alert') {
+          <label>Metric<select [(ngModel)]="metricKey">@for (metric of metrics(); track metric.metricKey) { <option [value]="metric.metricKey">{{ metric.title }}</option> }</select></label>
+          <label>شرط<select [(ngModel)]="thresholdOperator"><option value=">">&gt;</option><option value=">=">&gt;=</option><option value="<">&lt;</option><option value="<=">&lt;=</option><option value="=">=</option><option value="!=">!=</option></select></label>
+          <label>آستانه<input type="number" [(ngModel)]="thresholdValue"></label>
+        }
+        <button class="primary form-action" type="button" (click)="createSchedule()" [disabled]="busy()==='schedule'"><i class="mdi mdi-calendar-plus"></i> ثبت زمان‌بندی</button>
+      </div>
+      <div class="cards-list">@for (schedule of schedules(); track schedule.scheduleCode) { <article class="job"><div><span class="status schedule">{{ schedule.scheduleType }}</span><strong>{{ schedule.title }}</strong><small>{{ schedule.cadence }} · اجرای بعدی {{ schedule.nextRunAt | date:'yyyy/MM/dd HH:mm' }} · نگهداری {{ schedule.retentionDays }} روز</small>@if (schedule.scheduleType==='Alert') { <em>{{ schedule.metricKey }} {{ schedule.thresholdOperator }} {{ schedule.thresholdValue | number }}</em> }@if (schedule.lastStatus) { <small>آخرین وضعیت: {{ schedule.lastStatus }}</small> }</div><div class="actions"><button type="button" (click)="runSchedule(schedule)" [disabled]="busy()==='run-'+schedule.scheduleCode"><i class="mdi mdi-play"></i> اجرا</button><button type="button" class="danger" (click)="deleteSchedule(schedule)" [disabled]="busy()==='schedule-'+schedule.scheduleCode"><i class="mdi mdi-delete-outline"></i> حذف</button></div></article> } @empty { <div class="empty">زمان‌بندی ثبت نشده است.</div> }</div>
+    </section>
+  }
+
+  <div class="artifacts">
+    <section><div class="section-title"><div><span>Summary only</span><h2>Snapshotهای اخیر</h2></div></div><div class="table-wrap"><table><thead><tr><th>Dataset</th><th>زمان</th><th>نسخه</th><th>Freshness</th><th>Net</th></tr></thead><tbody>@for (snapshot of snapshots(); track snapshot.snapshotCode) { <tr><td><code>{{ snapshot.datasetKey }}</code></td><td>{{ snapshot.createdAt | date:'yyyy/MM/dd HH:mm' }}</td><td>{{ snapshot.definitionVersion }}</td><td>{{ snapshot.freshnessStatus }}</td><td>{{ snapshot.summary.netSales | number }}</td></tr> } @empty { <tr><td colspan="5" class="empty">Snapshot موجود نیست.</td></tr> }</tbody></table></div></section>
+    <section><div class="section-title"><div><span>Threshold history</span><h2>Alertهای اخیر</h2></div></div><div class="table-wrap"><table><thead><tr><th>Metric</th><th>Observed</th><th>شرط</th><th>نتیجه</th><th>زمان</th></tr></thead><tbody>@for (alert of alerts(); track alert.alertCode) { <tr><td><code>{{ alert.metricKey }}</code></td><td>{{ alert.observedValue | number }}</td><td>{{ alert.thresholdOperator }} {{ alert.thresholdValue | number }}</td><td><span class="status" [attr.data-status]="alert.isBreached ? 'Failed' : 'Succeeded'">{{ alert.isBreached ? 'عبور کرده' : 'عادی' }}</span></td><td>{{ alert.createdAt | date:'yyyy/MM/dd HH:mm' }}</td></tr> } @empty { <tr><td colspan="5" class="empty">Alert موجود نیست.</td></tr> }</tbody></table></div></section>
+  </div>
+
+  @if (permissions.isAdmin) { <section class="retention"><div><span>Retention policy</span><h2>پاک‌سازی داده‌های منقضی</h2><p>فقط Job، Snapshot، Alert و audit خارج از سیاست نگهداری حذف می‌شوند؛ این عملیات سراسری و فقط برای Admin است.</p></div><button type="button" class="danger" (click)="cleanup()" [disabled]="busy()==='cleanup'"><i class="mdi mdi-broom"></i> اجرای Cleanup</button></section> }
+</main>

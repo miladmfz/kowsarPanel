@@ -1,0 +1,42 @@
+<main class="bi-home" dir="rtl">
+  <header class="hero">
+    <div><span>Kowsar Management Intelligence</span><h1>مرکز داشبوردهای مدیریتی</h1><p>Pack معتبر را باز کنید، داشبورد شخصی بسازید و چیدمان گزارش را مطابق تصمیم خود تنظیم کنید.</p></div>
+    <div class="hero-actions"><a routerLink="/accounting/gozareshat/bi/workspace" class="primary"><i class="mdi mdi-plus"></i> داشبورد شخصی</a><a routerLink="/accounting/gozareshat/bi/analytics"><i class="mdi mdi-chart-timeline-variant-shimmer"></i> Analytics Lab</a>@if (permissions.canManageBiCatalog) { <a routerLink="/accounting/gozareshat/bi/catalog"><i class="mdi mdi-database-cog"></i> کاتالوگ</a> }@if (permissions.canViewBiOperations) { <a routerLink="/accounting/gozareshat/bi/operations"><i class="mdi mdi-monitor-dashboard"></i> Operations</a> }@if (permissions.canViewBiAudit) { <a routerLink="/accounting/gozareshat/bi/audit"><i class="mdi mdi-shield-search-outline"></i> Audit</a> }</div>
+  </header>
+
+  <section class="search"><i class="mdi mdi-magnify"></i><input [(ngModel)]="search" aria-label="جست‌وجوی داشبورد و Pack" placeholder="جست‌وجوی داشبورد، Domain یا Pack..."></section>
+  @if (error()) { <div class="alert">{{ error() }}</div> }
+  @if (loading()) { <div class="loading"><i class="mdi mdi-loading mdi-spin"></i> در حال آماده‌سازی فضای مدیریتی...</div> } @else {
+    @if (favorites().length) {
+      <section><div class="section-title"><div><span>Favorites</span><h2>منتخب‌های من</h2></div></div><div class="dashboard-grid">
+        @for (item of favorites(); track item.dashboardCode) { <button class="dashboard-card" (click)="open(item.dashboardCode)"><i class="mdi mdi-view-dashboard-outline icon"></i><span><strong>{{ item.title }}</strong><small>{{ item.packKey || 'داشبورد شخصی' }}</small></span><i class="mdi mdi-star favorite" (click)="toggleFavorite(item,$event)"></i></button> }
+      </div></section>
+    }
+    @if (templates().length) {
+      <section><div class="section-title"><div><span>Organization templates</span><h2>قالب‌های سازمانی</h2></div><p>قالب منتشرشده را باز کنید و با Copy یک نسخه شخصی بسازید.</p></div><div class="dashboard-grid">
+        @for (item of templates(); track item.dashboardCode) { <button class="dashboard-card" (click)="open(item.dashboardCode)"><i class="mdi mdi-view-dashboard-variant-outline icon"></i><span><strong>{{ item.title }}</strong><small>{{ item.templateDescription || ('نسخه ' + item.publishedVersion) }}</small></span><i class="mdi mdi-content-copy"></i></button> }
+      </div></section>
+    }
+    @if (shared().length) {
+      <section><div class="section-title"><div><span>Shared with me</span><h2>اشتراک‌گذاری‌شده با من</h2></div></div><div class="dashboard-grid compact">
+        @for (item of shared(); track item.dashboardCode) { <button class="dashboard-card" (click)="open(item.dashboardCode)"><i class="mdi mdi-account-multiple-outline icon"></i><span><strong>{{ item.title }}</strong><small>{{ item.accessLevel }}</small></span><i class="mdi" [class.mdi-star]="item.isFavorite" [class.mdi-star-outline]="!item.isFavorite" (click)="toggleFavorite(item,$event)"></i></button> }
+      </div></section>
+    }
+    @if (recent().length) {
+      <section><div class="section-title"><div><span>Recent</span><h2>مشاهده‌های اخیر</h2></div></div><div class="dashboard-grid compact">
+        @for (item of recent(); track item.dashboardCode) { <button class="dashboard-card" (click)="open(item.dashboardCode)"><i class="mdi mdi-history icon"></i><span><strong>{{ item.title }}</strong><small>{{ item.lastViewedAt | date:'yyyy/MM/dd HH:mm' }}</small></span><i class="mdi" [class.mdi-star]="item.isFavorite" [class.mdi-star-outline]="!item.isFavorite" (click)="toggleFavorite(item,$event)"></i></button> }
+      </div></section>
+    }
+    <section><div class="section-title"><div><span>Curated management packs</span><h2>Packهای تصمیم‌محور</h2></div><p>Primary KPI، Driver و Guardrail هر Pack از Semantic Catalog منتشرشده می‌آیند.</p></div><div class="pack-grid">
+      @for (pack of filteredPacks(); track pack.packKey) {
+        <article class="pack-card"><div class="pack-head"><span class="domain">{{ pack.domain }}</span>@if (pack.isInstalled) { <span class="installed"><i class="mdi mdi-check-circle"></i> نصب‌شده</span> }</div><h3>{{ pack.title }}</h3><p>{{ pack.description }}</p>
+          <div class="metrics"><div><span>Primary</span>@for (key of pack.primaryKpis; track key) { <b>{{ metricTitle(key) }}</b> }</div><div><span>Drivers</span>@for (key of pack.drivers; track key) { <b>{{ metricTitle(key) }}</b> }</div><div><span>Guardrails</span>@for (key of pack.guardrails; track key) { <b>{{ metricTitle(key) }}</b> }</div></div>
+          <button (click)="install(pack)" [disabled]="busyKey()===pack.packKey || (!permissions.canEditOwnBiDashboard && !pack.isInstalled)">@if (busyKey()===pack.packKey) { <i class="mdi mdi-loading mdi-spin"></i> } @else { <i class="mdi" [class.mdi-open-in-new]="pack.isInstalled" [class.mdi-plus-circle-outline]="!pack.isInstalled"></i> } {{ pack.isInstalled ? 'باز کردن داشبورد' : 'ساخت داشبورد شخصی' }}</button>
+        </article>
+      } @empty { <div class="empty">نتیجه‌ای برای جست‌وجوی شما پیدا نشد.</div> }
+    </div></section>
+    <section><div class="section-title"><div><span>All dashboards</span><h2>همه داشبوردهای من</h2></div></div><div class="dashboard-grid">
+      @for (item of owned(); track item.dashboardCode) { <button class="dashboard-card" (click)="open(item.dashboardCode)"><i class="mdi mdi-view-grid-outline icon"></i><span><strong>{{ item.title }}</strong><small>{{ item.packKey || 'شخصی' }}</small></span><i class="mdi" [class.mdi-star]="item.isFavorite" [class.mdi-star-outline]="!item.isFavorite" (click)="toggleFavorite(item,$event)"></i></button> } @empty { <div class="empty">هنوز داشبوردی ساخته نشده است؛ یکی از Packها را انتخاب کنید.</div> }
+    </div></section>
+  }
+</main>

@@ -1,0 +1,82 @@
+<main class="catalog-page" dir="rtl">
+  <header class="catalog-hero">
+    <div><span>Kowsar Semantic Catalog</span><h1>مدیریت کاتالوگ BI</h1><p>تعریف‌ها metadata هستند و هیچ SQL یا Formula اجرایی از این صفحه اجرا نمی‌شود.</p></div>
+    <a routerLink="/accounting/gozareshat/bi"><i class="mdi mdi-arrow-right"></i> بازگشت به BI Home</a>
+  </header>
+
+  @if (error()) { <div class="catalog-alert error" role="alert">{{ error() }}</div> }
+  @if (notice()) { <div class="catalog-alert success" role="status">{{ notice() }}</div> }
+
+  @if (loading()) {
+    <div class="catalog-loading"><span></span>در حال بارگذاری کاتالوگ...</div>
+  } @else {
+    <section class="catalog-layout">
+      <aside class="catalog-nav">
+        <h2>Datasetها</h2>
+        @for (dataset of catalog().datasets; track dataset.datasetKey) {
+          <button type="button" [class.active]="dataset.datasetKey === selectedDatasetKey()" (click)="selectDataset(dataset.datasetKey)">
+            <span>{{ dataset.title }}</span><small>{{ dataset.datasetKey }}</small><i [attr.data-status]="dataset.status">{{ statusLabel(dataset.status) }}</i>
+          </button>
+        }
+      </aside>
+
+      @if (selectedDataset(); as dataset) {
+        <div class="catalog-content">
+          <section class="catalog-card">
+            <div class="card-title"><div><h2>{{ dataset.title }}</h2><code>{{ dataset.handlerKey }}</code></div><span>Definition v{{ dataset.definitionVersion }}</span></div>
+            @if (datasetDraft) {
+              <div class="form-grid">
+                <label>عنوان<input [(ngModel)]="datasetDraft.title"></label><label>Domain<input [(ngModel)]="datasetDraft.domain"></label>
+                <label>وضعیت<select [(ngModel)]="datasetDraft.status">@for (status of statuses; track status) { <option [ngValue]="status">{{ statusLabel(status) }}</option> }</select></label>
+                <label>ترتیب<input type="number" [(ngModel)]="datasetDraft.sortOrder"></label>
+                <label class="wide">توضیح<textarea rows="2" [(ngModel)]="datasetDraft.description"></textarea></label>
+                <label>Max rows<input type="number" [(ngModel)]="datasetDraft.maxRows"></label><label>Max range days<input type="number" [(ngModel)]="datasetDraft.maxRangeDays"></label>
+                <label>Cache seconds<input type="number" [(ngModel)]="datasetDraft.cacheSeconds"></label><label>Freshness SLA (minute)<input type="number" [(ngModel)]="datasetDraft.freshnessSlaMinutes"></label>
+                <label>نام منبع<input [(ngModel)]="datasetDraft.sourceName"></label><label class="wide">شرح منبع<textarea rows="2" [(ngModel)]="datasetDraft.sourceDescription"></textarea></label>
+              </div>
+              <div class="actions"><button type="button" [disabled]="saving()" (click)="saveDataset()">ذخیره نسخه Dataset</button></div>
+            }
+          </section>
+
+          <div class="catalog-columns">
+            <section class="catalog-list">
+              <h2>Metricها <span>{{ dataset.metrics.length }}</span></h2>
+              @for (metric of dataset.metrics; track metric.metricKey) {
+                <button type="button" [class.active]="metric.metricKey === selectedMetricKey()" (click)="selectMetric(metric)"><div><strong>{{ metric.title }}</strong><code>{{ metric.metricKey }}</code></div><span>v{{ metric.definitionVersion }} · {{ statusLabel(metric.status) }}</span><small>{{ metric.widgetDependencyCount }} Widget</small></button>
+              }
+            </section>
+            <section class="catalog-list">
+              <h2>Fieldها <span>{{ dataset.fields.length }}</span></h2>
+              @for (field of dataset.fields; track field.fieldKey) {
+                <button type="button" [class.active]="field.fieldKey === selectedFieldKey()" (click)="selectField(field)"><div><strong>{{ field.title }}</strong><code>{{ field.fieldKey }}</code></div><span>v{{ field.definitionVersion }} · {{ statusLabel(field.status) }}</span><small>{{ field.dependencies.length }} وابستگی</small></button>
+              }
+            </section>
+          </div>
+
+          @if (selectedMetric(); as metric) {
+            <section class="catalog-card editor-card">
+              <div class="card-title"><div><h2>ویرایش Metric</h2><code>{{ metric.metricKey }}</code></div><span>{{ metric.widgetDependencyCount }} Widget وابسته</span></div>
+              @if (metricDraft) {
+                <div class="form-grid"><label>عنوان<input [(ngModel)]="metricDraft.title"></label><label>نقش<select [(ngModel)]="metricDraft.metricRole"><option value="Primary">Primary</option><option value="Driver">Driver</option><option value="Guardrail">Guardrail</option><option value="Diagnostic">Diagnostic</option></select></label><label>وضعیت<select [(ngModel)]="metricDraft.status">@for (status of statuses; track status) { <option [ngValue]="status">{{ statusLabel(status) }}</option> }</select></label><label>Precision<input type="number" min="0" max="6" [(ngModel)]="metricDraft.precision"></label><label>واحد<input [(ngModel)]="metricDraft.unit"></label><label>ترتیب<input type="number" [(ngModel)]="metricDraft.sortOrder"></label><label class="wide">تعریف<textarea rows="3" [(ngModel)]="metricDraft.definition"></textarea></label><label class="wide">Formula توصیفی<textarea rows="2" [(ngModel)]="metricDraft.formula"></textarea></label></div>
+                <div class="actions"><button type="button" [disabled]="saving()" (click)="saveMetric()">ساخت نسخه جدید Metric</button></div>
+              }
+              <details><summary>تاریخچه نسخه‌ها ({{ metric.versions.length }})</summary><ol class="version-list">@for (version of metric.versions; track version.definitionVersion) { <li><b>v{{ version.definitionVersion }}</b><span>{{ version.title }} · {{ statusLabel(version.status) }}</span><small>{{ version.changedAt | date:'yyyy/MM/dd HH:mm':'UTC' }} · {{ version.changedBy }}</small></li> }</ol></details>
+            </section>
+          }
+
+          @if (selectedField(); as field) {
+            <section class="catalog-card editor-card">
+              <div class="card-title"><div><h2>ویرایش Field</h2><code>{{ field.fieldKey }}</code></div><span>{{ field.dependencies.length }} وابستگی</span></div>
+              @if (fieldDraft) {
+                <div class="form-grid"><label>عنوان<input [(ngModel)]="fieldDraft.title"></label><label>نوع داده<select [(ngModel)]="fieldDraft.dataType"><option value="date">date</option><option value="integer">integer</option><option value="decimal">decimal</option><option value="string">string</option></select></label><label>نقش<select [(ngModel)]="fieldDraft.fieldRole"><option value="Dimension">Dimension</option><option value="Measure">Measure</option></select></label><label>وضعیت<select [(ngModel)]="fieldDraft.status">@for (status of statuses; track status) { <option [ngValue]="status">{{ statusLabel(status) }}</option> }</select></label><label>واحد<input [(ngModel)]="fieldDraft.unit"></label><label>ترتیب<input type="number" [(ngModel)]="fieldDraft.sortOrder"></label><label>Aggregationها<input [ngModel]="fieldDraft.allowedAggregations.join(',')" (ngModelChange)="setAggregations($event)"></label><label>Operatorها<input [ngModel]="fieldDraft.allowedOperators.join(',')" (ngModelChange)="setOperators($event)"></label><label class="check"><input type="checkbox" [(ngModel)]="fieldDraft.isSensitive"> حساس</label></div>
+                @if (field.dependencies.length) { <div class="dependency-box"><strong>وابستگی‌های ثبت‌شده</strong><ul>@for (dependency of field.dependencies; track dependency.kind + dependency.key) { <li>{{ dependency.kind }} · {{ dependency.title }} <code>{{ dependency.key }}</code></li> }</ul></div> }
+                @if (dependencyWarning().length) { <div class="catalog-alert warning"><strong>سرور تغییر را متوقف کرد.</strong><ul>@for (dependency of dependencyWarning(); track dependency) { <li>{{ dependency }}</li> }</ul><button type="button" [disabled]="saving()" (click)="saveField(true)">وابستگی‌ها بررسی شد؛ ثبت نسخه جدید</button></div> }
+                <div class="actions"><button type="button" [disabled]="saving()" (click)="saveField(false)">بررسی وابستگی و ذخیره</button></div>
+              }
+            </section>
+          }
+        </div>
+      }
+    </section>
+  }
+</main>

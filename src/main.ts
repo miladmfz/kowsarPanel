@@ -1,4 +1,4 @@
-import { enableProdMode, importProvidersFrom, provideZonelessChangeDetection, isDevMode } from '@angular/core';
+import { ErrorHandler, enableProdMode, importProvidersFrom, provideZonelessChangeDetection, isDevMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { HttpClientModule, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideRouter, withRouterConfig } from '@angular/router';
@@ -11,27 +11,10 @@ import { SecurityInterceptor } from './app/app-shell/framework-services/intercep
 import { ExceptionInterceptor } from './app/app-shell/framework-services/interceptors/exception.interceptor.service';
 
 import { AppConfigService } from './app/app-config.service';
+import { configureProductionConsole } from './app/app-shell/framework-services/logging/production-console';
+import { KowsarGlobalErrorHandler } from './app/app-shell/framework-services/logging/browser-error-monitoring.service';
 
-import { ModuleRegistry } from 'ag-grid-community';
-import {
-  AllCommunityModule,
-  AllEnterpriseModule,
-  LicenseManager,
-} from 'ag-grid-enterprise';
 import { provideServiceWorker } from '@angular/service-worker';
-
-// ✔ مجوز AG-Grid
-LicenseManager.setLicenseKey("MjAwMDAwMDAwMDAwMA==5a5ea3be8a8aaa9b54ce7186663066431");
-ModuleRegistry.registerModules([
-  AllCommunityModule,
-  AllEnterpriseModule,
-]);
-
-// import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
-
-// ModuleRegistry.registerModules([
-//   AllCommunityModule,
-// ]);
 
 // 🌗 تم اولیه
 function applyInitialTheme() {
@@ -61,16 +44,18 @@ function applyInitialTheme() {
 }
 
 // ⭐ لود تنظیمات برنامه + Bootstrap Angular
-fetch('./assets/config.json')
+fetch('./assets/config.json', { cache: 'no-store', credentials: 'same-origin' })
   .then(async response => {
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
     const config = await response.json();
 
-    const appConfig = new AppConfigService({} as any);
-    appConfig['config'] = config;
+    const appConfig = new AppConfigService();
+    appConfig.initialize(config);
 
-    if (config.production) enableProdMode();
+    configureProductionConsole(appConfig.all.production);
+
+    if (appConfig.all.production) enableProdMode();
 
     applyInitialTheme();
 
@@ -94,6 +79,7 @@ fetch('./assets/config.json')
         ),
 
         { provide: AppConfigService, useValue: appConfig },
+        { provide: ErrorHandler, useClass: KowsarGlobalErrorHandler },
 
         importProvidersFrom(CommonModule, HttpClientModule),
 

@@ -1,19 +1,25 @@
 <div class="card shadow-sm">
   <div class="card-body">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
       <div><h4 class="card-title mb-1">انواع درخواست</h4><div class="text-muted small">تعریف قوانین روزانه، ساعتی، استعلاجی و اضطراری</div></div>
       <button type="button" class="btn btn-success" (click)="create()">نوع جدید</button>
     </div>
 
     <form [formGroup]="SearchForm" class="row g-3 align-items-end mb-3">
-      <div class="col-md-3"><label class="form-label">وضعیت</label><select formControlName="OnlyActive" class="form-control"><option value="">همه</option><option value="1">فعال</option><option value="0">غیرفعال</option></select></div>
-      <div class="col-md-9 d-flex justify-content-end gap-2"><button type="button" class="btn btn-primary" (click)="loadList()">جستجو</button><a class="btn btn-light" [routerLink]="['/automation/workforce-absence/request-list']">بازگشت</a></div>
+      <div class="col-md-3"><label class="form-label" for="absence-type-status">وضعیت</label><select id="absence-type-status" formControlName="OnlyActive" class="form-control"><option value="">همه</option><option value="1">فعال</option><option value="0">غیرفعال</option></select></div>
+      <div class="col-md-9 d-flex flex-wrap justify-content-end gap-2"><button type="button" class="btn btn-primary" (click)="loadList()">جستجو</button><a class="btn btn-light" [routerLink]="['/automation/workforce-absence/request-list']">بازگشت</a></div>
     </form>
 
-    @if (loading()) { <div class="alert alert-info py-2">در حال دریافت...</div> }
-
-    <div class="ag-container" style="height:620px;border-radius:8px;overflow:hidden">
-      <ag-grid-angular [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions" [class]="themeClass + ' w-100 h-100'" (gridReady)="onGridReady($event,1)" (cellClicked)="onCellClicked($event)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"></ag-grid-angular>
-    </div>
+    @if (loading()) {
+      <app-data-view-state state="loading" />
+    } @else if (status() === 'error') {
+      <app-data-view-state state="error" [message]="errorMessage() || ''" actionLabel="تلاش مجدد" (action)="loadList()" />
+    } @else if (records().length === 0) {
+      <app-data-view-state state="empty" message="با فیلتر انتخاب‌شده نوع درخواستی ثبت نشده است." actionLabel="نوع جدید" (action)="create()" />
+    } @else {
+      <div class="ag-container absence-type-grid" role="region" aria-label="جدول انواع درخواست">
+        <ag-grid-angular [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions" [class]="themeClass + ' w-100 h-100'" (gridReady)="onGridReady($event,1)" (cellClicked)="onCellClicked($event)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"></ag-grid-angular>
+      </div>
+    }
   </div>
 </div>

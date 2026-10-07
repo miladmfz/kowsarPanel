@@ -1,0 +1,36 @@
+:host { position: relative; z-index: 2147483000; }
+.kws-grid-settings-backdrop { position: fixed; z-index: 2147483000; inset: 0; display: grid; place-items: center; padding: 1rem; background: rgba(10, 18, 34, .68); backdrop-filter: blur(3px); }
+.kws-grid-settings { display: grid; grid-template-rows: auto auto auto minmax(180px, 1fr) auto; width: min(1050px, 96vw); max-height: min(840px, 94vh); overflow: hidden; color: var(--vz-body-color, #17233c); border: 1px solid var(--vz-border-color, #dfe5ef); border-radius: 18px; background: var(--vz-body-bg, #fff); box-shadow: 0 24px 70px rgba(0, 0, 0, .35); }
+header, footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.2rem; }
+header { color: #fff; background: linear-gradient(125deg, #14213d, #245edb); }
+header span { color: #a7c7ff; font-size: .7rem; }
+header h2 { margin: .15rem 0; font-size: 1.15rem; }
+header small { direction: ltr; opacity: .75; }
+.icon-button { width: 36px; height: 36px; border: 0; border-radius: 10px; color: #fff; background: rgba(255,255,255,.14); font-size: 1.6rem; }
+.kws-grid-settings-toolbar { display: flex; flex-wrap: wrap; gap: .5rem; padding: .75rem 1rem; border-bottom: 1px solid var(--vz-border-color, #e5e7eb); }
+.kws-grid-settings-toolbar label { display: flex; flex: 1 1 260px; align-items: center; gap: .4rem; border: 1px solid #cfd7e4; border-radius: 9px; padding: 0 .65rem; }
+.kws-grid-settings-toolbar input { width: 100%; height: 38px; border: 0; outline: 0; color: inherit; background: transparent; }
+.kws-grid-settings-toolbar button, footer button, .order-buttons button { border: 1px solid #bed0f2; border-radius: 8px; padding: .45rem .7rem; color: #214f99; background: #edf4ff; }
+.kws-grid-settings-warning { margin: .6rem 1rem 0; padding: .55rem .7rem; color: #7c5613; border: 1px solid #ead19f; border-radius: 8px; background: #fff9e9; font-size: .75rem; }
+.kws-grid-settings-loading, .empty { padding: 2.5rem; color: #68758b; text-align: center; }
+.kws-grid-settings-table-wrap { overflow: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .76rem; }
+th { position: sticky; z-index: 1; top: 0; color: #506078; background: var(--vz-tertiary-bg, #f3f6fb); }
+th, td { padding: .55rem .65rem; border-bottom: 1px solid var(--vz-border-color, #edf0f5); text-align: right; }
+td:first-child, th:first-child, td:nth-child(4), th:nth-child(4), td:nth-child(5), th:nth-child(5) { text-align: center; }
+.caption-input, .width-input { height: 34px; border: 1px solid #cfd7e4; border-radius: 7px; padding: 0 .5rem; color: inherit; background: transparent; }
+.caption-input { width: min(260px, 100%); }.width-input { width: 78px; direction: ltr; }
+code { color: #526d9d; direction: ltr; }
+.order-buttons { display: inline-flex; gap: .25rem; }.order-buttons button { width: 31px; height: 31px; padding: 0; }
+.source-badge { display: inline-block; border-radius: 999px; padding: .2rem .45rem; color: #17633d; background: #eaf9f1; font-size: .62rem; direction: ltr; }.source-badge.runtime { color: #79540f; background: #fff4d6; }
+footer { border-top: 1px solid var(--vz-border-color, #e5e7eb); } footer p { margin: 0; color: #68758b; font-size: .7rem; } footer > div { display: flex; flex-wrap: wrap; gap: .45rem; justify-content: flex-end; }
+footer .primary { color: #fff; border-color: #245edb; background: #245edb; } footer .secondary { color: var(--vz-body-color, #42516a); border-color: var(--vz-border-color, #cfd7e4); background: transparent; }
+button { cursor: pointer; } button:disabled { opacity: .55; cursor: wait; }
+:host-context([data-bs-theme='dark']) .kws-grid-settings { color: #e6edf8; border-color: #354056; background: #202838; }
+:host-context([data-bs-theme='dark']) .kws-grid-settings-toolbar button,
+:host-context([data-bs-theme='dark']) footer button,
+:host-context([data-bs-theme='dark']) .order-buttons button { color: #b9d1ff; border-color: #465a7c; background: #273754; }
+:host-context([data-bs-theme='dark']) .kws-grid-settings-warning { color: #f0cc82; border-color: #765f2e; background: #3b321f; }
+:host-context([data-bs-theme='dark']) .source-badge { color: #8be0b6; background: #1d4334; }
+:host-context([data-bs-theme='dark']) .source-badge.runtime { color: #f0cc82; background: #493c20; }
+@media (max-width: 700px) { footer { align-items: stretch; flex-direction: column; } footer > div button { flex: 1; } th:nth-child(6), td:nth-child(6) { display: none; } }

@@ -1,5 +1,6 @@
 <div class="card shadow-sm">
   <div class="card-body">
+
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
       <div>
         <h4 class="card-title mb-1">مدیریت جدید مرخصی و غیبت</h4>
@@ -8,9 +9,17 @@
 
       <div class="d-flex flex-wrap gap-2">
         @if (permission.canManageRole) {
-          <a class="btn btn-light" [routerLink]="['/automation/workforce-absence/dashboard']">داشبورد</a>
-          <a class="btn btn-light" [routerLink]="['/automation/workforce-absence/policy-list']">Policy</a>
-          <a class="btn btn-light" [routerLink]="['/automation/workforce-absence/type-list']">انواع</a>
+        <a class="btn btn-light" [routerLink]="['/automation/workforce-absence/dashboard']">
+          داشبورد
+        </a>
+
+        <a class="btn btn-light" [routerLink]="['/automation/workforce-absence/policy-list']">
+          Policy
+        </a>
+
+        <a class="btn btn-light" [routerLink]="['/automation/workforce-absence/type-list']">
+          انواع
+        </a>
         }
 
         <button type="button" class="btn btn-success" (click)="navigateToCreate()">
@@ -21,47 +30,59 @@
     </div>
 
     <form [formGroup]="SearchForm" class="row g-3 align-items-end mb-3">
+
       <div class="col-md-2">
         <label class="form-label">از تاریخ</label>
+
         <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
+
           <input formControlName="StartJDate" class="form-control text-center" />
         </ng-persian-datepicker>
       </div>
 
       <div class="col-md-2">
         <label class="form-label">تا تاریخ</label>
+
         <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
+
           <input formControlName="EndJDate" class="form-control text-center" />
         </ng-persian-datepicker>
       </div>
 
       <div class="col-md-3">
         <label class="form-label">کاربر</label>
-        <select
-          formControlName="CentralRef"
-          class="form-control"
-          [style.pointer-events]="canSelectUser() ? 'auto' : 'none'"
-          [class.bg-light]="!canSelectUser()"
+
+        <select formControlName="CentralRef" class="form-control"
+          [style.pointer-events]="canSelectUser() ? 'auto' : 'none'" [class.bg-light]="!canSelectUser()"
           [attr.tabindex]="canSelectUser() ? 0 : -1">
+
           <option value="0">همه کاربران</option>
+
           @for (user of users(); track user.CentralCode) {
-            <option [value]="user.CentralCode?.toString()">{{ user.CentralName }}</option>
+          <option [value]="user.CentralCode?.toString()">
+            {{ user.CentralName }}
+          </option>
           }
         </select>
       </div>
 
       <div class="col-md-2">
         <label class="form-label">نوع</label>
+
         <select formControlName="AbsenceTypeKey" class="form-control">
           <option value="">همه</option>
+
           @for (item of types(); track item.AbsenceTypeCode) {
-            <option [value]="item.TypeKey">{{ item.TypeTitle }}</option>
+          <option [value]="item.TypeKey">
+            {{ item.TypeTitle }}
+          </option>
           }
         </select>
       </div>
 
       <div class="col-md-2">
         <label class="form-label">وضعیت</label>
+
         <select formControlName="WorkflowStatus" class="form-control">
           <option value="-1">همه</option>
           <option value="0">در انتظار</option>
@@ -80,68 +101,318 @@
     </form>
 
     @if (loading()) {
-      <div class="alert alert-info py-2">
-        <i class="fas fa-spinner fa-spin me-1"></i>
-        در حال دریافت اطلاعات...
-      </div>
+    <div class="alert alert-info py-2">
+      <i class="fas fa-spinner fa-spin me-1"></i>
+      در حال دریافت اطلاعات...
+    </div>
     }
 
     <div class="ag-container" style="height: 610px; border-radius: 8px; overflow: hidden;">
-      <ag-grid-angular
-        [columnDefs]="column_name_1"
-        [rowData]="records()"
-        [gridOptions]="gridOptions"
-        [class]="themeClass + ' w-100 h-100'"
-        (gridReady)="onGridReady($event, 1)"
-        (cellClicked)="onCellClicked($event)"
+
+      <ag-grid-angular [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions"
+        [class]="themeClass + ' w-100 h-100'" (gridReady)="onGridReady($event, 1)" (cellClicked)="onCellClicked($event)"
         (firstDataRendered)="gridApi1?.sizeColumnsToFit()">
       </ag-grid-angular>
     </div>
+
   </div>
 </div>
 
+<!-- =============================================================
+     FULL WORKFLOW MODAL
+     ============================================================= -->
 @if (showWorkflowPanel() && selectedRequest()) {
-  <div class="card shadow-sm mt-3 border-primary">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <strong>گردش‌کار درخواست شماره {{ selectedRequest()?.AbsenceRequestCode }}</strong>
-      <button type="button" class="btn btn-sm btn-light" (click)="closeWorkflow()">بستن</button>
-    </div>
 
-    <div class="card-body">
-      <div class="alert alert-light border small">
-        {{ selectedRequest()?.CentralName }} ـ {{ selectedRequest()?.TypeTitle }} ـ
-        {{ selectedRequest()?.StartJDate }} تا {{ selectedRequest()?.EndJDate }}
+<div class="modal d-block wfa-workflow-backdrop" tabindex="-1" role="dialog" aria-modal="true">
+
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable wfa-workflow-dialog" role="document">
+
+    <div class="modal-content shadow-lg border-0 wfa-workflow-content">
+
+      <!-- Header -->
+      <div class="modal-header wfa-workflow-header">
+
+        <div>
+          <h5 class="modal-title mb-1">
+            <i class="fas fa-user-check me-2"></i>
+            گردش‌کار درخواست شماره
+            {{ selectedRequest()?.AbsenceRequestCode }}
+          </h5>
+
+          <div class="small opacity-75">
+            مشاهده سابقه مرخصی و تصمیم مدیر
+          </div>
+        </div>
+
+        <button type="button" class="wfa-close-btn" aria-label="بستن" (click)="closeWorkflow()">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
 
-      <form [formGroup]="WorkflowForm" class="row g-3 align-items-end">
-        <div class="col-md-3">
-          <label class="form-label">وضعیت جدید</label>
-          <select formControlName="WorkflowStatus" class="form-control">
-            <option value="">انتخاب کنید</option>
-            <option value="1">تایید</option>
-            <option value="2">رد</option>
-            <option value="3">بررسی مجدد</option>
-            <option value="4">لغو</option>
-          </select>
+      <!-- Body -->
+      <div class="modal-body wfa-workflow-body p-3 p-md-4">
+
+        @if (workflowLoading()) {
+        <div class="alert alert-info d-flex align-items-center gap-2 mb-3">
+          <i class="fas fa-spinner fa-spin"></i>
+          <span>در حال دریافت سابقه و جزئیات درخواست...</span>
+        </div>
+        }
+
+        <!-- =====================================================
+               User leave history
+               ===================================================== -->
+        <div class="wfa-section p-3 mb-3">
+
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div class="wfa-section-title">
+              <i class="fas fa-history me-1 text-info"></i>
+              سابقه مرخصی‌های این کاربر
+            </div>
+
+            <span class="badge bg-light text-dark border">
+              {{ workflowHistory().length }} درخواست
+            </span>
+          </div>
+
+          @if (workflowHistory().length > 0) {
+          <div class="table-responsive wfa-history-wrap">
+            <table class="table table-sm table-hover align-middle">
+              <thead>
+                <tr>
+                  <th>کد</th>
+                  <th>تاریخ درخواست</th>
+                  <th>نوع</th>
+                  <th>حالت</th>
+                  <th>بازه</th>
+                  <th>ساعت</th>
+                  <th>مدت</th>
+                  <th>توضیحات</th>
+                  <th>وضعیت</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (item of workflowHistory(); track item.AbsenceRequestCode) {
+                <tr [class.wfa-current-history-row]="isCurrentHistoryRow(item)">
+                  <td>
+                    <strong>{{ item.AbsenceRequestCode }}</strong>
+                    @if (isCurrentHistoryRow(item)) {
+                    <span class="badge bg-primary ms-1">فعلی</span>
+                    }
+                  </td>
+
+                  <td>{{ display(item.RequestJDate) }}</td>
+                  <td>{{ display(item.TypeTitle) }}</td>
+                  <td>{{ requestModeText(item.RequestMode) }}</td>
+
+                  <td>
+                    {{ display(item.StartJDate) }}
+                    تا
+                    {{ display(item.EndJDate) }}
+                  </td>
+
+                  <td>
+                    @if (item.RequestMode === 'MINUTE') {
+                    {{ display(item.StartTime) }} تا {{ display(item.EndTime) }}
+                    } @else {
+                    -
+                    }
+                  </td>
+
+                  <td>{{ requestDurationText(item) }}</td>
+
+                  <td style="min-width: 180px; white-space: normal;">
+                    {{ display(item.Description) }}
+                  </td>
+
+                  <td>
+                    <span class="badge" [ngClass]="workflowStatusBadgeClass(item.WorkflowStatus)">
+                      {{ item.WorkflowStatusTitle || workflowStatusText(item.WorkflowStatus) }}
+                    </span>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          } @else if (!workflowLoading()) {
+          <div class="alert alert-light border mb-0 text-muted small">
+            سابقه‌ای برای این کاربر پیدا نشد.
+          </div>
+          }
         </div>
 
-        <div class="col-md-2">
-          <label class="form-label">پیوست دارد</label>
-          <select formControlName="HasAttachment" class="form-control">
-            <option value="0">خیر</option>
-            <option value="1">بله</option>
-          </select>
+        <!-- =====================================================
+               Current request compact details
+               ===================================================== -->
+        <div class="wfa-section p-3 mb-3">
+
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+            <div class="wfa-section-title">
+              <i class="fas fa-file-alt me-1 text-primary"></i>
+              خلاصه درخواست فعلی
+            </div>
+
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <span class="badge bg-light text-dark border">
+                کد {{ display(workflowDetail()?.AbsenceRequestCode || selectedRequest()?.AbsenceRequestCode) }}
+              </span>
+
+              <span class="badge"
+                [ngClass]="workflowStatusBadgeClass(workflowDetail()?.WorkflowStatus ?? selectedRequest()?.WorkflowStatus)">
+                {{ workflowStatusText(workflowDetail()?.WorkflowStatus ?? selectedRequest()?.WorkflowStatus) }}
+              </span>
+            </div>
+          </div>
+
+          <div class="wfa-compact-grid">
+
+            <div class="wfa-compact-item">
+              <span class="wfa-compact-label">کاربر</span>
+              <strong>{{ display(workflowDetail()?.CentralName || selectedRequest()?.CentralName) }}</strong>
+            </div>
+
+            <div class="wfa-compact-item">
+              <span class="wfa-compact-label">نوع</span>
+              <strong>
+                {{ display(workflowDetail()?.TypeTitle || selectedRequest()?.TypeTitle) }}
+                / {{ requestModeText(workflowDetail()?.RequestMode || selectedRequest()?.RequestMode) }}
+              </strong>
+            </div>
+
+            <div class="wfa-compact-item">
+              <span class="wfa-compact-label">بازه</span>
+              <strong>
+                {{ display(workflowDetail()?.StartJDate || selectedRequest()?.StartJDate) }}
+                تا
+                {{ display(workflowDetail()?.EndJDate || selectedRequest()?.EndJDate) }}
+              </strong>
+            </div>
+
+            <div class="wfa-compact-item">
+              <span class="wfa-compact-label">ساعت / مدت</span>
+              <strong>
+                @if ((workflowDetail()?.RequestMode || selectedRequest()?.RequestMode) === 'MINUTE') {
+                {{ display(workflowDetail()?.StartTime || selectedRequest()?.StartTime) }}
+                تا
+                {{ display(workflowDetail()?.EndTime || selectedRequest()?.EndTime) }}
+                ـ {{ requestDurationText(workflowDetail() || selectedRequest()) }}
+                } @else {
+                {{ requestDurationText(workflowDetail() || selectedRequest()) }}
+                }
+              </strong>
+            </div>
+
+            <div class="wfa-compact-item">
+              <span class="wfa-compact-label">تاریخ ثبت</span>
+              <strong>{{ display(workflowDetail()?.RequestJDate || selectedRequest()?.RequestJDate) }}</strong>
+            </div>
+
+            <div class="wfa-compact-item">
+              <span class="wfa-compact-label">پیوست</span>
+              <strong>{{ yesNoText(workflowDetail()?.HasAttachment ?? selectedRequest()?.HasAttachment) }}</strong>
+            </div>
+
+          </div>
+
+          <div class="wfa-compact-note mt-2">
+            <span class="wfa-compact-label">توضیحات درخواست:</span>
+            <strong>{{ display(workflowDetail()?.Description || selectedRequest()?.Description) }}</strong>
+          </div>
+
+          @if (workflowDetail()?.ManagerExplain) {
+          <div class="wfa-compact-note mt-2">
+            <span class="wfa-compact-label">توضیحات مدیر قبلی:</span>
+            <strong>{{ display(workflowDetail()?.ManagerExplain) }}</strong>
+          </div>
+          }
+
+          @if (workflowDetail()?.IsManagerOverride == 1) {
+          <div class="alert alert-warning py-2 px-3 mt-2 mb-0 small">
+            <strong>Override مدیر:</strong>
+            {{ display(workflowDetail()?.ManagerOverrideReason) }}
+          </div>
+          }
+
         </div>
 
-        <div class="col-md-5">
-          <label class="form-label">توضیحات مدیر</label>
-          <input formControlName="ManagerExplain" class="form-control" />
+        <!-- =====================================================
+               Manager decision - only editable part
+               ===================================================== -->
+        <div class="wfa-decision-box p-3">
+
+          <div class="wfa-section-title mb-3">
+            <i class="fas fa-check-circle me-1 text-primary"></i>
+            تصمیم مدیر برای همین درخواست
+          </div>
+
+          <form [formGroup]="WorkflowForm" class="row g-3">
+
+            <div class="col-md-4">
+              <label class="form-label">وضعیت جدید</label>
+
+              <select formControlName="WorkflowStatus" class="form-control"
+                [class.is-invalid]="WorkflowForm.controls.WorkflowStatus.invalid && WorkflowForm.controls.WorkflowStatus.touched">
+
+                <option value="">انتخاب کنید</option>
+                <option value="1">تایید</option>
+                <option value="2">رد</option>
+                <option value="3">بررسی مجدد</option>
+                <option value="4">لغو</option>
+              </select>
+
+              @if (WorkflowForm.controls.WorkflowStatus.invalid && WorkflowForm.controls.WorkflowStatus.touched) {
+              <div class="invalid-feedback d-block">
+                انتخاب وضعیت اجباری است
+              </div>
+              }
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">پیوست بررسی شد</label>
+
+              <select formControlName="HasAttachment" class="form-control">
+                <option value="0">خیر / ندارد</option>
+                <option value="1">بله</option>
+              </select>
+            </div>
+
+            <div class="col-md-5">
+              <label class="form-label">
+                توضیحات مدیر
+                @if (WorkflowForm.controls.WorkflowStatus.value === '2' || WorkflowForm.controls.WorkflowStatus.value
+                === '3') {
+                <span class="text-danger">*</span>
+                }
+              </label>
+
+              <textarea formControlName="ManagerExplain" class="form-control" rows="2"
+                placeholder="برای رد یا بررسی مجدد توضیح وارد کنید">
+                </textarea>
+            </div>
+
+          </form>
         </div>
 
-        <div class="col-md-2 d-grid">
-          <button type="button" class="btn btn-primary" (click)="submitWorkflow()">ثبت گردش‌کار</button>
-        </div>
-      </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer wfa-workflow-footer d-flex justify-content-between flex-wrap gap-2">
+
+        <button type="button" class="btn btn-light px-4" (click)="closeWorkflow()">
+          انصراف
+        </button>
+
+        <button type="button" class="btn btn-primary px-4" [disabled]="WorkflowForm.invalid || workflowLoading()"
+          (click)="submitWorkflow()">
+          <i class="fas fa-check me-1"></i>
+          ثبت تصمیم مدیر
+        </button>
+
+      </div>
+
     </div>
   </div>
+</div>
 }

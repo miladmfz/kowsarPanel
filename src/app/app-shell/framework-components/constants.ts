@@ -1,5 +1,4 @@
 import moment from "jalali-moment";
-declare var $: any;
 
 export const noImagePath = "../../../../../assets/images/noimage.png";
 
@@ -134,17 +133,22 @@ export var HotkeysAllowedIn = ['INPUT', 'TEXTAREA', 'SELECT'];
 export function createPreSelectedOption(selectId: string, dataName: string, dataId: string) {
     if (!dataName) return;
 
-    let select = $(selectId);
-    let option = new Option(dataName, dataId, true, true);
-    select.append(option).trigger('change');
+    const select = document.querySelector<HTMLSelectElement>(selectId);
+    if (!select) return;
+
+    const option = new Option(dataName, dataId, true, true);
+    select.add(option);
+    select.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
-export function colorizeRow(index, prefix = 'item') {
-    $(`[id^="${prefix}-"]`).each(function (_index, item) {
-        $(item).removeClass("bg-soft-primary");
+export function colorizeRow(index: string | number, prefix = 'item'): void {
+    document.querySelectorAll<HTMLElement>('[id]').forEach(item => {
+        if (item.id.startsWith(`${prefix}-`)) {
+            item.classList.remove('bg-soft-primary');
+        }
     });
 
-    $(`#${prefix}-${index}`).addClass("bg-soft-primary");
+    document.getElementById(`${prefix}-${index}`)?.classList.add('bg-soft-primary');
 }
 
 export function getTodayDate() {

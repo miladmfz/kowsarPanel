@@ -1,0 +1,417 @@
+<div class="kws-call-report-page" dir="rtl">
+  <header class="kws-report-hero">
+    <div>
+      <div class="kws-report-eyebrow"><i class="mdi mdi-chart-timeline-variant"></i> SANTRAL LOGICAL REPORTS</div>
+      <h3>مرکز گزارش تماس</h3>
+      <p>هر ردیف یک تماس منطقی است؛ مسیر تماس، پاسخ واقعی Endpoint و Legهای مرتبط جداگانه قابل بررسی‌اند.</p>
+    </div>
+
+    <div class="kws-hero-actions">
+      <button type="button" class="btn btn-outline-secondary" (click)="clearFilters()" [disabled]="loading">
+        <i class="mdi mdi-filter-remove-outline"></i>
+        پاک کردن فیلترها
+      </button>
+      <button type="button" class="btn btn-outline-success" (click)="exportCsv()" [disabled]="loading || exporting">
+        <i class="mdi" [class.mdi-download]="!exporting" [class.mdi-loading]="exporting" [class.mdi-spin]="exporting"></i>
+        خروجی CSV
+      </button>
+      <button type="button" class="btn btn-primary" (click)="loadReport(false)" [disabled]="loading">
+        <i class="mdi" [class.mdi-refresh]="!loading" [class.mdi-loading]="loading" [class.mdi-spin]="loading"></i>
+        بروزرسانی
+      </button>
+    </div>
+  </header>
+
+  <section class="kws-report-filter-card">
+    <div class="kws-filter-grid">
+      <label class="kws-field">
+        <span>از تاریخ</span>
+        <input class="form-control" [(ngModel)]="filter.startdateFa" placeholder="۱۴۰۵/۰۶/۲۱" (keyup.enter)="loadReport(true)">
+      </label>
+
+      <label class="kws-field">
+        <span>تا تاریخ</span>
+        <input class="form-control" [(ngModel)]="filter.enddateFa" placeholder="۱۴۰۵/۰۶/۲۱" (keyup.enter)="loadReport(true)">
+      </label>
+
+      <label class="kws-field kws-field-search">
+        <span>جستجو</span>
+        <div class="kws-input-icon">
+          <i class="mdi mdi-magnify"></i>
+          <input class="form-control" [(ngModel)]="filter.SearchTarget" placeholder="شماره، نام مخاطب، مسیر، داخلی..." (keyup.enter)="loadReport(true)">
+        </div>
+      </label>
+
+      <label class="kws-field">
+        <span>داخلی</span>
+        <input class="form-control" [(ngModel)]="filter.extension" placeholder="مثلاً 403" (keyup.enter)="loadReport(true)">
+      </label>
+
+      <label class="kws-field">
+        <span>جهت تماس</span>
+        <select class="form-select" [(ngModel)]="filter.CallType" (change)="loadReport(true)">
+          @for (item of callTypeOptions; track item.value) {
+            <option [value]="item.value">{{ item.label }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="kws-field">
+        <span>مسیر تماس</span>
+        <select class="form-select" [(ngModel)]="filter.RouteType" (change)="loadReport(true)">
+          @for (item of routeTypeOptions; track item.value) {
+            <option [value]="item.value">{{ item.label }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="kws-field">
+        <span>نتیجه تماس</span>
+        <select class="form-select" [(ngModel)]="filter.disposition" (change)="loadReport(true)">
+          @for (item of dispositionOptions; track item.value) {
+            <option [value]="item.value">{{ item.label }}</option>
+          }
+        </select>
+      </label>
+
+      <div class="kws-filter-actions">
+        <button type="button" class="btn btn-primary w-100" (click)="loadReport(true)" [disabled]="loading">
+          <i class="mdi mdi-filter-check-outline"></i>
+          اعمال فیلتر
+        </button>
+        <button type="button" class="btn btn-light w-100" (click)="toggleAdvancedFilters()">
+          <i class="mdi mdi-tune-variant"></i>
+          فیلتر پیشرفته
+          @if (activeFilterCount() > 0) {
+            <span class="kws-filter-count">{{ formatNumber(activeFilterCount()) }}</span>
+          }
+        </button>
+      </div>
+    </div>
+
+    @if (advancedFilters) {
+      <div class="kws-advanced-grid">
+        <label class="kws-field">
+          <span>DID / خط ورودی</span>
+          <input class="form-control" [(ngModel)]="filter.did" placeholder="شماره DID" (keyup.enter)="loadReport(true)">
+        </label>
+        <label class="kws-field">
+          <span>مبدأ خام</span>
+          <input class="form-control" [(ngModel)]="filter.src" placeholder="src" (keyup.enter)="loadReport(true)">
+        </label>
+        <label class="kws-field">
+          <span>مقصد خام</span>
+          <input class="form-control" [(ngModel)]="filter.dst" placeholder="dst" (keyup.enter)="loadReport(true)">
+        </label>
+        <label class="kws-field">
+          <span>Scan Limit</span>
+          <select class="form-select" [(ngModel)]="scanLimit" (change)="loadReport(true)">
+            <option [ngValue]="20000">20,000</option>
+            <option [ngValue]="50000">50,000</option>
+            <option [ngValue]="100000">100,000</option>
+          </select>
+        </label>
+      </div>
+    }
+  </section>
+
+  @if (scanTruncated) {
+    <div class="alert alert-warning kws-quality-warning">
+      <i class="mdi mdi-alert-outline"></i>
+      <div>
+        <strong>Scan محدود شده است.</strong>
+        <span>تعداد CDR خام از سقف {{ formatNumber(scanLimit) }} بیشتر بوده؛ برای گزارش کامل‌تر بازه تاریخ را کوچک‌تر یا Scan Limit را بیشتر کنید.</span>
+      </div>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  <section class="kws-summary-grid" [class.is-loading]="loading">
+    <button type="button" class="kws-summary-card neutral" (click)="filter.disposition=''; loadReport(true)">
+      <span class="kws-summary-icon"><i class="mdi mdi-phone-outline"></i></span>
+      <small>کل تماس منطقی</small>
+      <strong>{{ formatNumber(summary.total_calls) }}</strong>
+      <em>Logical Calls</em>
+    </button>
+
+    <button type="button" class="kws-summary-card success" (click)="setSummaryFilter('ANSWERED')" [class.is-active]="filter.disposition === 'ANSWERED'">
+      <span class="kws-summary-icon"><i class="mdi mdi-phone-check-outline"></i></span>
+      <small>پاسخ داده شده</small>
+      <strong>{{ formatNumber(summary.answered_calls) }}</strong>
+      <em>{{ formatPercent(summary.answer_rate) }} نرخ پاسخ</em>
+    </button>
+
+    <button type="button" class="kws-summary-card warning" (click)="setSummaryFilter('NO ANSWER')" [class.is-active]="filter.disposition === 'NO ANSWER'">
+      <span class="kws-summary-icon"><i class="mdi mdi-phone-missed-outline"></i></span>
+      <small>بی‌پاسخ</small>
+      <strong>{{ formatNumber(summary.no_answer_calls) }}</strong>
+      <em>نیازمند بررسی</em>
+    </button>
+
+    <button type="button" class="kws-summary-card danger" (click)="setSummaryFilter('BUSY')" [class.is-active]="filter.disposition === 'BUSY'">
+      <span class="kws-summary-icon"><i class="mdi mdi-phone-off-outline"></i></span>
+      <small>اشغال</small>
+      <strong>{{ formatNumber(summary.busy_calls) }}</strong>
+      <em>Busy</em>
+    </button>
+
+    <article class="kws-summary-card info">
+      <span class="kws-summary-icon"><i class="mdi mdi-timer-outline"></i></span>
+      <small>کل مکالمه</small>
+      <strong class="text-value">{{ summary.total_billsec_fa || secondsText(summary.total_billsec) }}</strong>
+      <em>زمان مکالمه واقعی</em>
+    </article>
+
+    <article class="kws-summary-card primary">
+      <span class="kws-summary-icon"><i class="mdi mdi-chart-clock"></i></span>
+      <small>میانگین مکالمه</small>
+      <strong class="text-value">{{ summary.avg_billsec_fa || secondsText(summary.avg_billsec) }}</strong>
+      <em>برای هر Logical Call</em>
+    </article>
+
+    <article class="kws-summary-card purple">
+      <span class="kws-summary-icon"><i class="mdi mdi-record-rec"></i></span>
+      <small>دارای ضبط</small>
+      <strong>{{ formatNumber(summary.recorded_calls) }}</strong>
+      <em>Recording</em>
+    </article>
+
+    <article class="kws-summary-card dark">
+      <span class="kws-summary-icon"><i class="mdi mdi-alert-circle-outline"></i></span>
+      <small>ناموفق / اختلال</small>
+      <strong>{{ formatNumber(summary.failed_calls) }}</strong>
+      <em>Failed / Congestion</em>
+    </article>
+  </section>
+
+  <section class="kws-facets">
+    <div class="kws-facet-group">
+      <span class="kws-facet-title">جهت:</span>
+      @for (item of callTypeFacets; track item.call_type) {
+        <button type="button" class="kws-facet-chip" [class.is-active]="filter.CallType === item.call_type" (click)="setCallTypeFacet(item.call_type || '')">
+          {{ item.call_type_fa || callTypeTitle(item.call_type || '') }}
+          <b>{{ formatNumber(item.call_count) }}</b>
+        </button>
+      }
+    </div>
+    <div class="kws-facet-group">
+      <span class="kws-facet-title">مسیر:</span>
+      @for (item of routeTypeFacets; track item.route_type) {
+        <button type="button" class="kws-facet-chip" [class.is-active]="filter.RouteType === item.route_type" (click)="setRouteTypeFacet(item.route_type || '')">
+          {{ item.route_type_fa || routeTypeTitle(item.route_type || '') }}
+          <b>{{ formatNumber(item.call_count) }}</b>
+        </button>
+      }
+    </div>
+  </section>
+
+  <section class="kws-table-card">
+    <div class="kws-table-header">
+      <div>
+        <h5><i class="mdi mdi-format-list-bulleted"></i> تماس‌ها</h5>
+        <span>{{ formatNumber(total) }} تماس منطقی • {{ formatNumber(rawRowsScanned) }} ردیف CDR بررسی شده</span>
+      </div>
+      <div class="kws-table-meta">
+        <span class="kws-engine-badge"><i class="mdi mdi-shield-check-outline"></i>{{ engine || 'logical-v4' }}</span>
+        @if (lastUpdate) { <span>بروزرسانی {{ lastUpdate }}</span> }
+      </div>
+    </div>
+
+    <div class="table-responsive kws-report-table-wrap">
+      <table class="table align-middle kws-report-table">
+        <thead>
+          <tr>
+            <th><button (click)="sortBy('calldate')">زمان <i [class]="sortIcon('calldate')"></i></button></th>
+            <th><button (click)="sortBy('extension')">داخلی <i [class]="sortIcon('extension')"></i></button></th>
+            <th><button (click)="sortBy('call_type')">جهت <i [class]="sortIcon('call_type')"></i></button></th>
+            <th><button (click)="sortBy('route_type')">مسیر <i [class]="sortIcon('route_type')"></i></button></th>
+            <th><button (click)="sortBy('peer_number')">طرف مقابل <i [class]="sortIcon('peer_number')"></i></button></th>
+            <th><button (click)="sortBy('disposition')">نتیجه <i [class]="sortIcon('disposition')"></i></button></th>
+            <th><button (click)="sortBy('billsec')">مکالمه <i [class]="sortIcon('billsec')"></i></button></th>
+            <th><button (click)="sortBy('did')">DID <i [class]="sortIcon('did')"></i></button></th>
+            <th>ضبط</th>
+            <th class="text-center">جزئیات</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (loading) {
+            @for (item of [1,2,3,4,5,6,7,8]; track item) {
+              <tr class="kws-skeleton-row"><td colspan="10"><span></span></td></tr>
+            }
+          } @else if (records.length === 0) {
+            <tr>
+              <td colspan="10">
+                <div class="kws-empty-state">
+                  <i class="mdi mdi-phone-remove-outline"></i>
+                  <strong>تماسی با این فیلترها پیدا نشد</strong>
+                  <span>بازه تاریخ یا فیلترهای گزارش را تغییر دهید.</span>
+                </div>
+              </td>
+            </tr>
+          } @else {
+            @for (row of records; track trackByCallKey($index, row)) {
+              <tr>
+                <td class="kws-date-cell">
+                  <strong>{{ row.calldate_fa || dateTimeText(row.calldate) }}</strong>
+                  <small>{{ row.calldate }}</small>
+                </td>
+                <td><span class="kws-extension">{{ row.extension || '-' }}</span></td>
+                <td>
+                  <span class="kws-type-badge" [class.incoming]="row.call_type === 'Incoming'" [class.outgoing]="row.call_type === 'Outgoing'" [class.internal]="row.call_type === 'Internal'">
+                    <i [class]="callTypeIcon(row.call_type)"></i>{{ row.call_type_fa || callTypeTitle(row.call_type) }}
+                  </span>
+                </td>
+                <td>
+                  <div class="kws-route" [class]="'kws-route ' + routeClass(row.route_type)">
+                    <i [class]="routeIcon(row.route_type)"></i>
+                    <div>
+                      <strong>{{ callRoute(row) }}</strong>
+                      @if (row.ringgroup_name && row.route_type === 'RingGroup') { <small>{{ row.ringgroup_name }}</small> }
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="kws-peer">
+                    <strong>{{ row.peer_display || row.peer_number || '-' }}</strong>
+                    @if (row.peer_display && row.peer_display !== row.peer_number) { <small>{{ row.peer_number }}</small> }
+                  </div>
+                </td>
+                <td><span class="kws-status" [class]="'kws-status ' + dispositionClass(row.disposition)">{{ row.disposition_fa || dispositionTitle(row.disposition) }}</span></td>
+                <td class="kws-duration-cell">
+                  <strong>{{ row.billsec_fa || secondsText(row.billsec) }}</strong>
+                  <small>کل: {{ row.duration_fa || secondsText(row.duration) }}</small>
+                </td>
+                <td>{{ row.did || '-' }}</td>
+                <td>
+                  @if (row.has_recording) {
+                    <button type="button" class="kws-icon-btn recording" title="پخش ضبط تماس" (click)="playRecording(row)"><i class="mdi mdi-play-circle-outline"></i></button>
+                  } @else {
+                    <span class="kws-no-recording">—</span>
+                  }
+                </td>
+                <td class="text-center">
+                  <button type="button" class="kws-detail-btn" (click)="openTrace(row)" title="مشاهده Logical Trace و Raw CDR Legs">
+                    <i class="mdi mdi-source-branch"></i>
+                    <span>{{ formatNumber(row.legs_count) }} Leg</span>
+                  </button>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="kws-pagination">
+      <div class="kws-page-size">
+        <span>تعداد در صفحه</span>
+        <select class="form-select form-select-sm" [(ngModel)]="limit" (change)="changePageSize()">
+          <option [ngValue]="25">25</option>
+          <option [ngValue]="50">50</option>
+          <option [ngValue]="100">100</option>
+          <option [ngValue]="200">200</option>
+        </select>
+      </div>
+      <div class="kws-page-info">صفحه {{ formatNumber(page) }} از {{ formatNumber(totalPages || 1) }}</div>
+      <div class="kws-page-actions">
+        <button class="btn btn-sm btn-light" [disabled]="page <= 1 || loading" (click)="changePage(1)"><i class="mdi mdi-page-first"></i></button>
+        <button class="btn btn-sm btn-light" [disabled]="page <= 1 || loading" (click)="changePage(page - 1)"><i class="mdi mdi-chevron-right"></i> قبلی</button>
+        <button class="btn btn-sm btn-light" [disabled]="page >= totalPages || totalPages === 0 || loading" (click)="changePage(page + 1)">بعدی <i class="mdi mdi-chevron-left"></i></button>
+        <button class="btn btn-sm btn-light" [disabled]="page >= totalPages || totalPages === 0 || loading" (click)="changePage(totalPages)"><i class="mdi mdi-page-last"></i></button>
+      </div>
+    </footer>
+  </section>
+</div>
+
+@if (traceVisible) {
+  <div class="kws-trace-backdrop" (click)="closeTrace()"></div>
+  <div class="kws-trace-shell" dir="rtl">
+    <section class="kws-trace-modal" (click)="$event.stopPropagation()">
+      <header class="kws-trace-header">
+        <div>
+          <span class="kws-report-eyebrow"><i class="mdi mdi-source-branch"></i> LOGICAL CALL TRACE</span>
+          <h5>{{ traceRow ? callRoute(traceRow) : 'جزئیات تماس' }}</h5>
+          <small>LinkedID: {{ traceRow?.linkedid || traceRow?.call_key }}</small>
+        </div>
+        <button type="button" class="kws-close-btn" (click)="closeTrace()"><i class="mdi mdi-close"></i></button>
+      </header>
+
+      <div class="kws-trace-body">
+        @if (traceRow) {
+          <div class="kws-trace-summary">
+            <div><span>زمان</span><strong>{{ traceRow.calldate_fa || dateTimeText(traceRow.calldate) }}</strong></div>
+            <div><span>داخلی</span><strong>{{ traceRow.extension || '-' }}</strong></div>
+            <div><span>جهت</span><strong>{{ traceRow.call_type_fa }}</strong></div>
+            <div><span>مسیر</span><strong>{{ callRoute(traceRow) }}</strong></div>
+            <div><span>طرف مقابل</span><strong>{{ traceRow.peer_display || traceRow.peer_number }}</strong></div>
+            <div><span>نتیجه</span><strong>{{ traceRow.disposition_fa }}</strong></div>
+            <div><span>پاسخ‌دهنده</span><strong>{{ traceRow.answered_extension || '-' }}</strong></div>
+            <div><span>مدت مکالمه</span><strong>{{ traceRow.billsec_fa }}</strong></div>
+          </div>
+        }
+
+        @if (traceLoading) {
+          <div class="kws-trace-loading"><i class="mdi mdi-loading mdi-spin"></i> در حال دریافت Legهای CDR...</div>
+        } @else if (traceError) {
+          <div class="alert alert-danger">{{ traceError }}</div>
+        } @else if (trace) {
+          <div class="kws-trace-title">
+            <div><h6>Raw CDR Legs</h6><span>{{ formatNumber(trace.legs_count) }} ردیف مرتبط با همین تماس</span></div>
+            <span class="kws-engine-badge">Audit View</span>
+          </div>
+
+          <div class="table-responsive kws-legs-wrap">
+            <table class="table table-sm kws-legs-table">
+              <thead><tr><th>#</th><th>زمان</th><th>src</th><th>dst</th><th>Context</th><th>Channel</th><th>DstChannel</th><th>Result</th><th>Billsec</th><th>LastData</th></tr></thead>
+              <tbody>
+                @for (leg of trace.raw_legs; track leg.id || $index) {
+                  <tr>
+                    <td>{{ leg.id || ($index + 1) }}</td>
+                    <td class="text-nowrap">{{ leg.calldate }}</td>
+                    <td>{{ leg.src || '-' }}</td>
+                    <td>{{ leg.dst || '-' }}</td>
+                    <td><code>{{ leg.dcontext || '-' }}</code></td>
+                    <td><code>{{ leg.channel || '-' }}</code></td>
+                    <td><code>{{ leg.dstchannel || '-' }}</code></td>
+                    <td><span class="kws-status" [class]="'kws-status ' + dispositionClass(leg.disposition)">{{ dispositionTitle(leg.disposition) }}</span></td>
+                    <td>{{ leg.billsec || 0 }}</td>
+                    <td><code>{{ leg.lastdata || '-' }}</code></td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          @if (trace.cel_events?.length) {
+            <div class="kws-trace-title kws-cel-title">
+              <div><h6>CEL Transfer Events</h6><span>{{ formatNumber(trace.cel_events_count || trace.cel_events?.length || 0) }} رویداد انتقال معتبر</span></div>
+              <span class="kws-engine-badge">Transfer Evidence</span>
+            </div>
+
+            <div class="table-responsive kws-legs-wrap">
+              <table class="table table-sm kws-legs-table">
+                <thead><tr><th>#</th><th>زمان</th><th>Event</th><th>Channel</th><th>Exten</th><th>Peer</th><th>Extra</th></tr></thead>
+                <tbody>
+                  @for (event of trace.cel_events; track event.uniqueid || $index) {
+                    <tr>
+                      <td>{{ $index + 1 }}</td>
+                      <td class="text-nowrap">{{ event.eventtime || '-' }}</td>
+                      <td><span class="kws-engine-badge">{{ event.eventtype || '-' }}</span></td>
+                      <td><code>{{ event.channame || '-' }}</code></td>
+                      <td>{{ event.exten || '-' }}</td>
+                      <td><code>{{ event.peer || '-' }}</code></td>
+                      <td><code class="kws-extra-code">{{ event.extra || '-' }}</code></td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        }
+      </div>
+    </section>
+  </div>
+}

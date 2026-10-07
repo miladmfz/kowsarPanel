@@ -30,7 +30,8 @@
 .kws-login-page {
     position: fixed !important;
     inset: 0 !important;
-    width: 100vw !important;
+    width: auto !important;
+    box-sizing: border-box;
     min-height: 100vh !important;
     padding: 40px 16px !important;
     overflow-y: auto !important;
@@ -102,6 +103,8 @@
 .kws-login-card {
     width: 100%;
     max-width: 460px;
+    min-width: 0;
+    flex: 0 1 460px;
     border-radius: 34px;
     backdrop-filter: blur(16px);
 
@@ -375,15 +378,43 @@
 }
 
 /* =========================
-   DARK MODE = FORCE LIGHT INPUT
+   DARK MODE INPUT
    ========================= */
 :host-context(html[data-bs-theme='dark']) .form-floating>.form-control.kws-input,
 :host-context(body[data-layout-color='dark']) .form-floating>.form-control.kws-input,
 :host-context(body[data-layout-mode='dark']) .form-floating>.form-control.kws-input {
-    background: #ffffff !important;
-    color: #000000 !important;
+    background: #1d2533 !important;
+    color: #f8fafc !important;
 
-    border: 1px solid #d0d7e2 !important;
+    border: 1px solid rgba(148, 163, 184, .42) !important;
+}
+
+:host-context(html[data-bs-theme='dark']) .form-floating>.form-control.kws-input:hover,
+:host-context(body[data-layout-color='dark']) .form-floating>.form-control.kws-input:hover,
+:host-context(body[data-layout-mode='dark']) .form-floating>.form-control.kws-input:hover {
+    background: #222c3d !important;
+    color: #f8fafc !important;
+    border-color: rgba(147, 197, 253, .58) !important;
+}
+
+:host-context(html[data-bs-theme='dark']) .form-floating>.form-control.kws-input:focus,
+:host-context(body[data-layout-color='dark']) .form-floating>.form-control.kws-input:focus,
+:host-context(body[data-layout-mode='dark']) .form-floating>.form-control.kws-input:focus {
+    background: #222c3d !important;
+    color: #ffffff !important;
+    border-color: #60a5fa !important;
+    box-shadow: 0 0 0 .18rem rgba(96, 165, 250, .22) !important;
+}
+
+:host-context(html[data-bs-theme='dark']) .form-control.is-valid,
+:host-context(html[data-bs-theme='dark']) .form-control.is-invalid,
+:host-context(body[data-layout-color='dark']) .form-control.is-valid,
+:host-context(body[data-layout-color='dark']) .form-control.is-invalid,
+:host-context(body[data-layout-mode='dark']) .form-control.is-valid,
+:host-context(body[data-layout-mode='dark']) .form-control.is-invalid {
+    background: #1d2533 !important;
+    color: #f8fafc !important;
+    border-color: rgba(148, 163, 184, .42) !important;
 }
 
 
@@ -392,7 +423,7 @@
 :host-context(html[data-bs-theme='dark']) .form-floating>label.kws-floating-label,
 :host-context(body[data-layout-color='dark']) .form-floating>label.kws-floating-label,
 :host-context(body[data-layout-mode='dark']) .form-floating>label.kws-floating-label {
-    color: rgba(12, 12, 12, 0.78) !important;
+    color: rgba(241, 245, 249, .78) !important;
     background: transparent !important;
 }
 
@@ -402,7 +433,7 @@
 :host-context(body[data-layout-color='dark']) .form-floating>.form-control:not(:placeholder-shown)~label.kws-floating-label,
 :host-context(body[data-layout-mode='dark']) .form-floating>.form-control:focus~label.kws-floating-label,
 :host-context(body[data-layout-mode='dark']) .form-floating>.form-control:not(:placeholder-shown)~label.kws-floating-label {
-    color: #292929 !important;
+    color: #93c5fd !important;
     background: transparent !important;
 }
 
@@ -422,10 +453,20 @@
     transform: translateY(-50%);
     cursor: pointer;
     z-index: 5;
+    padding: .35rem;
+    border: 0;
+    background: transparent;
+    color: inherit;
 }
 
 .kws-password-eye:hover {
     color: var(--bs-primary);
+}
+
+.kws-password-eye:focus-visible {
+    outline: 3px solid var(--bs-primary);
+    outline-offset: 2px;
+    border-radius: .375rem;
 }
 
 :host-context(html[data-bs-theme='dark']) .kws-password-eye,
@@ -578,7 +619,16 @@ input:-webkit-autofill:focus {
     }
 
     .kws-login-card {
+        width: calc(100vw - 32px) !important;
+        max-width: calc(100vw - 32px) !important;
+        min-width: 0;
+        flex: 0 0 auto;
         border-radius: 26px;
+    }
+
+    .kws-login-card .card-body {
+        min-width: 0;
+        padding-inline: 1rem !important;
     }
 
     .kws-logo-circle {
@@ -780,15 +830,15 @@ input:-webkit-autofill:focus {
 }
 
 /* Light mode */
-html[data-bs-theme="light"] .kws-back-to-site-btn,
-body:not([data-bs-theme="dark"]) .kws-back-to-site-btn {
+:host-context(html[data-bs-theme="light"]) .kws-back-to-site-btn,
+:host-context(body:not([data-bs-theme="dark"])) .kws-back-to-site-btn {
     color: #0d47a1;
     background: rgba(13, 71, 161, .06);
     border-color: rgba(13, 71, 161, .12);
 }
 
-html[data-bs-theme="light"] .kws-software-entry-icon,
-body:not([data-bs-theme="dark"]) .kws-software-entry-icon {
+:host-context(html[data-bs-theme="light"]) .kws-software-entry-icon,
+:host-context(body:not([data-bs-theme="dark"])) .kws-software-entry-icon {
     color: #0d47a1;
     background: rgba(13, 71, 161, .06);
     border-color: rgba(13, 71, 161, .12);

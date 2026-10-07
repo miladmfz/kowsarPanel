@@ -1,0 +1,87 @@
+:host {
+  --kws-loader-backdrop: rgba(15, 23, 42, 0.46);
+  --kws-loader-surface: #ffffff;
+  --kws-loader-surface-soft: #eff6ff;
+  --kws-loader-title: #102a4c;
+  --kws-loader-muted: #526277;
+  --kws-loader-border: rgba(30, 64, 175, 0.16);
+  --kws-loader-accent: #1565c0;
+}
+
+.kws-app-loading-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  color: var(--kws-loader-title);
+  background: var(--kws-loader-backdrop);
+  backdrop-filter: blur(3px);
+}
+
+.kws-app-loading-card {
+  width: min(320px, calc(100vw - 2rem));
+  overflow: hidden;
+  text-align: center;
+  color: var(--kws-loader-title);
+  background: var(--kws-loader-surface);
+  border: 1px solid var(--kws-loader-border);
+  border-radius: 18px;
+  box-shadow: 0 22px 60px rgba(15, 23, 42, 0.24);
+}
+
+.kws-app-loading-accent {
+  height: 4px;
+  background: linear-gradient(90deg, #0d47a1, #1976d2 58%, #ffcc33);
+}
+
+.kws-app-loading-content {
+  padding: 1.5rem 1rem 1.4rem;
+}
+
+.kws-app-loading-icon {
+  width: 58px;
+  height: 58px;
+  display: inline-grid;
+  place-items: center;
+  margin-bottom: 0.9rem;
+  color: var(--kws-loader-accent);
+  background: var(--kws-loader-surface-soft);
+  border: 1px solid var(--kws-loader-border);
+  border-radius: 50%;
+  font-size: 1.5rem;
+}
+
+.kws-app-loading-title {
+  margin-bottom: 0.25rem;
+  color: var(--kws-loader-title);
+  font-size: 1.05rem;
+  font-weight: 750;
+}
+
+.kws-app-loading-subtitle {
+  color: var(--kws-loader-muted);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+:host-context(html[data-bs-theme='dark']) {
+  --kws-loader-backdrop: rgba(2, 6, 23, 0.72);
+  --kws-loader-surface: #252e40;
+  --kws-loader-surface-soft: #1d3859;
+  --kws-loader-title: #f8fafc;
+  --kws-loader-muted: #cbd5e1;
+  --kws-loader-border: rgba(148, 163, 184, 0.28);
+  --kws-loader-accent: #60a5fa;
+}
+
+:host-context(html[data-bs-theme='dark']) .kws-app-loading-card {
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.52);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kws-app-loading-icon i {
+    animation-duration: 1.5s;
+  }
+}

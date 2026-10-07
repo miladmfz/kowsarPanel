@@ -1,78 +1,86 @@
 import { inject } from '@angular/core';
 import {
-  HttpInterceptorFn,
   HttpErrorResponse,
-  HttpRequest,
   HttpHandlerFn,
+  HttpInterceptorFn,
+  HttpRequest,
 } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
+
+import { AppConfigService } from 'src/app/app-config.service';
 import { NotificationService } from '../ui/notification.service';
+import { BrowserErrorMonitoringService } from '../logging/browser-error-monitoring.service';
 
-/**
- * ExceptionInterceptor
- * کنترل‌کننده‌ی خطاها برای تمام درخواست‌های HTTP
- * برای درخواست‌های blob (دانلود فایل) هیچ تغییری نمی‌دهد
- */
-export const ExceptionInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn) => {
+export const ExceptionInterceptor: HttpInterceptorFn = (
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn
+) => {
   const notifier = inject(NotificationService);
+  const config = inject(AppConfigService);
+  const monitoring = inject(BrowserErrorMonitoringService);
 
-  //   اگر درخواست blob یا دانلود فایل بود، مستقیماً عبور بده
-  if (
-    req.responseType === 'blob' ||
-    req.url.toLowerCase().includes('getattachfile') ||
-    req.url.toLowerCase().includes('download')
-  ) {
-    return next(req);
-  }
-
-  //   سایر درخواست‌ها
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      let message = 'خطایی در ارتباط با سرور رخ داده است.';
+      notifier.show(getHttpErrorMessage(error), 'خطا', 'error', 5000);
 
-      // 🧠 تشخیص نوع خطا
-      if (error.error instanceof ErrorEvent) {
-        message = `  خطای سمت کاربر: ${error.error.message}`;
-      } else {
-        switch (error.status) {
-          case 0:
-            message = '❌ ارتباط با سرور برقرار نشد.';
-            break;
-          case 400:
-            message = 'درخواست نامعتبر است.';
-            break;
-          case 401:
-            message = 'دسترسی غیرمجاز.';
-            break;
-          case 403:
-            message = 'شما مجاز به انجام این عملیات نیستید.';
-            break;
-          case 404:
-            message = 'موردی یافت نشد.';
-            break;
-          case 500:
-            message = 'خطای داخلی سرور.';
-            break;
-          default:
-            message = `❗ خطای ${error.status}: ${error.statusText}`;
-        }
+      if (error.status === 0 || error.status >= 500) {
+        monitoring.report(error);
       }
 
-      // 🚨 نمایش پیام خطا
-      notifier.show(message, 'خطا', 'error', 5000);
+      if (!config.all.production) {
+        console.error('HTTP request failed', {
+          method: req.method,
+          status: error.status,
+          statusText: error.statusText,
+          responseType: req.responseType,
+        });
+      }
 
-      // 🧾 لاگ کامل برای بررسی
-      console.error('❗ ExceptionInterceptor:', {
-        url: req.url,
-        method: req.method,
-        status: error.status,
-        statusText: error.statusText,
-        responseType: req.responseType,
-        error,
-      });
-
-      // ارسال خطا برای زنجیره observable
       return throwError(() => error);
     })
   );
 };
+
+export function getHttpErrorMessage(error: HttpErrorResponse): string {
+  const serverMessage = extractServerMessage(error.error);
+
+  if (error.error instanceof ErrorEvent) {
+    return 'خطایی در مرورگر رخ داده است.';
+  }
+
+  switch (error.status) {
+    case 0:
+      return 'ارتباط با سرور برقرار نشد.';
+    case 400:
+      return serverMessage || 'درخواست نامعتبر است.';
+    case 401:
+      return 'نشست شما منقضی شده است؛ لطفاً دوباره وارد شوید.';
+    case 403:
+      return 'شما مجاز به انجام این عملیات نیستید.';
+    case 404:
+      return serverMessage || 'مورد درخواستی یافت نشد.';
+    case 409:
+      return serverMessage || 'اطلاعات با وضعیت فعلی سیستم تداخل دارد.';
+    case 422:
+      return serverMessage || 'اطلاعات ارسال‌شده معتبر نیست.';
+    case 429:
+      return 'تعداد درخواست‌ها بیش از حد مجاز است؛ کمی بعد دوباره تلاش کنید.';
+    default:
+      return error.status >= 500
+        ? 'سرویس موقتاً با مشکل مواجه شده است.'
+        : serverMessage || 'خطایی در ارتباط با سرور رخ داده است.';
+  }
+}
+
+function extractServerMessage(payload: unknown): string {
+  if (!payload || typeof payload !== 'object' || payload instanceof Blob) {
+    return '';
+  }
+
+  const value = payload as Record<string, unknown>;
+  const candidate = value['ErrDesc'] ?? value['errDesc'] ?? value['Message'] ?? value['message'];
+
+  return typeof candidate === 'string'
+    ? candidate.trim().slice(0, 500)
+    : '';
+}

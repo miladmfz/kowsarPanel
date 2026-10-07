@@ -10,6 +10,7 @@ import {
 import { Router } from '@angular/router';
 import { KowsarBaseWebApi } from 'src/app/app-shell/framework-services/base/KowsarBaseWebApi.service';
 import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
+import { AuthTokenService } from '../../services/auth-token.service';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 
 @Component({
@@ -27,6 +28,7 @@ export class AuthChangeComponent {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   protected readonly session = inject(SessionStorageService);
+  private readonly authTokens = inject(AuthTokenService);
   protected readonly base_repo = inject(KowsarBaseWebApi);
   protected readonly notificationService = inject(NotificationService);
 
@@ -81,7 +83,7 @@ export class AuthChangeComponent {
     };
 
     this.base_repo.ChangeXUserPassword(payload).subscribe({
-      next: (data: any) => {
+      next: (data) => {
         const user = data?.users?.[0];
 
         if (!user) {
@@ -100,9 +102,8 @@ export class AuthChangeComponent {
 
         this.notificationService.succeded();
 
-        sessionStorage.clear();
-
-        this.router.navigate(['/auth/login']);
+        const loginRoute = this.session.loginRoute;
+        this.authTokens.logout().subscribe(() => void this.router.navigateByUrl(loginRoute));
       },
 
       error: () => {

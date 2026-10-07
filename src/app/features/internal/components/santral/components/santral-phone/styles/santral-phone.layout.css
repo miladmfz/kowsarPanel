@@ -1,0 +1,43 @@
+app-santral-phone {
+    display: block;
+}
+
+.kws-phone-page {
+    min-height: calc(100vh - 90px);
+    padding: 20px;
+    background:
+        radial-gradient(circle at top right, rgba(30, 58, 138, 0.10), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(212, 175, 55, 0.13), transparent 38%);
+}
+
+.kws-app-shell {
+    width: 100%;
+    max-width: 1480px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 430px minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+}
+
+.kws-phone-panel,
+.kws-workspace-panel {
+    min-width: 0;
+}
+
+.kws-phone-card,
+.kws-workspace-card {
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    box-shadow:
+        0 24px 70px rgba(15, 23, 42, 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 0.70);
+    backdrop-filter: blur(16px);
+}
+
+.kws-phone-right-column {
+    min-width: 0;
+    display: grid;
+    gap: 18px;
+}

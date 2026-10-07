@@ -8,7 +8,12 @@ export const authKowsarRoutes: Routes = [
         children: [
             {
                 path: '',
-                redirectTo: 'login',
+                redirectTo: 'login-person',
+                pathMatch: 'full',
+            },
+            {
+                path: 'login',
+                redirectTo: 'login-person',
                 pathMatch: 'full',
             },
             {
@@ -21,6 +26,12 @@ export const authKowsarRoutes: Routes = [
                 path: 'login-person',
                 loadComponent: () =>
                     import('./components/login-person/login-person.component').then(m => m.LoginPersonComponent),
+            },
+            {
+                path: 'guest-login',
+                title: 'ورود مهمان',
+                loadComponent: () =>
+                    import('./components/guest-login/guest-login.component').then(m => m.GuestLoginComponent),
             },
 
 

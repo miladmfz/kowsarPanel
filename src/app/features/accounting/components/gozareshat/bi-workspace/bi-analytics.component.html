@@ -1,0 +1,72 @@
+<main class="analytics" dir="rtl">
+  <header class="hero">
+    <div><span>Kowsar Advanced Analytics</span><h1>آزمایشگاه تحلیل مدیریتی</h1><p>ناهنجاری، پیش‌بینی و تحلیل هدایت‌شده بر پایه Semantic Catalog منتشرشده و Scope مجاز شما.</p></div>
+    <nav><a routerLink="/accounting/gozareshat/bi"><i class="mdi mdi-view-dashboard-outline"></i> BI Home</a><a routerLink="/accounting/gozareshat/bi/workspace"><i class="mdi mdi-view-grid-outline"></i> Workspace</a></nav>
+  </header>
+
+  @if (error()) { <div class="alert error" role="alert"><i class="mdi mdi-alert-circle-outline"></i>{{ error() }}</div> }
+  @if (notice()) { <div class="alert success" role="status"><i class="mdi mdi-check-circle-outline"></i>{{ notice() }}</div> }
+
+  <section class="nlq card">
+    <div class="section-head"><div><span>Governed natural language</span><h2>پرسش با واژگان کسب‌وکار</h2></div><small>بدون SQL آزاد؛ فقط Dataset و Metricهای Published</small></div>
+    <div class="nlq-row"><textarea maxlength="500" [(ngModel)]="naturalLanguage" aria-label="پرسش تحلیلی"></textarea><button (click)="interpret()" [disabled]="interpreting() || loading()">@if (interpreting()) { <i class="mdi mdi-loading mdi-spin"></i> } @else { <i class="mdi mdi-message-processing-outline"></i> } تفسیر</button></div>
+    @if (interpretation(); as item) {
+      <div class="interpretation" [class.failed]="item.status !== 'ReadyForConfirmation'">
+        <div><b>{{ item.status === 'ReadyForConfirmation' ? item.metricTitle : 'درخواست قابل تفسیر نیست' }}</b><span>Confidence: {{ confidence(item.confidence) }}</span></div>
+        @if (item.query) { <p>{{ item.datasetTitle }} · {{ item.query.grain === 'month' ? 'ماهانه' : 'روزانه' }} · {{ item.query.fromDate }} تا {{ item.query.toDate }}</p> }
+        @for (warning of item.warnings; track warning) { <small>{{ warning }}</small> }
+        @if (item.status === 'ReadyForConfirmation') { <button class="confirm" (click)="confirmInterpretation()">تأیید و اجرای تحلیل</button> }
+      </div>
+    }
+  </section>
+
+  <section class="controls card" aria-label="تنظیم تحلیل">
+    <label>Dataset<select [(ngModel)]="datasetKey" (ngModelChange)="datasetChanged()">@for (item of catalog()?.datasets ?? []; track item.datasetKey) { <option [value]="item.datasetKey">{{ item.title }}</option> }</select></label>
+    <label>Metric<select [(ngModel)]="metricKey">@for (item of metricOptions(); track item.metricKey) { <option [value]="item.metricKey">{{ item.title }}</option> }</select></label>
+    <label>از تاریخ<input maxlength="10" [(ngModel)]="fromDate"></label><label>تا تاریخ<input maxlength="10" [(ngModel)]="toDate"></label>
+    <label>دانه‌بندی<select [(ngModel)]="grain"><option value="month">ماهانه</option><option value="day">روزانه</option></select></label>
+    <label>واحد<select [(ngModel)]="departmentRef"><option [ngValue]="0">همه واحدهای مجاز</option>@for (item of catalog()?.departments ?? []; track item.departmentCode) { <option [ngValue]="item.departmentCode">{{ item.departmentName }}</option> }</select></label>
+    <label>افق<input type="number" min="1" max="12" [(ngModel)]="horizon"></label><label>حساسیت<input type="range" min="1" max="5" [(ngModel)]="sensitivity"><small>{{ sensitivity }}</small></label>
+    <button class="run" (click)="analyze()" [disabled]="analyzing() || loading()">@if (analyzing()) { <i class="mdi mdi-loading mdi-spin"></i> } @else { <i class="mdi mdi-chart-timeline-variant-shimmer"></i> } اجرای تحلیل</button>
+  </section>
+
+  @if (loading()) { <div class="loading"><i class="mdi mdi-loading mdi-spin"></i> در حال بارگذاری Semantic Catalog...</div> }
+  @if (result(); as analysis) {
+    <section class="context">
+      <span><i class="mdi mdi-database-check-outline"></i>{{ analysis.metricTitle }} · v{{ analysis.definitionVersion }}</span>
+      <span [class.stale]="analysis.source.freshnessStatus !== 'Current'"><i class="mdi mdi-database-clock-outline"></i>{{ analysis.source.freshnessStatus }} · {{ analysis.source.dataThroughDate || 'نامشخص' }}</span>
+      @if (departmentRef || activePeriod()) { <button (click)="clearCrossFilters()"><i class="mdi mdi-filter-remove-outline"></i> حذف Cross-filter</button> }
+    </section>
+
+    @if (analysis.warnings.length) { <div class="alert warning">@for (warning of analysis.warnings; track warning) { <span>{{ warning }}</span> }</div> }
+
+    <section class="kpis">
+      <article><span>مقدار متمرکز</span><strong>{{ format(focusedObservation()?.value) }}</strong><small>{{ focusedObservation()?.period || 'بدون داده' }} · {{ analysis.unit }}</small></article>
+      <article><span>ناهنجاری</span><strong>{{ focusedAnomalies().length }}</strong><small>از {{ analysis.observations.length }} دوره</small></article>
+      <article><span>کیفیت Backtest</span><strong>{{ analysis.forecast.backtest?.quality || 'N/A' }}</strong><small>WAPE {{ format(analysis.forecast.backtest?.wape) }}٪</small></article>
+      <article><span>Confidence پیش‌بینی</span><strong>{{ confidence(analysis.forecast.confidence) }}</strong><small>{{ analysis.forecast.method }} · {{ analysis.forecast.seasonality }}</small></article>
+    </section>
+
+    <section class="grid">
+      <article class="card chart-card">
+        <div class="section-head"><div><span>Observed + forecast</span><h2>روند و بازه اطمینان</h2></div><small>روی نقطه یا ردیف دوره کلیک کنید تا همه پنل‌ها فیلتر شوند.</small></div>
+        @if (chartPoints().length) {
+          <div class="chart"><svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" [attr.aria-label]="analysis.metricTitle"><line x1="0" y1="88" x2="100" y2="88"></line><polyline [attr.points]="observedPolyline()" class="observed"></polyline><polyline [attr.points]="forecastPolyline()" class="forecast"></polyline>@for (point of chartPoints(); track point.period) { <circle [attr.cx]="point.x" [attr.cy]="point.y" [attr.r]="point.anomaly ? 2.4 : 1.4" [class.anomaly]="point.anomaly" [class.predicted]="point.forecast" [class.selected]="activePeriod() === point.period" (click)="selectPeriod(point.period)"><title>{{ point.period }} · {{ format(point.value) }}</title></circle> }</svg></div>
+          <div class="legend"><span><i class="observed-key"></i>Observed</span><span><i class="forecast-key"></i>Forecast</span><span><i class="anomaly-key"></i>Anomaly</span></div>
+        } @else { <div class="empty">داده‌ای برای نمایش وجود ندارد.</div> }
+      </article>
+
+      <article class="card forecast-card"><div class="section-head"><div><span>Evidence</span><h2>پیش‌بینی Backtested</h2></div><b [class.low]="analysis.forecast.backtest?.quality === 'Low'">{{ analysis.forecast.status }}</b></div>
+        @if (analysis.forecast.status === 'Ready') { <div class="forecast-meta"><span>Train: {{ analysis.forecast.backtest?.trainingPoints }}</span><span>Test: {{ analysis.forecast.backtest?.testPoints }}</span><span>MAE: {{ format(analysis.forecast.backtest?.mae) }}</span><span>MAPE: {{ format(analysis.forecast.backtest?.mape) }}٪</span></div><table><thead><tr><th>دوره</th><th>برآورد</th><th>بازه ۹۵٪</th></tr></thead><tbody>@for (point of analysis.forecast.points; track point.period) { <tr><td>{{ point.period }}</td><td>{{ format(point.value) }}</td><td>{{ forecastBounds(point) }}</td></tr> }</tbody></table> } @else { <div class="empty">{{ analysis.forecast.warnings[0] }}</div> }
+      </article>
+
+      <article class="card departments"><div class="section-head"><div><span>Cross-filter</span><h2>واحدهای سازمانی</h2></div><small>انتخاب واحد، تحلیل را با Scope سرور دوباره اجرا می‌کند.</small></div><div class="department-list">@for (item of analysis.departmentBreakdown; track item.departmentCode) { <button [class.active]="departmentRef === item.departmentCode" (click)="selectDepartment(item.departmentCode)"><span>{{ item.departmentName }}</span><b>{{ format(item.value) }}</b></button> } @empty { <div class="empty">Breakdown واحدی موجود نیست.</div> }</div></article>
+
+      <article class="card anomalies"><div class="section-head"><div><span>Explainable detection</span><h2>ناهنجاری‌ها</h2></div><small>Robust rolling median / MAD</small></div><div class="anomaly-list">@for (item of focusedAnomalies(); track item.period) { <button (click)="selectPeriod(item.period)" [class.active]="activePeriod() === item.period"><span><b>{{ item.period }}</b><em [class.down]="item.direction === 'BelowBaseline'">{{ item.direction === 'BelowBaseline' ? 'کمتر' : 'بیشتر' }} از baseline</em></span><strong>{{ format(item.actual) }}</strong><p>{{ item.explanation }}</p><small>Confidence {{ confidence(item.confidence) }} · Score {{ format(item.score) }}</small></button> } @empty { <div class="empty">در فیلتر فعلی ناهنجاری معناداری تشخیص داده نشد.</div> }</div></article>
+
+      <article class="card guided"><div class="section-head"><div><span>Guided analysis</span><h2>راهنمای بررسی</h2></div></div>@for (item of focusedInsights(); track item.kind + item.period) { <div class="insight" [attr.data-severity]="item.severity"><i class="mdi" [class.mdi-alert-decagram-outline]="item.kind === 'Anomaly'" [class.mdi-chart-line]="item.kind === 'Trend'" [class.mdi-check-decagram-outline]="item.kind === 'ForecastQuality'" [class.mdi-database-alert-outline]="item.kind === 'DataQuality'"></i><div><strong>{{ item.title }}</strong><p>{{ item.description }}</p><small>{{ item.recommendedAction }}</small></div></div> }</article>
+
+      <article class="card periods"><div class="section-head"><div><span>Period cross-filter</span><h2>داده مشاهده‌شده</h2></div></div><div class="period-table"><table><thead><tr><th>دوره</th><th>مقدار</th><th>وضعیت</th></tr></thead><tbody>@for (item of analysis.observations; track item.period) { <tr (click)="selectPeriod(item.period)" [class.active]="activePeriod() === item.period"><td>{{ item.period }}</td><td>{{ format(item.value) }}</td><td>{{ isAnomalyPeriod(item.period) ? 'Anomaly' : 'Observed' }}</td></tr> }</tbody></table></div></article>
+    </section>
+  }
+</main>

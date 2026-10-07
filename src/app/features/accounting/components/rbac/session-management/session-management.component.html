@@ -1,0 +1,98 @@
+<section class="session-page" dir="rtl">
+  <header class="session-header">
+    <div>
+      <span class="eyebrow">امنیت حساب‌ها</span>
+      <h1>نشست‌های ورود</h1>
+      <p>ورودهای فعال را مشاهده کنید و یک دستگاه یا تمام نشست‌های یک کاربر را قطع کنید.</p>
+    </div>
+
+    <div class="session-actions">
+      <label class="inactive-toggle">
+        <input type="checkbox" [checked]="includeInactive()" (change)="toggleInactive($event)">
+        نمایش تاریخچه منقضی و قطع‌شده
+      </label>
+      <button type="button" class="btn btn-outline-primary" (click)="load()" [disabled]="loading()">
+        <i class="fas fa-sync-alt" [class.fa-spin]="loading()"></i>
+        بازخوانی
+      </button>
+    </div>
+  </header>
+
+  @if (loading() && sessions().length === 0) {
+    <div class="session-state" role="status">
+      <span class="spinner-border spinner-border-sm"></span>
+      در حال دریافت نشست‌ها...
+    </div>
+  } @else if (sessions().length === 0) {
+    <div class="session-state">
+      <i class="fas fa-user-shield"></i>
+      نشستی برای نمایش وجود ندارد.
+    </div>
+  } @else {
+    <div class="session-table-wrap">
+      <table class="session-table">
+        <thead>
+          <tr>
+            <th>کاربر</th>
+            <th>دستگاه</th>
+            <th>IP</th>
+            <th>شروع نشست</th>
+            <th>آخرین فعالیت</th>
+            <th>انقضا</th>
+            <th>وضعیت</th>
+            <th>عملیات</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (session of sessions(); track session.sessionId) {
+            <tr [class.current-session]="isCurrent(session)">
+              <td data-label="کاربر">
+                <strong>{{ session.displayName || session.subject }}</strong>
+                <small>{{ session.subject }}</small>
+                @if (isCurrent(session)) {
+                  <span class="current-badge">نشست فعلی</span>
+                }
+              </td>
+              <td data-label="دستگاه">
+                <span>{{ deviceLabel(session) }}</span>
+                <small [title]="session.deviceId || ''">{{ session.deviceId || 'بدون شناسه دستگاه' }}</small>
+              </td>
+              <td data-label="IP" class="ltr-value">{{ session.ipAddress || '—' }}</td>
+              <td data-label="شروع نشست">{{ session.createdAt | date:'yyyy/MM/dd HH:mm' }}</td>
+              <td data-label="آخرین فعالیت">{{ session.lastSeenAt | date:'yyyy/MM/dd HH:mm' }}</td>
+              <td data-label="انقضا">{{ session.expiresAt | date:'yyyy/MM/dd HH:mm' }}</td>
+              <td data-label="وضعیت">
+                <span class="status-badge" [class.active]="session.status === 'ACTIVE'"
+                  [class.revoked]="session.status === 'REVOKED'">
+                  {{ statusLabel(session.status) }}
+                </span>
+              </td>
+              <td data-label="عملیات">
+                <div class="row-actions">
+                  <button type="button" class="btn btn-sm btn-outline-danger"
+                    [disabled]="session.status !== 'ACTIVE' || !!revokingSessionId() || !!revokingSubject()"
+                    (click)="revoke(session)">
+                    @if (revokingSessionId() === session.sessionId) {
+                      <span class="spinner-border spinner-border-sm"></span>
+                    } @else {
+                      قطع نشست
+                    }
+                  </button>
+                  <button type="button" class="btn btn-sm btn-danger"
+                    [disabled]="session.status !== 'ACTIVE' || !!revokingSessionId() || !!revokingSubject()"
+                    (click)="revokeAll(session)">
+                    @if (revokingSubject() === session.subject) {
+                      <span class="spinner-border spinner-border-sm"></span>
+                    } @else {
+                      خروج از همه دستگاه‌ها
+                    }
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

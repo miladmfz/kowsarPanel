@@ -4,15 +4,18 @@ import { CommonModule } from '@angular/common';
 
 import { LoadingService } from './app-shell/framework-services/ui/loading.service';
 import { SessionStorageService } from './app-shell/framework-services/storage/session.storage.service';
+import { AgGridSettingsDialogComponent } from './app-shell/framework-components/ag-grid/ag-grid-settings-dialog/ag-grid-settings-dialog.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     CommonModule,
-    RouterOutlet
+    RouterOutlet,
+    AgGridSettingsDialogComponent,
   ],
   templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
   public readonly loadingService = inject(LoadingService);
@@ -22,33 +25,25 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const currentPath =
-      window.location.pathname;
+    const pathSegments = window.location.pathname
+      .toLowerCase()
+      .split('/')
+      .filter(Boolean);
 
     const isMenuRoute =
-      currentPath.includes('/menu');
+      pathSegments.includes('menu');
 
     const isAuthRoute =
-      currentPath.includes('/auth');
+      pathSegments.includes('auth');
 
     if (
       !this.session.sessionId
       && !isMenuRoute
       && !isAuthRoute
     ) {
-      if (localStorage.getItem('UserTypeLogin') == 'KOWSAR') {
-        this.router.createUrlTree(['/auth/login-kowsar']);
-
-      } else {
-        this.router.createUrlTree(['/auth/login-person']);
-
-      }
+      void this.router.navigateByUrl(this.session.loginRoute);
     }
 
-    setTimeout(() =>
-      this.loadingService.hide(),
-      1500
-    );
   }
 
 }

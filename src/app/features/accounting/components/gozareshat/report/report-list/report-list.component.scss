@@ -1,0 +1,17 @@
+.report-list-grid {
+  height: min(1200px, 75vh);
+  min-height: 480px;
+  max-width: 100%;
+  overflow: auto;
+}
+
+@media (max-width: 767.98px) {
+  .report-list-grid {
+    height: 65vh;
+    min-height: 360px;
+  }
+
+  .card-body {
+    padding-inline: .75rem;
+  }
+}

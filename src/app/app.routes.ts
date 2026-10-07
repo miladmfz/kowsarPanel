@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { NotFoundComponent } from './app-shell/core/not-found/not-found.component';
 import { AuthGuard } from './app-shell/framework-services/AuthGuard';
+import { RoleGuard } from './app-shell/framework-services/RoleGuard';
+import { GuestGuard } from './app-shell/framework-services/GuestGuard';
 
 // 🛡️ Guards
 // import { RoleGuard } from './app-shell/framework-services/auth/role.guard';
@@ -39,6 +41,15 @@ export const routes: Routes = [
         loadComponent: () =>
             import('./app-shell/framework-components/kowsar/system-info/system-info.component')
                 .then(m => m.SystemInfoComponent),
+    },
+
+    {
+        path: 'guest/ticket',
+        title: 'ثبت تیکت مهمان',
+        canActivate: [GuestGuard],
+        loadComponent: () =>
+            import('./features/automation/components/autletter/autletter-insert-guest/autletter-insert-guest.component')
+                .then(m => m.AutletterInsertGuestComponent),
     },
 
     // 🏠 مسیر اصلی → داشبورد (بعد از لاگین)
@@ -83,6 +94,13 @@ export const routes: Routes = [
                         .then(m => m.AUTOMATION_ROUTES),
             },
 
+            {
+                path: 'collaboration',
+                loadChildren: () =>
+                    import('./features/collaboration/collaboration.routes')
+                        .then(m => m.COLLABORATION_ROUTES),
+            },
+
             // 📱 ماژول‌ها
             {
                 path: 'module',
@@ -111,7 +129,8 @@ export const routes: Routes = [
             // 🧰 پنل داخلی
             {
                 path: 'rbac',
-                // canActivate: [UrlGuard, RoleGuard],
+                canActivate: [RoleGuard],
+                data: { roles: ['ADMIN'] },
                 loadChildren: () =>
                     import('./features/accounting/components/rbac/rbac.routes')
                         .then(m => m.RBAC_ROUTES),

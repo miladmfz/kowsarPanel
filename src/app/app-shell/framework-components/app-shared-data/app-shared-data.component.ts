@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-declare var $: any;
 
 @Component({
   selector: 'app-app-shared-data',
@@ -16,32 +15,28 @@ export class AppSharedDataComponent implements OnInit {
 
   ngOnInit() { }
 
-  getFormValue(form: FormGroup, controlName: string) {
-    return form.get(controlName).value;
+  getFormValue(form: FormGroup, controlName: string): unknown {
+    return form.get(controlName)?.value;
   }
 
-  setFormValue(form: FormGroup, controlName: string, value: any) {
-    form.get(controlName).setValue(value);
+  setFormValue(form: FormGroup, controlName: string, value: unknown): void {
+    form.get(controlName)?.setValue(value);
   }
 
-  disableFormControl(form: FormGroup, controlName: string) {
-    form.get(controlName).disable();
+  disableFormControl(form: FormGroup, controlName: string): void {
+    form.get(controlName)?.disable();
   }
 
-  enableFormControl(form: FormGroup, controlName: string) {
-    form.get(controlName).enable();
+  enableFormControl(form: FormGroup, controlName: string): void {
+    form.get(controlName)?.enable();
   }
 
-  hideElement(id) {
-    $(id).addClass('d-none');
+  hideElement(selector: string): void {
+    document.querySelector<HTMLElement>(selector)?.classList.add('d-none');
   }
 
-  showElement(id) {
-    $(id).removeClass('d-none');
+  showElement(selector: string): void {
+    document.querySelector<HTMLElement>(selector)?.classList.remove('d-none');
   }
-
-  // changeElement(id, value) {
-  //   $(id).innerHTML = value;
-  // }
 
 }

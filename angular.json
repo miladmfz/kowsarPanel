@@ -19,7 +19,18 @@
               {
                 "glob": "**/*",
                 "input": "src/assets",
-                "output": "assets"
+                "output": "assets",
+                "ignore": [
+                  "libs/**/*",
+                  "js/**/*",
+                  "configs/**/*",
+                  "config_bak.json"
+                ]
+              },
+              {
+                "glob": "apexcharts.min.js",
+                "input": "src/assets/libs/apexcharts",
+                "output": "assets/libs/apexcharts"
               },
               {
                 "glob": "**/*",
@@ -35,22 +46,55 @@
               "src/assets/css/theme-fix.css"
             ],
             "scripts": [
-              "src/assets/libs/jquery/jquery.min.js",
               "src/assets/libs/bootstrap/js/bootstrap.bundle.min.js",
               "src/assets/libs/sweetalert2/sweetalert2.min.js",
               "src/assets/libs/simplebar/simplebar.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "jalaali-js",
+              "jalali-moment",
+              "jalali-ts",
+              "jssip",
+              "leaflet",
+              "leaflet.markercluster",
+              "sweetalert2",
+              "xml-js"
             ],
             "outputPath": "dist/build"
           },
           "configurations": {
             "production": {
-              "optimization": true,
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": {
+                "scripts": true,
+                "styles": false,
+                "hidden": true,
+                "vendor": false
+              },
               "namedChunks": false,
               "extractLicenses": true,
               "aot": true,
-              "serviceWorker": "ngsw-config.json"
+              "serviceWorker": "ngsw-config.json",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "750kB",
+                  "maximumError": "850kB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "100kB",
+                  "maximumError": "150kB"
+                }
+              ]
             },
             "development": {
               "optimization": false,
@@ -71,6 +115,21 @@
             }
           },
           "defaultConfiguration": "development"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "tsConfig": "tsconfig.spec.json",
+            "browsers": "ChromeHeadlessNoSandbox",
+            "watch": false,
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/assets/images",
+                "output": "assets/images"
+              }
+            ]
+          }
         }
       }
     }

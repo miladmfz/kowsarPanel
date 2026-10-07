@@ -3,7 +3,7 @@
     "production": true,
     "localapiUrl": "http://192.168.1.27:60006/api/",
     "localMenuapiUrl": "http://192.168.1.27:60005/loginCoffee/index.php?tag=",
-    "apiUrl": "http://5.160.152.173:60005/api/",
+    "apiUrl": "https://itmali.ir/webapi/",
     "baseHref": "/KowsarPanelIp/",
     "MenuapiUrl": "http://localhost:60009/loginCoffee/index.php?tag=",
     "menuConfig": {

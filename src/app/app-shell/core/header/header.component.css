@@ -200,29 +200,29 @@
 }
 
 /* Dark mode */
-html[data-bs-theme="dark"] .kws-mini-phone:not(.is-online):not(.is-calling):not(.is-ringing) {
+:host-context(html[data-bs-theme="dark"]) .kws-mini-phone:not(.is-online):not(.is-calling):not(.is-ringing) {
     background: linear-gradient(135deg, #0f172a, #1e293b);
     border-color: rgba(148, 163, 184, .24);
 }
 
-html[data-bs-theme="dark"] .kws-mini-phone:not(.is-online):not(.is-calling):not(.is-ringing) .kws-mini-phone-main {
+:host-context(html[data-bs-theme="dark"]) .kws-mini-phone:not(.is-online):not(.is-calling):not(.is-ringing) .kws-mini-phone-main {
     background: linear-gradient(135deg, #1e293b, #334155);
     color: #e2e8f0;
 }
 
-html[data-bs-theme="dark"] .kws-mini-phone:not(.is-online):not(.is-calling):not(.is-ringing) .kws-mini-phone-main i {
+:host-context(html[data-bs-theme="dark"]) .kws-mini-phone:not(.is-online):not(.is-calling):not(.is-ringing) .kws-mini-phone-main i {
     color: #93c5fd;
 }
 
-html[data-bs-theme="dark"] .kws-mini-phone.is-online:not(.is-calling):not(.is-ringing) {
+:host-context(html[data-bs-theme="dark"]) .kws-mini-phone.is-online:not(.is-calling):not(.is-ringing) {
     background: linear-gradient(135deg, rgba(22, 163, 74, .28), rgba(15, 23, 42, .9));
 }
 
-html[data-bs-theme="dark"] .kws-mini-phone.is-ringing {
+:host-context(html[data-bs-theme="dark"]) .kws-mini-phone.is-ringing {
     background: linear-gradient(135deg, rgba(245, 158, 11, .32), rgba(15, 23, 42, .9));
 }
 
-html[data-bs-theme="dark"] .kws-mini-phone.is-calling:not(.is-ringing) {
+:host-context(html[data-bs-theme="dark"]) .kws-mini-phone.is-calling:not(.is-ringing) {
     background: linear-gradient(135deg, rgba(37, 99, 235, .32), rgba(15, 23, 42, .9));
 }
 
@@ -313,4 +313,37 @@ html[data-bs-theme="dark"] .kws-mini-phone.is-calling:not(.is-ringing) {
     100% {
         transform: rotate(0deg);
     }
+}
+.kws-collab-notifications__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .45rem .8rem;
+  color: var(--bs-secondary-color);
+  background: var(--bs-tertiary-bg);
+}
+
+.kws-collab-notifications__header button {
+  border: 0;
+  color: var(--bs-primary);
+  background: transparent;
+  font-size: .75rem;
+}
+
+.kws-collab-notification {
+  width: 100%;
+  border: 0;
+  text-align: right;
+}
+
+.kws-collab-notification > span {
+  min-width: 0;
+}
+
+.kws-collab-notification .kws-noti-subtitle {
+  display: block;
+  max-width: 260px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

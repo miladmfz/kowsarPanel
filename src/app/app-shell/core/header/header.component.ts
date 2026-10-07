@@ -14,12 +14,14 @@
    =============================================================== */
 
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, AfterViewInit, OnDestroy, NgZone, inject, signal, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, NgZone, inject, signal, HostListener, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl, ValidationErrors, FormGroup } from '@angular/forms';
 import { NotificationService } from '../../framework-services/ui/notification.service';
 import { PermissionService } from '../../framework-services/storage/PermissionService';
 import { SessionStorageService } from '../../framework-services/storage/session.storage.service';
+import { AuthTokenService } from 'src/app/auth-kowsar/services/auth-token.service';
 import { KowsarBaseWebApi } from '../../framework-services/base/KowsarBaseWebApi.service';
 import { AppConfigService } from 'src/app/app-config.service';
 import { WebPhoneService } from 'src/app/features/santral/services/webphone.service';
@@ -30,6 +32,9 @@ import { cleanSantralText } from 'src/app/features/santral/shared/utils/santral-
 import { WebPhoneTonePlayer } from 'src/app/features/santral/shared/webphone/webphone-tone-player';
 import { SantralWebApiService } from 'src/app/features/santral/services/santralapi.service';
 import { CustomerWebApiService } from 'src/app/features/internal/services/CustomerWebApi.service';
+import { CollaborationNotification } from 'src/app/features/collaboration/models/collaboration.models';
+import { CollaborationApiService } from 'src/app/features/collaboration/services/collaboration-api.service';
+import { CollaborationRealtimeService } from 'src/app/features/collaboration/services/collaboration-realtime.service';
 
 interface HeaderPhoneBookItem {
   name: string;
@@ -67,6 +72,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   AlarmActive_Conversation = signal(0)
   AlarmActive_LeaveRequest = signal(0)
   AlarmActive_New = signal(0)
+  CollaborationUnread = signal(0)
+  collaborationNotifications = signal<CollaborationNotification[]>([])
   profileDropdownOpen = signal(false);
   toggleProfileDropdown(event: MouseEvent): void {
     event.preventDefault();
@@ -103,6 +110,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   private lastLeaveRequestCount = 0;
   private lastAlarmRowCount = 0;
   private lastAlarmNewCount = 0;
+  private lastCollaborationCount = 0;
+  private collaborationInitialized = false;
   private headerPhoneBook = signal<HeaderPhoneBookItem[]>([]);
   private headerCallContexts = new Map<number, HeaderCallContext>();
   // ===============================================================
@@ -126,7 +135,11 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly router = inject(Router);
   protected readonly permissionService = inject(PermissionService);
   protected readonly session = inject(SessionStorageService);
+  private readonly authTokens = inject(AuthTokenService);
   private readonly appConfig = inject(AppConfigService);
+  private readonly collaborationApi = inject(CollaborationApiService);
+  private readonly collaborationRealtime = inject(CollaborationRealtimeService);
+  private readonly destroyRef = inject(DestroyRef);
   protected readonly webPhoneService = inject(WebPhoneService);
   private readonly santralApi = inject(SantralWebApiService) as any;
   constructor() { }
@@ -160,6 +173,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.LoginType() == 'KOWSAR') {
       this.initHeaderWebPhone();
       this.loadHeaderPhoneBook();
+      this.initCollaborationNotifications();
     }
     this.requestNotificationPermission();
 
@@ -480,6 +494,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   Get_Notification(): void {
 
+    if (this.LoginType() === 'KOWSAR') this.loadCollaborationNotifications();
+
     const request$ = this.permissionService.canManageUsers
       ? this.base_repo.GetKowsarNotification()
       : this.base_repo.GetCustomerNotification();
@@ -522,6 +538,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     const leaveRequestCount = this.AlarmActive_LeaveRequest();
     const alarmRowCount = this.AlarmActive_Row();
     const alarmNewCount = this.AlarmActive_New();
+    const collaborationCount = this.CollaborationUnread();
 
     const notificationItems: string[] = [];
 
@@ -541,6 +558,10 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       notificationItems.push(`${alarmNewCount} تیکت جدید`);
     }
 
+    if (this.collaborationInitialized && collaborationCount > this.lastCollaborationCount) {
+      notificationItems.push(`${collaborationCount} پیام همکاری خوانده‌نشده`);
+    }
+
     if (notificationItems.length > 0) {
       new Notification('اعلان‌های جدید', {
         body: notificationItems.join(' | ')
@@ -551,6 +572,50 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.lastLeaveRequestCount = leaveRequestCount;
     this.lastAlarmRowCount = alarmRowCount;
     this.lastAlarmNewCount = alarmNewCount;
+    this.lastCollaborationCount = collaborationCount;
+  }
+
+  openCollaborationNotification(item: CollaborationNotification): void {
+    this.collaborationApi.readNotification(item.notificationCode).subscribe({
+      next: () => this.loadCollaborationNotifications()
+    });
+    void this.router.navigate(['/collaboration'], { queryParams: { room: item.roomRef } });
+  }
+
+  markAllCollaborationRead(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.collaborationApi.readAllNotifications().subscribe({ next: () => this.loadCollaborationNotifications() });
+  }
+
+  private initCollaborationNotifications(): void {
+    this.loadCollaborationNotifications();
+    void this.collaborationRealtime.connect().catch(() => undefined);
+    this.collaborationRealtime.notificationCreated$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.loadCollaborationNotifications());
+    this.collaborationRealtime.roomChanged$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.loadCollaborationNotifications());
+  }
+
+  private loadCollaborationNotifications(): void {
+    this.collaborationApi.getNotifications(30).subscribe({
+      next: items => {
+        this.collaborationNotifications.set(items);
+        this.CollaborationUnread.set(items.filter(item => !item.readAt).length);
+        if (!this.collaborationInitialized) {
+          this.lastCollaborationCount = this.CollaborationUnread();
+          this.collaborationInitialized = true;
+        } else {
+          this.showSystemNotifications();
+        }
+      },
+      error: () => {
+        this.collaborationNotifications.set([]);
+        this.CollaborationUnread.set(0);
+      }
+    });
   }
 
   // ===============================================================
@@ -591,9 +656,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   // 🚪 خروج از سیستم
   // ===============================================================
   logout(): void {
-
-    this.session.clearSession();
-    window.location.reload();
+    const loginRoute = this.session.loginRoute;
+    this.authTokens.logout().subscribe(() => void this.router.navigateByUrl(loginRoute));
   }
 
   // ===============================================================

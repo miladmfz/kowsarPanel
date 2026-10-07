@@ -5,6 +5,17 @@ import { LoadingService } from 'src/app/app-shell/framework-services/ui/loading.
 import { AppConfigService } from 'src/app/app-config.service';
 import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
 import { HeaderService } from 'src/app/app-shell/framework-services/HeaderService';
+
+export interface GuestTicketCreateCommand {
+  guestName: string;
+  title: string;
+  description: string;
+}
+
+export interface GuestTicketCreateResponse {
+  AutLetters?: Array<{ LetterCode?: string | number }>;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -69,6 +80,14 @@ export class AutletterWebApiService {
 
     return this.withLoading(this.client.post<any[]>(this.baseUrl + "LetterInsert", command, { headers: this.headerService.headers }))
 
+  }
+
+  GuestTicketCreate(command: GuestTicketCreateCommand): Observable<GuestTicketCreateResponse> {
+    return this.withLoading(this.client.post<GuestTicketCreateResponse>(
+      this.baseUrl + 'GuestTicketCreate',
+      command,
+      { headers: this.headerService.headers }
+    ));
   }
 
 
@@ -183,6 +202,132 @@ export class AutletterWebApiService {
   GetFactorByCustomerCode(command): Observable<any[]> {
     return this.withLoading(this.client.post<any[]>(this.baseUrl + "GetFactorByCustomerCode", command, { headers: this.headerService.headers }))
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // Add/replace these methods inside AutletterWebApiService.
+
+  GetAutConversationV2(LetterRef: string, CentralRef: string): Observable<any> {
+    const params = new HttpParams()
+      .append('LetterRef', LetterRef)
+      .append('CentralRef', CentralRef);
+
+    return this.client.get<any>(this.baseUrl + 'GetAutConversationV2', {
+      headers: this.headerService.headers,
+      params
+    });
+  }
+
+  Conversation_InsertV2(command: {
+    LetterRef: number;
+    CentralRef: number;
+    UserRef?: number | null;
+    ConversationText: string;
+    ClassName?: string;
+    ReplyToConversationRef?: number | null;
+    IsInternal?: boolean;
+  }): Observable<any> {
+    return this.withLoading(this.client.post<any>(
+      this.baseUrl + 'Conversation_InsertV2',
+      command,
+      { headers: this.headerService.headers }
+    ));
+  }
+
+  ConversationSeenV2(command: {
+    LetterRef: number;
+    CentralRef: number;
+    UserRef: number;
+    DisplayName: string;
+  }): Observable<any> {
+    return this.client.post<any>(
+      this.baseUrl + 'ConversationSeenV2',
+      command,
+      { headers: this.headerService.headers }
+    );
+  }
+
+  Conversation_Edit(command: {
+    ConversationCode: number;
+    CentralRef: number;
+    UserRef?: number | null;
+    ActorName: string;
+    ConversationText: string;
+  }): Observable<any> {
+    return this.withLoading(this.client.post<any>(
+      this.baseUrl + 'Conversation_Edit',
+      command,
+      { headers: this.headerService.headers }
+    ));
+  }
+
+  Conversation_Delete(command: {
+    ConversationCode: number;
+    CentralRef: number;
+    UserRef?: number | null;
+    ActorName: string;
+  }): Observable<any> {
+    return this.withLoading(this.client.post<any>(
+      this.baseUrl + 'Conversation_Delete',
+      command,
+      { headers: this.headerService.headers }
+    ));
+  }
+
+  GetConversationAudit(ConversationCode: number): Observable<any> {
+    const params = new HttpParams().append('ConversationCode', String(ConversationCode));
+    return this.client.get<any>(this.baseUrl + 'GetConversationAudit', {
+      headers: this.headerService.headers,
+      params
+    });
+  }
+
+  GetConversationUnreadCount(CentralRef: string, UserRef = '0'): Observable<any> {
+    const params = new HttpParams()
+      .append('CentralRef', CentralRef)
+      .append('UserRef', UserRef);
+
+    return this.client.get<any>(this.baseUrl + 'GetConversationUnreadCount', {
+      headers: this.headerService.headers,
+      params
+    });
+  }
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,27 +1,35 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
+import { CellClickedEvent, ValueFormatterParams } from 'ag-grid-community';
 
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
+import { DataViewStateComponent } from 'src/app/app-shell/framework-components/data-view-state/data-view-state.component';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
-import { WorkforceAbsenceWebApiService } from '../../../../automation/services/WorkforceAbsenceWebApi.service';
+import { CrudListState } from 'src/app/app-shell/framework-services/crud/crud-list-state';
+import { WorkforceAbsenceTypeRecord } from '../../../models/workforce-absence-type.models';
+import { WorkforceAbsenceTypeApiService } from '../../../services/workforce-absence-type-api.service';
 
 @Component({
     selector: 'app-workforce-absence-type-list',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, RouterModule, AgGridModule],
+    imports: [CommonModule, ReactiveFormsModule, RouterModule, AgGridModule, DataViewStateComponent],
     templateUrl: './workforce-absence-type-list.component.html',
+    styleUrl: './workforce-absence-type-list.component.scss',
 })
 export class WorkforceAbsenceTypeListComponent extends AgGridBaseComponent implements OnInit {
-    records = signal<any[]>([]);
-    loading = signal(false);
+    private readonly listState = new CrudListState<WorkforceAbsenceTypeRecord>();
+    readonly records = this.listState.records;
+    readonly loading = this.listState.loading;
+    readonly status = this.listState.status;
+    readonly errorMessage = this.listState.errorMessage;
 
     SearchForm = new FormGroup({ OnlyActive: new FormControl('') });
 
     private readonly router = inject(Router);
-    private readonly repo = inject(WorkforceAbsenceWebApiService);
+    private readonly repo = inject(WorkforceAbsenceTypeApiService);
     private readonly notificationService = inject(NotificationService);
 
     constructor() { super(); }
@@ -35,39 +43,32 @@ export class WorkforceAbsenceTypeListComponent extends AgGridBaseComponent imple
             { field: 'CalculationMode', headerName: 'محاسبه', minWidth: 110 },
             { field: 'BalanceMode', headerName: 'سهمیه', minWidth: 150 },
             { field: 'MinimumAdvanceWorkDay', headerName: 'فاصله کاری', minWidth: 110 },
-            { field: 'AllowFriday', headerName: 'جمعه', minWidth: 80, valueFormatter: (p: any) => this.boolLabel(p.value) },
-            { field: 'AllowHoliday', headerName: 'تعطیل', minWidth: 80, valueFormatter: (p: any) => this.boolLabel(p.value) },
-            { field: 'RequireAttachment', headerName: 'پیوست', minWidth: 90, valueFormatter: (p: any) => this.boolLabel(p.value) },
-            { field: 'DeductFromBalance', headerName: 'کسر سهمیه', minWidth: 105, valueFormatter: (p: any) => this.boolLabel(p.value) },
+            { field: 'AllowFriday', headerName: 'جمعه', minWidth: 80, valueFormatter: (p: ValueFormatterParams<WorkforceAbsenceTypeRecord, unknown>) => this.boolLabel(p.value) },
+            { field: 'AllowHoliday', headerName: 'تعطیل', minWidth: 80, valueFormatter: (p: ValueFormatterParams<WorkforceAbsenceTypeRecord, unknown>) => this.boolLabel(p.value) },
+            { field: 'RequireAttachment', headerName: 'پیوست', minWidth: 90, valueFormatter: (p: ValueFormatterParams<WorkforceAbsenceTypeRecord, unknown>) => this.boolLabel(p.value) },
+            { field: 'DeductFromBalance', headerName: 'کسر سهمیه', minWidth: 105, valueFormatter: (p: ValueFormatterParams<WorkforceAbsenceTypeRecord, unknown>) => this.boolLabel(p.value) },
             { field: 'DisplayOrder', headerName: 'ترتیب', minWidth: 80 },
-            { field: 'IsActive', headerName: 'فعال', minWidth: 80, valueFormatter: (p: any) => this.boolLabel(p.value) },
+            { field: 'IsActive', headerName: 'فعال', minWidth: 80, valueFormatter: (p: ValueFormatterParams<WorkforceAbsenceTypeRecord, unknown>) => this.boolLabel(p.value) },
             { field: 'HelpText', headerName: 'راهنما', minWidth: 260 },
         ];
         this.loadList();
     }
 
-    override onGridReady(params: any, index: number): void {
-        super.onGridReady(params, index);
-        if (index >= 1 && index <= 6) (this as any)[`gridApi${index}`] = params.api;
-    }
-
-    override onCellClicked(event: any): void {
-        if (event?.colDef?.field === 'Action') {
+    override onCellClicked(event: CellClickedEvent<WorkforceAbsenceTypeRecord>): void {
+        if (event.colDef.field === 'Action' && event.data) {
             this.router.navigate(['/automation/workforce-absence/type-edit', event.data.AbsenceTypeCode], { state: { type: event.data } });
         }
     }
 
     loadList(): void {
-        this.loading.set(true);
-        this.repo.Type_Get({ AbsenceTypeCode: '0', OnlyActive: this.SearchForm.controls.OnlyActive.value || null }).subscribe({
-            next: (data: any) => {
-                this.records.set(data?.WorkforceAbsenceTypes ?? []);
-                this.loading.set(false);
+        this.listState.beginLoad();
+        this.repo.list({ AbsenceTypeCode: '0', OnlyActive: this.SearchForm.controls.OnlyActive.value || null }).subscribe({
+            next: (data) => {
+                this.listState.resolve(data.WorkforceAbsenceTypes ?? []);
                 this.updateGridData(1, this.records());
             },
             error: () => {
-                this.records.set([]);
-                this.loading.set(false);
+                this.listState.reject('Failed to load workforce absence types.');
                 this.notificationService.error('خطا در دریافت انواع درخواست');
             },
         });
@@ -75,7 +76,7 @@ export class WorkforceAbsenceTypeListComponent extends AgGridBaseComponent imple
 
     create(): void { this.router.navigate(['/automation/workforce-absence/type-edit', '0']); }
 
-    boolLabel(value: any): string {
+    boolLabel(value: unknown): string {
         const text = String(value ?? '').toLowerCase();
         return text === '1' || text === 'true' ? 'بله' : 'خیر';
     }

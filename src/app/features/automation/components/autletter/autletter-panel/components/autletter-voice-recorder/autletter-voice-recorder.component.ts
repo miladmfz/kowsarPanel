@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, inject, Output, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { AppConfigService } from 'src/app/app-config.service';
 
 @Component({
   selector: 'app-autletter-voice-recorder',
@@ -46,6 +47,7 @@ export class AutletterVoiceRecorderComponent {
   audioFile: File | null = null;
 
   private readonly client = inject(HttpClient);
+  private readonly config = inject(AppConfigService);
 
   constructor() { }
 
@@ -102,7 +104,7 @@ export class AutletterVoiceRecorderComponent {
         formData.append('file', this.audioFile);
 
         const response = await this.client
-          .post<{ text: string }>('http://localhost:60006/api/automation/UploadAndTranscribe', formData)
+          .post<{ text: string }>(`${this.config.apiUrl}automation/UploadAndTranscribe`, formData)
           .toPromise();
 
         this.voiceToText.set(response?.text || '')

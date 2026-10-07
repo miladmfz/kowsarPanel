@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { SessionStorageService } from './session.storage.service';
+import { PermissionRecord } from 'src/app/auth-kowsar/auth-api.models';
 
 @Injectable({
   providedIn: 'root'
@@ -8,13 +9,13 @@ export class PermissionService {
 
   private readonly session = inject(SessionStorageService);
 
-  savePermissions(data: any[]): void {
+  savePermissions(data: PermissionRecord[]): void {
     const permissionKeys = [
-      ...new Set(data.map(x => x.PermissionKey).filter(x => !!x))
+      ...new Set(data.map(x => x.PermissionKey).filter((value): value is string => !!value))
     ];
 
     const roleNames = [
-      ...new Set(data.map(x => x.RoleName).filter(x => !!x))
+      ...new Set(data.map(x => x.RoleName).filter((value): value is string => !!value))
     ];
 
     this.session.setItem('PermissionKeys', permissionKeys);
@@ -31,7 +32,6 @@ export class PermissionService {
   }
 
   hasPermission(permission: string): boolean {
-    console.log(this.getPermissions())
     return this.getPermissions().includes(permission);
   }
 
@@ -62,6 +62,46 @@ export class PermissionService {
 
   get canViewDashboard(): boolean {
     return this.hasPermission('DASHBOARD_VIEW');
+  }
+
+  get canViewBiDashboard(): boolean {
+    return this.isAdmin || this.hasPermission('BI_DASHBOARD_VIEW');
+  }
+
+  get canEditOwnBiDashboard(): boolean {
+    return this.isAdmin || this.hasPermission('BI_DASHBOARD_EDIT_OWN');
+  }
+
+  get canManageBiCatalog(): boolean {
+    return this.isAdmin || this.hasPermission('BI_CATALOG_MANAGE');
+  }
+
+  get canPublishBiDashboard(): boolean {
+    return this.isAdmin || this.hasPermission('BI_DASHBOARD_PUBLISH');
+  }
+
+  get canShareBiDashboard(): boolean {
+    return this.isAdmin || this.hasPermission('BI_DASHBOARD_SHARE');
+  }
+
+  get canViewBiAudit(): boolean {
+    return this.isAdmin || this.hasPermission('BI_AUDIT_VIEW');
+  }
+
+  get canViewBiOperations(): boolean {
+    return this.isAdmin || this.hasPermission('BI_OPERATIONS_VIEW');
+  }
+
+  get canManageBiSchedules(): boolean {
+    return this.isAdmin || this.hasPermission('BI_SCHEDULE_MANAGE');
+  }
+
+  get canReviewBiPilot(): boolean {
+    return this.isAdmin || this.hasPermission('BI_PILOT_REVIEW');
+  }
+
+  get canExportBi(): boolean {
+    return this.isAdmin || this.hasPermission('BI_EXPORT');
   }
 
   get isAdmin(): boolean {

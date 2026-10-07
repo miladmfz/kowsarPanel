@@ -282,6 +282,46 @@
   color: #64748b !important;
 }
 
+/* Dark theme: component styles are scoped, so the document theme must be
+   reached through :host-context rather than a plain ancestor selector. */
+:host-context(html[data-bs-theme='dark']) {
+  background: var(--kws-dark-bg, #171d29);
+}
+
+:host-context(html[data-bs-theme='dark']) .dashboard-wrapper {
+  color: var(--kws-dark-text, #f1f5f9);
+  background: var(--kws-dark-bg, #171d29);
+  border-color: var(--kws-dark-border, rgba(226, 232, 240, .18));
+}
+
+:host-context(html[data-bs-theme='dark']) .dashboard-wrapper::before {
+  background: radial-gradient(circle at top right, rgba(96, 165, 250, .11), transparent 42%);
+}
+
+:host-context(html[data-bs-theme='dark']) .dashboard-card,
+:host-context(html[data-bs-theme='dark']) .dashboard-card .card-body {
+  color: var(--kws-dark-text, #f1f5f9);
+  background: var(--kws-dark-surface, #252e40) !important;
+  border-color: var(--kws-dark-border, rgba(226, 232, 240, .18));
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .24);
+}
+
+:host-context(html[data-bs-theme='dark']) .card-title,
+:host-context(html[data-bs-theme='dark']) .counter {
+  color: var(--kws-dark-text, #f1f5f9);
+}
+
+:host-context(html[data-bs-theme='dark']) .status-title,
+:host-context(html[data-bs-theme='dark']) .text-muted {
+  color: var(--kws-dark-muted, #c2ccda) !important;
+}
+
+:host-context(html[data-bs-theme='dark']) .outline-primary {
+  color: #93c5fd;
+  border-color: #60a5fa;
+  background: rgba(59, 130, 246, .14);
+}
+
 /* =========================
    RESPONSIVE
 ========================= */

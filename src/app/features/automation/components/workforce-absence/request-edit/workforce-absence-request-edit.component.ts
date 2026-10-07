@@ -61,6 +61,14 @@ import { WorkforceAbsenceWebApiService } from '../../../services/WorkforceAbsenc
             font-size: .76rem;
             font-weight: 700;
         }
+
+        :host-context(html[data-bs-theme='dark']) .summary-box,
+        :host-context(html[data-bs-theme='dark']) .condition-card,
+        :host-context(html[data-bs-theme='dark']) .rule-pill {
+            color: var(--kws-dark-text, #f1f5f9);
+            background: var(--kws-dark-surface-raised, #303b51);
+            border-color: var(--kws-dark-border, rgba(226, 232, 240, .18));
+        }
     `],
 })
 export class WorkforceAbsenceRequestEditComponent implements OnInit, OnDestroy {
@@ -188,6 +196,11 @@ export class WorkforceAbsenceRequestEditComponent implements OnInit, OnDestroy {
     }
 
     showModeSelector(): boolean {
+        const typeKey = String(this.EditForm.controls.AbsenceTypeKey.value ?? '').toUpperCase();
+
+        // اضطراری همیشه ساعتی است و انتخاب حالت ندارد.
+        if (typeKey === 'EMERGENCY') return false;
+
         return String(this.selectedType()?.CalculationMode ?? '') === 'FLEXIBLE';
     }
 
@@ -201,13 +214,11 @@ export class WorkforceAbsenceRequestEditComponent implements OnInit, OnDestroy {
     }
 
     allowsFridayForUser(): boolean {
-        return this.bit(this.selectedType()?.AllowFriday)
-            || this.bit(this.policy()?.AllowHolidayRequest);
+        return this.permission.canManageRole === true;
     }
 
     allowsHolidayForUser(): boolean {
-        return this.bit(this.selectedType()?.AllowHoliday)
-            || this.bit(this.policy()?.AllowHolidayRequest);
+        return this.permission.canManageRole === true;
     }
 
     requiredAdvanceWorkDay(): number {
@@ -532,9 +543,16 @@ export class WorkforceAbsenceRequestEditComponent implements OnInit, OnDestroy {
         const type = this.selectedType();
         if (!type) return;
 
+        const typeKey = String(type?.TypeKey ?? '').toUpperCase();
         const calculationMode = String(type?.CalculationMode ?? '');
 
-        if (calculationMode === 'MINUTE') {
+        // V3: اضطراری تحت هر شرایطی فقط ساعتی است؛ حتی اگر دیتابیس قدیمی باشد.
+        if (typeKey === 'EMERGENCY') {
+            this.EditForm.patchValue(
+                { RequestMode: 'MINUTE' },
+                { emitEvent: false }
+            );
+        } else if (calculationMode === 'MINUTE') {
             this.EditForm.patchValue(
                 { RequestMode: 'MINUTE' },
                 { emitEvent: false }
@@ -798,22 +816,12 @@ export class WorkforceAbsenceRequestEditComponent implements OnInit, OnDestroy {
     }
 
     private isDateAllowedForCurrentType(jDate: string): boolean {
+        // مدیر محدودیت جمعه و تعطیل رسمی ندارد.
         if (this.permission.canManageRole) return true;
 
-        if (this.bit(this.policy()?.AllowHolidayRequest)) {
-            return true;
-        }
-
-        if (this.isFriday(jDate) && !this.bit(this.selectedType()?.AllowFriday)) {
-            return false;
-        }
-
-        if (
-            this.isOfficialHoliday(jDate)
-            && !this.bit(this.selectedType()?.AllowHoliday)
-        ) {
-            return false;
-        }
+        // کاربر عادی برای هیچ نوع مرخصی اجازه انتخاب جمعه/تعطیل رسمی ندارد.
+        if (this.isFriday(jDate)) return false;
+        if (this.isOfficialHoliday(jDate)) return false;
 
         return true;
     }

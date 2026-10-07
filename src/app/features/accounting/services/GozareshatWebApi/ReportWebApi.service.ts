@@ -67,6 +67,25 @@ export class ReportWebApiService {
     return this.withLoading(this.client.get<any[]>(this.baseUrl + "GetReportsByCode", { headers: this.headerService.headers, params: params }))
   }
 
+  LegacyReport(reportForm: string, command: unknown): Observable<{
+    Reports?: unknown[];
+    ReportColumns?: unknown[];
+  }> {
+    // A few authoritative Delphi form names do not use the Rpt suffix. The
+    // caller still validates them against the compile-time report allow-list.
+    if (!/^[A-Za-z][A-Za-z0-9_]*$/.test(reportForm)) {
+      throw new Error('Invalid legacy report form.');
+    }
+
+    return this.withLoading(
+      this.client.post<{ Reports?: unknown[]; ReportColumns?: unknown[] }>(
+        this.baseUrl + reportForm,
+        command,
+        { headers: this.headerService.headers },
+      ),
+    );
+  }
+
   BazaryabKarkardRpt(command): Observable<any[]> {
     return this.withLoading(this.client.post<any[]>(this.baseUrl + "BazaryabKarkardRpt", command, { headers: this.headerService.headers }))
   }

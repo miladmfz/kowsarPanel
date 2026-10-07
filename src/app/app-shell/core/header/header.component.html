@@ -18,9 +18,9 @@
 
           <i class="fe-bell noti-icon text-primary fs-5"></i>
 
-          @if (AlarmActive_Row() + AlarmActive_New() + AlarmActive_Conversation() + AlarmActive_LeaveRequest() > 0) {
+          @if (AlarmActive_Row() + AlarmActive_New() + AlarmActive_Conversation() + AlarmActive_LeaveRequest() + CollaborationUnread() > 0) {
           <span class="badge bg-danger rounded-circle noti-icon-badge animate-pulse shadow">
-            {{ AlarmActive_New() + AlarmActive_Row() + AlarmActive_Conversation() + AlarmActive_LeaveRequest() }}
+            {{ AlarmActive_New() + AlarmActive_Row() + AlarmActive_Conversation() + AlarmActive_LeaveRequest() + CollaborationUnread() }}
           </span>
           }
 
@@ -104,7 +104,27 @@
             </a>
             }
 
-            @if (AlarmActive_New() + AlarmActive_Row() + AlarmActive_Conversation() + AlarmActive_LeaveRequest() === 0)
+            @if (CollaborationUnread() > 0) {
+            <div class="kws-collab-notifications">
+              <div class="kws-collab-notifications__header">
+                <strong>گفت‌وگوی سازمانی</strong>
+                <button type="button" (click)="markAllCollaborationRead($event)">خواندن همه</button>
+              </div>
+              @for (item of collaborationNotifications(); track item.notificationCode) {
+                @if (!item.readAt) {
+                <button type="button" class="list-group-item list-group-item-action d-flex align-items-start gap-2 py-2 kws-noti-item kws-collab-notification" (click)="openCollaborationNotification(item)">
+                  <div class="notify-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"><i class="fe-users"></i></div>
+                  <span>
+                    <strong class="kws-noti-title">{{ item.roomType === 'Direct' ? item.authorDisplayName : item.roomTitle }}</strong>
+                    <small class="kws-noti-subtitle">{{ item.body }}</small>
+                  </span>
+                </button>
+                }
+              }
+            </div>
+            }
+
+            @if (AlarmActive_New() + AlarmActive_Row() + AlarmActive_Conversation() + AlarmActive_LeaveRequest() + CollaborationUnread() === 0)
             {
             <div class="text-center kws-noti-empty py-4 small">
               <i class="fe-check-circle me-1"></i>

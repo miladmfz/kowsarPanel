@@ -522,6 +522,86 @@
   font-size: 0.68rem;
 }
 
+:host ::ng-deep .attendance-call-route {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.32rem;
+  max-width: 100%;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid #dbe4ef;
+  border-radius: 999px;
+  color: #475569;
+  background: #f8fafc;
+  font-size: 0.66rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .attendance-call-route i {
+  font-size: 0.62rem;
+}
+
+:host ::ng-deep .attendance-call-route.is-ringgroup {
+  border-color: #c7d2fe;
+  color: #4338ca;
+  background: #eef2ff;
+}
+
+:host ::ng-deep .attendance-call-route.is-forward {
+  border-color: #fed7aa;
+  color: #c2410c;
+  background: #fff7ed;
+}
+
+:host ::ng-deep .attendance-call-route.is-transfer {
+  border-color: #ddd6fe;
+  color: #6d28d9;
+  background: #f5f3ff;
+}
+
+:host ::ng-deep .attendance-call-route.is-ivr {
+  border-color: #bae6fd;
+  color: #0369a1;
+  background: #f0f9ff;
+}
+
+:host-context(html[data-bs-theme='dark']) ::ng-deep .attendance-call-route,
+:host-context(.bg-dark) ::ng-deep .attendance-call-route,
+:host-context(.dark-mode) ::ng-deep .attendance-call-route,
+.dark-report :host ::ng-deep .attendance-call-route {
+  border-color: rgba(148, 163, 184, 0.25);
+  color: #e2e8f0;
+  background: rgba(51, 65, 85, 0.6);
+}
+
+:host-context(html[data-bs-theme='dark']) ::ng-deep .attendance-call-route.is-ringgroup,
+:host-context(.bg-dark) ::ng-deep .attendance-call-route.is-ringgroup,
+:host-context(.dark-mode) ::ng-deep .attendance-call-route.is-ringgroup,
+.dark-report :host ::ng-deep .attendance-call-route.is-ringgroup {
+  border-color: rgba(129, 140, 248, 0.45);
+  color: #c7d2fe;
+  background: rgba(67, 56, 202, 0.18);
+}
+
+:host-context(html[data-bs-theme='dark']) ::ng-deep .attendance-call-route.is-forward,
+:host-context(.bg-dark) ::ng-deep .attendance-call-route.is-forward,
+:host-context(.dark-mode) ::ng-deep .attendance-call-route.is-forward,
+.dark-report :host ::ng-deep .attendance-call-route.is-forward {
+  border-color: rgba(251, 146, 60, 0.42);
+  color: #fdba74;
+  background: rgba(194, 65, 12, 0.16);
+}
+
+:host-context(html[data-bs-theme='dark']) ::ng-deep .attendance-call-route.is-transfer,
+:host-context(.bg-dark) ::ng-deep .attendance-call-route.is-transfer,
+:host-context(.dark-mode) ::ng-deep .attendance-call-route.is-transfer,
+.dark-report :host ::ng-deep .attendance-call-route.is-transfer {
+  border-color: rgba(167, 139, 250, 0.42);
+  color: #ddd6fe;
+  background: rgba(109, 40, 217, 0.16);
+}
+
 :host ::ng-deep .attendance-call-detail-status {
   display: inline-flex;
   align-items: center;
@@ -675,6 +755,7 @@
    Dark mode
    =============================================================== */
 
+:host-context(html[data-bs-theme='dark']) .attendance-call-report,
 :host-context(.bg-dark) .attendance-call-report,
 :host-context(.dark-mode) .attendance-call-report,
 .dark-report {
@@ -684,12 +765,14 @@
   --call-text: #f8fafc;
 }
 
+:host-context(html[data-bs-theme='dark']) .attendance-call-report__followup-header h6,
 :host-context(.bg-dark) .attendance-call-report__followup-header h6,
 :host-context(.dark-mode) .attendance-call-report__followup-header h6,
 .dark-report .attendance-call-report__followup-header h6 {
   color: #f8fafc;
 }
 
+:host-context(html[data-bs-theme='dark']) .attendance-call-stat,
 :host-context(.bg-dark) .attendance-call-stat,
 :host-context(.dark-mode) .attendance-call-stat,
 .dark-report .attendance-call-stat {
@@ -697,6 +780,7 @@
   border-color: #475569;
 }
 
+:host-context(html[data-bs-theme='dark']) .attendance-call-stat__action,
 :host-context(.bg-dark) .attendance-call-stat__action,
 :host-context(.dark-mode) .attendance-call-stat__action,
 .dark-report .attendance-call-stat__action {
@@ -1030,6 +1114,7 @@
   height: 420px;
 }
 
+:host-context(html[data-bs-theme='dark']) .attendance-followup-tab,
 :host-context(.bg-dark) .attendance-followup-tab,
 :host-context(.dark-mode) .attendance-followup-tab,
 .dark-report .attendance-followup-tab {
@@ -1038,6 +1123,7 @@
   border-color: rgba(148, 163, 184, 0.25);
 }
 
+:host-context(html[data-bs-theme='dark']) .attendance-followup-tab__text strong,
 :host-context(.bg-dark) .attendance-followup-tab__text strong,
 :host-context(.dark-mode) .attendance-followup-tab__text strong,
 .dark-report .attendance-followup-tab__text strong {
@@ -1096,6 +1182,7 @@
   white-space: nowrap;
 }
 
+:host-context(html[data-bs-theme='dark']) ::ng-deep .attendance-followup-peer .attendance-followup-ringgroup,
 :host-context(.bg-dark) ::ng-deep .attendance-followup-peer .attendance-followup-ringgroup,
 :host-context(.dark-mode) ::ng-deep .attendance-followup-peer .attendance-followup-ringgroup,
 .dark-report :host ::ng-deep .attendance-followup-peer .attendance-followup-ringgroup {

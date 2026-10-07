@@ -96,10 +96,22 @@ export class AttendanceGridComponent extends AgGridBaseComponent implements OnIn
                 sortable: false,
                 filter: false,
             },
-            { field: 'CentralName', headerName: 'کارشناس', cellClass: 'text-center', minWidth: 120 },
-            { field: 'وضعیت حضور', cellRenderer: CellStatusAttendancePanel, cellClass: 'text-center', width: 80 },
-            { field: 'تاریخ', cellRenderer: CellDateAttendancePanel, cellClass: 'text-center', width: 80 },
-            { field: 'CustNames', headerName: 'مشتری', cellClass: 'text-center', minWidth: 120 },
+            {
+                field: 'CentralName',
+                headerName: 'کارشناس',
+                cellClass: 'text-center',
+                minWidth: 70,
+                maxWidth: 130,
+            },
+            { field: 'وضعیت حضور', cellRenderer: CellStatusAttendancePanel, cellClass: 'text-center', width: 60 },
+            { field: 'تاریخ', cellRenderer: CellDateAttendancePanel, cellClass: 'text-center', width: 60 },
+            {
+                field: 'CustNames',
+                headerName: 'مشتری',
+                cellClass: 'text-center',
+                flex: 1,
+                minWidth: 240,
+            },
         ];
 
         this.refresh();
@@ -112,11 +124,11 @@ export class AttendanceGridComponent extends AgGridBaseComponent implements OnIn
             (this as any)[`gridApi${index}`] = params.api;
         }
 
-        // فیت کردن ستون‌ها با تأخیر کوتاه
+        // عرض کارشناس به‌اندازه محتوا و ستون مشتری مصرف‌کننده فضای باقی‌مانده است.
         setTimeout(() => {
             try {
                 if (params.api && !params.api.isDestroyed?.()) {
-                    params.api.sizeColumnsToFit();
+                    params.api.autoSizeColumns(['CentralName'], false);
                 }
             } catch { }
         }, 50);

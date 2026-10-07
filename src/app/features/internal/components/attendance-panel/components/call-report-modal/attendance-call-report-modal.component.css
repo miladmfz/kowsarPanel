@@ -84,6 +84,31 @@
   filter: invert(1);
 }
 
+:host-context(html[data-bs-theme='dark']) .attendance-call-modal-dialog {
+  color: var(--kws-dark-text, #f1f5f9);
+  border-color: var(--kws-dark-border, rgba(226, 232, 240, .18));
+  background: var(--kws-dark-bg, #171d29);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, .48);
+}
+
+:host-context(html[data-bs-theme='dark']) .attendance-call-modal-header {
+  color: var(--kws-dark-text, #f1f5f9);
+  border-color: var(--kws-dark-border, rgba(226, 232, 240, .18));
+  background: var(--kws-dark-surface, #252e40);
+}
+
+:host-context(html[data-bs-theme='dark']) .attendance-call-modal-header h5 {
+  color: var(--kws-dark-text, #f1f5f9);
+}
+
+:host-context(html[data-bs-theme='dark']) .attendance-call-modal-header small {
+  color: var(--kws-dark-muted, #c2ccda);
+}
+
+:host-context(html[data-bs-theme='dark']) .attendance-call-modal-header .btn-close {
+  filter: invert(1) grayscale(1) brightness(1.7);
+}
+
 @media (max-width: 768px) {
   .attendance-call-modal-shell {
     padding: 0.45rem;

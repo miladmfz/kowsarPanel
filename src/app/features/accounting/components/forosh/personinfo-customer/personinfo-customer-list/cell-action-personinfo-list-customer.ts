@@ -1,7 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
-declare var $: any;
 
 @Component({
   selector: 'edit-delete-cell-renderer',

@@ -19,7 +19,7 @@ export class SharedService {
   message$ = this.messageSource.asObservable();
 
   /**    داده موقت برای انتقال بین صفحات */
-  private tempData: any = null;
+  private tempData: unknown = null;
 
   /** 🔁 رویدادهای عمومی (مثل Refresh) بین بخش‌های مختلف برنامه */
   private refreshAllActionsSource = new Subject<string>();
@@ -56,12 +56,12 @@ export class SharedService {
   }
 
   // ===   Temp data storage ===
-  setTempData(data: any): void {
+  setTempData(data: unknown): void {
     this.tempData = data;
   }
 
-  getTempData<T = any>(): T | null {
-    return this.tempData;
+  getTempData<T = unknown>(): T | null {
+    return this.tempData as T | null;
   }
 
   clearTempData(): void {

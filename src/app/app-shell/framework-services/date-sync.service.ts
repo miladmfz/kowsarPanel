@@ -27,7 +27,7 @@ export class DateSyncService {
                     resolve(null);
                     return of(null);
                 }),
-                tap((data: any) => {
+                tap((data) => {
                     if (!data) {
                         resolve(null);
                         return;

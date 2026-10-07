@@ -20,6 +20,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular';
+import 'src/app/app-shell/framework-components/ag-grid/ag-grid-enterprise-registration';
 import { ColDef } from 'ag-grid-community';
 
 @Component({

@@ -1,0 +1,97 @@
+<main class="guest-ticket-page" dir="rtl">
+  <section class="guest-ticket-card" aria-labelledby="guest-ticket-title">
+    <header class="guest-ticket-header">
+      <div>
+        <p class="eyebrow">پشتیبانی کوثر</p>
+        <h1 id="guest-ticket-title">ثبت تیکت مهمان</h1>
+        <p class="subtitle">درخواست خود را بنویسید تا همکاران پشتیبانی با شما تماس بگیرند.</p>
+      </div>
+      <button type="button" class="btn btn-outline-secondary" (click)="logout()">
+        خروج
+      </button>
+    </header>
+
+    <div class="mobile-card">
+      <i class="mdi mdi-cellphone-check" aria-hidden="true"></i>
+      <span>شماره تأییدشده</span>
+      <strong dir="ltr">{{ mobile }}</strong>
+    </div>
+
+    @if (createdLetterCode()) {
+      <div class="success-panel" role="status">
+        <i class="mdi mdi-check-circle-outline" aria-hidden="true"></i>
+        <div>
+          <strong>درخواست شما ثبت شد.</strong>
+          <span>شماره پیگیری: {{ createdLetterCode() }}</span>
+        </div>
+      </div>
+    }
+
+    <form [formGroup]="ticketForm" (ngSubmit)="submit()" novalidate>
+      <div class="field-group">
+        <label for="guest-ticket-name">نام و نام خانوادگی</label>
+        <input
+          id="guest-ticket-name"
+          type="text"
+          class="form-control form-control-lg"
+          formControlName="guestName"
+          maxlength="80"
+          autocomplete="name"
+          placeholder="نام و نام خانوادگی خود را وارد کنید"
+          [class.is-invalid]="ticketForm.controls.guestName.invalid && ticketForm.controls.guestName.touched"
+        />
+        @if (ticketForm.controls.guestName.invalid && ticketForm.controls.guestName.touched) {
+          <div class="invalid-feedback d-block">نام و نام خانوادگی الزامی است و حداکثر ۸۰ کاراکتر دارد.</div>
+        }
+      </div>
+
+      <div class="field-group">
+        <label for="guest-ticket-subject">عنوان درخواست</label>
+        <input
+          id="guest-ticket-subject"
+          type="text"
+          class="form-control form-control-lg"
+          formControlName="title"
+          maxlength="120"
+          autocomplete="off"
+          placeholder="برای نمونه: راهنمایی درباره خدمات"
+          [class.is-invalid]="ticketForm.controls.title.invalid && ticketForm.controls.title.touched"
+        />
+        @if (ticketForm.controls.title.invalid && ticketForm.controls.title.touched) {
+          <div class="invalid-feedback d-block">عنوان درخواست الزامی است و حداکثر ۱۲۰ کاراکتر دارد.</div>
+        }
+      </div>
+
+      <div class="field-group">
+        <label for="guest-ticket-description">شرح درخواست</label>
+        <textarea
+          id="guest-ticket-description"
+          class="form-control"
+          formControlName="description"
+          rows="7"
+          maxlength="4000"
+          placeholder="موضوع را با جزئیات توضیح دهید..."
+          [class.is-invalid]="ticketForm.controls.description.invalid && ticketForm.controls.description.touched"
+        ></textarea>
+        <div class="field-meta">
+          @if (ticketForm.controls.description.invalid && ticketForm.controls.description.touched) {
+            <span class="text-danger">شرح درخواست الزامی است.</span>
+          } @else {
+            <span>اطلاعات حساس مانند رمز عبور را وارد نکنید.</span>
+          }
+          <span>{{ ticketForm.controls.description.value.length }}/4000</span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-lg submit-button" type="submit" [disabled]="submitting()">
+        @if (submitting()) {
+          <span class="spinner-border spinner-border-sm ms-2" aria-hidden="true"></span>
+          در حال ثبت...
+        } @else {
+          <i class="mdi mdi-send ms-1" aria-hidden="true"></i>
+          ثبت تیکت
+        }
+      </button>
+    </form>
+  </section>
+</main>

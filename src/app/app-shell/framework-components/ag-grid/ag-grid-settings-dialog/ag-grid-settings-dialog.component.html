@@ -1,0 +1,48 @@
+@if (dialog.state(); as state) {
+  <div class="kws-grid-settings-backdrop" dir="rtl" role="presentation" (mousedown)="$event.target === $event.currentTarget && close()">
+    <section class="kws-grid-settings" role="dialog" aria-modal="true" aria-labelledby="kws-grid-settings-title">
+      <header>
+        <div>
+          <span>تنظیمات مشترک جدول</span>
+          <h2 id="kws-grid-settings-title">{{ state.title }}</h2>
+          <small>{{ state.schemaClassName || 'ستون‌های زمان اجرا' }}</small>
+        </div>
+        <button type="button" class="icon-button" aria-label="بستن" (click)="close()">×</button>
+      </header>
+
+      <div class="kws-grid-settings-toolbar">
+        <label><i class="mdi mdi-magnify"></i><input type="search" placeholder="جست‌وجوی عنوان یا FieldName" [ngModel]="search()" (ngModelChange)="search.set($event)"></label>
+        <button type="button" (click)="setAllVisible(true)">نمایش همه</button>
+        <button type="button" (click)="setAllVisible(false)">مخفی‌کردن همه</button>
+      </div>
+
+      @if (state.error) { <div class="kws-grid-settings-warning">{{ state.error }}</div> }
+      @if (state.loading) {
+        <div class="kws-grid-settings-loading"><span class="spinner-border spinner-border-sm"></span> در حال دریافت تمام ستون‌های GridSchema...</div>
+      } @else {
+        <div class="kws-grid-settings-table-wrap">
+          <table>
+            <thead><tr><th>نمایش</th><th>عنوان ستون</th><th>FieldName</th><th>عرض</th><th>ترتیب</th><th>منبع</th></tr></thead>
+            <tbody>
+              @for (column of filteredColumns(); track column.id) {
+                <tr>
+                  <td><input type="checkbox" [checked]="column.visible" (change)="update(column, { visible: $any($event.target).checked })" [attr.aria-label]="'نمایش ' + column.caption"></td>
+                  <td><input class="caption-input" maxlength="160" [ngModel]="column.caption" (ngModelChange)="update(column, { caption: $event })"></td>
+                  <td><code>{{ column.field }}</code></td>
+                  <td><input class="width-input" type="number" min="60" max="1200" [ngModel]="column.width" (ngModelChange)="update(column, { width: +$event })"></td>
+                  <td><div class="order-buttons"><button type="button" aria-label="انتقال به بالا" (click)="move(column, -1)"><i class="mdi mdi-arrow-up"></i></button><button type="button" aria-label="انتقال به پایین" (click)="move(column, 1)"><i class="mdi mdi-arrow-down"></i></button></div></td>
+                  <td><span class="source-badge" [class.runtime]="column.source === 'Runtime'">{{ column.source }}</span></td>
+                </tr>
+              } @empty { <tr><td colspan="6" class="empty">ستونی با این عبارت پیدا نشد.</td></tr> }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <footer>
+        <p>تنظیمات برای همین کاربر و همین جدول ذخیره می‌شود و شامل داده‌های سطرها نیست.</p>
+        <div><button type="button" class="secondary" (click)="dialog.resetToSchema()">بازنشانی به GridSchema</button><button type="button" class="secondary" (click)="close()">انصراف</button><button type="button" class="primary" [disabled]="state.loading" (click)="dialog.apply()">اعمال و ذخیره</button></div>
+      </footer>
+    </section>
+  </div>
+}

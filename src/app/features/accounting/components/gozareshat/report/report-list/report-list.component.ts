@@ -6,10 +6,11 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 
-import Swal from 'sweetalert2';
 import { CellActionReportList } from './cell-action-report-list';
 import { ReportWebApiService } from 'src/app/features/accounting/services/GozareshatWebApi/ReportWebApi.service';
 import { AgGridMemoryService } from 'src/app/app-shell/framework-components/ag-grid/services/ag-grid-memory.service';
+import { DataViewStateComponent } from 'src/app/app-shell/framework-components/data-view-state/data-view-state.component';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-report-list',
@@ -19,15 +20,16 @@ import { AgGridMemoryService } from 'src/app/app-shell/framework-components/ag-g
     CommonModule,
     ReactiveFormsModule,
     AgGridAngular,
-
-
-  ]
+    DataViewStateComponent,
+  ],
+  styleUrl: './report-list.component.scss',
 })
 export class ReportListComponent extends AgGridBaseComponent
   implements OnInit {
 
   private readonly router = inject(Router);
   private readonly gridMemory_service = inject(AgGridMemoryService);
+  private readonly notificationService = inject(NotificationService);
 
   private readonly repo = inject(ReportWebApiService);
 
@@ -38,6 +40,8 @@ export class ReportListComponent extends AgGridBaseComponent
 
   title = signal('')
   records = signal<any[]>([])
+  loading = signal(false);
+  errorMessage = signal('');
 
   gridMemory1 = new Map<string, any>();
   gridKey = signal('');
@@ -169,8 +173,6 @@ export class ReportListComponent extends AgGridBaseComponent
 
     if (memory?.rowData) {
       this.records.set(memory.rowData);
-    } else {
-      this.GetData();
     }
   }
 
@@ -185,24 +187,23 @@ export class ReportListComponent extends AgGridBaseComponent
   }
 
   GetData() {
-
+    this.loading.set(true);
+    this.errorMessage.set('');
     this.repo.GetReports(this.EditForm_SearchTarget.value)
-      .subscribe((data: any) => {
-
-
-        const reports = data?.Reports ?? []
-
-        if (!reports.length) {
-          this.title.set('گزارشی یافت نشد')
-        } else {
-          this.title.set('لیست گزارشات')
-
-        }
-
-
-
-        this.records.set(data?.Reports ?? [])
-        this.updateGridData(1, this.records());
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: (data: any) => {
+          const reports = data?.Reports ?? [];
+          this.title.set(reports.length ? 'لیست گزارشات' : 'گزارشی یافت نشد');
+          this.records.set(reports);
+          this.updateGridData(1, reports);
+        },
+        error: () => {
+          this.records.set([]);
+          this.title.set('لیست گزارشات');
+          this.errorMessage.set('امکان دریافت فهرست گزارش‌ها وجود ندارد.');
+          this.notificationService.error('خطا در دریافت فهرست گزارش‌ها');
+        },
       });
   }
 

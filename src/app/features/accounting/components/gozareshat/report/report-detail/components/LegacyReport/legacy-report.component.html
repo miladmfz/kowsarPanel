@@ -1,0 +1,104 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title mb-3">{{ title() }}</h4>
+
+    <form [formGroup]="filterForm" class="row g-3 mb-4 align-items-end" (ngSubmit)="loadList()">
+      <div class="col-sm-6 col-xl-3">
+        <label for="legacy-report-search" class="form-label">جستجو</label>
+        <input id="legacy-report-search" class="form-control" formControlName="SearchTarget" maxlength="120" autocomplete="off" />
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <label for="legacy-report-from-date" class="form-label">از تاریخ</label>
+        <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
+          <input id="legacy-report-from-date" class="form-control text-center" formControlName="FromDate" autocomplete="off" />
+        </ng-persian-datepicker>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <label for="legacy-report-to-date" class="form-label">تا تاریخ</label>
+        <ng-persian-datepicker [uiTheme]="customTheme" [uiHideOnOutsideClick]="true" [uiHideAfterSelectDate]="true">
+          <input id="legacy-report-to-date" class="form-control text-center" formControlName="ToDate" autocomplete="off" />
+        </ng-persian-datepicker>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <label for="legacy-report-department" class="form-label">کد شعبه</label>
+        <input id="legacy-report-department" class="form-control" formControlName="Department" inputmode="numeric" autocomplete="off" />
+      </div>
+
+      <details class="col-12">
+        <summary class="text-primary mb-3">فیلترهای تکمیلی گزارش</summary>
+        <div class="row g-3">
+          <div class="col-sm-6 col-xl-3"><label for="legacy-good" class="form-label">کد کالا</label><input id="legacy-good" class="form-control" formControlName="GoodCode" /></div>
+          <div class="col-sm-6 col-xl-3"><label for="legacy-customer" class="form-label">کد مشتری / شخص</label><input id="legacy-customer" class="form-control" formControlName="CustomerRef" /></div>
+          <div class="col-sm-6 col-xl-3"><label for="legacy-factor" class="form-label">کد سند / فاکتور</label><input id="legacy-factor" class="form-control" formControlName="FactorPrivateCode" /></div>
+          <div class="col-sm-6 col-xl-3"><label for="legacy-stack" class="form-label">کد انبار</label><input id="legacy-stack" class="form-control" formControlName="StackCode" /></div>
+          <div class="col-sm-6 col-xl-3"><label for="legacy-group" class="form-label">کد گروه</label><input id="legacy-group" class="form-control" formControlName="GroupCode" /></div>
+          <div class="col-sm-6 col-xl-3"><label for="legacy-provider" class="form-label">کد تأمین‌کننده</label><input id="legacy-provider" class="form-control" formControlName="ProviderCode" /></div>
+          <div class="col-sm-6 col-xl-3"><label for="legacy-broker" class="form-label">کد بازاریاب</label><input id="legacy-broker" class="form-control" formControlName="BrokerRef" /></div>
+          <div class="col-sm-6 col-xl-3">
+            <label for="legacy-active-state" class="form-label">وضعیت</label>
+            <select id="legacy-active-state" class="form-select" formControlName="ActiveState">
+              <option value="all">همه</option>
+              <option value="active">فعال</option>
+              <option value="inactive">غیرفعال</option>
+            </select>
+          </div>
+          <div class="col-12 d-flex flex-wrap gap-4">
+            <label class="form-check"><input class="form-check-input" type="checkbox" formControlName="WithMainCode" /> <span class="form-check-label">کد اصلی کالا</span></label>
+            <label class="form-check"><input class="form-check-input" type="checkbox" formControlName="IsYear" /> <span class="form-check-label">گروه‌بندی سالانه</span></label>
+            <label class="form-check"><input class="form-check-input" type="checkbox" formControlName="IncludeSubgroups" /> <span class="form-check-label">زیرگروه‌ها</span></label>
+            <label class="form-check"><input class="form-check-input" type="checkbox" formControlName="WithStackGrouping" /> <span class="form-check-label">تفکیک انبار</span></label>
+          </div>
+        </div>
+      </details>
+
+      <div class="col-12 d-flex flex-wrap justify-content-end gap-2">
+        <button type="submit" class="btn btn-primary" [disabled]="loading()">
+          <i class="fas fa-search me-1"></i>{{ loading() ? 'در حال دریافت...' : 'اجرای گزارش' }}
+        </button>
+        <button type="button" class="btn btn-light" (click)="loadList()" [disabled]="loading()">
+          <i class="fas fa-sync me-1"></i>بازخوانی
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="clearFilter()" [disabled]="loading()">
+          <i class="fas fa-eraser me-1"></i>پاک‌کردن فیلترها
+        </button>
+        <button type="button" class="btn btn-outline-primary" (click)="toggleReportView()" [disabled]="loading() || records().length === 0">
+          {{ showChart() ? 'نمایش لیست' : 'نمایش نمودار' }}
+        </button>
+      </div>
+    </form>
+
+    @if (hasLoaded()) {
+      <div class="row g-2 mb-3" aria-label="خلاصه گزارش">
+        <div class="col-6 col-lg-3"><div class="border rounded p-2 text-center h-100"><small class="text-muted d-block">تعداد رکورد</small><strong>{{ formatNumber(records().length) }}</strong></div></div>
+        @for (summary of summaries(); track summary.field) {
+          <div class="col-6 col-lg-3"><div class="border rounded p-2 text-center h-100"><small class="text-muted d-block">جمع {{ summary.caption }}</small><strong>{{ formatNumber(summary.value) }}</strong></div></div>
+        }
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <div class="alert alert-danger" role="alert">{{ errorMessage() }}</div>
+    } @else if (hasLoaded() && !loading() && records().length === 0) {
+      <div class="alert alert-info" role="status">برای فیلترهای انتخاب‌شده رکوردی پیدا نشد.</div>
+    }
+
+    @if (showChart()) {
+      <app-kowsar-chart-column [title]="title()" [series]="chartModel().series" [categories]="chartModel().categories" [height]="520"></app-kowsar-chart-column>
+    } @else {
+      <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px">
+        <ag-grid-angular
+          [enableBrowserTooltips]="true"
+          [tooltipShowDelay]="200"
+          [tooltipHideDelay]="800"
+          [columnDefs]="column_name_1"
+          [rowData]="records()"
+          [gridOptions]="gridOptions"
+          (gridReady)="onGridReady($event, 1)"
+          (sortChanged)="syncChartOrder()"
+          (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+          [class]="themeClass + ' w-100 h-100'"
+        ></ag-grid-angular>
+      </div>
+    }
+  </div>
+</div>

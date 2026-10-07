@@ -1,76 +1,54 @@
-<div class="card">
-  <div class="card-body">
+<section class="central-role-page" aria-labelledby="central-role-title">
+  <header>
+    <div>
+      <span>Tenant-safe RBAC</span>
+      <h1 id="central-role-title">مدیریت نقش‌های Central جاری</h1>
+      <p>Roleها از Database خوانده می‌شوند و Central فقط از Claim احراز هویت‌شده تعیین می‌شود.</p>
+    </div>
+    <button type="button" class="secondary" (click)="load()" [disabled]="loading() || saving()">
+      <i class="mdi" [class.mdi-loading]="loading()" [class.mdi-spin]="loading()" [class.mdi-refresh]="!loading()"></i>
+      بازخوانی
+    </button>
+  </header>
 
-    <h4 class="card-title">{{ title() }}</h4>
+  @if (notice()) { <div class="message success" role="status">{{ notice() }}</div> }
+  @if (error()) { <div class="message error" role="alert">{{ error() }}</div> }
 
-    <div class="row mb-2">
-      <div class="col-sm-12">
-
-        <a type="button" class="btn btn-success waves-effect waves-light m-1"
-          [routerLink]="['/internal/internal-apps-edit', 0]">
-          <span class="btn-label"><i class="fas fa-plus"></i></span>
-          جدید
-        </a>
-
-
-        <button type="button" class="btn btn-light waves-effect waves-light m-1" (click)="getList()">
-          <span class="btn-label"><i class="fas fa-sync me-1"></i></span>
-          بازخوانی
-        </button>
-
-
-
-
-      </div>
+  @if (loading() && !configuration()) {
+    <div class="state"><i class="mdi mdi-loading mdi-spin"></i><span>در حال دریافت تنظیمات…</span></div>
+  } @else if (configuration(); as item) {
+    <div class="central-summary">
+      <div><small>Central</small><strong>{{ item.centralName || 'بدون عنوان' }}</strong><code>{{ item.centralRef }}</code></div>
+      <div><small>Role فعال</small><strong>{{ enabledCount() | number:'1.0-0' }}</strong><span>از {{ item.roles.length | number:'1.0-0' }} Role موجود</span></div>
+      <div><small>Concurrency</small><strong>محافظت‌شده</strong><span>نسخه در هر ذخیره کنترل می‌شود</span></div>
     </div>
 
-    @if (loading()) {
-    <div class="text-center">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
+    <div class="role-grid">
+      @for (role of item.roles; track role.roleCode) {
+        <label class="role-card" [class.enabled]="selectedRoleRefs().has(role.roleCode)" [class.pilot-role]="isPilotRole(role)" [class.locked]="role.locked">
+          <input type="checkbox"
+            [checked]="selectedRoleRefs().has(role.roleCode)"
+            [disabled]="role.locked || saving()"
+            (change)="toggle(role, $event)" />
+          <span class="check"><i class="mdi mdi-check"></i></span>
+          <span class="role-copy">
+            <span class="role-name"><strong>{{ role.roleTitle || role.roleName }}</strong>@if (isPilotRole(role)) { <em>BI Pilot</em> }</span>
+            <code>{{ role.roleName }}</code>
+            @if (role.explain) { <small>{{ role.explain }}</small> }
+            @if (role.locked) { <small class="locked-note"><i class="mdi mdi-lock-outline"></i>برای جلوگیری از قفل‌شدن مدیریت، این Role از این صفحه تغییر نمی‌کند.</small> }
+          </span>
+        </label>
+      }
     </div>
-    }
 
-    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
-      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
-        [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions"
-        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
-        [class]="themeClass + ' w-100 h-100'">
-      </ag-grid-angular>
-    </div>
-
-  </div>
-</div>
-
-
-
-<div class="modal fade" id="CentralRole" tabindex="-1" aria-labelledby="CentralRoleLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg kowsar-modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="CentralRoleLabel">لیست دسترسی ها</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-          (click)="CentralRole_dialog_close()"></button>
-      </div>
-      <div class="modal-body">
-
-
-        <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 600px;">
-          <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
-            [columnDefs]="columnDefs2" [rowData]="records_CentralRole()" [gridOptions]="gridOptions"
-            (gridReady)="onGridReady($event, 2)" (firstDataRendered)="gridApi2?.sizeColumnsToFit()"
-            [class]="themeClass + ' w-100 h-100'">
-          </ag-grid-angular>
-        </div>
-
-
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-          (click)="CentralRole_dialog_close()">بستن</button>
-      </div>
-    </div>
-  </div>
-</div>
+    <footer>
+      <p><i class="mdi mdi-information-outline"></i>تغییر Role روی Token فعال فعلی اعمال نمی‌شود؛ کاربران باید پس از ذخیره دوباره Login کنند.</p>
+      <button type="button" class="primary" (click)="save()" [disabled]="!dirty() || saving()">
+        <i class="mdi" [class.mdi-loading]="saving()" [class.mdi-spin]="saving()" [class.mdi-content-save-check-outline]="!saving()"></i>
+        ذخیره Roleهای Central
+      </button>
+    </footer>
+  } @else {
+    <div class="state error-state"><i class="mdi mdi-alert-circle-outline"></i><span>تنظیمات قابل نمایش نیست.</span></div>
+  }
+</section>

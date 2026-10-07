@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class KowsarNumberService {
   // تبدیل رشته به عدد نرمال (یا null اگر عدد نبود)
-  parseKowsarNumber(value: any): number | null {
+  parseKowsarNumber(value: unknown): number | null {
     if (value === null || value === undefined) return null;
 
     const raw = String(value).trim();
@@ -40,12 +40,12 @@ export class KowsarNumberService {
   }
 
   // فرمت نهایی برای نمایش (سه‌رقمی + ارقام فارسی)
-  formatKowsarNumber(value: any): string {
+  formatKowsarNumber(value: unknown): string {
     const num = this.parseKowsarNumber(value);
 
     // اگر عدد نیست → همون مقدار اصلی برگرده (یا رشته خالی)
     if (num === null) {
-      return value ?? '';
+      return value == null ? '' : String(value);
     }
 
     const parts = num.toString().split('.');
@@ -72,7 +72,7 @@ export class KowsarNumberService {
   }
 
   // مقایسه برای سورت عددی/متنی
-  compareKowsarValues(valueA: any, valueB: any): number {
+  compareKowsarValues(valueA: unknown, valueB: unknown): number {
     const nA = this.parseKowsarNumber(valueA);
     const nB = this.parseKowsarNumber(valueB);
 

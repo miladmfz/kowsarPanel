@@ -139,20 +139,36 @@ import { KowsarBaseWebApi } from 'src/app/app-shell/framework-services/base/Kows
         }
 
 
+        :host-context(html[data-bs-theme='dark']) .attendance-refresh-interval,
         .bg-dark .attendance-refresh-interval {
             color: #cbd5e1;
             background: rgba(15, 23, 42, 0.65);
             border-color: #475569;
         }
 
+        :host-context(html[data-bs-theme='dark']) .attendance-refresh-interval select,
         .bg-dark .attendance-refresh-interval select {
             color: #f8fafc;
             background: #1e293b;
         }
 
+        :host-context(html[data-bs-theme='dark']) .attendance-last-update,
+        :host-context(html[data-bs-theme='dark']) .attendance-last-update strong,
         .bg-dark .attendance-last-update,
         .bg-dark .attendance-last-update strong {
             color: #e2e8f0;
+        }
+
+        :host-context(html[data-bs-theme='dark']) .attendance-auto-btn.active {
+            color: #bbf7d0;
+            background: rgba(34, 197, 94, .18);
+            border-color: rgba(74, 222, 128, .55);
+        }
+
+        :host-context(html[data-bs-theme='dark']) .attendance-auto-btn:not(.active) {
+            color: #fed7aa;
+            background: rgba(249, 115, 22, .18);
+            border-color: rgba(251, 146, 60, .55);
         }
 
         @media (max-width: 768px) {

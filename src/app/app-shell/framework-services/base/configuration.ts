@@ -17,7 +17,7 @@ export interface AppConfiguration {
 /**
  *   مقادیر ثابت (Global Constants)
  */
-export const ACCESS_TOKEN_NAME = '*&^%*((())$';
+export const ACCESS_TOKEN_NAME = 'kowsar.access_token';
 export const PERMISSIONS_NAME = '%%%%%%%%%%';
 
 /**

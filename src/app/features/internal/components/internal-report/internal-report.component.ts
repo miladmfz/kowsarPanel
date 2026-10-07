@@ -15,6 +15,7 @@ import { InternalReportCustomerComponent } from './components/internal-report-cu
     InternalReportCustomerComponent
   ],
 })
+
 export class InternalReportComponent
   extends AgGridBaseComponent
   implements OnInit {

@@ -29,6 +29,12 @@ export const RBAC_ROUTES: Routes = [
         path: 'centralrole', loadComponent: () => import('./centralrole/centralrole.component').then(m => m.CentralroleComponent),
     },
 
+    {
+        path: 'sessions',
+        loadComponent: () => import('./session-management/session-management.component')
+            .then(m => m.SessionManagementComponent),
+    },
+
 
 
 

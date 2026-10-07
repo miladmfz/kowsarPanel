@@ -1,19 +1,24 @@
 import { inject } from '@angular/core';
-import { HttpInterceptorFn, HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { catchError, switchMap, throwError } from 'rxjs';
 import { AppConfigService } from 'src/app/app-config.service';
-import { ACCESS_TOKEN_NAME } from '../base/configuration';
+import { SessionStorageService } from '../storage/session.storage.service';
+import { AuthTokenService } from 'src/app/auth-kowsar/services/auth-token.service';
 
 export const SecurityInterceptor: HttpInterceptorFn = (req, next) => {
   const config = inject(AppConfigService);
+  const router = inject(Router);
+  const session = inject(SessionStorageService);
+  const authTokens = inject(AuthTokenService);
   const apiUrl = config.apiUrl;
 
-  // فقط درخواست‌های مربوط به API اصلی intercept شوند
-  if (!req.url.includes(apiUrl)) {
+  // فقط درخواست‌های همان Origin و مسیر API اصلی intercept شوند.
+  if (!isRequestForApi(req.url, apiUrl)) {
     return next(req);
   }
 
-  const token = localStorage.getItem(ACCESS_TOKEN_NAME);
+  const token = session.accessToken;
 
   // 🔐 افزودن توکن در Header در صورت وجود
   const cloned = req.clone({
@@ -24,24 +29,45 @@ export const SecurityInterceptor: HttpInterceptorFn = (req, next) => {
   });
 
   //   کنترل پاسخ‌ها و خطاهای امنیتی
-  return next(cloned).pipe(
-    tap({
-      next: (event) => {
-        if (event instanceof HttpResponse) {
-          // پاسخ موفق - در صورت نیاز می‌توانی لاگ بزنی
-        }
-      },
-      error: (err) => {
-        if (err instanceof HttpErrorResponse) {
-          if ([401, 403].includes(err.status)) {
-            console.warn('🚫 دسترسی غیرمجاز - لطفاً دوباره وارد شوید');
-            localStorage.removeItem(ACCESS_TOKEN_NAME);
-            sessionStorage.clear();
-            // در صورت نیاز، ریدایرکت به صفحه لاگین:
-            // window.location.href = '/auth/login';
-          }
-        }
-      },
-    })
-  );
+  return next(cloned).pipe(catchError(err => {
+    if (!(err instanceof HttpErrorResponse) || ![401, 403].includes(err.status)) {
+      return throwError(() => err);
+    }
+
+    const isRefreshRequest = req.url.includes('/Auth/v2/refresh');
+    if (err.status === 401 && !isRefreshRequest && session.refreshToken && session.authSubject) {
+      return authTokens.refreshAccessToken().pipe(
+        switchMap(newToken => next(cloned.clone({
+          setHeaders: { Authorization: `Bearer ${newToken}` },
+        }))),
+        catchError(refreshError => {
+          clearAuthentication();
+          return throwError(() => refreshError);
+        })
+      );
+    }
+
+    clearAuthentication();
+    return throwError(() => err);
+  }));
+
+  function clearAuthentication(): void {
+    const loginRoute = session.loginType.trim().toUpperCase() === 'GUEST'
+      ? '/auth/guest-login'
+      : session.loginRoute;
+    session.clearAuthentication();
+    void router.navigateByUrl(loginRoute);
+  }
 };
+
+function isRequestForApi(requestUrl: string, apiUrl: string): boolean {
+  try {
+    const request = new URL(requestUrl, document.baseURI);
+    const api = new URL(apiUrl, document.baseURI);
+    const apiPath = api.pathname.endsWith('/') ? api.pathname : `${api.pathname}/`;
+
+    return request.origin === api.origin && request.pathname.startsWith(apiPath);
+  } catch {
+    return false;
+  }
+}

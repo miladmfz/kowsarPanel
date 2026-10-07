@@ -1,0 +1,184 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title mb-3">{{ title() }}</h4>
+
+    <form
+      [formGroup]="EditForm_SearchTarget"
+      class="row g-3 mb-4 align-items-end"
+      (ngSubmit)="loadList()"
+    >
+      <div class="col-sm-6 col-lg-3">
+        <label class="form-label" for="periodic-report-from-month"
+          >از ماه</label
+        >
+        <input
+          id="periodic-report-from-month"
+          type="text"
+          inputmode="numeric"
+          maxlength="7"
+          class="form-control text-center"
+          formControlName="FromDate"
+          placeholder="1405/01"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="col-sm-6 col-lg-3">
+        <label class="form-label" for="periodic-report-to-month">تا ماه</label>
+        <input
+          id="periodic-report-to-month"
+          type="text"
+          inputmode="numeric"
+          maxlength="7"
+          class="form-control text-center"
+          formControlName="ToDate"
+          placeholder="1405/06"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="col-sm-6 col-lg-3">
+        <label class="form-label" for="periodic-report-department">
+          کد دپارتمان
+        </label>
+        <input
+          id="periodic-report-department"
+          type="text"
+          inputmode="numeric"
+          class="form-control"
+          formControlName="Department"
+          placeholder="مثال: 1 یا 1,2"
+          autocomplete="off"
+        />
+      </div>
+
+      @if (supportsAnnual) {
+        <div class="col-sm-6 col-lg-3">
+          <div class="form-check mb-2">
+            <input
+              id="periodic-report-is-year"
+              type="checkbox"
+              class="form-check-input"
+              formControlName="IsYear"
+            />
+            <label class="form-check-label" for="periodic-report-is-year">
+              نمایش سالانه
+            </label>
+          </div>
+        </div>
+      }
+
+      <div class="col-12 d-flex justify-content-end gap-2">
+        <button type="submit" class="btn btn-primary" [disabled]="loading()">
+          <i class="fas fa-search me-1"></i>
+          {{ loading() ? "در حال دریافت..." : "جستجو" }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-light"
+          (click)="loadList()"
+          [disabled]="loading()"
+        >
+          <i class="fas fa-sync me-1"></i> بازخوانی
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="clearFilter()"
+          [disabled]="loading()"
+        >
+          <i class="fas fa-eraser me-1"></i> پاک‌کردن فیلترها
+        </button>
+      </div>
+    </form>
+
+    <div class="d-flex justify-content-end mb-3">
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="toggleReportView()"
+        [disabled]="loading() || records().length === 0"
+      >
+        <i
+          class="fas"
+          [class.fa-chart-column]="!showChart()"
+          [class.fa-table]="showChart()"
+        ></i>
+        {{ showChart() ? "نمایش لیست" : "نمایش نمودار" }}
+      </button>
+    </div>
+
+    @if (hasLoaded()) {
+      <div class="row g-2 mb-3" aria-label="جمع گزارش">
+        <div class="col-6 col-lg">
+          <div class="border rounded p-2 text-center h-100">
+            <small class="text-muted d-block">تعداد رکورد</small>
+            <strong>{{ formatNumber(totals().count) }}</strong>
+          </div>
+        </div>
+        <div class="col-6 col-lg">
+          <div class="border rounded p-2 text-center h-100">
+            <small class="text-muted d-block">جمع تعداد</small>
+            <strong>{{ formatNumber(totals().amount) }}</strong>
+          </div>
+        </div>
+        @if (showPriceTotals) {
+          <div class="col-6 col-lg">
+            <div class="border rounded p-2 text-center h-100">
+              <small class="text-muted d-block">جمع مبلغ خالص</small>
+              <strong>{{ formatNumber(totals().net) }}</strong>
+            </div>
+          </div>
+          <div class="col-6 col-lg">
+            <div class="border rounded p-2 text-center h-100">
+              <small class="text-muted d-block">جمع مبلغ ناخالص</small>
+              <strong>{{ formatNumber(totals().gross) }}</strong>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <div class="alert alert-danger" role="alert" aria-live="polite">
+        {{ errorMessage() }}
+      </div>
+    } @else if (hasLoaded() && !loading() && records().length === 0) {
+      <div class="alert alert-info" role="status">
+        برای فیلترهای انتخاب‌شده رکوردی پیدا نشد.
+      </div>
+    }
+
+    @if (showChart()) {
+      <app-kowsar-chart-column
+        [title]="title()"
+        [series]="chartModel().series"
+        [categories]="chartModel().categories"
+        [height]="520"
+      ></app-kowsar-chart-column>
+      @if (records().length > 12) {
+        <small class="text-muted"
+          >نمودار ۱۲ ردیف اولِ ترتیب فعلی جدول را نمایش می‌دهد.</small
+        >
+      }
+    } @else {
+      <div
+        class="ag-container rounded-3 border shadow-sm overflow-hidden"
+        style="height: 600px"
+      >
+        <ag-grid-angular
+          [enableBrowserTooltips]="true"
+          [tooltipShowDelay]="200"
+          [tooltipHideDelay]="800"
+          [columnDefs]="column_name_1"
+          [rowData]="records()"
+          [gridOptions]="gridOptions"
+          (gridReady)="onGridReady($event, 1)"
+          (sortChanged)="syncChartOrder()"
+          (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+          [class]="themeClass + ' w-100 h-100'"
+        ></ag-grid-angular>
+      </div>
+    }
+  </div>
+</div>

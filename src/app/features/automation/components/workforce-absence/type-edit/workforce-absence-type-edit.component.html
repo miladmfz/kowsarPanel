@@ -10,9 +10,9 @@
         <div class="col-md-4"><label class="form-label">عنوان</label><input formControlName="TypeTitle" class="form-control" [class.is-invalid]="isInvalid('TypeTitle')" /></div>
         <div class="col-md-3"><label class="form-label">ترتیب نمایش</label><input formControlName="DisplayOrder" type="number" class="form-control text-center" /></div>
 
-        <div class="col-md-4"><label class="form-label">روش محاسبه</label><select formControlName="CalculationMode" class="form-control">@for (x of CalculationModes; track x.id) { <option [value]="x.id">{{ x.title }}</option> }</select></div>
-        <div class="col-md-4"><label class="form-label">روش کسر سهمیه</label><select formControlName="BalanceMode" class="form-control">@for (x of BalanceModes; track x.id) { <option [value]="x.id">{{ x.title }}</option> }</select></div>
-        <div class="col-md-2"><label class="form-label">فاصله روز کاری</label><input formControlName="MinimumAdvanceWorkDay" type="number" class="form-control text-center" /></div>
+        <div class="col-md-4"><label class="form-label">روش محاسبه</label><select formControlName="CalculationMode" class="form-control" [style.pointer-events]="isEmergencyType() ? 'none' : 'auto'" [class.bg-light]="isEmergencyType()">@for (x of CalculationModes; track x.id) { <option [value]="x.id">{{ x.title }}</option> }</select></div>
+        <div class="col-md-4"><label class="form-label">روش کسر سهمیه</label><select formControlName="BalanceMode" class="form-control" [style.pointer-events]="isEmergencyType() ? 'none' : 'auto'" [class.bg-light]="isEmergencyType()">@for (x of BalanceModes; track x.id) { <option [value]="x.id">{{ x.title }}</option> }</select></div>
+        <div class="col-md-2"><label class="form-label">فاصله روز کاری</label><input formControlName="MinimumAdvanceWorkDay" type="number" class="form-control text-center" [readonly]="isEmergencyType()" [class.bg-light]="isEmergencyType()" /></div>
         <div class="col-md-2"><label class="form-label">فعال</label><select formControlName="IsActive" class="form-control"><option value="1">بله</option><option value="0">خیر</option></select></div>
 
         <div class="col-md-2"><label class="form-label">جمعه</label><select formControlName="AllowFriday" class="form-control"><option value="0">غیرمجاز</option><option value="1">مجاز</option></select></div>

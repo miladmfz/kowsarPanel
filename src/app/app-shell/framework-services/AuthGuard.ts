@@ -44,15 +44,8 @@ export class AuthGuard implements CanActivate {
     }
 
     private logoutAndRedirect(): UrlTree {
-        this.session.clear();
-
-        if (localStorage.getItem('UserTypeLogin') == 'KOWSAR') {
-            return this.router.createUrlTree(['/auth/login-kowsar']);
-
-        } else {
-            return this.router.createUrlTree(['/auth/login-person']);
-
-        }
+        this.session.clearAuthentication();
+        return this.router.createUrlTree([this.session.loginRoute]);
 
     }
 }

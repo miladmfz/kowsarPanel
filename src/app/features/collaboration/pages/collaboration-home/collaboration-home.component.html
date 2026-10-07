@@ -1,0 +1,193 @@
+<main class="collaboration" dir="rtl">
+  <header class="collaboration__toolbar">
+    <div>
+      <h1><i class="ri-discuss-line" aria-hidden="true"></i> همکاری سازمانی</h1>
+      <p>گفت‌وگو، تصمیم و عملیات در متن موجودیت‌های Kowsar</p>
+    </div>
+    <nav aria-label="نمای همکاری">
+      <button type="button" [class.active]="view === 'conversation'" (click)="view = 'conversation'"><i class="ri-chat-3-line"></i> گفتگو</button>
+      <button type="button" [class.active]="view === 'search'" (click)="view = 'search'"><i class="ri-search-line"></i> جست‌وجو</button>
+      <button *ngIf="canViewPlaybook" type="button" [class.active]="view === 'playbooks'" (click)="showPlaybooks()"><i class="ri-list-check-3"></i> Playbook</button>
+      <button *ngIf="canOpenAdministration" type="button" [class.active]="view === 'administration'" (click)="showAdministration()"><i class="ri-settings-3-line"></i> مدیریت</button>
+    </nav>
+  </header>
+
+  <div *ngIf="error" class="collaboration__error" role="alert">
+    <span>{{ error }}</span><button type="button" aria-label="بستن" (click)="error = ''">×</button>
+  </div>
+
+  <section class="collaboration__shell">
+    <aside class="room-sidebar">
+      <div class="room-sidebar__title">
+        <strong>گفت‌وگوها</strong>
+        <div class="room-sidebar__actions">
+          <button *ngIf="canCreatePost" type="button" class="icon-btn" title="پیام مستقیم جدید" (click)="showUserPicker = !showUserPicker"><i class="ri-user-add-line"></i></button>
+          <button *ngIf="canCreateRoom" type="button" class="icon-btn" title="اتاق جدید" (click)="showCreateRoom = !showCreateRoom"><i class="ri-add-line"></i></button>
+        </div>
+      </div>
+
+      <section *ngIf="showUserPicker" class="user-picker">
+        <form (ngSubmit)="loadUsers()">
+          <input name="userSearch" [(ngModel)]="userSearch" placeholder="نام، نام کاربری یا واحد">
+          <button type="submit" class="icon-btn" title="جست‌وجو"><i class="ri-search-line"></i></button>
+        </form>
+        <button *ngFor="let user of users" type="button" class="user-picker__item" [disabled]="user.isSelf || directStarting" (click)="startDirect(user)">
+          <span class="user-picker__avatar">{{ user.displayName.slice(0, 1) }}</span>
+          <span><strong>{{ user.displayName }}</strong><small>{{ user.departmentName || user.userName }}<ng-container *ngIf="user.isSelf"> · خودم</ng-container></small></span>
+          <i class="ri-chat-new-line"></i>
+        </button>
+        <div *ngIf="!users.length" class="state-box">کاربری پیدا نشد.</div>
+      </section>
+
+      <form *ngIf="showCreateRoom" class="compact-form" (ngSubmit)="createRoom()">
+        <input name="roomTitle" [(ngModel)]="newRoom.title" required placeholder="عنوان اتاق">
+        <select name="roomType" [(ngModel)]="newRoom.roomType">
+          <option value="General">عمومی</option><option value="Department">واحد</option><option value="Project">پروژه</option>
+          <option value="Support">پشتیبانی</option><option value="Alert">هشدار</option><option value="Entity">موجودیت</option>
+        </select>
+        <div class="compact-form__row" *ngIf="newRoom.roomType === 'Entity'">
+          <input name="entityType" [(ngModel)]="newRoom.linkedEntityType" placeholder="EntityType">
+          <input name="entityCode" [(ngModel)]="newRoom.linkedEntityCode" placeholder="EntityCode">
+        </div>
+        <button type="submit" class="primary-btn">ایجاد</button>
+      </form>
+
+      <div *ngIf="loading" class="state-box"><span class="spinner-border spinner-border-sm"></span> در حال دریافت...</div>
+      <div *ngIf="!loading && !rooms.length" class="state-box">هنوز اتاقی در دسترس نیست.</div>
+      <button *ngFor="let room of rooms; trackBy: trackRoom" type="button" class="room-card"
+        [class.active]="selectedRoom?.roomCode === room.roomCode" (click)="selectRoom(room)">
+        <i [class]="room.roomType === 'Direct' ? 'ri-user-line' : room.roomType === 'Entity' ? 'ri-links-line' : 'ri-hashtag'"></i>
+        <span><strong>{{ roomTitle(room) }}</strong><small>{{ room.roomType === 'Direct' ? 'پیام مستقیم خصوصی' : room.roomType }}<ng-container *ngIf="room.linkedEntityCode"> · {{ room.linkedEntityType }} #{{ room.linkedEntityCode }}</ng-container></small></span>
+        <b *ngIf="room.unreadCount">{{ room.unreadCount }}</b>
+      </button>
+    </aside>
+
+    <section class="workspace" *ngIf="selectedRoom; else selectRoomState">
+      <ng-container *ngIf="view === 'conversation'">
+        <header class="room-header">
+          <div><h2>{{ roomTitle(selectedRoom) }}</h2><p>{{ selectedRoom.roomType === 'Direct' ? 'این گفتگو فقط برای دو عضو آن قابل مشاهده است.' : (selectedRoom.description || 'فضای همکاری این اتاق') }}</p></div>
+          <button type="button" class="icon-btn" [title]="selectedRoom.isMuted ? 'فعال کردن اعلان' : 'بی‌صدا کردن'" (click)="toggleMute()">
+            <i [class]="selectedRoom.isMuted ? 'ri-notification-off-line' : 'ri-notification-3-line'"></i>
+          </button>
+        </header>
+
+        <div class="bookmark-bar" *ngIf="bookmarks.length || canManageRoom">
+          <a *ngFor="let item of bookmarks" [href]="item.url || null" [class.disabled]="!item.url" target="_blank" rel="noopener noreferrer"><i class="ri-bookmark-3-line"></i>{{ item.title }}</a>
+          <details *ngIf="canManageRoom">
+            <summary title="افزودن منبع"><i class="ri-add-circle-line"></i></summary>
+            <form (ngSubmit)="addBookmark()"><input name="bookmarkTitle" [(ngModel)]="bookmark.title" required placeholder="عنوان"><input name="bookmarkUrl" [(ngModel)]="bookmark.url" placeholder="URL"><button>ثبت</button></form>
+          </details>
+        </div>
+
+        <div class="post-list" aria-live="polite">
+          <article *ngFor="let post of posts; trackBy: trackPost" class="post" [class.post--important]="post.priority === 'Important'" [class.post--urgent]="post.priority === 'Urgent'">
+            <div class="post__avatar" [class.system]="post.actorType !== 'User'"><i [class]="post.actorType === 'User' ? 'ri-user-line' : 'ri-robot-2-line'"></i></div>
+            <div class="post__content">
+              <header><strong>{{ post.authorDisplayName }}</strong><span *ngIf="post.actorType !== 'User'" class="actor">{{ post.actorType }}</span><time>{{ post.publishedAt | date:'yyyy/MM/dd HH:mm' }}</time><span *ngIf="post.priority !== 'Standard'" class="priority">{{ post.priority === 'Urgent' ? 'فوری' : 'مهم' }}</span></header>
+              <p>{{ post.body }}</p>
+              <div class="attachment-list" *ngIf="post.attachments?.length">
+                <button *ngFor="let file of post.attachments" type="button" (click)="download(file.attachmentCode, file.fileName)"><i class="ri-attachment-2"></i>{{ file.fileName }} <small>{{ file.fileSize / 1024 | number:'1.0-0' }} KB</small></button>
+              </div>
+              <div class="action-cards" *ngIf="post.actions?.length">
+                <button *ngFor="let action of post.actions" type="button" (click)="runAction(post, action.actionCode)">{{ action.label }}</button>
+              </div>
+              <footer>
+                <button type="button" (click)="openThread(post)"><i class="ri-chat-thread-line"></i>{{ post.replyCount ? post.replyCount + ' پاسخ' : 'پاسخ' }}</button>
+                <button type="button" [class.active]="post.isFollowed" (click)="follow(post)"><i class="ri-notification-badge-line"></i>{{ post.isFollowed ? 'دنبال می‌کنم' : 'دنبال کردن' }}</button>
+                <button *ngIf="post.requireAcknowledgement" type="button" [disabled]="post.isAcknowledged" (click)="acknowledge(post)"><i class="ri-checkbox-circle-line"></i>{{ post.isAcknowledged ? 'تأیید شد' : 'تأیید دریافت' }} · {{ post.ackCount }}</button>
+                <button type="button" (click)="setReminder(post)"><i class="ri-alarm-line"></i>یادآوری</button>
+              </footer>
+              <form *ngIf="reminder.postCode === post.postCode" class="inline-reminder" (ngSubmit)="saveReminder()"><input type="datetime-local" name="reminderAt" [(ngModel)]="reminder.at" required><button>ثبت</button></form>
+            </div>
+          </article>
+          <div *ngIf="!posts.length" class="state-box state-box--large"><i class="ri-chat-new-line"></i><strong>گفتگو را شروع کنید</strong><span>اولین پیام، تصمیم یا رویداد این اتاق را ثبت کنید.</span></div>
+        </div>
+
+        <form *ngIf="canCreatePost" class="composer" (ngSubmit)="send(threadRoot)">
+          <div class="composer__context" *ngIf="threadRoot"><span>پاسخ در Thread پیام {{ threadRoot.authorDisplayName }}</span><button type="button" (click)="threadRoot = undefined; threadPosts = []">×</button></div>
+          <textarea name="message" [(ngModel)]="message" (input)="onTyping()" required rows="2" placeholder="پیام بنویسید… برای Mention شناسه کاربر یا گروه را در تنظیمات پیام وارد کنید."></textarea>
+          <div class="composer__options">
+            <select name="priority" [(ngModel)]="priority" aria-label="اولویت"><option value="Standard">عادی</option><option value="Important">مهم</option><option value="Urgent">فوری</option></select>
+            <label><input type="checkbox" name="ack" [(ngModel)]="requireAcknowledgement"> نیازمند تأیید</label>
+            <label class="file-picker"><i class="ri-attachment-2"></i><span>{{ pendingFile?.name || 'پیوست' }}</span><input type="file" (change)="chooseFile($event)" accept="image/jpeg,image/png,image/webp,application/pdf,text/plain,.docx,.xlsx"></label>
+            <details><summary><i class="ri-at-line"></i> Mention / زمان‌بندی</summary><div class="composer__advanced">
+              <label>افراد<select name="mentionUsers" multiple [(ngModel)]="mentionSubjects"><option *ngFor="let user of users" [value]="user.subject" [disabled]="user.isSelf">{{ userLabel(user.subject) }}</option></select></label>
+              <label *ngIf="groups.length">گروه‌ها<select name="mentionGroups" multiple [(ngModel)]="mentionGroups"><option *ngFor="let group of groups" [value]="group.groupKey">{{ group.title }}</option></select></label>
+              <label>ارسال در زمان<input type="datetime-local" name="schedule" [(ngModel)]="scheduledFor"></label>
+            </div></details>
+            <button type="submit" class="send-btn" [disabled]="saving || !message.trim()"><i class="ri-send-plane-2-fill"></i>{{ scheduledFor ? 'زمان‌بندی' : 'ارسال' }}</button>
+          </div>
+          <small class="typing" *ngIf="typingName">{{ typingName }} در حال نوشتن است…</small>
+        </form>
+      </ng-container>
+
+      <section *ngIf="view === 'search'" class="tool-view">
+        <header><h2>جست‌وجوی گفتگو</h2><p>نتایج فقط از اتاق‌هایی نمایش داده می‌شوند که عضو آن هستید.</p></header>
+        <form class="search-form" (ngSubmit)="search()"><input name="searchText" [(ngModel)]="searchText" placeholder="متن پیام یا موضوع"><input name="searchAuthor" [(ngModel)]="searchAuthor" placeholder="نویسنده"><label>از تاریخ<input type="date" name="searchDateFrom" [(ngModel)]="searchDateFrom"></label><label>تا تاریخ<input type="date" name="searchDateTo" [(ngModel)]="searchDateTo"></label><label><input type="checkbox" name="onlyAttachment" [(ngModel)]="onlyWithAttachment"> دارای پیوست</label><button class="primary-btn">جست‌وجو</button></form>
+        <article *ngFor="let result of searchResults" class="search-result" (click)="selectRoomByCode(result.roomRef)"><strong>{{ result.roomTitle }} · {{ result.authorDisplayName }}</strong><p>{{ result.body }}</p><small>{{ result.publishedAt | date:'yyyy/MM/dd HH:mm' }} <i *ngIf="result.hasAttachment" class="ri-attachment-2"></i></small></article>
+        <div *ngIf="!searchResults.length" class="state-box state-box--large">عبارت موردنظر را جست‌وجو کنید.</div>
+      </section>
+
+      <section *ngIf="view === 'playbooks'" class="tool-view">
+        <header><h2>Playbook و Run</h2><p>فرایندهای تکرارپذیر را به یک اتاق و موجودیت متصل کنید.</p></header>
+        <form *ngIf="canManagePlaybook" class="playbook-form" (ngSubmit)="createPlaybook()"><input name="playbookTitle" [(ngModel)]="newPlaybook.title" required placeholder="عنوان Playbook"><input name="playbookDescription" [(ngModel)]="newPlaybook.description" placeholder="توضیح"><textarea name="playbookSteps" [(ngModel)]="newPlaybook.stepsText" rows="4" required placeholder="هر مرحله در یک خط"></textarea><button class="primary-btn">ساخت قالب</button></form>
+        <article *ngFor="let playbook of playbooks" class="playbook-card"><div><h3>{{ playbook.title }}</h3><p>{{ playbook.description }}</p></div><ol><li *ngFor="let step of playbook.steps">{{ step.title }}</li></ol><button *ngIf="canRunPlaybook" type="button" (click)="startRun(playbook)"><i class="ri-play-circle-line"></i> شروع Run</button></article>
+        <div *ngIf="!playbooks.length" class="state-box state-box--large">هنوز Playbook فعالی وجود ندارد.</div>
+        <h2 class="run-title" *ngIf="runs.length">Runهای فعال</h2>
+        <article *ngFor="let run of runs" class="run-card">
+          <header><div><strong>{{ run.title }}</strong><small>{{ run.ownerSubject }} · {{ run.startedAt | date:'yyyy/MM/dd HH:mm' }}</small></div><button type="button" (click)="selectRoomByCode(run.roomRef)">باز کردن گفتگو</button></header>
+          <div *ngFor="let step of run.steps" class="run-step" [class.done]="step.status === 'Done'">
+            <span><i [class]="step.status === 'Done' ? 'ri-checkbox-circle-fill' : 'ri-checkbox-blank-circle-line'"></i>{{ step.title }}</span>
+            <select [ngModel]="step.status" (ngModelChange)="setRunStep(run, step.runStepCode, $event)" [ngModelOptions]="{standalone:true}" [disabled]="!canRunPlaybook"><option value="Pending">در انتظار</option><option value="Running">در حال اجرا</option><option value="Done">انجام شد</option><option value="Skipped">رد شد</option></select>
+          </div>
+        </article>
+      </section>
+
+      <section *ngIf="view === 'administration'" class="tool-view administration-view">
+        <header><h2>مدیریت همکاری</h2><p>عضویت اتاق، گروه‌های Mention و اتصال رویدادها را بدون قراردادن secret در Frontend مدیریت کنید.</p></header>
+
+        <div class="administration-grid">
+          <article *ngIf="canManageRoom && selectedRoom.roomType !== 'Direct'" class="administration-card">
+            <header><h3>عضو اتاق</h3><small>{{ selectedRoom.title }}</small></header>
+            <form (ngSubmit)="addMember()">
+              <select name="memberSubject" [(ngModel)]="newMember.subject" required><option value="" disabled>انتخاب کاربر</option><option *ngFor="let user of users" [value]="user.subject" [disabled]="user.isSelf">{{ userLabel(user.subject) }}</option></select>
+              <input name="memberPersonInfo" [(ngModel)]="newMember.personInfoRef" inputmode="numeric" placeholder="PersonInfoRef (اختیاری)">
+              <select name="memberRole" [(ngModel)]="newMember.memberRole"><option value="Member">عضو</option><option value="Moderator">مدیر گفتگو</option><option value="Owner">مالک</option></select>
+              <button class="primary-btn">ثبت عضو</button>
+            </form>
+          </article>
+
+          <article *ngIf="canManageRoom" class="administration-card">
+            <header><h3>گروه Mention</h3><small>برای استفاده در پیام‌ها با GroupKey</small></header>
+            <form (ngSubmit)="createGroup()">
+              <input name="groupKey" [(ngModel)]="newGroup.groupKey" required maxlength="100" placeholder="GroupKey مانند support">
+              <input name="groupTitle" [(ngModel)]="newGroup.title" required maxlength="200" placeholder="عنوان گروه">
+              <select name="groupMembers" [(ngModel)]="newGroup.memberSubjects" required multiple><option *ngFor="let user of users" [value]="user.subject">{{ userLabel(user.subject) }}</option></select>
+              <button class="primary-btn">ایجاد گروه</button>
+            </form>
+            <ul class="administration-list"><li *ngFor="let group of groups"><strong>{{ group.title }}</strong><code>{{ group.groupKey }}</code><small>{{ group.memberSubjects.length }} عضو</small></li></ul>
+          </article>
+
+          <article *ngIf="canManageIntegration" class="administration-card administration-card--wide">
+            <header><h3>Event Integration</h3><small>رویدادهای مطابق Pattern در اتاق انتخاب‌شده منتشر می‌شوند.</small></header>
+            <form (ngSubmit)="createIntegration()">
+              <input name="integrationTitle" [(ngModel)]="newIntegration.title" required maxlength="200" placeholder="عنوان Integration">
+              <input name="eventPattern" [(ngModel)]="newIntegration.eventPattern" required maxlength="200" placeholder="Support.LetterCreated یا *">
+              <input name="webhookUrl" [(ngModel)]="newIntegration.webhookUrl" maxlength="1000" placeholder="Webhook HTTPS اختیاری؛ host باید allow-list شده باشد">
+              <button class="primary-btn">ایجاد Integration</button>
+            </form>
+            <ul class="administration-list"><li *ngFor="let integration of integrations"><strong>{{ integration.title }}</strong><code>{{ integration.eventPattern }}</code><small>Room #{{ integration.targetRoomRef }} · {{ integration.webhookUrl ? 'Webhook' : 'داخلی' }}</small></li></ul>
+          </article>
+        </div>
+      </section>
+    </section>
+  </section>
+
+  <ng-template #selectRoomState><section class="workspace workspace--empty"><i class="ri-discuss-line"></i><h2>یک اتاق انتخاب کنید</h2><p>گفتگوهای متصل به نامه، مشتری، فاکتور، پروژه و رویداد اینجا قرار می‌گیرند.</p></section></ng-template>
+
+  <aside *ngIf="threadRoot && view === 'conversation'" class="thread-panel" aria-label="Thread">
+    <header><div><strong>Thread</strong><small>{{ threadRoot.authorDisplayName }}</small></div><button type="button" (click)="threadRoot = undefined; threadPosts = []">×</button></header>
+    <article class="thread-root"><strong>{{ threadRoot.authorDisplayName }}</strong><p>{{ threadRoot.body }}</p></article>
+    <article *ngFor="let reply of threadPosts" class="thread-reply"><strong>{{ reply.authorDisplayName }}</strong><p>{{ reply.body }}</p><time>{{ reply.createdAt | date:'HH:mm' }}</time></article>
+  </aside>
+</main>

@@ -168,6 +168,40 @@
     font-weight: 700;
 }
 
+:host-context(html[data-bs-theme='dark']) .project-tree-card,
+:host-context(html[data-bs-theme='dark']) .project-tree-box {
+    color: var(--kws-dark-text, #f1f5f9);
+    background: var(--kws-dark-surface, #252e40);
+    border-color: var(--kws-dark-border, rgba(226, 232, 240, .18));
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .28);
+}
+
+:host-context(html[data-bs-theme='dark']) .project-tree-stats span,
+:host-context(html[data-bs-theme='dark']) .tree-count {
+    color: #bfdbfe;
+    background: rgba(59, 130, 246, .18);
+}
+
+:host-context(html[data-bs-theme='dark']) .tree-li::before,
+:host-context(html[data-bs-theme='dark']) .tree-li::after {
+    background: rgba(148, 163, 184, .38);
+}
+
+:host-context(html[data-bs-theme='dark']) .tree-row:hover,
+:host-context(html[data-bs-theme='dark']) .tree-row.open {
+    background: rgba(96, 165, 250, .12);
+}
+
+:host-context(html[data-bs-theme='dark']) .tree-toggle,
+:host-context(html[data-bs-theme='dark']) .tree-row.file .tree-icon,
+:host-context(html[data-bs-theme='dark']) .tree-name {
+    color: var(--kws-dark-muted, #c2ccda);
+}
+
+:host-context(html[data-bs-theme='dark']) .tree-row.folder .tree-name {
+    color: #93c5fd;
+}
+
 @media (max-width: 768px) {
     .project-tree-header {
         flex-direction: column;

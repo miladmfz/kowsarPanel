@@ -3,9 +3,9 @@
 
     <h4 class="card-title">{{ title() }}</h4>
 
-    <div class="d-flex flex-wrap mb-3 gap-2">
+    <div class="d-flex flex-wrap mb-3 gap-2" role="toolbar" aria-label="عملیات فهرست گزارش‌ها">
 
-      <button class="btn btn-light m-1" (click)="GetData()">
+      <button type="button" class="btn btn-light m-1" (click)="GetData()" [disabled]="loading()">
         <span class="btn-label"><i class="fas fa-sync me-1"></i></span>
         بازخوانی
       </button>
@@ -15,13 +15,21 @@
     </div>
 
 
-    <div class="ag-container rounded-3 border shadow-sm overflow-hidden" style="height: 1200px;">
-      <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
-        [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions"
-        (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
-        [class]="themeClass + ' w-100 h-100'" [treeData]="true" [getDataPath]="getDataPath_report">
-      </ag-grid-angular>
-    </div>
+    @if (loading()) {
+      <app-data-view-state state="loading" message="ساختار درختی گزارش‌ها در حال آماده‌سازی است." />
+    } @else if (errorMessage()) {
+      <app-data-view-state state="error" [message]="errorMessage()" actionLabel="تلاش مجدد" (action)="GetData()" />
+    } @else if (records().length === 0) {
+      <app-data-view-state state="empty" message="گزارشی مطابق دسترسی‌های فعلی یافت نشد." actionLabel="بازخوانی" (action)="GetData()" />
+    } @else {
+      <div class="ag-container report-list-grid rounded-3 border shadow-sm" role="region" aria-label="درخت گزارش‌های مالی">
+        <ag-grid-angular [enableBrowserTooltips]="true" [tooltipShowDelay]="200" [tooltipHideDelay]="800"
+          [columnDefs]="column_name_1" [rowData]="records()" [gridOptions]="gridOptions"
+          (gridReady)="onGridReady($event, 1)" (firstDataRendered)="gridApi1?.sizeColumnsToFit()"
+          [class]="themeClass + ' w-100 h-100'" [treeData]="true" [getDataPath]="getDataPath_report">
+        </ag-grid-angular>
+      </div>
+    }
 
 
   </div>

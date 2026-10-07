@@ -32,9 +32,9 @@ import Swal from 'sweetalert2';
 
   .kws-attach-btn {
 
-    width: 48px;
+    width: 46px;
 
-    height: 48px;
+    height: 46px;
 
     border: none;
 
@@ -46,7 +46,7 @@ import Swal from 'sweetalert2';
 
     justify-content: center;
 
-    border-radius: 50%;
+    border-radius: 14px;
 
     background:
       linear-gradient(
@@ -91,6 +91,19 @@ import Swal from 'sweetalert2';
 
     box-shadow:
       0 10px 24px rgba(255,204,51,.16);
+  }
+
+  :host-context(html[data-bs-theme='dark']) .kws-attach-btn {
+    color: #bfdbfe;
+    background: linear-gradient(135deg, #303b51, #252e40);
+    border-color: rgba(226, 232, 240, .18);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, .25);
+  }
+
+  :host-context(html[data-bs-theme='dark']) .kws-attach-btn:hover {
+    color: #ffffff;
+    background: linear-gradient(135deg, #37445c, #2d3850);
+    border-color: rgba(96, 165, 250, .48);
   }
 
 `]
@@ -183,12 +196,6 @@ export class AutletterFileUploadComponent {
 
 
       const fileCategory = this.getFileCategory(file.type, file.name);
-      console.log(fileCategory)
-      console.log(this.selectedFileName())
-      console.log(this.selectedFileType())
-      console.log(base64)
-
-
       this.fileReady.emit({
         Title: fileCategory,
         FileName: this.selectedFileName(),

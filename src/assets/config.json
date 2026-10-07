@@ -15,6 +15,19 @@
         "domain": "192.168.1.2",
         "autoRegister": true
     },
+    "signalR": {
+        "enabled": true,
+        "hubUrl": "http://192.168.1.27:60007/hubs/autletter",
+        "withCredentials": false,
+        "logLevel": "Information",
+        "reconnectDelays": [
+            0,
+            2000,
+            5000,
+            10000,
+            30000
+        ]
+    },
     "menuConfig": {
         "ShowGroupImage": false,
         "ShowProductImage": true,

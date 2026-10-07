@@ -4,7 +4,8 @@ import { ActivatedRoute, ParamMap, Router, RouterModule } from '@angular/router'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
-import { WorkforceAbsenceWebApiService } from '../../../../automation/services/WorkforceAbsenceWebApi.service';
+import { WorkforceAbsenceTypeRecord, WorkforceAbsenceTypeSaveRequest } from '../../../models/workforce-absence-type.models';
+import { WorkforceAbsenceTypeApiService } from '../../../services/workforce-absence-type-api.service';
 
 @Component({
     selector: 'app-workforce-absence-type-edit',
@@ -54,10 +55,14 @@ export class WorkforceAbsenceTypeEditComponent implements OnInit {
 
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
-    private readonly repo = inject(WorkforceAbsenceWebApiService);
+    private readonly repo = inject(WorkforceAbsenceTypeApiService);
     private readonly notificationService = inject(NotificationService);
 
     ngOnInit(): void {
+        this.EditForm.controls.TypeKey.valueChanges.subscribe(() => {
+            this.applyEmergencyRules();
+        });
+
         this.route.paramMap.subscribe((params: ParamMap) => {
             const id = params.get('id') || '0';
             if (id === '0') return;
@@ -74,8 +79,8 @@ export class WorkforceAbsenceTypeEditComponent implements OnInit {
 
     private load(id: string): void {
         this.loading.set(true);
-        this.repo.Type_Get({ AbsenceTypeCode: id, OnlyActive: null }).subscribe({
-            next: (data: any) => {
+        this.repo.list({ AbsenceTypeCode: id, OnlyActive: null }).subscribe({
+            next: (data) => {
                 this.loading.set(false);
                 const row = data?.WorkforceAbsenceTypes?.[0];
                 if (!row) { this.notificationService.error('نوع درخواست پیدا نشد'); this.cancel(); return; }
@@ -85,29 +90,50 @@ export class WorkforceAbsenceTypeEditComponent implements OnInit {
         });
     }
 
-    private patch(row: any): void {
-        const values: any = {};
+    private patch(row: WorkforceAbsenceTypeRecord): void {
+        const values: Record<string, string> = {};
         Object.keys(this.EditForm.controls).forEach((key) => {
             values[key] = row[key] === null || row[key] === undefined ? '' : String(row[key]);
         });
         this.EditForm.patchValue(values, { emitEvent: false });
+        this.applyEmergencyRules();
     }
 
     submit(): void {
+        this.applyEmergencyRules();
         this.EditForm.markAllAsTouched();
         if (this.EditForm.invalid) { this.notificationService.warning('اطلاعات اجباری را کامل کنید'); return; }
 
         this.loading.set(true);
-        this.repo.Type_Save(this.EditForm.getRawValue()).subscribe({
-            next: (data: any) => {
+        this.repo.save(this.EditForm.getRawValue() as WorkforceAbsenceTypeSaveRequest).subscribe({
+            next: (data) => {
                 this.loading.set(false);
-                const result = data?.WorkforceAbsenceTypes?.[0] ?? data;
+                const result = data.WorkforceAbsenceTypes?.[0];
                 if (Number(result?.ErrCode ?? 0) !== 0) { this.notificationService.warning(result?.ErrDesc ?? 'خطا در ذخیره'); return; }
                 this.notificationService.success('نوع درخواست ذخیره شد');
                 this.cancel();
             },
             error: () => { this.loading.set(false); this.notificationService.error('خطا در ارتباط با سرور'); },
         });
+    }
+
+    isEmergencyType(): boolean {
+        return String(this.EditForm.controls.TypeKey.value ?? '').trim().toUpperCase() === 'EMERGENCY';
+    }
+
+    private applyEmergencyRules(): void {
+        if (!this.isEmergencyType()) return;
+
+        this.EditForm.patchValue(
+            {
+                CalculationMode: 'MINUTE',
+                BalanceMode: 'MONTHLY_HOURLY',
+                MinimumAdvanceWorkDay: '0',
+                AllowFriday: '0',
+                AllowHoliday: '0',
+            },
+            { emitEvent: false }
+        );
     }
 
     cancel(): void { this.router.navigate(['/automation/workforce-absence/type-list']); }

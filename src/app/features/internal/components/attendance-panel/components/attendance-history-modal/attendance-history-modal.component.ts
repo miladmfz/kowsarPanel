@@ -15,6 +15,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
+import 'src/app/app-shell/framework-components/ag-grid/ag-grid-enterprise-registration';
 import { ColDef } from 'ag-grid-community';
 import { CellStatusAttendanceHistoryPanel } from './cell-status-history-attendance-panel';
 

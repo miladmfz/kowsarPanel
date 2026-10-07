@@ -1,206 +1,126 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnDestroy, OnInit, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Component } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular';
-import { IDatepickerTheme, NgPersianDatepickerModule } from 'ng-persian-datepicker';
-import { catchError, of } from 'rxjs';
-import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
-import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
-
-import { ReportWebApiService } from 'src/app/features/accounting/services/GozareshatWebApi/ReportWebApi.service';
-import { KowsarNumberService } from 'src/app/app-shell/framework-services/kowsar-number.service';
+import { Observable } from 'rxjs';
+import { KowsarChartColumnComponent } from 'src/app/app-shell/framework-components/kowsar/kowsar-chart-column/kowsar-chart-column.component';
+import {
+  InventoryChartModel,
+  InventoryGridSchema,
+  InventoryFilterConfig,
+  InventoryReportBaseComponent,
+  InventorySummary,
+} from '../InventoryReportShared/inventory-report.base';
 
 @Component({
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterModule,
     AgGridModule,
-    NgPersianDatepickerModule,
+    KowsarChartColumnComponent,
   ],
   selector: 'app-GoodSefareshPointRpt',
-  templateUrl: './GoodSefareshPointRpt.component.html',
+  templateUrl: '../InventoryReportShared/inventory-report.component.html',
 })
-export class GoodSefareshPointRptComponent extends AgGridBaseComponent implements OnInit, OnDestroy {
-
-
-  private readonly repo = inject(ReportWebApiService);
-  private readonly route = inject(ActivatedRoute);
-  private readonly notificationService = inject(NotificationService);
-  private readonly kowsarNumber = inject(KowsarNumberService);
-
-  constructor() {
-    super();
-  }
-
-  @Input() ReportData: any;
-
-  records = signal<any[]>([])
-
-  gridMemory1 = new Map<string, any>();
-  gridKey = signal('');
-  modal_title = signal('')
-  title = signal('Sample title');
-
-  ReportCode = signal('')
-
-  customTheme: Partial<IDatepickerTheme> = {
-    selectedBackground: '#0066cc',
-    selectedText: '#ffffff',
+export class GoodSefareshPointRptComponent extends InventoryReportBaseComponent {
+  protected override readonly reportForm = 'GoodSefareshPointRpt';
+  protected override readonly defaultTitle = 'کالاهای کمتر از نقطه سفارش';
+  override readonly chartTitle = 'موجودی در مقایسه با نقاط سفارش و بحرانی';
+  override readonly autoLoad = true;
+  override readonly filterConfig: InventoryFilterConfig = {
+    department: true,
+    stack: true,
+    mainCode: true,
   };
+  protected override readonly initialFilters = {};
+  protected override readonly numericFields = new Set([
+    'Amount',
+    'MaxSellPrice',
+    'MinSellPrice',
+    'SefareshPoint',
+    'SefareshTaf',
+    'CriticalPoint',
+    'CriticalTaf',
+    'Tiraj',
+    'PrintPeriod',
+    'BulletinGroupSerial',
+    'SellPrice1',
+    'SellPrice2',
+    'SellPrice3',
+    'SellPrice4',
+    'SellPrice5',
+    'SellPrice6',
+    'FinalPrice',
+    'FormNo',
+  ]);
+  protected override readonly fallbackSchemas: InventoryGridSchema[] = [
+    {
+      FieldName: 'PrivateCodeForSort',
+      Caption: 'کد کالا',
+      Width: 90,
+      Visible: true,
+    },
+    { FieldName: 'GoodName', Caption: 'نام کالا', Width: 220, Visible: true },
+    { FieldName: 'Amount', Caption: 'تعداد', Width: 90, Visible: true },
+    {
+      FieldName: 'SefareshPoint',
+      Caption: 'نقطه سفارش',
+      Width: 100,
+      Visible: true,
+    },
+    {
+      FieldName: 'SefareshTaf',
+      Caption: 'اختلاف نقطه سفارش',
+      Width: 120,
+      Visible: true,
+    },
+    {
+      FieldName: 'CriticalPoint',
+      Caption: 'نقطه بحرانی',
+      Width: 100,
+      Visible: true,
+    },
+    {
+      FieldName: 'CriticalTaf',
+      Caption: 'اختلاف نقطه بحرانی',
+      Width: 120,
+      Visible: true,
+    },
+    { FieldName: 'Writer', Caption: 'مولف', Width: 140, Visible: true },
+  ];
 
-
-  EditForm_SearchTarget = new FormGroup({
-    SearchTarget: new FormControl(''),
-    CentralRef: new FormControl(''),
-    ObjectRef: new FormControl('0'),
-    ReportCode: new FormControl(''),
-    ReportTitle: new FormControl(''),
-
-    FromDate: new FormControl(''),
-    ToDate: new FormControl(''),
-
-    ClassName: new FormControl(''),
-    Department: new FormControl(''),
-    WhereCluase: new FormControl(''),
-    OrderBy: new FormControl(''),
-    Column: new FormControl(''),
-
-  });
-
-
-
-
-
-
-
-  ngOnInit(): void {
-
-    this.title.set(this.ReportData.ReportTitle)
-
-    this.EditForm_SearchTarget.patchValue({
-      ReportCode: this.ReportData.ReportCode,
-      ReportTitle: this.ReportData.ReportTitle,
-      ClassName: this.ReportData.ReportForm,
-    });
-
-
-
-    this.initColumns();
-    //this.loadList();
+  protected override request(payload: unknown): Observable<any> {
+    return this.repo.GoodSefareshPointRpt(payload);
   }
 
-
-
-  private initColumns(): void {
-
-
-
-
-    this.repo.GetGridSchemaVisible('T' + this.ReportData.ReportForm)
-      .pipe(
-        catchError((_error) => {
-
-          return of(null);
-        })
-      )
-      .subscribe((data: any) => {
-
-        this.column_name_1 = data.GridSchemas
-          .filter((schema: any) => schema.Visible === 'True')
-          .map((schema: any) => {
-
-            // ستون عددی؟ (بر اساس Separator)
-            const isNumeric =
-              schema.Separator === 'True' ||
-              schema.Separator === 'true' ||
-              schema.Separator === '1' ||
-              schema.Separator === 1 ||
-              schema.Separator === true;
-
-            const col: any = {
-              field: schema.FieldName,
-              headerName: schema.Caption,
-              cellClass: 'text-center',
-              sortable: true,
-              resizable: true,
-              minWidth: parseInt(schema.Width, 10),
-              filter: isNumeric ? 'agNumberColumnFilter' : 'agSetColumnFilter',
-            };
-
-            if (isNumeric) {
-              // ۱) نمایش عددی (۳ رقمی + فارسی) — فقط اگر واقعاً عدد باشد
-              col.valueFormatter = (p: any) =>
-                this.kowsarNumber.formatKowsarNumber(p.value);
-
-              // ۲) سورت عددی واقعی، نه رشته‌ای
-              col.comparator = (valueA: any, valueB: any) =>
-                this.kowsarNumber.compareKowsarValues(valueA, valueB);
-            }
-
-            return col;
-          });
-
-
-
-
-
-        //this.loadList()
-
-      });
-
-
+  protected override buildChart(rows: any[]): InventoryChartModel {
+    return {
+      categories: rows.map((row) =>
+        this.chartLabel(row, 'GoodName', 'PrivateCodeForSort'),
+      ),
+      series: [
+        {
+          name: 'موجودی',
+          data: rows.map((row) => this.chartValue(row, 'Amount')),
+        },
+        {
+          name: 'نقطه سفارش',
+          data: rows.map((row) => this.chartValue(row, 'SefareshPoint')),
+        },
+        {
+          name: 'نقطه بحرانی',
+          data: rows.map((row) => this.chartValue(row, 'CriticalPoint')),
+        },
+      ],
+    };
   }
 
-
-
-
-
-
-
-  override onGridReady(params: any, index: number) {
-    super.onGridReady(params, index);
-
-    if (index >= 1 && index <= 6) {
-      (this as any)[`gridApi${index}`] = params.api;
-    }
-    setTimeout(() => {
-      try {
-        if (params.api && !params.api.isDestroyed?.()) {
-          params.api.sizeColumnsToFit();
-        }
-      } catch { }
-    }, 50);
+  protected override buildReportSummaries(rows: any[]): InventorySummary[] {
+    return [
+      { label: 'جمع موجودی', value: this.sumField(rows, 'Amount') },
+      { label: 'جمع نقطه سفارش', value: this.sumField(rows, 'SefareshPoint') },
+      { label: 'اختلاف نقطه سفارش', value: this.sumField(rows, 'SefareshTaf') },
+    ];
   }
-
-
-
-  loadList(): void {
-
-
-
-
-  }
-
-  clearFilter(): void {
-
-    // this.EditForm_SearchTarget.patchValue({
-    //   SearchTarget: "",
-    //   CentralRef: "",
-    //   CreationDate: "",
-    //   OwnCentralRef: "",
-    //   PersonInfoCode: "",
-    //   OwnerPersonInfoRef: "",
-    //   StartTime: "",
-    //   EndTime: "",
-    //   SelectedOption: "0",
-    // });
-    // this.loadList()
-  }
-
-
-
-
 }

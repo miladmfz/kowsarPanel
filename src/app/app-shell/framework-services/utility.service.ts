@@ -10,13 +10,15 @@ export class UtilityService {
     // 🧮 محاسبات عمومی ------------------------------------------------------
 
     /** بررسی مقدار تهی یا خالی */
-    isNullOrEmpty(value: any): boolean {
+    isNullOrEmpty(value: unknown): boolean {
         return value === null || value === undefined || value === '';
     }
 
     /** بررسی رشته فقط شامل عدد است */
-    isNumeric(value: any): boolean {
-        return !isNaN(value - parseFloat(value));
+    isNumeric(value: unknown): boolean {
+        if (typeof value === 'number') return Number.isFinite(value);
+        if (typeof value !== 'string' || value.trim() === '') return false;
+        return Number.isFinite(Number(value));
     }
 
     /** گرد کردن عدد به n رقم اعشار */
@@ -27,9 +29,9 @@ export class UtilityService {
     }
 
     /** فرمت عدد با جداکننده هزارگان */
-    formatNumber(value: any): string {
+    formatNumber(value: unknown): string {
         if (value === null || value === undefined) return '';
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
 
     // 📅 تاریخ و زمان -------------------------------------------------------
@@ -85,7 +87,7 @@ export class UtilityService {
     // 🔐 ذخیره و بازیابی داده ------------------------------------------------
 
     /** تبدیل شیء به JSON ایمن */
-    toJson(value: any): string {
+    toJson(value: unknown): string {
         try {
             return JSON.stringify(value);
         } catch {
@@ -115,10 +117,10 @@ export class UtilityService {
     }
 
 
-    customNumberFormatter(params: any) {
+    customNumberFormatter(params: { value: unknown }): string {
         if (params.value === null || params.value === undefined) return '';
-        const value = parseFloat(params.value);
-        if (isNaN(value)) return params.value;
+        const value = Number(params.value);
+        if (!Number.isFinite(value)) return String(params.value);
 
         let formatted = value.toLocaleString('en-US', {
             minimumFractionDigits: 0,

@@ -1,185 +1,104 @@
-import { Component, OnInit, OnDestroy, inject, signal, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
-import { AgGridModule } from 'ag-grid-angular';
-import { AgGridBaseComponent } from 'src/app/app-shell/framework-components/ag-grid/base';
-import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
+import { CentralRoleConfiguration, CentralRoleOption } from 'src/app/auth-kowsar/auth-api.models';
 import { AuthKowsarWebApiService } from 'src/app/auth-kowsar/services/AuthKowsarWebApi.service';
-import { CellActionCentralRoleList } from './cell_action_centralrole_list';
-
 
 @Component({
   selector: 'app-centralrole',
-  templateUrl: './centralrole.component.html',
   standalone: true,
-  imports: [
-    CommonModule,
-    AgGridModule,
-    RouterModule,
-  ],
+  imports: [CommonModule],
+  templateUrl: './centralrole.component.html',
+  styleUrl: './centralrole.component.css',
 })
-export class CentralroleComponent extends AgGridBaseComponent
-  implements OnInit, OnDestroy {
+export class CentralroleComponent implements OnInit {
+  protected readonly configuration = signal<CentralRoleConfiguration | null>(null);
+  protected readonly selectedRoleRefs = signal<ReadonlySet<number>>(new Set<number>());
+  protected readonly loading = signal(false);
+  protected readonly saving = signal(false);
+  protected readonly notice = signal('');
+  protected readonly error = signal('');
 
-  records = signal<any[]>([])
-  records_CentralRole = signal<any[]>([])
-  title = signal('Centralrole')
-  loading = signal(false)
+  protected readonly dirty = computed(() => {
+    const configuration = this.configuration();
+    if (!configuration) return false;
+    const selected = this.selectedRoleRefs();
+    return configuration.roles.some(role => !role.locked && role.enabled !== selected.has(role.roleCode));
+  });
 
-  private readonly router = inject(Router);
-  private readonly renderer = inject(Renderer2);
+  protected readonly enabledCount = computed(() => this.selectedRoleRefs().size);
 
-  private readonly repo = inject(AuthKowsarWebApiService);
-  private readonly notificationService = inject(NotificationService);
-
-  constructor() {
-    super();
-  }
-
+  private readonly api = inject(AuthKowsarWebApiService);
+  private readonly destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
-
-
-
-    this.column_name_1 = [
-      {
-        field: 'عملیات',
-        pinned: 'left',
-        cellRenderer: CellActionCentralRoleList,
-        minWidth: 100,
-      },
-      {
-        field: 'UserId',
-        headerName: 'کد کاربری',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'CentralRef',
-        headerName: 'کد اجزای پایه',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'CentralName',
-        headerName: 'نام',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'UserName',
-        headerName: 'نام کاربری',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'UserNameInPrint',
-        headerName: 'پرینت',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'Active',
-        headerName: 'Active',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-
-    ];
-    this.columnDefs2 = [
-
-      {
-        field: 'RoleName',
-        headerName: 'RoleName',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-
-      {
-        field: 'RoleTitle',
-        headerName: 'RoleTitle',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-
-      {
-        field: 'RoleTitle',
-        headerName: 'RoleTitle',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-      {
-        field: 'Explain',
-        headerName: 'Explain',
-        cellClass: 'text-center',
-        minWidth: 150
-      },
-
-    ];
-    this.getList();
+    this.load();
   }
 
-  override onGridReady(params: any, index: number) {
-    super.onGridReady(params, index);
-
-    // ذخیره API درست
-    if (index >= 1 && index <= 6) {
-      (this as any)[`gridApi${index}`] = params.api;
-    }
-
-    // فیت کردن ستون‌ها با تأخیر کوتاه
-    setTimeout(() => {
-      try {
-        if (params.api && !params.api.isDestroyed?.()) {
-          params.api.sizeColumnsToFit();
-        }
-      } catch { }
-    }, 50);
-  }
-
-  getList(): void {
-
-    this.repo.GetCentralUsers().subscribe((data: any) => {
-
-      this.records.set(data?.CentralUsers ?? [])
-      this.updateGridData(1, this.records());
+  protected load(): void {
+    this.loading.set(true);
+    this.clearMessages();
+    this.api.GetCurrentCentralRoleConfiguration().pipe(
+      finalize(() => this.loading.set(false)),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: configuration => this.applyConfiguration(configuration),
+      error: error => this.error.set(this.errorMessage(error, 'دریافت نقش‌های Central انجام نشد.')),
     });
   }
 
-  GetCentralRoles(data: any): void {
+  protected toggle(role: CentralRoleOption, event: Event): void {
+    if (role.locked) return;
+    const checked = (event.target as HTMLInputElement).checked;
+    const next = new Set(this.selectedRoleRefs());
+    checked ? next.add(role.roleCode) : next.delete(role.roleCode);
+    this.selectedRoleRefs.set(next);
+    this.clearMessages();
+  }
 
-    this.repo.GetCentralRoles(data.CentralRef).subscribe((data: any) => {
-      console.log(data.CentralRoles[0])
+  protected save(): void {
+    const configuration = this.configuration();
+    if (!configuration || !this.dirty() || this.saving()) return;
+    if (!window.confirm('تغییر Roleهای Central روی ورودهای بعدی کاربران اثر می‌گذارد. ذخیره شود؟')) return;
 
-      this.records_CentralRole.set(data?.CentralRoles ?? [])
-      this.updateGridData(2, this.records_CentralRole());
-      this.CentralRole_dialog_show()
+    this.saving.set(true);
+    this.clearMessages();
+    this.api.UpdateCurrentCentralRoleConfiguration({
+      enabledRoleRefs: [...this.selectedRoleRefs()].sort((left, right) => left - right),
+      expectedVersion: configuration.version,
+    }).pipe(
+      finalize(() => this.saving.set(false)),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: saved => {
+        this.applyConfiguration(saved);
+        this.notice.set('Roleهای Central با موفقیت ذخیره شدند. کاربران برای دریافت Claimهای جدید باید دوباره وارد شوند.');
+      },
+      error: error => this.error.set(this.errorMessage(error, 'ذخیره Roleهای Central انجام نشد.')),
     });
-
   }
 
-
-  btnDeleteClicked(data: any): void {
-
-
-    this.notificationService.develop()
+  protected isPilotRole(role: CentralRoleOption): boolean {
+    return role.roleName === 'REPORT_VIEWER';
   }
 
-  CentralRole_dialog_show() {
-    const modal = this.renderer.selectRootElement('#CentralRole', true);
-    this.renderer.addClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'block');
-    this.renderer.setAttribute(modal, 'aria-modal', 'true');
-    this.renderer.setAttribute(modal, 'role', 'dialog');
+  private applyConfiguration(configuration: CentralRoleConfiguration): void {
+    this.configuration.set(configuration);
+    this.selectedRoleRefs.set(new Set(configuration.roles.filter(role => role.enabled).map(role => role.roleCode)));
   }
 
-  CentralRole_dialog_close() {
-    const modal = this.renderer.selectRootElement('#CentralRole', true);
-    this.renderer.removeClass(modal, 'show');
-    this.renderer.setStyle(modal, 'display', 'none');
-    this.renderer.removeAttribute(modal, 'aria-modal');
-    this.renderer.removeAttribute(modal, 'role');
+  private clearMessages(): void {
+    this.notice.set('');
+    this.error.set('');
   }
 
-
+  private errorMessage(error: unknown, fallback: string): string {
+    if (error instanceof HttpErrorResponse && error.status === 409)
+      return 'تنظیمات توسط درخواست دیگری تغییر کرده است؛ بازخوانی کنید و دوباره تصمیم بگیرید.';
+    if (error instanceof HttpErrorResponse && error.status === 403)
+      return 'فقط Admin می‌تواند Roleهای Central را تغییر دهد.';
+    return fallback;
+  }
 }

@@ -5,8 +5,22 @@ import { Router } from '@angular/router';
 import { AuthKowsarWebApiService } from '../../services/AuthKowsarWebApi.service';
 import { AppConfigService } from 'src/app/app-config.service';
 import { SwalService } from 'src/app/app-shell/framework-services/ui/swal.service';
-import { NotificationService } from 'src/app/app-shell/framework-services/ui/notification.service';
 import { SessionStorageService } from 'src/app/app-shell/framework-services/storage/session.storage.service';
+import {
+  AuthLoginRequest,
+  AuthUserRecord,
+  CustomerLoginResponse,
+  LoginResponse,
+} from '../../auth-api.models';
+import { AuthSessionService } from '../../services/auth-session.service';
+
+interface LoginParticle {
+  id: number;
+  x: number;
+  y: number;
+  size: number;
+  delay: number;
+}
 
 type UserType = 'KOWSAR' | 'CUSTOMER';
 
@@ -29,7 +43,7 @@ export class LoginComponent implements OnInit {
   private readonly repo = inject(AuthKowsarWebApiService);
   private readonly config = inject(AppConfigService);
   private readonly swal = inject(SwalService);
-  private readonly notificationService = inject(NotificationService);
+  private readonly authSession = inject(AuthSessionService);
   protected readonly session = inject(SessionStorageService);
   ngOnInit(): void {
 
@@ -135,10 +149,10 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  private loginKowsar(payload: any): void {
+  private loginKowsar(payload: AuthLoginRequest): void {
 
     this.repo.KowsarLogin(payload).subscribe({
-      next: (data: any) => {
+      next: (data: LoginResponse) => {
         this.handleLoginSuccess(data)
 
       },
@@ -151,20 +165,12 @@ export class LoginComponent implements OnInit {
 
   }
 
-  private loginCustomer(payload: any): void {
+  private loginCustomer(payload: AuthLoginRequest): void {
     this.repo.IsUser(payload).subscribe({
-      next: (data: any) => {
+      next: (data: CustomerLoginResponse) => {
         this.isLoading.set(false);
-        this.loginResultData = data;
-
-        const user = data?.users?.[0];
-
-        const encodedCode = data?.users?.[0]?.RandomeCode;
-        const realCode = this.decodeBase64(encodedCode);
-
-
-        if (user?.AuthSms == "True" && user?.RandomeCode) {
-          this.smsCodeFromServer = realCode;
+        if ('requiresOtp' in data) {
+          this.otpChallengeId = String(data.challengeId);
           this.smsConfirmVisible = true;
           return;
         }
@@ -180,10 +186,8 @@ export class LoginComponent implements OnInit {
 
   //////////////////////////////////
 
-  loginResultData: any = null;
-
   smsConfirmVisible = false;
-  smsCodeFromServer: string | null = null;
+  otpChallengeId: string | null = null;
 
   smsForm = this.fb.group({
     ConfirmCode: ['', [Validators.required, Validators.minLength(4)]],
@@ -195,25 +199,17 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    const userCode = this.smsForm.value.ConfirmCode;
+    const code = String(this.smsForm.value.ConfirmCode ?? '');
+    if (!this.otpChallengeId) return;
 
-    if (userCode === this.smsCodeFromServer) {
-      this.handleLoginSuccess(this.loginResultData);
-      console.log('SMS code confirmed');
-    } else {
-      this.smsForm.controls['ConfirmCode'].setErrors({ wrongCode: true });
-    }
-  }
-  private decodeBase64(value: string): string {
-    try {
-      return decodeURIComponent(
-        Array.prototype.map.call(atob(value), (c: string) =>
-          '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-        ).join('')
-      );
-    } catch {
-      return '';
-    }
+    this.repo.VerifyOtp(this.otpChallengeId, code).subscribe({
+      next: data => {
+        this.smsConfirmVisible = false;
+        this.otpChallengeId = null;
+        this.handleLoginSuccess(data);
+      },
+      error: () => this.smsForm.controls['ConfirmCode'].setErrors({ wrongCode: true }),
+    });
   }
   ///////////////////////////
   private reset_LoginForm(): void {
@@ -227,7 +223,7 @@ export class LoginComponent implements OnInit {
   }
 
 
-  private handleLoginSuccess(data: any): void {
+  private handleLoginSuccess(data: LoginResponse): void {
     this.isLoading.set(false);
 
     const user = data?.users?.[0];
@@ -251,7 +247,7 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    this.storeNormalizedUserSession(user, isKowsarLogin, isXUserLogin);
+    this.authSession.storeLogin(data, user, isKowsarLogin);
 
     const needChangePassword = String(user.NeedChangePassword ?? '0').trim();
 
@@ -261,40 +257,14 @@ export class LoginComponent implements OnInit {
     }
     const centralRef = user.CentralRef || this.session.centralRef;
 
-    this.repo.CentralPermission(centralRef).subscribe({
-      next: (permissionData: any) => {
-        const permissions = permissionData?.permissions || permissionData?.Permissions || [];
-
-        const permissionKeys = [
-          ...new Set(
-            permissions
-              .map((x: any) => x.PermissionKey)
-              .filter((x: any) => !!x)
-          )
-        ];
-
-        const roleNames = [
-          ...new Set(
-            permissions
-              .map((x: any) => x.RoleName)
-              .filter((x: any) => !!x)
-          )
-        ];
-
-        this.session.setItem('Permissions', JSON.stringify(permissions));
-        this.session.setItem('PermissionKeys', JSON.stringify(permissionKeys));
-        this.session.setItem('RoleNames', JSON.stringify(roleNames));
-
+    this.repo.CentralPermission(String(centralRef)).subscribe({
+      next: permissionData => {
+        this.authSession.storePermissions(permissionData);
         this.router.navigate(['/dashboard']);
       },
 
-      error: err => {
-        console.error('CentralPermission error:', err);
-
-        this.session.setItem('Permissions', JSON.stringify([]));
-        this.session.setItem('PermissionKeys', JSON.stringify([]));
-        this.session.setItem('RoleNames', JSON.stringify([]));
-
+      error: () => {
+        this.authSession.clearPermissions();
         this.router.navigate(['/dashboard']);
       }
     });
@@ -302,116 +272,10 @@ export class LoginComponent implements OnInit {
 
 
   }
-  private getCurrentBasePath(): string {
-    const segments = window.location.pathname
-      .split('/')
-      .filter(Boolean);
-
-    return segments.length > 0
-      ? `/${segments[0].toLowerCase()}`
-      : '/';
-  }
-
-  private getCurrentAppKey(): string {
-    return `${window.location.hostname}${this.getCurrentBasePath()}`.toLowerCase();
-  }
-
-  private storeNormalizedUserSession(user: any, isKowsarLogin: boolean, isXUserLogin: boolean): void {
-    const appKey = this.getCurrentAppKey();
-    const loginType = user.LoginType || (isKowsarLogin ? 'KOWSAR' : 'CUSTOMER');
-    console.log(user)
-    const normalizedUser = {
-      LoginType: loginType,
-      AppKey: appKey,
-      HostName: window.location.hostname,
-      BasePath: this.getCurrentBasePath(),
-      UserId: isKowsarLogin
-        ? (user.UserId || '1')
-        : '1',
-
-      OldUserId: user.OldUserId || '',
-      CentralRef: user.CentralRef || '',
-      CentralName: user.CentralName || '',
-      UserName: user.UserName || '',
-      DisplayName: user.DisplayName || user.UserPrintName || user.PhFullName || user.BrokerName || user.UserName || '',
-      UserPrintName: user.UserPrintName || '',
-      Active: user.Active || user.Success || '',
-      DepartmentCode: user.DepartmentCode || '',
-      DepartmentName: user.DepartmentName || '',
-      NeedChangePassword: user.NeedChangePassword || 'False',
-      UserMaxDiscount: user.UserMaxDiscount || '0',
-      UserIdRef: user.UserIdRef || '',
-      XUserCode: user.XUserCode || '',
-      CustomerCode: user.CustomerCode || '',
-      CustName_Small: user.CustName_Small || '',
-      Explain: user.Explain || '',
-      PersonInfoRef: user.PersonInfoRef || '',
-      PhFullName: user.PhFullName || '',
-      SessionId: user.SessionId || '',
-      ActiveDate: user.ActiveDate || '',
-      Message: user.Message || user.ErrDesc || '',
-      ErrCode: user.ErrCode || '0'
-    };
-
-    Object.keys(normalizedUser).forEach(key => {
-      this.session.setItem(key, String((normalizedUser as any)[key]));
-    });
-
-    this.session.setItem('CurrentUser', JSON.stringify(normalizedUser));
-    this.session.setItem('RawUser', JSON.stringify(user));
-  }
-
-
-  private handleLoginSuccess1(data: any): void {
+  private handleLoginError(_error: unknown): void {
     this.isLoading.set(false);
-
-    const user = data?.users?.[0];
-
-    if (!user || user.ErrCode !== '0') {
-      this.swal.error(user?.ErrDesc || 'ورود ناموفق بود');
-      this.reset_LoginForm()
-      return;
-    }
-
-    this.storeUserSession(user);
-
-
-
-
-    if (user.Userid && user.UserId.length > 0) {
-      this.session.setItem('UserId', user.Userid);
-    } else {
-      this.session.setItem('UserId', "1");
-    }
-
-
-    // مسیر متفاوت (اختیاری)
-    if (this.userType === 'KOWSAR') {
-      this.router.navigate(['/dashboard']);
-    } else {
-      this.router.navigate(['/dashboard']);
-    }
-  }
-
-  private handleLoginError(error: any): void {
-    this.isLoading.set(false);
-    console.error('Login error:', error);
     this.swal.error('خطا در ارتباط با سرور');
     this.reset_LoginForm()
-  }
-
-  // -------------------------------
-  // Session
-  // -------------------------------
-  private storeUserSession(user: any): void {
-    Object.keys(user).forEach(key => {
-      this.session.setItem(key, String(user[key]));
-    });
-
-    // این یکی هم مفید است که نوع کاربر را هم نگه داری
-    this.session.setItem('UserType', this.userType);
-
-
   }
 
 
@@ -419,7 +283,7 @@ export class LoginComponent implements OnInit {
 
   glowY: number = -500;
 
-  particles: any[] = [];
+  particles: LoginParticle[] = [];
 
   particleId: number = 0;
 

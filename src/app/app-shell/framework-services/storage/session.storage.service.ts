@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { ACCESS_TOKEN_NAME } from '../base/configuration';
+import { NormalizedAuthUser } from 'src/app/auth-kowsar/auth-api.models';
 
 @Injectable({
     providedIn: 'root',
@@ -37,7 +39,6 @@ export class SessionStorageService {
     setItem<T>(key: string, value: T): void {
         if (!this.hasWindow) return;
 
-        console.log(key + '=' + JSON.stringify(value))
         try {
             sessionStorage.setItem(key, JSON.stringify(value));
         } catch (err) {
@@ -70,7 +71,7 @@ export class SessionStorageService {
         return sessionStorage.getItem(key) !== null;
     }
     clearSession(): void {
-        sessionStorage.clear();
+        this.clearAuthentication();
     }
     removeItem(key: string): void {
         if (!this.hasWindow) return;
@@ -82,6 +83,63 @@ export class SessionStorageService {
         if (!this.hasWindow) return;
 
         sessionStorage.clear();
+    }
+
+    clearAuthentication(): void {
+        if (!this.hasWindow) return;
+
+        sessionStorage.clear();
+        // پاک‌سازی Token نسخه قدیمی که در localStorage نگهداری می‌شد.
+        localStorage.removeItem(ACCESS_TOKEN_NAME);
+    }
+
+    set accessToken(value: string) {
+        this.setString(ACCESS_TOKEN_NAME, value);
+    }
+
+    get accessToken(): string {
+        return this.getString(ACCESS_TOKEN_NAME);
+    }
+
+    set refreshToken(value: string) {
+        this.setString('kowsar.refresh_token', value);
+    }
+
+    get refreshToken(): string {
+        return this.getString('kowsar.refresh_token');
+    }
+
+    set authSubject(value: string) {
+        this.setString('kowsar.auth_subject', value);
+    }
+
+    get authSubject(): string {
+        return this.getString('kowsar.auth_subject');
+    }
+
+    set authSessionId(value: string) {
+        this.setString('kowsar.auth_session_id', value);
+    }
+
+    get authSessionId(): string {
+        return this.getString('kowsar.auth_session_id');
+    }
+
+    set authTokenVersion(value: number) {
+        this.setString('kowsar.auth_token_version', String(value));
+    }
+
+    get authTokenVersion(): number {
+        const value = Number(this.getString('kowsar.auth_token_version'));
+        return Number.isFinite(value) && value > 0 ? value : 1;
+    }
+
+    get loginRoute(): string {
+        if (!this.hasWindow) return '/auth/login-person';
+
+        return localStorage.getItem('UserTypeLogin') === 'KOWSAR'
+            ? '/auth/login-kowsar'
+            : '/auth/login-person';
     }
 
     // ======================================================
@@ -172,8 +230,8 @@ export class SessionStorageService {
         return this.getString('IsAdminUser');
     }
 
-    get currentUser(): any {
-        return this.getItem<any>('CurrentUser');
+    get currentUser(): Partial<NormalizedAuthUser> | null {
+        return this.getItem<Partial<NormalizedAuthUser>>('CurrentUser');
     }
 
     get permissions(): string[] {
